@@ -1,293 +1,344 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/idea.dart';
 
-/// Widget for displaying an idea card
+/// Карточка идеи в ленте
 class IdeaCard extends StatelessWidget {
   final Idea idea;
   final VoidCallback? onTap;
   final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onSave;
   final VoidCallback? onShare;
-  final bool showActions;
 
   const IdeaCard({
     super.key,
     required this.idea,
     this.onTap,
     this.onLike,
+    this.onComment,
+    this.onSave,
     this.onShare,
-    this.showActions = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header with category and difficulty
-              _buildHeader(),
+              // Заголовок с аватаром автора
+              _IdeaHeader(idea: idea),
+              
               const SizedBox(height: 12),
-
-              // Title
+              
+              // Текст идеи
               Text(
-                idea.title,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8),
-
-              // Description
-              Text(
-                idea.shortDesc,
-                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                idea.text,
+                style: const TextStyle(fontSize: 16),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 12),
-
-              // Media content
-              if (idea.hasMedia) ...[
-                _buildMediaContent(context),
-                const SizedBox(height: 12)
+              
+              // Медиа контент
+              if (idea.media.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                _IdeaMedia(media: idea.media),
               ],
-
-              // Tags
+              
+              // Теги
               if (idea.tags.isNotEmpty) ...[
-                _buildTags(),
-                const SizedBox(height: 12)
+                const SizedBox(height: 12),
+                _IdeaTags(tags: idea.tags),
               ],
-
-              // Meta info
-              _buildMetaInfo(),
-              const SizedBox(height: 12),
-
-              // Actions
-              if (showActions) ...[
-                _buildActions(context),
-                const SizedBox(height: 8)
-              ],
-
-              // Stats
-              _buildStats(),
+              
+              const SizedBox(height: 16),
+              
+              // Действия
+              _IdeaActions(
+                idea: idea,
+                onLike: onLike,
+                onComment: onComment,
+                onSave: onSave,
+                onShare: onShare,
+              ),
+              
+              const SizedBox(height: 8),
+              
+              // Статистика
+              _IdeaStats(idea: idea),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildHeader() {
+/// Заголовок идеи с аватаром автора
+class _IdeaHeader extends StatelessWidget {
+  final Idea idea;
+
+  const _IdeaHeader({required this.idea});
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
-        // Category icon
-        if (idea.category != null) ...[
-          Text(idea.categoryIcon, style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              idea.category!,
-              style: TextStyle(
-                  fontSize: 14,
+        CircleAvatar(
+          backgroundImage: idea.authorAvatar != null
+              ? NetworkImage(idea.authorAvatar!)
+              : null,
+          child: idea.authorAvatar == null
+              ? const Icon(Icons.person)
+              : null,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                idea.authorName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                _formatDate(idea.createdAt),
+                style: TextStyle(
                   color: Colors.grey[600],
-                  fontWeight: FontWeight.w500),
-            ),
-          ),
-        ],
-        const Spacer(),
-        // Difficulty badge
-        if (idea.difficulty != null)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color:
-                  _getDifficultyColor(idea.difficulty!).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: _getDifficultyColor(idea.difficulty!)
-                    .withValues(alpha: 0.3),
+                  fontSize: 12,
+                ),
               ),
-            ),
-            child: Text(
-              idea.difficultyText,
-              style: TextStyle(
-                color: _getDifficultyColor(idea.difficulty!),
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            ],
           ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.more_vert),
+          onPressed: () => _showIdeaMenu(context),
+        ),
       ],
     );
   }
 
-  Widget _buildMediaContent(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: CachedNetworkImage(
-        imageUrl: idea.mediaUrl!,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: 150,
-        placeholder: (context, url) => Container(
-          height: 150,
-          color: Colors.grey[200],
-          child: const Center(child: CircularProgressIndicator()),
-        ),
-        errorWidget: (context, url, error) => Container(
-          height: 150,
-          color: Colors.grey[200],
-          child: const Center(child: Icon(Icons.error, color: Colors.grey)),
-        ),
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+    
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
+    } else {
+      return 'только что';
+    }
+  }
+
+  void _showIdeaMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.report),
+            title: const Text('Пожаловаться'),
+            onTap: () => Navigator.pop(context),
+          ),
+          ListTile(
+            leading: const Icon(Icons.block),
+            title: const Text('Заблокировать'),
+            onTap: () => Navigator.pop(context),
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildTags() {
+/// Медиа контент идеи
+class _IdeaMedia extends StatelessWidget {
+  final List<String> media;
+
+  const _IdeaMedia({required this.media});
+
+  @override
+  Widget build(BuildContext context) {
+    if (media.length == 1) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          media.first,
+          width: double.infinity,
+          height: 200,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              height: 200,
+              color: Colors.grey[300],
+              child: const Center(
+                child: Icon(Icons.broken_image, size: 64),
+              ),
+            );
+          },
+        ),
+      );
+    } else if (media.length > 1) {
+      return SizedBox(
+        height: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: media.length,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 200,
+              margin: const EdgeInsets.only(right: 8),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  media[index],
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: const Center(
+                        child: Icon(Icons.broken_image),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+    
+    return const SizedBox.shrink();
+  }
+}
+
+/// Теги идеи
+class _IdeaTags extends StatelessWidget {
+  final List<String> tags;
+
+  const _IdeaTags({required this.tags});
+
+  @override
+  Widget build(BuildContext context) {
     return Wrap(
       spacing: 8,
       runSpacing: 4,
-      children: idea.tags.map((tag) {
+      children: tags.map((tag) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.orange[50],
+            color: Theme.of(context).primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.orange[200]!),
           ),
           child: Text(
             '#$tag',
             style: TextStyle(
-                color: Colors.orange[700],
-                fontSize: 12,
-                fontWeight: FontWeight.w500),
+              color: Theme.of(context).primaryColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         );
       }).toList(),
     );
   }
+}
 
-  Widget _buildMetaInfo() {
+/// Действия с идеей
+class _IdeaActions extends StatelessWidget {
+  final Idea idea;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onSave;
+  final VoidCallback? onShare;
+
+  const _IdeaActions({
+    required this.idea,
+    this.onLike,
+    this.onComment,
+    this.onSave,
+    this.onShare,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
-        // Duration
-        if (idea.estimatedDuration != null) ...[
-          Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
-          const SizedBox(width: 4),
-          Text(idea.formattedDuration,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-          const SizedBox(width: 16),
-        ],
-        // Author
-        if (idea.authorName != null) ...[
-          Icon(Icons.person, size: 16, color: Colors.grey[600]),
-          const SizedBox(width: 4),
-          Text(idea.authorName!,
-              style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-          const SizedBox(width: 16),
-        ],
-        // Time ago
-        Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
-        const SizedBox(width: 4),
-        Text(idea.timeAgo,
-            style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-      ],
-    );
-  }
-
-  Widget _buildActions(BuildContext context) {
-    return Row(
-      children: [
-        _buildActionButton(
-          icon: idea.likesCount > 0 ? Icons.favorite : Icons.favorite_border,
-          color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
-          label: idea.likesCount > 0 ? '${idea.likesCount}' : 'Лайк',
-          onTap: onLike,
+        IconButton(
+          icon: Icon(
+            idea.isLiked ? Icons.favorite : Icons.favorite_border,
+            color: idea.isLiked ? Colors.red : null,
+          ),
+          onPressed: onLike,
         ),
-        const SizedBox(width: 24),
-        _buildActionButton(
-          icon: Icons.visibility,
-          color: Colors.grey[600],
-          label: idea.viewsCount > 0 ? '${idea.viewsCount}' : 'Просмотр',
+        IconButton(
+          icon: const Icon(Icons.comment_outlined),
+          onPressed: onComment,
         ),
-        const SizedBox(width: 24),
-        _buildActionButton(
-          icon: Icons.share_outlined,
-          color: Colors.grey[600],
-          label: 'Поделиться',
-          onTap: onShare,
+        IconButton(
+          icon: const Icon(Icons.share),
+          onPressed: onShare,
+        ),
+        const Spacer(),
+        IconButton(
+          icon: Icon(
+            idea.isSaved ? Icons.bookmark : Icons.bookmark_border,
+            color: idea.isSaved ? Colors.blue : null,
+          ),
+          onPressed: onSave,
         ),
       ],
     );
   }
+}
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required Color? color,
-    required String label,
-    VoidCallback? onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 20),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                  color: color, fontSize: 12, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+/// Статистика идеи
+class _IdeaStats extends StatelessWidget {
+  final Idea idea;
 
-  Widget _buildStats() {
+  const _IdeaStats({required this.idea});
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         if (idea.likesCount > 0) ...[
           Text(
             '${idea.likesCount} ${_getLikesText(idea.likesCount)}',
-            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(width: 16),
         ],
-        if (idea.viewsCount > 0) ...[
+        if (idea.commentsCount > 0) ...[
           Text(
-            '${idea.viewsCount} ${_getViewsText(idea.viewsCount)}',
-            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            '${idea.commentsCount} ${_getCommentsText(idea.commentsCount)}',
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+          const SizedBox(width: 16),
+        ],
+        if (idea.sharesCount > 0) ...[
+          Text(
+            '${idea.sharesCount} ${_getSharesText(idea.sharesCount)}',
+            style: TextStyle(color: Colors.grey[600]),
           ),
         ],
       ],
     );
-  }
-
-  Color _getDifficultyColor(String difficulty) {
-    switch (difficulty) {
-      case 'easy':
-        return Colors.green;
-      case 'medium':
-        return Colors.orange;
-      case 'hard':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
   }
 
   String _getLikesText(int count) {
@@ -296,9 +347,15 @@ class IdeaCard extends StatelessWidget {
     return 'лайков';
   }
 
-  String _getViewsText(int count) {
-    if (count == 1) return 'просмотр';
-    if (count >= 2 && count <= 4) return 'просмотра';
-    return 'просмотров';
+  String _getCommentsText(int count) {
+    if (count == 1) return 'комментарий';
+    if (count >= 2 && count <= 4) return 'комментария';
+    return 'комментариев';
+  }
+
+  String _getSharesText(int count) {
+    if (count == 1) return 'репост';
+    if (count >= 2 && count <= 4) return 'репоста';
+    return 'репостов';
   }
 }

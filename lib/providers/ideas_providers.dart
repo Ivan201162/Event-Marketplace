@@ -1,89 +1,127 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/idea.dart';
-import '../services/idea_service.dart';
+import '../services/ideas_service.dart';
 
-/// Idea service provider
-final ideaServiceProvider = Provider<IdeaService>((ref) {
-  return IdeaService();
+/// Провайдер сервиса идей
+final ideasServiceProvider = Provider<IdeasService>((ref) {
+  return IdeasService();
 });
 
-/// All ideas provider
-final ideasProvider = FutureProvider<List<Idea>>((ref) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getIdeas();
+/// Провайдер состояния идей
+final ideasProvider = StateNotifierProvider<IdeasNotifier, AsyncValue<List<Idea>>>((ref) {
+  return IdeasNotifier(ref.read(ideasServiceProvider));
 });
 
-/// Popular ideas provider
-final popularIdeasProvider = FutureProvider<List<Idea>>((ref) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getPopularIdeas();
-});
+/// Notifier для управления состоянием идей
+class IdeasNotifier extends StateNotifier<AsyncValue<List<Idea>>> {
+  final IdeasService _ideasService;
 
-/// Trending ideas provider
-final trendingIdeasProvider = FutureProvider<List<Idea>>((ref) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getTrendingIdeas();
-});
+  IdeasNotifier(this._ideasService) : super(const AsyncValue.loading()) {
+    _loadInitialIdeas();
+  }
 
-/// Ideas by category provider
-final ideasByCategoryProvider =
-    FutureProvider.family<List<Idea>, String>((ref, category) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getIdeasByCategory(category);
-});
+  Future<void> _loadInitialIdeas() async {
+    try {
+      state = const AsyncValue.loading();
+      final ideas = await _ideasService.getIdeas();
+      state = AsyncValue.data(ideas);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Ideas by tags provider
-final ideasByTagsProvider =
-    FutureProvider.family<List<Idea>, List<String>>((ref, tags) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getIdeasByTags(tags);
-});
+  Future<void> refreshIdeas() async {
+    await _loadInitialIdeas();
+  }
 
-/// Ideas by difficulty provider
-final ideasByDifficultyProvider = FutureProvider.family<List<Idea>, String>((
-  ref,
-  difficulty,
-) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getIdeasByDifficulty(difficulty);
-});
+  Future<void> loadMoreIdeas() async {
+    if (state.hasValue) {
+      try {
+        final currentIdeas = state.value!;
+        final newIdeas = await _ideasService.getMoreIdeas(currentIdeas.length);
+        state = AsyncValue.data([...currentIdeas, ...newIdeas]);
+      } catch (error, stackTrace) {
+        state = AsyncValue.error(error, stackTrace);
+      }
+    }
+  }
 
-/// Idea by ID provider
-final ideaByIdProvider =
-    FutureProvider.family<Idea?, String>((ref, ideaId) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getIdeaById(ideaId);
-});
+  Future<void> searchIdeas(String query) async {
+    try {
+      state = const AsyncValue.loading();
+      final ideas = await _ideasService.searchIdeas(query);
+      state = AsyncValue.data(ideas);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Stream of ideas provider
-final ideasStreamProvider = StreamProvider<List<Idea>>((ref) {
-  final service = ref.read(ideaServiceProvider);
-  return service.getIdeasStream();
-});
+  Future<void> filterIdeas(String filter) async {
+    try {
+      state = const AsyncValue.loading();
+      final ideas = await _ideasService.filterIdeas(filter);
+      state = AsyncValue.data(ideas);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Stream of ideas by category provider
-final ideasByCategoryStreamProvider =
-    StreamProvider.family<List<Idea>, String>((ref, category) {
-  final service = ref.read(ideaServiceProvider);
-  return service.getIdeasByCategoryStream(category);
-});
+  Future<void> createIdea(Idea idea) async {
+    try {
+      await _ideasService.createIdea(idea);
+      await refreshIdeas();
+    } catch (error) {
+      // Обработка ошибки создания идеи
+      rethrow;
+    }
+  }
 
-/// Search ideas provider
-final searchIdeasProvider =
-    FutureProvider.family<List<Idea>, String>((ref, query) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.searchIdeas(query);
-});
+  Future<void> likeIdea(String ideaId) async {
+    try {
+      await _ideasService.likeIdea(ideaId);
+      // Обновить состояние идеи
+      if (state.hasValue) {
+        final ideas = state.value!;
+        final updatedIdeas = ideas.map((idea) {
+          if (idea.id == ideaId) {
+            return idea.copyWith(
+              likesCount: idea.likesCount + 1,
+              isLiked: true,
+            );
+          }
+          return idea;
+        }).toList();
+        state = AsyncValue.data(updatedIdeas);
+      }
+    } catch (error) {
+      // Обработка ошибки лайка
+    }
+  }
 
-/// Available categories provider
-final ideaCategoriesProvider = FutureProvider<List<String>>((ref) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getCategories();
-});
+  Future<void> saveIdea(String ideaId) async {
+    try {
+      await _ideasService.saveIdea(ideaId);
+    } catch (error) {
+      // Обработка ошибки сохранения
+    }
+  }
 
-/// Available tags provider
-final ideaTagsProvider = FutureProvider<List<String>>((ref) async {
-  final service = ref.read(ideaServiceProvider);
-  return await service.getTags();
-});
+  Future<void> shareIdea(String ideaId) async {
+    try {
+      await _ideasService.shareIdea(ideaId);
+    } catch (error) {
+      // Обработка ошибки шаринга
+    }
+  }
+
+  Future<void> deleteIdea(String ideaId) async {
+    try {
+      await _ideasService.deleteIdea(ideaId);
+      await refreshIdeas();
+    } catch (error) {
+      // Обработка ошибки удаления идеи
+      rethrow;
+    }
+  }
+}
