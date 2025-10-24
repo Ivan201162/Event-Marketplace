@@ -1,68 +1,114 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/post.dart';
-import '../services/post_service.dart';
+import '../models/story.dart';
+import '../services/feed_service.dart';
 
-/// Post service provider
-final postServiceProvider = Provider<PostService>((ref) {
-  return PostService();
+/// Провайдер сервиса ленты
+final feedServiceProvider = Provider<FeedService>((ref) {
+  return FeedService();
 });
 
-/// All posts provider
-final postsProvider = FutureProvider<List<Post>>((ref) async {
-  final service = ref.read(postServiceProvider);
-  return await service.getPosts();
+/// Провайдер состояния ленты
+final feedProvider = StateNotifierProvider<FeedNotifier, AsyncValue<List<Post>>>((ref) {
+  return FeedNotifier(ref.read(feedServiceProvider));
 });
 
-/// Popular posts provider
-final popularPostsProvider = FutureProvider<List<Post>>((ref) async {
-  final service = ref.read(postServiceProvider);
-  return await service.getPopularPosts();
+/// Провайдер Stories
+final storiesProvider = FutureProvider<List<Story>>((ref) async {
+  final feedService = ref.read(feedServiceProvider);
+  return await feedService.getStories();
 });
 
-/// Trending posts provider
-final trendingPostsProvider = FutureProvider<List<Post>>((ref) async {
-  final service = ref.read(postServiceProvider);
-  return await service.getTrendingPosts();
-});
+/// Notifier для управления состоянием ленты
+class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
+  final FeedService _feedService;
 
-/// Posts by user provider
-final postsByUserProvider =
-    FutureProvider.family<List<Post>, String>((ref, userId) async {
-  final service = ref.read(postServiceProvider);
-  return await service.getPostsByUser(userId);
-});
+  FeedNotifier(this._feedService) : super(const AsyncValue.loading()) {
+    _loadInitialPosts();
+  }
 
-/// Posts by tags provider
-final postsByTagsProvider =
-    FutureProvider.family<List<Post>, List<String>>((ref, tags) async {
-  final service = ref.read(postServiceProvider);
-  return await service.getPostsByTags(tags);
-});
+  Future<void> _loadInitialPosts() async {
+    try {
+      state = const AsyncValue.loading();
+      final posts = await _feedService.getPosts();
+      state = AsyncValue.data(posts);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Post by ID provider
-final postByIdProvider =
-    FutureProvider.family<Post?, String>((ref, postId) async {
-  final service = ref.read(postServiceProvider);
-  return await service.getPostById(postId);
-});
+  Future<void> refreshFeed() async {
+    await _loadInitialPosts();
+  }
 
-/// Stream of posts provider
-final postsStreamProvider = StreamProvider<List<Post>>((ref) {
-  final service = ref.read(postServiceProvider);
-  return service.getPostsStream();
-});
+  Future<void> loadMorePosts() async {
+    if (state.hasValue) {
+      try {
+        final currentPosts = state.value!;
+        final newPosts = await _feedService.getMorePosts(currentPosts.length);
+        state = AsyncValue.data([...currentPosts, ...newPosts]);
+      } catch (error, stackTrace) {
+        state = AsyncValue.error(error, stackTrace);
+      }
+    }
+  }
 
-/// Stream of posts by user provider
-final postsByUserStreamProvider =
-    StreamProvider.family<List<Post>, String>((ref, userId) {
-  final service = ref.read(postServiceProvider);
-  return service.getPostsByUserStream(userId);
-});
+  Future<void> searchPosts(String query) async {
+    try {
+      state = const AsyncValue.loading();
+      final posts = await _feedService.searchPosts(query);
+      state = AsyncValue.data(posts);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Search posts provider
-final searchPostsProvider =
-    FutureProvider.family<List<Post>, String>((ref, query) async {
-  final service = ref.read(postServiceProvider);
-  return await service.searchPosts(query);
-});
+  Future<void> filterPosts(String filter) async {
+    try {
+      state = const AsyncValue.loading();
+      final posts = await _feedService.filterPosts(filter);
+      state = AsyncValue.data(posts);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  Future<void> likePost(String postId) async {
+    try {
+      await _feedService.likePost(postId);
+      // Обновить состояние поста
+      if (state.hasValue) {
+        final posts = state.value!;
+        final updatedPosts = posts.map((post) {
+          if (post.id == postId) {
+            return post.copyWith(
+              likesCount: post.likesCount + 1,
+              isLiked: true,
+            );
+          }
+          return post;
+        }).toList();
+        state = AsyncValue.data(updatedPosts);
+      }
+    } catch (error) {
+      // Обработка ошибки лайка
+    }
+  }
+
+  Future<void> sharePost(String postId) async {
+    try {
+      await _feedService.sharePost(postId);
+    } catch (error) {
+      // Обработка ошибки шаринга
+    }
+  }
+
+  Future<void> savePost(String postId) async {
+    try {
+      await _feedService.savePost(postId);
+    } catch (error) {
+      // Обработка ошибки сохранения
+    }
+  }
+}

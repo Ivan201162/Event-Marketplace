@@ -1,128 +1,155 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/feed_comment.dart';
 import '../models/post.dart';
+import '../models/story.dart';
 
-/// Feed service for managing posts and comments
+/// Сервис для работы с лентой
 class FeedService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Get posts stream
-  Stream<List<Post>> getPostsStream() {
-    return _firestore
-        .collection('posts')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
+  /// Получить посты для ленты
+  Future<List<Post>> getPosts() async {
+    try {
+      final snapshot = await _firestore
+          .collection('posts')
+          .orderBy('createdAt', descending: true)
+          .limit(20)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Post.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка загрузки постов: $e');
+    }
   }
 
-  /// Get post comments stream
-  Stream<List<FeedComment>> getPostComments(String postId) {
-    return _firestore
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .orderBy('createdAt', descending: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => FeedComment.fromFirestore(doc))
-            .toList());
+  /// Загрузить больше постов
+  Future<List<Post>> getMorePosts(int offset) async {
+    try {
+      final snapshot = await _firestore
+          .collection('posts')
+          .orderBy('createdAt', descending: true)
+          .startAfter([offset])
+          .limit(10)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Post.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка загрузки дополнительных постов: $e');
+    }
   }
 
-  /// Create a new post
-  Future<String> createPost(Post post) async {
-    final docRef = await _firestore.collection('posts').add(post.toFirestore());
-    return docRef.id;
+  /// Получить Stories
+  Future<List<Story>> getStories() async {
+    try {
+      final snapshot = await _firestore
+          .collection('stories')
+          .where('expiresAt', isGreaterThan: DateTime.now())
+          .orderBy('expiresAt')
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Story.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка загрузки Stories: $e');
+    }
   }
 
-  /// Update a post
-  Future<void> updatePost(String postId, Post post) async {
-    await _firestore.collection('posts').doc(postId).update(post.toFirestore());
+  /// Поиск постов
+  Future<List<Post>> searchPosts(String query) async {
+    try {
+      final snapshot = await _firestore
+          .collection('posts')
+          .where('text', isGreaterThanOrEqualTo: query)
+          .where('text', isLessThan: query + '\uf8ff')
+          .orderBy('text')
+          .orderBy('createdAt', descending: true)
+          .limit(20)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Post.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка поиска постов: $e');
+    }
   }
 
-  /// Delete a post
-  Future<void> deletePost(String postId) async {
-    await _firestore.collection('posts').doc(postId).delete();
-  }
+  /// Фильтрация постов
+  Future<List<Post>> filterPosts(String filter) async {
+    try {
+      Query query = _firestore.collection('posts');
 
-  /// Like/unlike a post
-  Future<void> toggleLike(String postId, String userId) async {
-    final postRef = _firestore.collection('posts').doc(postId);
-
-    await _firestore.runTransaction((transaction) async {
-      final postDoc = await transaction.get(postRef);
-      if (!postDoc.exists) return;
-
-      final post = Post.fromFirestore(postDoc);
-      final likedBy = List<String>.from(post.likedBy);
-
-      if (likedBy.contains(userId)) {
-        likedBy.remove(userId);
-      } else {
-        likedBy.add(userId);
+      switch (filter) {
+        case 'popular':
+          query = query.orderBy('likesCount', descending: true);
+          break;
+        case 'recent':
+          query = query.orderBy('createdAt', descending: true);
+          break;
+        default:
+          query = query.orderBy('createdAt', descending: true);
       }
 
-      transaction
-          .update(postRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
-    });
+      final snapshot = await query.limit(20).get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return Post.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка фильтрации постов: $e');
+    }
   }
 
-  /// Add a comment to a post
-  Future<String> addComment(String postId, FeedComment comment) async {
-    final docRef = await _firestore
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .add(comment.toFirestore());
-
-    // Update post comments count
-    await _firestore.collection('posts').doc(postId).update({
-      'commentsCount': FieldValue.increment(1),
-    });
-
-    return docRef.id;
+  /// Лайк поста
+  Future<void> likePost(String postId) async {
+    try {
+      await _firestore.collection('posts').doc(postId).update({
+        'likesCount': FieldValue.increment(1),
+        'lastUpdated': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка лайка поста: $e');
+    }
   }
 
-  /// Like/unlike a comment
-  Future<void> toggleCommentLike(
-      String postId, String commentId, String userId) async {
-    final commentRef = _firestore
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .doc(commentId);
-
-    await _firestore.runTransaction((transaction) async {
-      final commentDoc = await transaction.get(commentRef);
-      if (!commentDoc.exists) return;
-
-      final comment = FeedComment.fromFirestore(commentDoc);
-      final likedBy = List<String>.from(comment.likedBy);
-
-      if (likedBy.contains(userId)) {
-        likedBy.remove(userId);
-      } else {
-        likedBy.add(userId);
-      }
-
-      transaction.update(
-          commentRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
-    });
+  /// Поделиться постом
+  Future<void> sharePost(String postId) async {
+    try {
+      await _firestore.collection('posts').doc(postId).update({
+        'sharesCount': FieldValue.increment(1),
+        'lastUpdated': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка шаринга поста: $e');
+    }
   }
 
-  /// Delete a comment
-  Future<void> deleteComment(String postId, String commentId) async {
-    await _firestore
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .doc(commentId)
-        .delete();
-
-    // Update post comments count
-    await _firestore.collection('posts').doc(postId).update({
-      'commentsCount': FieldValue.increment(-1),
-    });
+  /// Сохранить пост
+  Future<void> savePost(String postId) async {
+    try {
+      // Добавить в коллекцию сохранённых постов пользователя
+      await _firestore
+          .collection('users')
+          .doc('current_user_id') // TODO: Получить ID текущего пользователя
+          .collection('saved_posts')
+          .doc(postId)
+          .set({
+        'postId': postId,
+        'savedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка сохранения поста: $e');
+    }
   }
 }

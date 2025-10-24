@@ -1,247 +1,119 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/post.dart';
 
 /// Карточка поста в ленте
-class FeedPostCard extends StatefulWidget {
+class FeedPostCard extends StatelessWidget {
+  final Post post;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onShare;
+  final VoidCallback? onSave;
+
   const FeedPostCard({
     super.key,
     required this.post,
-    required this.onLike,
-    required this.onComment,
-    required this.onShare,
-    required this.onSave,
+    this.onLike,
+    this.onComment,
+    this.onShare,
+    this.onSave,
   });
 
-  final Post post;
-  final VoidCallback onLike;
-  final VoidCallback onComment;
-  final VoidCallback onShare;
-  final VoidCallback onSave;
-
   @override
-  State<FeedPostCard> createState() => _FeedPostCardState();
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок поста с аватаром автора
+          _PostHeader(post: post),
+          
+          // Текст поста
+          if (post.text.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                post.text,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          
+          // Медиа контент
+          if (post.media.isNotEmpty) _PostMedia(media: post.media),
+          
+          // Действия
+          _PostActions(
+            post: post,
+            onLike: onLike,
+            onComment: onComment,
+            onShare: onShare,
+            onSave: onSave,
+          ),
+          
+          // Статистика
+          _PostStats(post: post),
+        ],
+      ),
+    );
+  }
 }
 
-class _FeedPostCardState extends State<FeedPostCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-  bool _isLiked = false;
-  bool _isSaved = false;
+/// Заголовок поста с аватаром и именем автора
+class _PostHeader extends StatelessWidget {
+  final Post post;
+
+  const _PostHeader({required this.post});
 
   @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(
-      begin: 1,
-      end: 1.2,
-    ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок поста
-            _buildPostHeader(),
-
-            // Контент поста
-            _buildPostContent(),
-
-            // Действия с постом
-            _buildPostActions(),
-
-            // Информация о лайках и комментариях
-            _buildPostInfo(),
-          ],
-        ),
-      );
-
-  Widget _buildPostHeader() => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              radius: 20,
-              backgroundImage: CachedNetworkImageProvider(
-                'https://placehold.co/100x100/4CAF50/white?text=SP',
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Специалист',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-                  Text(
-                    _formatTime(widget.post.createdAt),
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-                icon: const Icon(Icons.more_vert), onPressed: _showPostOptions),
-          ],
-        ),
-      );
-
-  Widget _buildPostContent() {
-    if (widget.post.mediaUrls.isNotEmpty) {
-      return Column(
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
         children: [
-          if (widget.post.text != null && widget.post.text!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child:
-                  Text(widget.post.text!, style: const TextStyle(fontSize: 14)),
+          CircleAvatar(
+            backgroundImage: post.authorAvatar != null
+                ? NetworkImage(post.authorAvatar!)
+                : null,
+            child: post.authorAvatar == null
+                ? const Icon(Icons.person)
+                : null,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  post.authorName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  _formatDate(post.createdAt),
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
-          const SizedBox(height: 8),
-          _buildMediaContent(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => _showPostMenu(context),
+          ),
         ],
-      );
-    } else if (widget.post.text != null && widget.post.text!.isNotEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(widget.post.text!, style: const TextStyle(fontSize: 14)),
-      );
-    }
-    return const SizedBox.shrink();
+      ),
+    );
   }
 
-  Widget _buildMediaContent() {
-    if (widget.post.mediaUrls.length == 1) {
-      return _buildSingleMedia(widget.post.mediaUrls.first);
-    } else if (widget.post.mediaUrls.length > 1) {
-      return _buildMultipleMedia();
-    }
-    return const SizedBox.shrink();
-  }
-
-  Widget _buildSingleMedia(String mediaUrl) => SizedBox(
-        height: 300,
-        width: double.infinity,
-        child: CachedNetworkImage(
-          imageUrl: mediaUrl,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Container(
-            color: Colors.grey[300],
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-          errorWidget: (context, url, error) => Container(
-              color: Colors.grey[300], child: const Icon(Icons.error)),
-        ),
-      );
-
-  Widget _buildMultipleMedia() => SizedBox(
-        height: 200,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: widget.post.mediaUrls.length,
-          itemBuilder: (context, index) => Container(
-            width: 200,
-            margin: const EdgeInsets.only(right: 8),
-            child: CachedNetworkImage(
-              imageUrl: widget.post.mediaUrls[index],
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                color: Colors.grey[300],
-                child: const Center(child: CircularProgressIndicator()),
-              ),
-              errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[300], child: const Icon(Icons.error)),
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildPostActions() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            _buildActionButton(
-              icon: _isLiked ? Icons.favorite : Icons.favorite_border,
-              color: _isLiked ? Colors.red : Colors.grey,
-              onTap: _toggleLike,
-            ),
-            const SizedBox(width: 16),
-            _buildActionButton(
-                icon: Icons.chat_bubble_outline, onTap: widget.onComment),
-            const SizedBox(width: 16),
-            _buildActionButton(icon: Icons.share, onTap: widget.onShare),
-            const Spacer(),
-            _buildActionButton(
-              icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
-              color: _isSaved ? Colors.blue : Colors.grey,
-              onTap: _toggleSave,
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildActionButton(
-          {required IconData icon,
-          Color? color,
-          required VoidCallback onTap}) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
-      );
-
-  Widget _buildPostInfo() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.post.likesCount > 0)
-              Text(
-                '${widget.post.likesCount} лайков',
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-              ),
-            if (widget.post.commentsCount > 0) ...[
-              const SizedBox(height: 4),
-              Text(
-                '${widget.post.commentsCount} комментариев',
-                style: TextStyle(color: Colors.grey[600], fontSize: 14),
-              ),
-            ],
-          ],
-        ),
-      );
-
-  String _formatTime(DateTime time) {
+  String _formatDate(DateTime date) {
     final now = DateTime.now();
-    final difference = now.difference(time);
-
+    final difference = now.difference(date);
+    
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {
@@ -249,58 +121,176 @@ class _FeedPostCardState extends State<FeedPostCard>
     } else if (difference.inMinutes > 0) {
       return '${difference.inMinutes}м назад';
     } else {
-      return 'сейчас';
+      return 'только что';
     }
   }
 
-  void _toggleLike() {
-    setState(() => _isLiked = !_isLiked);
-    _animationController.forward().then((_) {
-      _animationController.reverse();
-    });
-    widget.onLike();
-  }
-
-  void _toggleSave() {
-    setState(() => _isSaved = !_isSaved);
-    widget.onSave();
-  }
-
-  void _showPostOptions() {
+  void _showPostMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.share),
-              title: const Text('Поделиться'),
-              onTap: () {
-                Navigator.pop(context);
-                widget.onShare();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.bookmark),
-              title: const Text('Сохранить'),
-              onTap: () {
-                Navigator.pop(context);
-                widget.onSave();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.report),
-              title: const Text('Пожаловаться'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Реализовать жалобу
-              },
-            ),
-          ],
-        ),
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.report),
+            title: const Text('Пожаловаться'),
+            onTap: () => Navigator.pop(context),
+          ),
+          ListTile(
+            leading: const Icon(Icons.block),
+            title: const Text('Заблокировать'),
+            onTap: () => Navigator.pop(context),
+          ),
+        ],
       ),
     );
+  }
+}
+
+/// Медиа контент поста
+class _PostMedia extends StatelessWidget {
+  final List<String> media;
+
+  const _PostMedia({required this.media});
+
+  @override
+  Widget build(BuildContext context) {
+    if (media.length == 1) {
+      return Image.network(
+        media.first,
+        width: double.infinity,
+        height: 200,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            height: 200,
+            color: Colors.grey[300],
+            child: const Center(
+              child: Icon(Icons.broken_image, size: 64),
+            ),
+          );
+        },
+      );
+    } else if (media.length > 1) {
+      return SizedBox(
+        height: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: media.length,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 200,
+              margin: const EdgeInsets.only(right: 4),
+              child: Image.network(
+                media[index],
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(Icons.broken_image),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+      );
+    }
+    
+    return const SizedBox.shrink();
+  }
+}
+
+/// Действия с постом
+class _PostActions extends StatelessWidget {
+  final Post post;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onShare;
+  final VoidCallback? onSave;
+
+  const _PostActions({
+    required this.post,
+    this.onLike,
+    this.onComment,
+    this.onShare,
+    this.onSave,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              post.isLiked ? Icons.favorite : Icons.favorite_border,
+              color: post.isLiked ? Colors.red : null,
+            ),
+            onPressed: onLike,
+          ),
+          IconButton(
+            icon: const Icon(Icons.comment_outlined),
+            onPressed: onComment,
+          ),
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: onShare,
+          ),
+          const Spacer(),
+          IconButton(
+            icon: Icon(
+              post.isSaved ? Icons.bookmark : Icons.bookmark_border,
+              color: post.isSaved ? Colors.blue : null,
+            ),
+            onPressed: onSave,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Статистика поста
+class _PostStats extends StatelessWidget {
+  final Post post;
+
+  const _PostStats({required this.post});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (post.likesCount > 0)
+            Text(
+              '${post.likesCount} ${_getLikesText(post.likesCount)}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          if (post.commentsCount > 0)
+            Text(
+              '${post.commentsCount} ${_getCommentsText(post.commentsCount)}',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+        ],
+      ),
+    );
+  }
+
+  String _getLikesText(int count) {
+    if (count == 1) return 'лайк';
+    if (count >= 2 && count <= 4) return 'лайка';
+    return 'лайков';
+  }
+
+  String _getCommentsText(int count) {
+    if (count == 1) return 'комментарий';
+    if (count >= 2 && count <= 4) return 'комментария';
+    return 'комментариев';
   }
 }
