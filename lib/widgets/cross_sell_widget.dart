@@ -523,18 +523,18 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
 }
 
 /// Диалог для отклонения предложения
-class _RejectSuggestionDialog extends StatefulWidget {
+class _RejectSuggestionDialog extends ConsumerStatefulWidget {
   const _RejectSuggestionDialog(
       {required this.suggestion, required this.onRejected});
   final CrossSellSuggestion suggestion;
   final VoidCallback onRejected;
 
   @override
-  State<_RejectSuggestionDialog> createState() =>
+  ConsumerState<_RejectSuggestionDialog> createState() =>
       _RejectSuggestionDialogState();
 }
 
-class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
+class _RejectSuggestionDialogState extends ConsumerState<_RejectSuggestionDialog> {
   final _reasonController = TextEditingController();
   bool _isLoading = false;
 

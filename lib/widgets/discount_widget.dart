@@ -266,17 +266,17 @@ class DiscountWidget extends ConsumerWidget {
 }
 
 /// Диалог для отклонения скидки
-class _RejectDiscountDialog extends StatefulWidget {
+class _RejectDiscountDialog extends ConsumerStatefulWidget {
   const _RejectDiscountDialog(
       {required this.bookingId, required this.onRejected});
   final String bookingId;
   final VoidCallback onRejected;
 
   @override
-  State<_RejectDiscountDialog> createState() => _RejectDiscountDialogState();
+  ConsumerState<_RejectDiscountDialog> createState() => _RejectDiscountDialogState();
 }
 
-class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
+class _RejectDiscountDialogState extends ConsumerState<_RejectDiscountDialog> {
   final _reasonController = TextEditingController();
   bool _isLoading = false;
 
@@ -407,7 +407,7 @@ class OfferDiscountWidget extends ConsumerWidget {
 }
 
 /// Диалог для предложения скидки
-class _OfferDiscountDialog extends StatefulWidget {
+class _OfferDiscountDialog extends ConsumerStatefulWidget {
   const _OfferDiscountDialog({
     required this.bookingId,
     required this.currentPrice,
@@ -418,10 +418,10 @@ class _OfferDiscountDialog extends StatefulWidget {
   final VoidCallback onOffered;
 
   @override
-  State<_OfferDiscountDialog> createState() => _OfferDiscountDialogState();
+  ConsumerState<_OfferDiscountDialog> createState() => _OfferDiscountDialogState();
 }
 
-class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
+class _OfferDiscountDialogState extends ConsumerState<_OfferDiscountDialog> {
   final _formKey = GlobalKey<FormState>();
   final _newPriceController = TextEditingController();
   final _reasonController = TextEditingController();

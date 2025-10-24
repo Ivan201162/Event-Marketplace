@@ -44,7 +44,7 @@ class FeedPostWidget extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          post.specialistName,
+                          post.specialistName ?? 'Пользователь',
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),

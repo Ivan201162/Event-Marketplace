@@ -176,8 +176,8 @@ class IdeaCollectionListTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (collection.description.isNotEmpty) ...[
-              Text(collection.description,
+            if (collection.description?.isNotEmpty == true) ...[
+              Text(collection.description!,
                   maxLines: 2, overflow: TextOverflow.ellipsis),
               const SizedBox(height: 4),
             ],

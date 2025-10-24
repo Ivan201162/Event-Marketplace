@@ -9,6 +9,8 @@ enum MessageType {
   location,
   sticker,
   gif,
+  document,
+  attachment,
 }
 
 class Message {
@@ -23,6 +25,12 @@ class Message {
   final List<String> reactions;
   final String? fileUrl;
   final GeoPoint? location;
+  final String? senderName;
+  final String? mediaUrl;
+  final String? fileName;
+  final int? fileSize;
+  final String? formattedFileSize;
+  final DateTime createdAt;
 
   Message({
     required this.id,
@@ -36,6 +44,12 @@ class Message {
     this.reactions = const [],
     this.fileUrl,
     this.location,
+    this.senderName,
+    this.mediaUrl,
+    this.fileName,
+    this.fileSize,
+    this.formattedFileSize,
+    required this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
