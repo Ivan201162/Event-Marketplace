@@ -1,111 +1,99 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/request.dart';
-import '../services/request_service.dart';
+import '../services/requests_service.dart';
 
-/// Request service provider
-final requestServiceProvider = Provider<RequestService>((ref) {
-  return RequestService();
+/// Провайдер сервиса заявок
+final requestsServiceProvider = Provider<RequestsService>((ref) {
+  return RequestsService();
 });
 
-/// Sent requests provider
-final sentRequestsProvider =
-    FutureProvider.family<List<Request>, String>((ref, userId) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getSentRequests(userId);
+/// Провайдер состояния заявок
+final requestsProvider = StateNotifierProvider<RequestsNotifier, AsyncValue<List<Request>>>((ref) {
+  return RequestsNotifier(ref.read(requestsServiceProvider));
 });
 
-/// Received requests provider
-final receivedRequestsProvider =
-    FutureProvider.family<List<Request>, String>((ref, userId) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getReceivedRequests(userId);
-});
+/// Notifier для управления состоянием заявок
+class RequestsNotifier extends StateNotifier<AsyncValue<List<Request>>> {
+  final RequestsService _requestsService;
 
-/// Requests by status provider
-final requestsByStatusProvider = FutureProvider.family<List<Request>,
-    ({String userId, RequestStatus status})>((
-  ref,
-  params,
-) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getRequestsByStatus(params.userId, params.status);
-});
+  RequestsNotifier(this._requestsService) : super(const AsyncValue.loading()) {
+    _loadInitialRequests();
+  }
 
-/// Requests by category provider
-final requestsByCategoryProvider =
-    FutureProvider.family<List<Request>, String>((
-  ref,
-  category,
-) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getRequestsByCategory(category);
-});
+  Future<void> _loadInitialRequests() async {
+    try {
+      state = const AsyncValue.loading();
+      final requests = await _requestsService.getRequests();
+      state = AsyncValue.data(requests);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Requests by city provider
-final requestsByCityProvider =
-    FutureProvider.family<List<Request>, String>((ref, city) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getRequestsByCity(city);
-});
+  Future<void> refreshRequests() async {
+    await _loadInitialRequests();
+  }
 
-/// Request by ID provider
-final requestByIdProvider =
-    FutureProvider.family<Request?, String>((ref, requestId) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getRequestById(requestId);
-});
+  Future<void> loadMoreRequests() async {
+    if (state.hasValue) {
+      try {
+        final currentRequests = state.value!;
+        final newRequests = await _requestsService.getMoreRequests(currentRequests.length);
+        state = AsyncValue.data([...currentRequests, ...newRequests]);
+      } catch (error, stackTrace) {
+        state = AsyncValue.error(error, stackTrace);
+      }
+    }
+  }
 
-/// Stream of sent requests provider
-final sentRequestsStreamProvider =
-    StreamProvider.family<List<Request>, String>((ref, userId) {
-  final service = ref.read(requestServiceProvider);
-  return service.getSentRequestsStream(userId);
-});
+  Future<void> searchRequests(String query) async {
+    try {
+      state = const AsyncValue.loading();
+      final requests = await _requestsService.searchRequests(query);
+      state = AsyncValue.data(requests);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Stream of received requests provider
-final receivedRequestsStreamProvider =
-    StreamProvider.family<List<Request>, String>((ref, userId) {
-  final service = ref.read(requestServiceProvider);
-  return service.getReceivedRequestsStream(userId);
-});
+  Future<void> filterRequests(String filter) async {
+    try {
+      state = const AsyncValue.loading();
+      final requests = await _requestsService.filterRequests(filter);
+      state = AsyncValue.data(requests);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Search requests provider
-final searchRequestsProvider =
-    FutureProvider.family<List<Request>, String>((ref, query) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.searchRequests(query);
-});
+  Future<void> createRequest(Request request) async {
+    try {
+      await _requestsService.createRequest(request);
+      await refreshRequests();
+    } catch (error) {
+      // Обработка ошибки создания заявки
+      rethrow;
+    }
+  }
 
-/// Request statistics provider
-final requestStatsProvider =
-    FutureProvider.family<Map<String, int>, String>((ref, userId) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getRequestStats(userId);
-});
+  Future<void> updateRequestStatus(String requestId, String status) async {
+    try {
+      await _requestsService.updateRequestStatus(requestId, status);
+      await refreshRequests();
+    } catch (error) {
+      // Обработка ошибки обновления статуса
+      rethrow;
+    }
+  }
 
-/// Available categories provider
-final requestCategoriesProvider = FutureProvider<List<String>>((ref) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getCategories();
-});
-
-/// Available cities provider
-final requestCitiesProvider = FutureProvider<List<String>>((ref) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getCities();
-});
-
-/// Pending requests count provider
-final pendingRequestsCountProvider =
-    FutureProvider.family<int, String>((ref, userId) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getPendingRequestsCount(userId);
-});
-
-/// Stream of pending requests count provider
-final pendingRequestsCountStreamProvider =
-    StreamProvider.family<int, String>((ref, userId) {
-  final service = ref.read(requestServiceProvider);
-  return service.getPendingRequestsCountStream(userId);
-});
+  Future<void> deleteRequest(String requestId) async {
+    try {
+      await _requestsService.deleteRequest(requestId);
+      await refreshRequests();
+    } catch (error) {
+      // Обработка ошибки удаления заявки
+      rethrow;
+    }
+  }
+}

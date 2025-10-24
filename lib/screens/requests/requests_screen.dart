@@ -1,292 +1,205 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Requests screen with user requests
-class RequestsScreen extends StatelessWidget {
+import '../../providers/requests_providers.dart';
+import '../../widgets/request_card.dart';
+import '../../widgets/request_filters.dart';
+import 'create_request_screen.dart';
+import 'request_details_screen.dart';
+
+/// Экран списка заявок
+class RequestsScreen extends ConsumerStatefulWidget {
   const RequestsScreen({super.key});
 
   @override
+  ConsumerState<RequestsScreen> createState() => _RequestsScreenState();
+}
+
+class _RequestsScreenState extends ConsumerState<RequestsScreen> {
+  String _selectedFilter = 'all';
+  String _selectedSort = 'newest';
+  String _searchQuery = '';
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Заявки'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Мои заявки'),
-              Tab(text: 'Заявки мне'),
-            ],
+    final requestsState = ref.watch(requestsProvider);
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Заявки'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => _showSearchDialog(),
           ),
-        ),
-        body: const TabBarView(
-            children: [_MyRequestsTab(), _IncomingRequestsTab()]),
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: () => _showFilterDialog(),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Фильтры
+          RequestFilters(
+            selectedFilter: _selectedFilter,
+            selectedSort: _selectedSort,
+            onFilterChanged: (filter) => setState(() => _selectedFilter = filter),
+            onSortChanged: (sort) => setState(() => _selectedSort = sort),
+          ),
+          
+          // Список заявок
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.read(requestsProvider.notifier).refreshRequests();
+              },
+              child: requestsState.when(
+                data: (requests) => ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: requests.length,
+                  itemBuilder: (context, index) {
+                    final request = requests[index];
+                    return RequestCard(
+                      request: request,
+                      onTap: () => _openRequestDetails(request.id),
+                    );
+                  },
+                ),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (error, stack) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                      const SizedBox(height: 16),
+                      Text('Ошибка загрузки заявок: $error'),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => ref.read(requestsProvider.notifier).refreshRequests(),
+                        child: const Text('Повторить'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _createRequest(),
+        child: const Icon(Icons.add),
       ),
     );
   }
-}
 
-void _showCancelDialog(BuildContext context, int requestIndex) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Отменить заявку'),
-      content: const Text('Вы уверены, что хотите отменить эту заявку?'),
-      actions: [
-        TextButton(
-            onPressed: () => Navigator.pop(context), child: const Text('Нет')),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(
-                SnackBar(content: Text('Заявка $requestIndex отменена')));
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('Да, отменить'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _showAcceptDialog(BuildContext context, int requestIndex) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Принять заявку'),
-      content: const Text('Вы хотите принять эту заявку?'),
-      actions: [
-        TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена')),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(
-                SnackBar(content: Text('Заявка $requestIndex принята')));
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-          child: const Text('Принять'),
-        ),
-      ],
-    ),
-  );
-}
-
-void _showRejectDialog(BuildContext context, int requestIndex) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Отклонить заявку'),
-      content: const Text('Вы уверены, что хотите отклонить эту заявку?'),
-      actions: [
-        TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена')),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(
-                SnackBar(content: Text('Заявка $requestIndex отклонена')));
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('Отклонить'),
-        ),
-      ],
-    ),
-  );
-}
-
-class _MyRequestsTab extends StatelessWidget {
-  const _MyRequestsTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 5, // Mock data
-      itemBuilder: (context, index) {
-        return Card(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const CircleAvatar(radius: 20, child: Icon(Icons.person)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Специалист ${index + 1}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text('Москва',
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 12)),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        'В ожидании',
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Свадьба 15 июня',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text('Бюджет: 50,000 ₽',
-                    style: TextStyle(color: Colors.grey[600])),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          context.push('/requests/edit/$index');
-                        },
-                        child: const Text('Изменить'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _showCancelDialog(context, index);
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red),
-                        child: const Text('Отменить'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+  void _showSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Поиск заявок'),
+        content: TextField(
+          decoration: const InputDecoration(
+            hintText: 'Введите запрос...',
+            border: OutlineInputBorder(),
           ),
-        );
-      },
+          onChanged: (value) => setState(() => _searchQuery = value),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ref.read(requestsProvider.notifier).searchRequests(_searchQuery);
+            },
+            child: const Text('Найти'),
+          ),
+        ],
+      ),
     );
   }
-}
 
-class _IncomingRequestsTab extends StatelessWidget {
-  const _IncomingRequestsTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 3, // Mock data
-      itemBuilder: (context, index) {
-        return Card(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const CircleAvatar(radius: 20, child: Icon(Icons.person)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Клиент ${index + 1}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'Санкт-Петербург',
-                            style: TextStyle(
-                                color: Colors.grey[600], fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        'Новая',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Корпоратив 20 июня',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text('Бюджет: 30,000 ₽',
-                    style: TextStyle(color: Colors.grey[600])),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _showAcceptDialog(context, index);
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green),
-                        child: const Text('Принять'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          _showRejectDialog(context, index);
-                        },
-                        child: const Text('Отклонить'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+  void _showFilterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Фильтры'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Все'),
+              leading: Radio<String>(
+                value: 'all',
+                groupValue: _selectedFilter,
+                onChanged: (value) => setState(() => _selectedFilter = value!),
+              ),
             ),
+            ListTile(
+              title: const Text('Открытые'),
+              leading: Radio<String>(
+                value: 'open',
+                groupValue: _selectedFilter,
+                onChanged: (value) => setState(() => _selectedFilter = value!),
+              ),
+            ),
+            ListTile(
+              title: const Text('В работе'),
+              leading: Radio<String>(
+                value: 'in_progress',
+                groupValue: _selectedFilter,
+                onChanged: (value) => setState(() => _selectedFilter = value!),
+              ),
+            ),
+            ListTile(
+              title: const Text('Завершённые'),
+              leading: Radio<String>(
+                value: 'done',
+                groupValue: _selectedFilter,
+                onChanged: (value) => setState(() => _selectedFilter = value!),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
           ),
-        );
-      },
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ref.read(requestsProvider.notifier).filterRequests(_selectedFilter);
+            },
+            child: const Text('Применить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _createRequest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CreateRequestScreen(),
+      ),
+    );
+  }
+
+  void _openRequestDetails(String requestId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RequestDetailsScreen(requestId: requestId),
+      ),
     );
   }
 }
