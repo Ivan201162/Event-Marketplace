@@ -22,6 +22,7 @@ import '../screens/requests/requests_screen.dart';
 import '../screens/ideas/ideas_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/settings/settings_screen.dart';
+import '../screens/about_screen.dart';
 
 /// App router provider
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -166,12 +167,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ProfileScreen(),
       ),
 
-      // Settings routes
-      GoRoute(
-        path: '/settings',
-        name: 'settings',
-        builder: (context, state) => const SettingsScreen(),
-      ),
+              // Settings routes
+              GoRoute(
+                path: '/settings',
+                name: 'settings',
+                builder: (context, state) => const SettingsScreen(),
+              ),
+
+              // About route
+              GoRoute(
+                path: '/about',
+                name: 'about',
+                builder: (context, state) => const AboutScreen(),
+              ),
 
       // Main app routes
       GoRoute(
