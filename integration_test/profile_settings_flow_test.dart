@@ -1,91 +1,209 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:event_marketplace_app/main_fixed.dart' as app;
+import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('Profile and Settings Flow Integration Tests', () {
-    testWidgets('Profile loads with user data', (WidgetTester tester) async {
+  group('Profile and Settings Flow Tests', () {
+    testWidgets('Profile screen loads with user data', (WidgetTester tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
 
-      // Ожидание загрузки
+      // Ожидание загрузки главного экрана
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
-      // Навигация к профилю
+      // Переход на экран профиля
       await tester.tap(find.text('Профиль'));
       await tester.pumpAndSettle();
 
-      // Проверка наличия элементов профиля
-      expect(find.byType(CircleAvatar), findsWidgets);
-      expect(find.byType(TabBar), findsOneWidget);
-    });
+      // Проверка наличия экрана профиля
+      expect(find.text('Профиль'), findsOneWidget);
 
-    testWidgets('Settings screen loads', (WidgetTester tester) async {
-      app.main();
-      await tester.pumpAndSettle();
+      // Проверка наличия вкладок
+      expect(find.text('Посты'), findsOneWidget);
+      expect(find.text('Идеи'), findsOneWidget);
+      expect(find.text('Заявки'), findsOneWidget);
 
-      // Навигация к настройкам через профиль
-      await tester.tap(find.text('Профиль'));
-      await tester.pumpAndSettle();
-
-      // Проверка наличия кнопки настроек
+      // Проверка наличия кнопок действий
+      expect(find.byIcon(Icons.edit), findsOneWidget);
       expect(find.byIcon(Icons.settings), findsOneWidget);
     });
 
-    testWidgets('Profile tabs work', (WidgetTester tester) async {
+    testWidgets('Edit profile flow works', (WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Навигация к профилю
+      // Переход на экран профиля
       await tester.tap(find.text('Профиль'));
       await tester.pumpAndSettle();
 
-      // Проверка табов профиля
-      expect(find.text('Посты'), findsOneWidget);
-      expect(find.text('Рилсы'), findsOneWidget);
-      expect(find.text('Медиа'), findsOneWidget);
-      expect(find.text('Отметки'), findsOneWidget);
-    });
-
-    testWidgets('Settings sections work', (WidgetTester tester) async {
-      app.main();
+      // Нажатие на кнопку редактирования
+      await tester.tap(find.byIcon(Icons.edit));
       await tester.pumpAndSettle();
 
-      // Навигация к настройкам
-      await tester.tap(find.text('Настройки'));
+      // Проверка открытия экрана редактирования профиля
+      expect(find.text('Редактировать профиль'), findsOneWidget);
+
+      // Заполнение полей
+      await tester.enterText(find.byKey(const Key('display_name_field')), 'Новое имя');
       await tester.pumpAndSettle();
 
-      // Проверка разделов настроек
+      await tester.enterText(find.byKey(const Key('username_field')), '@newusername');
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('bio_field')), 'Новое описание');
+      await tester.pumpAndSettle();
+
+      // Нажатие кнопки "Сохранить"
+      await tester.tap(find.text('Сохранить'));
+      await tester.pumpAndSettle();
+
+      // Проверка возврата на экран профиля
       expect(find.text('Профиль'), findsOneWidget);
-      expect(find.text('Внешний вид'), findsOneWidget);
-      expect(find.text('Уведомления'), findsOneWidget);
-      expect(find.text('Конфиденциальность'), findsOneWidget);
-      expect(find.text('Pro-аккаунт'), findsOneWidget);
-      expect(find.text('Монетизация'), findsOneWidget);
-      expect(find.text('Поддержка'), findsOneWidget);
     });
 
-    testWidgets('About dialog shows version', (WidgetTester tester) async {
+    testWidgets('Profile tabs navigation works', (WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle();
 
-      // Навигация к настройкам
-      await tester.tap(find.text('Настройки'));
+      // Переход на экран профиля
+      await tester.tap(find.text('Профиль'));
       await tester.pumpAndSettle();
 
-      // Нажатие на "О приложении"
-      await tester.tap(find.text('О приложении'));
+      // Переключение на вкладку "Идеи"
+      await tester.tap(find.text('Идеи'));
       await tester.pumpAndSettle();
 
-      // Проверка диалога
-      expect(find.text('Event Marketplace'), findsOneWidget);
-      expect(find.text('1.0.1 (2)'), findsOneWidget);
+      // Переключение на вкладку "Заявки"
+      await tester.tap(find.text('Заявки'));
+      await tester.pumpAndSettle();
+
+      // Переключение на вкладку "Посты"
+      await tester.tap(find.text('Посты'));
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('Profile statistics work', (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Переход на экран профиля
+      await tester.tap(find.text('Профиль'));
+      await tester.pumpAndSettle();
+
+      // Проверка наличия статистики
+      expect(find.text('Подписчики'), findsOneWidget);
+      expect(find.text('Подписки'), findsOneWidget);
+      expect(find.text('Посты'), findsOneWidget);
+      expect(find.text('Идеи'), findsOneWidget);
+      expect(find.text('Заявки'), findsOneWidget);
+
+      // Нажатие на статистику подписчиков
+      await tester.tap(find.text('Подписчики'));
+      await tester.pumpAndSettle();
+
+      // Проверка открытия диалога
+      expect(find.text('Список подписчиков'), findsOneWidget);
+    });
+
+    testWidgets('Settings screen opens', (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Переход на экран профиля
+      await tester.tap(find.text('Профиль'));
+      await tester.pumpAndSettle();
+
+      // Нажатие на кнопку настроек
+      await tester.tap(find.byIcon(Icons.settings));
+      await tester.pumpAndSettle();
+
+      // Проверка открытия экрана настроек
+      expect(find.text('Настройки'), findsOneWidget);
+    });
+
+    testWidgets('Avatar selection works', (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Переход на экран профиля
+      await tester.tap(find.text('Профиль'));
+      await tester.pumpAndSettle();
+
+      // Нажатие на кнопку редактирования
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+
+      // Нажатие на аватар
+      await tester.tap(find.byType(CircleAvatar));
+      await tester.pumpAndSettle();
+
+      // Проверка открытия диалога выбора аватара
+      expect(find.text('Выбор аватара'), findsOneWidget);
+    });
+
+    testWidgets('Cover selection works', (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Переход на экран профиля
+      await tester.tap(find.text('Профиль'));
+      await tester.pumpAndSettle();
+
+      // Нажатие на кнопку редактирования
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+
+      // Нажатие на обложку
+      await tester.tap(find.byType(Container).first);
+      await tester.pumpAndSettle();
+
+      // Проверка открытия диалога выбора обложки
+      expect(find.text('Выбор обложки'), findsOneWidget);
+    });
+
+    testWidgets('Profile validation works', (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Переход на экран профиля
+      await tester.tap(find.text('Профиль'));
+      await tester.pumpAndSettle();
+
+      // Нажатие на кнопку редактирования
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+
+      // Очистка поля имени
+      await tester.enterText(find.byKey(const Key('display_name_field')), '');
+      await tester.pumpAndSettle();
+
+      // Нажатие кнопки "Сохранить"
+      await tester.tap(find.text('Сохранить'));
+      await tester.pumpAndSettle();
+
+      // Проверка появления ошибки валидации
+      expect(find.text('Введите имя и фамилию'), findsOneWidget);
+    });
+
+    testWidgets('Profile tabs content loads', (WidgetTester tester) async {
+      app.main();
+      await tester.pumpAndSettle();
+
+      // Переход на экран профиля
+      await tester.tap(find.text('Профиль'));
+      await tester.pumpAndSettle();
+
+      // Ожидание загрузки контента
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      // Проверка наличия контента в каждой вкладке
+      expect(find.byType(Card), findsWidgets);
+      expect(find.byType(ListTile), findsWidgets);
     });
   });
 }
