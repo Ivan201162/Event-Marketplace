@@ -1,3 +1,6 @@
+import 'story_type.dart';
+import 'story_privacy.dart';
+
 /// Модель истории
 class Story {
   final String id;
@@ -7,6 +10,9 @@ class Story {
   final String text;
   final List<String> media;
   final bool isViewed;
+  final StoryType type;
+  final StoryPrivacy privacy;
+  final String? content;
   final DateTime createdAt;
   final DateTime expiresAt;
 
@@ -18,6 +24,9 @@ class Story {
     required this.text,
     required this.media,
     required this.isViewed,
+    required this.type,
+    required this.privacy,
+    this.content,
     required this.createdAt,
     required this.expiresAt,
   });
@@ -31,9 +40,23 @@ class Story {
       text: map['text'] ?? '',
       media: List<String>.from(map['media'] ?? []),
       isViewed: map['isViewed'] ?? false,
+      type: StoryType.values.firstWhere(
+        (e) => e.name == map['type'],
+        orElse: () => StoryType.text,
+      ),
+      privacy: StoryPrivacy.values.firstWhere(
+        (e) => e.name == map['privacy'],
+        orElse: () => StoryPrivacy.public,
+      ),
+      content: map['content'],
       createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
       expiresAt: DateTime.parse(map['expiresAt'] ?? DateTime.now().add(const Duration(hours: 24)).toIso8601String()),
     );
+  }
+
+  factory Story.fromFirestore(dynamic doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Story.fromMap(data, doc.id);
   }
 
   Map<String, dynamic> toMap() {
@@ -44,9 +67,17 @@ class Story {
       'text': text,
       'media': media,
       'isViewed': isViewed,
+      'type': type.name,
+      'privacy': privacy.name,
+      'content': content,
       'createdAt': createdAt.toIso8601String(),
       'expiresAt': expiresAt.toIso8601String(),
     };
+  }
+
+  /// Проверяет, просмотрена ли история пользователем
+  bool hasViewed(String userId) {
+    return isViewed;
   }
 
   Story copyWith({
@@ -57,6 +88,9 @@ class Story {
     String? text,
     List<String>? media,
     bool? isViewed,
+    StoryType? type,
+    StoryPrivacy? privacy,
+    String? content,
     DateTime? createdAt,
     DateTime? expiresAt,
   }) {
@@ -68,6 +102,9 @@ class Story {
       text: text ?? this.text,
       media: media ?? this.media,
       isViewed: isViewed ?? this.isViewed,
+      type: type ?? this.type,
+      privacy: privacy ?? this.privacy,
+      content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       expiresAt: expiresAt ?? this.expiresAt,
     );

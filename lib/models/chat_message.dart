@@ -1,3 +1,5 @@
+import 'message_status.dart';
+
 /// Тип сообщения
 enum MessageType {
   text,
@@ -96,5 +98,45 @@ class ChatMessage {
       editedAt: editedAt ?? this.editedAt,
       isRead: isRead ?? this.isRead,
     );
+  }
+
+  /// Проверяет, отправлено ли сообщение от указанного пользователя
+  bool isFromUser(String userId) {
+    return senderId == userId;
+  }
+
+  /// Проверяет, является ли сообщение системным
+  bool get isSystemMessage {
+    return senderId == 'system';
+  }
+
+  /// Получает контент сообщения
+  String get content {
+    return text;
+  }
+
+  /// Получает отформатированное время
+  String get formattedTime {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+    
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м';
+    } else {
+      return 'сейчас';
+    }
+  }
+
+  /// Получает статус сообщения
+  MessageStatus get status {
+    if (isRead) return MessageStatus.read;
+    if (createdAt.isBefore(DateTime.now().subtract(const Duration(minutes: 1)))) {
+      return MessageStatus.delivered;
+    }
+    return MessageStatus.sent;
   }
 }
