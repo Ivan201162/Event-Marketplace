@@ -1,230 +1,111 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-
-/// Media type for posts
-enum MediaType { image, video, text }
-
-/// Post model for feed
-class Post extends Equatable {
+/// Модель поста
+class Post {
   final String id;
   final String authorId;
-  final String? text;
-  final String? mediaUrl;
-  final MediaType? mediaType;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String authorName;
+  final String? authorAvatar;
+  final String text;
+  final List<String> media;
+  final List<String> tags;
+  final String city;
   final int likesCount;
   final int commentsCount;
-  final List<String> likedBy;
-  final String? authorName;
-  final String? authorAvatarUrl;
-  final List<String> tags;
-  final bool isPinned;
-  final String? location;
-  final List<String> mediaUrls;
-  final String? specialistPhotoUrl;
-  final String? specialistName;
-  final String? content;
-  final int shares;
-  final List<String> comments;
+  final int sharesCount;
+  final bool isLiked;
+  final bool isSaved;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const Post({
     required this.id,
     required this.authorId,
-    this.text,
-    this.mediaUrl,
-    this.mediaType,
+    required this.authorName,
+    this.authorAvatar,
+    required this.text,
+    required this.media,
+    required this.tags,
+    required this.city,
+    required this.likesCount,
+    required this.commentsCount,
+    required this.sharesCount,
+    required this.isLiked,
+    required this.isSaved,
     required this.createdAt,
     required this.updatedAt,
-    this.likesCount = 0,
-    this.commentsCount = 0,
-    this.likedBy = const [],
-    this.authorName,
-    this.authorAvatarUrl,
-    this.tags = const [],
-    this.isPinned = false,
-    this.location,
-    this.mediaUrls = const [],
-    this.specialistPhotoUrl,
-    this.specialistName,
-    this.content,
-    this.shares = 0,
-    this.comments = const [],
   });
 
-  /// Create Post from Firestore document
-  factory Post.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory Post.fromMap(Map<String, dynamic> map, String id) {
     return Post(
-      id: doc.id,
-      authorId: data['authorId'] ?? '',
-      text: data['text'],
-      mediaUrl: data['mediaUrl'],
-      mediaType: data['mediaType'] != null
-          ? MediaType.values.firstWhere(
-              (e) => e.toString().split('.').last == data['mediaType'],
-              orElse: () => MediaType.text,
-            )
-          : null,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likesCount: data['likesCount'] ?? 0,
-      commentsCount: data['commentsCount'] ?? 0,
-      likedBy: List<String>.from(data['likedBy'] ?? []),
-      authorName: data['authorName'],
-      authorAvatarUrl: data['authorAvatarUrl'],
-      tags: List<String>.from(data['tags'] ?? []),
-      isPinned: data['isPinned'] ?? false,
-      location: data['location'],
-      mediaUrls: List<String>.from(data['mediaUrls'] ?? []),
-      specialistPhotoUrl: data['specialistPhotoUrl'],
-      specialistName: data['specialistName'],
-      content: data['content'],
-      shares: data['shares'] ?? 0,
-      comments: List<String>.from(data['comments'] ?? []),
+      id: id,
+      authorId: map['authorId'] ?? '',
+      authorName: map['authorName'] ?? '',
+      authorAvatar: map['authorAvatar'],
+      text: map['text'] ?? '',
+      media: List<String>.from(map['media'] ?? []),
+      tags: List<String>.from(map['tags'] ?? []),
+      city: map['city'] ?? '',
+      likesCount: map['likesCount'] ?? 0,
+      commentsCount: map['commentsCount'] ?? 0,
+      sharesCount: map['sharesCount'] ?? 0,
+      isLiked: map['isLiked'] ?? false,
+      isSaved: map['isSaved'] ?? false,
+      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 
-  /// Convert Post to Firestore document
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toMap() {
     return {
       'authorId': authorId,
+      'authorName': authorName,
+      'authorAvatar': authorAvatar,
       'text': text,
-      'mediaUrl': mediaUrl,
-      'mediaType': mediaType?.toString().split('.').last,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
+      'media': media,
+      'tags': tags,
+      'city': city,
       'likesCount': likesCount,
       'commentsCount': commentsCount,
-      'likedBy': likedBy,
-      'authorName': authorName,
-      'authorAvatarUrl': authorAvatarUrl,
-      'tags': tags,
-      'isPinned': isPinned,
-      'location': location,
-      'mediaUrls': mediaUrls,
-      'specialistPhotoUrl': specialistPhotoUrl,
-      'specialistName': specialistName,
-      'content': content,
-      'shares': shares,
-      'comments': comments,
+      'sharesCount': sharesCount,
+      'isLiked': isLiked,
+      'isSaved': isSaved,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
-  /// Create a copy with updated fields
   Post copyWith({
     String? id,
     String? authorId,
+    String? authorName,
+    String? authorAvatar,
     String? text,
-    String? mediaUrl,
-    MediaType? mediaType,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    List<String>? media,
+    List<String>? tags,
+    String? city,
     int? likesCount,
     int? commentsCount,
-    List<String>? likedBy,
-    String? authorName,
-    String? authorAvatarUrl,
-    List<String>? tags,
-    bool? isPinned,
-    String? location,
-    List<String>? mediaUrls,
-    String? specialistPhotoUrl,
-    String? specialistName,
-    String? content,
-    int? shares,
-    List<String>? comments,
+    int? sharesCount,
+    bool? isLiked,
+    bool? isSaved,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Post(
       id: id ?? this.id,
       authorId: authorId ?? this.authorId,
+      authorName: authorName ?? this.authorName,
+      authorAvatar: authorAvatar ?? this.authorAvatar,
       text: text ?? this.text,
-      mediaUrl: mediaUrl ?? this.mediaUrl,
-      mediaType: mediaType ?? this.mediaType,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      media: media ?? this.media,
+      tags: tags ?? this.tags,
+      city: city ?? this.city,
       likesCount: likesCount ?? this.likesCount,
       commentsCount: commentsCount ?? this.commentsCount,
-      likedBy: likedBy ?? this.likedBy,
-      authorName: authorName ?? this.authorName,
-      authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
-      tags: tags ?? this.tags,
-      isPinned: isPinned ?? this.isPinned,
-      location: location ?? this.location,
-      mediaUrls: mediaUrls ?? this.mediaUrls,
-      specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
-      specialistName: specialistName ?? this.specialistName,
-      content: content ?? this.content,
-      shares: shares ?? this.shares,
-      comments: comments ?? this.comments,
+      sharesCount: sharesCount ?? this.sharesCount,
+      isLiked: isLiked ?? this.isLiked,
+      isSaved: isSaved ?? this.isSaved,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
-  }
-
-  /// Check if post has media
-  bool get hasMedia => mediaUrl != null && mediaUrl!.isNotEmpty;
-
-  /// Check if post is liked by user
-  bool isLikedBy(String userId) => likedBy.contains(userId);
-
-  /// Get likes count
-  int get likes => likesCount;
-
-  /// Get formatted time ago string
-  String get timeAgo {
-    final now = DateTime.now();
-    final difference = now.difference(createdAt);
-
-    if (difference.inDays > 0) {
-      return '${difference.inDays}д назад';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}ч назад';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}м назад';
-    } else {
-      return 'только что';
-    }
-  }
-
-  /// Get media type icon
-  String get mediaTypeIcon {
-    switch (mediaType) {
-      case MediaType.image:
-        return '🖼️';
-      case MediaType.video:
-        return '🎥';
-      case MediaType.text:
-      case null:
-        return '📝';
-    }
-  }
-
-  @override
-  List<Object?> get props => [
-        id,
-        authorId,
-        text,
-        mediaUrl,
-        mediaType,
-        createdAt,
-        updatedAt,
-        likesCount,
-        commentsCount,
-        likedBy,
-        authorName,
-        authorAvatarUrl,
-        tags,
-        isPinned,
-        location,
-        mediaUrls,
-        specialistPhotoUrl,
-        specialistName,
-        content,
-        shares,
-        comments,
-      ];
-
-  @override
-  String toString() {
-    return 'Post(id: $id, authorId: $authorId, text: ${text?.substring(0, text!.length > 50 ? 50 : text!.length)}...)';
   }
 }

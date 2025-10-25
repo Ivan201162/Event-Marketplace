@@ -1,178 +1,100 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-
-/// Типы сообщений
+/// Тип сообщения
 enum MessageType {
-  text('text'),
-  image('image'),
-  file('file'),
-  system('system');
-
-  const MessageType(this.value);
-  final String value;
-
-  static MessageType fromString(String value) {
-    return MessageType.values.firstWhere(
-      (type) => type.value == value,
-      orElse: () => MessageType.text,
-    );
-  }
+  text,
+  image,
+  video,
+  audio,
+  document,
+  location,
 }
 
-/// Статус сообщения
-enum MessageStatus {
-  sent('sent'),
-  delivered('delivered'),
-  read('read');
-
-  const MessageStatus(this.value);
-  final String value;
-
-  static MessageStatus fromString(String value) {
-    return MessageStatus.values.firstWhere(
-      (status) => status.value == value,
-      orElse: () => MessageStatus.sent,
-    );
-  }
-}
-
-/// Модель сообщения в чате
-class ChatMessage extends Equatable {
+/// Модель сообщения чата
+class ChatMessage {
   final String id;
   final String chatId;
   final String senderId;
-  final String? receiverId;
-  final String content;
+  final String? senderAvatar;
+  final String text;
   final MessageType type;
-  final MessageStatus status;
+  final List<String> attachments;
+  final Map<String, String> reactions;
   final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic>? metadata;
-  final String? replyToMessageId;
-  final bool isEdited;
+  final DateTime? editedAt;
+  final bool isRead;
 
   const ChatMessage({
     required this.id,
     required this.chatId,
     required this.senderId,
-    this.receiverId,
-    required this.content,
-    this.type = MessageType.text,
-    this.status = MessageStatus.sent,
+    this.senderAvatar,
+    required this.text,
+    required this.type,
+    required this.attachments,
+    required this.reactions,
     required this.createdAt,
-    required this.updatedAt,
-    this.metadata,
-    this.replyToMessageId,
-    this.isEdited = false,
+    this.editedAt,
+    required this.isRead,
   });
 
-  /// Создать ChatMessage из Firestore документа
-  factory ChatMessage.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory ChatMessage.fromMap(Map<String, dynamic> map, String id) {
     return ChatMessage(
-      id: doc.id,
-      chatId: data['chatId'] ?? '',
-      senderId: data['senderId'] ?? '',
-      receiverId: data['receiverId'],
-      content: data['content'] ?? '',
-      type: MessageType.fromString(data['type'] ?? 'text'),
-      status: MessageStatus.fromString(data['status'] ?? 'sent'),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      metadata: data['metadata'] as Map<String, dynamic>?,
-      replyToMessageId: data['replyToMessageId'],
-      isEdited: data['isEdited'] ?? false,
+      id: id,
+      chatId: map['chatId'] ?? '',
+      senderId: map['senderId'] ?? '',
+      senderAvatar: map['senderAvatar'],
+      text: map['text'] ?? '',
+      type: MessageType.values.firstWhere(
+        (e) => e.name == map['type'],
+        orElse: () => MessageType.text,
+      ),
+      attachments: List<String>.from(map['attachments'] ?? []),
+      reactions: Map<String, String>.from(map['reactions'] ?? {}),
+      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      editedAt: map['editedAt'] != null ? DateTime.parse(map['editedAt']) : null,
+      isRead: map['isRead'] ?? false,
     );
   }
 
-  /// Конвертировать ChatMessage в Firestore документ
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toMap() {
     return {
       'chatId': chatId,
       'senderId': senderId,
-      'receiverId': receiverId,
-      'content': content,
-      'type': type.value,
-      'status': status.value,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'metadata': metadata,
-      'replyToMessageId': replyToMessageId,
-      'isEdited': isEdited,
+      'senderAvatar': senderAvatar,
+      'text': text,
+      'type': type.name,
+      'attachments': attachments,
+      'reactions': reactions,
+      'createdAt': createdAt.toIso8601String(),
+      'editedAt': editedAt?.toIso8601String(),
+      'isRead': isRead,
     };
   }
 
-  /// Создать копию с обновленными полями
   ChatMessage copyWith({
     String? id,
     String? chatId,
     String? senderId,
-    String? receiverId,
-    String? content,
+    String? senderAvatar,
+    String? text,
     MessageType? type,
-    MessageStatus? status,
+    List<String>? attachments,
+    Map<String, String>? reactions,
     DateTime? createdAt,
-    DateTime? updatedAt,
-    Map<String, dynamic>? metadata,
-    String? replyToMessageId,
-    bool? isEdited,
+    DateTime? editedAt,
+    bool? isRead,
   }) {
     return ChatMessage(
       id: id ?? this.id,
       chatId: chatId ?? this.chatId,
       senderId: senderId ?? this.senderId,
-      receiverId: receiverId ?? this.receiverId,
-      content: content ?? this.content,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
+      text: text ?? this.text,
       type: type ?? this.type,
-      status: status ?? this.status,
+      attachments: attachments ?? this.attachments,
+      reactions: reactions ?? this.reactions,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      metadata: metadata ?? this.metadata,
-      replyToMessageId: replyToMessageId ?? this.replyToMessageId,
-      isEdited: isEdited ?? this.isEdited,
+      editedAt: editedAt ?? this.editedAt,
+      isRead: isRead ?? this.isRead,
     );
-  }
-
-  /// Проверить, является ли сообщение системным
-  bool get isSystemMessage => type == MessageType.system;
-
-  /// Проверить, является ли сообщение от текущего пользователя
-  bool isFromUser(String userId) => senderId == userId;
-
-  /// Получить отформатированное время
-  String get formattedTime {
-    final now = DateTime.now();
-    final difference = now.difference(createdAt);
-
-    if (difference.inDays > 0) {
-      return '${createdAt.day}.${createdAt.month}.${createdAt.year}';
-    } else if (difference.inHours > 0) {
-      return '${createdAt.hour}:${createdAt.minute.toString().padLeft(2, '0')}';
-    } else if (difference.inMinutes > 0) {
-      return '${createdAt.hour}:${createdAt.minute.toString().padLeft(2, '0')}';
-    } else {
-      return 'только что';
-    }
-  }
-
-  @override
-  List<Object?> get props => [
-        id,
-        chatId,
-        senderId,
-        receiverId,
-        content,
-        type,
-        status,
-        createdAt,
-        updatedAt,
-        metadata,
-        replyToMessageId,
-        isEdited,
-      ];
-
-  @override
-  String toString() {
-    return 'ChatMessage(id: $id, chatId: $chatId, senderId: $senderId, content: $content, type: $type, status: $status)';
   }
 }
