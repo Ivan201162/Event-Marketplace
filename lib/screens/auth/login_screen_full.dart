@@ -4,19 +4,20 @@ import 'package:go_router/go_router.dart';
 
 import '../../providers/auth_providers.dart';
 
-/// Улучшенный экран входа
-class LoginScreenImproved extends ConsumerStatefulWidget {
-  const LoginScreenImproved({super.key});
+/// Полноценный экран входа с Google Sign-In
+class LoginScreenFull extends ConsumerStatefulWidget {
+  const LoginScreenFull({super.key});
 
   @override
-  ConsumerState<LoginScreenImproved> createState() => _LoginScreenImprovedState();
+  ConsumerState<LoginScreenFull> createState() => _LoginScreenFullState();
 }
 
-class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
+class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -27,6 +28,8 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
 
   Future<void> _signInWithEmail() async {
     if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
 
     try {
       final authService = ref.read(authServiceProvider);
@@ -47,10 +50,16 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
           ),
         );
       }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   Future<void> _signInWithGoogle() async {
+    setState(() => _isLoading = true);
+
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithGoogle();
@@ -66,6 +75,42 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
             backgroundColor: Colors.red,
           ),
         );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _signUpWithEmail() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final authService = ref.read(authServiceProvider);
+      await authService.signUpWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        name: _emailController.text.split('@')[0], // Временное имя из email
+      );
+      
+      if (mounted) {
+        context.go('/main');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка регистрации: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -126,11 +171,12 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                         const SizedBox(height: 8),
                         
                         Text(
-                          'Войдите в свой аккаунт',
+                          'Войдите в свой аккаунт или зарегистрируйтесь',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[600],
                           ),
+                          textAlign: TextAlign.center,
                         ),
                         
                         const SizedBox(height: 32),
@@ -196,7 +242,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                           width: double.infinity,
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: _signInWithEmail,
+                            onPressed: _isLoading ? null : _signInWithEmail,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).primaryColor,
                               foregroundColor: Colors.white,
@@ -204,13 +250,32 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            child: const Text(
-                              'Войти',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            child: _isLoading
+                                ? const CircularProgressIndicator(color: Colors.white)
+                                : const Text(
+                                    'Войти',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 16),
+                        
+                        // Кнопка регистрации
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: OutlinedButton(
+                            onPressed: _isLoading ? null : _signUpWithEmail,
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
+                            child: const Text('Регистрация'),
                           ),
                         ),
                         
@@ -238,7 +303,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                           width: double.infinity,
                           height: 48,
                           child: OutlinedButton.icon(
-                            onPressed: _signInWithGoogle,
+                            onPressed: _isLoading ? null : _signInWithGoogle,
                             icon: const Icon(Icons.g_mobiledata, size: 24),
                             label: const Text('Войти через Google'),
                             style: OutlinedButton.styleFrom(
@@ -251,23 +316,17 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                         
                         const SizedBox(height: 24),
                         
-                        // Ссылки
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                // TODO: Implement password reset
-                              },
-                              child: const Text('Забыли пароль?'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // TODO: Navigate to registration
-                              },
-                              child: const Text('Регистрация'),
-                            ),
-                          ],
+                        // Ссылка на восстановление пароля
+                        TextButton(
+                          onPressed: () {
+                            // TODO: Implement password reset
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Функция восстановления пароля в разработке'),
+                              ),
+                            );
+                          },
+                          child: const Text('Забыли пароль?'),
                         ),
                       ],
                     ),

@@ -50,11 +50,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBcNT54NuncA9Nck-5VQYdbnxwl5pdzsmA',
-    appId: '1:272201705683:android:057887a281175671f80c26',
+    apiKey: 'AIzaSyCdDRPCyCHEJy7WBr5eQrcyuRhh_hSfih4',
+    appId: '1:272201705683:android:0196de78aaeb970ef80c26',
     messagingSenderId: '272201705683',
     projectId: 'event-marketplace-mvp',
-    storageBucket: 'event-marketplace-mvp.appspot.com',
+    storageBucket: 'event-marketplace-mvp.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../providers/auth_providers.dart';
 
-/// Упрощенный главный экран
-class HomeScreenSimple extends ConsumerWidget {
-  const HomeScreenSimple({super.key});
+/// Полноценный главный экран с данными из Firebase
+class HomeScreenFull extends ConsumerWidget {
+  const HomeScreenFull({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +30,22 @@ class HomeScreenSimple extends ConsumerWidget {
         data: (user) {
           if (user == null) {
             return const Center(
-              child: Text('Пользователь не авторизован'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.person_off, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    'Пользователь не авторизован',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Пожалуйста, войдите в систему',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
             );
           }
 
@@ -39,7 +54,7 @@ class HomeScreenSimple extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Приветствие
+                // Приветствие с данными пользователя
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
@@ -55,20 +70,61 @@ class HomeScreenSimple extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Добро пожаловать, ${user.name}!',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: user.avatarUrl != null
+                                ? NetworkImage(user.avatarUrl!)
+                                : null,
+                            child: user.avatarUrl == null
+                                ? const Icon(Icons.person, size: 30)
+                                : null,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Добро пожаловать, ${user.name}!',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                if (user.city != null) ...[
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on,
+                                        size: 16,
+                                        color: Colors.white70,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        user.city!,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 16),
+                      const Text(
                         'Найдите идеального специалиста для вашего мероприятия',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: Colors.white70,
                         ),
                       ),
                     ],
@@ -124,7 +180,7 @@ class HomeScreenSimple extends ConsumerWidget {
 
                 const SizedBox(height: 24),
 
-                // Статистика
+                // Статистика пользователя
                 const Text(
                   'Ваша статистика',
                   style: TextStyle(
@@ -153,12 +209,90 @@ class HomeScreenSimple extends ConsumerWidget {
                     ),
                   ],
                 ),
+
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: _StatCard(
+                        title: 'Чаты',
+                        value: '0',
+                        icon: Icons.chat,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _StatCard(
+                        title: 'Подписчики',
+                        value: '${user.followersCount}',
+                        icon: Icons.people,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // Лучшие специалисты
+                const Text(
+                  'Лучшие специалисты',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Заглушка для специалистов
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        size: 48,
+                        color: Colors.amber,
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        'Специалисты появятся здесь',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'После создания заявок вы увидите лучших специалистов',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           );
         },
         loading: () => const Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Загрузка данных...'),
+            ],
+          ),
         ),
         error: (error, stack) => Center(
           child: Column(
@@ -166,7 +300,11 @@ class HomeScreenSimple extends ConsumerWidget {
             children: [
               const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Ошибка загрузки: $error'),
+              Text(
+                'Ошибка загрузки: $error',
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => context.go('/login'),
