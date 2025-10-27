@@ -51,7 +51,7 @@ class AppNotification extends Equatable {
       userId: data['userId'] ?? '',
       senderId: data['senderId'],
       isRead: data['isRead'] ?? false,
-      createdAt: data['createdAt'] is Timestamp 
+      createdAt: data['createdAt'] is Timestamp
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
       data: data['data'] as Map<String, dynamic>?,

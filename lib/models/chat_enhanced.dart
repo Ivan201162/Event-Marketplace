@@ -144,7 +144,8 @@ class ChatEnhanced extends Equatable {
       'lastMessageId': lastMessageId,
       'lastMessageText': lastMessageText,
       'lastMessageAuthorId': lastMessageAuthorId,
-      'lastMessageTime': lastMessageTime != null ? Timestamp.fromDate(lastMessageTime!) : null,
+      'lastMessageTime':
+          lastMessageTime != null ? Timestamp.fromDate(lastMessageTime!) : null,
       'unreadCount': unreadCount,
       'isMuted': isMuted,
       'isPinned': isPinned,
@@ -268,8 +269,9 @@ class ChatMessageEnhanced extends Equatable {
       attachments: List<String>.from(data['attachments'] ?? []),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       reactions: (data['reactions'] as List<dynamic>?)
-          ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       readBy: List<String>.from(data['readBy'] ?? []),
       forwardedTo: List<String>.from(data['forwardedTo'] ?? []),
       isEdited: data['isEdited'] ?? false,
@@ -454,6 +456,3 @@ class MessageFilters extends Equatable {
         isDeleted,
       ];
 }
-
-
-

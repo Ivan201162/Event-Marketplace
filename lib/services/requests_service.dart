@@ -99,7 +99,8 @@ class RequestsService {
   /// Создать заявку
   Future<String> createRequest(Request request) async {
     try {
-      final docRef = await _firestore.collection('requests').add(request.toMap());
+      final docRef =
+          await _firestore.collection('requests').add(request.toMap());
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания заявки: $e');

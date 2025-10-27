@@ -905,7 +905,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
             Tab(icon: Icon(Icons.emoji_events)),
           ],
         ),
-        
+
         // TabBarView
         SizedBox(
           height: 400,

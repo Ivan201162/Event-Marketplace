@@ -16,7 +16,8 @@ class MainNavigationScreenFull extends ConsumerStatefulWidget {
       _MainNavigationScreenFullState();
 }
 
-class _MainNavigationScreenFullState extends ConsumerState<MainNavigationScreenFull>
+class _MainNavigationScreenFullState
+    extends ConsumerState<MainNavigationScreenFull>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
   late AnimationController _animationController;

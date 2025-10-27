@@ -51,14 +51,17 @@ class Request {
       city: map['city'] ?? '',
       budgetMin: (map['budgetMin'] ?? 0.0).toDouble(),
       budgetMax: (map['budgetMax'] ?? 0.0).toDouble(),
-      dateTime: DateTime.parse(map['dateTime'] ?? DateTime.now().toIso8601String()),
+      dateTime:
+          DateTime.parse(map['dateTime'] ?? DateTime.now().toIso8601String()),
       status: RequestStatus.values.firstWhere(
         (e) => e.name == map['status'],
         orElse: () => RequestStatus.open,
       ),
       attachments: List<String>.from(map['attachments'] ?? []),
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt:
+          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt:
+          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 

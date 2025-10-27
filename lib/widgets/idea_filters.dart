@@ -54,7 +54,7 @@ class IdeaFilters extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Сортировка
           PopupMenuButton<String>(
             icon: const Icon(Icons.sort),

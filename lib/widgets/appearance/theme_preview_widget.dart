@@ -64,10 +64,12 @@ class _ThemePreviewWidgetState extends State<ThemePreviewWidget> {
                     const Text('Тема: '),
                     Expanded(
                       child: SegmentedButton<AppTheme>(
-                        segments: AppTheme.values.map((theme) => ButtonSegment<AppTheme>(
-                          value: theme,
-                          label: Text(_getThemeTitle(theme)),
-                        )).toList(),
+                        segments: AppTheme.values
+                            .map((theme) => ButtonSegment<AppTheme>(
+                                  value: theme,
+                                  label: Text(_getThemeTitle(theme)),
+                                ))
+                            .toList(),
                         selected: {_currentTheme},
                         onSelectionChanged: (selection) {
                           setState(() {
@@ -79,17 +81,19 @@ class _ThemePreviewWidgetState extends State<ThemePreviewWidget> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Выбор размера шрифта
                 Row(
                   children: [
                     const Text('Шрифт: '),
                     Expanded(
                       child: SegmentedButton<FontSize>(
-                        segments: FontSize.values.map((fontSize) => ButtonSegment<FontSize>(
-                          value: fontSize,
-                          label: Text(_getFontSizeTitle(fontSize)),
-                        )).toList(),
+                        segments: FontSize.values
+                            .map((fontSize) => ButtonSegment<FontSize>(
+                                  value: fontSize,
+                                  label: Text(_getFontSizeTitle(fontSize)),
+                                ))
+                            .toList(),
                         selected: {_currentFontSize},
                         onSelectionChanged: (selection) {
                           setState(() {
@@ -204,32 +208,34 @@ class _ThemePreviewWidgetState extends State<ThemePreviewWidget> {
               ),
             ),
             const SizedBox(height: 8),
-            ...List.generate(3, (index) => ListTile(
-              leading: CircleAvatar(
-                backgroundColor: _getAccentColor(_currentTheme),
-                child: Text(
-                  '${index + 1}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: _getFontSize(_currentFontSize),
-                  ),
-                ),
-              ),
-              title: Text(
-                'Элемент списка ${index + 1}',
-                style: TextStyle(
-                  fontSize: _getFontSize(_currentFontSize),
-                  color: _getTextColor(_currentTheme),
-                ),
-              ),
-              subtitle: Text(
-                'Описание элемента ${index + 1}',
-                style: TextStyle(
-                  fontSize: _getFontSize(_currentFontSize) * 0.9,
-                  color: _getTextColor(_currentTheme).withOpacity(0.7),
-                ),
-              ),
-            )),
+            ...List.generate(
+                3,
+                (index) => ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: _getAccentColor(_currentTheme),
+                        child: Text(
+                          '${index + 1}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: _getFontSize(_currentFontSize),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        'Элемент списка ${index + 1}',
+                        style: TextStyle(
+                          fontSize: _getFontSize(_currentFontSize),
+                          color: _getTextColor(_currentTheme),
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Описание элемента ${index + 1}',
+                        style: TextStyle(
+                          fontSize: _getFontSize(_currentFontSize) * 0.9,
+                          color: _getTextColor(_currentTheme).withOpacity(0.7),
+                        ),
+                      ),
+                    )),
           ],
         ),
       ),

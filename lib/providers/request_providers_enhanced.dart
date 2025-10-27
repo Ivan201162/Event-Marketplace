@@ -5,7 +5,8 @@ import '../models/request_enhanced.dart';
 import '../services/request_service_enhanced.dart';
 
 /// Провайдер для получения заявок
-final requestsProvider = FutureProvider.family<List<RequestEnhanced>, RequestFilters?>(
+final requestsProvider =
+    FutureProvider.family<List<RequestEnhanced>, RequestFilters?>(
   (ref, filters) async {
     return await RequestServiceEnhanced.getRequests(filters: filters);
   },
@@ -23,19 +24,20 @@ final userRequestsProvider = FutureProvider<List<RequestEnhanced>>(
   (ref) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
-    
+
     return await RequestServiceEnhanced.getUserRequests(user.uid);
   },
 );
 
 /// Провайдер для получения ближайших заявок
-final nearbyRequestsProvider = FutureProvider.family<List<RequestEnhanced>, Map<String, dynamic>>(
+final nearbyRequestsProvider =
+    FutureProvider.family<List<RequestEnhanced>, Map<String, dynamic>>(
   (ref, params) async {
     final latitude = params['latitude'] as double;
     final longitude = params['longitude'] as double;
     final radiusKm = params['radiusKm'] as double;
     final filters = params['filters'] as RequestFilters?;
-    
+
     return await RequestServiceEnhanced.getNearbyRequests(
       latitude: latitude,
       longitude: longitude,
@@ -46,7 +48,8 @@ final nearbyRequestsProvider = FutureProvider.family<List<RequestEnhanced>, Map<
 );
 
 /// Провайдер для фильтров заявок
-final requestFiltersProvider = StateNotifierProvider<RequestFiltersNotifier, RequestFilters>(
+final requestFiltersProvider =
+    StateNotifierProvider<RequestFiltersNotifier, RequestFilters>(
   (ref) => RequestFiltersNotifier(),
 );
 
@@ -76,21 +79,63 @@ final requestCategoriesProvider = FutureProvider<List<String>>(
 );
 
 /// Провайдер для подкатегорий заявок
-final requestSubcategoriesProvider = FutureProvider.family<List<String>, String>(
+final requestSubcategoriesProvider =
+    FutureProvider.family<List<String>, String>(
   (ref, category) async {
     final subcategoriesMap = {
-      'Фотография': ['Свадебная', 'Портретная', 'Студийная', 'Уличная', 'Событийная'],
-      'Кейтеринг': ['Банкет', 'Фуршет', 'Кофе-брейк', 'Детский', 'Корпоративный'],
+      'Фотография': [
+        'Свадебная',
+        'Портретная',
+        'Студийная',
+        'Уличная',
+        'Событийная'
+      ],
+      'Кейтеринг': [
+        'Банкет',
+        'Фуршет',
+        'Кофе-брейк',
+        'Детский',
+        'Корпоративный'
+      ],
       'Музыка': ['Живая музыка', 'DJ', 'Вокал', 'Инструментальная', 'Караоке'],
       'Декор': ['Цветы', 'Шары', 'Свет', 'Ткани', 'Мебель'],
-      'Ведущий': ['Свадьба', 'Корпоратив', 'День рождения', 'Детский праздник', 'Конференция'],
-      'Видеосъемка': ['Свадебная', 'Корпоративная', 'Реклама', 'Документальная', 'Событийная'],
-      'Анимация': ['Детская', 'Взрослая', 'Корпоративная', 'Свадебная', 'Тематическая'],
-      'Транспорт': ['Автомобиль', 'Микроавтобус', 'Автобус', 'Лимузин', 'Мотоцикл'],
-      'Безопасность': ['Охрана', 'Контроль доступа', 'Видеонаблюдение', 'Пожарная безопасность'],
+      'Ведущий': [
+        'Свадьба',
+        'Корпоратив',
+        'День рождения',
+        'Детский праздник',
+        'Конференция'
+      ],
+      'Видеосъемка': [
+        'Свадебная',
+        'Корпоративная',
+        'Реклама',
+        'Документальная',
+        'Событийная'
+      ],
+      'Анимация': [
+        'Детская',
+        'Взрослая',
+        'Корпоративная',
+        'Свадебная',
+        'Тематическая'
+      ],
+      'Транспорт': [
+        'Автомобиль',
+        'Микроавтобус',
+        'Автобус',
+        'Лимузин',
+        'Мотоцикл'
+      ],
+      'Безопасность': [
+        'Охрана',
+        'Контроль доступа',
+        'Видеонаблюдение',
+        'Пожарная безопасность'
+      ],
       'Другое': ['Услуги', 'Консультации', 'Обучение', 'Ремонт', 'Доставка'],
     };
-    
+
     return subcategoriesMap[category] ?? [];
   },
 );
@@ -200,14 +245,20 @@ final userRequestStatsProvider = FutureProvider<Map<String, dynamic>>(
     if (user == null) return {};
 
     final userRequests = await RequestServiceEnhanced.getUserRequests(user.uid);
-    
+
     return {
       'totalRequests': userRequests.length,
-      'activeRequests': userRequests.where((r) => r.status == RequestStatus.open).length,
-      'completedRequests': userRequests.where((r) => r.status == RequestStatus.completed).length,
-      'cancelledRequests': userRequests.where((r) => r.status == RequestStatus.cancelled).length,
+      'activeRequests':
+          userRequests.where((r) => r.status == RequestStatus.open).length,
+      'completedRequests':
+          userRequests.where((r) => r.status == RequestStatus.completed).length,
+      'cancelledRequests':
+          userRequests.where((r) => r.status == RequestStatus.cancelled).length,
       'totalBudget': userRequests.fold(0.0, (sum, r) => sum + r.budget),
-      'averageBudget': userRequests.isNotEmpty ? userRequests.fold(0.0, (sum, r) => sum + r.budget) / userRequests.length : 0.0,
+      'averageBudget': userRequests.isNotEmpty
+          ? userRequests.fold(0.0, (sum, r) => sum + r.budget) /
+              userRequests.length
+          : 0.0,
       'categories': userRequests.map((r) => r.category).toSet().toList(),
       'cities': userRequests.map((r) => r.city).toSet().toList(),
     };
@@ -226,10 +277,12 @@ final requestNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>(
         .where('data.type', isEqualTo: 'request')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            }).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {
+                  'id': doc.id,
+                  ...doc.data(),
+                })
+            .toList());
   },
 );
 
@@ -546,6 +599,3 @@ class RequestFiltersNotifier extends StateNotifier<RequestFilters> {
     state = const RequestFilters();
   }
 }
-
-
-

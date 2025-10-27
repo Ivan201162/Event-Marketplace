@@ -58,13 +58,11 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
         _currentProfile!.id,
         !_isProAccount,
       );
-      
+
       setState(() => _isProAccount = !_isProAccount);
-      
+
       _showSuccessSnackBar(
-        _isProAccount 
-            ? 'PRO-аккаунт активирован' 
-            : 'PRO-аккаунт деактивирован',
+        _isProAccount ? 'PRO-аккаунт активирован' : 'PRO-аккаунт деактивирован',
       );
     } catch (e) {
       _showErrorSnackBar('Ошибка переключения PRO-аккаунта: $e');
@@ -209,15 +207,17 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _isProAccount ? 'PRO-аккаунт активен' : 'Обычный аккаунт',
+                        _isProAccount
+                            ? 'PRO-аккаунт активен'
+                            : 'Обычный аккаунт',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        _isProAccount 
-                            ? 'Вы используете все возможности PRO' 
+                        _isProAccount
+                            ? 'Вы используете все возможности PRO'
                             : 'Активируйте PRO для расширенных функций',
                         style: const TextStyle(color: Colors.grey),
                       ),
@@ -232,7 +232,8 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               child: ElevatedButton.icon(
                 onPressed: _toggleProAccount,
                 icon: Icon(_isProAccount ? Icons.cancel : Icons.star),
-                label: Text(_isProAccount ? 'Деактивировать PRO' : 'Активировать PRO'),
+                label: Text(
+                    _isProAccount ? 'Деактивировать PRO' : 'Активировать PRO'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _isProAccount ? Colors.red : Colors.amber,
                   foregroundColor: Colors.white,
@@ -257,7 +258,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.work),
               title: const Text('Настроить специализацию'),
@@ -283,7 +283,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.photo_library),
               title: const Text('Управление портфолио'),
@@ -309,7 +308,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.attach_money),
               title: const Text('Настроить цены'),
@@ -335,7 +333,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.analytics),
               title: const Text('Просмотр аналитики'),
@@ -361,7 +358,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.trending_up),
               title: const Text('Управление продвижением'),
@@ -387,7 +383,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.monetization_on),
               title: const Text('Настроить монетизацию'),
@@ -418,7 +413,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
             const Text(
               '• Указание специализации и портфолио\n'
               '• Настройка цен и услуг\n'
@@ -432,7 +426,6 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
-            
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(

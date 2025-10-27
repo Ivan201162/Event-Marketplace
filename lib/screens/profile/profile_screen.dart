@@ -35,7 +35,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(profileProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Профиль'),
@@ -77,10 +77,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               onFollow: _toggleFollow,
               onMessage: _sendMessage,
             ),
-            
+
             // Статистика
             ProfileStats(profile: profile),
-            
+
             // Контент
             Expanded(
               child: TabBarView(
@@ -106,7 +106,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               Text('Ошибка загрузки профиля: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => ref.read(profileProvider.notifier).refreshProfile(),
+                onPressed: () =>
+                    ref.read(profileProvider.notifier).refreshProfile(),
                 child: const Text('Повторить'),
               ),
             ],

@@ -53,11 +53,11 @@ class _SessionsListWidgetState extends State<SessionsListWidget> {
       try {
         // TODO: Реализовать завершение сессии
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         setState(() {
           _sessions.remove(session);
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Сессия завершена'),
@@ -107,11 +107,11 @@ class _SessionsListWidgetState extends State<SessionsListWidget> {
       try {
         // TODO: Реализовать завершение всех сессий
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         setState(() {
           _sessions.clear();
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Все сессии завершены'),
@@ -184,7 +184,8 @@ class _SessionsListWidgetState extends State<SessionsListWidget> {
                     margin: const EdgeInsets.only(bottom: 8),
                     child: ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: session.isActive ? Colors.green : Colors.grey,
+                        backgroundColor:
+                            session.isActive ? Colors.green : Colors.grey,
                         child: Icon(
                           _getDeviceIcon(session.deviceType),
                           color: Colors.white,

@@ -1,5 +1,5 @@
-/// Модель поста
-class Post {
+/// Модель поста пользователя с поддержкой видео
+class UserPost {
   final String id;
   final String authorId;
   final String authorName;
@@ -15,8 +15,11 @@ class Post {
   final bool isSaved;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final bool isVideo;
+  final String? videoUrl;
+  final String? thumbnailUrl;
 
-  const Post({
+  const UserPost({
     required this.id,
     required this.authorId,
     required this.authorName,
@@ -32,10 +35,13 @@ class Post {
     required this.isSaved,
     required this.createdAt,
     required this.updatedAt,
+    this.isVideo = false,
+    this.videoUrl,
+    this.thumbnailUrl,
   });
 
-  factory Post.fromMap(Map<String, dynamic> map, String id) {
-    return Post(
+  factory UserPost.fromMap(Map<String, dynamic> map, String id) {
+    return UserPost(
       id: id,
       authorId: map['authorId'] ?? '',
       authorName: map['authorName'] ?? '',
@@ -49,10 +55,11 @@ class Post {
       sharesCount: map['sharesCount'] ?? 0,
       isLiked: map['isLiked'] ?? false,
       isSaved: map['isSaved'] ?? false,
-      createdAt:
-          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt:
-          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      isVideo: map['isVideo'] ?? false,
+      videoUrl: map['videoUrl'],
+      thumbnailUrl: map['thumbnailUrl'],
     );
   }
 
@@ -72,10 +79,13 @@ class Post {
       'isSaved': isSaved,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'isVideo': isVideo,
+      'videoUrl': videoUrl,
+      'thumbnailUrl': thumbnailUrl,
     };
   }
 
-  Post copyWith({
+  UserPost copyWith({
     String? id,
     String? authorId,
     String? authorName,
@@ -91,8 +101,11 @@ class Post {
     bool? isSaved,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool? isVideo,
+    String? videoUrl,
+    String? thumbnailUrl,
   }) {
-    return Post(
+    return UserPost(
       id: id ?? this.id,
       authorId: authorId ?? this.authorId,
       authorName: authorName ?? this.authorName,
@@ -108,6 +121,9 @@ class Post {
       isSaved: isSaved ?? this.isSaved,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      isVideo: isVideo ?? this.isVideo,
+      videoUrl: videoUrl ?? this.videoUrl,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
     );
   }
 }

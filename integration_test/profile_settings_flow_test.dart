@@ -8,7 +8,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Profile and Settings Flow Tests', () {
-    testWidgets('Profile screen loads with user data', (WidgetTester tester) async {
+    testWidgets('Profile screen loads with user data',
+        (WidgetTester tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -49,13 +50,16 @@ void main() {
       expect(find.text('Редактировать профиль'), findsOneWidget);
 
       // Заполнение полей
-      await tester.enterText(find.byKey(const Key('display_name_field')), 'Новое имя');
+      await tester.enterText(
+          find.byKey(const Key('display_name_field')), 'Новое имя');
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byKey(const Key('username_field')), '@newusername');
+      await tester.enterText(
+          find.byKey(const Key('username_field')), '@newusername');
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byKey(const Key('bio_field')), 'Новое описание');
+      await tester.enterText(
+          find.byKey(const Key('bio_field')), 'Новое описание');
       await tester.pumpAndSettle();
 
       // Нажатие кнопки "Сохранить"

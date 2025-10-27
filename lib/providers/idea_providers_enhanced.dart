@@ -27,7 +27,8 @@ final userIdeasProvider = FutureProvider.family<List<IdeaEnhanced>, String>(
 );
 
 /// Провайдер для получения трендовых идей
-final trendingIdeasProvider = FutureProvider.family<List<IdeaEnhanced>, String?>(
+final trendingIdeasProvider =
+    FutureProvider.family<List<IdeaEnhanced>, String?>(
   (ref, category) async {
     return await IdeaServiceEnhanced.getTrendingIdeas(category: category);
   },
@@ -38,18 +39,19 @@ final recommendedIdeasProvider = FutureProvider<List<IdeaEnhanced>>(
   (ref) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
-    
+
     return await IdeaServiceEnhanced.getRecommendedIdeas(userId: user.uid);
   },
 );
 
 /// Провайдер для поиска идей
-final searchIdeasProvider = FutureProvider.family<List<IdeaEnhanced>, Map<String, dynamic>>(
+final searchIdeasProvider =
+    FutureProvider.family<List<IdeaEnhanced>, Map<String, dynamic>>(
   (ref, params) async {
     final query = params['query'] as String;
     final filters = params['filters'] as IdeaFilters?;
     final limit = params['limit'] as int? ?? 20;
-    
+
     return await IdeaServiceEnhanced.searchIdeas(
       query: query,
       filters: filters,
@@ -59,7 +61,8 @@ final searchIdeasProvider = FutureProvider.family<List<IdeaEnhanced>, Map<String
 );
 
 /// Провайдер для фильтров идей
-final ideaFiltersProvider = StateNotifierProvider<IdeaFiltersNotifier, IdeaFilters>(
+final ideaFiltersProvider =
+    StateNotifierProvider<IdeaFiltersNotifier, IdeaFilters>(
   (ref) => IdeaFiltersNotifier(),
 );
 
@@ -147,10 +150,11 @@ final ideaAnalyticsProvider = FutureProvider<Map<String, dynamic>>(
     if (user == null) return {};
 
     final userIdeas = await IdeaServiceEnhanced.getUserIdeas(user.uid);
-    
+
     return {
       'totalIdeas': userIdeas.length,
-      'publishedIdeas': userIdeas.where((i) => i.status == IdeaStatus.published).length,
+      'publishedIdeas':
+          userIdeas.where((i) => i.status == IdeaStatus.published).length,
       'draftIdeas': userIdeas.where((i) => i.status == IdeaStatus.draft).length,
       'featuredIdeas': userIdeas.where((i) => i.isFeatured).length,
       'trendingIdeas': userIdeas.where((i) => i.isTrending).length,
@@ -159,10 +163,11 @@ final ideaAnalyticsProvider = FutureProvider<Map<String, dynamic>>(
       'totalComments': userIdeas.fold(0, (sum, i) => sum + i.comments),
       'totalShares': userIdeas.fold(0, (sum, i) => sum + i.shares),
       'totalBookmarks': userIdeas.fold(0, (sum, i) => sum + i.bookmarks),
-      'averageRating': userIdeas.isNotEmpty 
-          ? userIdeas.fold(0.0, (sum, i) => sum + i.rating) / userIdeas.length 
+      'averageRating': userIdeas.isNotEmpty
+          ? userIdeas.fold(0.0, (sum, i) => sum + i.rating) / userIdeas.length
           : 0.0,
-      'categories': userIdeas.map((i) => i.categories).expand((x) => x).toSet().toList(),
+      'categories':
+          userIdeas.map((i) => i.categories).expand((x) => x).toSet().toList(),
       'tags': userIdeas.map((i) => i.tags).expand((x) => x).toSet().toList(),
     };
   },
@@ -200,13 +205,20 @@ final ideaNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>(
     yield* FirebaseFirestore.instance
         .collection('notifications')
         .where('userId', isEqualTo: user.uid)
-        .where('data.type', whereIn: ['idea_mention', 'idea_like', 'idea_comment', 'idea_repost'])
+        .where('data.type', whereIn: [
+          'idea_mention',
+          'idea_like',
+          'idea_comment',
+          'idea_repost'
+        ])
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            }).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {
+                  'id': doc.id,
+                  ...doc.data(),
+                })
+            .toList());
   },
 );
 
@@ -219,7 +231,12 @@ final unreadIdeaNotificationsCountProvider = StreamProvider<int>(
     yield* FirebaseFirestore.instance
         .collection('notifications')
         .where('userId', isEqualTo: user.uid)
-        .where('data.type', whereIn: ['idea_mention', 'idea_like', 'idea_comment', 'idea_repost'])
+        .where('data.type', whereIn: [
+          'idea_mention',
+          'idea_like',
+          'idea_comment',
+          'idea_repost'
+        ])
         .where('isRead', isEqualTo: false)
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
@@ -542,6 +559,3 @@ class IdeaFiltersNotifier extends StateNotifier<IdeaFilters> {
     state = const IdeaFilters();
   }
 }
-
-
-

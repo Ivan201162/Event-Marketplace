@@ -151,7 +151,8 @@ class UserProfileEnhanced {
       'securitySettings': securitySettings?.toMap(),
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
       'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+      'lastLoginAt':
+          lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
       'isActive': isActive,
       'role': role?.name,
     };
@@ -239,7 +240,8 @@ class UserProfileEnhanced {
   }
 
   @override
-  String toString() => 'UserProfileEnhanced(id: $id, email: $email, displayName: $displayName)';
+  String toString() =>
+      'UserProfileEnhanced(id: $id, email: $email, displayName: $displayName)';
 }
 
 /// Социальные ссылки

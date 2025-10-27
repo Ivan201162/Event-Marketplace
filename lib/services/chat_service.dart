@@ -12,7 +12,9 @@ class ChatService {
     try {
       final snapshot = await _firestore
           .collection('chats')
-          .where('members', arrayContains: 'current_user_id') // TODO: Получить ID текущего пользователя
+          .where('members',
+              arrayContains:
+                  'current_user_id') // TODO: Получить ID текущего пользователя
           .orderBy('lastMessageAt', descending: true)
           .limit(20)
           .get();
@@ -100,12 +102,19 @@ class ChatService {
   }
 
   /// Создать чат
-  Future<String> createChat(String otherUserId, String otherUserName, String? otherUserAvatar) async {
+  Future<String> createChat(
+      String otherUserId, String otherUserName, String? otherUserAvatar) async {
     try {
       final chatData = {
         'type': 'private',
-        'members': ['current_user_id', otherUserId], // TODO: Получить ID текущего пользователя
-        'memberNames': ['Текущий пользователь', otherUserName], // TODO: Получить имя текущего пользователя
+        'members': [
+          'current_user_id',
+          otherUserId
+        ], // TODO: Получить ID текущего пользователя
+        'memberNames': [
+          'Текущий пользователь',
+          otherUserName
+        ], // TODO: Получить имя текущего пользователя
         'memberAvatars': [null, otherUserAvatar],
         'lastMessage': '',
         'lastMessageAt': FieldValue.serverTimestamp(),
@@ -173,12 +182,15 @@ class ChatService {
   }
 
   /// Отправить сообщение
-  Future<void> sendMessage(String chatId, String text, {List<String>? attachments}) async {
+  Future<void> sendMessage(String chatId, String text,
+      {List<String>? attachments}) async {
     try {
       final messageData = {
         'text': text,
-        'senderId': 'current_user_id', // TODO: Получить ID текущего пользователя
-        'senderName': 'Текущий пользователь', // TODO: Получить имя текущего пользователя
+        'senderId':
+            'current_user_id', // TODO: Получить ID текущего пользователя
+        'senderName':
+            'Текущий пользователь', // TODO: Получить имя текущего пользователя
         'attachments': attachments ?? [],
         'type': 'text',
         'isEdited': false,
@@ -205,7 +217,8 @@ class ChatService {
   }
 
   /// Редактировать сообщение
-  Future<void> editMessage(String chatId, String messageId, String newText) async {
+  Future<void> editMessage(
+      String chatId, String messageId, String newText) async {
     try {
       await _firestore
           .collection('chats')

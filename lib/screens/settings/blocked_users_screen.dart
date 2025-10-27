@@ -31,7 +31,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
     try {
       // TODO: Реализовать загрузку заблокированных пользователей
       await Future.delayed(const Duration(seconds: 1)); // Заглушка
-      
+
       // Заглушка данных
       setState(() {
         _blockedUsers = [
@@ -89,11 +89,11 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
       try {
         // TODO: Реализовать разблокировку пользователя
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         setState(() {
           _blockedUsers.remove(user);
         });
-        
+
         _showSuccessSnackBar('Пользователь разблокирован');
       } catch (e) {
         _showErrorSnackBar('Ошибка разблокировки: $e');
@@ -207,7 +207,8 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
                     width: 40,
                     height: 40,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.person),
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.person),
                   ),
                 )
               : const Icon(Icons.person),

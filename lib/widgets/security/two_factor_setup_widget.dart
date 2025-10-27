@@ -23,7 +23,8 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
   void initState() {
     super.initState();
     _isEnabled = widget.currentSettings?.twoFactorEnabled ?? false;
-    _selectedMethod = widget.currentSettings?.twoFactorMethod ?? TwoFactorMethod.sms;
+    _selectedMethod =
+        widget.currentSettings?.twoFactorMethod ?? TwoFactorMethod.sms;
   }
 
   /// Включить/выключить 2FA
@@ -33,14 +34,14 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
     try {
       // TODO: Реализовать включение/выключение 2FA
       await Future.delayed(const Duration(seconds: 1)); // Заглушка
-      
+
       setState(() => _isEnabled = !_isEnabled);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            _isEnabled 
-                ? 'Двухфакторная аутентификация включена' 
+            _isEnabled
+                ? 'Двухфакторная аутентификация включена'
                 : 'Двухфакторная аутентификация отключена',
           ),
           backgroundColor: Colors.green,
@@ -73,9 +74,9 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
       try {
         // TODO: Реализовать смену метода 2FA
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         setState(() => _selectedMethod = result);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Метод двухфакторной аутентификации изменен'),
@@ -132,14 +133,15 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
                         ),
                         Switch(
                           value: _isEnabled,
-                          onChanged: _isLoading ? null : (value) => _toggleTwoFactor(),
+                          onChanged:
+                              _isLoading ? null : (value) => _toggleTwoFactor(),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      _isEnabled 
-                          ? 'Двухфакторная аутентификация включена' 
+                      _isEnabled
+                          ? 'Двухфакторная аутентификация включена'
                           : 'Двухфакторная аутентификация отключена',
                       style: TextStyle(
                         color: _isEnabled ? Colors.green : Colors.grey,
@@ -167,7 +169,6 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
                     ListTile(
                       leading: Icon(_getMethodIcon(_selectedMethod)),
                       title: Text(_getMethodTitle(_selectedMethod)),
@@ -314,17 +315,19 @@ class _MethodSelectionDialogState extends State<_MethodSelectionDialog> {
       title: const Text('Выберите метод'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: TwoFactorMethod.values.map((method) => RadioListTile<TwoFactorMethod>(
-          title: Text(_getMethodTitle(method)),
-          subtitle: Text(_getMethodDescription(method)),
-          value: method,
-          groupValue: _selectedMethod,
-          onChanged: (value) {
-            if (value != null) {
-              setState(() => _selectedMethod = value);
-            }
-          },
-        )).toList(),
+        children: TwoFactorMethod.values
+            .map((method) => RadioListTile<TwoFactorMethod>(
+                  title: Text(_getMethodTitle(method)),
+                  subtitle: Text(_getMethodDescription(method)),
+                  value: method,
+                  groupValue: _selectedMethod,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _selectedMethod = value);
+                    }
+                  },
+                ))
+            .toList(),
       ),
       actions: [
         TextButton(

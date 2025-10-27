@@ -69,7 +69,6 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.edit, color: Colors.blue),
               title: const Text('Редактировать профиль'),
@@ -79,14 +78,14 @@ class SettingsMainScreen extends StatelessWidget {
                 Navigator.of(context).pushNamed('/edit-profile');
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.visibility, color: Colors.green),
               title: const Text('Предпросмотр профиля'),
               subtitle: const Text('Как видят ваш профиль другие'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                _showInfoSnackBar(context, 'Предпросмотр профиля будет реализован');
+                _showInfoSnackBar(
+                    context, 'Предпросмотр профиля будет реализован');
               },
             ),
           ],
@@ -107,7 +106,6 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.security, color: Colors.red),
               title: const Text('Безопасность аккаунта'),
@@ -139,7 +137,6 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.palette, color: Colors.purple),
               title: const Text('Темы и оформление'),
@@ -171,7 +168,6 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.notifications, color: Colors.orange),
               title: const Text('Настройки уведомлений'),
@@ -203,11 +199,11 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.privacy_tip, color: Colors.blue),
               title: const Text('Настройки приватности'),
-              subtitle: const Text('Кто может писать, комментировать, упоминать'),
+              subtitle:
+                  const Text('Кто может писать, комментировать, упоминать'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 Navigator.of(context).push(
@@ -242,7 +238,6 @@ class SettingsMainScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.workspace_premium, color: Colors.amber),
               title: const Text('PRO-функции'),
@@ -270,7 +265,6 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.block, color: Colors.red),
               title: const Text('Заблокированные пользователи'),
@@ -302,7 +296,6 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.support_agent, color: Colors.green),
               title: const Text('Обратная связь'),
@@ -334,7 +327,6 @@ class SettingsMainScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.info, color: Colors.grey),
               title: const Text('Версия приложения'),
@@ -343,7 +335,6 @@ class SettingsMainScreen extends StatelessWidget {
                 _showInfoSnackBar(context, 'Версия 1.0.0');
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.help, color: Colors.blue),
               title: const Text('Помощь'),
@@ -353,24 +344,24 @@ class SettingsMainScreen extends StatelessWidget {
                 _showInfoSnackBar(context, 'Помощь будет реализована');
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.description, color: Colors.orange),
               title: const Text('Условия использования'),
               subtitle: const Text('Пользовательское соглашение'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                _showInfoSnackBar(context, 'Условия использования будут реализованы');
+                _showInfoSnackBar(
+                    context, 'Условия использования будут реализованы');
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.privacy_tip, color: Colors.purple),
               title: const Text('Политика конфиденциальности'),
               subtitle: const Text('Обработка персональных данных'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                _showInfoSnackBar(context, 'Политика конфиденциальности будет реализована');
+                _showInfoSnackBar(
+                    context, 'Политика конфиденциальности будет реализована');
               },
             ),
           ],

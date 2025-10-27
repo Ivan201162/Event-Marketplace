@@ -15,13 +15,15 @@ final requestsProvider = FutureProvider<List<Request>>((ref) async {
 });
 
 /// Провайдер для создания заявки
-final createRequestProvider = FutureProvider.family<void, Request>((ref, request) async {
+final createRequestProvider =
+    FutureProvider.family<void, Request>((ref, request) async {
   final requestsService = ref.read(requestsServiceProvider);
   await requestsService.createRequest(request);
 });
 
 /// Провайдер для обновления заявки
-final updateRequestProvider = FutureProvider.family<void, Request>((ref, request) async {
+final updateRequestProvider =
+    FutureProvider.family<void, Request>((ref, request) async {
   final requestsService = ref.read(requestsServiceProvider);
   await requestsService.updateRequest(request);
 });

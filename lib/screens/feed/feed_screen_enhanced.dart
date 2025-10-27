@@ -470,30 +470,30 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
             .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildShimmerLoadingState();
-        }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildShimmerLoadingState();
+          }
 
-        if (snapshot.hasError) {
-          return _buildErrorState(snapshot.error.toString());
-        }
+          if (snapshot.hasError) {
+            return _buildErrorState(snapshot.error.toString());
+          }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return _buildEmptyState();
-        }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return _buildEmptyState();
+          }
 
-        return ListView.builder(
-          controller: _scrollController,
-          padding: const EdgeInsets.all(16),
-          itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) {
-            final doc = snapshot.data!.docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+          return ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.all(16),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final doc = snapshot.data!.docs[index];
+              final data = doc.data() as Map<String, dynamic>;
 
-            return _buildPostCard(doc.id, data);
-          },
-        );
-      },
+              return _buildPostCard(doc.id, data);
+            },
+          );
+        },
       ),
     );
   }

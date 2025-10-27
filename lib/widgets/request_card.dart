@@ -39,9 +39,9 @@ class RequestCard extends StatelessWidget {
                   _StatusChip(status: request.status),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Описание
               Text(
                 request.description,
@@ -52,9 +52,9 @@ class RequestCard extends StatelessWidget {
                   fontSize: 14,
                 ),
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Детали заявки
               Row(
                 children: [
@@ -73,9 +73,9 @@ class RequestCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Бюджет и дата
               Row(
                 children: [
@@ -92,7 +92,7 @@ class RequestCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               if (request.attachments.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Row(
@@ -116,7 +116,7 @@ class RequestCard extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {

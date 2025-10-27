@@ -84,7 +84,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
       );
 
       await _userProfileService.updatePrivacySettings(userId, settings);
-      
+
       _showSuccessSnackBar('Настройки конфиденциальности сохранены');
     } catch (e) {
       _showErrorSnackBar('Ошибка сохранения: $e');
@@ -182,18 +182,19 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
-            ...MessagePermission.values.map((permission) => RadioListTile<MessagePermission>(
-              title: Text(_getMessagePermissionTitle(permission)),
-              subtitle: Text(_getMessagePermissionDescription(permission)),
-              value: permission,
-              groupValue: _whoCanMessage,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _whoCanMessage = value);
-                }
-              },
-            )),
+            ...MessagePermission.values
+                .map((permission) => RadioListTile<MessagePermission>(
+                      title: Text(_getMessagePermissionTitle(permission)),
+                      subtitle:
+                          Text(_getMessagePermissionDescription(permission)),
+                      value: permission,
+                      groupValue: _whoCanMessage,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _whoCanMessage = value);
+                        }
+                      },
+                    )),
           ],
         ),
       ),
@@ -212,18 +213,19 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
-            ...CommentPermission.values.map((permission) => RadioListTile<CommentPermission>(
-              title: Text(_getCommentPermissionTitle(permission)),
-              subtitle: Text(_getCommentPermissionDescription(permission)),
-              value: permission,
-              groupValue: _whoCanComment,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _whoCanComment = value);
-                }
-              },
-            )),
+            ...CommentPermission.values
+                .map((permission) => RadioListTile<CommentPermission>(
+                      title: Text(_getCommentPermissionTitle(permission)),
+                      subtitle:
+                          Text(_getCommentPermissionDescription(permission)),
+                      value: permission,
+                      groupValue: _whoCanComment,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _whoCanComment = value);
+                        }
+                      },
+                    )),
           ],
         ),
       ),
@@ -242,18 +244,19 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
-            ...MentionPermission.values.map((permission) => RadioListTile<MentionPermission>(
-              title: Text(_getMentionPermissionTitle(permission)),
-              subtitle: Text(_getMentionPermissionDescription(permission)),
-              value: permission,
-              groupValue: _whoCanMention,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _whoCanMention = value);
-                }
-              },
-            )),
+            ...MentionPermission.values
+                .map((permission) => RadioListTile<MentionPermission>(
+                      title: Text(_getMentionPermissionTitle(permission)),
+                      subtitle:
+                          Text(_getMentionPermissionDescription(permission)),
+                      value: permission,
+                      groupValue: _whoCanMention,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => _whoCanMention = value);
+                        }
+                      },
+                    )),
           ],
         ),
       ),
@@ -272,10 +275,10 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Скрыть от поиска'),
-              subtitle: const Text('Ваш профиль не будет отображаться в результатах поиска'),
+              subtitle: const Text(
+                  'Ваш профиль не будет отображаться в результатах поиска'),
               value: _hideFromSearch,
               onChanged: (value) {
                 setState(() => _hideFromSearch = value);
@@ -299,16 +302,15 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Только для близких друзей'),
-              subtitle: const Text('Истории будут видны только близким друзьям'),
+              subtitle:
+                  const Text('Истории будут видны только близким друзьям'),
               value: _closeFriendsOnly,
               onChanged: (value) {
                 setState(() => _closeFriendsOnly = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Архивировать истории'),
               subtitle: const Text('Автоматически архивировать истории'),
@@ -317,11 +319,11 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
                 setState(() => _archiveStories = value);
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.visibility_off),
               title: const Text('Скрыть истории от пользователей'),
-              subtitle: Text('Скрыто от ${_hideStoriesFrom.length} пользователей'),
+              subtitle:
+                  Text('Скрыто от ${_hideStoriesFrom.length} пользователей'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: _manageHiddenStories,
             ),

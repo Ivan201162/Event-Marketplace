@@ -13,7 +13,7 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
   bool _donationsEnabled = false;
   bool _subscriptionsEnabled = false;
   bool _directStreamsEnabled = false;
-  
+
   double _storyPrice = 50.0;
   double _streamPrice = 200.0;
   double _subscriptionPrice = 500.0;
@@ -70,11 +70,12 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Включить монетизацию'),
               subtitle: const Text('Разрешить получение платежей'),
-              value: _paidStoriesEnabled || _donationsEnabled || _subscriptionsEnabled,
+              value: _paidStoriesEnabled ||
+                  _donationsEnabled ||
+                  _subscriptionsEnabled,
               onChanged: (value) {
                 setState(() {
                   _paidStoriesEnabled = value;
@@ -101,19 +102,17 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Включить платные сторис'),
-              subtitle: const Text('Пользователи платят за просмотр ваших историй'),
+              subtitle:
+                  const Text('Пользователи платят за просмотр ваших историй'),
               value: _paidStoriesEnabled,
               onChanged: (value) {
                 setState(() => _paidStoriesEnabled = value);
               },
             ),
-            
             if (_paidStoriesEnabled) ...[
               const SizedBox(height: 16),
-              
               const Text('Цена за просмотр (руб.):'),
               Slider(
                 value: _storyPrice,
@@ -144,7 +143,6 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Включить донаты'),
               subtitle: const Text('Пользователи могут отправить вам донат'),
@@ -153,21 +151,20 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
                 setState(() => _donationsEnabled = value);
               },
             ),
-            
             if (_donationsEnabled) ...[
               const SizedBox(height: 16),
-              
               const Text('Рекомендуемые суммы:'),
               const SizedBox(height: 8),
-              
               Wrap(
                 spacing: 8,
-                children: [50, 100, 200, 500, 1000].map((amount) => 
-                  Chip(
-                    label: Text('$amount ₽'),
-                    onDeleted: () {},
-                  ),
-                ).toList(),
+                children: [50, 100, 200, 500, 1000]
+                    .map(
+                      (amount) => Chip(
+                        label: Text('$amount ₽'),
+                        onDeleted: () {},
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ],
@@ -188,19 +185,17 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Включить подписки'),
-              subtitle: const Text('Пользователи могут подписаться на эксклюзивный контент'),
+              subtitle: const Text(
+                  'Пользователи могут подписаться на эксклюзивный контент'),
               value: _subscriptionsEnabled,
               onChanged: (value) {
                 setState(() => _subscriptionsEnabled = value);
               },
             ),
-            
             if (_subscriptionsEnabled) ...[
               const SizedBox(height: 16),
-              
               const Text('Цена подписки (руб./месяц):'),
               Slider(
                 value: _subscriptionPrice,
@@ -231,19 +226,17 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Включить платные эфиры'),
-              subtitle: const Text('Пользователи платят за просмотр ваших эфиров'),
+              subtitle:
+                  const Text('Пользователи платят за просмотр ваших эфиров'),
               value: _directStreamsEnabled,
               onChanged: (value) {
                 setState(() => _directStreamsEnabled = value);
               },
             ),
-            
             if (_directStreamsEnabled) ...[
               const SizedBox(height: 16),
-              
               const Text('Цена за эфир (руб.):'),
               Slider(
                 value: _streamPrice,
@@ -274,7 +267,7 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             // Статистика
             Row(
               children: [
@@ -298,7 +291,7 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             Row(
               children: [
                 Expanded(
@@ -321,7 +314,7 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
@@ -350,7 +343,6 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.credit_card, color: Colors.blue),
               title: const Text('Банковская карта'),
@@ -360,9 +352,9 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
                 _showInfoSnackBar('Управление картами будет реализовано');
               },
             ),
-            
             ListTile(
-              leading: const Icon(Icons.account_balance_wallet, color: Colors.green),
+              leading:
+                  const Icon(Icons.account_balance_wallet, color: Colors.green),
               title: const Text('Электронный кошелек'),
               subtitle: const Text('Не привязан'),
               trailing: const Icon(Icons.arrow_forward_ios),
@@ -370,14 +362,13 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
                 _showInfoSnackBar('Привязка кошелька будет реализована');
               },
             ),
-            
             const SizedBox(height: 16),
-            
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  _showInfoSnackBar('Добавление способа оплаты будет реализовано');
+                  _showInfoSnackBar(
+                      'Добавление способа оплаты будет реализовано');
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Добавить способ оплаты'),
@@ -389,7 +380,8 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
     );
   }
 
-  Widget _buildStatItem(String title, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

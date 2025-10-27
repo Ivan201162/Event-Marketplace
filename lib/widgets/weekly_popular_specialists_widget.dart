@@ -77,7 +77,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                     CircleAvatar(
                       radius: 20,
                       backgroundImage: specialist['photoUrl'] != null
-                          ? NetworkImage(specialist['photoUrl'])
+                          ? NetworkImage(specialist['photoUrl'] as String)
                           : null,
                       child: specialist['photoUrl'] == null
                           ? const Icon(Icons.person, size: 20)
@@ -89,7 +89,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
 
                 // Имя
                 Text(
-                  specialist['name'] ?? 'Специалист',
+                  specialist['name'] as String? ?? 'Специалист',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 14),
                   maxLines: 1,
@@ -99,7 +99,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
 
                 // Категория
                 Text(
-                  specialist['category'] ?? 'Категория',
+                  specialist['category'] as String? ?? 'Категория',
                   style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -113,7 +113,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                     const SizedBox(width: 2),
                     Expanded(
                       child: Text(
-                        specialist['city'] ?? 'Город',
+                        specialist['city'] as String? ?? 'Город',
                         style: TextStyle(color: Colors.grey[500], fontSize: 10),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

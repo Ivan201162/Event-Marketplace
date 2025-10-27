@@ -51,8 +51,10 @@ class ChatMessage {
       ),
       attachments: List<String>.from(map['attachments'] ?? []),
       reactions: Map<String, String>.from(map['reactions'] ?? {}),
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      editedAt: map['editedAt'] != null ? DateTime.parse(map['editedAt']) : null,
+      createdAt:
+          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      editedAt:
+          map['editedAt'] != null ? DateTime.parse(map['editedAt']) : null,
       isRead: map['isRead'] ?? false,
     );
   }
@@ -119,7 +121,7 @@ class ChatMessage {
   String get formattedTime {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д';
     } else if (difference.inHours > 0) {
@@ -134,7 +136,8 @@ class ChatMessage {
   /// Получает статус сообщения
   MessageStatus get status {
     if (isRead) return MessageStatus.read;
-    if (createdAt.isBefore(DateTime.now().subtract(const Duration(minutes: 1)))) {
+    if (createdAt
+        .isBefore(DateTime.now().subtract(const Duration(minutes: 1)))) {
       return MessageStatus.delivered;
     }
     return MessageStatus.sent;

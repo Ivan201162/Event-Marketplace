@@ -49,8 +49,10 @@ class Story {
         orElse: () => StoryPrivacy.public,
       ),
       content: map['content'],
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      expiresAt: DateTime.parse(map['expiresAt'] ?? DateTime.now().add(const Duration(hours: 24)).toIso8601String()),
+      createdAt:
+          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      expiresAt: DateTime.parse(map['expiresAt'] ??
+          DateTime.now().add(const Duration(hours: 24)).toIso8601String()),
     );
   }
 

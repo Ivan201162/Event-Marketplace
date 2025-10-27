@@ -41,7 +41,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final messagesState = ref.watch(chatMessagesProvider(widget.chatId));
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Чат'),
@@ -80,12 +80,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline,
+                        size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки сообщений: $error'),
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => ref.read(chatMessagesProvider(widget.chatId).notifier).refreshMessages(),
+                      onPressed: () => ref
+                          .read(chatMessagesProvider(widget.chatId).notifier)
+                          .refreshMessages(),
                       child: const Text('Повторить'),
                     ),
                   ],
@@ -93,7 +96,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
             ),
           ),
-          
+
           // Поле ввода сообщения
           ChatInput(
             controller: _messageController,
@@ -107,10 +110,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   void _sendMessage(String text) {
     if (text.trim().isEmpty) return;
-    
+
     ref.read(chatMessagesProvider(widget.chatId).notifier).sendMessage(text);
     _messageController.clear();
-    
+
     // Прокрутить вниз
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -142,7 +145,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           onSubmitted: (newText) {
             if (newText.trim().isNotEmpty) {
-              ref.read(chatMessagesProvider(widget.chatId).notifier).editMessage(messageId, newText);
+              ref
+                  .read(chatMessagesProvider(widget.chatId).notifier)
+                  .editMessage(messageId, newText);
               Navigator.pop(context);
             }
           },
@@ -170,7 +175,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              ref.read(chatMessagesProvider(widget.chatId).notifier).deleteMessage(messageId);
+              ref
+                  .read(chatMessagesProvider(widget.chatId).notifier)
+                  .deleteMessage(messageId);
               Navigator.pop(context);
             },
             child: const Text('Удалить'),

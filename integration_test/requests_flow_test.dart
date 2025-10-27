@@ -47,10 +47,12 @@ void main() {
       expect(find.text('Создать заявку'), findsOneWidget);
 
       // Заполнение формы
-      await tester.enterText(find.byKey(const Key('title_field')), 'Тестовая заявка');
+      await tester.enterText(
+          find.byKey(const Key('title_field')), 'Тестовая заявка');
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byKey(const Key('description_field')), 'Описание тестовой заявки');
+      await tester.enterText(find.byKey(const Key('description_field')),
+          'Описание тестовой заявки');
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byKey(const Key('city_field')), 'Москва');

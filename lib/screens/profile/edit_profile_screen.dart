@@ -85,16 +85,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 avatarUrl: _selectedAvatar,
                 onAvatarTap: _selectAvatar,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               _CoverSection(
                 coverUrl: _selectedCover,
                 onCoverTap: _selectCover,
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Основная информация
               const Text(
                 'Основная информация',
@@ -103,9 +103,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _displayNameController,
                 decoration: const InputDecoration(
@@ -119,9 +119,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _usernameController,
                 decoration: const InputDecoration(
@@ -139,9 +139,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _bioController,
                 decoration: const InputDecoration(
@@ -151,9 +151,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 ),
                 maxLines: 3,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _cityController,
                 decoration: const InputDecoration(
@@ -161,9 +161,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Контактная информация
               const Text(
                 'Контактная информация',
@@ -172,9 +172,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -192,9 +192,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _phoneController,
                 decoration: const InputDecoration(
@@ -203,9 +203,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 ),
                 keyboardType: TextInputType.phone,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _websiteController,
                 decoration: const InputDecoration(
@@ -215,9 +215,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 ),
                 keyboardType: TextInputType.url,
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Статус
               const Text(
                 'Статус',
@@ -226,16 +226,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               SwitchListTile(
                 title: const Text('Pro-аккаунт'),
                 subtitle: const Text('Расширенные возможности'),
                 value: _isPro,
                 onChanged: (value) => setState(() => _isPro = value),
               ),
-              
+
               SwitchListTile(
                 title: const Text('Верифицированный'),
                 subtitle: const Text('Подтверждённый аккаунт'),
@@ -274,10 +274,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         displayName: _displayNameController.text.trim(),
         username: _usernameController.text.trim(),
         email: _emailController.text.trim(),
-        phone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
+        phone: _phoneController.text.trim().isEmpty
+            ? null
+            : _phoneController.text.trim(),
         bio: _bioController.text.trim(),
         city: _cityController.text.trim(),
-        website: _websiteController.text.trim().isEmpty ? null : _websiteController.text.trim(),
+        website: _websiteController.text.trim().isEmpty
+            ? null
+            : _websiteController.text.trim(),
         socialLinks: {},
         avatarUrl: _selectedAvatar,
         coverUrl: _selectedCover,
@@ -294,7 +298,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       );
 
       await ref.read(profileProvider.notifier).updateProfile(profile);
-      
+
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -339,12 +343,10 @@ class _AvatarSection extends StatelessWidget {
             onTap: onAvatarTap,
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: avatarUrl != null
-                  ? NetworkImage(avatarUrl!)
-                  : null,
-              child: avatarUrl == null
-                  ? const Icon(Icons.person, size: 50)
-                  : null,
+              backgroundImage:
+                  avatarUrl != null ? NetworkImage(avatarUrl!) : null,
+              child:
+                  avatarUrl == null ? const Icon(Icons.person, size: 50) : null,
             ),
           ),
         ),

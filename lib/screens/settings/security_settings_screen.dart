@@ -55,10 +55,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     if (result != null) {
       try {
         setState(() => _isLoading = true);
-        
+
         // TODO: Реализовать смену пароля через Firebase Auth
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         _showSuccessSnackBar('Пароль успешно изменен');
       } catch (e) {
         _showErrorSnackBar('Ошибка смены пароля: $e');
@@ -117,10 +117,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     if (result != null) {
       try {
         setState(() => _isLoading = true);
-        
+
         // TODO: Реализовать смену email через Firebase Auth
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         _showSuccessSnackBar('Email успешно изменен');
       } catch (e) {
         _showErrorSnackBar('Ошибка смены email: $e');
@@ -142,10 +142,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     if (result != null) {
       try {
         setState(() => _isLoading = true);
-        
+
         // TODO: Реализовать смену номера телефона
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         _showSuccessSnackBar('Номер телефона успешно изменен');
       } catch (e) {
         _showErrorSnackBar('Ошибка смены номера: $e');
@@ -159,10 +159,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   Future<void> _linkGoogleAccount() async {
     try {
       setState(() => _isLoading = true);
-      
+
       // TODO: Реализовать привязку Google аккаунта
       await Future.delayed(const Duration(seconds: 1)); // Заглушка
-      
+
       _showSuccessSnackBar('Google аккаунт успешно привязан');
     } catch (e) {
       _showErrorSnackBar('Ошибка привязки Google: $e');
@@ -198,10 +198,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     if (confirmed == true) {
       try {
         setState(() => _isLoading = true);
-        
+
         // TODO: Реализовать отвязку Google аккаунта
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         _showSuccessSnackBar('Google аккаунт отвязан');
       } catch (e) {
         _showErrorSnackBar('Ошибка отвязки Google: $e');
@@ -238,10 +238,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     if (confirmed == true) {
       try {
         setState(() => _isLoading = true);
-        
+
         // TODO: Реализовать удаление аккаунта
         await Future.delayed(const Duration(seconds: 1)); // Заглушка
-        
+
         _showSuccessSnackBar('Аккаунт удален');
         Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
       } catch (e) {
@@ -319,7 +319,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.lock),
               title: const Text('Сменить пароль'),
@@ -334,8 +333,9 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   }
 
   Widget _buildTwoFactorSection() {
-    final isTwoFactorEnabled = _currentProfile?.securitySettings?.twoFactorEnabled ?? false;
-    
+    final isTwoFactorEnabled =
+        _currentProfile?.securitySettings?.twoFactorEnabled ?? false;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -357,8 +357,8 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              isTwoFactorEnabled 
-                  ? '2FA включена' 
+              isTwoFactorEnabled
+                  ? '2FA включена'
                   : 'Дополнительная защита аккаунта',
               style: const TextStyle(color: Colors.grey),
             ),
@@ -390,7 +390,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.devices),
               title: const Text('Управление сессиями'),
@@ -398,7 +397,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: _manageSessions,
             ),
-            
             ListTile(
               leading: const Icon(Icons.history),
               title: const Text('История входов'),
@@ -424,7 +422,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.email),
               title: const Text('Сменить email'),
@@ -432,7 +429,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: _changeEmail,
             ),
-            
             ListTile(
               leading: const Icon(Icons.phone),
               title: const Text('Сменить номер телефона'),
@@ -458,7 +454,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.account_circle, color: Colors.blue),
               title: const Text('Google аккаунт'),
@@ -492,7 +487,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.delete_forever, color: Colors.red),
               title: const Text('Удалить аккаунт'),
@@ -554,8 +548,11 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                 labelText: 'Текущий пароль',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(_obscureCurrent ? Icons.visibility : Icons.visibility_off),
-                  onPressed: () => setState(() => _obscureCurrent = !_obscureCurrent),
+                  icon: Icon(_obscureCurrent
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () =>
+                      setState(() => _obscureCurrent = !_obscureCurrent),
                 ),
               ),
               obscureText: _obscureCurrent,
@@ -573,7 +570,8 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                 labelText: 'Новый пароль',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(_obscureNew ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(
+                      _obscureNew ? Icons.visibility : Icons.visibility_off),
                   onPressed: () => setState(() => _obscureNew = !_obscureNew),
                 ),
               ),
@@ -595,8 +593,11 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                 labelText: 'Подтвердите пароль',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(_obscureConfirm ? Icons.visibility : Icons.visibility_off),
-                  onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                  icon: Icon(_obscureConfirm
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                  onPressed: () =>
+                      setState(() => _obscureConfirm = !_obscureConfirm),
                 ),
               ),
               obscureText: _obscureConfirm,
@@ -675,7 +676,8 @@ class _ChangeEmailDialogState extends State<_ChangeEmailDialog> {
                 if (value == null || value.isEmpty) {
                   return 'Введите новый email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                    .hasMatch(value)) {
                   return 'Введите корректный email';
                 }
                 return null;
@@ -733,7 +735,8 @@ class _ChangePhoneDialogState extends State<_ChangePhoneDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Текущий номер: ${widget.currentPhone.isEmpty ? 'Не указан' : widget.currentPhone}'),
+            Text(
+                'Текущий номер: ${widget.currentPhone.isEmpty ? 'Не указан' : widget.currentPhone}'),
             const SizedBox(height: 16),
             TextFormField(
               controller: _newPhoneController,
@@ -747,7 +750,8 @@ class _ChangePhoneDialogState extends State<_ChangePhoneDialog> {
                 if (value == null || value.isEmpty) {
                   return 'Введите новый номер';
                 }
-                if (!RegExp(r'^\+?[1-9]\d{1,14}$').hasMatch(value.replaceAll(RegExp(r'[^\d+]'), ''))) {
+                if (!RegExp(r'^\+?[1-9]\d{1,14}$')
+                    .hasMatch(value.replaceAll(RegExp(r'[^\d+]'), ''))) {
                   return 'Введите корректный номер телефона';
                 }
                 return null;

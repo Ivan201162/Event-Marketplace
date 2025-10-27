@@ -138,7 +138,8 @@ class FeedbackTicket {
   }
 
   @override
-  String toString() => 'FeedbackTicket(id: $id, title: $title, status: $status)';
+  String toString() =>
+      'FeedbackTicket(id: $id, title: $title, status: $status)';
 }
 
 /// Приоритеты тикетов

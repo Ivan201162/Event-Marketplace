@@ -21,7 +21,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
   @override
   Widget build(BuildContext context) {
     final chatsState = ref.watch(chatsProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Чаты'),
@@ -43,7 +43,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
           ChatSearchBar(
             onSearchChanged: (query) => setState(() => _searchQuery = query),
           ),
-          
+
           // Список чатов
           Expanded(
             child: RefreshIndicator(
@@ -69,12 +69,14 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                      const Icon(Icons.error_outline,
+                          size: 64, color: Colors.red),
                       const SizedBox(height: 16),
                       Text('Ошибка загрузки чатов: $error'),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () => ref.read(chatsProvider.notifier).refreshChats(),
+                        onPressed: () =>
+                            ref.read(chatsProvider.notifier).refreshChats(),
                         child: const Text('Повторить'),
                       ),
                     ],

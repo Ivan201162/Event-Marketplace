@@ -43,10 +43,7 @@ class ProfileService {
   Future<void> toggleFollow() async {
     try {
       // TODO: Реализовать логику подписки
-      await _firestore
-          .collection('users')
-          .doc('current_user_id')
-          .update({
+      await _firestore.collection('users').doc('current_user_id').update({
         'isFollowing': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -58,14 +55,12 @@ class ProfileService {
   /// Загрузить аватар
   Future<String> uploadAvatar(String imagePath) async {
     try {
-      final ref = _storage
-          .ref()
-          .child('avatars')
-          .child('current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final ref = _storage.ref().child('avatars').child(
+          'current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg');
 
       final uploadTask = await ref.putFile(File(imagePath));
       final downloadUrl = await uploadTask.ref.getDownloadURL();
-      
+
       return downloadUrl;
     } catch (e) {
       throw Exception('Ошибка загрузки аватара: $e');
@@ -75,14 +70,12 @@ class ProfileService {
   /// Загрузить обложку
   Future<String> uploadCover(String imagePath) async {
     try {
-      final ref = _storage
-          .ref()
-          .child('covers')
-          .child('current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final ref = _storage.ref().child('covers').child(
+          'current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg');
 
       final uploadTask = await ref.putFile(File(imagePath));
       final downloadUrl = await uploadTask.ref.getDownloadURL();
-      
+
       return downloadUrl;
     } catch (e) {
       throw Exception('Ошибка загрузки обложки: $e');

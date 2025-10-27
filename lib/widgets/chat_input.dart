@@ -58,7 +58,7 @@ class _ChatInputState extends State<ChatInput> {
             icon: const Icon(Icons.attach_file),
             onPressed: widget.onAttach,
           ),
-          
+
           // Поле ввода
           Expanded(
             child: TextField(
@@ -78,9 +78,9 @@ class _ChatInputState extends State<ChatInput> {
               onSubmitted: _handleSubmit,
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Кнопка отправки
           if (_isComposing)
             IconButton(

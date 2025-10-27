@@ -34,9 +34,9 @@ class IdeaCard extends StatelessWidget {
             children: [
               // Заголовок с аватаром автора
               _IdeaHeader(idea: idea),
-              
+
               const SizedBox(height: 12),
-              
+
               // Текст идеи
               Text(
                 idea.text,
@@ -44,21 +44,21 @@ class IdeaCard extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               // Медиа контент
               if (idea.media.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 _IdeaMedia(media: idea.media),
               ],
-              
+
               // Теги
               if (idea.tags.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 _IdeaTags(tags: idea.tags),
               ],
-              
+
               const SizedBox(height: 16),
-              
+
               // Действия
               _IdeaActions(
                 idea: idea,
@@ -67,9 +67,9 @@ class IdeaCard extends StatelessWidget {
                 onSave: onSave,
                 onShare: onShare,
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Статистика
               _IdeaStats(idea: idea),
             ],
@@ -94,9 +94,7 @@ class _IdeaHeader extends StatelessWidget {
           backgroundImage: idea.authorAvatar != null
               ? NetworkImage(idea.authorAvatar!)
               : null,
-          child: idea.authorAvatar == null
-              ? const Icon(Icons.person)
-              : null,
+          child: idea.authorAvatar == null ? const Icon(Icons.person) : null,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -131,7 +129,7 @@ class _IdeaHeader extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {
@@ -222,7 +220,7 @@ class _IdeaMedia extends StatelessWidget {
         ),
       );
     }
-    
+
     return const SizedBox.shrink();
   }
 }

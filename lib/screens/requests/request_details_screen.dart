@@ -14,7 +14,8 @@ class RequestDetailsScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<RequestDetailsScreen> createState() => _RequestDetailsScreenState();
+  ConsumerState<RequestDetailsScreen> createState() =>
+      _RequestDetailsScreenState();
 }
 
 class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
@@ -30,7 +31,9 @@ class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
 
   Future<void> _loadRequest() async {
     try {
-      final request = await ref.read(requestsServiceProvider).getRequestById(widget.requestId);
+      final request = await ref
+          .read(requestsServiceProvider)
+          .getRequestById(widget.requestId);
       setState(() {
         _request = request;
         _isLoading = false;
@@ -129,28 +132,28 @@ class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
                 _StatusChip(status: _request!.status),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Информация о заявке
             _InfoCard(
               title: 'Описание',
               content: _request!.description,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Детали
             _DetailsCard(request: _request!),
-            
+
             const SizedBox(height: 16),
-            
+
             // Вложения
             if (_request!.attachments.isNotEmpty)
               _AttachmentsCard(attachments: _request!.attachments),
-            
+
             const SizedBox(height: 16),
-            
+
             // Действия
             _ActionsCard(
               request: _request!,
@@ -180,9 +183,9 @@ class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
   void _changeStatus(String newStatus) async {
     try {
       await ref.read(requestsProvider.notifier).updateRequestStatus(
-        _request!.id,
-        newStatus,
-      );
+            _request!.id,
+            newStatus,
+          );
       await _loadRequest();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -312,7 +315,8 @@ class _DetailsCard extends StatelessWidget {
             _DetailRow(
               icon: Icons.calendar_today,
               label: 'Дата',
-              value: '${request.dateTime.day}.${request.dateTime.month}.${request.dateTime.year}',
+              value:
+                  '${request.dateTime.day}.${request.dateTime.month}.${request.dateTime.year}',
             ),
             if (request.time != null)
               _DetailRow(
@@ -386,15 +390,15 @@ class _AttachmentsCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             ...attachments.map((attachment) => ListTile(
-              leading: const Icon(Icons.attach_file),
-              title: Text(attachment),
-              onTap: () {
-                // TODO: Открыть вложение
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Открытие вложения: $attachment')),
-                );
-              },
-            )),
+                  leading: const Icon(Icons.attach_file),
+                  title: Text(attachment),
+                  onTap: () {
+                    // TODO: Открыть вложение
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Открытие вложения: $attachment')),
+                    );
+                  },
+                )),
           ],
         ),
       ),

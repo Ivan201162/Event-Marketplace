@@ -9,7 +9,8 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
 });
 
 /// Провайдер состояния профиля
-final profileProvider = StateNotifierProvider<ProfileNotifier, AsyncValue<UserProfile>>((ref) {
+final profileProvider =
+    StateNotifierProvider<ProfileNotifier, AsyncValue<UserProfile>>((ref) {
   return ProfileNotifier(ref.read(profileServiceProvider));
 });
 
@@ -53,8 +54,8 @@ class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile>> {
         final currentProfile = state.value!;
         final updatedProfile = currentProfile.copyWith(
           isFollowing: !currentProfile.isFollowing,
-          followersCount: currentProfile.isFollowing 
-              ? currentProfile.followersCount - 1 
+          followersCount: currentProfile.isFollowing
+              ? currentProfile.followersCount - 1
               : currentProfile.followersCount + 1,
         );
         state = AsyncValue.data(updatedProfile);

@@ -28,7 +28,7 @@ class FeedPostCard extends StatelessWidget {
         children: [
           // Заголовок поста с аватаром автора
           _PostHeader(post: post),
-          
+
           // Текст поста
           if (post.text.isNotEmpty)
             Padding(
@@ -38,10 +38,10 @@ class FeedPostCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 16),
               ),
             ),
-          
+
           // Медиа контент
           if (post.media.isNotEmpty) _PostMedia(media: post.media),
-          
+
           // Действия
           _PostActions(
             post: post,
@@ -50,7 +50,7 @@ class FeedPostCard extends StatelessWidget {
             onShare: onShare,
             onSave: onSave,
           ),
-          
+
           // Статистика
           _PostStats(post: post),
         ],
@@ -75,9 +75,7 @@ class _PostHeader extends StatelessWidget {
             backgroundImage: post.authorAvatar != null
                 ? NetworkImage(post.authorAvatar!)
                 : null,
-            child: post.authorAvatar == null
-                ? const Icon(Icons.person)
-                : null,
+            child: post.authorAvatar == null ? const Icon(Icons.person) : null,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -113,7 +111,7 @@ class _PostHeader extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {
@@ -198,7 +196,7 @@ class _PostMedia extends StatelessWidget {
         ),
       );
     }
-    
+
     return const SizedBox.shrink();
   }
 }

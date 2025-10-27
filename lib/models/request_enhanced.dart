@@ -144,9 +144,11 @@ class RequestEnhanced extends Equatable {
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       timeline: (data['timeline'] as List<dynamic>?)
-          ?.map((e) => RequestTimeline.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [],
-      aiRecommendations: Map<String, dynamic>.from(data['aiRecommendations'] ?? {}),
+              ?.map((e) => RequestTimeline.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      aiRecommendations:
+          Map<String, dynamic>.from(data['aiRecommendations'] ?? {}),
       isVerified: data['isVerified'] ?? false,
       rating: (data['rating'] ?? 0.0).toDouble(),
       views: data['views'] ?? 0,
@@ -194,7 +196,8 @@ class RequestEnhanced extends Equatable {
       'views': views,
       'likes': likes,
       'isPinned': isPinned,
-      'pinnedUntil': pinnedUntil != null ? Timestamp.fromDate(pinnedUntil!) : null,
+      'pinnedUntil':
+          pinnedUntil != null ? Timestamp.fromDate(pinnedUntil!) : null,
       'sharedWith': sharedWith,
       'analytics': analytics,
     };
@@ -440,6 +443,3 @@ class RequestFilters extends Equatable {
         radius,
       ];
 }
-
-
-

@@ -405,7 +405,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         eventTitle: 'Тестовое событие',
         participantsCount: 10,
       );
-      
+
       final bookingId = await _bookingService.createBooking(bookingData);
 
       _showSuccessMessage('Бронирование создано: $bookingId');

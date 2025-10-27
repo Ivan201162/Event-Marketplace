@@ -38,9 +38,9 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ),
             ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Аватар и основная информация
           Row(
             children: [
@@ -54,9 +54,9 @@ class ProfileHeader extends StatelessWidget {
                     ? const Icon(Icons.person, size: 40)
                     : null,
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // Информация
               Expanded(
                 child: Column(
@@ -82,7 +82,8 @@ class ProfileHeader extends StatelessWidget {
                         if (profile.isPro) ...[
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.amber,
                               borderRadius: BorderRadius.circular(12),
@@ -99,9 +100,7 @@ class ProfileHeader extends StatelessWidget {
                         ],
                       ],
                     ),
-                    
                     const SizedBox(height: 4),
-                    
                     Text(
                       '@${profile.username}',
                       style: TextStyle(
@@ -109,7 +108,6 @@ class ProfileHeader extends StatelessWidget {
                         fontSize: 14,
                       ),
                     ),
-                    
                     if (profile.bio.isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(
@@ -119,12 +117,12 @@ class ProfileHeader extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                    
                     if (profile.city.isNotEmpty) ...[
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                          Icon(Icons.location_on,
+                              size: 16, color: Colors.grey[600]),
                           const SizedBox(width: 4),
                           Text(
                             profile.city,
@@ -141,9 +139,9 @@ class ProfileHeader extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Кнопки действий
           if (isOwnProfile) ...[
             Row(
@@ -172,7 +170,9 @@ class ProfileHeader extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onFollow,
                     icon: Icon(
-                      profile.isFollowing ? Icons.person_remove : Icons.person_add,
+                      profile.isFollowing
+                          ? Icons.person_remove
+                          : Icons.person_add,
                     ),
                     label: Text(
                       profile.isFollowing ? 'Отписаться' : 'Подписаться',

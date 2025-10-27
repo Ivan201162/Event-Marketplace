@@ -251,7 +251,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   TicketCategory _selectedCategory = TicketCategory.bug;
   bool _isLoading = false;
 
@@ -281,7 +281,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       );
 
       await FeedbackService().createTicket(ticket);
-      
+
       Navigator.of(context).pop(ticket);
     } catch (e) {
       _showErrorSnackBar('Ошибка создания тикета: $e');
@@ -331,21 +331,22 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   children: [
                     const Text(
                       'Категория',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
-                    
-                    ...TicketCategory.values.map((category) => RadioListTile<TicketCategory>(
-                      title: Text(_getCategoryTitle(category)),
-                      subtitle: Text(_getCategoryDescription(category)),
-                      value: category,
-                      groupValue: _selectedCategory,
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => _selectedCategory = value);
-                        }
-                      },
-                    )),
+                    ...TicketCategory.values
+                        .map((category) => RadioListTile<TicketCategory>(
+                              title: Text(_getCategoryTitle(category)),
+                              subtitle: Text(_getCategoryDescription(category)),
+                              value: category,
+                              groupValue: _selectedCategory,
+                              onChanged: (value) {
+                                if (value != null) {
+                                  setState(() => _selectedCategory = value);
+                                }
+                              },
+                            )),
                   ],
                 ),
               ),
@@ -361,10 +362,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   children: [
                     const Text(
                       'Заголовок',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
-                    
                     TextFormField(
                       controller: _titleController,
                       decoration: const InputDecoration(
@@ -397,10 +398,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   children: [
                     const Text(
                       'Описание',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
-                    
                     TextFormField(
                       controller: _descriptionController,
                       decoration: const InputDecoration(
@@ -435,15 +436,16 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   children: [
                     const Text(
                       'Вложения',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
-                    
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          _showInfoSnackBar('Добавление вложений будет реализовано');
+                          _showInfoSnackBar(
+                              'Добавление вложений будет реализовано');
                         },
                         icon: const Icon(Icons.attach_file),
                         label: const Text('Добавить файлы'),
@@ -530,7 +532,6 @@ class TicketDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
                   Row(
                     children: [
                       Chip(
@@ -540,12 +541,12 @@ class TicketDetailsScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Chip(
                         label: Text(_getStatusText(ticket.status)),
-                        backgroundColor: _getStatusColor(ticket.status).withOpacity(0.2),
+                        backgroundColor:
+                            _getStatusColor(ticket.status).withOpacity(0.2),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  
                   Text(
                     ticket.description,
                     style: const TextStyle(fontSize: 16),
@@ -568,7 +569,6 @@ class TicketDetailsScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
-                  
                   const Text(
                     'Здесь будет отображаться переписка с поддержкой',
                     style: TextStyle(color: Colors.grey),

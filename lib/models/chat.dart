@@ -23,12 +23,14 @@ class Chat {
       id: id,
       participants: List<String>.from(map['participants'] ?? []),
       lastMessage: map['lastMessage'],
-      lastMessageTime: map['lastMessageTime'] != null 
+      lastMessageTime: map['lastMessageTime'] != null
           ? DateTime.parse(map['lastMessageTime'])
           : null,
       unreadCount: map['unreadCount'] ?? 0,
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt:
+          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt:
+          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 

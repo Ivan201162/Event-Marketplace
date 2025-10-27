@@ -38,11 +38,13 @@ class StoriesWidget extends ConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         final adsAsync = ref.watch(storyAdsProvider);
-        
+
         return ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          itemCount: stories.length + (isOwnProfile ? 1 : 0) + (adsAsync.value?.length ?? 0),
+          itemCount: stories.length +
+              (isOwnProfile ? 1 : 0) +
+              (adsAsync.value?.length ?? 0),
           itemBuilder: (context, index) {
             if (isOwnProfile && index == 0) {
               return _buildAddStoryButton(context);

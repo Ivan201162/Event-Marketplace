@@ -18,10 +18,8 @@ class UserProfileService {
   /// Получить профиль пользователя
   Future<UserProfileEnhanced?> getUserProfile(String userId) async {
     try {
-      final doc = await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .get();
+      final doc =
+          await _firestore.collection('user_profiles').doc(userId).get();
 
       if (doc.exists) {
         return UserProfileEnhanced.fromDocument(doc);
@@ -105,18 +103,16 @@ class UserProfileService {
   Future<String?> uploadAvatar(String userId, XFile imageFile) async {
     try {
       final file = File(imageFile.path);
-      final fileName = 'avatars/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      
+      final fileName =
+          'avatars/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
       final ref = _storage.ref().child(fileName);
       final uploadTask = ref.putFile(file);
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Обновляем URL аватарки в профиле
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'avatarUrl': downloadUrl,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -133,18 +129,16 @@ class UserProfileService {
   Future<String?> uploadCover(String userId, XFile imageFile) async {
     try {
       final file = File(imageFile.path);
-      final fileName = 'covers/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
-      
+      final fileName =
+          'covers/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
       final ref = _storage.ref().child(fileName);
       final uploadTask = ref.putFile(file);
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Обновляем URL обложки в профиле
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'coverUrl': downloadUrl,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -158,10 +152,11 @@ class UserProfileService {
   }
 
   /// Загрузить видео-презентацию
-  Future<String?> uploadVideoPresentation(String userId, XFile videoFile) async {
+  Future<String?> uploadVideoPresentation(
+      String userId, XFile videoFile) async {
     try {
       final file = File(videoFile.path);
-      
+
       // Сжимаем видео до 30 секунд
       final compressedVideo = await VideoCompress.compressVideo(
         file.path,
@@ -174,17 +169,15 @@ class UserProfileService {
         throw Exception('Ошибка сжатия видео');
       }
 
-      final fileName = 'videos/$userId/${DateTime.now().millisecondsSinceEpoch}.mp4';
+      final fileName =
+          'videos/$userId/${DateTime.now().millisecondsSinceEpoch}.mp4';
       final ref = _storage.ref().child(fileName);
       final uploadTask = ref.putFile(File(compressedVideo.path));
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Обновляем URL видео в профиле
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'videoPresentation': downloadUrl,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -200,10 +193,7 @@ class UserProfileService {
   /// Добавить социальную ссылку
   Future<void> addSocialLink(String userId, SocialLink socialLink) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'socialLinks': FieldValue.arrayUnion([socialLink.toMap()]),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -218,10 +208,7 @@ class UserProfileService {
   /// Удалить социальную ссылку
   Future<void> removeSocialLink(String userId, SocialLink socialLink) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'socialLinks': FieldValue.arrayRemove([socialLink.toMap()]),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -239,10 +226,7 @@ class UserProfileService {
     ProfileVisibilitySettings settings,
   ) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'visibilitySettings': settings.toMap(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -260,10 +244,7 @@ class UserProfileService {
     PrivacySettings settings,
   ) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'privacySettings': settings.toMap(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -281,10 +262,7 @@ class UserProfileService {
     NotificationSettings settings,
   ) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'notificationSettings': settings.toMap(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -302,10 +280,7 @@ class UserProfileService {
     AppearanceSettings settings,
   ) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'appearanceSettings': settings.toMap(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -323,10 +298,7 @@ class UserProfileService {
     SecuritySettings settings,
   ) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'securitySettings': settings.toMap(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -341,10 +313,7 @@ class UserProfileService {
   /// Переключить PRO-аккаунт
   Future<void> toggleProAccount(String userId, bool isPro) async {
     try {
-      await _firestore
-          .collection('user_profiles')
-          .doc(userId)
-          .update({
+      await _firestore.collection('user_profiles').doc(userId).update({
         'isProAccount': isPro,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -372,7 +341,8 @@ class UserProfileService {
   }
 
   /// Получить предпросмотр профиля для других пользователей
-  Future<Map<String, dynamic>?> getProfilePreview(String userId, String viewerId) async {
+  Future<Map<String, dynamic>?> getProfilePreview(
+      String userId, String viewerId) async {
     try {
       final profile = await getUserProfile(userId);
       if (profile == null) return null;

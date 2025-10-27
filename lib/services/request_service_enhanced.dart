@@ -102,7 +102,10 @@ class RequestServiceEnhanced {
         },
       );
 
-      await _firestore.collection('requests').doc(requestId).set(request.toFirestore());
+      await _firestore
+          .collection('requests')
+          .doc(requestId)
+          .set(request.toFirestore());
 
       // Добавляем в аналитику
       await _updateAnalytics('request_created', {
@@ -151,16 +154,19 @@ class RequestServiceEnhanced {
           query = query.where('language', isEqualTo: filters.language);
         }
         if (filters.minBudget != null) {
-          query = query.where('budget', isGreaterThanOrEqualTo: filters.minBudget);
+          query =
+              query.where('budget', isGreaterThanOrEqualTo: filters.minBudget);
         }
         if (filters.maxBudget != null) {
           query = query.where('budget', isLessThanOrEqualTo: filters.maxBudget);
         }
         if (filters.startDate != null) {
-          query = query.where('deadline', isGreaterThanOrEqualTo: Timestamp.fromDate(filters.startDate!));
+          query = query.where('deadline',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(filters.startDate!));
         }
         if (filters.endDate != null) {
-          query = query.where('deadline', isLessThanOrEqualTo: Timestamp.fromDate(filters.endDate!));
+          query = query.where('deadline',
+              isLessThanOrEqualTo: Timestamp.fromDate(filters.endDate!));
         }
       }
 
@@ -175,7 +181,9 @@ class RequestServiceEnhanced {
       query = query.limit(limit);
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => RequestEnhanced.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => RequestEnhanced.fromFirestore(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения заявок: $e');
     }
@@ -195,7 +203,8 @@ class RequestServiceEnhanced {
   }
 
   /// Обновление заявки
-  static Future<void> updateRequest(String requestId, Map<String, dynamic> updates) async {
+  static Future<void> updateRequest(
+      String requestId, Map<String, dynamic> updates) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('Пользователь не авторизован');
@@ -203,14 +212,16 @@ class RequestServiceEnhanced {
       // Проверяем права на редактирование
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId != user.uid) throw Exception('Нет прав на редактирование');
+      if (request.authorId != user.uid)
+        throw Exception('Нет прав на редактирование');
 
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
 
       await _firestore.collection('requests').doc(requestId).update(updates);
 
       // Добавляем в таймлайн
-      await _addTimelineEntry(requestId, 'updated', 'Заявка обновлена', user.uid);
+      await _addTimelineEntry(
+          requestId, 'updated', 'Заявка обновлена', user.uid);
     } catch (e) {
       throw Exception('Ошибка обновления заявки: $e');
     }
@@ -248,9 +259,12 @@ class RequestServiceEnhanced {
 
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId == user.uid) throw Exception('Нельзя откликнуться на свою заявку');
-      if (request.applicants.contains(user.uid)) throw Exception('Вы уже откликнулись на эту заявку');
-      if (request.applicants.length >= request.maxApplicants) throw Exception('Достигнуто максимальное количество откликов');
+      if (request.authorId == user.uid)
+        throw Exception('Нельзя откликнуться на свою заявку');
+      if (request.applicants.contains(user.uid))
+        throw Exception('Вы уже откликнулись на эту заявку');
+      if (request.applicants.length >= request.maxApplicants)
+        throw Exception('Достигнуто максимальное количество откликов');
 
       // Добавляем отклик
       await _firestore.collection('requests').doc(requestId).update({
@@ -267,7 +281,8 @@ class RequestServiceEnhanced {
       );
 
       // Добавляем в таймлайн
-      await _addTimelineEntry(requestId, 'application', 'Новый отклик', user.uid);
+      await _addTimelineEntry(
+          requestId, 'application', 'Новый отклик', user.uid);
 
       // Добавляем в аналитику
       await _updateAnalytics('request_application', {
@@ -281,15 +296,18 @@ class RequestServiceEnhanced {
   }
 
   /// Выбор исполнителя
-  static Future<void> selectApplicant(String requestId, String applicantId) async {
+  static Future<void> selectApplicant(
+      String requestId, String applicantId) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('Пользователь не авторизован');
 
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId != user.uid) throw Exception('Нет прав на выбор исполнителя');
-      if (!request.applicants.contains(applicantId)) throw Exception('Пользователь не откликнулся на заявку');
+      if (request.authorId != user.uid)
+        throw Exception('Нет прав на выбор исполнителя');
+      if (!request.applicants.contains(applicantId))
+        throw Exception('Пользователь не откликнулся на заявку');
 
       // Обновляем заявку
       await _firestore.collection('requests').doc(requestId).update({
@@ -307,7 +325,8 @@ class RequestServiceEnhanced {
       );
 
       // Добавляем в таймлайн
-      await _addTimelineEntry(requestId, 'selected', 'Исполнитель выбран', user.uid);
+      await _addTimelineEntry(
+          requestId, 'selected', 'Исполнитель выбран', user.uid);
 
       // Добавляем в аналитику
       await _updateAnalytics('request_selected', {
@@ -321,14 +340,16 @@ class RequestServiceEnhanced {
   }
 
   /// Завершение заявки
-  static Future<void> completeRequest(String requestId, String? review, double? rating) async {
+  static Future<void> completeRequest(
+      String requestId, String? review, double? rating) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('Пользователь не авторизован');
 
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId != user.uid) throw Exception('Нет прав на завершение заявки');
+      if (request.authorId != user.uid)
+        throw Exception('Нет прав на завершение заявки');
 
       // Обновляем заявку
       await _firestore.collection('requests').doc(requestId).update({
@@ -337,12 +358,16 @@ class RequestServiceEnhanced {
       });
 
       // Если есть отзыв и рейтинг, добавляем их
-      if (review != null && rating != null && request.selectedApplicantId != null) {
-        await _addReview(request.selectedApplicantId!, user.uid, review, rating);
+      if (review != null &&
+          rating != null &&
+          request.selectedApplicantId != null) {
+        await _addReview(
+            request.selectedApplicantId!, user.uid, review, rating);
       }
 
       // Добавляем в таймлайн
-      await _addTimelineEntry(requestId, 'completed', 'Заявка завершена', user.uid);
+      await _addTimelineEntry(
+          requestId, 'completed', 'Заявка завершена', user.uid);
 
       // Добавляем в аналитику
       await _updateAnalytics('request_completed', {
@@ -364,7 +389,9 @@ class RequestServiceEnhanced {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => RequestEnhanced.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => RequestEnhanced.fromFirestore(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения заявок пользователя: $e');
     }
@@ -380,7 +407,7 @@ class RequestServiceEnhanced {
     try {
       // Получаем все заявки (Firestore не поддерживает геопространственные запросы)
       final allRequests = await getRequests(filters: filters, limit: 1000);
-      
+
       // Фильтруем по расстоянию
       final nearbyRequests = <RequestEnhanced>[];
       for (final request in allRequests) {
@@ -390,7 +417,7 @@ class RequestServiceEnhanced {
           request.latitude,
           request.longitude,
         );
-        
+
         if (distance <= radiusKm * 1000) {
           nearbyRequests.add(request);
         }
@@ -450,7 +477,7 @@ class RequestServiceEnhanced {
       'music': ['Игра на инструментах', 'Вокал', 'DJ'],
       'decoration': ['Дизайн', 'Декорирование', 'Цветы'],
     };
-    
+
     return skillsMap[category] ?? ['Навыки по категории'];
   }
 
@@ -462,7 +489,7 @@ class RequestServiceEnhanced {
       'music': ['музыка', 'концерт', 'звук'],
       'decoration': ['декор', 'украшение', 'стиль'],
     };
-    
+
     return tagsMap[category] ?? ['тег1', 'тег2'];
   }
 
@@ -564,7 +591,8 @@ class RequestServiceEnhanced {
       final userData = userDoc.data()!;
       final currentRating = (userData['rating'] ?? 0.0).toDouble();
       final reviewCount = (userData['reviewCount'] ?? 0) + 1;
-      final newRating = (currentRating * (reviewCount - 1) + rating) / reviewCount;
+      final newRating =
+          (currentRating * (reviewCount - 1) + rating) / reviewCount;
 
       await _firestore.collection('users').doc(userId).update({
         'rating': newRating,
@@ -576,7 +604,8 @@ class RequestServiceEnhanced {
   }
 
   /// Обновление аналитики
-  static Future<void> _updateAnalytics(String event, Map<String, dynamic> data) async {
+  static Future<void> _updateAnalytics(
+      String event, Map<String, dynamic> data) async {
     try {
       await _firestore.collection('analytics').add({
         'event': event,
@@ -588,6 +617,3 @@ class RequestServiceEnhanced {
     }
   }
 }
-
-
-

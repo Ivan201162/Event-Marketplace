@@ -16,7 +16,7 @@ class FeedbackService {
       if (userId == null) throw Exception('Пользователь не авторизован');
 
       final ticketWithUser = ticket.copyWith(userId: userId);
-      
+
       await _firestore
           .collection('feedback_tickets')
           .doc(ticket.id)
@@ -41,9 +41,7 @@ class FeedbackService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return query.docs
-          .map((doc) => FeedbackTicket.fromDocument(doc))
-          .toList();
+      return query.docs.map((doc) => FeedbackTicket.fromDocument(doc)).toList();
     } catch (e) {
       debugPrint('❌ Ошибка получения тикетов: $e');
       return [];
@@ -53,10 +51,8 @@ class FeedbackService {
   /// Получить тикет по ID
   Future<FeedbackTicket?> getTicket(String ticketId) async {
     try {
-      final doc = await _firestore
-          .collection('feedback_tickets')
-          .doc(ticketId)
-          .get();
+      final doc =
+          await _firestore.collection('feedback_tickets').doc(ticketId).get();
 
       if (doc.exists) {
         return FeedbackTicket.fromDocument(doc);
@@ -130,10 +126,7 @@ class FeedbackService {
   /// Изменить статус тикета
   Future<void> updateTicketStatus(String ticketId, TicketStatus status) async {
     try {
-      await _firestore
-          .collection('feedback_tickets')
-          .doc(ticketId)
-          .update({
+      await _firestore.collection('feedback_tickets').doc(ticketId).update({
         'status': status.name,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -148,10 +141,7 @@ class FeedbackService {
   /// Назначить тикет администратору
   Future<void> assignTicket(String ticketId, String adminId) async {
     try {
-      await _firestore
-          .collection('feedback_tickets')
-          .doc(ticketId)
-          .update({
+      await _firestore.collection('feedback_tickets').doc(ticketId).update({
         'adminId': adminId,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -166,10 +156,7 @@ class FeedbackService {
   /// Добавить тег к тикету
   Future<void> addTag(String ticketId, String tag) async {
     try {
-      await _firestore
-          .collection('feedback_tickets')
-          .doc(ticketId)
-          .update({
+      await _firestore.collection('feedback_tickets').doc(ticketId).update({
         'tags': FieldValue.arrayUnion([tag]),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -184,10 +171,7 @@ class FeedbackService {
   /// Удалить тег из тикета
   Future<void> removeTag(String ticketId, String tag) async {
     try {
-      await _firestore
-          .collection('feedback_tickets')
-          .doc(ticketId)
-          .update({
+      await _firestore.collection('feedback_tickets').doc(ticketId).update({
         'tags': FieldValue.arrayRemove([tag]),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -200,12 +184,10 @@ class FeedbackService {
   }
 
   /// Изменить приоритет тикета
-  Future<void> updateTicketPriority(String ticketId, TicketPriority priority) async {
+  Future<void> updateTicketPriority(
+      String ticketId, TicketPriority priority) async {
     try {
-      await _firestore
-          .collection('feedback_tickets')
-          .doc(ticketId)
-          .update({
+      await _firestore.collection('feedback_tickets').doc(ticketId).update({
         'priority': priority.name,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -239,7 +221,7 @@ class FeedbackService {
       for (final doc in query.docs) {
         final ticket = FeedbackTicket.fromDocument(doc);
         stats['total'] = (stats['total'] ?? 0) + 1;
-        
+
         switch (ticket.status) {
           case TicketStatus.open:
             stats['open'] = (stats['open'] ?? 0) + 1;

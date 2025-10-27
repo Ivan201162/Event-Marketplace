@@ -116,8 +116,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
             itemCount: filteredItems.length,
             itemBuilder: (context, index) {
               final faqItem = filteredItems[index];
-              return FAQWidget(
-                  onItemTap: (item) => _showFAQDetail(item));
+              return FAQWidget(onItemTap: (item) => _showFAQDetail(item));
             },
           );
         },

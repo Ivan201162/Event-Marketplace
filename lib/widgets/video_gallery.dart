@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/user_profile.dart';
+import '../models/user_post.dart';
 import '../providers/user_profile_provider.dart';
 
 /// Виджет для отображения галереи видео

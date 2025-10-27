@@ -19,7 +19,8 @@ class ChatServiceEnhanced {
       if (user == null) throw Exception('Пользователь не авторизован');
 
       // Проверяем, не существует ли уже чат между этими пользователями
-      final existingChat = await _findExistingPersonalChat(user.uid, otherUserId);
+      final existingChat =
+          await _findExistingPersonalChat(user.uid, otherUserId);
       if (existingChat != null) return existingChat;
 
       final chatId = _firestore.collection('chats').doc().id;
@@ -27,14 +28,16 @@ class ChatServiceEnhanced {
 
       // Получаем данные пользователей
       final userDoc = await _firestore.collection('users').doc(user.uid).get();
-      final otherUserDoc = await _firestore.collection('users').doc(otherUserId).get();
-      
+      final otherUserDoc =
+          await _firestore.collection('users').doc(otherUserId).get();
+
       final userData = userDoc.data() ?? {};
       final otherUserData = otherUserDoc.data() ?? {};
 
       final chat = ChatEnhanced(
         id: chatId,
-        name: '${userData['name'] ?? 'Пользователь'} & ${otherUserData['name'] ?? 'Пользователь'}',
+        name:
+            '${userData['name'] ?? 'Пользователь'} & ${otherUserData['name'] ?? 'Пользователь'}',
         description: 'Личный чат',
         avatar: '',
         type: ChatType.personal,
@@ -153,7 +156,8 @@ class ChatServiceEnhanced {
       if (user == null) throw Exception('Пользователь не авторизован');
 
       // Получаем данные заявки
-      final requestDoc = await _firestore.collection('requests').doc(requestId).get();
+      final requestDoc =
+          await _firestore.collection('requests').doc(requestId).get();
       if (!requestDoc.exists) throw Exception('Заявка не найдена');
 
       final requestData = requestDoc.data()!;
@@ -255,7 +259,9 @@ class ChatServiceEnhanced {
       query = query.limit(limit);
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => ChatEnhanced.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => ChatEnhanced.fromFirestore(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения чатов: $e');
     }
@@ -328,7 +334,10 @@ class ChatServiceEnhanced {
       );
 
       // Сохраняем сообщение
-      await _firestore.collection('messages').doc(messageId).set(message.toFirestore());
+      await _firestore
+          .collection('messages')
+          .doc(messageId)
+          .set(message.toFirestore());
 
       // Обновляем чат
       await _firestore.collection('chats').doc(chatId).update({
@@ -409,7 +418,10 @@ class ChatServiceEnhanced {
         },
       );
 
-      await _firestore.collection('messages').doc(messageId).set(message.toFirestore());
+      await _firestore
+          .collection('messages')
+          .doc(messageId)
+          .set(message.toFirestore());
 
       // Обновляем чат
       await _firestore.collection('chats').doc(chatId).update({
@@ -478,7 +490,10 @@ class ChatServiceEnhanced {
         },
       );
 
-      await _firestore.collection('messages').doc(messageId).set(message.toFirestore());
+      await _firestore
+          .collection('messages')
+          .doc(messageId)
+          .set(message.toFirestore());
 
       // Обновляем чат
       await _firestore.collection('chats').doc(chatId).update({
@@ -541,7 +556,10 @@ class ChatServiceEnhanced {
         },
       );
 
-      await _firestore.collection('messages').doc(messageId).set(message.toFirestore());
+      await _firestore
+          .collection('messages')
+          .doc(messageId)
+          .set(message.toFirestore());
 
       // Обновляем чат
       await _firestore.collection('chats').doc(chatId).update({
@@ -605,7 +623,9 @@ class ChatServiceEnhanced {
       query = query.limit(limit);
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => ChatMessageEnhanced.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => ChatMessageEnhanced.fromFirestore(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения сообщений: $e');
     }
@@ -649,13 +669,15 @@ class ChatServiceEnhanced {
       if (user == null) throw Exception('Пользователь не авторизован');
 
       // Получаем сообщение
-      final messageDoc = await _firestore.collection('messages').doc(messageId).get();
+      final messageDoc =
+          await _firestore.collection('messages').doc(messageId).get();
       if (!messageDoc.exists) throw Exception('Сообщение не найдено');
 
       final messageData = messageDoc.data()!;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-          ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [];
+              ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [];
 
       // Находим реакцию пользователя с этим эмодзи
       final userReaction = reactions.firstWhere(
@@ -712,22 +734,29 @@ class ChatServiceEnhanced {
       // Firestore не поддерживает полнотекстовый поиск
       // Получаем все сообщения и фильтруем локально
       final allMessages = await getChatMessages(chatId: chatId, limit: 1000);
-      
+
       return allMessages.where((message) {
         if (filters != null) {
-          if (filters.type != null && message.type != filters.type) return false;
-          if (filters.authorId != null && message.authorId != filters.authorId) return false;
+          if (filters.type != null && message.type != filters.type)
+            return false;
+          if (filters.authorId != null && message.authorId != filters.authorId)
+            return false;
           if (filters.hasAttachments != null) {
-            if (filters.hasAttachments! && message.attachments.isEmpty) return false;
-            if (!filters.hasAttachments! && message.attachments.isNotEmpty) return false;
+            if (filters.hasAttachments! && message.attachments.isEmpty)
+              return false;
+            if (!filters.hasAttachments! && message.attachments.isNotEmpty)
+              return false;
           }
           if (filters.hasReactions != null) {
-            if (filters.hasReactions! && message.reactions.isEmpty) return false;
-            if (!filters.hasReactions! && message.reactions.isNotEmpty) return false;
+            if (filters.hasReactions! && message.reactions.isEmpty)
+              return false;
+            if (!filters.hasReactions! && message.reactions.isNotEmpty)
+              return false;
           }
-          if (filters.isEdited != null && message.isEdited != filters.isEdited) return false;
+          if (filters.isEdited != null && message.isEdited != filters.isEdited)
+            return false;
         }
-        
+
         return message.content.toLowerCase().contains(query.toLowerCase());
       }).toList();
     } catch (e) {
@@ -736,7 +765,8 @@ class ChatServiceEnhanced {
   }
 
   /// Вспомогательные методы
-  static Future<ChatEnhanced?> _findExistingPersonalChat(String userId1, String userId2) async {
+  static Future<ChatEnhanced?> _findExistingPersonalChat(
+      String userId1, String userId2) async {
     try {
       final snapshot = await _firestore
           .collection('chats')
@@ -756,7 +786,8 @@ class ChatServiceEnhanced {
     }
   }
 
-  static Future<ChatEnhanced?> _findExistingRequestChat(String requestId) async {
+  static Future<ChatEnhanced?> _findExistingRequestChat(
+      String requestId) async {
     try {
       final snapshot = await _firestore
           .collection('chats')
@@ -780,7 +811,7 @@ class ChatServiceEnhanced {
 
   static MessageType _getFileType(String fileName) {
     final extension = fileName.split('.').last.toLowerCase();
-    
+
     if (['jpg', 'jpeg', 'png', 'gif', 'webp'].contains(extension)) {
       return MessageType.image;
     } else if (['mp4', 'avi', 'mov', 'wmv'].contains(extension)) {
@@ -817,6 +848,3 @@ class ChatServiceEnhanced {
     }
   }
 }
-
-
-

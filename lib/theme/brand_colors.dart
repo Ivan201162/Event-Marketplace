@@ -54,6 +54,3 @@ class BrandColors {
     Color(0xFFFF5722),
   ];
 }
-
-
-

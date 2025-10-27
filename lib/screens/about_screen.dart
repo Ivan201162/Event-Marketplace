@@ -64,7 +64,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(12),
@@ -81,9 +82,9 @@ class _AboutScreenState extends State<AboutScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Информация о версии
             if (_packageInfo != null) ...[
               _InfoCard(
@@ -106,17 +107,17 @@ class _AboutScreenState extends State<AboutScreen> {
                 value: DateTime.now().toString().split(' ')[0],
               ),
             ],
-            
+
             const SizedBox(height: 32),
-            
+
             // Описание приложения
             const Text(
               'Event Marketplace — это платформа для поиска и бронирования специалистов для мероприятий. Создавайте заявки, находите исполнителей, общайтесь в чатах и делитесь идеями.',
               style: TextStyle(fontSize: 16),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Функции
             const Text(
               'Основные функции:',
@@ -129,7 +130,8 @@ class _AboutScreenState extends State<AboutScreen> {
             const _FeatureItem(
               icon: Icons.feed,
               title: 'Лента и Stories',
-              description: 'Просматривайте посты и истории от других пользователей',
+              description:
+                  'Просматривайте посты и истории от других пользователей',
             ),
             const _FeatureItem(
               icon: Icons.work,

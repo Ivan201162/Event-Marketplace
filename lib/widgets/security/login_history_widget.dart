@@ -54,7 +54,8 @@ class LoginHistoryWidget extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: login.success ? Colors.green : Colors.red,
+                      backgroundColor:
+                          login.success ? Colors.green : Colors.red,
                       child: Icon(
                         login.success ? Icons.check : Icons.close,
                         color: Colors.white,

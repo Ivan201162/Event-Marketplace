@@ -9,10 +9,12 @@ class NotificationsSettingsScreen extends StatefulWidget {
   const NotificationsSettingsScreen({super.key});
 
   @override
-  State<NotificationsSettingsScreen> createState() => _NotificationsSettingsScreenState();
+  State<NotificationsSettingsScreen> createState() =>
+      _NotificationsSettingsScreenState();
 }
 
-class _NotificationsSettingsScreenState extends State<NotificationsSettingsScreen> {
+class _NotificationsSettingsScreenState
+    extends State<NotificationsSettingsScreen> {
   final _userProfileService = UserProfileService();
 
   UserProfileEnhanced? _currentProfile;
@@ -102,7 +104,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
       );
 
       await _userProfileService.updateNotificationSettings(userId, settings);
-      
+
       _showSuccessSnackBar('Настройки уведомлений сохранены');
     } catch (e) {
       _showErrorSnackBar('Ошибка сохранения: $e');
@@ -202,7 +204,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Push-уведомления'),
               subtitle: const Text('Получать уведомления на устройство'),
@@ -211,7 +212,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 setState(() => _pushEnabled = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Email-уведомления'),
               subtitle: const Text('Получать уведомления по email'),
@@ -238,7 +238,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Лайки'),
               subtitle: const Text('Уведомления о лайках ваших постов'),
@@ -247,7 +246,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 setState(() => _likes = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Комментарии'),
               subtitle: const Text('Уведомления о комментариях к вашим постам'),
@@ -256,7 +254,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 setState(() => _comments = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Подписки'),
               subtitle: const Text('Уведомления о новых подписчиках'),
@@ -265,7 +262,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 setState(() => _follows = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Сообщения'),
               subtitle: const Text('Уведомления о новых сообщениях'),
@@ -274,7 +270,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 setState(() => _messages = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Заявки'),
               subtitle: const Text('Уведомления о новых заявках'),
@@ -283,7 +278,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 setState(() => _requests = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Рекомендации'),
               subtitle: const Text('Уведомления о рекомендациях'),
@@ -292,7 +286,6 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 setState(() => _recommendations = value);
               },
             ),
-            
             SwitchListTile(
               title: const Text('Системные'),
               subtitle: const Text('Системные уведомления и обновления'),
@@ -366,10 +359,10 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Звуки уведомлений'),
-              subtitle: const Text('Воспроизводить звук при получении уведомлений'),
+              subtitle:
+                  const Text('Воспроизводить звук при получении уведомлений'),
               value: _soundEnabled,
               onChanged: (value) {
                 setState(() => _soundEnabled = value);
@@ -403,10 +396,12 @@ class _QuietHoursDialogState extends State<_QuietHoursDialog> {
   @override
   void initState() {
     super.initState();
-    
+
     // Парсим текущее время или устанавливаем значения по умолчанию
-    _startTime = _parseTime(widget.currentStart) ?? const TimeOfDay(hour: 22, minute: 0);
-    _endTime = _parseTime(widget.currentEnd) ?? const TimeOfDay(hour: 8, minute: 0);
+    _startTime =
+        _parseTime(widget.currentStart) ?? const TimeOfDay(hour: 22, minute: 0);
+    _endTime =
+        _parseTime(widget.currentEnd) ?? const TimeOfDay(hour: 8, minute: 0);
   }
 
   TimeOfDay? _parseTime(String? timeString) {

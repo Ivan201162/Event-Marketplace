@@ -325,13 +325,16 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
           prefixIcon: const Icon(Icons.search, color: Color(0xFF1E3A8A)),
           suffixIcon: Consumer(
             builder: (context, ref, child) {
-              final hasActiveFilters = ref.watch(currentSearchFiltersProvider).hasActiveFilters;
+              final hasActiveFilters =
+                  ref.watch(currentSearchFiltersProvider).hasActiveFilters;
               return Stack(
                 children: [
                   IconButton(
                     icon: Icon(
                       Icons.filter_list,
-                      color: hasActiveFilters ? Colors.orange : const Color(0xFF1E3A8A),
+                      color: hasActiveFilters
+                          ? Colors.orange
+                          : const Color(0xFF1E3A8A),
                     ),
                     onPressed: () {
                       NavigationService.safeGo(context, '/search');
@@ -477,13 +480,13 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
         Consumer(
           builder: (context, ref, child) {
             final topSpecialistsAsync = ref.watch(topSpecialistsByCityProvider);
-            
+
             return topSpecialistsAsync.when(
               data: (specialists) {
                 if (specialists.isEmpty) {
                   return _buildEmptySpecialistsState();
                 }
-                
+
                 return SizedBox(
                   height: 200,
                   child: ListView.builder(
@@ -497,24 +500,26 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                 );
               },
               loading: () => _buildSpecialistsLoadingState(),
-              error: (error, stack) => _buildSpecialistsErrorState(error.toString()),
+              error: (error, stack) =>
+                  _buildSpecialistsErrorState(error.toString()),
             );
           },
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // ТОП специалисты по России
         Consumer(
           builder: (context, ref, child) {
-            final topSpecialistsAsync = ref.watch(topSpecialistsByRussiaProvider);
-            
+            final topSpecialistsAsync =
+                ref.watch(topSpecialistsByRussiaProvider);
+
             return topSpecialistsAsync.when(
               data: (specialists) {
                 if (specialists.isEmpty) {
                   return _buildEmptySpecialistsState();
                 }
-                
+
                 return SizedBox(
                   height: 200,
                   child: ListView.builder(
@@ -528,7 +533,8 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                 );
               },
               loading: () => _buildSpecialistsLoadingState(),
-              error: (error, stack) => _buildSpecialistsErrorState(error.toString()),
+              error: (error, stack) =>
+                  _buildSpecialistsErrorState(error.toString()),
             );
           },
         ),
@@ -926,7 +932,7 @@ class _StatCard extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Информация
           Padding(
             padding: const EdgeInsets.all(12),
@@ -1124,7 +1130,7 @@ class _StatCard extends StatelessWidget {
   /// Элемент сторис
   Widget _buildStoryItem(int index) {
     final isOwnStory = index == 0;
-    
+
     return Container(
       width: 80,
       margin: const EdgeInsets.only(right: 12),
@@ -1146,7 +1152,8 @@ class _StatCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isOwnStory ? Colors.grey[400]! : const Color(0xFF1E3A8A),
+                  color:
+                      isOwnStory ? Colors.grey[400]! : const Color(0xFF1E3A8A),
                   width: 2,
                 ),
                 color: Colors.grey[100],

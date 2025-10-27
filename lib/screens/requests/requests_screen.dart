@@ -23,7 +23,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
   @override
   Widget build(BuildContext context) {
     final requestsState = ref.watch(requestsProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Заявки'),
@@ -45,10 +45,11 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
           RequestFilters(
             selectedFilter: _selectedFilter,
             selectedSort: _selectedSort,
-            onFilterChanged: (filter) => setState(() => _selectedFilter = filter),
+            onFilterChanged: (filter) =>
+                setState(() => _selectedFilter = filter),
             onSortChanged: (sort) => setState(() => _selectedSort = sort),
           ),
-          
+
           // Список заявок
           Expanded(
             child: RefreshIndicator(
@@ -74,12 +75,15 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                      const Icon(Icons.error_outline,
+                          size: 64, color: Colors.red),
                       const SizedBox(height: 16),
                       Text('Ошибка загрузки заявок: $error'),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () => ref.read(requestsProvider.notifier).refreshRequests(),
+                        onPressed: () => ref
+                            .read(requestsProvider.notifier)
+                            .refreshRequests(),
                         child: const Text('Повторить'),
                       ),
                     ],
@@ -176,7 +180,9 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ref.read(requestsProvider.notifier).filterRequests(_selectedFilter);
+              ref
+                  .read(requestsProvider.notifier)
+                  .filterRequests(_selectedFilter);
             },
             child: const Text('Применить'),
           ),

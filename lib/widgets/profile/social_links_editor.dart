@@ -261,7 +261,9 @@ class _SocialLinkDialogState extends State<_SocialLinkDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.initialLink == null ? 'Добавить ссылку' : 'Редактировать ссылку'),
+      title: Text(widget.initialLink == null
+          ? 'Добавить ссылку'
+          : 'Редактировать ссылку'),
       content: Form(
         key: _formKey,
         child: Column(

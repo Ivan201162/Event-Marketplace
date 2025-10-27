@@ -353,7 +353,8 @@ class NotificationService {
   }
 
   /// Получение уведомлений для пользователя
-  Future<List<Map<String, dynamic>>> getNotificationsForUser(String userId) async {
+  Future<List<Map<String, dynamic>>> getNotificationsForUser(
+      String userId) async {
     try {
       final snapshot = await _firestore
           .collection('notifications')
@@ -427,9 +428,7 @@ class NotificationService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => doc.data())
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
   /// Отметить уведомление как прочитанное

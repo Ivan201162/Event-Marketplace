@@ -49,8 +49,10 @@ class Idea {
       sharesCount: map['sharesCount'] ?? 0,
       isLiked: map['isLiked'] ?? false,
       isSaved: map['isSaved'] ?? false,
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt:
+          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt:
+          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 

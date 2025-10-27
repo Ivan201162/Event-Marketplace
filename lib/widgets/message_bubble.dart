@@ -19,12 +19,14 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMe = message.senderId == 'current_user_id'; // TODO: Получить ID текущего пользователя
-    
+    final isMe = message.senderId ==
+        'current_user_id'; // TODO: Получить ID текущего пользователя
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isMe) ...[
             CircleAvatar(
@@ -45,12 +47,14 @@ class MessageBubble extends StatelessWidget {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: isMe 
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[300],
+                color: isMe ? Theme.of(context).primaryColor : Colors.grey[300],
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isMe ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight: isMe ? const Radius.circular(4) : const Radius.circular(20),
+                  bottomLeft: isMe
+                      ? const Radius.circular(20)
+                      : const Radius.circular(4),
+                  bottomRight: isMe
+                      ? const Radius.circular(4)
+                      : const Radius.circular(20),
                 ),
               ),
               child: Column(
@@ -64,15 +68,14 @@ class MessageBubble extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  
+
                   // Вложения
                   if (message.attachments.isNotEmpty) ...[
                     const SizedBox(height: 8),
-                    ...message.attachments.map((attachment) => 
-                      _AttachmentWidget(attachment: attachment)
-                    ),
+                    ...message.attachments.map((attachment) =>
+                        _AttachmentWidget(attachment: attachment)),
                   ],
-                  
+
                   // Время и статус
                   const SizedBox(height: 4),
                   Row(
@@ -98,7 +101,7 @@ class MessageBubble extends StatelessWidget {
                       ],
                     ],
                   ),
-                  
+
                   // Реакции
                   if (message.reactions.isNotEmpty) ...[
                     const SizedBox(height: 4),
@@ -106,7 +109,8 @@ class MessageBubble extends StatelessWidget {
                       spacing: 4,
                       children: message.reactions.entries.map((entry) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12),
@@ -143,7 +147,7 @@ class MessageBubble extends StatelessWidget {
   String _formatTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays > 0) {
       return '${dateTime.day}.${dateTime.month} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
     } else if (difference.inHours > 0) {

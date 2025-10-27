@@ -9,7 +9,8 @@ class LoginScreenImproved extends ConsumerStatefulWidget {
   const LoginScreenImproved({super.key});
 
   @override
-  ConsumerState<LoginScreenImproved> createState() => _LoginScreenImprovedState();
+  ConsumerState<LoginScreenImproved> createState() =>
+      _LoginScreenImprovedState();
 }
 
 class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
@@ -34,7 +35,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -54,7 +55,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithGoogle();
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -111,9 +112,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             color: Colors.white,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Заголовок
                         const Text(
                           'Добро пожаловать!',
@@ -122,9 +123,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 8),
-                        
+
                         Text(
                           'Войдите в свой аккаунт',
                           style: TextStyle(
@@ -132,9 +133,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             color: Colors.grey[600],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 32),
-                        
+
                         // Поле email
                         TextFormField(
                           controller: _emailController,
@@ -148,15 +149,16 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             if (value == null || value.isEmpty) {
                               return 'Введите email';
                             }
-                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
                               return 'Неверный формат email';
                             }
                             return null;
                           },
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Поле пароля
                         TextFormField(
                           controller: _passwordController,
@@ -188,9 +190,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             return null;
                           },
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Кнопка входа
                         SizedBox(
                           width: double.infinity,
@@ -213,15 +215,16 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Разделитель
                         Row(
                           children: [
                             const Expanded(child: Divider()),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
                                 'или',
                                 style: TextStyle(color: Colors.grey[600]),
@@ -230,9 +233,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             const Expanded(child: Divider()),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Кнопка входа через Google
                         SizedBox(
                           width: double.infinity,
@@ -248,9 +251,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Ссылки
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -8,7 +8,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Chats Flow Tests', () {
-    testWidgets('Chat list screen loads with chats', (WidgetTester tester) async {
+    testWidgets('Chat list screen loads with chats',
+        (WidgetTester tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();

@@ -10,7 +10,8 @@ final feedServiceProvider = Provider<FeedService>((ref) {
 });
 
 /// Провайдер состояния ленты
-final feedProvider = StateNotifierProvider<FeedNotifier, AsyncValue<List<Post>>>((ref) {
+final feedProvider =
+    StateNotifierProvider<FeedNotifier, AsyncValue<List<Post>>>((ref) {
   return FeedNotifier(ref.read(feedServiceProvider));
 });
 

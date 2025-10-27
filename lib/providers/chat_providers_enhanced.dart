@@ -6,7 +6,8 @@ import '../models/chat_enhanced.dart';
 import '../services/chat_service_enhanced.dart';
 
 /// Провайдер для получения чатов пользователя
-final userChatsProvider = FutureProvider.family<List<ChatEnhanced>, ChatFilters?>(
+final userChatsProvider =
+    FutureProvider.family<List<ChatEnhanced>, ChatFilters?>(
   (ref, filters) async {
     return await ChatServiceEnhanced.getUserChats(filters: filters);
   },
@@ -20,13 +21,14 @@ final chatByIdProvider = FutureProvider.family<ChatEnhanced?, String>(
 );
 
 /// Провайдер для получения сообщений чата
-final chatMessagesProvider = FutureProvider.family<List<ChatMessageEnhanced>, Map<String, dynamic>>(
+final chatMessagesProvider =
+    FutureProvider.family<List<ChatMessageEnhanced>, Map<String, dynamic>>(
   (ref, params) async {
     final chatId = params['chatId'] as String;
     final filters = params['filters'] as MessageFilters?;
     final limit = params['limit'] as int? ?? 50;
     final lastDocument = params['lastDocument'] as DocumentSnapshot?;
-    
+
     return await ChatServiceEnhanced.getChatMessages(
       chatId: chatId,
       filters: filters,
@@ -37,12 +39,13 @@ final chatMessagesProvider = FutureProvider.family<List<ChatMessageEnhanced>, Ma
 );
 
 /// Провайдер для поиска сообщений
-final searchMessagesProvider = FutureProvider.family<List<ChatMessageEnhanced>, Map<String, dynamic>>(
+final searchMessagesProvider =
+    FutureProvider.family<List<ChatMessageEnhanced>, Map<String, dynamic>>(
   (ref, params) async {
     final chatId = params['chatId'] as String;
     final query = params['query'] as String;
     final filters = params['filters'] as MessageFilters?;
-    
+
     return await ChatServiceEnhanced.searchMessages(
       chatId: chatId,
       query: query,
@@ -52,12 +55,14 @@ final searchMessagesProvider = FutureProvider.family<List<ChatMessageEnhanced>, 
 );
 
 /// Провайдер для фильтров чатов
-final chatFiltersProvider = StateNotifierProvider<ChatFiltersNotifier, ChatFilters>(
+final chatFiltersProvider =
+    StateNotifierProvider<ChatFiltersNotifier, ChatFilters>(
   (ref) => ChatFiltersNotifier(),
 );
 
 /// Провайдер для фильтров сообщений
-final messageFiltersProvider = StateNotifierProvider<MessageFiltersNotifier, MessageFilters>(
+final messageFiltersProvider =
+    StateNotifierProvider<MessageFiltersNotifier, MessageFilters>(
   (ref) => MessageFiltersNotifier(),
 );
 
@@ -91,13 +96,20 @@ final chatNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>(
     yield* FirebaseFirestore.instance
         .collection('notifications')
         .where('userId', isEqualTo: user.uid)
-        .where('data.type', whereIn: ['chat_created', 'group_invite', 'request_chat', 'message'])
+        .where('data.type', whereIn: [
+          'chat_created',
+          'group_invite',
+          'request_chat',
+          'message'
+        ])
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            }).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {
+                  'id': doc.id,
+                  ...doc.data(),
+                })
+            .toList());
   },
 );
 
@@ -125,7 +137,7 @@ final chatAnalyticsProvider = FutureProvider<Map<String, dynamic>>(
     if (user == null) return {};
 
     final chats = await ChatServiceEnhanced.getUserChats();
-    
+
     return {
       'totalChats': chats.length,
       'personalChats': chats.where((c) => c.type == ChatType.personal).length,
@@ -140,25 +152,34 @@ final chatAnalyticsProvider = FutureProvider<Map<String, dynamic>>(
 );
 
 /// Провайдер для статистики сообщений
-final messageStatsProvider = FutureProvider.family<Map<String, dynamic>, String>(
+final messageStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>(
   (ref, chatId) async {
-    final messages = await ChatServiceEnhanced.getChatMessages(chatId: chatId, limit: 1000);
-    
+    final messages =
+        await ChatServiceEnhanced.getChatMessages(chatId: chatId, limit: 1000);
+
     return {
       'totalMessages': messages.length,
       'textMessages': messages.where((m) => m.type == MessageType.text).length,
-      'imageMessages': messages.where((m) => m.type == MessageType.image).length,
-      'videoMessages': messages.where((m) => m.type == MessageType.video).length,
-      'audioMessages': messages.where((m) => m.type == MessageType.audio).length,
+      'imageMessages':
+          messages.where((m) => m.type == MessageType.image).length,
+      'videoMessages':
+          messages.where((m) => m.type == MessageType.video).length,
+      'audioMessages':
+          messages.where((m) => m.type == MessageType.audio).length,
       'fileMessages': messages.where((m) => m.type == MessageType.file).length,
-      'locationMessages': messages.where((m) => m.type == MessageType.location).length,
-      'stickerMessages': messages.where((m) => m.type == MessageType.sticker).length,
+      'locationMessages':
+          messages.where((m) => m.type == MessageType.location).length,
+      'stickerMessages':
+          messages.where((m) => m.type == MessageType.sticker).length,
       'gifMessages': messages.where((m) => m.type == MessageType.gif).length,
       'editedMessages': messages.where((m) => m.isEdited).length,
       'deletedMessages': messages.where((m) => m.isDeleted).length,
-      'messagesWithReactions': messages.where((m) => m.reactions.isNotEmpty).length,
-      'averageReactionsPerMessage': messages.isNotEmpty 
-          ? messages.fold(0, (sum, m) => sum + m.reactions.length) / messages.length 
+      'messagesWithReactions':
+          messages.where((m) => m.reactions.isNotEmpty).length,
+      'averageReactionsPerMessage': messages.isNotEmpty
+          ? messages.fold(0, (sum, m) => sum + m.reactions.length) /
+              messages.length
           : 0.0,
     };
   },
@@ -428,6 +449,3 @@ class MessageFiltersNotifier extends StateNotifier<MessageFilters> {
     state = const MessageFilters();
   }
 }
-
-
-

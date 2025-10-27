@@ -23,9 +23,7 @@ class ChatListItem extends StatelessWidget {
           backgroundImage: chat.otherUserAvatar != null
               ? NetworkImage(chat.otherUserAvatar!)
               : null,
-          child: chat.otherUserAvatar == null
-              ? const Icon(Icons.person)
-              : null,
+          child: chat.otherUserAvatar == null ? const Icon(Icons.person) : null,
         ),
         title: Row(
           children: [
@@ -64,11 +62,10 @@ class ChatListItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: chat.unreadCount > 0 
-                      ? Colors.black87 
-                      : Colors.grey[600],
-                  fontWeight: chat.unreadCount > 0 
-                      ? FontWeight.w500 
+                  color:
+                      chat.unreadCount > 0 ? Colors.black87 : Colors.grey[600],
+                  fontWeight: chat.unreadCount > 0
+                      ? FontWeight.w500
                       : FontWeight.normal,
                 ),
               ),
@@ -107,7 +104,7 @@ class ChatListItem extends StatelessWidget {
   String _formatTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д';
     } else if (difference.inHours > 0) {

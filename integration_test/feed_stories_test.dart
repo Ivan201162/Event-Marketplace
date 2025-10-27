@@ -8,7 +8,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Feed and Stories Tests', () {
-    testWidgets('Feed loads with stories and posts', (WidgetTester tester) async {
+    testWidgets('Feed loads with stories and posts',
+        (WidgetTester tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();

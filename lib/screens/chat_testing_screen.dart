@@ -153,8 +153,8 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    builder: (context) => EnhancedChatScreen(
-                        chatId: _testChatId!),
+                    builder: (context) =>
+                        EnhancedChatScreen(chatId: _testChatId!),
                   ),
                 );
               },

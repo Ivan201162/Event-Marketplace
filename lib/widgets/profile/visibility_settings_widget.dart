@@ -11,7 +11,8 @@ class VisibilitySettingsWidget extends StatefulWidget {
   final ProfileVisibilitySettings? initialSettings;
 
   @override
-  State<VisibilitySettingsWidget> createState() => _VisibilitySettingsWidgetState();
+  State<VisibilitySettingsWidget> createState() =>
+      _VisibilitySettingsWidgetState();
 }
 
 class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
@@ -62,27 +63,29 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                     style: TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 16),
-                  ...ProfileVisibility.values.map((visibility) => RadioListTile<ProfileVisibility>(
-                    title: Text(_getVisibilityTitle(visibility)),
-                    subtitle: Text(_getVisibilityDescription(visibility)),
-                    value: visibility,
-                    groupValue: _settings.profileVisibility,
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _settings = ProfileVisibilitySettings(
-                            profileVisibility: value,
-                            showPhone: _settings.showPhone,
-                            showEmail: _settings.showEmail,
-                            showCity: _settings.showCity,
-                            showActivity: _settings.showActivity,
-                            showFollowers: _settings.showFollowers,
-                            showFollowing: _settings.showFollowing,
-                          );
-                        });
-                      }
-                    },
-                  )),
+                  ...ProfileVisibility.values
+                      .map((visibility) => RadioListTile<ProfileVisibility>(
+                            title: Text(_getVisibilityTitle(visibility)),
+                            subtitle:
+                                Text(_getVisibilityDescription(visibility)),
+                            value: visibility,
+                            groupValue: _settings.profileVisibility,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _settings = ProfileVisibilitySettings(
+                                    profileVisibility: value,
+                                    showPhone: _settings.showPhone,
+                                    showEmail: _settings.showEmail,
+                                    showCity: _settings.showCity,
+                                    showActivity: _settings.showActivity,
+                                    showFollowers: _settings.showFollowers,
+                                    showFollowing: _settings.showFollowing,
+                                  );
+                                });
+                              }
+                            },
+                          )),
                 ],
               ),
             ),
@@ -104,7 +107,6 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
                   SwitchListTile(
                     title: const Text('Показывать телефон'),
                     subtitle: const Text('Отображать номер телефона в профиле'),
@@ -123,7 +125,6 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                       });
                     },
                   ),
-                  
                   SwitchListTile(
                     title: const Text('Показывать email'),
                     subtitle: const Text('Отображать email в профиле'),
@@ -142,7 +143,6 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                       });
                     },
                   ),
-                  
                   SwitchListTile(
                     title: const Text('Показывать город'),
                     subtitle: const Text('Отображать город в профиле'),
@@ -161,10 +161,10 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                       });
                     },
                   ),
-                  
                   SwitchListTile(
                     title: const Text('Показывать активность'),
-                    subtitle: const Text('Отображать время последней активности'),
+                    subtitle:
+                        const Text('Отображать время последней активности'),
                     value: _settings.showActivity,
                     onChanged: (value) {
                       setState(() {
@@ -180,7 +180,6 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                       });
                     },
                   ),
-                  
                   SwitchListTile(
                     title: const Text('Показывать подписчиков'),
                     subtitle: const Text('Отображать количество подписчиков'),
@@ -199,7 +198,6 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                       });
                     },
                   ),
-                  
                   SwitchListTile(
                     title: const Text('Показывать подписки'),
                     subtitle: const Text('Отображать количество подписок'),

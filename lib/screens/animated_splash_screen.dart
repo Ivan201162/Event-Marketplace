@@ -18,7 +18,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -99,9 +99,9 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                           color: Color(0xFF6C5CE7),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Название приложения
                       const Text(
                         'Event Marketplace',
@@ -111,9 +111,9 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                           color: Colors.white,
                         ),
                       ),
-                      
+
                       const SizedBox(height: 8),
-                      
+
                       // Подзаголовок
                       Text(
                         'Найдите идеального специалиста',
@@ -122,9 +122,9 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                           color: Colors.white.withValues(alpha: 0.9),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 48),
-                      
+
                       // Индикатор загрузки
                       const CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),

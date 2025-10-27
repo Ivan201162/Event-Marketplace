@@ -23,6 +23,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
   int _currentIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
+  late PageController _pageController;
 
   final List<NavigationItem> _navigationItems = [
     const NavigationItem(
@@ -71,19 +72,26 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
+    _pageController = PageController(initialPage: _currentIndex);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         children: _navigationItems.map((item) => item.screen).toList(),
       ),
       bottomNavigationBar: Container(
@@ -122,9 +130,11 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                         _animationController.forward().then((_) {
                           _animationController.reverse();
                         });
-                        setState(() {
-                          _currentIndex = index;
-                        });
+                        _pageController.animateToPage(
+                          index,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
                       }
                     },
                     child: AnimatedContainer(

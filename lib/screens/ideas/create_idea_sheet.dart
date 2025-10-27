@@ -16,7 +16,7 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
   final _tagsController = TextEditingController();
-  
+
   List<String> _attachments = [];
   List<String> _tags = [];
   bool _isPoll = false;
@@ -71,9 +71,9 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                     return null;
                   },
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Теги
                 TextFormField(
                   controller: _tagsController,
@@ -84,11 +84,15 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                   ),
                   onChanged: (value) {
                     setState(() {
-                      _tags = value.split(',').map((tag) => tag.trim()).where((tag) => tag.isNotEmpty).toList();
+                      _tags = value
+                          .split(',')
+                          .map((tag) => tag.trim())
+                          .where((tag) => tag.isNotEmpty)
+                          .toList();
                     });
                   },
                 ),
-                
+
                 if (_tags.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Wrap(
@@ -107,9 +111,9 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                     }).toList(),
                   ),
                 ],
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Вложения
                 Row(
                   children: [
@@ -125,7 +129,7 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                     ),
                   ],
                 ),
-                
+
                 if (_attachments.isNotEmpty)
                   ListView.builder(
                     shrinkWrap: true,
@@ -142,9 +146,9 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                       );
                     },
                   ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Опрос
                 SwitchListTile(
                   title: const Text('Создать опрос'),
@@ -152,7 +156,7 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                   value: _isPoll,
                   onChanged: (value) => setState(() => _isPoll = value),
                 ),
-                
+
                 if (_isPoll) ...[
                   const SizedBox(height: 16),
                   TextFormField(
@@ -162,7 +166,6 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                     ),
                     onChanged: (value) => _pollQuestion = value,
                   ),
-                  
                   const SizedBox(height: 16),
                   const Text('Варианты ответов:'),
                   const SizedBox(height: 8),
@@ -189,7 +192,6 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                       ),
                     );
                   }),
-                  
                   if (_pollOptions.length < 6)
                     TextButton.icon(
                       onPressed: _addPollOption,
@@ -197,9 +199,9 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
                       label: const Text('Добавить вариант'),
                     ),
                 ],
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Кнопки действий
                 Row(
                   children: [
@@ -276,14 +278,16 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
       final idea = Idea(
         text: _textController.text.trim(),
         authorId: 'current_user_id', // TODO: Получить ID текущего пользователя
-        authorName: 'Текущий пользователь', // TODO: Получить имя текущего пользователя
+        authorName:
+            'Текущий пользователь', // TODO: Получить имя текущего пользователя
         authorAvatar: null, // TODO: Получить аватар текущего пользователя
         media: _attachments,
         tags: _tags,
         poll: _isPoll && _pollQuestion.isNotEmpty
             ? {
                 'question': _pollQuestion,
-                'options': _pollOptions.where((option) => option.isNotEmpty).toList(),
+                'options':
+                    _pollOptions.where((option) => option.isNotEmpty).toList(),
                 'votes': {},
               }
             : null,
@@ -298,7 +302,7 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
       );
 
       await ref.read(ideasProvider.notifier).createIdea(idea);
-      
+
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(

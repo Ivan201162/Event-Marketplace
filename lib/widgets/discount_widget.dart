@@ -273,7 +273,8 @@ class _RejectDiscountDialog extends ConsumerStatefulWidget {
   final VoidCallback onRejected;
 
   @override
-  ConsumerState<_RejectDiscountDialog> createState() => _RejectDiscountDialogState();
+  ConsumerState<_RejectDiscountDialog> createState() =>
+      _RejectDiscountDialogState();
 }
 
 class _RejectDiscountDialogState extends ConsumerState<_RejectDiscountDialog> {
@@ -418,7 +419,8 @@ class _OfferDiscountDialog extends ConsumerStatefulWidget {
   final VoidCallback onOffered;
 
   @override
-  ConsumerState<_OfferDiscountDialog> createState() => _OfferDiscountDialogState();
+  ConsumerState<_OfferDiscountDialog> createState() =>
+      _OfferDiscountDialogState();
 }
 
 class _OfferDiscountDialogState extends ConsumerState<_OfferDiscountDialog> {

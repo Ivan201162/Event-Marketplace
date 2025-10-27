@@ -67,8 +67,10 @@ class UserProfile {
       ideasCount: map['ideasCount'] ?? 0,
       requestsCount: map['requestsCount'] ?? 0,
       isFollowing: map['isFollowing'] ?? false,
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt:
+          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt:
+          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 

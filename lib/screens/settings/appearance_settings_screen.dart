@@ -10,7 +10,8 @@ class AppearanceSettingsScreen extends StatefulWidget {
   const AppearanceSettingsScreen({super.key});
 
   @override
-  State<AppearanceSettingsScreen> createState() => _AppearanceSettingsScreenState();
+  State<AppearanceSettingsScreen> createState() =>
+      _AppearanceSettingsScreenState();
 }
 
 class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
@@ -79,7 +80,7 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
       );
 
       await _userProfileService.updateAppearanceSettings(userId, settings);
-      
+
       _showSuccessSnackBar('Настройки сохранены');
     } catch (e) {
       _showErrorSnackBar('Ошибка сохранения: $e');
@@ -199,18 +200,17 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ...AppTheme.values.map((theme) => RadioListTile<AppTheme>(
-              title: Text(_getThemeTitle(theme)),
-              subtitle: Text(_getThemeDescription(theme)),
-              value: theme,
-              groupValue: _selectedTheme,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedTheme = value);
-                }
-              },
-            )),
+                  title: Text(_getThemeTitle(theme)),
+                  subtitle: Text(_getThemeDescription(theme)),
+                  value: theme,
+                  groupValue: _selectedTheme,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _selectedTheme = value);
+                    }
+                  },
+                )),
           ],
         ),
       ),
@@ -229,18 +229,17 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ...FontSize.values.map((fontSize) => RadioListTile<FontSize>(
-              title: Text(_getFontSizeTitle(fontSize)),
-              subtitle: Text(_getFontSizeDescription(fontSize)),
-              value: fontSize,
-              groupValue: _selectedFontSize,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedFontSize = value);
-                }
-              },
-            )),
+                  title: Text(_getFontSizeTitle(fontSize)),
+                  subtitle: Text(_getFontSizeDescription(fontSize)),
+                  value: fontSize,
+                  groupValue: _selectedFontSize,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _selectedFontSize = value);
+                    }
+                  },
+                )),
           ],
         ),
       ),
@@ -259,18 +258,17 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ...TabPosition.values.map((position) => RadioListTile<TabPosition>(
-              title: Text(_getTabPositionTitle(position)),
-              subtitle: Text(_getTabPositionDescription(position)),
-              value: position,
-              groupValue: _selectedTabPosition,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _selectedTabPosition = value);
-                }
-              },
-            )),
+                  title: Text(_getTabPositionTitle(position)),
+                  subtitle: Text(_getTabPositionDescription(position)),
+                  value: position,
+                  groupValue: _selectedTabPosition,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _selectedTabPosition = value);
+                    }
+                  },
+                )),
           ],
         ),
       ),
@@ -289,7 +287,6 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Включить анимации'),
               subtitle: const Text('Плавные переходы и анимации в приложении'),
@@ -316,7 +313,6 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.image),
               title: const Text('Выбрать фон'),
@@ -324,7 +320,6 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: _selectCustomBackground,
             ),
-            
             if (_customBackground != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -360,7 +355,6 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(

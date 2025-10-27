@@ -19,30 +19,152 @@ class ChatListScreenImproved extends ConsumerWidget {
           ),
         ],
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // TODO: Implement refresh
+          await Future.delayed(const Duration(seconds: 1));
+        },
+        child: ListView.builder(
+          itemCount: 15, // Mock data
+          itemBuilder: (context, index) {
+            return _ChatItem(
+              userName: 'Пользователь ${index + 1}',
+              lastMessage: 'Последнее сообщение от пользователя ${index + 1}',
+              timestamp: '${index + 1}ч назад',
+              unreadCount: index % 3 == 0 ? index + 1 : 0,
+              isOnline: index % 2 == 0,
+              onTap: () {
+                // TODO: Navigate to chat
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _ChatItem extends StatelessWidget {
+  final String userName;
+  final String lastMessage;
+  final String timestamp;
+  final int unreadCount;
+  final bool isOnline;
+  final VoidCallback onTap;
+
+  const _ChatItem({
+    required this.userName,
+    required this.lastMessage,
+    required this.timestamp,
+    required this.unreadCount,
+    required this.isOnline,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
           children: [
-            Icon(
-              Icons.chat_bubble_outline,
-              size: 64,
-              color: Colors.grey,
+            // Avatar
+            Stack(
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  child: Text(
+                    userName.substring(0, 1).toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                if (isOnline)
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            SizedBox(height: 16),
-            Text(
-              'Чаты',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Здесь будут отображаться ваши чаты',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
+
+            const SizedBox(width: 12),
+
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          userName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        timestamp,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          lastMessage,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (unreadCount > 0)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '$unreadCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],

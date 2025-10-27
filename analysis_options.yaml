@@ -1,54 +1,20 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
-
+include: package:very_good_analysis/analysis_options.5.1.0.yaml
 analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
-  language:
-    strict-inference: true
-    strict-raw-types: true
-  errors:
-    # преврати предупреждения в ошибки, чтобы добиться "полного нуля"
-    unused_import: error
-    dead_code: error
-    missing_required_param: error
-    missing_return: error
-    parameter_assignments: error
-    invalid_use_of_visible_for_testing_member: error
-    invalid_use_of_protected_member: error
-    invalid_use_of_internal_member: error
-    deprecated_member_use_from_same_package: error
-    deprecated_member_use: error
-    todo: ignore       # TODO не считаем ошибкой
-    inference_failure_on_untyped_parameter: error
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
-    - "**/*.gen.dart"
     - "build/**"
-    - ".dart_tool/**"
-
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
 linter:
   rules:
-    - always_declare_return_types
-    - avoid_print
-    - avoid_redundant_argument_values
-    - avoid_returning_null
-    - avoid_returning_this
-    - cascade_invocations
-    - directives_ordering
-    - prefer_const_constructors
-    - prefer_final_locals
-    - prefer_final_in_for_each
-    - sort_pub_dependencies
-    - unawaited_futures
-    - use_build_context_synchronously
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    use_super_parameters: true
+    avoid_print: true
+    cancel_subscriptions: true
+    close_sinks: true
+    unnecessary_lambdas: true
+    avoid_types_on_closure_parameters: true

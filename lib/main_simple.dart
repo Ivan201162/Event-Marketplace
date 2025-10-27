@@ -72,6 +72,3 @@ class SimpleHomeScreen extends StatelessWidget {
     );
   }
 }
-
-
-

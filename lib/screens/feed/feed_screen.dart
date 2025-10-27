@@ -42,7 +42,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final feedState = ref.watch(feedProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Лента'),
@@ -69,7 +69,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             const SliverToBoxAdapter(
               child: StoriesBar(),
             ),
-            
+
             // Посты
             feedState.when(
               data: (posts) => SliverList(
@@ -101,12 +101,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                     padding: const EdgeInsets.all(32.0),
                     child: Column(
                       children: [
-                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        const Icon(Icons.error_outline,
+                            size: 64, color: Colors.red),
                         const SizedBox(height: 16),
                         Text('Ошибка загрузки ленты: $error'),
                         const SizedBox(height: 16),
                         ElevatedButton(
-                          onPressed: () => ref.read(feedProvider.notifier).refreshFeed(),
+                          onPressed: () =>
+                              ref.read(feedProvider.notifier).refreshFeed(),
                           child: const Text('Повторить'),
                         ),
                       ],

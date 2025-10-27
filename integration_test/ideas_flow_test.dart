@@ -8,7 +8,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Ideas Flow Tests', () {
-    testWidgets('Ideas screen loads with ideas list', (WidgetTester tester) async {
+    testWidgets('Ideas screen loads with ideas list',
+        (WidgetTester tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -47,7 +48,8 @@ void main() {
       expect(find.text('Создать идею'), findsOneWidget);
 
       // Заполнение текста идеи
-      await tester.enterText(find.byKey(const Key('idea_text_field')), 'Тестовая идея');
+      await tester.enterText(
+          find.byKey(const Key('idea_text_field')), 'Тестовая идея');
       await tester.pumpAndSettle();
 
       // Добавление тегов
@@ -62,7 +64,8 @@ void main() {
       expect(find.text('Создать идею'), findsNothing);
     });
 
-    testWidgets('Ideas search functionality works', (WidgetTester tester) async {
+    testWidgets('Ideas search functionality works',
+        (WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -156,7 +159,8 @@ void main() {
       await tester.pumpAndSettle();
 
       // Заполнение вопроса опроса
-      await tester.enterText(find.byKey(const Key('poll_question_field')), 'Какой ваш любимый цвет?');
+      await tester.enterText(find.byKey(const Key('poll_question_field')),
+          'Какой ваш любимый цвет?');
       await tester.pumpAndSettle();
 
       // Заполнение вариантов ответов

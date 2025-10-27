@@ -71,9 +71,7 @@ class _PromotionWidgetState extends State<PromotionWidget> {
                         ),
                       ),
                       Text(
-                        _isVipActive 
-                            ? 'Активен до 31.12.2024' 
-                            : 'Неактивен',
+                        _isVipActive ? 'Активен до 31.12.2024' : 'Неактивен',
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ],
@@ -82,7 +80,6 @@ class _PromotionWidgetState extends State<PromotionWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
             Text(
               'Преимущества VIP-статуса:',
               style: TextStyle(
@@ -98,7 +95,6 @@ class _PromotionWidgetState extends State<PromotionWidget> {
               '• Приоритетная поддержка',
             ),
             const SizedBox(height: 16),
-            
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -106,7 +102,8 @@ class _PromotionWidgetState extends State<PromotionWidget> {
                   setState(() => _isVipActive = !_isVipActive);
                 },
                 icon: Icon(_isVipActive ? Icons.cancel : Icons.star),
-                label: Text(_isVipActive ? 'Деактивировать VIP' : 'Активировать VIP'),
+                label: Text(
+                    _isVipActive ? 'Деактивировать VIP' : 'Активировать VIP'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _isVipActive ? Colors.red : Colors.amber,
                   foregroundColor: Colors.white,
@@ -131,7 +128,6 @@ class _PromotionWidgetState extends State<PromotionWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             SwitchListTile(
               title: const Text('Включить продвижение'),
               subtitle: const Text('Платно продвигать профиль'),
@@ -140,10 +136,9 @@ class _PromotionWidgetState extends State<PromotionWidget> {
                 setState(() => _isPromotionActive = value);
               },
             ),
-            
             if (_isPromotionActive) ...[
               const SizedBox(height: 16),
-              
+
               // Длительность продвижения
               const Text('Длительность (дни):'),
               Slider(
@@ -156,9 +151,9 @@ class _PromotionWidgetState extends State<PromotionWidget> {
                   setState(() => _promotionDays = value.round());
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Бюджет
               const Text('Бюджет (руб.):'),
               Slider(
@@ -171,9 +166,9 @@ class _PromotionWidgetState extends State<PromotionWidget> {
                   setState(() => _promotionBudget = value);
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Кнопка запуска
               SizedBox(
                 width: double.infinity,
@@ -208,7 +203,6 @@ class _PromotionWidgetState extends State<PromotionWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             ListTile(
               leading: const Icon(Icons.business),
               title: const Text('Редактировать визитку'),
@@ -218,7 +212,6 @@ class _PromotionWidgetState extends State<PromotionWidget> {
                 _showInfoSnackBar('Редактирование визитки будет реализовано');
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.preview),
               title: const Text('Предпросмотр визитки'),
@@ -246,7 +239,6 @@ class _PromotionWidgetState extends State<PromotionWidget> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -269,7 +261,6 @@ class _PromotionWidgetState extends State<PromotionWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -297,7 +288,8 @@ class _PromotionWidgetState extends State<PromotionWidget> {
     );
   }
 
-  Widget _buildStatItem(String title, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

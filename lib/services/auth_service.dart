@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/app_user.dart';
 
@@ -67,6 +68,10 @@ class AuthService {
       if (credential.user != null) {
         // Обновляем FCM токен после успешного входа
         await updateFCMToken();
+
+        // Сохраняем сессию
+        await _saveUserSession(credential.user!);
+
         return await currentUser;
       }
       return null;
@@ -133,9 +138,21 @@ class AuthService {
   /// Get sign-in methods for email (to detect Google/Phone conflicts)
   Future<List<String>> getSignInMethodsForEmail(String email) async {
     try {
-      // This method is deprecated, return empty list for now
-      // In production, you might want to implement a different approach
-      return [];
+      // Проверяем существование email через попытку входа
+      try {
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: 'dummy_password');
+        return ['email']; // Email существует
+      } catch (e) {
+        if (e is FirebaseAuthException) {
+          if (e.code == 'user-not-found') {
+            return []; // Email не найден
+          } else if (e.code == 'wrong-password') {
+            return ['email']; // Email существует, но пароль неверный
+          }
+        }
+        return [];
+      }
     } catch (e) {
       debugPrint('Error getting sign-in methods: $e');
       return [];
@@ -477,6 +494,9 @@ class AuthService {
       // Обновляем FCM токен после успешной авторизации
       await updateFCMToken();
 
+      // Сохраняем сессию
+      await _saveUserSession(user);
+
       return await currentUser;
     } on FirebaseAuthException catch (e) {
       debugPrint('Google sign-in error: ${e.code} - ${e.message}');
@@ -630,6 +650,9 @@ class AuthService {
       // Очищаем FCM токен перед выходом
       await clearFCMToken();
 
+      // Очищаем локальную сессию
+      await _clearUserSession();
+
       if (!kIsWeb) {
         try {
           // Google sign out is handled by Firebase Auth
@@ -672,6 +695,88 @@ class AuthService {
     } catch (e) {
       debugPrint('Error creating user document: $e');
       rethrow;
+    }
+  }
+
+  /// Сохранить сессию пользователя локально
+  Future<void> _saveUserSession(User user) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_session_id', user.uid);
+      await prefs.setString('user_email', user.email ?? '');
+      await prefs.setString('user_display_name', user.displayName ?? '');
+      await prefs.setString('user_photo_url', user.photoURL ?? '');
+      await prefs.setInt(
+          'session_timestamp', DateTime.now().millisecondsSinceEpoch);
+
+      debugPrint('✅ User session saved locally');
+    } catch (e) {
+      debugPrint('❌ Error saving user session: $e');
+    }
+  }
+
+  /// Очистить локальную сессию пользователя
+  Future<void> _clearUserSession() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_session_id');
+      await prefs.remove('user_email');
+      await prefs.remove('user_display_name');
+      await prefs.remove('user_photo_url');
+      await prefs.remove('session_timestamp');
+
+      debugPrint('✅ User session cleared locally');
+    } catch (e) {
+      debugPrint('❌ Error clearing user session: $e');
+    }
+  }
+
+  /// Проверить, есть ли сохраненная сессия
+  Future<bool> hasStoredSession() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final sessionId = prefs.getString('user_session_id');
+      final timestamp = prefs.getInt('session_timestamp');
+
+      if (sessionId == null || timestamp == null) return false;
+
+      // Проверяем, не истекла ли сессия (30 дней)
+      final sessionDate = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      final now = DateTime.now();
+      final difference = now.difference(sessionDate);
+
+      if (difference.inDays > 30) {
+        await _clearUserSession();
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint('❌ Error checking stored session: $e');
+      return false;
+    }
+  }
+
+  /// Получить сохраненные данные пользователя
+  Future<Map<String, String>?> getStoredUserData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final sessionId = prefs.getString('user_session_id');
+      final email = prefs.getString('user_email');
+      final displayName = prefs.getString('user_display_name');
+      final photoUrl = prefs.getString('user_photo_url');
+
+      if (sessionId == null) return null;
+
+      return {
+        'uid': sessionId,
+        'email': email ?? '',
+        'displayName': displayName ?? '',
+        'photoURL': photoUrl ?? '',
+      };
+    } catch (e) {
+      debugPrint('❌ Error getting stored user data: $e');
+      return null;
     }
   }
 }

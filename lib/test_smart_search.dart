@@ -10,7 +10,8 @@ import 'services/smart_specialist_data_generator.dart';
 class SmartSearchTester {
   final SmartSearchService _smartSearchService = SmartSearchService();
   final AIAssistantService _aiAssistantService = AIAssistantService();
-  final SmartSpecialistDataGenerator _dataGenerator = SmartSpecialistDataGenerator();
+  final SmartSpecialistDataGenerator _dataGenerator =
+      SmartSpecialistDataGenerator();
 
   /// Запустить все тесты
   Future<void> runAllTests() async {
@@ -62,28 +63,32 @@ class SmartSearchTester {
         query: 'ведущий',
         limit: 5,
       );
-      debugPrint('✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов');
+      debugPrint(
+          '✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов');
 
       // Поиск по городу
       final specialistsByCity = await _smartSearchService.searchSpecialists(
         query: 'Москва',
         limit: 5,
       );
-      debugPrint('✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов');
+      debugPrint(
+          '✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов');
 
       // Поиск по цене
       final specialistsByPrice = await _smartSearchService.searchSpecialists(
         query: 'фотограф',
         limit: 5,
       );
-      debugPrint('✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов');
+      debugPrint(
+          '✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов');
 
       // Поиск по стилю
       final specialistsByStyle = await _smartSearchService.searchSpecialists(
         query: 'классика юмор',
         limit: 5,
       );
-      debugPrint('✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов');
+      debugPrint(
+          '✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов');
     } catch (e) {
       debugPrint('❌ Ошибка умного поиска: $e');
     }
@@ -144,7 +149,8 @@ class SmartSearchTester {
 
     try {
       // Начинаем беседу
-      final conversation = await _aiAssistantService.startConversation(userId: 'test_user_123');
+      final conversation =
+          await _aiAssistantService.startConversation(userId: 'test_user_123');
       debugPrint('✅ Беседа начата: ${conversation.id}');
 
       // Отправляем сообщения
@@ -294,45 +300,50 @@ class _SmartSearchTestWidgetState extends State<SmartSearchTestWidget> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Тесты умного поиска')),
-    body: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: ElevatedButton(
-            onPressed: _isRunning ? null : _runTests,
-            child: _isRunning
-                ? const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      SizedBox(width: 8),
-                      Text('Запуск тестов...'),
-                    ],
-                  )
-                : const Text('Запустить все тесты'),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
-            child: SingleChildScrollView(
-              child: Text(
-                _output,
-                style: const TextStyle(color: Colors.green, fontFamily: 'monospace', fontSize: 12),
+        appBar: AppBar(title: const Text('Тесты умного поиска')),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: ElevatedButton(
+                onPressed: _isRunning ? null : _runTests,
+                child: _isRunning
+                    ? const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          SizedBox(width: 8),
+                          Text('Запуск тестов...'),
+                        ],
+                      )
+                    : const Text('Запустить все тесты'),
               ),
             ),
-          ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(8)),
+                child: SingleChildScrollView(
+                  child: Text(
+                    _output,
+                    style: const TextStyle(
+                        color: Colors.green,
+                        fontFamily: 'monospace',
+                        fontSize: 12),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Future<void> _runTests() async {
     setState(() {

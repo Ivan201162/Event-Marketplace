@@ -178,13 +178,16 @@ class IdeaEnhanced extends Equatable {
       collaborators: List<String>.from(data['collaborators'] ?? []),
       followers: List<String>.from(data['followers'] ?? []),
       analytics: Map<String, dynamic>.from(data['analytics'] ?? {}),
-      aiRecommendations: Map<String, dynamic>.from(data['aiRecommendations'] ?? {}),
+      aiRecommendations:
+          Map<String, dynamic>.from(data['aiRecommendations'] ?? {}),
       commentsList: (data['commentsList'] as List<dynamic>?)
-          ?.map((e) => IdeaComment.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((e) => IdeaComment.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       reactions: (data['reactions'] as List<dynamic>?)
-          ?.map((e) => IdeaReaction.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((e) => IdeaReaction.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       pollData: Map<String, dynamic>.from(data['pollData'] ?? {}),
       originalIdeaId: data['originalIdeaId'],
       parentIdeaId: data['parentIdeaId'],
@@ -216,7 +219,8 @@ class IdeaEnhanced extends Equatable {
       'metadata': metadata,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
-      'publishedAt': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
+      'publishedAt':
+          publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
       'views': views,
       'likes': likes,
       'comments': comments,
@@ -331,8 +335,9 @@ class IdeaComment extends Equatable {
       editedAt: (map['editedAt'] as Timestamp?)?.toDate(),
       likes: List<String>.from(map['likes'] ?? []),
       replies: (map['replies'] as List<dynamic>?)
-          ?.map((e) => IdeaComment.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((e) => IdeaComment.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       parentCommentId: map['parentCommentId'],
       metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
     );
@@ -471,6 +476,3 @@ class IdeaFilters extends Equatable {
         radius,
       ];
 }
-
-
-

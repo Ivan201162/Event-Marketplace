@@ -20,6 +20,3 @@ class RadioGroup<T> extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -1,0 +1,23 @@
+metrics:
+  cyclomatic-complexity: 20
+  lines-of-code: 300
+  number-of-parameters: 6
+  maximum-nesting: 5
+  weight-of-class: 500
+rules:
+  - no-boolean-literal-compare
+  - no-empty-block
+  - prefer-trailing-comma
+  - newline-before-return
+  - prefer-const-border-radius
+  - avoid-non-null-assertion
+  - avoid-collection-methods-with-unrelated-types
+  - avoid-global-state
+  - avoid-returning-widgets
+  - avoid-unnecessary-type-assertions
+  - avoid-unused-parameters
+  - prefer-correct-identifier-length:
+      min-identifier-length: 3
+      max-identifier-length: 30
+  - no-equal-then-else
+  - binary-expression-operand-order

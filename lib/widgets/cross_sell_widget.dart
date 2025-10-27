@@ -534,7 +534,8 @@ class _RejectSuggestionDialog extends ConsumerStatefulWidget {
       _RejectSuggestionDialogState();
 }
 
-class _RejectSuggestionDialogState extends ConsumerState<_RejectSuggestionDialog> {
+class _RejectSuggestionDialogState
+    extends ConsumerState<_RejectSuggestionDialog> {
   final _reasonController = TextEditingController();
   bool _isLoading = false;
 

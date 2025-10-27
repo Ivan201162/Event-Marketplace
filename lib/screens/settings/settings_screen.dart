@@ -43,7 +43,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: 'Пароль, 2FA, сессии',
             onTap: () => context.push('/settings/security'),
           ),
-          
+
           // Внешний вид
           _buildSectionHeader('Внешний вид'),
           _buildSettingsTile(
@@ -61,7 +61,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: _language == 'ru' ? 'Русский' : 'English',
             onTap: () => _showLanguageDialog(),
           ),
-          
+
           // Уведомления
           _buildSectionHeader('Уведомления'),
           _buildSettingsTile(
@@ -70,7 +70,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: _notificationsEnabled ? 'Включены' : 'Выключены',
             trailing: Switch(
               value: _notificationsEnabled,
-              onChanged: (value) => setState(() => _notificationsEnabled = value),
+              onChanged: (value) =>
+                  setState(() => _notificationsEnabled = value),
             ),
           ),
           _buildSettingsTile(
@@ -82,7 +83,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onChanged: (value) => setState(() => _pushNotifications = value),
             ),
           ),
-          
+
           // Конфиденциальность
           _buildSectionHeader('Конфиденциальность'),
           _buildSettingsTile(
@@ -97,7 +98,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: 'Управление блокировками',
             onTap: () => context.push('/settings/blocked'),
           ),
-          
+
           // Pro-аккаунт
           _buildSectionHeader('Pro-аккаунт'),
           _buildSettingsTile(
@@ -112,7 +113,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: 'Статистика профиля',
             onTap: () => context.push('/settings/analytics'),
           ),
-          
+
           // Монетизация
           _buildSectionHeader('Монетизация'),
           _buildSettingsTile(
@@ -127,7 +128,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: _currency,
             onTap: () => _showCurrencyDialog(),
           ),
-          
+
           // Поддержка
           _buildSectionHeader('Поддержка'),
           _buildSettingsTile(
@@ -148,7 +149,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: 'Версия 1.0.1 (2)',
             onTap: () => _showAboutDialog(),
           ),
-          
+
           // Выход
           _buildSectionHeader(''),
           _buildSettingsTile(
@@ -170,9 +171,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.primary,
-        ),
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
       ),
     );
   }
@@ -191,7 +192,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         leading: Icon(icon, color: textColor),
         title: Text(title, style: TextStyle(color: textColor)),
         subtitle: Text(subtitle),
-        trailing: trailing ?? (onTap != null ? const Icon(Icons.chevron_right) : null),
+        trailing: trailing ??
+            (onTap != null ? const Icon(Icons.chevron_right) : null),
         onTap: onTap,
       ),
     );

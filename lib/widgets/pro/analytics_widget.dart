@@ -48,7 +48,6 @@ class AnalyticsWidget extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -71,7 +70,6 @@ class AnalyticsWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -99,7 +97,8 @@ class AnalyticsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(String title, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -141,7 +140,7 @@ class AnalyticsWidget extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             // График просмотров (заглушка)
             Container(
               height: 200,
@@ -168,7 +167,7 @@ class AnalyticsWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -216,7 +215,6 @@ class AnalyticsWidget extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -292,7 +290,6 @@ class AnalyticsWidget extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             Container(
               height: 200,
               decoration: BoxDecoration(
@@ -335,7 +332,6 @@ class AnalyticsWidget extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -358,7 +354,6 @@ class AnalyticsWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -386,7 +381,8 @@ class AnalyticsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildReachItem(String title, String value, IconData icon, Color color) {
+  Widget _buildReachItem(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

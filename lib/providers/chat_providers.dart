@@ -16,13 +16,15 @@ final chatsProvider = FutureProvider<List<Chat>>((ref) async {
 });
 
 /// Провайдер сообщений чата
-final chatMessagesProvider = FutureProvider.family<List<ChatMessage>, String>((ref, chatId) async {
+final chatMessagesProvider =
+    FutureProvider.family<List<ChatMessage>, String>((ref, chatId) async {
   final chatService = ref.read(chatServiceProvider);
   return await chatService.getMessages(chatId);
 });
 
 /// Провайдер для отправки сообщения
-final sendMessageProvider = FutureProvider.family<void, Map<String, String>>((ref, params) async {
+final sendMessageProvider =
+    FutureProvider.family<void, Map<String, String>>((ref, params) async {
   final chatService = ref.read(chatServiceProvider);
   final chatId = params['chatId']!;
   final text = params['text']!;

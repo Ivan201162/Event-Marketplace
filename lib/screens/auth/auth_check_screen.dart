@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../models/app_user.dart';
 import '../../providers/auth_providers.dart';
@@ -31,13 +32,31 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
     super.dispose();
   }
 
-  void _startAuthCheck() {
+  void _startAuthCheck() async {
     // Set timeout for auth check
     _timeoutTimer = Timer(const Duration(seconds: 5), () {
       if (!_hasNavigated) {
         _navigateToLogin();
       }
     });
+
+    // Сначала проверяем сохраненную сессию
+    try {
+      final authService = ref.read(authServiceProvider);
+      final hasStoredSession = await authService.hasStoredSession();
+
+      if (hasStoredSession) {
+        debugPrint('✅ Found stored session, checking Firebase auth...');
+        // Если есть сохраненная сессия, проверяем Firebase
+        final firebaseUser = FirebaseAuth.instance.currentUser;
+        if (firebaseUser != null) {
+          _navigateToMain();
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('❌ Error checking stored session: $e');
+    }
 
     // Listen to auth state changes using listenManual
     ref.listenManual<AsyncValue<AppUser?>>(authStateProvider, (previous, next) {

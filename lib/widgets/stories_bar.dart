@@ -26,7 +26,7 @@ class StoriesBar extends ConsumerWidget {
               // Кнопка добавления своей Story
               return const _AddStoryButton();
             }
-            
+
             final story = stories[index - 1];
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),

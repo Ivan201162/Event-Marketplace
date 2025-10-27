@@ -117,7 +117,7 @@ class _MainNavigationScreenEnhancedState
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 768;
-    
+
     return Scaffold(
       body: PageView.builder(
         controller: _pageController,
@@ -256,17 +256,21 @@ class _MainNavigationScreenEnhancedState
             final index = entry.key;
             final item = entry.value;
             final isActive = _currentIndex == index;
-            
+
             return ListTile(
               leading: Icon(
                 isActive ? item.activeIcon : item.icon,
-                color: isActive ? Theme.of(context).primaryColor : Colors.grey[600],
+                color: isActive
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[600],
               ),
               title: Text(
                 item.label,
                 style: TextStyle(
                   fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                  color: isActive ? Theme.of(context).primaryColor : Colors.grey[600],
+                  color: isActive
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[600],
                 ),
               ),
               selected: isActive,

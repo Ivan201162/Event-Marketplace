@@ -141,6 +141,7 @@ class HomeScreenSimple extends ConsumerWidget {
                         title: 'Заявки',
                         value: '0',
                         icon: Icons.assignment,
+                        subtitle: 'Активных заявок',
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -149,9 +150,42 @@ class HomeScreenSimple extends ConsumerWidget {
                         title: 'Идеи',
                         value: '0',
                         icon: Icons.lightbulb,
+                        subtitle: 'Опубликованных идей',
                       ),
                     ),
                   ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // Рекомендации
+                const Text(
+                  'Рекомендации',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                _RecommendationCard(
+                  title: 'Популярные специалисты',
+                  subtitle: 'Лучшие исполнители в вашем городе',
+                  icon: Icons.star,
+                  onTap: () {
+                    // TODO: Navigate to specialists
+                  },
+                ),
+
+                const SizedBox(height: 12),
+
+                _RecommendationCard(
+                  title: 'Новые идеи',
+                  subtitle: 'Свежие идеи от сообщества',
+                  icon: Icons.lightbulb_outline,
+                  onTap: () {
+                    // TODO: Navigate to ideas
+                  },
                 ),
               ],
             ),
@@ -240,16 +274,19 @@ class _StatCard extends StatelessWidget {
   final String title;
   final String value;
   final IconData icon;
+  final String subtitle;
 
   const _StatCard({
     required this.title,
     required this.value,
     required this.icon,
+    required this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -269,12 +306,92 @@ class _StatCard extends StatelessWidget {
             ),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12,
                 color: Colors.grey[600],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecommendationCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _RecommendationCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: Theme.of(context).primaryColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey[400],
+              ),
+            ],
+          ),
         ),
       ),
     );

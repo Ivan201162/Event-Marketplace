@@ -219,7 +219,8 @@ class _CreateRequestScreenEnhancedState
                 type: FileType.any,
               );
               if (result != null) {
-                Navigator.pop(context, result.files.map((e) => e.path!).toList());
+                Navigator.pop(
+                    context, result.files.map((e) => e.path!).toList());
               }
             },
           ),
@@ -444,7 +445,8 @@ class _CreateRequestScreenEnhancedState
                     children: [
                       const Text(
                         'Основная информация',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -496,15 +498,20 @@ class _CreateRequestScreenEnhancedState
                     children: [
                       const Text(
                         'Категория',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       Consumer(
                         builder: (context, ref, child) {
-                          final categoriesAsync = ref.watch(requestCategoriesProvider);
+                          final categoriesAsync =
+                              ref.watch(requestCategoriesProvider);
                           return categoriesAsync.when(
-                            data: (categories) => DropdownButtonFormField<String>(
-                              value: _selectedCategory.isEmpty ? null : _selectedCategory,
+                            data: (categories) =>
+                                DropdownButtonFormField<String>(
+                              value: _selectedCategory.isEmpty
+                                  ? null
+                                  : _selectedCategory,
                               decoration: const InputDecoration(
                                 labelText: 'Выберите категорию',
                                 border: OutlineInputBorder(),
@@ -541,8 +548,11 @@ class _CreateRequestScreenEnhancedState
                               requestSubcategoriesProvider(_selectedCategory),
                             );
                             return subcategoriesAsync.when(
-                              data: (subcategories) => DropdownButtonFormField<String>(
-                                value: _selectedSubcategory.isEmpty ? null : _selectedSubcategory,
+                              data: (subcategories) =>
+                                  DropdownButtonFormField<String>(
+                                value: _selectedSubcategory.isEmpty
+                                    ? null
+                                    : _selectedSubcategory,
                                 decoration: const InputDecoration(
                                   labelText: 'Выберите подкатегорию',
                                   border: OutlineInputBorder(),
@@ -578,7 +588,8 @@ class _CreateRequestScreenEnhancedState
                     children: [
                       const Text(
                         'Локация и время',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -637,7 +648,8 @@ class _CreateRequestScreenEnhancedState
                                 border: OutlineInputBorder(),
                               ),
                               controller: TextEditingController(
-                                text: '${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}',
+                                text:
+                                    '${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}',
                               ),
                               readOnly: true,
                               onTap: _selectDate,
@@ -662,7 +674,8 @@ class _CreateRequestScreenEnhancedState
                       const SizedBox(height: 16),
                       SwitchListTile(
                         title: const Text('Удаленная работа'),
-                        subtitle: const Text('Заявка может выполняться удаленно'),
+                        subtitle:
+                            const Text('Заявка может выполняться удаленно'),
                         value: _isRemote,
                         onChanged: (value) {
                           setState(() {
@@ -683,7 +696,8 @@ class _CreateRequestScreenEnhancedState
                     children: [
                       const Text(
                         'Бюджет и параметры',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -765,7 +779,8 @@ class _CreateRequestScreenEnhancedState
                     children: [
                       const Text(
                         'Теги и навыки',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -834,7 +849,8 @@ class _CreateRequestScreenEnhancedState
                     children: [
                       const Text(
                         'Вложения',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       OutlinedButton.icon(
@@ -879,6 +895,3 @@ class _CreateRequestScreenEnhancedState
     );
   }
 }
-
-
-

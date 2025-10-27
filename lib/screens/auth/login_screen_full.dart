@@ -37,7 +37,7 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -63,7 +63,7 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithGoogle();
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -95,7 +95,7 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
         password: _passwordController.text,
         name: _emailController.text.split('@')[0], // Временное имя из email
       );
-      
+
       if (mounted) {
         context.go('/main');
       }
@@ -156,9 +156,9 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             color: Colors.white,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Заголовок
                         const Text(
                           'Добро пожаловать!',
@@ -167,9 +167,9 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 8),
-                        
+
                         Text(
                           'Войдите в свой аккаунт или зарегистрируйтесь',
                           style: TextStyle(
@@ -178,9 +178,9 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        
+
                         const SizedBox(height: 32),
-                        
+
                         // Поле email
                         TextFormField(
                           controller: _emailController,
@@ -194,15 +194,16 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             if (value == null || value.isEmpty) {
                               return 'Введите email';
                             }
-                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
                               return 'Неверный формат email';
                             }
                             return null;
                           },
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Поле пароля
                         TextFormField(
                           controller: _passwordController,
@@ -234,9 +235,9 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             return null;
                           },
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Кнопка входа
                         SizedBox(
                           width: double.infinity,
@@ -251,7 +252,8 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                               ),
                             ),
                             child: _isLoading
-                                ? const CircularProgressIndicator(color: Colors.white)
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white)
                                 : const Text(
                                     'Войти',
                                     style: TextStyle(
@@ -261,9 +263,9 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                                   ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Кнопка регистрации
                         SizedBox(
                           width: double.infinity,
@@ -278,15 +280,16 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             child: const Text('Регистрация'),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Разделитель
                         Row(
                           children: [
                             const Expanded(child: Divider()),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Text(
                                 'или',
                                 style: TextStyle(color: Colors.grey[600]),
@@ -295,9 +298,9 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             const Expanded(child: Divider()),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Кнопка входа через Google
                         SizedBox(
                           width: double.infinity,
@@ -313,16 +316,17 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Ссылка на восстановление пароля
                         TextButton(
                           onPressed: () {
                             // TODO: Implement password reset
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Функция восстановления пароля в разработке'),
+                                content: Text(
+                                    'Функция восстановления пароля в разработке'),
                               ),
                             );
                           },
