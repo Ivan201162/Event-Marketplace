@@ -230,6 +230,8 @@ class _PostCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         postTime,
@@ -237,6 +239,8 @@ class _PostCard extends StatelessWidget {
                           color: Colors.grey[600],
                           fontSize: 12,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),

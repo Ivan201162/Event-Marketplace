@@ -206,7 +206,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const Icon(Icons.event, size: 80, color: Colors.white),
                         const SizedBox(height: 16),
                         const Text(
-                          'Event Marketplace',
+                          'Event',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,

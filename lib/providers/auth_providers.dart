@@ -96,8 +96,9 @@ final currentUserProvider = StreamProvider<AppUser?>((ref) {
 });
 
 /// Auth state provider (loading, authenticated, unauthenticated)
-final authStateProvider = Provider<AsyncValue<AppUser?>>((ref) {
-  return ref.watch(currentUserProvider);
+final authStateProvider = StreamProvider<AppUser?>((ref) {
+  final authService = ref.watch(authServiceProvider);
+  return authService.currentUserStream;
 });
 
 /// Check if user is authenticated

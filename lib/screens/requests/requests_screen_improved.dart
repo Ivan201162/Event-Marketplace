@@ -116,6 +116,8 @@ class _RequestCard extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Container(

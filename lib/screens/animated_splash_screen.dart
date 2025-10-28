@@ -162,7 +162,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                     child: Column(
                       children: [
                         Text(
-                          'Event Marketplace',
+                          'Event',
                           style: TextStyle(
                             fontSize: context.isSmallScreen ? 24 : 28,
                             color: Colors.white,

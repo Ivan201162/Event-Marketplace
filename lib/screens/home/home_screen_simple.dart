@@ -16,7 +16,7 @@ class HomeScreenSimple extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Marketplace'),
+        title: const Text('Event'),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
@@ -127,7 +127,7 @@ class HomeScreenSimple extends ConsumerWidget {
                 const SizedBox(height: 16),
 
                 AppComponents.animatedList(
-                  children: const [
+                  children: [
                     Row(
                       children: [
                         Expanded(
@@ -138,7 +138,7 @@ class HomeScreenSimple extends ConsumerWidget {
                             subtitle: 'Активных заявок',
                           ),
                         ),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: _StatCard(
                             title: 'Идеи',
@@ -256,6 +256,8 @@ class _ActionCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
             MicroAnimations.fadeInText(
@@ -265,6 +267,8 @@ class _ActionCard extends StatelessWidget {
                 color: Colors.grey[600],
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

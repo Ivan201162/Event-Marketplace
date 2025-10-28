@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   /// Stream of current user
   Stream<AppUser?> get currentUserStream {
@@ -22,14 +24,35 @@ class AuthService {
             await _firestore.collection('users').doc(firebaseUser.uid).get();
 
         if (userDoc.exists) {
-          return AppUser.fromFirestore(userDoc);
+          try {
+            return AppUser.fromFirestore(userDoc);
+          } catch (e) {
+            debugPrint('Error parsing user data from Firestore: $e');
+            // If parsing fails, create a new user document
+            return await _createUserDocument(firebaseUser);
+          }
         } else {
           // Create user document if it doesn't exist
           return await _createUserDocument(firebaseUser);
         }
       } catch (e) {
         debugPrint('Error getting user: $e');
-        return null;
+        // Return a basic user object if Firestore fails
+        return AppUser(
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName ?? 'Пользователь',
+          email: firebaseUser.email,
+          phone: firebaseUser.phoneNumber,
+          avatarUrl: firebaseUser.photoURL,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          type: UserType.physical,
+          favoriteSpecialists: const [],
+          socialLinks: const [],
+          ctaButtons: const {},
+        );
       }
     });
   }
@@ -50,7 +73,22 @@ class AuthService {
       }
     } catch (e) {
       debugPrint('Error getting current user: $e');
-      return null;
+      // Return a basic user object if Firestore fails
+      return AppUser(
+        uid: firebaseUser.uid,
+        name: firebaseUser.displayName ?? 'Пользователь',
+        email: firebaseUser.email,
+        phone: firebaseUser.phoneNumber,
+        avatarUrl: firebaseUser.photoURL,
+        displayName: firebaseUser.displayName,
+        photoURL: firebaseUser.photoURL,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        type: UserType.physical,
+        favoriteSpecialists: const [],
+        socialLinks: const [],
+        ctaButtons: const {},
+      );
     }
   }
 
@@ -69,6 +107,9 @@ class AuthService {
 
         // Сохраняем сессию
         await _saveUserSession(credential.user!);
+
+        // Логируем успешную авторизацию
+        await _analytics.logLogin(loginMethod: 'email');
 
         return await currentUser;
       }
@@ -101,6 +142,9 @@ class AuthService {
         // Create user document
         await _createUserDocument(credential.user!);
       }
+
+      // Логируем успешную регистрацию
+      await _analytics.logSignUp(signUpMethod: 'email');
 
       debugPrint('✅ User created with email successfully');
     } catch (e) {
@@ -214,7 +258,12 @@ class AuthService {
         await credential.user!.updateDisplayName(name);
 
         // Create user document
-        return await _createUserDocument(credential.user!, name: name);
+        final user = await _createUserDocument(credential.user!, name: name);
+
+        // Логируем успешную регистрацию
+        await _analytics.logSignUp(signUpMethod: 'email');
+
+        return user;
       }
       return null;
     } on FirebaseAuthException catch (e) {
@@ -495,6 +544,9 @@ class AuthService {
       // Сохраняем сессию
       await _saveUserSession(user);
 
+      // Логируем успешную авторизацию
+      await _analytics.logLogin(loginMethod: 'google');
+
       return await currentUser;
     } on FirebaseAuthException catch (e) {
       debugPrint('Google sign-in error: ${e.code} - ${e.message}');
@@ -656,6 +708,10 @@ class AuthService {
           // Google sign out is handled by Firebase Auth
         } catch (_) {}
       }
+
+      // Логируем выход
+      await _analytics.logEvent(name: 'user_sign_out');
+
       await _auth.signOut();
     } catch (e) {
       debugPrint('Error signing out: $e');
@@ -670,14 +726,34 @@ class AuthService {
     bool isGuest = false,
   }) async {
     final now = DateTime.now();
+    
+    // Parse display name into first and last name
+    var firstName = '';
+    var lastName = '';
+    if (firebaseUser.displayName != null && firebaseUser.displayName!.isNotEmpty) {
+      final nameParts = firebaseUser.displayName!.split(' ');
+      firstName = nameParts.first;
+      if (nameParts.length > 1) {
+        lastName = nameParts.sublist(1).join(' ');
+      }
+    }
+    
     final user = AppUser(
       uid: firebaseUser.uid,
       name: name ?? firebaseUser.displayName ?? 'Пользователь',
+      firstName: firstName,
+      lastName: lastName,
       email: firebaseUser.email,
       phone: firebaseUser.phoneNumber,
+      avatarUrl: firebaseUser.photoURL,
+      displayName: firebaseUser.displayName,
+      photoURL: firebaseUser.photoURL,
       createdAt: now,
       updatedAt: now,
       type: isGuest ? UserType.physical : UserType.physical,
+      favoriteSpecialists: const [],
+      socialLinks: const [],
+      ctaButtons: const {},
     );
 
     try {

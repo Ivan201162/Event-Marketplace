@@ -128,12 +128,16 @@ class MicroAnimations {
     Duration duration = const Duration(milliseconds: 500),
     TextStyle? style,
     TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
   }) {
     return _FadeInText(
       text: text,
       duration: duration,
       style: style,
       textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
     );
   }
 
@@ -584,12 +588,16 @@ class _FadeInText extends StatefulWidget {
   final Duration duration;
   final TextStyle? style;
   final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
 
   const _FadeInText({
     required this.text,
     required this.duration,
     this.style,
     this.textAlign,
+    this.maxLines,
+    this.overflow,
   });
 
   @override
@@ -635,6 +643,8 @@ class _FadeInTextState extends State<_FadeInText>
             widget.text,
             style: widget.style,
             textAlign: widget.textAlign,
+            maxLines: widget.maxLines,
+            overflow: widget.overflow,
           ),
         );
       },

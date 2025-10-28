@@ -271,7 +271,7 @@ class AppComponents {
     double? mainAxisSpacing,
     EdgeInsets? padding,
     ScrollController? controller,
-    bool shrinkWrap = false,
+    bool shrinkWrap = true,
     ScrollPhysics? physics,
   }) {
     return GridView.builder(

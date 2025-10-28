@@ -2,6 +2,7 @@ import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 
 /// Главный экран авторизации с поддержкой разных способов входа
@@ -139,6 +140,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
       if (mounted) {
         context.go('/main');
+        Fluttertoast.showToast(
+          msg: 'Успешный вход через Google!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
       }
     } catch (e) {
       var errorMessage = 'Ошибка входа через Google';
@@ -164,6 +170,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             errorMessage = 'Неверный ID подтверждения';
           case 'network-request-failed':
             errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
+          case 'invalid-cert-hash':
+            errorMessage = 'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
           default:
             errorMessage = 'Ошибка Google Sign-In: ${e.message ?? e.code}';
         }
@@ -177,6 +185,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       setState(() {
         _errorMessage = errorMessage;
       });
+
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -275,7 +291,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
                       // Заголовок
                       Text(
-                        'Event Marketplace',
+                        'Event',
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),

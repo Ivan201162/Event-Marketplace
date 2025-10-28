@@ -5,12 +5,15 @@ import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_screen_improved.dart';
 import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
+import 'package:event_marketplace_app/screens/legal/privacy_policy_screen.dart';
+import 'package:event_marketplace_app/screens/legal/terms_of_use_screen.dart';
 import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
 import 'package:event_marketplace_app/screens/monetization/monetization_screen.dart';
 import 'package:event_marketplace_app/screens/notifications/notifications_screen.dart';
 import 'package:event_marketplace_app/screens/profile/edit_profile_advanced.dart';
 import 'package:event_marketplace_app/screens/profile/profile_screen_advanced.dart';
 import 'package:event_marketplace_app/screens/requests/create_request_screen.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +23,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/splash',
     debugLogDiagnostics: true,
+    observers: [
+      _AnalyticsRouteObserver(),
+    ],
     routes: [
       // Splash экран
       GoRoute(
@@ -115,6 +121,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'notifications',
         builder: (context, state) => const NotificationsScreen(),
       ),
+
+      // Юридические документы
+      GoRoute(
+        path: '/privacy-policy',
+        name: 'privacy-policy',
+        builder: (context, state) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: '/terms-of-use',
+        name: 'terms-of-use',
+        builder: (context, state) => const TermsOfUseScreen(),
+      ),
     ],
     errorBuilder: (context, state) {
       debugPrint('🚨 Router error for path: ${state.uri.path}');
@@ -125,3 +143,38 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
   );
 });
+
+/// Наблюдатель для логирования навигации в Firebase Analytics
+class _AnalyticsRouteObserver extends NavigatorObserver {
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    _logRouteChange(route.settings.name ?? 'unknown', 'push');
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    _logRouteChange(route.settings.name ?? 'unknown', 'pop');
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    if (newRoute != null) {
+      _logRouteChange(newRoute.settings.name ?? 'unknown', 'replace');
+    }
+  }
+
+  void _logRouteChange(String routeName, String action) {
+    _analytics.logEvent(
+      name: 'screen_view',
+      parameters: {
+        'screen_name': routeName,
+        'action': action,
+      },
+    );
+  }
+}

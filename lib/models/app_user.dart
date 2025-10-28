@@ -60,6 +60,18 @@ class AppUser extends Equatable {
     this.postsCount = 0,
   });
 
+  /// Helper function to safely parse string lists
+  static List<String> _parseStringList(dynamic data) {
+    if (data == null) return [];
+    if (data is List) {
+      return data.map((e) => e.toString()).toList();
+    }
+    if (data is Map) {
+      return data.keys.map((e) => e.toString()).toList();
+    }
+    return [];
+  }
+
   /// Create AppUser from Firestore document
   factory AppUser.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
@@ -83,7 +95,7 @@ class AppUser extends Equatable {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       isOnline: data['isOnline'] ?? false,
       preferences: data['preferences'] as Map<String, dynamic>?,
-      favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
+      favoriteSpecialists: _parseStringList(data['favoriteSpecialists']),
       bio: data['bio'],
       description: data['description'],
       hourlyRate: data['hourlyRate']?.toDouble(),
@@ -91,7 +103,7 @@ class AppUser extends Equatable {
       isProAccount: data['isProAccount'] ?? false,
       proCategory: data['proCategory'],
       isVerified: data['isVerified'] ?? false,
-      socialLinks: List<String>.from(data['socialLinks'] ?? []),
+      socialLinks: _parseStringList(data['socialLinks']),
       website: data['website'],
       ctaButtons: Map<String, String>.from(data['ctaButtons'] ?? {}),
       followersCount: data['followersCount'] ?? 0,
