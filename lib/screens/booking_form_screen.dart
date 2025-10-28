@@ -187,7 +187,6 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                       ),
                     ],
                   ),
-              ,,,,),
             ),
           ),
 
@@ -281,7 +280,10 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
           const SizedBox(height: 24),
 
           // Управление командой (если выбран тип "Команда специалистов")
-          if (_isTeamBooking) ...[_buildTeamManagement(), const SizedBox(height: 24)],
+          if (_isTeamBooking) ...[
+            _buildTeamManagement(),
+            const SizedBox(height: 24),
+          ],
 
           // Настройки оплаты
           Text('Настройки оплаты', style: Theme.of(context).textTheme.titleMedium),

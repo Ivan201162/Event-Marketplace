@@ -8,7 +8,7 @@ class WeeklyLeadersWidget extends StatelessWidget {
   const WeeklyLeadersWidget(
       {required this.leaders, super.key, this.onLeaderTap,});
   final List<WeeklyLeader> leaders;
-  final Function(WeeklyLeader)? onLeaderTap;
+  final void Function(WeeklyLeader)? onLeaderTap;
 
   @override
   Widget build(BuildContext context) {
