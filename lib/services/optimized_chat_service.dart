@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/enhanced_chat.dart';
+import 'package:event_marketplace_app/models/enhanced_message.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/enhanced_chat.dart';
-import '../models/enhanced_message.dart';
 
 /// Оптимизированный сервис для работы с чатами
 class OptimizedChatService {
@@ -30,7 +29,7 @@ class OptimizedChatService {
 
   /// Получить чаты пользователя (одноразово)
   Future<List<EnhancedChat>> getUserChats(String userId,
-      {bool forceRefresh = false}) async {
+      {bool forceRefresh = false,}) async {
     try {
       // Проверяем кэш
       if (!forceRefresh &&
@@ -213,7 +212,7 @@ class OptimizedChatService {
           .where('members', arrayContains: userId)
           .get();
 
-      int totalUnread = 0;
+      var totalUnread = 0;
 
       for (final chatDoc in chatsSnapshot.docs) {
         final unreadSnapshot = await _firestore
@@ -241,8 +240,7 @@ class OptimizedChatService {
                   userId: memberId.toString(),
                   role: ChatMemberRole.member,
                   joinedAt: DateTime.now(),
-                  isOnline: false,
-                ))
+                ),)
             .toList() ??
         [];
 
@@ -272,7 +270,7 @@ class OptimizedChatService {
 
   /// Парсинг сообщения из Firestore
   EnhancedMessage _parseMessageFromFirestore(
-      String id, Map<String, dynamic> data) {
+      String id, Map<String, dynamic> data,) {
     return EnhancedMessage(
       id: id,
       senderId: data['senderId'] ?? '',

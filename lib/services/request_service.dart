@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/request.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/request.dart';
 
 /// Service for managing requests
 class RequestService {
@@ -18,7 +17,7 @@ class RequestService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Request.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting sent requests: $e');
       return [];
@@ -27,7 +26,7 @@ class RequestService {
 
   /// Get requests received by user
   Future<List<Request>> getReceivedRequests(String userId,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -36,7 +35,7 @@ class RequestService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Request.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting received requests: $e');
       return [];
@@ -58,7 +57,7 @@ class RequestService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Request.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting requests by status: $e');
       return [];
@@ -67,7 +66,7 @@ class RequestService {
 
   /// Get requests by category
   Future<List<Request>> getRequestsByCategory(String category,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -76,7 +75,7 @@ class RequestService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Request.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting requests by category: $e');
       return [];
@@ -93,7 +92,7 @@ class RequestService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Request.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting requests by city: $e');
       return [];
@@ -154,7 +153,7 @@ class RequestService {
 
   /// Update request status
   Future<bool> updateRequestStatus(
-      String requestId, RequestStatus status) async {
+      String requestId, RequestStatus status,) async {
     try {
       await _firestore.collection(_collection).doc(requestId).update({
         'status': status.toString().split('.').last,
@@ -170,7 +169,7 @@ class RequestService {
 
   /// Update request
   Future<bool> updateRequest(
-      String requestId, Map<String, dynamic> updates) async {
+      String requestId, Map<String, dynamic> updates,) async {
     try {
       await _firestore.collection(_collection).doc(requestId).update({
         ...updates,
@@ -218,7 +217,7 @@ class RequestService {
           .get();
 
       final requests =
-          snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
+          snapshot.docs.map(Request.fromFirestore).toList();
 
       // Filter requests that contain the query in description, category, or city
       return requests.where((request) {
@@ -248,11 +247,11 @@ class RequestService {
           .where('toUserId', isEqualTo: userId)
           .get();
 
-      final int sentCount = sentSnapshot.docs.length;
-      final int receivedCount = receivedSnapshot.docs.length;
-      int pendingCount = 0;
-      int acceptedCount = 0;
-      int completedCount = 0;
+      final sentCount = sentSnapshot.docs.length;
+      final receivedCount = receivedSnapshot.docs.length;
+      var pendingCount = 0;
+      var acceptedCount = 0;
+      var completedCount = 0;
 
       for (final doc in receivedSnapshot.docs) {
         final data = doc.data();
@@ -260,13 +259,10 @@ class RequestService {
         switch (status) {
           case 'pending':
             pendingCount++;
-            break;
           case 'accepted':
             acceptedCount++;
-            break;
           case 'completed':
             completedCount++;
-            break;
         }
       }
 
@@ -284,7 +280,7 @@ class RequestService {
         'received': 0,
         'pending': 0,
         'accepted': 0,
-        'completed': 0
+        'completed': 0,
       };
     }
   }
@@ -340,12 +336,12 @@ class RequestService {
         .limit(limit)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList());
+            snapshot.docs.map(Request.fromFirestore).toList(),);
   }
 
   /// Stream of received requests
   Stream<List<Request>> getReceivedRequestsStream(String userId,
-      {int limit = 20}) {
+      {int limit = 20,}) {
     return _firestore
         .collection(_collection)
         .where('toUserId', isEqualTo: userId)
@@ -353,7 +349,7 @@ class RequestService {
         .limit(limit)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList());
+            snapshot.docs.map(Request.fromFirestore).toList(),);
   }
 
   /// Get pending requests count
@@ -363,7 +359,7 @@ class RequestService {
           .collection(_collection)
           .where('toUserId', isEqualTo: userId)
           .where('status',
-              isEqualTo: RequestStatus.pending.toString().split('.').last)
+              isEqualTo: RequestStatus.pending.toString().split('.').last,)
           .get();
 
       return snapshot.docs.length;
@@ -379,7 +375,7 @@ class RequestService {
         .collection(_collection)
         .where('toUserId', isEqualTo: userId)
         .where('status',
-            isEqualTo: RequestStatus.pending.toString().split('.').last)
+            isEqualTo: RequestStatus.pending.toString().split('.').last,)
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
   }

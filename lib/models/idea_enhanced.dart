@@ -43,49 +43,6 @@ enum IdeaPrivacy {
 
 /// Расширенная модель идеи
 class IdeaEnhanced extends Equatable {
-  final String id;
-  final String title;
-  final String description;
-  final String content;
-  final IdeaType type;
-  final IdeaStatus status;
-  final IdeaPrivacy privacy;
-  final String authorId;
-  final String authorName;
-  final String authorAvatar;
-  final List<String> attachments;
-  final List<String> tags;
-  final List<String> categories;
-  final List<String> mentions;
-  final List<String> hashtags;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? publishedAt;
-  final int views;
-  final int likes;
-  final int comments;
-  final int shares;
-  final int bookmarks;
-  final double rating;
-  final bool isVerified;
-  final bool isPinned;
-  final bool isFeatured;
-  final bool isTrending;
-  final List<String> collaborators;
-  final List<String> followers;
-  final Map<String, dynamic> analytics;
-  final Map<String, dynamic> aiRecommendations;
-  final List<IdeaComment> commentsList;
-  final List<IdeaReaction> reactions;
-  final Map<String, dynamic> pollData;
-  final String? originalIdeaId;
-  final String? parentIdeaId;
-  final List<String> childIdeas;
-  final Map<String, dynamic> location;
-  final String? language;
-  final List<String> sharedWith;
-  final Map<String, dynamic> monetization;
 
   const IdeaEnhanced({
     required this.id,
@@ -106,36 +63,15 @@ class IdeaEnhanced extends Equatable {
     required this.metadata,
     required this.createdAt,
     required this.updatedAt,
-    this.publishedAt,
-    required this.views,
-    required this.likes,
-    required this.comments,
-    required this.shares,
-    required this.bookmarks,
-    required this.rating,
-    required this.isVerified,
-    required this.isPinned,
-    required this.isFeatured,
-    required this.isTrending,
-    required this.collaborators,
-    required this.followers,
-    required this.analytics,
-    required this.aiRecommendations,
-    required this.commentsList,
-    required this.reactions,
-    required this.pollData,
+    required this.views, required this.likes, required this.comments, required this.shares, required this.bookmarks, required this.rating, required this.isVerified, required this.isPinned, required this.isFeatured, required this.isTrending, required this.collaborators, required this.followers, required this.analytics, required this.aiRecommendations, required this.commentsList, required this.reactions, required this.pollData, required this.childIdeas, required this.location, required this.sharedWith, required this.monetization, this.publishedAt,
     this.originalIdeaId,
     this.parentIdeaId,
-    required this.childIdeas,
-    required this.location,
     this.language,
-    required this.sharedWith,
-    required this.monetization,
   });
 
   /// Создание из Firestore документа
   factory IdeaEnhanced.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return IdeaEnhanced(
       id: doc.id,
       title: data['title'] ?? '',
@@ -198,6 +134,49 @@ class IdeaEnhanced extends Equatable {
       monetization: Map<String, dynamic>.from(data['monetization'] ?? {}),
     );
   }
+  final String id;
+  final String title;
+  final String description;
+  final String content;
+  final IdeaType type;
+  final IdeaStatus status;
+  final IdeaPrivacy privacy;
+  final String authorId;
+  final String authorName;
+  final String authorAvatar;
+  final List<String> attachments;
+  final List<String> tags;
+  final List<String> categories;
+  final List<String> mentions;
+  final List<String> hashtags;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? publishedAt;
+  final int views;
+  final int likes;
+  final int comments;
+  final int shares;
+  final int bookmarks;
+  final double rating;
+  final bool isVerified;
+  final bool isPinned;
+  final bool isFeatured;
+  final bool isTrending;
+  final List<String> collaborators;
+  final List<String> followers;
+  final Map<String, dynamic> analytics;
+  final Map<String, dynamic> aiRecommendations;
+  final List<IdeaComment> commentsList;
+  final List<IdeaReaction> reactions;
+  final Map<String, dynamic> pollData;
+  final String? originalIdeaId;
+  final String? parentIdeaId;
+  final List<String> childIdeas;
+  final Map<String, dynamic> location;
+  final String? language;
+  final List<String> sharedWith;
+  final Map<String, dynamic> monetization;
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() {
@@ -298,17 +277,6 @@ class IdeaEnhanced extends Equatable {
 
 /// Комментарий к идее
 class IdeaComment extends Equatable {
-  final String id;
-  final String authorId;
-  final String authorName;
-  final String authorAvatar;
-  final String content;
-  final DateTime createdAt;
-  final DateTime? editedAt;
-  final List<String> likes;
-  final List<IdeaComment> replies;
-  final String? parentCommentId;
-  final Map<String, dynamic> metadata;
 
   const IdeaComment({
     required this.id,
@@ -317,11 +285,8 @@ class IdeaComment extends Equatable {
     required this.authorAvatar,
     required this.content,
     required this.createdAt,
-    this.editedAt,
-    required this.likes,
-    required this.replies,
+    required this.likes, required this.replies, required this.metadata, this.editedAt,
     this.parentCommentId,
-    required this.metadata,
   });
 
   factory IdeaComment.fromMap(Map<String, dynamic> map) {
@@ -342,6 +307,17 @@ class IdeaComment extends Equatable {
       metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String authorId;
+  final String authorName;
+  final String authorAvatar;
+  final String content;
+  final DateTime createdAt;
+  final DateTime? editedAt;
+  final List<String> likes;
+  final List<IdeaComment> replies;
+  final String? parentCommentId;
+  final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() {
     return {
@@ -377,11 +353,6 @@ class IdeaComment extends Equatable {
 
 /// Реакция на идею
 class IdeaReaction extends Equatable {
-  final String id;
-  final String userId;
-  final String userName;
-  final String emoji;
-  final DateTime createdAt;
 
   const IdeaReaction({
     required this.id,
@@ -400,6 +371,11 @@ class IdeaReaction extends Equatable {
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
+  final String id;
+  final String userId;
+  final String userName;
+  final String emoji;
+  final DateTime createdAt;
 
   Map<String, dynamic> toMap() {
     return {
@@ -417,23 +393,6 @@ class IdeaReaction extends Equatable {
 
 /// Фильтры для идей
 class IdeaFilters extends Equatable {
-  final IdeaType? type;
-  final IdeaStatus? status;
-  final IdeaPrivacy? privacy;
-  final String? authorId;
-  final List<String>? categories;
-  final List<String>? tags;
-  final String? searchQuery;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final double? minRating;
-  final double? maxRating;
-  final bool? isVerified;
-  final bool? isFeatured;
-  final bool? isTrending;
-  final String? language;
-  final Map<String, dynamic>? location;
-  final double? radius;
 
   const IdeaFilters({
     this.type,
@@ -454,6 +413,23 @@ class IdeaFilters extends Equatable {
     this.location,
     this.radius,
   });
+  final IdeaType? type;
+  final IdeaStatus? status;
+  final IdeaPrivacy? privacy;
+  final String? authorId;
+  final List<String>? categories;
+  final List<String>? tags;
+  final String? searchQuery;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final double? minRating;
+  final double? maxRating;
+  final bool? isVerified;
+  final bool? isFeatured;
+  final bool? isTrending;
+  final String? language;
+  final Map<String, dynamic>? location;
+  final double? radius;
 
   @override
   List<Object?> get props => [

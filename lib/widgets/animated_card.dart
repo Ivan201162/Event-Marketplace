@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Анимированная карточка
 class AnimatedCard extends StatefulWidget {
   const AnimatedCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onTap,
     this.duration = const Duration(milliseconds: 200),
     this.elevation = 2,
@@ -59,7 +58,7 @@ class _AnimatedCardState extends State<AnimatedCard>
               margin: widget.margin,
               child: Padding(
                   padding: widget.padding ?? const EdgeInsets.all(16),
-                  child: widget.child),
+                  child: widget.child,),
             ),
           ),
         ),

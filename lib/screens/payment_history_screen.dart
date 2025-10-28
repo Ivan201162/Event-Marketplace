@@ -1,12 +1,12 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/payment.dart';
-import '../services/payment_service.dart';
 
 /// Экран истории платежей
 class PaymentHistoryScreen extends ConsumerStatefulWidget {
   const PaymentHistoryScreen(
-      {super.key, required this.userId, this.isSpecialist = false});
+      {required this.userId, super.key, this.isSpecialist = false,});
 
   final String userId;
   final bool isSpecialist;
@@ -57,12 +57,12 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-              widget.isSpecialist ? 'Платежи специалиста' : 'История платежей'),
+              widget.isSpecialist ? 'Платежи специалиста' : 'История платежей',),
           actions: [
             IconButton(
-                icon: const Icon(Icons.filter_list), onPressed: _showFilters),
+                icon: const Icon(Icons.filter_list), onPressed: _showFilters,),
             IconButton(
-                icon: const Icon(Icons.refresh), onPressed: _loadPayments),
+                icon: const Icon(Icons.refresh), onPressed: _loadPayments,),
           ],
         ),
         body: Column(
@@ -119,7 +119,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
             Text('Ошибка: $_error'),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadPayments, child: const Text('Повторить')),
+                onPressed: _loadPayments, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -143,7 +143,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
       itemBuilder: (context, index) {
         final payment = _payments[index];
         return _PaymentCard(
-            payment: payment, onTap: () => _showPaymentDetails(payment));
+            payment: payment, onTap: () => _showPaymentDetails(payment),);
       },
     );
   }
@@ -198,11 +198,11 @@ class _PaymentCard extends StatelessWidget {
                 '${payment.formattedAmount} • ${payment.statusName}',
                 style: TextStyle(
                     color: _getStatusColor(payment.status),
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w500,),
               ),
               if (payment.dueDate != null)
                 Text('Срок: ${_formatDate(payment.dueDate!)}',
-                    style: const TextStyle(fontSize: 12)),
+                    style: const TextStyle(fontSize: 12),),
             ],
           ),
           trailing: Column(
@@ -215,7 +215,7 @@ class _PaymentCard extends StatelessWidget {
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text(_formatDate(payment.createdAt),
-                  style: const TextStyle(fontSize: 12)),
+                  style: const TextStyle(fontSize: 12),),
             ],
           ),
           onTap: onTap,
@@ -267,10 +267,10 @@ class _PaymentDetailsDialog extends StatelessWidget {
                 _DetailRow('Провайдер', payment.paymentProvider!),
               if (payment.fee != null)
                 _DetailRow('Комиссия',
-                    '${payment.fee!.toStringAsFixed(2)} ${payment.currency}'),
+                    '${payment.fee!.toStringAsFixed(2)} ${payment.currency}',),
               if (payment.tax != null)
                 _DetailRow('Налог',
-                    '${payment.tax!.toStringAsFixed(2)} ${payment.currency}'),
+                    '${payment.tax!.toStringAsFixed(2)} ${payment.currency}',),
               _DetailRow('Итого', payment.formattedTotalAmount),
               _DetailRow('Создан', _formatDate(payment.createdAt)),
               if (payment.processedAt != null)
@@ -293,7 +293,7 @@ class _PaymentDetailsDialog extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       );
 
@@ -317,7 +317,7 @@ class _DetailRow extends StatelessWidget {
             SizedBox(
               width: 120,
               child: Text('$label:',
-                  style: const TextStyle(fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontWeight: FontWeight.w500),),
             ),
             Expanded(child: Text(value)),
           ],
@@ -360,7 +360,7 @@ class _FiltersBottomSheetState extends State<_FiltersBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Фильтры',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             const Text('Статус платежа:'),
             const SizedBox(height: 8),
@@ -451,7 +451,7 @@ class _FiltersBottomSheetState extends State<_FiltersBottomSheet> {
 /// Чип фильтра
 class _FilterChip extends StatelessWidget {
   const _FilterChip(
-      {required this.label, required this.selected, required this.onSelected});
+      {required this.label, required this.selected, required this.onSelected,});
 
   final String label;
   final bool selected;
@@ -459,5 +459,5 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FilterChip(
-      label: Text(label), selected: selected, onSelected: onSelected);
+      label: Text(label), selected: selected, onSelected: onSelected,);
 }

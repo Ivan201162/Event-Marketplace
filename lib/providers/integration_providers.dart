@@ -1,8 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:event_marketplace_app/models/integration.dart';
+import 'package:event_marketplace_app/services/integration_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/integration.dart';
-import '../services/integration_service.dart';
 
 /// Провайдер сервиса интеграций
 final integrationServiceProvider =

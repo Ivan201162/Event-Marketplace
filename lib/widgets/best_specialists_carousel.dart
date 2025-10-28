@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/real_specialists_providers.dart';
+import 'package:event_marketplace_app/widgets/ui_kit/ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../models/specialist.dart';
-import '../providers/real_specialists_providers.dart';
-import '../core/feature_flags.dart';
-import 'ui_kit/ui_kit.dart';
 
 class BestSpecialistsCarousel extends ConsumerWidget {
   const BestSpecialistsCarousel({super.key});
@@ -28,7 +27,7 @@ class BestSpecialistsCarousel extends ConsumerWidget {
               ),
               TextButton(
                   onPressed: () => context.push('/specialists'),
-                  child: const Text('Все')),
+                  child: const Text('Все'),),
             ],
           ),
         ),
@@ -51,7 +50,7 @@ class BestSpecialistsCarousel extends ConsumerWidget {
               ),
             );
           },
-          loading: () => _buildLoadingState(),
+          loading: _buildLoadingState,
           error: (error, stack) => _buildErrorState(error.toString()),
         ),
       ],
@@ -70,7 +69,6 @@ class BestSpecialistsCarousel extends ConsumerWidget {
             width: 160,
             margin: const EdgeInsets.only(right: 12),
             child: context.cardSkeleton(
-              height: 200,
               borderRadius: BorderRadius.circular(12),
             ),
           );
@@ -137,7 +135,7 @@ class _SpecialistCard extends StatelessWidget {
                   image: specialist.avatar != null
                       ? DecorationImage(
                           image: NetworkImage(specialist.avatar!),
-                          fit: BoxFit.cover)
+                          fit: BoxFit.cover,)
                       : null,
                   color: specialist.avatar == null
                       ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
@@ -145,7 +143,7 @@ class _SpecialistCard extends StatelessWidget {
                 ),
                 child: specialist.avatar == null
                     ? const Center(
-                        child: Icon(Icons.person, size: 40, color: Colors.grey))
+                        child: Icon(Icons.person, size: 40, color: Colors.grey),)
                     : null,
               ),
               // Информация о специалисте
@@ -158,7 +156,7 @@ class _SpecialistCard extends StatelessWidget {
                       Text(
                         specialist.name,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
+                            fontWeight: FontWeight.bold, fontSize: 14,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -177,7 +175,7 @@ class _SpecialistCard extends StatelessWidget {
                           Text(
                             specialist.rating.toString(),
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold,),
                           ),
                           const Spacer(),
                           Text(

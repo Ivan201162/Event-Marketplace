@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/screens/enhanced_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'enhanced_main_screen.dart';
 
 /// Оптимизированный главный экран с ленивой загрузкой
 class OptimizedMainScreen extends ConsumerWidget {

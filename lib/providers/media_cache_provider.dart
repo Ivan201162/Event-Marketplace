@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/services/image_optimization_service.dart';
+import 'package:event_marketplace_app/services/video_optimization_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/image_optimization_service.dart';
-import '../services/video_optimization_service.dart';
 
 /// Провайдер для управления кэшем изображений
 final imageCacheProvider =
@@ -247,12 +247,12 @@ class MediaOptimizationSettingsNotifier
   /// Обновить настройки сжатия видео
   void updateVideoCompressionSettings({bool? enableCompression, int? maxSize}) {
     state = state.copyWith(
-        enableVideoCompression: enableCompression, maxVideoSize: maxSize);
+        enableVideoCompression: enableCompression, maxVideoSize: maxSize,);
   }
 
   /// Обновить настройки кэширования
   void updateCachingSettings(
-      {bool? enableCaching, bool? autoClearCache, int? cacheMaxSize}) {
+      {bool? enableCaching, bool? autoClearCache, int? cacheMaxSize,}) {
     state = state.copyWith(
       enableCaching: enableCaching,
       autoClearCache: autoClearCache,

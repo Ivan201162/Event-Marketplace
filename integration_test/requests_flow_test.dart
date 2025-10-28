@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-
-import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Requests Flow Tests', () {
-    testWidgets('Requests screen loads with list', (WidgetTester tester) async {
+    testWidgets('Requests screen loads with list', (tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -31,7 +30,7 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('Create request flow works', (WidgetTester tester) async {
+    testWidgets('Create request flow works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -48,11 +47,11 @@ void main() {
 
       // Заполнение формы
       await tester.enterText(
-          find.byKey(const Key('title_field')), 'Тестовая заявка');
+          find.byKey(const Key('title_field')), 'Тестовая заявка',);
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byKey(const Key('description_field')),
-          'Описание тестовой заявки');
+          'Описание тестовой заявки',);
       await tester.pumpAndSettle();
 
       await tester.enterText(find.byKey(const Key('city_field')), 'Москва');
@@ -79,7 +78,7 @@ void main() {
       expect(find.text('Заявки'), findsOneWidget);
     });
 
-    testWidgets('Request filters work', (WidgetTester tester) async {
+    testWidgets('Request filters work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -107,7 +106,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Request search works', (WidgetTester tester) async {
+    testWidgets('Request search works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -132,7 +131,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Request details screen works', (WidgetTester tester) async {
+    testWidgets('Request details screen works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -153,7 +152,7 @@ void main() {
       }
     });
 
-    testWidgets('Pull to refresh works', (WidgetTester tester) async {
+    testWidgets('Pull to refresh works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 

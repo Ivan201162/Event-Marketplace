@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/user_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/user_profile.dart';
-
 /// Экран детального просмотра поста
 class PostDetailScreen extends ConsumerStatefulWidget {
-  const PostDetailScreen({super.key, required this.post});
+  const PostDetailScreen({required this.post, super.key});
   final UserPost post;
 
   @override
@@ -82,17 +81,17 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       return Container(
         color: Colors.grey[800],
         child: const Center(
-            child: Icon(Icons.image, color: Colors.white, size: 64)),
+            child: Icon(Icons.image, color: Colors.white, size: 64),),
       );
     }
   }
 
   Widget _buildVideoPlayer() {
     if (!_isVideoInitialized || _videoController == null) {
-      return Container(
+      return const ColoredBox(
         color: Colors.black,
         child:
-            const Center(child: CircularProgressIndicator(color: Colors.white)),
+            Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
 
@@ -135,17 +134,17 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           placeholder: (context, url) => Container(
             color: Colors.grey[800],
             child: const Center(
-                child: CircularProgressIndicator(color: Colors.white)),
+                child: CircularProgressIndicator(color: Colors.white),),
           ),
           errorWidget: (context, url, error) => Container(
             color: Colors.grey[800],
             child: const Center(
-                child: Icon(Icons.error, color: Colors.white, size: 64)),
+                child: Icon(Icons.error, color: Colors.white, size: 64),),
           ),
         ),
       );
 
-  Widget _buildPostInfo() => Container(
+  Widget _buildPostInfo() => ColoredBox(
         color: Colors.white,
         child: Column(
           children: [
@@ -182,12 +181,12 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             ),
             IconButton(
                 icon: const Icon(Icons.comment_outlined),
-                onPressed: _showComments),
+                onPressed: _showComments,),
             IconButton(
-                icon: const Icon(Icons.share_outlined), onPressed: _sharePost),
+                icon: const Icon(Icons.share_outlined), onPressed: _sharePost,),
             const Spacer(),
             IconButton(
-                icon: const Icon(Icons.bookmark_border), onPressed: _savePost),
+                icon: const Icon(Icons.bookmark_border), onPressed: _savePost,),
           ],
         ),
       );

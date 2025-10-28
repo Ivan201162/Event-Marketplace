@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/user.dart';
-import '../providers/auth_providers.dart';
-import '../providers/profile_providers.dart';
 
 class CustomerProfileEditScreen extends ConsumerStatefulWidget {
   const CustomerProfileEditScreen({super.key});
@@ -56,7 +55,7 @@ class _CustomerProfileEditScreenState
 
     // Инициализация полей при загрузке профиля
     if (editState.profile != null && !editState.isDirty) {
-      final profile = editState.profile!;
+      final profile = editState.profile;
       _bioController.text = profile.bio ?? '';
       _phoneController.text = profile.phoneNumber ?? '';
       _locationController.text = profile.location ?? '';
@@ -157,7 +156,7 @@ class _CustomerProfileEditScreenState
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content:
-                              Text('Загрузка фото будет реализована позже')),
+                              Text('Загрузка фото будет реализована позже'),),
                     );
                   },
                 ),
@@ -265,7 +264,7 @@ class _CustomerProfileEditScreenState
                           ref
                               .read(customerProfileEditProvider.notifier)
                               .updateField(
-                                  maritalStatus: _selectedMaritalStatus);
+                                  maritalStatus: _selectedMaritalStatus,);
                         },
                       ),
                     )

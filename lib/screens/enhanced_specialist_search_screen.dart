@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/screens/specialist_profile_screen.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../providers/specialist_providers.dart';
-import '../widgets/specialist_card.dart';
-import 'specialist_profile_screen.dart';
 
 /// Улучшенный экран поиска специалистов с полным функционалом
 class EnhancedSpecialistSearchScreen extends ConsumerStatefulWidget {
@@ -57,7 +56,7 @@ class _EnhancedSpecialistSearchScreenState
           actions: [
             IconButton(
               icon: Icon(
-                  _showFilters ? Icons.filter_list_off : Icons.filter_list),
+                  _showFilters ? Icons.filter_list_off : Icons.filter_list,),
               onPressed: () {
                 setState(() {
                   _showFilters = !_showFilters;
@@ -150,7 +149,7 @@ class _EnhancedSpecialistSearchScreenState
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 TextButton(
-                    onPressed: _clearFilters, child: const Text('Сбросить')),
+                    onPressed: _clearFilters, child: const Text('Сбросить'),),
               ],
             ),
             const SizedBox(height: 16),
@@ -195,11 +194,11 @@ class _EnhancedSpecialistSearchScreenState
           DropdownButtonFormField<SpecialistCategory?>(
             initialValue: _selectedCategory,
             decoration: const InputDecoration(
-                border: OutlineInputBorder(), isDense: true),
+                border: OutlineInputBorder(), isDense: true,),
             hint: const Text('Все категории'),
             items: [
               const DropdownMenuItem<SpecialistCategory?>(
-                  child: Text('Все категории')),
+                  child: Text('Все категории'),),
               ...SpecialistCategory.values.map(
                 (category) => DropdownMenuItem<SpecialistCategory?>(
                   value: category,
@@ -271,7 +270,7 @@ class _EnhancedSpecialistSearchScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Минимальный рейтинг',
-              style: Theme.of(context).textTheme.titleSmall),
+              style: Theme.of(context).textTheme.titleSmall,),
           const SizedBox(height: 8),
           Row(
             children: List.generate(
@@ -279,7 +278,7 @@ class _EnhancedSpecialistSearchScreenState
               (index) => IconButton(
                 icon: Icon(Icons.star,
                     color:
-                        index < _minRating ? Colors.amber : Colors.grey[300]),
+                        index < _minRating ? Colors.amber : Colors.grey[300],),
                 onPressed: () {
                   setState(() {
                     _minRating = index + 1.0;
@@ -366,7 +365,7 @@ class _EnhancedSpecialistSearchScreenState
           DropdownButtonFormField<SpecialistSorting>(
             initialValue: _sorting,
             decoration: const InputDecoration(
-                border: OutlineInputBorder(), isDense: true),
+                border: OutlineInputBorder(), isDense: true,),
             items: SpecialistSorting.values
                 .map(
                   (sorting) => DropdownMenuItem<SpecialistSorting>(
@@ -412,19 +411,19 @@ class _EnhancedSpecialistSearchScreenState
               runSpacing: 8,
               children: [
                 _buildQuickFilterChip(
-                    SpecialistCategory.photographer, '📸 Фотографы'),
+                    SpecialistCategory.photographer, '📸 Фотографы',),
                 _buildQuickFilterChip(
-                    SpecialistCategory.videographer, '🎥 Видеографы'),
+                    SpecialistCategory.videographer, '🎥 Видеографы',),
                 _buildQuickFilterChip(SpecialistCategory.host, '🎤 Ведущие'),
                 _buildQuickFilterChip(SpecialistCategory.dj, '🎧 DJ'),
                 _buildQuickFilterChip(
-                    SpecialistCategory.decorator, '🎈 Декораторы'),
+                    SpecialistCategory.decorator, '🎈 Декораторы',),
                 _buildQuickFilterChip(
-                    SpecialistCategory.musician, '🎵 Музыканты'),
+                    SpecialistCategory.musician, '🎵 Музыканты',),
                 _buildQuickFilterChip(
-                    SpecialistCategory.animator, '🎭 Аниматоры'),
+                    SpecialistCategory.animator, '🎭 Аниматоры',),
                 _buildQuickFilterChip(
-                    SpecialistCategory.florist, '🌸 Флористы'),
+                    SpecialistCategory.florist, '🌸 Флористы',),
               ],
             ),
           ],
@@ -537,7 +536,7 @@ class _EnhancedSpecialistSearchScreenState
             ),
             const SizedBox(height: 8),
             Text('Используйте быстрые фильтры выше',
-                style: TextStyle(color: Colors.grey[500])),
+                style: TextStyle(color: Colors.grey[500]),),
           ],
         ),
       );
@@ -604,7 +603,7 @@ class _EnhancedSpecialistSearchScreenState
             const SizedBox(height: 24),
             ElevatedButton(
                 onPressed: _clearFilters,
-                child: const Text('Очистить фильтры')),
+                child: const Text('Очистить фильтры'),),
           ],
         ),
       );
@@ -691,20 +690,15 @@ class _EnhancedSpecialistSearchScreenState
     switch (_sorting) {
       case SpecialistSorting.rating:
         filtered.sort((a, b) => b.rating.compareTo(a.rating));
-        break;
       case SpecialistSorting.priceAsc:
         filtered.sort((a, b) => a.price.compareTo(b.price));
-        break;
       case SpecialistSorting.priceDesc:
         filtered.sort((a, b) => b.price.compareTo(a.price));
-        break;
       case SpecialistSorting.experience:
         filtered
             .sort((a, b) => b.yearsOfExperience.compareTo(a.yearsOfExperience));
-        break;
       case SpecialistSorting.reviews:
         filtered.sort((a, b) => b.reviewCount.compareTo(a.reviewCount));
-        break;
     }
 
     return filtered;

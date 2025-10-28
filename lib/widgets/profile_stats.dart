@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/user_profile.dart';
 import 'package:flutter/material.dart';
-
-import '../models/user_profile.dart';
 
 /// Статистика профиля
 class ProfileStats extends StatelessWidget {
-  final UserProfile profile;
 
-  const ProfileStats({super.key, required this.profile});
+  const ProfileStats({required this.profile, super.key});
+  final UserProfile profile;
 
   @override
   Widget build(BuildContext context) {
@@ -83,15 +82,15 @@ class ProfileStats extends StatelessWidget {
 
 /// Элемент статистики
 class _StatItem extends StatelessWidget {
-  final String label;
-  final int value;
-  final VoidCallback? onTap;
 
   const _StatItem({
     required this.label,
     required this.value,
     this.onTap,
   });
+  final String label;
+  final int value;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/feed_post.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/feed_post.dart';
 
 /// Провайдер для ленты новостей с тестовыми данными
 final feedProvider = StreamProvider<List<FeedPost>>((ref) async* {
@@ -129,8 +128,7 @@ class FeedNotifier extends Notifier<AsyncValue<List<FeedPost>>> {
   Future<void> createPost({
     required String authorId,
     required String authorName,
-    String? authorAvatar,
-    required String description,
+    required String description, String? authorAvatar,
     String? imageUrl,
     String? location,
   }) async {

@@ -1,15 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
-
 class SocialFollowersScreen extends ConsumerStatefulWidget {
-  final String username;
 
-  const SocialFollowersScreen({super.key, required this.username});
+  const SocialFollowersScreen({required this.username, super.key});
+  final String username;
 
   @override
   ConsumerState<SocialFollowersScreen> createState() =>
@@ -83,7 +82,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
             Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
             const SizedBox(height: 16),
             Text('Ошибка загрузки',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -92,7 +91,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadData, child: const Text('Повторить')),
+                onPressed: _loadData, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -110,14 +109,14 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
             ),
             const SizedBox(height: 16),
             Text('Нет подписчиков',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               'У ${_profile?.name ?? 'пользователя'} пока нет подписчиков',
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color),
+                  color: Theme.of(context).textTheme.bodySmall?.color,),
               textAlign: TextAlign.center,
             ),
           ],
@@ -147,7 +146,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
         child: follower.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
       title: Text(follower.name,
-          style: const TextStyle(fontWeight: FontWeight.w500)),
+          style: const TextStyle(fontWeight: FontWeight.w500),),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -162,7 +161,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(follower.city!,
-                    style: Theme.of(context).textTheme.bodySmall),
+                    style: Theme.of(context).textTheme.bodySmall,),
               ],
             ),
         ],
@@ -219,7 +218,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка обновления подписки')));
+            const SnackBar(content: Text('Ошибка обновления подписки')),);
       }
     } catch (e) {
       ScaffoldMessenger.of(context)

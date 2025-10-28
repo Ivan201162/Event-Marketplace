@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/app_update_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/app_update_service.dart';
 
 /// Провайдер для управления обновлениями приложения
 final appUpdateProvider = NotifierProvider<AppUpdateNotifier, AppUpdateState>(

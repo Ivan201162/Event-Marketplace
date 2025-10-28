@@ -68,7 +68,7 @@ class AppNavigator {
   /// Создание правильной стрелки "Назад" для AppBar
   static Widget? buildBackButton(BuildContext context) => IconButton(
       icon: const Icon(Icons.arrow_back),
-      onPressed: () => handleBackPress(context));
+      onPressed: () => handleBackPress(context),);
 
   /// Создание AppBar с правильной навигацией
   static AppBar buildAppBar(
@@ -91,7 +91,7 @@ class AppNavigator {
 
   /// Создание PopScope с правильной обработкой
   static Widget buildPopScope(
-          {required Widget child, required BuildContext context}) =>
+          {required Widget child, required BuildContext context,}) =>
       PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) async {

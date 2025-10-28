@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/enhanced_order.dart';
+import 'package:event_marketplace_app/services/enhanced_orders_service.dart';
+import 'package:event_marketplace_app/widgets/order_comments_widget.dart';
+import 'package:event_marketplace_app/widgets/order_timeline_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/enhanced_order.dart';
-import '../services/enhanced_orders_service.dart';
-import '../widgets/order_comments_widget.dart';
-import '../widgets/order_timeline_widget.dart';
-
 /// Расширенный экран заявки
 class EnhancedOrderScreen extends ConsumerStatefulWidget {
-  const EnhancedOrderScreen({super.key, required this.orderId});
+  const EnhancedOrderScreen({required this.orderId, super.key});
 
   final String orderId;
 
@@ -131,7 +130,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
               Text('Ошибка: $_error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                  onPressed: _loadOrder, child: const Text('Повторить')),
+                  onPressed: _loadOrder, child: const Text('Повторить'),),
             ],
           ),
         ),
@@ -155,12 +154,12 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
               const PopupMenuItem(
                 value: 'edit',
                 child: ListTile(
-                    leading: Icon(Icons.edit), title: Text('Редактировать')),
+                    leading: Icon(Icons.edit), title: Text('Редактировать'),),
               ),
               const PopupMenuItem(
                 value: 'share',
                 child: ListTile(
-                    leading: Icon(Icons.share), title: Text('Поделиться')),
+                    leading: Icon(Icons.share), title: Text('Поделиться'),),
               ),
               if (_order!.status == OrderStatus.pending)
                 const PopupMenuItem(
@@ -188,7 +187,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
         children: [
           _buildDetailsTab(),
           _buildTimelineTab(),
-          _buildCommentsTab()
+          _buildCommentsTab(),
         ],
       ),
     );
@@ -253,7 +252,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Описание заявки',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 12),
             Text(_order!.description, style: const TextStyle(fontSize: 14)),
             const SizedBox(height: 16),
@@ -299,7 +298,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Бюджет и сроки',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -355,7 +354,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
               children: [
                 Expanded(
                   child: _buildStatusCard('Статус', _order!.status.displayName,
-                      _order!.status.color),
+                      _order!.status.color,),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -393,7 +392,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Вложения',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 16),
           Wrap(
             spacing: 8,
@@ -462,14 +461,14 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
               icon: const Icon(Icons.message),
               label: const Text('Написать сообщение'),
               style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),),
             ),
           ),
         ],
       );
 
   Widget _buildInfoCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -484,11 +483,11 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
             Text(
               value,
               style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(title,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
           ],
         ),
       );
@@ -517,7 +516,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
             ),
             const SizedBox(height: 4),
             Text(title,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
           ],
         ),
       );
@@ -540,7 +539,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
               const SizedBox(width: 8),
               Text(attachment.name,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500)),
+                      fontSize: 14, fontWeight: FontWeight.w500,),),
             ],
           ),
         ),
@@ -550,13 +549,10 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
     switch (action) {
       case 'edit':
         _editOrder();
-        break;
       case 'share':
         _shareOrder();
-        break;
       case 'cancel':
         _cancelOrder();
-        break;
     }
   }
 
@@ -579,7 +575,7 @@ class _EnhancedOrderScreenState extends ConsumerState<EnhancedOrderScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

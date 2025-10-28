@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
-
-import '../models/specialist.dart';
 
 /// Карточка ведущего для отображения в списке
 class HostCard extends StatelessWidget {
-  const HostCard({super.key, required this.specialist, this.onTap});
+  const HostCard({required this.specialist, super.key, this.onTap});
   final Specialist specialist;
   final VoidCallback? onTap;
 
@@ -41,17 +40,17 @@ class HostCard extends StatelessWidget {
                       ? CachedNetworkImage(
                           imageUrl: specialist.avatarUrl!,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
+                          placeholder: (context, url) => ColoredBox(
                             color: theme.primaryColor.withValues(alpha: 0.1),
                             child: Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                    theme.primaryColor),
+                                    theme.primaryColor,),
                               ),
                             ),
                           ),
-                          errorWidget: (context, url, error) => Container(
+                          errorWidget: (context, url, error) => ColoredBox(
                             color: theme.primaryColor.withValues(alpha: 0.1),
                             child: Icon(
                               Icons.person,
@@ -60,7 +59,7 @@ class HostCard extends StatelessWidget {
                             ),
                           ),
                         )
-                      : Container(
+                      : ColoredBox(
                           color: theme.primaryColor.withValues(alpha: 0.1),
                           child: Icon(
                             Icons.person,
@@ -96,7 +95,7 @@ class HostCard extends StatelessWidget {
                         ),
                         if (specialist.isVerified)
                           Icon(Icons.verified,
-                              size: isMobile ? 14 : 16, color: Colors.green),
+                              size: isMobile ? 14 : 16, color: Colors.green,),
                       ],
                     ),
 
@@ -133,7 +132,7 @@ class HostCard extends StatelessWidget {
                     Row(
                       children: [
                         Icon(Icons.star,
-                            size: isMobile ? 12 : 14, color: Colors.amber),
+                            size: isMobile ? 12 : 14, color: Colors.amber,),
                         const SizedBox(width: 2),
                         Text(
                           specialist.rating.toStringAsFixed(1),

@@ -92,9 +92,9 @@ class ResponsiveUtils {
   /// Адаптивный отступ
   static EdgeInsets getResponsivePadding(
     BuildContext context, {
-    EdgeInsets mobile = const EdgeInsets.all(16.0),
-    EdgeInsets tablet = const EdgeInsets.all(24.0),
-    EdgeInsets desktop = const EdgeInsets.all(32.0),
+    EdgeInsets mobile = const EdgeInsets.all(16),
+    EdgeInsets tablet = const EdgeInsets.all(24),
+    EdgeInsets desktop = const EdgeInsets.all(32),
   }) {
     final screenType = getScreenType(context);
 
@@ -455,7 +455,7 @@ class ResponsiveUtils {
         context: context,
         style: TextStyle(
           fontSize: getResponsiveFontSize(context,
-              mobile: 18.0, tablet: 20.0, desktop: 22.0),
+              mobile: 18, tablet: 20, desktop: 22,),
         ),
       ),
       actions: actions,
@@ -486,7 +486,7 @@ class ResponsiveUtils {
       type: isDesktop(context)
           ? BottomNavigationBarType.fixed
           : BottomNavigationBarType.fixed,
-      elevation: 8.0,
+      elevation: 8,
     );
   }
 }

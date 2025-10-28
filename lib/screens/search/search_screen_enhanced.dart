@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/specialist_enhanced.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/services/navigation_service.dart';
+import 'package:event_marketplace_app/widgets/animated_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/specialist_providers.dart';
-import '../../models/specialist_enhanced.dart';
-import '../../widgets/animated_skeleton.dart';
-import '../../services/navigation_service.dart';
 
 /// Расширенный экран поиска с фильтрами
 class SearchScreenEnhanced extends ConsumerStatefulWidget {
@@ -41,12 +40,12 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.2),
@@ -54,7 +53,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeOutCubic,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -129,9 +128,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
       ),
       child: TextField(
         controller: _searchController,
-        onSubmitted: (value) {
-          _performSearch(value);
-        },
+        onSubmitted: _performSearch,
         decoration: InputDecoration(
           hintText: 'Поиск по имени, специализации, городу...',
           hintStyle: TextStyle(color: Colors.grey[300]),
@@ -237,9 +234,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
-                    _applyFilters();
-                  },
+                  onPressed: _applyFilters,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1E3A8A),
                     foregroundColor: Colors.white,
@@ -435,17 +430,17 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: _selectedSortBy,
+          initialValue: _selectedSortBy,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
           ),
           items: const [
             DropdownMenuItem(value: 'rating', child: Text('По рейтингу')),
             DropdownMenuItem(
-                value: 'orders', child: Text('По количеству заказов')),
+                value: 'orders', child: Text('По количеству заказов'),),
             DropdownMenuItem(value: 'price', child: Text('По цене')),
             DropdownMenuItem(
-                value: 'newest', child: Text('По дате регистрации')),
+                value: 'newest', child: Text('По дате регистрации'),),
           ],
           onChanged: (value) {
             setState(() {
@@ -459,7 +454,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
 
   /// Результаты поиска
   Widget _buildSearchResults(
-      AsyncValue<List<SpecialistEnhanced>> searchResults) {
+      AsyncValue<List<SpecialistEnhanced>> searchResults,) {
     return searchResults.when(
       data: (specialists) {
         if (specialists.isEmpty) {
@@ -485,7 +480,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                   if (ref.read(currentSearchFiltersProvider).hasActiveFilters)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: const Color(0xFF1E3A8A).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -518,7 +513,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
           ],
         );
       },
-      loading: () => _buildLoadingState(),
+      loading: _buildLoadingState,
       error: (error, stack) => _buildErrorState(error.toString()),
     );
   }
@@ -633,7 +628,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                           children: specialist.badges.take(3).map((badge) {
                             return Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                                  horizontal: 6, vertical: 2,),
                               decoration: BoxDecoration(
                                 color: Color(badge.color).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),

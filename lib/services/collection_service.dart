@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/idea.dart';
 import 'package:flutter/foundation.dart';
-
-import '../core/feature_flags.dart';
-import '../models/idea.dart';
 
 /// Сервис для работы с коллекциями идей
 class CollectionService {
@@ -31,7 +30,7 @@ class CollectionService {
     return query.snapshots().map(
           (snapshot) => snapshot.docs
               .map((doc) =>
-                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}),)
               .toList(),
         );
   }
@@ -50,7 +49,7 @@ class CollectionService {
         .map(
           (snapshot) => snapshot.docs
               .map((doc) =>
-                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}),)
               .toList(),
         );
   }
@@ -69,7 +68,7 @@ class CollectionService {
         .map(
           (snapshot) => snapshot.docs
               .map((doc) =>
-                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}),)
               .toList(),
         );
   }
@@ -93,7 +92,7 @@ class CollectionService {
 
   /// Обновить коллекцию
   Future<void> updateCollection(
-      String collectionId, Map<String, dynamic> updates) async {
+      String collectionId, Map<String, dynamic> updates,) async {
     if (!FeatureFlags.ideasEnabled) {
       throw Exception('Функция идей отключена');
     }
@@ -231,7 +230,7 @@ class CollectionService {
 
   /// Удалить идею из коллекции
   Future<void> removeIdeaFromCollection(
-      String collectionId, String ideaId) async {
+      String collectionId, String ideaId,) async {
     if (!FeatureFlags.ideasEnabled) {
       throw Exception('Функция идей отключена');
     }
@@ -323,7 +322,7 @@ class CollectionService {
       }
 
       final collection = IdeaCollection.fromMap(
-          {'id': collectionDoc.id, ...collectionDoc.data()!});
+          {'id': collectionDoc.id, ...collectionDoc.data()!},);
 
       if (collection.ideaIds.isEmpty) {
         return <Idea>[];
@@ -344,7 +343,7 @@ class CollectionService {
 
   /// Поиск коллекций
   Stream<List<IdeaCollection>> searchCollections(
-      {required String query, int limit = 20}) {
+      {required String query, int limit = 20,}) {
     if (!FeatureFlags.ideasEnabled) {
       return Stream.value([]);
     }
@@ -390,7 +389,7 @@ class CollectionService {
         .map(
           (snapshot) => snapshot.docs
               .map((doc) =>
-                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}),)
               .toList(),
         );
   }

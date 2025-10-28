@@ -129,7 +129,7 @@ extension UserRoleExtension on UserRole {
           'users.moderate',
           'content.moderate',
           'reports.view',
-          'analytics.view'
+          'analytics.view',
         ];
       case UserRole.specialist:
         return [
@@ -144,14 +144,14 @@ extension UserRoleExtension on UserRole {
           'profile.manage',
           'events.manage',
           'proposals.create',
-          'analytics.view'
+          'analytics.view',
         ];
       case UserRole.customer:
         return [
           'profile.manage',
           'bookings.create',
           'reviews.create',
-          'content.view'
+          'content.view',
         ];
       case UserRole.guest:
         return ['content.view'];
@@ -171,10 +171,8 @@ class AppUser {
   const AppUser({
     required this.id,
     required this.email,
-    this.displayName,
+    required this.role, required this.createdAt, this.displayName,
     this.photoURL,
-    required this.role,
-    required this.createdAt,
     this.lastLoginAt,
     this.isActive = true,
     this.socialProvider,

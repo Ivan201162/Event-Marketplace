@@ -1,23 +1,22 @@
+import 'package:event_marketplace_app/features/specialists/data/models/specialist.dart';
 import 'package:flutter/material.dart';
-
-import '../data/models/specialist.dart';
 
 /// Виджет карточки специалиста
 class SpecialistCard extends StatelessWidget {
+
+  const SpecialistCard({required this.specialist, super.key, this.onTap});
   final Specialist specialist;
   final VoidCallback? onTap;
-
-  const SpecialistCard({super.key, required this.specialist, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(8),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -31,7 +30,7 @@ class SpecialistCard extends StatelessWidget {
                     child: specialist.avatarUrl == null
                         ? Text(specialist.name.isNotEmpty
                             ? specialist.name[0].toUpperCase()
-                            : '?')
+                            : '?',)
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -42,13 +41,13 @@ class SpecialistCard extends StatelessWidget {
                         Text(
                           specialist.name,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
                             const Icon(Icons.star,
-                                color: Colors.amber, size: 16),
+                                color: Colors.amber, size: 16,),
                             const SizedBox(width: 4),
                             Text(
                               specialist.rating.toStringAsFixed(1),
@@ -59,7 +58,7 @@ class SpecialistCard extends StatelessWidget {
                             Text(
                               '(${specialist.reviewCount} отзывов)',
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 12),
+                                  color: Colors.grey[600], fontSize: 12,),
                             ),
                           ],
                         ),
@@ -69,7 +68,7 @@ class SpecialistCard extends StatelessWidget {
                   if (specialist.isAvailable)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),

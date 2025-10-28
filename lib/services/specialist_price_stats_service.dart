@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/booking.dart';
-import '../models/specialist_price_stats.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist_price_stats.dart';
 
 /// Сервис для работы со статистикой цен специалистов
 class SpecialistPriceStatsService {
@@ -41,7 +41,7 @@ class SpecialistPriceStatsService {
 
   /// Получить статистику цен специалиста
   Future<SpecialistPriceAggregate?> getSpecialistPriceStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -84,7 +84,7 @@ class SpecialistPriceStatsService {
 
   /// Получить статистику по категории
   Future<SpecialistPriceStats?> getCategoryStats(
-      String specialistId, String categoryId) async {
+      String specialistId, String categoryId,) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -318,7 +318,7 @@ class SpecialistPriceStatsService {
 
   /// Вычислить месячный тренд
   Future<Map<String, double>> _calculateMonthlyTrend(
-      String specialistId, String categoryId) async {
+      String specialistId, String categoryId,) async {
     try {
       final now = DateTime.now();
       final sixMonthsAgo = DateTime(now.year, now.month - 6, now.day);

@@ -1,17 +1,13 @@
+import 'package:event_marketplace_app/services/advance_payment_service.dart';
+import 'package:event_marketplace_app/services/bank_integration_service.dart';
+import 'package:event_marketplace_app/widgets/bank_payment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/advance_payment_service.dart';
-import '../services/bank_integration_service.dart';
-import 'bank_payment_widget.dart';
 
 /// Виджет для управления авансами и финальными платежами
 class AdvancePaymentWidget extends ConsumerStatefulWidget {
   const AdvancePaymentWidget({
-    super.key,
-    required this.bookingId,
-    required this.customerId,
-    required this.specialistId,
-    required this.totalAmount,
+    required this.bookingId, required this.customerId, required this.specialistId, required this.totalAmount, super.key,
     this.onPaymentCompleted,
   });
   final String bookingId;
@@ -72,7 +68,7 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
 
     if (_paymentSummary == null) {
       return const Center(
-          child: Text('Не удалось загрузить информацию о платежах'));
+          child: Text('Не удалось загрузить информацию о платежах'),);
     }
 
     return SingleChildScrollView(
@@ -132,13 +128,13 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
           ),
           const SizedBox(height: 16),
           _buildSummaryRow(
-              'Общая сумма:', '${summary.totalAmount.toStringAsFixed(2)} ₽'),
+              'Общая сумма:', '${summary.totalAmount.toStringAsFixed(2)} ₽',),
           _buildSummaryRow('Аванс оплачен:',
-              '${summary.advanceAmount.toStringAsFixed(2)} ₽'),
+              '${summary.advanceAmount.toStringAsFixed(2)} ₽',),
           _buildSummaryRow('Финальный платеж:',
-              '${summary.finalAmount.toStringAsFixed(2)} ₽'),
+              '${summary.finalAmount.toStringAsFixed(2)} ₽',),
           _buildSummaryRow(
-              'Всего оплачено:', '${summary.totalPaid.toStringAsFixed(2)} ₽'),
+              'Всего оплачено:', '${summary.totalPaid.toStringAsFixed(2)} ₽',),
           const Divider(),
           _buildSummaryRow(
             'Остаток к доплате:',
@@ -160,7 +156,7 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
                   Text(
                     'Следующий платеж до: ${_formatDate(summary.nextPaymentDue!)}',
                     style: TextStyle(
-                        color: Colors.orange[800], fontWeight: FontWeight.w500),
+                        color: Colors.orange[800], fontWeight: FontWeight.w500,),
                   ),
                 ],
               ),
@@ -174,7 +170,7 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
   }
 
   Widget _buildSummaryRow(String label, String value,
-          {bool isHighlighted = false}) =>
+          {bool isHighlighted = false,}) =>
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
@@ -231,7 +227,7 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
           Text(
             statusText,
             style: TextStyle(
-                color: statusColor, fontWeight: FontWeight.w500, fontSize: 12),
+                color: statusColor, fontWeight: FontWeight.w500, fontSize: 12,),
           ),
         ],
       ),
@@ -296,7 +292,7 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Авансовый платеж',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
             const SizedBox(height: 16),
 
             // Сумма аванса
@@ -395,13 +391,13 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccess(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 }

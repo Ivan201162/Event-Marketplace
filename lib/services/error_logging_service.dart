@@ -1,5 +1,5 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 /// Сервис для логирования ошибок и аналитики
@@ -37,7 +37,7 @@ class ErrorLoggingService {
 
   /// Логирует пользовательское событие
   static Future<void> logUserAction(String action,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, dynamic>? parameters,}) async {
     try {
       await _analytics.logEvent(
         name: action,
@@ -61,7 +61,7 @@ class ErrorLoggingService {
     await logUserAction('auth_error', parameters: {
       'error_message': error,
       'method': method,
-    });
+    },);
   }
 
   /// Логирует ошибку Firestore
@@ -75,7 +75,7 @@ class ErrorLoggingService {
     await logUserAction('firestore_error', parameters: {
       'error_message': error,
       'operation': operation,
-    });
+    },);
   }
 
   /// Логирует ошибку Storage
@@ -89,7 +89,7 @@ class ErrorLoggingService {
     await logUserAction('storage_error', parameters: {
       'error_message': error,
       'operation': operation,
-    });
+    },);
   }
 
   /// Логирует ошибку UI
@@ -103,7 +103,7 @@ class ErrorLoggingService {
     await logUserAction('ui_error', parameters: {
       'error_message': error,
       'screen': screen,
-    });
+    },);
   }
 
   /// Логирует ошибку роутинга
@@ -117,12 +117,12 @@ class ErrorLoggingService {
     await logUserAction('routing_error', parameters: {
       'error_message': error,
       'route': route,
-    });
+    },);
   }
 
   /// Логирует успешное действие пользователя
   static Future<void> logSuccess(String action,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, dynamic>? parameters,}) async {
     await logUserAction('success_$action', parameters: parameters);
   }
 
@@ -130,14 +130,14 @@ class ErrorLoggingService {
   static Future<void> logSessionStart() async {
     await logUserAction('session_start', parameters: {
       'timestamp': DateTime.now().toIso8601String(),
-    });
+    },);
   }
 
   /// Логирует конец сессии
   static Future<void> logSessionEnd() async {
     await logUserAction('session_end', parameters: {
       'timestamp': DateTime.now().toIso8601String(),
-    });
+    },);
   }
 
   /// Устанавливает пользовательские данные для Crashlytics

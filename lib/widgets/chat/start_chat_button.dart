@@ -1,16 +1,13 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../models/app_user.dart';
-import '../../providers/auth_providers.dart';
-import '../../services/chat_service.dart';
-
 /// Кнопка для начала чата с пользователем
 class StartChatButton extends ConsumerStatefulWidget {
   const StartChatButton({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.userName,
     this.userAvatar,
     this.isCompact = false,
@@ -40,12 +37,12 @@ class _StartChatButtonState extends ConsumerState<StartChatButton>
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.95,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
   }
 
   @override
@@ -81,7 +78,7 @@ class _StartChatButtonState extends ConsumerState<StartChatButton>
           'otherUserId': widget.userId,
           'otherUserName': widget.userName,
           'otherUserAvatar': widget.userAvatar,
-        });
+        },);
       }
     } catch (e) {
       _showError('Ошибка создания чата: $e');
@@ -144,7 +141,7 @@ class _StartChatButtonState extends ConsumerState<StartChatButton>
           child: ElevatedButton.icon(
             onPressed: _isLoading ? null : _startChat,
             icon: _isLoading
-                ? SizedBox(
+                ? const SizedBox(
                     width: 16,
                     height: 16,
                     child: CircularProgressIndicator(
@@ -175,8 +172,7 @@ class _StartChatButtonState extends ConsumerState<StartChatButton>
 /// Кнопка для быстрого начала чата (плавающая)
 class FloatingStartChatButton extends StatelessWidget {
   const FloatingStartChatButton({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.userName,
     this.userAvatar,
   });
@@ -193,7 +189,6 @@ class FloatingStartChatButton extends StatelessWidget {
           userId: userId,
           userName: userName,
           userAvatar: userAvatar,
-          isCompact: false,
         );
       },
     );
@@ -203,8 +198,7 @@ class FloatingStartChatButton extends StatelessWidget {
 /// Виджет для отображения статуса чата
 class ChatStatusWidget extends StatelessWidget {
   const ChatStatusWidget({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.showOnlineStatus = true,
   });
 
@@ -216,7 +210,7 @@ class ChatStatusWidget extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         // TODO: Получить статус пользователя из провайдера
-        final isOnline = false; // Временная заглушка
+        const isOnline = false; // Временная заглушка
 
         if (!showOnlineStatus) return const SizedBox.shrink();
 
@@ -226,9 +220,9 @@ class ChatStatusWidget extends StatelessWidget {
             color: isOnline ? Colors.green : Colors.grey,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Text(
+          child: const Text(
             isOnline ? 'В сети' : 'Не в сети',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               color: Colors.white,
               fontWeight: FontWeight.w500,

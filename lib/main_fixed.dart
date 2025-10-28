@@ -1,13 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:event_marketplace_app/core/app_router_enhanced.dart';
+import 'package:event_marketplace_app/services/test_specialists_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-
-import 'core/app_router_enhanced.dart';
-import 'services/session_service.dart';
-import 'services/navigation_service.dart';
-import 'services/test_specialists_data.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +50,6 @@ class EventMarketplaceApp extends ConsumerWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF1E3A8A),
-          brightness: Brightness.light,
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF1E3A8A),

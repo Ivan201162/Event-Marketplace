@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_proposal.dart';
+import 'package:event_marketplace_app/services/proposal_service.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
+import 'package:event_marketplace_app/widgets/error_widget.dart';
+import 'package:event_marketplace_app/widgets/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../models/specialist.dart';
-import '../models/specialist_proposal.dart';
-import '../services/proposal_service.dart';
-import '../services/specialist_service.dart';
-import '../widgets/error_widget.dart';
-import '../widgets/loading_widget.dart';
 
 class OrganizerProposalsScreen extends StatefulWidget {
   const OrganizerProposalsScreen({super.key});
@@ -39,7 +38,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
   Widget build(BuildContext context) {
     if (_currentUserId == null) {
       return const Scaffold(
-          body: Center(child: Text('Пользователь не авторизован')));
+          body: Center(child: Text('Пользователь не авторизован')),);
     }
 
     return Scaffold(
@@ -68,7 +67,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
   Widget _buildProposalsList(String status) =>
       StreamBuilder<List<SpecialistProposal>>(
         stream: ProposalService.getProposalsByStatus(_currentUserId!, status,
-            isCustomer: false),
+            isCustomer: false,),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingWidget();
@@ -77,7 +76,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
           if (snapshot.hasError) {
             return CustomErrorWidget(
                 message: snapshot.error.toString(),
-                onRetry: () => setState(() {}));
+                onRetry: () => setState(() {}),);
           }
 
           final proposals = snapshot.data ?? [];
@@ -103,15 +102,12 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
       case 'pending':
         message = 'Нет предложений, ожидающих ответа';
         icon = Icons.pending_actions;
-        break;
       case 'accepted':
         message = 'Нет принятых предложений';
         icon = Icons.check_circle_outline;
-        break;
       case 'rejected':
         message = 'Нет отклоненных предложений';
         icon = Icons.cancel_outlined;
-        break;
       default:
         message = 'Нет предложений';
         icon = Icons.inbox;
@@ -148,7 +144,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                   CircleAvatar(
                     backgroundColor: _getStatusColor(proposal.status),
                     child: Icon(_getStatusIcon(proposal.status),
-                        color: Colors.white),
+                        color: Colors.white,),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -191,7 +187,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(proposal.message!,
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: Theme.of(context).textTheme.bodyMedium,),
                 ),
               ],
               const SizedBox(height: 12),
@@ -234,7 +230,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox(
-                height: 60, child: Center(child: CircularProgressIndicator()));
+                height: 60, child: Center(child: CircularProgressIndicator()),);
           }
 
           if (snapshot.hasError) {
@@ -259,7 +255,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                       child: specialist.photoUrl == null
                           ? Text(specialist.name.isNotEmpty
                               ? specialist.name[0]
-                              : '?')
+                              : '?',)
                           : null,
                     ),
                     label: Text(specialist.name),
@@ -336,7 +332,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                 _buildDetailRow('Сообщение', proposal.message!),
               const SizedBox(height: 8),
               Text('Специалисты:',
-                  style: Theme.of(context).textTheme.titleSmall),
+                  style: Theme.of(context).textTheme.titleSmall,),
               const SizedBox(height: 4),
               ...proposal.specialistIds.map((id) => Text('• $id')),
             ],
@@ -345,7 +341,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -359,7 +355,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
             SizedBox(
               width: 80,
               child: Text('$label:',
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontWeight: FontWeight.bold),),
             ),
             Expanded(child: Text(value)),
           ],

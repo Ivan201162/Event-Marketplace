@@ -1,17 +1,15 @@
+import 'package:event_marketplace_app/models/request.dart';
 import 'package:flutter/material.dart';
-
-import '../models/request.dart';
 
 /// Карточка заявки в списке
 class RequestCard extends StatelessWidget {
-  final Request request;
-  final VoidCallback? onTap;
 
   const RequestCard({
-    super.key,
-    required this.request,
+    required this.request, super.key,
     this.onTap,
   });
+  final Request request;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +129,9 @@ class RequestCard extends StatelessWidget {
 
 /// Чип статуса заявки
 class _StatusChip extends StatelessWidget {
-  final String status;
 
   const _StatusChip({required this.status});
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -146,22 +144,18 @@ class _StatusChip extends StatelessWidget {
         backgroundColor = Colors.green;
         textColor = Colors.white;
         statusText = 'Открыта';
-        break;
       case 'IN_PROGRESS':
         backgroundColor = Colors.orange;
         textColor = Colors.white;
         statusText = 'В работе';
-        break;
       case 'DONE':
         backgroundColor = Colors.blue;
         textColor = Colors.white;
         statusText = 'Завершена';
-        break;
       case 'CANCELED':
         backgroundColor = Colors.red;
         textColor = Colors.white;
         statusText = 'Отменена';
-        break;
       default:
         backgroundColor = Colors.grey;
         textColor = Colors.white;

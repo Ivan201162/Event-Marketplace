@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/payment_extended.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import '../models/payment_extended.dart';
 
 /// Сервис для работы с расширенными платежами
 class PaymentExtendedService {
@@ -43,7 +43,6 @@ class PaymentExtendedService {
               status: PaymentStatus.pending,
             ),
           ];
-          break;
 
         case PaymentType.advance:
           // Предоплата
@@ -69,7 +68,6 @@ class PaymentExtendedService {
               ),
             );
           }
-          break;
 
         case PaymentType.installment:
           // Рассрочка
@@ -86,7 +84,6 @@ class PaymentExtendedService {
               ),
             );
           }
-          break;
 
         case PaymentType.partial:
           // Частичная оплата
@@ -105,7 +102,6 @@ class PaymentExtendedService {
               status: PaymentStatus.pending,
             ),
           ];
-          break;
       }
 
       final payment = PaymentExtended(
@@ -113,9 +109,9 @@ class PaymentExtendedService {
         bookingId: bookingId,
         customerId: customerId,
         specialistId: specialistId,
-        totalAmount: totalAmount.toDouble(),
+        totalAmount: totalAmount,
         paidAmount: paidAmount.toDouble(),
-        remainingAmount: remainingAmount.toDouble(),
+        remainingAmount: remainingAmount,
         status: PaymentStatus.pending,
         type: type,
         installments: installments,
@@ -161,7 +157,7 @@ class PaymentExtendedService {
 
   /// Получить платежи пользователя
   Stream<List<PaymentExtended>> getUserPayments(String userId,
-      {bool isCustomer = true}) {
+      {bool isCustomer = true,}) {
     final field = isCustomer ? 'customerId' : 'specialistId';
     return _firestore
         .collection('payments')
@@ -169,7 +165,7 @@ class PaymentExtendedService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map(PaymentExtended.fromDocument).toList());
+            snapshot.docs.map(PaymentExtended.fromDocument).toList(),);
   }
 
   /// Оплатить взнос
@@ -236,7 +232,7 @@ class PaymentExtendedService {
                 child: pw.Text(
                   'КВИТАНЦИЯ ОБ ОПЛАТЕ',
                   style: pw.TextStyle(
-                      fontSize: 20, fontWeight: pw.FontWeight.bold),
+                      fontSize: 20, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -249,15 +245,15 @@ class PaymentExtendedService {
 
               // Суммы
               pw.Text(
-                  'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
+                  'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽',),
               pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
               pw.Text(
-                  'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
+                  'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽',),
               pw.SizedBox(height: 20),
 
               // Взносы
               pw.Text('Взносы:',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
               pw.SizedBox(height: 10),
 
               ...payment.installments.map(
@@ -319,7 +315,7 @@ class PaymentExtendedService {
                 child: pw.Text(
                   'СЧЁТ НА ОПЛАТУ',
                   style: pw.TextStyle(
-                      fontSize: 20, fontWeight: pw.FontWeight.bold),
+                      fontSize: 20, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -328,7 +324,7 @@ class PaymentExtendedService {
               pw.Text('Номер счёта: ${payment.id}'),
               pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
               pw.Text(
-                  'Срок оплаты: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}'),
+                  'Срок оплаты: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}',),
               pw.SizedBox(height: 10),
 
               // Сумма к оплате
@@ -339,7 +335,7 @@ class PaymentExtendedService {
                   child: pw.Text(
                     'К ОПЛАТЕ: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
                     style: pw.TextStyle(
-                        fontSize: 18, fontWeight: pw.FontWeight.bold),
+                        fontSize: 18, fontWeight: pw.FontWeight.bold,),
                   ),
                 ),
               ),
@@ -347,14 +343,14 @@ class PaymentExtendedService {
 
               // Детали платежа
               pw.Text('Детали платежа:',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
               pw.SizedBox(height: 10),
 
               pw.Text(
-                  'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
+                  'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽',),
               pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
               pw.Text(
-                  'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
+                  'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽',),
             ],
           ),
         ),
@@ -387,7 +383,7 @@ class PaymentExtendedService {
 
   /// Получить статистику платежей
   Future<PaymentStats> getPaymentStats(String userId,
-      {bool isCustomer = true}) async {
+      {bool isCustomer = true,}) async {
     try {
       final field = isCustomer ? 'customerId' : 'specialistId';
       final snapshot = await _firestore
@@ -455,7 +451,7 @@ class PaymentExtendedService {
 
   /// Обновить настройки предоплаты
   Future<bool> updateAdvancePaymentSettings(
-      AdvancePaymentSettings settings) async {
+      AdvancePaymentSettings settings,) async {
     try {
       await _firestore
           .collection('settings')

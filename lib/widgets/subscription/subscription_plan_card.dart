@@ -1,14 +1,9 @@
+import 'package:event_marketplace_app/models/subscription.dart';
 import 'package:flutter/material.dart';
-import '../../models/subscription.dart';
 
 class SubscriptionPlanCard extends StatelessWidget {
   const SubscriptionPlanCard({
-    super.key,
-    required this.plan,
-    required this.price,
-    required this.isSelected,
-    required this.isCurrentPlan,
-    required this.onTap,
+    required this.plan, required this.price, required this.isSelected, required this.isCurrentPlan, required this.onTap, super.key,
   });
   final SubscriptionPlan plan;
   final double price;
@@ -64,7 +59,7 @@ class SubscriptionPlanCard extends StatelessWidget {
                               const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
+                                    horizontal: 8, vertical: 2,),
                                 decoration: BoxDecoration(
                                   color: Colors.green,
                                   borderRadius: BorderRadius.circular(12),
@@ -127,7 +122,7 @@ class SubscriptionPlanCard extends StatelessWidget {
                       Expanded(
                         child: Text(feature,
                             style: TextStyle(
-                                color: Colors.grey[700], fontSize: 14)),
+                                color: Colors.grey[700], fontSize: 14,),),
                       ),
                     ],
                   ),

@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
-import '../../providers/auth_providers.dart';
 
 class EditSpecialistProfileScreen extends ConsumerStatefulWidget {
   const EditSpecialistProfileScreen({super.key});
@@ -34,7 +33,7 @@ class _EditSpecialistProfileScreenState
     'Декоратор',
     'Флорист',
     'Кейтеринг',
-    'Другое'
+    'Другое',
   ];
 
   @override
@@ -286,7 +285,7 @@ class _EditSpecialistProfileScreenState
         : null;
 
     return DropdownButtonFormField<String>(
-      value: safeValue,
+      initialValue: safeValue,
       decoration: const InputDecoration(
         labelText: 'Тип специалиста',
         border: OutlineInputBorder(),

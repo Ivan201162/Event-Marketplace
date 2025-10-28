@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/organizer_chat.dart';
+import 'package:event_marketplace_app/services/organizer_chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/organizer_chat.dart';
-import '../services/organizer_chat_service.dart';
 
 class OrganizerChatsListScreen extends ConsumerStatefulWidget {
   // 'customer' или 'organizer'
 
   const OrganizerChatsListScreen(
-      {super.key, required this.userId, required this.userType});
+      {required this.userId, required this.userType, super.key,});
   final String userId;
   final String userType;
 
@@ -63,13 +62,13 @@ class _OrganizerChatsListScreenState
         appBar: AppBar(
           title: Text(widget.userType == 'customer'
               ? 'Чаты с организаторами'
-              : 'Чаты с заказчиками'),
+              : 'Чаты с заказчиками',),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           actions: [
             IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: _loadChats,
-                tooltip: 'Обновить'),
+                tooltip: 'Обновить',),
           ],
         ),
         body: _isLoading
@@ -84,7 +83,7 @@ class _OrganizerChatsListScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.chat_bubble_outline,
-                size: 64, color: Theme.of(context).colorScheme.outline),
+                size: 64, color: Theme.of(context).colorScheme.outline,),
             const SizedBox(height: 16),
             Text('Нет чатов', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
@@ -148,7 +147,7 @@ class _OrganizerChatsListScreenState
                           .toUpperCase()
                       : '?',
                   style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                      color: Colors.white, fontWeight: FontWeight.bold,),
                 ),
               ),
 
@@ -229,7 +228,7 @@ class _OrganizerChatsListScreenState
                               borderRadius: BorderRadius.circular(10),
                             ),
                             constraints: const BoxConstraints(
-                                minWidth: 20, minHeight: 20),
+                                minWidth: 20, minHeight: 20,),
                             child: Text(
                               '${chat.unreadCount}',
                               style: const TextStyle(
@@ -257,7 +256,7 @@ class _OrganizerChatsListScreenState
                       _formatDate(chat.eventDate),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.outline,
-                          fontSize: 10),
+                          fontSize: 10,),
                     ),
                 ],
               ),
@@ -276,19 +275,15 @@ class _OrganizerChatsListScreenState
       case OrganizerChatStatus.active:
         color = Colors.green;
         text = 'Активный';
-        break;
       case OrganizerChatStatus.closed:
         color = Colors.red;
         text = 'Закрыт';
-        break;
       case OrganizerChatStatus.archived:
         color = Colors.grey;
         text = 'Архив';
-        break;
       case OrganizerChatStatus.pending:
         color = Colors.orange;
         text = 'Ожидает';
-        break;
     }
 
     return Container(
@@ -315,7 +310,7 @@ class _OrganizerChatsListScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция создания чата будет реализована')));
+        content: Text('Функция создания чата будет реализована'),),);
   }
 
   String _formatTime(DateTime dateTime) {

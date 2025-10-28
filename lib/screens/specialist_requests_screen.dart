@@ -1,16 +1,15 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/booking_status.dart';
+import 'package:event_marketplace_app/providers/auth_provider.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/firestore_service.dart';
+import 'package:event_marketplace_app/widgets/booking_card.dart';
+import 'package:event_marketplace_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/booking.dart';
-import '../models/booking_status.dart';
-import '../providers/auth_provider.dart';
-import '../services/booking_service.dart';
-import '../services/firestore_service.dart';
-import '../widgets/booking_card.dart';
-import '../widgets/loading_widget.dart';
-
 class SpecialistRequestsScreen extends StatefulWidget {
-  const SpecialistRequestsScreen({super.key, required this.specialistId});
+  const SpecialistRequestsScreen({required this.specialistId, super.key});
   final String specialistId;
 
   @override
@@ -61,14 +60,14 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(
-                    value: 'date_desc', child: Text('По дате (новые)')),
+                    value: 'date_desc', child: Text('По дате (новые)'),),
                 const PopupMenuItem(
-                    value: 'date_asc', child: Text('По дате (старые)')),
+                    value: 'date_asc', child: Text('По дате (старые)'),),
                 const PopupMenuItem(value: 'status', child: Text('По статусу')),
                 const PopupMenuItem(
-                    value: 'price_desc', child: Text('По цене (убывание)')),
+                    value: 'price_desc', child: Text('По цене (убывание)'),),
                 const PopupMenuItem(
-                    value: 'price_asc', child: Text('По цене (возрастание)')),
+                    value: 'price_asc', child: Text('По цене (возрастание)'),),
               ],
             ),
           ],
@@ -169,15 +168,12 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
       case 'pending':
         message = 'Нет заявок на рассмотрении';
         icon = Icons.pending;
-        break;
       case 'confirmed':
         message = 'Нет подтвержденных заявок';
         icon = Icons.check_circle;
-        break;
       case 'completed':
         message = 'Нет завершенных заявок';
         icon = Icons.done_all;
-        break;
       default:
         message = 'У вас пока нет заявок';
         icon = Icons.inbox;
@@ -190,7 +186,7 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
           Text(message,
-              style: const TextStyle(fontSize: 18, color: Colors.grey)),
+              style: const TextStyle(fontSize: 18, color: Colors.grey),),
         ],
       ),
     );
@@ -200,19 +196,14 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
     switch (sortOption) {
       case 'date_desc':
         bookings.sort((a, b) => b.eventDate.compareTo(a.eventDate));
-        break;
       case 'date_asc':
         bookings.sort((a, b) => a.eventDate.compareTo(b.eventDate));
-        break;
       case 'status':
         bookings.sort((a, b) => a.status.name.compareTo(b.status.name));
-        break;
       case 'price_desc':
         bookings.sort((a, b) => b.totalPrice.compareTo(a.totalPrice));
-        break;
       case 'price_asc':
         bookings.sort((a, b) => a.totalPrice.compareTo(b.totalPrice));
-        break;
     }
     return bookings;
   }
@@ -261,18 +252,18 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
                       booking.status.name,
                       style: TextStyle(
                           color: booking.status.color,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               _buildDetailRow(Icons.person, 'Заказчик',
-                  booking.customerName ?? 'Не указан'),
+                  booking.customerName ?? 'Не указан',),
               _buildDetailRow(
-                  Icons.phone, 'Телефон', booking.customerPhone ?? 'Не указан'),
+                  Icons.phone, 'Телефон', booking.customerPhone ?? 'Не указан',),
               _buildDetailRow(
-                  Icons.email, 'Email', booking.customerEmail ?? 'Не указан'),
+                  Icons.email, 'Email', booking.customerEmail ?? 'Не указан',),
               _buildDetailRow(
                 Icons.calendar_today,
                 'Дата',
@@ -291,12 +282,12 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
                 '${booking.totalPrice.toStringAsFixed(0)} ₽',
               ),
               _buildDetailRow(Icons.payment, 'Аванс',
-                  '${booking.prepayment.toStringAsFixed(0)} ₽'),
+                  '${booking.prepayment.toStringAsFixed(0)} ₽',),
               if (booking.description != null) ...[
                 const SizedBox(height: 16),
                 const Text('Описание',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                 const SizedBox(height: 8),
                 Text(booking.description!),
               ],
@@ -307,18 +298,18 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () => _updateBookingStatus(
-                            booking, BookingStatus.rejected),
+                            booking, BookingStatus.rejected,),
                         icon: const Icon(Icons.close),
                         label: const Text('Отклонить'),
                         style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red),
+                            foregroundColor: Colors.red,),
                       ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () => _updateBookingStatus(
-                            booking, BookingStatus.confirmed),
+                            booking, BookingStatus.confirmed,),
                         icon: const Icon(Icons.check),
                         label: const Text('Подтвердить'),
                       ),
@@ -349,17 +340,17 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
             Icon(icon, size: 20, color: Colors.grey[600]),
             const SizedBox(width: 12),
             Text('$label: ',
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
             Expanded(child: Text(value)),
           ],
         ),
       );
 
   Future<void> _updateBookingStatus(
-      Booking booking, BookingStatus newStatus) async {
+      Booking booking, BookingStatus newStatus,) async {
     try {
       await _firestoreService.updateBookingStatusWithCalendar(
-          booking.id, newStatus.name);
+          booking.id, newStatus.name,);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -374,7 +365,7 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка обновления статуса: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }

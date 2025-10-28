@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/security_audit.dart';
+import 'package:event_marketplace_app/services/security_service.dart';
+import 'package:event_marketplace_app/ui/ui.dart' hide ResponsiveCard;
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/security_audit.dart';
-import '../services/security_service.dart';
-import '../ui/ui.dart' hide ResponsiveCard;
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления безопасностью
 class SecurityManagementScreen extends ConsumerStatefulWidget {
@@ -60,16 +59,16 @@ class _SecurityManagementScreenState
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('overview', 'Обзор', Icons.security)),
+                child: _buildTabButton('overview', 'Обзор', Icons.security),),
             Expanded(
-                child: _buildTabButton('audits', 'Аудит', Icons.assignment)),
+                child: _buildTabButton('audits', 'Аудит', Icons.assignment),),
             Expanded(
-                child: _buildTabButton('policies', 'Политики', Icons.policy)),
+                child: _buildTabButton('policies', 'Политики', Icons.policy),),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.analytics)),
+                    'statistics', 'Статистика', Icons.analytics,),),
             Expanded(
-                child: _buildTabButton('encryption', 'Шифрование', Icons.lock)),
+                child: _buildTabButton('encryption', 'Шифрование', Icons.lock),),
           ],
         ),
       );
@@ -95,7 +94,7 @@ class _SecurityManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -171,14 +170,14 @@ class _SecurityManagementScreenState
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
                                 color: _getRiskColor(
-                                    _statistics!.overallRiskLevel)),
+                                    _statistics!.overallRiskLevel,),),
                           ),
                           child: Row(
                             children: [
                               Icon(
                                 _getRiskIcon(_statistics!.overallRiskLevel),
                                 color: _getRiskColor(
-                                    _statistics!.overallRiskLevel),
+                                    _statistics!.overallRiskLevel,),
                                 size: 32,
                               ),
                               const SizedBox(width: 16),
@@ -191,7 +190,7 @@ class _SecurityManagementScreenState
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: _getRiskColor(
-                                            _statistics!.overallRiskLevel),
+                                            _statistics!.overallRiskLevel,),
                                       ),
                                     ),
                                     Text(
@@ -200,7 +199,7 @@ class _SecurityManagementScreenState
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                         color: _getRiskColor(
-                                            _statistics!.overallRiskLevel),
+                                            _statistics!.overallRiskLevel,),
                                       ),
                                     ),
                                   ],
@@ -296,10 +295,10 @@ class _SecurityManagementScreenState
                     Text(
                       audit.eventType,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(audit.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -311,7 +310,7 @@ class _SecurityManagementScreenState
                     const PopupMenuItem(
                       value: 'resolve',
                       child: ListTile(
-                          leading: Icon(Icons.check), title: Text('Разрешить')),
+                          leading: Icon(Icons.check), title: Text('Разрешить'),),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),
@@ -416,10 +415,10 @@ class _SecurityManagementScreenState
                     Text(
                       policy.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(policy.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -431,20 +430,20 @@ class _SecurityManagementScreenState
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   PopupMenuItem(
                     value: policy.isEnabled ? 'disable' : 'enable',
                     child: ListTile(
                       leading: Icon(
-                          policy.isEnabled ? Icons.pause : Icons.play_arrow),
+                          policy.isEnabled ? Icons.pause : Icons.play_arrow,),
                       title: Text(policy.isEnabled ? 'Отключить' : 'Включить'),
                     ),
                   ),
                   const PopupMenuItem(
                     value: 'delete',
                     child: ListTile(
-                        leading: Icon(Icons.delete), title: Text('Удалить')),
+                        leading: Icon(Icons.delete), title: Text('Удалить'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -474,7 +473,7 @@ class _SecurityManagementScreenState
             Text(
               'Затронутые роли:',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                  fontWeight: FontWeight.bold, color: Colors.grey[600],),
             ),
             const SizedBox(height: 4),
             Wrap(
@@ -524,7 +523,7 @@ class _SecurityManagementScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const ResponsiveText('Статистика безопасности',
-                      isTitle: true),
+                      isTitle: true,),
                   const SizedBox(height: 16),
                   if (_statistics == null)
                     const Center(child: Text('Статистика не загружена'))
@@ -600,7 +599,7 @@ class _SecurityManagementScreenState
                             'События по типам:',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey[600]),
+                                color: Colors.grey[600],),
                           ),
                           const SizedBox(height: 8),
                           ..._statistics!.eventsByType.entries.map(
@@ -614,7 +613,7 @@ class _SecurityManagementScreenState
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(entry.key),
-                                      Text('${entry.value}')
+                                      Text('${entry.value}'),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
@@ -625,7 +624,7 @@ class _SecurityManagementScreenState
                                         Colors.grey.withValues(alpha: 0.3),
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
-                                            Colors.blue),
+                                            Colors.blue,),
                                   ),
                                 ],
                               ),
@@ -666,7 +665,7 @@ class _SecurityManagementScreenState
                       ),
                       Expanded(
                         child: _buildStatCard('Алгоритм', 'AES-256-CBC',
-                            Colors.green, Icons.lock),
+                            Colors.green, Icons.lock,),
                       ),
                     ],
                   ),
@@ -705,7 +704,7 @@ class _SecurityManagementScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const ResponsiveText('Информация о безопасности',
-                      isTitle: true),
+                      isTitle: true,),
                   const SizedBox(height: 16),
                   _buildSecurityInfoItem('Версия шифрования', 'AES-256-CBC'),
                   _buildSecurityInfoItem('Хеширование', 'SHA-256'),
@@ -720,7 +719,7 @@ class _SecurityManagementScreenState
       );
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -735,7 +734,7 @@ class _SecurityManagementScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -774,7 +773,7 @@ class _SecurityManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -785,7 +784,7 @@ class _SecurityManagementScreenState
             SizedBox(
               width: 150,
               child: Text(label,
-                  style: const TextStyle(fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontWeight: FontWeight.w500),),
             ),
             const Text(': '),
             Expanded(child: Text(value)),
@@ -863,7 +862,7 @@ class _SecurityManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -915,7 +914,6 @@ class _SecurityManagementScreenState
     switch (action) {
       case 'resolve':
         _resolveAudit(audit);
-        break;
     }
   }
 
@@ -924,7 +922,7 @@ class _SecurityManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Разрешение события "${audit.eventType}" будет реализовано')),
+              'Разрешение события "${audit.eventType}" будет реализовано',),),
     );
   }
 
@@ -932,14 +930,11 @@ class _SecurityManagementScreenState
     switch (action) {
       case 'edit':
         _editPolicy(policy);
-        break;
       case 'enable':
       case 'disable':
         _togglePolicy(policy);
-        break;
       case 'delete':
         _deletePolicy(policy);
-        break;
     }
   }
 
@@ -948,7 +943,7 @@ class _SecurityManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование политики "${policy.name}" будет реализовано')),
+              'Редактирование политики "${policy.name}" будет реализовано',),),
     );
   }
 
@@ -973,7 +968,7 @@ class _SecurityManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -983,7 +978,7 @@ class _SecurityManagementScreenState
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Политика удалена'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -1009,7 +1004,7 @@ class _SecurityManagementScreenState
     // TODO(developer): Реализовать диалог создания политики
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Создание политики безопасности будет реализовано')),
+          content: Text('Создание политики безопасности будет реализовано'),),
     );
   }
 
@@ -1018,7 +1013,7 @@ class _SecurityManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Создание ключа шифрования будет реализовано')));
+        content: Text('Создание ключа шифрования будет реализовано'),),);
   }
 
   void _testEncryption() {
@@ -1026,6 +1021,6 @@ class _SecurityManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Тест шифрования будет реализован')));
+        const SnackBar(content: Text('Тест шифрования будет реализован')),);
   }
 }

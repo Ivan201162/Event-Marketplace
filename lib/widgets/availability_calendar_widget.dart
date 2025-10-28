@@ -4,8 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 /// Виджет календаря занятости специалиста
 class AvailabilityCalendarWidget extends StatefulWidget {
   const AvailabilityCalendarWidget({
-    super.key,
-    required this.busyDates,
+    required this.busyDates, super.key,
     this.availableDates = const [],
     this.onDateSelected,
     this.isReadOnly = true,
@@ -84,14 +83,14 @@ class _AvailabilityCalendarWidgetState
                 weekendTextStyle: const TextStyle(color: Colors.red),
                 holidayTextStyle: const TextStyle(color: Colors.red),
                 selectedDecoration: const BoxDecoration(
-                    color: Colors.blue, shape: BoxShape.circle),
+                    color: Colors.blue, shape: BoxShape.circle,),
                 todayDecoration: BoxDecoration(
-                    color: Colors.blue.shade200, shape: BoxShape.circle),
+                    color: Colors.blue.shade200, shape: BoxShape.circle,),
                 markerDecoration: const BoxDecoration(
-                    color: Colors.red, shape: BoxShape.circle),
+                    color: Colors.red, shape: BoxShape.circle,),
               ),
               headerStyle: const HeaderStyle(
-                  formatButtonVisible: false, titleCentered: true),
+                  formatButtonVisible: false, titleCentered: true,),
               calendarBuilders: CalendarBuilders(
                 defaultBuilder: (context, day, focusedDay) =>
                     _buildDayCell(day),
@@ -113,7 +112,7 @@ class _AvailabilityCalendarWidgetState
   Widget _buildLegend() => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey.shade50, borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey.shade50, borderRadius: BorderRadius.circular(8),),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -138,7 +137,7 @@ class _AvailabilityCalendarWidgetState
       );
 
   Widget _buildDayCell(DateTime day,
-      {bool isToday = false, bool isSelected = false}) {
+      {bool isToday = false, bool isSelected = false,}) {
     final isBusy = _isDateBusy(day);
     final isAvailable = _isDateAvailable(day);
 
@@ -200,10 +199,10 @@ class _AvailabilityCalendarWidgetState
           Row(
             children: [
               Expanded(
-                  child: _buildStatItem('Занятых дней', busyDays, Colors.red)),
+                  child: _buildStatItem('Занятых дней', busyDays, Colors.red),),
               Expanded(
                   child:
-                      _buildStatItem('Свободных дней', freeDays, Colors.green)),
+                      _buildStatItem('Свободных дней', freeDays, Colors.green),),
             ],
           ),
         ],
@@ -216,7 +215,7 @@ class _AvailabilityCalendarWidgetState
           Text(
             '$value',
             style: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: color),
+                fontSize: 20, fontWeight: FontWeight.bold, color: color,),
           ),
           const SizedBox(height: 4),
           Text(

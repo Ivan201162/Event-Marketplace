@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/admin_models.dart';
+import 'package:event_marketplace_app/services/admin_service.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/admin_models.dart';
-import '../../services/admin_service.dart';
 
 class AdminLogsScreen extends StatefulWidget {
   const AdminLogsScreen({super.key});
@@ -27,7 +26,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
         actions: [
           IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: _showFiltersDialog),
+              onPressed: _showFiltersDialog,),
           IconButton(icon: const Icon(Icons.download), onPressed: _exportLogs),
         ],
       ),
@@ -67,7 +66,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                         leading: CircleAvatar(
                           backgroundColor: _getActionColor(log.action),
                           child: Icon(_getActionIcon(log.action),
-                              color: Colors.white, size: 20),
+                              color: Colors.white, size: 20,),
                         ),
                         title: Text(
                           log.description ??
@@ -84,7 +83,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                             Text('Время: ${_formatTimestamp(log.timestamp)}'),
                             if (log.metadata != null &&
                                 log.metadata!.isNotEmpty)
-                              Text('Детали: ${log.metadata.toString()}'),
+                              Text('Детали: ${log.metadata}'),
                             if (log.errorMessage != null)
                               Text(
                                 'Ошибка: ${log.errorMessage}',
@@ -176,9 +175,9 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
               ),
               items: const [
                 DropdownMenuItem(
-                    value: 'admin_123', child: Text('admin@example.com')),
+                    value: 'admin_123', child: Text('admin@example.com'),),
                 DropdownMenuItem(
-                    value: 'admin_456', child: Text('superadmin@example.com')),
+                    value: 'admin_456', child: Text('superadmin@example.com'),),
               ],
               onChanged: (value) {
                 setState(() {
@@ -195,7 +194,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
               ),
               items: AdminAction.values.map((action) {
                 return DropdownMenuItem(
-                    value: action, child: Text(_getActionName(action)));
+                    value: action, child: Text(_getActionName(action)),);
               }).toList(),
               onChanged: (value) {
                 setState(() {
@@ -207,14 +206,14 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
             ListTile(
               title: const Text('Начальная дата'),
               subtitle: Text(
-                  _startDate != null ? _formatDate(_startDate!) : 'Не выбрана'),
+                  _startDate != null ? _formatDate(_startDate!) : 'Не выбрана',),
               trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(true),
             ),
             ListTile(
               title: const Text('Конечная дата'),
               subtitle: Text(
-                  _endDate != null ? _formatDate(_endDate!) : 'Не выбрана'),
+                  _endDate != null ? _formatDate(_endDate!) : 'Не выбрана',),
               trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(false),
             ),
@@ -223,7 +222,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -278,7 +277,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Логи экспортированы успешно')));
+          const SnackBar(content: Text('Логи экспортированы успешно')),);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));

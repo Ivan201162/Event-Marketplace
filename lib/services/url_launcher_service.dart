@@ -10,7 +10,7 @@ class UrlLauncher {
   }
 
   static Future<bool> launchUrl(Uri url,
-      {LaunchMode mode = LaunchMode.platformDefault}) async {
+      {LaunchMode mode = LaunchMode.platformDefault,}) async {
     if (kDebugMode) {
       debugPrint('UrlLauncher.launchUrl not implemented - using mock');
       debugPrint('Would launch URL: $url with mode: $mode');

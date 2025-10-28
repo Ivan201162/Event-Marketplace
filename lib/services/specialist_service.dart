@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/search_filters.dart';
-import '../models/specialist.dart';
 
 /// Service for managing specialists data
 class SpecialistService {
@@ -17,7 +16,7 @@ class SpecialistService {
           .orderBy('rating', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting all specialists: $e');
       return [];
@@ -33,7 +32,7 @@ class SpecialistService {
           .orderBy('rating', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting specialists by city: $e');
       return [];
@@ -42,7 +41,7 @@ class SpecialistService {
 
   /// Get specialists by specialization
   Future<List<Specialist>> getSpecialistsBySpecialization(
-      String specialization) async {
+      String specialization,) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -50,7 +49,7 @@ class SpecialistService {
           .orderBy('rating', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting specialists by specialization: $e');
       return [];
@@ -67,7 +66,7 @@ class SpecialistService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting top specialists: $e');
       return [];
@@ -76,7 +75,7 @@ class SpecialistService {
 
   /// Get top specialists by city
   Future<List<Specialist>> getTopSpecialistsByCity(String city,
-      {int limit = 10}) async {
+      {int limit = 10,}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -86,7 +85,7 @@ class SpecialistService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting top specialists by city: $e');
       return [];
@@ -116,7 +115,7 @@ class SpecialistService {
 
       if (filters.minPrice != null) {
         query = query.where('pricePerHour',
-            isGreaterThanOrEqualTo: filters.minPrice);
+            isGreaterThanOrEqualTo: filters.minPrice,);
       }
 
       if (filters.maxPrice != null) {
@@ -134,16 +133,12 @@ class SpecialistService {
         switch (filters.sortBy) {
           case 'rating':
             query = query.orderBy('rating', descending: !ascending);
-            break;
           case 'price':
             query = query.orderBy('pricePerHour', descending: !ascending);
-            break;
           case 'experience':
             query = query.orderBy('completedEvents', descending: !ascending);
-            break;
           case 'name':
             query = query.orderBy('name', descending: !ascending);
-            break;
           default:
             query = query.orderBy('rating', descending: true);
         }
@@ -152,8 +147,8 @@ class SpecialistService {
       }
 
       final snapshot = await query.get();
-      List<Specialist> specialists =
-          snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList();
+      var specialists =
+          snapshot.docs.map(Specialist.fromFirestore).toList();
 
       // Apply text search filter (client-side for now)
       if (filters.query != null && filters.query!.isNotEmpty) {
@@ -161,10 +156,9 @@ class SpecialistService {
         specialists = specialists.where((specialist) {
           return specialist.name.toLowerCase().contains(searchQuery) ||
               specialist.specialization.toLowerCase().contains(searchQuery) ||
-              specialist.description?.toLowerCase().contains(searchQuery) ==
-                  true ||
+              specialist.description?.toLowerCase().contains(searchQuery) ?? false ||
               specialist.services.any(
-                  (service) => service.toLowerCase().contains(searchQuery));
+                  (service) => service.toLowerCase().contains(searchQuery),);
         }).toList();
       }
 
@@ -273,7 +267,7 @@ class SpecialistService {
         .orderBy('rating', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList());
+            snapshot.docs.map(Specialist.fromFirestore).toList(),);
   }
 
   /// Stream of specialists by city
@@ -284,6 +278,6 @@ class SpecialistService {
         .orderBy('rating', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Specialist.fromFirestore(doc)).toList());
+            snapshot.docs.map(Specialist.fromFirestore).toList(),);
   }
 }

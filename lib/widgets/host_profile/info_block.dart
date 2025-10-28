@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/models/host_profile.dart';
 import 'package:flutter/material.dart';
-import '../../models/host_profile.dart';
 
 /// Компонент информационного блока ведущего
 class InfoBlock extends StatelessWidget {
-  const InfoBlock({super.key, required this.host});
+  const InfoBlock({required this.host, super.key});
   final HostProfile host;
 
   @override
@@ -61,7 +61,7 @@ class InfoBlock extends StatelessWidget {
                 color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: theme.primaryColor.withValues(alpha: 0.3)),
+                    color: theme.primaryColor.withValues(alpha: 0.3),),
               ),
               child: Text(
                 host.priceRangeText,
@@ -153,7 +153,7 @@ class InfoBlock extends StatelessWidget {
 
         return Container(
           padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 8 : 12, vertical: isMobile ? 4 : 6),
+              horizontal: isMobile ? 8 : 12, vertical: isMobile ? 4 : 6,),
           decoration: BoxDecoration(
             color: theme.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
@@ -164,7 +164,7 @@ class InfoBlock extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(eventCategory.emoji,
-                  style: TextStyle(fontSize: isMobile ? 14 : 16)),
+                  style: TextStyle(fontSize: isMobile ? 14 : 16),),
               const SizedBox(width: 4),
               Text(
                 category,

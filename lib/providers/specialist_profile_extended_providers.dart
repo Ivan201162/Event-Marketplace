@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
+import 'package:event_marketplace_app/services/specialist_profile_extended_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist_profile_extended.dart';
-import '../services/specialist_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля специалиста
 final specialistProfileExtendedServiceProvider =

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/pro_subscription.dart';
+import 'package:event_marketplace_app/models/pro_subscription.dart';
 
 /// Сервис для работы с PRO подписками
 class ProSubscriptionService {
@@ -89,7 +89,7 @@ class ProSubscriptionService {
   }) async {
     try {
       final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (plan != null) updates['plan'] = plan.value;
@@ -158,7 +158,7 @@ class ProSubscriptionService {
 
   /// Получить историю платежей
   Future<List<Payment>> getPaymentHistory(
-      {required String subscriptionId, int limit = 20}) async {
+      {required String subscriptionId, int limit = 20,}) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('payments')
@@ -182,7 +182,7 @@ class ProSubscriptionService {
 
   /// Проверить доступность функции
   Future<bool> hasFeature(
-      {required String userId, required String feature}) async {
+      {required String userId, required String feature,}) async {
     try {
       final subscription = await getUserSubscription(userId);
       if (subscription == null) return false;
@@ -240,7 +240,7 @@ class ProSubscriptionService {
         return {
           'basic_profile': true,
           'portfolio_limit_5': true,
-          'standard_support': true
+          'standard_support': true,
         };
       case SubscriptionPlan.pro:
         return {

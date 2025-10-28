@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter/material.dart';
-import '../models/review.dart';
-import '../services/review_service.dart';
 
 /// Экран ответа специалиста на отзыв
 class RespondToReviewScreen extends StatefulWidget {
-  const RespondToReviewScreen({super.key, required this.review});
+  const RespondToReviewScreen({required this.review, super.key});
   final Review review;
 
   @override
@@ -50,7 +50,7 @@ class _RespondToReviewScreenState extends State<RespondToReviewScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -162,7 +162,7 @@ class _RespondToReviewScreenState extends State<RespondToReviewScreen> {
               if (widget.review.comment.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Text(widget.review.comment,
-                    style: const TextStyle(fontSize: 16)),
+                    style: const TextStyle(fontSize: 16),),
               ],
               if (widget.review.eventTitle != null) ...[
                 const SizedBox(height: 8),

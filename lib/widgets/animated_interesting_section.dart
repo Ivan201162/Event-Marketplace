@@ -36,14 +36,14 @@ class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
 
     _cardAnimations = _cardControllers.map((controller) {
       return Tween<double>(
-        begin: 0.0,
-        end: 1.0,
+        begin: 0,
+        end: 1,
       ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
 
     _cardSlideAnimations = _cardControllers.map((controller) {
       return Tween<Offset>(
-        begin: const Offset(0.0, 0.5),
+        begin: const Offset(0, 0.5),
         end: Offset.zero,
       ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
@@ -53,7 +53,7 @@ class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
   }
 
   void _startCardAnimations() {
-    for (int i = 0; i < _cardControllers.length; i++) {
+    for (var i = 0; i < _cardControllers.length; i++) {
       Future.delayed(Duration(milliseconds: i * 200), () {
         if (mounted) {
           _cardControllers[i].forward();
@@ -186,10 +186,10 @@ class _InterestingCardState extends State<_InterestingCard>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 1.05,
     ).animate(
-        CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),);
   }
 
   @override

@@ -2,19 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель специалиста
 class Specialist {
-  final String id;
-  final String name;
-  final String description;
-  final List<String> categories;
-  final List<String> skills;
-  final double rating;
-  final int reviewCount;
-  final Map<String, dynamic> pricing;
-  final List<String> portfolioImages;
-  final String? avatarUrl;
-  final bool isAvailable;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const Specialist({
     required this.id,
@@ -26,14 +13,11 @@ class Specialist {
     required this.reviewCount,
     required this.pricing,
     required this.portfolioImages,
-    this.avatarUrl,
-    required this.isAvailable,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.isAvailable, required this.createdAt, required this.updatedAt, this.avatarUrl,
   });
 
   factory Specialist.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Specialist(
       id: doc.id,
       name: data['name'] ?? '',
@@ -50,6 +34,19 @@ class Specialist {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String name;
+  final String description;
+  final List<String> categories;
+  final List<String> skills;
+  final double rating;
+  final int reviewCount;
+  final Map<String, dynamic> pricing;
+  final List<String> portfolioImages;
+  final String? avatarUrl;
+  final bool isAvailable;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toFirestore() {
     return {

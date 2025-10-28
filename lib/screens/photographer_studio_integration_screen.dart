@@ -1,17 +1,16 @@
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/models/photographer_studio_link.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/photo_studio_service.dart';
+import 'package:event_marketplace_app/services/photographer_studio_link_service.dart';
+import 'package:event_marketplace_app/widgets/studio_suggestion_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/photo_studio.dart';
-import '../models/photographer_studio_link.dart';
-import '../providers/auth_providers.dart';
-import '../services/photo_studio_service.dart';
-import '../services/photographer_studio_link_service.dart';
-import '../widgets/studio_suggestion_widget.dart';
 
 /// Экран интеграции фотографов и фотостудий
 class PhotographerStudioIntegrationScreen extends ConsumerStatefulWidget {
   const PhotographerStudioIntegrationScreen(
-      {super.key, required this.photographerId});
+      {required this.photographerId, super.key,});
 
   final String photographerId;
 
@@ -107,10 +106,10 @@ class _PhotographerStudioIntegrationScreenState
               const SizedBox(height: 16),
               Text(_error!,
                   style: const TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center),
+                  textAlign: TextAlign.center,),
               const SizedBox(height: 16),
               ElevatedButton(
-                  onPressed: _loadData, child: const Text('Повторить')),
+                  onPressed: _loadData, child: const Text('Повторить'),),
             ],
           ),
         ),
@@ -126,7 +125,7 @@ class _PhotographerStudioIntegrationScreenState
           IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _loadData,
-              tooltip: 'Обновить'),
+              tooltip: 'Обновить',),
         ],
       ),
       body: Column(
@@ -143,7 +142,7 @@ class _PhotographerStudioIntegrationScreenState
     );
   }
 
-  Widget _buildTabBar() => Container(
+  Widget _buildTabBar() => ColoredBox(
         color: Theme.of(context).colorScheme.surface,
         child: TabBar(
           controller: _tabController,
@@ -166,7 +165,7 @@ class _PhotographerStudioIntegrationScreenState
             Icon(Icons.photo_camera_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Нет доступных фотостудий',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
           ],
         ),
       );
@@ -261,7 +260,7 @@ class _PhotographerStudioIntegrationScreenState
                 const SizedBox(width: 4),
                 Text(link.timeAgo,
                     style: theme.textTheme.bodySmall
-                        ?.copyWith(color: Colors.grey)),
+                        ?.copyWith(color: Colors.grey),),
                 if (link.commissionRate != null) ...[
                   const SizedBox(width: 16),
                   const Icon(Icons.percent, size: 16, color: Colors.grey),
@@ -331,19 +330,15 @@ class _PhotographerStudioIntegrationScreenState
       case 'active':
         color = Colors.green;
         text = 'Активна';
-        break;
       case 'pending':
         color = Colors.orange;
         text = 'Ожидает';
-        break;
       case 'rejected':
         color = Colors.red;
         text = 'Отклонена';
-        break;
       case 'suspended':
         color = Colors.grey;
         text = 'Приостановлена';
-        break;
       default:
         color = Colors.grey;
         text = status;
@@ -399,7 +394,7 @@ class _PhotographerStudioIntegrationScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания связки: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -432,7 +427,7 @@ class _PhotographerStudioIntegrationScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -446,7 +441,7 @@ class _PhotographerStudioIntegrationScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Связка отменена'), backgroundColor: Colors.orange),
+              content: Text('Связка отменена'), backgroundColor: Colors.orange,),
         );
       }
     } catch (e) {
@@ -454,7 +449,7 @@ class _PhotographerStudioIntegrationScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка отмены связки: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -469,7 +464,7 @@ class _PhotographerStudioIntegrationScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Связка приостановлена'),
-              backgroundColor: Colors.orange),
+              backgroundColor: Colors.orange,),
         );
       }
     } catch (e) {
@@ -477,7 +472,7 @@ class _PhotographerStudioIntegrationScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка приостановки связки: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }

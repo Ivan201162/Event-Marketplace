@@ -1,16 +1,12 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/review_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../providers/auth_providers.dart';
-import '../providers/review_providers.dart';
 
 /// Экран для создания отзыва о специалисте
 class ReviewScreen extends ConsumerStatefulWidget {
   const ReviewScreen({
-    super.key,
-    required this.bookingId,
-    required this.specialistId,
-    required this.specialistName,
+    required this.bookingId, required this.specialistId, required this.specialistName, super.key,
   });
 
   final String bookingId;
@@ -159,7 +155,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                             'Выберите оценку от 1 до 5 звезд',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 14, color: Colors.grey[600]),
+                                fontSize: 14, color: Colors.grey[600],),
                           ),
                         ],
                       ],
@@ -215,12 +211,12 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(
-                                color: Colors.white, strokeWidth: 2),
+                                color: Colors.white, strokeWidth: 2,),
                           )
                         : const Text(
                             'Отправить отзыв',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,),
                           ),
                   ),
                 ),
@@ -238,7 +234,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   child: Row(
                     children: [
                       Icon(Icons.info_outline,
-                          color: Colors.blue[700], size: 20),
+                          color: Colors.blue[700], size: 20,),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -282,7 +278,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Пожалуйста, выберите оценку'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
       return;
     }
@@ -316,7 +312,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Отзыв успешно отправлен!'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         Navigator.of(context).pop(true);
       }
@@ -325,7 +321,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка при отправке отзыва: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {

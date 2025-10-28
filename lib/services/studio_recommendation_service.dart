@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/studio_recommendation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-import '../models/photo_studio.dart';
-import '../models/specialist.dart';
-import '../models/studio_recommendation.dart';
 
 /// Сервис для работы с рекомендациями студий
 class StudioRecommendationService {
@@ -51,7 +50,7 @@ class StudioRecommendationService {
 
   /// Получить рекомендации фотографа
   Future<List<StudioRecommendation>> getPhotographerRecommendations(
-      String photographerId) async {
+      String photographerId,) async {
     try {
       final snapshot = await _firestore
           .collection('studioRecommendations')
@@ -71,7 +70,7 @@ class StudioRecommendationService {
 
   /// Получить рекомендации для студии
   Future<List<StudioRecommendation>> getStudioRecommendations(
-      String studioId) async {
+      String studioId,) async {
     try {
       final snapshot = await _firestore
           .collection('studioRecommendations')
@@ -91,7 +90,7 @@ class StudioRecommendationService {
 
   /// Получить рекомендацию по ID
   Future<StudioRecommendation?> getRecommendation(
-      String recommendationId) async {
+      String recommendationId,) async {
     try {
       final doc = await _firestore
           .collection('studioRecommendations')
@@ -214,7 +213,7 @@ class StudioRecommendationService {
 
   /// Получить двойные бронирования фотографа
   Future<List<DualBooking>> getPhotographerDualBookings(
-      String photographerId) async {
+      String photographerId,) async {
     try {
       final snapshot = await _firestore
           .collection('dualBookings')
@@ -269,7 +268,7 @@ class StudioRecommendationService {
 
   /// Получить рекомендуемые студии для фотографа
   Future<List<PhotoStudio>> getRecommendedStudiosForPhotographer(
-      String photographerId) async {
+      String photographerId,) async {
     try {
       // Получаем информацию о фотографе
       final photographerDoc =
@@ -296,7 +295,7 @@ class StudioRecommendationService {
 
   /// Получить статистику рекомендаций
   Future<Map<String, dynamic>> getRecommendationStats(
-      String photographerId) async {
+      String photographerId,) async {
     try {
       final snapshot = await _firestore
           .collection('studioRecommendations')
@@ -428,7 +427,7 @@ class StudioRecommendationService {
 
   /// Обновить статусы отдельных бронирований
   Future<void> _updateIndividualBookingStatuses(
-      String dualBookingId, String status) async {
+      String dualBookingId, String status,) async {
     try {
       // Обновляем бронирование фотографа
       final photographerBookings = await _firestore
@@ -529,7 +528,7 @@ class StudioRecommendationService {
 
   /// Логировать действие с двойным бронированием
   Future<void> _logDualBookingAction(
-      String bookingId, String action, String userId) async {
+      String bookingId, String action, String userId,) async {
     try {
       await _firestore.collection('dualBookingLogs').add({
         'bookingId': bookingId,

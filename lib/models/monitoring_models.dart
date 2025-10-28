@@ -17,16 +17,6 @@ class PerformanceMetric {
     this.metadata = const {},
   });
 
-  final String id;
-  final String name;
-  final MetricType type;
-  final double value;
-  final Map<String, String> labels;
-  final DateTime? timestamp;
-  final String? description;
-  final String? unit;
-  final Map<String, dynamic> metadata;
-
   /// Создать из Map
   factory PerformanceMetric.fromMap(Map<String, dynamic> data) {
     return PerformanceMetric(
@@ -55,6 +45,16 @@ class PerformanceMetric {
 
     return PerformanceMetric.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String name;
+  final MetricType type;
+  final double value;
+  final Map<String, String> labels;
+  final DateTime? timestamp;
+  final String? description;
+  final String? unit;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -162,21 +162,6 @@ class MonitoringEvent {
     this.metadata = const {},
   });
 
-  final String id;
-  final String eventType;
-  final String severity;
-  final String message;
-  final String? source;
-  final String? userId;
-  final String? sessionId;
-  final Map<String, String> tags;
-  final Map<String, dynamic> data;
-  final DateTime? timestamp;
-  final bool resolved;
-  final DateTime? resolvedAt;
-  final String? resolvedBy;
-  final Map<String, dynamic> metadata;
-
   /// Создать из Map
   factory MonitoringEvent.fromMap(Map<String, dynamic> data) {
     return MonitoringEvent(
@@ -214,6 +199,21 @@ class MonitoringEvent {
 
     return MonitoringEvent.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String eventType;
+  final String severity;
+  final String message;
+  final String? source;
+  final String? userId;
+  final String? sessionId;
+  final Map<String, String> tags;
+  final Map<String, dynamic> data;
+  final DateTime? timestamp;
+  final bool resolved;
+  final DateTime? resolvedAt;
+  final String? resolvedBy;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -346,20 +346,6 @@ class MonitoringStats {
     this.metadata = const {},
   });
 
-  final String period;
-  final int totalEvents;
-  final int errorEvents;
-  final int warningEvents;
-  final int infoEvents;
-  final int debugEvents;
-  final int criticalEvents;
-  final int resolvedEvents;
-  final int unresolvedEvents;
-  final double averageResponseTime;
-  final double uptime;
-  final double errorRate;
-  final Map<String, dynamic> metadata;
-
   /// Создать из Map
   factory MonitoringStats.fromMap(Map<String, dynamic> data) {
     return MonitoringStats(
@@ -379,6 +365,20 @@ class MonitoringStats {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+
+  final String period;
+  final int totalEvents;
+  final int errorEvents;
+  final int warningEvents;
+  final int infoEvents;
+  final int debugEvents;
+  final int criticalEvents;
+  final int resolvedEvents;
+  final int unresolvedEvents;
+  final double averageResponseTime;
+  final double uptime;
+  final double errorRate;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -431,19 +431,19 @@ class MonitoringStats {
 
   /// Получить процент ошибок
   double get errorPercentage {
-    if (totalEvents == 0) return 0.0;
+    if (totalEvents == 0) return 0;
     return (errorEvents / totalEvents) * 100;
   }
 
   /// Получить процент предупреждений
   double get warningPercentage {
-    if (totalEvents == 0) return 0.0;
+    if (totalEvents == 0) return 0;
     return (warningEvents / totalEvents) * 100;
   }
 
   /// Получить процент решенных событий
   double get resolutionRate {
-    if (totalEvents == 0) return 0.0;
+    if (totalEvents == 0) return 0;
     return (resolvedEvents / totalEvents) * 100;
   }
 

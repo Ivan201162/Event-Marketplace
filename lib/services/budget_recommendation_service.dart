@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис для предложений по увеличению бюджета
 class BudgetRecommendationService {
@@ -74,7 +74,7 @@ class BudgetRecommendationService {
       final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
 
       final totalPrice = specialists.fold<double>(
-          0, (sum, specialist) => sum + specialist.price);
+          0, (sum, specialist) => sum + specialist.price,);
       return totalPrice / specialists.length;
     } on Exception catch (e) {
       debugPrint('Ошибка получения средней цены для категории: $e');
@@ -101,7 +101,7 @@ class BudgetRecommendationService {
 
   /// Получить специалистов по ID
   Future<List<Specialist>> _getSpecialistsByIds(
-      List<String> specialistIds) async {
+      List<String> specialistIds,) async {
     final specialists = <Specialist>[];
 
     for (final id in specialistIds) {
@@ -178,7 +178,7 @@ class BudgetRecommendationService {
 
   /// Получить рекомендуемые категории для данной категории
   List<SpecialistCategory> _getRecommendedCategoriesFor(
-      SpecialistCategory category) {
+      SpecialistCategory category,) {
     switch (category) {
       case SpecialistCategory.host:
         return [
@@ -219,7 +219,7 @@ class BudgetRecommendationService {
       default:
         return [
           SpecialistCategory.photographer,
-          SpecialistCategory.videographer
+          SpecialistCategory.videographer,
         ];
     }
   }
@@ -254,7 +254,7 @@ class BudgetRecommendationService {
 
   /// Рассчитать приоритет рекомендации
   double _calculatePriority(
-      SpecialistCategory selected, SpecialistCategory recommended) {
+      SpecialistCategory selected, SpecialistCategory recommended,) {
     // Базовые приоритеты совместимости
     final compatibilityScores = {
       '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}':

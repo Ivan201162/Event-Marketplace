@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/organizer_profile.dart';
+import 'package:event_marketplace_app/screens/organizer_profile_screen.dart';
+import 'package:event_marketplace_app/services/organizer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/organizer_profile.dart';
-import '../services/organizer_service.dart';
-import 'organizer_profile_screen.dart';
 
 /// Экран списка организаторов
 class OrganizersListScreen extends ConsumerStatefulWidget {
@@ -94,7 +94,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
             (organizer.description?.toLowerCase().contains(searchQuery) ??
                 false) ||
             organizer.categories.any(
-                (category) => category.toLowerCase().contains(searchQuery));
+                (category) => category.toLowerCase().contains(searchQuery),);
 
         return categoryMatch && searchMatch;
       }).toList();
@@ -124,7 +124,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   @override
@@ -133,7 +133,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
           title: const Text('Организаторы мероприятий'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.refresh), onPressed: _loadOrganizers)
+                icon: const Icon(Icons.refresh), onPressed: _loadOrganizers,),
           ],
         ),
         body: Column(
@@ -184,7 +184,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                     ),
                     items: _categories
                         .map((category) => DropdownMenuItem(
-                            value: category, child: Text(category)))
+                            value: category, child: Text(category),),)
                         .toList(),
                     onChanged: (value) {
                       if (value != null) {
@@ -212,7 +212,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                         .map(
                           (option) => DropdownMenuItem(
                               value: option['key'],
-                              child: Text(option['label']!)),
+                              child: Text(option['label']!),),
                         )
                         .toList(),
                     onChanged: (value) {
@@ -240,9 +240,9 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
             Icon(Icons.search_off, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Организаторы не найдены',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             Text('Попробуйте изменить параметры поиска',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -297,13 +297,13 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                                   organizer.name,
                                   style: const TextStyle(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,),
                                 ),
                               ),
                               if (organizer.isVerified)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 2),
+                                      horizontal: 6, vertical: 2,),
                                   decoration: BoxDecoration(
                                     color: Colors.blue,
                                     borderRadius: BorderRadius.circular(8),
@@ -324,7 +324,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                             Text(
                               organizer.shortDescription,
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 14),
+                                  color: Colors.grey[600], fontSize: 14,),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -377,17 +377,17 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                         .map(
                           (category) => Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: Colors.blue.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                  color: Colors.blue.withValues(alpha: 0.3)),
+                                  color: Colors.blue.withValues(alpha: 0.3),),
                             ),
                             child: Text(
                               category,
                               style: TextStyle(
-                                  color: Colors.blue[700], fontSize: 12),
+                                  color: Colors.blue[700], fontSize: 12,),
                             ),
                           ),
                         )
@@ -400,7 +400,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                 Row(
                   children: [
                     Icon(Icons.attach_money,
-                        color: Colors.green[700], size: 16),
+                        color: Colors.green[700], size: 16,),
                     const SizedBox(width: 4),
                     Text(
                       organizer.formattedBudget,
@@ -413,7 +413,7 @@ class _OrganizersListScreenState extends ConsumerState<OrganizersListScreen> {
                     if (organizer.location != null) ...[
                       const SizedBox(width: 16),
                       Icon(Icons.location_on,
-                          color: Colors.grey[600], size: 16),
+                          color: Colors.grey[600], size: 16,),
                       const SizedBox(width: 4),
                       Text(
                         organizer.location!,

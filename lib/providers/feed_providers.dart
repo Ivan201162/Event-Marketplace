@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/post.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/feed_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/post.dart';
-import '../models/story.dart';
-import '../services/feed_service.dart';
 
 /// Провайдер сервиса ленты
 final feedServiceProvider = Provider<FeedService>((ref) {
@@ -18,16 +17,16 @@ final feedProvider =
 /// Провайдер Stories
 final storiesProvider = FutureProvider<List<Story>>((ref) async {
   final feedService = ref.read(feedServiceProvider);
-  return await feedService.getStories();
+  return feedService.getStories();
 });
 
 /// Notifier для управления состоянием ленты
 class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
-  final FeedService _feedService;
 
   FeedNotifier(this._feedService) : super(const AsyncValue.loading()) {
     _loadInitialPosts();
   }
+  final FeedService _feedService;
 
   Future<void> _loadInitialPosts() async {
     try {
@@ -46,7 +45,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
   Future<void> loadMorePosts() async {
     if (state.hasValue) {
       try {
-        final currentPosts = state.value!;
+        final currentPosts = state.value;
         final newPosts = await _feedService.getMorePosts(currentPosts.length);
         state = AsyncValue.data([...currentPosts, ...newPosts]);
       } catch (error, stackTrace) {
@@ -80,7 +79,7 @@ class FeedNotifier extends StateNotifier<AsyncValue<List<Post>>> {
       await _feedService.likePost(postId);
       // Обновить состояние поста
       if (state.hasValue) {
-        final posts = state.value!;
+        final posts = state.value;
         final updatedPosts = posts.map((post) {
           if (post.id == postId) {
             return post.copyWith(

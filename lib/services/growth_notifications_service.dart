@@ -7,9 +7,9 @@ class GrowthNotificationsService {
 
   /// Отправка уведомления о реферале
   Future<void> sendReferralNotification(
-      String userId, Map<String, dynamic> referral) async {
+      String userId, Map<String, dynamic> referral,) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'referral',
@@ -32,10 +32,10 @@ class GrowthNotificationsService {
           .set(notification);
 
       debugPrint(
-          'INFO: [GrowthNotificationsService] Referral notification sent to user $userId');
+          'INFO: [GrowthNotificationsService] Referral notification sent to user $userId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send referral notification: $e');
+          'ERROR: [GrowthNotificationsService] Failed to send referral notification: $e',);
     }
   }
 
@@ -46,33 +46,28 @@ class GrowthNotificationsService {
     Map<String, dynamic> bonusData,
   ) async {
     try {
-      const String title = 'Бонус получен!';
-      String message = '';
+      const title = 'Бонус получен!';
+      var message = '';
 
       switch (bonusType) {
         case 'freePromotion':
           message = 'Вы получили бесплатное продвижение профиля!';
-          break;
         case 'discount':
           final double discount = (bonusData['discount'] ?? 0.0).toDouble();
           message = 'Вы получили скидку ${(discount * 100).toInt()}%!';
-          break;
         case 'premiumTrial':
           final int days = bonusData['days'] ?? 0;
           message = 'Вы получили $days дней Premium бесплатно!';
-          break;
         case 'proTrial':
           message = 'Вы получили месяц PRO бесплатно!';
-          break;
         case 'cashback':
           final double amount = (bonusData['amount'] ?? 0.0).toDouble();
           message = 'Вы получили кэшбэк $amount рублей!';
-          break;
         default:
           message = 'Вы получили бонус!';
       }
 
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'referral',
@@ -108,12 +103,12 @@ class GrowthNotificationsService {
     double newPrice,
   ) async {
     try {
-      final double changePercent = ((newPrice - oldPrice) / oldPrice * 100);
-      final String changeText =
+      final changePercent = (newPrice - oldPrice) / oldPrice * 100;
+      final changeText =
           changePercent > 0 ? 'увеличилась' : 'уменьшилась';
-      final String changeValue = changePercent.abs().toStringAsFixed(1);
+      final changeValue = changePercent.abs().toStringAsFixed(1);
 
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'pricing',
@@ -153,7 +148,7 @@ class GrowthNotificationsService {
     Map<String, dynamic> partnerTransaction,
   ) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'partnership',
@@ -188,9 +183,9 @@ class GrowthNotificationsService {
 
   /// Отправка уведомления о новом рекламном предложении
   Future<void> sendNewAdOfferNotification(
-      String userId, Map<String, dynamic> adOffer) async {
+      String userId, Map<String, dynamic> adOffer,) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'advertisement',
@@ -220,9 +215,9 @@ class GrowthNotificationsService {
 
   /// Отправка уведомления о промо-кампании
   Future<void> sendPromotionNotification(
-      String userId, Map<String, dynamic> promotion) async {
+      String userId, Map<String, dynamic> promotion,) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'promotion',
@@ -245,18 +240,18 @@ class GrowthNotificationsService {
           .set(notification);
 
       debugPrint(
-          'INFO: [GrowthNotificationsService] Promotion notification sent to user $userId');
+          'INFO: [GrowthNotificationsService] Promotion notification sent to user $userId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send promotion notification: $e');
+          'ERROR: [GrowthNotificationsService] Failed to send promotion notification: $e',);
     }
   }
 
   /// Отправка уведомления о чеке
   Future<void> sendReceiptNotification(
-      String userId, Map<String, dynamic> receipt) async {
+      String userId, Map<String, dynamic> receipt,) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'receipt',
@@ -281,18 +276,18 @@ class GrowthNotificationsService {
           .set(notification);
 
       debugPrint(
-          'INFO: [GrowthNotificationsService] Receipt notification sent to user $userId');
+          'INFO: [GrowthNotificationsService] Receipt notification sent to user $userId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send receipt notification: $e');
+          'ERROR: [GrowthNotificationsService] Failed to send receipt notification: $e',);
     }
   }
 
   /// Отправка уведомления о новом челлендже
   Future<void> sendNewChallengeNotification(
-      String userId, Map<String, dynamic> challenge) async {
+      String userId, Map<String, dynamic> challenge,) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'challenge',
@@ -332,7 +327,7 @@ class GrowthNotificationsService {
     Map<String, dynamic> progress,
   ) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'challenge',
@@ -371,7 +366,7 @@ class GrowthNotificationsService {
     Map<String, dynamic> achievement,
   ) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'achievement',
@@ -407,9 +402,9 @@ class GrowthNotificationsService {
 
   /// Отправка уведомления о новом значке
   Future<void> sendNewBadgeNotification(
-      String userId, Map<String, dynamic> badge) async {
+      String userId, Map<String, dynamic> badge,) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'badge',
@@ -433,10 +428,10 @@ class GrowthNotificationsService {
           .set(notification);
 
       debugPrint(
-          'INFO: [GrowthNotificationsService] New badge notification sent to user $userId');
+          'INFO: [GrowthNotificationsService] New badge notification sent to user $userId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send new badge notification: $e');
+          'ERROR: [GrowthNotificationsService] Failed to send new badge notification: $e',);
     }
   }
 
@@ -448,7 +443,7 @@ class GrowthNotificationsService {
     Map<String, dynamic> testData,
   ) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'abTest',
@@ -461,7 +456,7 @@ class GrowthNotificationsService {
         'data': {
           'testName': testName,
           'variant': variant,
-          'testData': testData
+          'testData': testData,
         },
       };
 
@@ -471,10 +466,10 @@ class GrowthNotificationsService {
           .set(notification);
 
       debugPrint(
-          'INFO: [GrowthNotificationsService] AB test notification sent to user $userId');
+          'INFO: [GrowthNotificationsService] AB test notification sent to user $userId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to send AB test notification: $e');
+          'ERROR: [GrowthNotificationsService] Failed to send AB test notification: $e',);
     }
   }
 
@@ -485,7 +480,7 @@ class GrowthNotificationsService {
     Map<String, dynamic> promotionData,
   ) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'seasonal',
@@ -520,7 +515,7 @@ class GrowthNotificationsService {
     Map<String, dynamic> promotionData,
   ) async {
     try {
-      final Map<String, dynamic> notification = {
+      final notification = <String, dynamic>{
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'holiday',
@@ -572,10 +567,10 @@ class GrowthNotificationsService {
       });
 
       debugPrint(
-          'INFO: [GrowthNotificationsService] Notification $notificationId marked as read');
+          'INFO: [GrowthNotificationsService] Notification $notificationId marked as read',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to mark notification as read: $e');
+          'ERROR: [GrowthNotificationsService] Failed to mark notification as read: $e',);
     }
   }
 
@@ -588,10 +583,10 @@ class GrowthNotificationsService {
           .where('isRead', isEqualTo: false)
           .get();
 
-      final WriteBatch batch = _firestore.batch();
+      final batch = _firestore.batch();
       for (final doc in unreadNotifications.docs) {
         batch.update(doc.reference,
-            {'isRead': true, 'readAt': FieldValue.serverTimestamp()});
+            {'isRead': true, 'readAt': FieldValue.serverTimestamp()},);
       }
 
       await batch.commit();
@@ -613,10 +608,10 @@ class GrowthNotificationsService {
           .doc(notificationId)
           .delete();
       debugPrint(
-          'INFO: [GrowthNotificationsService] Notification $notificationId deleted');
+          'INFO: [GrowthNotificationsService] Notification $notificationId deleted',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthNotificationsService] Failed to delete notification: $e');
+          'ERROR: [GrowthNotificationsService] Failed to delete notification: $e',);
     }
   }
 

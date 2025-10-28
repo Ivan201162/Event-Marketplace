@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/discount_notification.dart';
+import 'package:event_marketplace_app/services/discount_notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/discount_notification.dart';
-import '../services/discount_notification_service.dart';
 
 /// Сервис уведомлений о скидках
 final discountNotificationServiceProvider =

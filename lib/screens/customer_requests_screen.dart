@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/booking_status.dart';
+import 'package:event_marketplace_app/providers/auth_provider.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/firestore_service.dart';
+import 'package:event_marketplace_app/widgets/booking_card.dart';
+import 'package:event_marketplace_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../models/booking.dart';
-import '../models/booking_status.dart';
-import '../providers/auth_provider.dart';
-import '../services/booking_service.dart';
-import '../services/firestore_service.dart';
-import '../widgets/booking_card.dart';
-import '../widgets/loading_widget.dart';
 
 class CustomerRequestsScreen extends StatefulWidget {
   const CustomerRequestsScreen({super.key});
@@ -60,14 +59,14 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(
-                    value: 'date_desc', child: Text('По дате (новые)')),
+                    value: 'date_desc', child: Text('По дате (новые)'),),
                 const PopupMenuItem(
-                    value: 'date_asc', child: Text('По дате (старые)')),
+                    value: 'date_asc', child: Text('По дате (старые)'),),
                 const PopupMenuItem(value: 'status', child: Text('По статусу')),
                 const PopupMenuItem(
-                    value: 'price_desc', child: Text('По цене (убывание)')),
+                    value: 'price_desc', child: Text('По цене (убывание)'),),
                 const PopupMenuItem(
-                    value: 'price_asc', child: Text('По цене (возрастание)')),
+                    value: 'price_asc', child: Text('По цене (возрастание)'),),
               ],
             ),
           ],
@@ -175,15 +174,12 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
       case 'pending':
         message = 'Нет заявок на рассмотрении';
         icon = Icons.pending;
-        break;
       case 'confirmed':
         message = 'Нет подтвержденных заявок';
         icon = Icons.check_circle;
-        break;
       case 'completed':
         message = 'Нет завершенных заявок';
         icon = Icons.done_all;
-        break;
       default:
         message = 'У вас пока нет заявок';
         icon = Icons.inbox;
@@ -196,7 +192,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
           Text(message,
-              style: const TextStyle(fontSize: 18, color: Colors.grey)),
+              style: const TextStyle(fontSize: 18, color: Colors.grey),),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
@@ -214,19 +210,14 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
     switch (sortOption) {
       case 'date_desc':
         bookings.sort((a, b) => b.eventDate.compareTo(a.eventDate));
-        break;
       case 'date_asc':
         bookings.sort((a, b) => a.eventDate.compareTo(b.eventDate));
-        break;
       case 'status':
         bookings.sort((a, b) => a.status.name.compareTo(b.status.name));
-        break;
       case 'price_desc':
         bookings.sort((a, b) => b.totalPrice.compareTo(a.totalPrice));
-        break;
       case 'price_asc':
         bookings.sort((a, b) => a.totalPrice.compareTo(b.totalPrice));
-        break;
     }
     return bookings;
   }
@@ -275,14 +266,14 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
                       booking.status.name,
                       style: TextStyle(
                           color: booking.status.color,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               _buildDetailRow(Icons.person, 'Специалист',
-                  booking.specialistName ?? 'Не указан'),
+                  booking.specialistName ?? 'Не указан',),
               _buildDetailRow(
                 Icons.calendar_today,
                 'Дата',
@@ -301,12 +292,12 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
                 '${booking.totalPrice.toStringAsFixed(0)} ₽',
               ),
               _buildDetailRow(Icons.payment, 'Аванс',
-                  '${booking.prepayment.toStringAsFixed(0)} ₽'),
+                  '${booking.prepayment.toStringAsFixed(0)} ₽',),
               if (booking.description != null) ...[
                 const SizedBox(height: 16),
                 const Text('Описание',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                 const SizedBox(height: 8),
                 Text(booking.description!),
               ],
@@ -345,7 +336,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
             Icon(icon, size: 20, color: Colors.grey[600]),
             const SizedBox(width: 12),
             Text('$label: ',
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
             Expanded(child: Text(value)),
           ],
         ),
@@ -363,7 +354,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Да, отменить'),
@@ -380,7 +371,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Заявка отменена'),
-                backgroundColor: Colors.green),
+                backgroundColor: Colors.green,),
           );
         }
       } catch (e) {
@@ -388,7 +379,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text('Ошибка отмены заявки: $e'),
-                backgroundColor: Colors.red),
+                backgroundColor: Colors.red,),
           );
         }
       }
@@ -400,7 +391,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content:
-              Text('Функция переноса будет добавлена в следующем обновлении')),
+              Text('Функция переноса будет добавлена в следующем обновлении'),),
     );
   }
 }

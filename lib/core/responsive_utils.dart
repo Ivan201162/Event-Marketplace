@@ -193,8 +193,7 @@ enum ScreenType { mobile, tablet, desktop, largeDesktop }
 /// Виджет для адаптивного контейнера
 class ResponsiveContainer extends StatelessWidget {
   const ResponsiveContainer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.maxWidth,
     this.padding,
     this.alignment = Alignment.center,
@@ -226,8 +225,7 @@ class ResponsiveContainer extends StatelessWidget {
 /// Виджет для адаптивной сетки
 class ResponsiveGrid extends StatelessWidget {
   const ResponsiveGrid({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.crossAxisCount,
     this.crossAxisSpacing,
     this.mainAxisSpacing,
@@ -327,7 +325,7 @@ class ResponsiveIcon extends StatelessWidget {
 /// Виджет для адаптивного отступа
 class ResponsivePadding extends StatelessWidget {
   const ResponsivePadding(
-      {super.key, required this.child, this.padding, this.multiplier = 1.0});
+      {required this.child, super.key, this.padding, this.multiplier = 1.0,});
   final Widget child;
   final EdgeInsets? padding;
   final double? multiplier;

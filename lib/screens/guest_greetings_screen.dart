@@ -1,18 +1,14 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/guest.dart';
+import 'package:event_marketplace_app/services/guest_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../models/event.dart';
-import '../models/guest.dart';
-import '../services/guest_service.dart';
 
 /// Экран для загрузки приветствий от гостей
 class GuestGreetingsScreen extends ConsumerStatefulWidget {
   const GuestGreetingsScreen({
-    super.key,
-    required this.event,
-    required this.guestId,
-    required this.guestName,
+    required this.event, required this.guestId, required this.guestName, super.key,
   });
   final Event event;
   final String guestId;
@@ -91,7 +87,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -106,10 +102,10 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   Icon(Icons.message_outlined, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Пока нет приветствий',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text('Будьте первым, кто оставит приветствие!',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: Colors.grey),),
                 ],
               ),
             );
@@ -152,7 +148,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                         Text(
                           greeting.guestName,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold, fontSize: 16,),
                         ),
                         Text(
                           _formatDateTime(greeting.createdAt),
@@ -167,7 +163,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                     backgroundColor:
                         _getTypeColor(greeting.type).withValues(alpha: 0.1),
                     labelStyle: TextStyle(
-                        color: _getTypeColor(greeting.type), fontSize: 12),
+                        color: _getTypeColor(greeting.type), fontSize: 12,),
                   ),
                 ],
               ),
@@ -255,7 +251,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.play_circle_outline,
-                          size: 48, color: Colors.grey),
+                          size: 48, color: Colors.grey,),
                       SizedBox(height: 8),
                       Text('Видео приветствие'),
                     ],
@@ -325,7 +321,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Событие',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 8),
               Text(widget.event.title, style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 4),
@@ -380,7 +376,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Содержание',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               TextField(
                 controller: _textController,
@@ -407,7 +403,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Медиафайл',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 12),
             _buildMediaUploadButton(),
           ],
@@ -426,17 +422,14 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
         icon = Icons.image;
         label = 'Загрузить фото';
         currentUrl = _imageUrl;
-        break;
       case GreetingType.video:
         icon = Icons.videocam;
         label = 'Загрузить видео';
         currentUrl = _videoUrl;
-        break;
       case GreetingType.audio:
         icon = Icons.audiotrack;
         label = 'Загрузить аудио';
         currentUrl = _audioUrl;
-        break;
       default:
         return const SizedBox.shrink();
     }
@@ -457,7 +450,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
-              onPressed: _uploadMedia, icon: Icon(icon), label: Text(label)),
+              onPressed: _uploadMedia, icon: Icon(icon), label: Text(label),),
         ),
       ],
     );
@@ -470,7 +463,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
           icon: const Icon(Icons.send),
           label: const Text('Отправить приветствие'),
           style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12)),
+              padding: const EdgeInsets.symmetric(vertical: 12),),
         ),
       );
 
@@ -509,7 +502,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -518,7 +511,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-            'Функция загрузки медиафайлов будет добавлена в следующих версиях'),
+            'Функция загрузки медиафайлов будет добавлена в следующих версиях',),
       ),
     );
   }
@@ -563,13 +556,13 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Приветствие отправлено!'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка отправки: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка отправки: $e'), backgroundColor: Colors.red,),);
     }
   }
 }

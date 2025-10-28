@@ -132,7 +132,7 @@ class MonetizationService {
 
   /// Получение активных продвижений специалиста
   Future<List<Map<String, dynamic>>> getSpecialistPromotions(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final querySnapshot = await _firestore
           .collection('promotions')
@@ -292,22 +292,22 @@ class MonetizationService {
 
       if (startDate != null) {
         query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final querySnapshot = await query.get();
 
       double totalRevenue = 0;
-      Map<String, double> revenueByType = {};
-      Map<String, int> transactionCounts = {};
+      final revenueByType = <String, double>{};
+      final transactionCounts = <String, int>{};
 
       for (final doc in querySnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         final amount = data['amount'] as double;
         final type = data['type'] as String;
 
@@ -405,7 +405,7 @@ class MonetizationService {
       // Применение скидки
       final discount = couponData['discount'] as double;
       final discountType = couponData['discountType'] as String;
-      double finalPrice = originalPrice;
+      var finalPrice = originalPrice;
 
       if (discountType == 'percentage') {
         finalPrice = originalPrice * (1 - discount / 100);
@@ -450,12 +450,12 @@ class MonetizationService {
 
       if (startDate != null) {
         viewsQuery.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         viewsQuery.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final viewsSnapshot = await viewsQuery.get();
@@ -467,12 +467,12 @@ class MonetizationService {
 
       if (startDate != null) {
         requestsQuery.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         requestsQuery.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final requestsSnapshot = await requestsQuery.get();
@@ -484,12 +484,12 @@ class MonetizationService {
 
       if (startDate != null) {
         reviewsQuery.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         reviewsQuery.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final reviewsSnapshot = await reviewsQuery.get();

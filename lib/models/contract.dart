@@ -44,7 +44,7 @@ class PartyInfo {
         email: map['email'] as String?,
         bankDetails: map['bankDetails'] != null
             ? Map<String, dynamic>.from(
-                map['bankDetails'] as Map<dynamic, dynamic>)
+                map['bankDetails'] as Map<dynamic, dynamic>,)
             : null,
       );
 
@@ -127,9 +127,7 @@ class Contract {
     required this.terms,
     required this.createdAt,
     required this.updatedAt,
-    this.signedAt,
-    required this.expiresAt,
-    required this.metadata,
+    required this.expiresAt, required this.metadata, this.signedAt,
     this.specialistName,
     this.startDate,
     this.endDate,
@@ -161,7 +159,7 @@ class Contract {
       title: data['title'] as String? ?? '',
       content: data['content'] as String? ?? '',
       terms: Map<String, dynamic>.from(
-          data['terms'] as Map<dynamic, dynamic>? ?? {}),
+          data['terms'] as Map<dynamic, dynamic>? ?? {},),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       signedAt: data['signedAt'] != null
@@ -169,7 +167,7 @@ class Contract {
           : null,
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},),
       specialistName: data['specialistName'] as String?,
       startDate: data['startDate'] != null
           ? (data['startDate'] as Timestamp).toDate()
@@ -182,7 +180,7 @@ class Contract {
       partiesInfo: data['partiesInfo'] != null
           ? (data['partiesInfo'] as Map<String, dynamic>).map(
               (key, value) => MapEntry(
-                  key, PartyInfo.fromMap(value as Map<String, dynamic>)),
+                  key, PartyInfo.fromMap(value as Map<String, dynamic>),),
             )
           : null,
       servicesList: data['servicesList'] != null

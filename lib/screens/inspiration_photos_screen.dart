@@ -1,18 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+// import 'dart:io';
+import 'package:event_marketplace_app/models/customer_profile_extended.dart';
+import 'package:event_marketplace_app/providers/customer_profile_extended_providers.dart';
+import 'package:event_marketplace_app/services/customer_profile_extended_service.dart';
+import 'package:event_marketplace_app/widgets/photo_filter_widget.dart';
+import 'package:event_marketplace_app/widgets/photo_grid_widget.dart';
+import 'package:event_marketplace_app/widgets/photo_upload_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// import 'dart:io';
-import '../models/customer_profile_extended.dart';
-import '../providers/customer_profile_extended_providers.dart';
-import '../services/customer_profile_extended_service.dart';
-import '../widgets/photo_filter_widget.dart';
-import '../widgets/photo_grid_widget.dart';
-import '../widgets/photo_upload_widget.dart';
-
 /// Экран управления фотоальбомом вдохновения
 class InspirationPhotosScreen extends ConsumerStatefulWidget {
-  const InspirationPhotosScreen({super.key, required this.userId});
+  const InspirationPhotosScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -59,10 +58,10 @@ class _InspirationPhotosScreenState
         ),
         actions: [
           IconButton(
-              icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+              icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
           IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: _showFilterDialog),
+              onPressed: _showFilterDialog,),
         ],
       ),
       body: Column(
@@ -81,7 +80,7 @@ class _InspirationPhotosScreenState
               children: [
                 _buildAllPhotosTab(photosAsync),
                 _buildPublicPhotosTab(),
-                _buildTagsTab()
+                _buildTagsTab(),
               ],
             ),
           ),
@@ -102,7 +101,7 @@ class _InspirationPhotosScreenState
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem(
-                  'Всего фото', stats.totalPhotos, Icons.photo_library),
+                  'Всего фото', stats.totalPhotos, Icons.photo_library,),
               _buildStatItem('Публичных', stats.publicPhotos, Icons.public),
               _buildStatItem('Тегов', stats.totalTags, Icons.tag),
             ],
@@ -117,7 +116,7 @@ class _InspirationPhotosScreenState
           const SizedBox(height: 4),
           Text(value.toString(),
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       );
@@ -225,7 +224,7 @@ class _InspirationPhotosScreenState
             const SizedBox(height: 16),
             Text(title,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Text(
               subtitle,
@@ -281,7 +280,7 @@ class _InspirationPhotosScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               final query = _searchController.text.trim();
@@ -334,7 +333,7 @@ class _InspirationPhotosScreenState
                     Text(
                       photo.caption!,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
                     const SizedBox(height: 8),
                   ],
@@ -345,7 +344,7 @@ class _InspirationPhotosScreenState
                           .map(
                             (tag) => Chip(
                                 label: Text(tag),
-                                labelStyle: const TextStyle(fontSize: 12)),
+                                labelStyle: const TextStyle(fontSize: 12),),
                           )
                           .toList(),
                     ),
@@ -362,7 +361,7 @@ class _InspirationPhotosScreenState
                       Text(
                         photo.isPublic ? 'Публичное' : 'Приватное',
                         style: TextStyle(
-                            color: photo.isPublic ? Colors.green : Colors.grey),
+                            color: photo.isPublic ? Colors.green : Colors.grey,),
                       ),
                       const Spacer(),
                       Text(
@@ -386,7 +385,7 @@ class _InspirationPhotosScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content:
-              Text('Редактирование фото будет добавлено в следующей версии')),
+              Text('Редактирование фото будет добавлено в следующей версии'),),
     );
   }
 
@@ -399,7 +398,7 @@ class _InspirationPhotosScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -441,7 +440,7 @@ class _InspirationPhotosScreenState
 
 /// Экран фото по тегу
 class PhotosByTagScreen extends ConsumerWidget {
-  const PhotosByTagScreen({super.key, required this.userId, required this.tag});
+  const PhotosByTagScreen({required this.userId, required this.tag, super.key});
   final String userId;
   final String tag;
 
@@ -479,7 +478,7 @@ class PhotosByTagScreen extends ConsumerWidget {
   }
 
   void _deletePhoto(
-      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+      BuildContext context, WidgetRef ref, InspirationPhoto photo,) {
     // TODO(developer): Удалить фото
   }
 }
@@ -487,7 +486,7 @@ class PhotosByTagScreen extends ConsumerWidget {
 /// Экран результатов поиска фото
 class PhotoSearchResultsScreen extends ConsumerWidget {
   const PhotoSearchResultsScreen(
-      {super.key, required this.userId, required this.query});
+      {required this.userId, required this.query, super.key,});
   final String userId;
   final String query;
 
@@ -525,7 +524,7 @@ class PhotoSearchResultsScreen extends ConsumerWidget {
   }
 
   void _deletePhoto(
-      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+      BuildContext context, WidgetRef ref, InspirationPhoto photo,) {
     // TODO(developer): Удалить фото
   }
 }

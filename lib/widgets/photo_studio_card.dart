@@ -1,13 +1,10 @@
+import 'package:event_marketplace_app/models/photo_studio.dart';
 import 'package:flutter/material.dart';
-
-import '../models/photo_studio.dart';
 
 /// Карточка фотостудии
 class PhotoStudioCard extends StatelessWidget {
   const PhotoStudioCard({
-    super.key,
-    required this.photoStudio,
-    required this.onTap,
+    required this.photoStudio, required this.onTap, super.key,
     this.showActions = true,
   });
 
@@ -51,7 +48,7 @@ class PhotoStudioCard extends StatelessWidget {
                       if (photoStudio.isVerified)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
                             color: Colors.blue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -60,7 +57,7 @@ class PhotoStudioCard extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(Icons.verified,
-                                  size: 14, color: Colors.blue),
+                                  size: 14, color: Colors.blue,),
                               const SizedBox(width: 4),
                               Text(
                                 'Проверено',
@@ -112,7 +109,7 @@ class PhotoStudioCard extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.location_on,
-                          size: 16, color: Colors.grey),
+                          size: 16, color: Colors.grey,),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -148,7 +145,7 @@ class PhotoStudioCard extends StatelessWidget {
                           .map(
                             (amenity) => Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                  horizontal: 8, vertical: 4,),
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(12),
@@ -185,7 +182,7 @@ class PhotoStudioCard extends StatelessWidget {
                       if (photoStudio.hourlyRate != null) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                              horizontal: 12, vertical: 6,),
                           decoration: BoxDecoration(
                             color: Colors.green.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
@@ -203,7 +200,7 @@ class PhotoStudioCard extends StatelessWidget {
                       if (photoStudio.dailyRate != null) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                              horizontal: 12, vertical: 6,),
                           decoration: BoxDecoration(
                             color: Colors.blue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
@@ -271,7 +268,7 @@ class PhotoStudioCard extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7)
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius:
@@ -295,7 +292,7 @@ class PhotoStudioCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.photo_library,
-                        size: 14, color: Colors.white),
+                        size: 14, color: Colors.white,),
                     const SizedBox(width: 4),
                     Text(
                       '${photoStudio.imageCount}',
@@ -346,7 +343,7 @@ class PhotoStudioCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.photo_camera,
-                size: 48, color: theme.colorScheme.outline),
+                size: 48, color: theme.colorScheme.outline,),
             const SizedBox(height: 8),
             Text(
               'Фотостудия',

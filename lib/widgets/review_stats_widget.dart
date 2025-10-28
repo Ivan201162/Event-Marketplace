@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/widgets/rating_widget.dart';
 import 'package:flutter/material.dart';
-import '../models/review.dart';
-import 'rating_widget.dart';
 
 /// Виджет для отображения статистики отзывов
 class ReviewStatsWidget extends StatelessWidget {
-  const ReviewStatsWidget({super.key, required this.stats});
+  const ReviewStatsWidget({required this.stats, super.key});
 
   final ReviewStats stats;
 
@@ -74,7 +74,7 @@ class ReviewStatsWidget extends StatelessWidget {
                             children: [
                               // Звезда
                               const Icon(Icons.star,
-                                  size: 16, color: Colors.amber),
+                                  size: 16, color: Colors.amber,),
                               const SizedBox(width: 8),
 
                               // Номер рейтинга
@@ -131,9 +131,7 @@ class ReviewStatsWidget extends StatelessWidget {
 /// Компактный виджет рейтинга для карточек
 class CompactRatingWidget extends StatelessWidget {
   const CompactRatingWidget({
-    super.key,
-    required this.rating,
-    required this.reviewCount,
+    required this.rating, required this.reviewCount, super.key,
     this.showReviewCount = true,
   });
 
@@ -145,7 +143,7 @@ class CompactRatingWidget extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          RatingWidget(rating: rating.toDouble(), starSize: 16),
+          RatingWidget(rating: rating, starSize: 16),
           if (showReviewCount && reviewCount > 0) ...[
             const SizedBox(width: 4),
             Text(

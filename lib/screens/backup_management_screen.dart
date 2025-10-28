@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/backup.dart';
+import 'package:event_marketplace_app/services/backup_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/backup.dart';
-import '../services/backup_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления бэкапами
 class BackupManagementScreen extends ConsumerStatefulWidget {
@@ -55,10 +55,10 @@ class _BackupManagementScreenState
             Expanded(child: _buildTabButton('backups', 'Бэкапы', Icons.backup)),
             Expanded(
                 child: _buildTabButton(
-                    'restores', 'Восстановления', Icons.restore)),
+                    'restores', 'Восстановления', Icons.restore,),),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.analytics)),
+                    'statistics', 'Статистика', Icons.analytics,),),
             Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
           ],
         ),
@@ -87,7 +87,7 @@ class _BackupManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -152,11 +152,11 @@ class _BackupManagementScreenState
             Row(
               children: [
                 Icon(_getBackupIcon(backup.type),
-                    color: _getBackupColor(backup.type), size: 24),
+                    color: _getBackupColor(backup.type), size: 24,),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(backup.name,
-                        style: Theme.of(context).textTheme.titleMedium)),
+                        style: Theme.of(context).textTheme.titleMedium,),),
                 _buildStatusChip(backup.status),
                 PopupMenuButton<String>(
                   onSelected: (value) => _handleBackupAction(value, backup),
@@ -166,19 +166,19 @@ class _BackupManagementScreenState
                         value: 'download',
                         child: ListTile(
                             leading: Icon(Icons.download),
-                            title: Text('Скачать')),
+                            title: Text('Скачать'),),
                       ),
                       const PopupMenuItem(
                         value: 'restore',
                         child: ListTile(
                             leading: Icon(Icons.restore),
-                            title: Text('Восстановить')),
+                            title: Text('Восстановить'),),
                       ),
                     ],
                     const PopupMenuItem(
                       value: 'delete',
                       child: ListTile(
-                          leading: Icon(Icons.delete), title: Text('Удалить')),
+                          leading: Icon(Icons.delete), title: Text('Удалить'),),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),
@@ -200,7 +200,7 @@ class _BackupManagementScreenState
                 const SizedBox(width: 8),
                 if (backup.fileSize != null)
                   _buildInfoChip(
-                      'Размер', backup.formattedFileSize, Colors.green),
+                      'Размер', backup.formattedFileSize, Colors.green,),
               ],
             ),
 
@@ -211,7 +211,7 @@ class _BackupManagementScreenState
               Text(
                 'Коллекции:',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                    fontWeight: FontWeight.bold, color: Colors.grey[600],),
               ),
               const SizedBox(height: 4),
               Wrap(
@@ -277,7 +277,7 @@ class _BackupManagementScreenState
             child: Row(
               children: [
                 Text('Восстановления',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadRestores,
@@ -311,11 +311,11 @@ class _BackupManagementScreenState
             Row(
               children: [
                 Icon(_getRestoreIcon(restore.type),
-                    color: _getRestoreColor(restore.type), size: 24),
+                    color: _getRestoreColor(restore.type), size: 24,),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(restore.name,
-                        style: Theme.of(context).textTheme.titleMedium)),
+                        style: Theme.of(context).textTheme.titleMedium,),),
                 _buildStatusChip(restore.status),
               ],
             ),
@@ -333,7 +333,7 @@ class _BackupManagementScreenState
                 _buildInfoChip('Тип', restore.type.name, Colors.blue),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Бэкап ID', restore.backupId.substring(0, 8), Colors.green),
+                    'Бэкап ID', restore.backupId.substring(0, 8), Colors.green,),
               ],
             ),
 
@@ -344,7 +344,7 @@ class _BackupManagementScreenState
               Text(
                 'Коллекции:',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                    fontWeight: FontWeight.bold, color: Colors.grey[600],),
               ),
               const SizedBox(height: 4),
               Wrap(
@@ -421,7 +421,7 @@ class _BackupManagementScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Статистика бэкапов',
-                          style: Theme.of(context).textTheme.titleMedium),
+                          style: Theme.of(context).textTheme.titleMedium,),
                       const SizedBox(height: 16),
                       Row(
                         children: [
@@ -482,7 +482,7 @@ class _BackupManagementScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Бэкапы по типам',
-                          style: Theme.of(context).textTheme.titleMedium),
+                          style: Theme.of(context).textTheme.titleMedium,),
                       const SizedBox(height: 16),
                       ...stats.backupsByType.entries.map((entry) {
                         final percentage = stats.totalBackups > 0
@@ -500,7 +500,7 @@ class _BackupManagementScreenState
                                 children: [
                                   Text(entry.key),
                                   Text(
-                                      '${entry.value} (${percentage.toStringAsFixed(1)}%)'),
+                                      '${entry.value} (${percentage.toStringAsFixed(1)}%)',),
                                 ],
                               ),
                               const SizedBox(height: 4),
@@ -526,7 +526,7 @@ class _BackupManagementScreenState
       );
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -541,7 +541,7 @@ class _BackupManagementScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -561,46 +561,36 @@ class _BackupManagementScreenState
         case BackupStatus.pending:
           color = Colors.orange;
           text = 'Ожидает';
-          break;
         case BackupStatus.inProgress:
           color = Colors.blue;
           text = 'В процессе';
-          break;
         case BackupStatus.completed:
           color = Colors.green;
           text = 'Завершен';
-          break;
         case BackupStatus.failed:
           color = Colors.red;
           text = 'Ошибка';
-          break;
         case BackupStatus.cancelled:
           color = Colors.grey;
           text = 'Отменен';
-          break;
       }
     } else if (status is RestoreStatus) {
       switch (status) {
         case RestoreStatus.pending:
           color = Colors.orange;
           text = 'Ожидает';
-          break;
         case RestoreStatus.inProgress:
           color = Colors.blue;
           text = 'В процессе';
-          break;
         case RestoreStatus.completed:
           color = Colors.green;
           text = 'Завершен';
-          break;
         case RestoreStatus.failed:
           color = Colors.red;
           text = 'Ошибка';
-          break;
         case RestoreStatus.cancelled:
           color = Colors.grey;
           text = 'Отменен';
-          break;
       }
     } else {
       color = Colors.grey;
@@ -632,7 +622,7 @@ class _BackupManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -726,7 +716,7 @@ class _BackupManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки бэкапов: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -741,7 +731,7 @@ class _BackupManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки восстановлений: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -759,7 +749,7 @@ class _BackupManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -777,20 +767,17 @@ class _BackupManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция создания бэкапа будет реализована')));
+        content: Text('Функция создания бэкапа будет реализована'),),);
   }
 
   void _handleBackupAction(String action, Backup backup) {
     switch (action) {
       case 'download':
         _downloadBackup(backup);
-        break;
       case 'restore':
         _restoreBackup(backup);
-        break;
       case 'delete':
         _deleteBackup(backup);
-        break;
     }
   }
 
@@ -799,7 +786,7 @@ class _BackupManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Скачивание бэкапа "${backup.name}" будет реализовано')));
+        content: Text('Скачивание бэкапа "${backup.name}" будет реализовано'),),);
   }
 
   void _restoreBackup(Backup backup) {
@@ -807,7 +794,7 @@ class _BackupManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Восстановление из бэкапа "${backup.name}" будет реализовано')),
+              'Восстановление из бэкапа "${backup.name}" будет реализовано',),),
     );
   }
 
@@ -820,7 +807,7 @@ class _BackupManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -830,7 +817,7 @@ class _BackupManagementScreenState
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Бэкап удален'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(

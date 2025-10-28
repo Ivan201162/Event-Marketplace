@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/providers/notification_providers.dart';
+import 'package:event_marketplace_app/widgets/animated_page_transition.dart' as custom;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/notification_providers.dart';
-import '../widgets/animated_page_transition.dart' as custom;
 
 /// Экран настроек уведомлений
 class NotificationSettingsScreen extends ConsumerWidget {
@@ -126,7 +126,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon,
-                  color: Theme.of(context).colorScheme.primary, size: 24),
+                  color: Theme.of(context).colorScheme.primary, size: 24,),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -191,7 +191,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(Icons.schedule,
-                    color: Theme.of(context).colorScheme.primary, size: 24),
+                    color: Theme.of(context).colorScheme.primary, size: 24,),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -287,7 +287,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon,
-                  color: Theme.of(context).colorScheme.error, size: 24),
+                  color: Theme.of(context).colorScheme.error, size: 24,),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -350,7 +350,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               // Здесь будет логика очистки уведомлений
@@ -358,7 +358,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(
-                  const SnackBar(content: Text('Уведомления очищены')));
+                  const SnackBar(content: Text('Уведомления очищены')),);
             },
             child: const Text('Очистить'),
           ),
@@ -375,6 +375,6 @@ class NotificationSettingsScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Тестовое уведомление отправлено')));
+        const SnackBar(content: Text('Тестовое уведомление отправлено')),);
   }
 }

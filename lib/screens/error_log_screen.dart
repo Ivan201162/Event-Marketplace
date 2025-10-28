@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/app_error.dart';
+import 'package:event_marketplace_app/services/error_logger_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/app_error.dart';
-import '../services/error_logger_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран журнала ошибок
 class ErrorLogScreen extends ConsumerStatefulWidget {
@@ -65,18 +65,18 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                       DropdownMenuItem(value: 'all', child: Text('Все')),
                       DropdownMenuItem(
                           value: 'flutter_error',
-                          child: Text('Flutter ошибки')),
+                          child: Text('Flutter ошибки'),),
                       DropdownMenuItem(
                           value: 'network_error',
-                          child: Text('Сетевые ошибки')),
+                          child: Text('Сетевые ошибки'),),
                       DropdownMenuItem(
                           value: 'validation_error',
-                          child: Text('Ошибки валидации')),
+                          child: Text('Ошибки валидации'),),
                       DropdownMenuItem(
-                          value: 'ui_error', child: Text('UI ошибки')),
+                          value: 'ui_error', child: Text('UI ошибки'),),
                       DropdownMenuItem(
                           value: 'user_error',
-                          child: Text('Пользовательские ошибки')),
+                          child: Text('Пользовательские ошибки'),),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -96,13 +96,13 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                     ),
                     items: const [
                       DropdownMenuItem(
-                          value: 'timestamp', child: Text('По времени')),
+                          value: 'timestamp', child: Text('По времени'),),
                       DropdownMenuItem(
-                          value: 'errorType', child: Text('По типу')),
+                          value: 'errorType', child: Text('По типу'),),
                       DropdownMenuItem(
-                          value: 'screen', child: Text('По экрану')),
+                          value: 'screen', child: Text('По экрану'),),
                       DropdownMenuItem(
-                          value: 'severity', child: Text('По критичности')),
+                          value: 'severity', child: Text('По критичности'),),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -159,7 +159,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Статистика ошибок',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const SizedBox(height: 16),
                 Row(
                   children: [
@@ -204,7 +204,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       );
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -219,10 +219,10 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(title,
-                style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),),
           ],
         ),
       );
@@ -243,11 +243,11 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
             Row(
               children: [
                 Icon(_getErrorIcon(error.errorType),
-                    color: error.severity.color, size: 24),
+                    color: error.severity.color, size: 24,),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(error.errorType,
-                        style: Theme.of(context).textTheme.titleMedium)),
+                        style: Theme.of(context).textTheme.titleMedium,),),
                 _buildSeverityChip(error.severity),
                 if (error.resolved) ...[
                   const SizedBox(width: 8),
@@ -263,7 +263,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.green,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ],
@@ -284,7 +284,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(error.shortDescription,
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: Theme.of(context).textTheme.bodyMedium,),
                   if (error.stackTrace != null) ...[
                     const SizedBox(height: 8),
                     ExpansionTile(
@@ -300,7 +300,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                           child: Text(
                             error.stackTrace!,
                             style: const TextStyle(
-                                fontFamily: 'monospace', fontSize: 12),
+                                fontFamily: 'monospace', fontSize: 12,),
                           ),
                         ),
                       ],
@@ -317,10 +317,10 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
               children: [
                 Expanded(
                     child: _buildMetadataItem(
-                        'Экран', error.screen, Icons.screen_share)),
+                        'Экран', error.screen, Icons.screen_share,),),
                 Expanded(
                     child: _buildMetadataItem(
-                        'Устройство', error.device, Icons.phone_android)),
+                        'Устройство', error.device, Icons.phone_android,),),
               ],
             ),
 
@@ -376,7 +376,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
         child: Text(
           severity.displayName,
           style: TextStyle(
-              fontSize: 12, color: severity.color, fontWeight: FontWeight.bold),
+              fontSize: 12, color: severity.color, fontWeight: FontWeight.bold,),
         ),
       );
 
@@ -390,9 +390,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
               children: [
                 Text(value,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500)),
+                        fontSize: 12, fontWeight: FontWeight.w500,),),
                 Text(label,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),),
               ],
             ),
           ),
@@ -449,7 +449,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -458,16 +458,12 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       switch (_selectedSort) {
         case 'timestamp':
           _errors.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-          break;
         case 'errorType':
           _errors.sort((a, b) => a.errorType.compareTo(b.errorType));
-          break;
         case 'screen':
           _errors.sort((a, b) => a.screen.compareTo(b.screen));
-          break;
         case 'severity':
           _errors.sort((a, b) => b.severity.index.compareTo(a.severity.index));
-          break;
       }
     });
   }
@@ -486,7 +482,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -504,7 +500,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -514,13 +510,13 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Экспорт завершен'), backgroundColor: Colors.green),
+            content: Text('Экспорт завершен'), backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -531,13 +527,13 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Старые ошибки очищены'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка очистки: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка очистки: $e'), backgroundColor: Colors.red,),);
     }
   }
 }

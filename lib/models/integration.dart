@@ -9,15 +9,13 @@ class Integration {
     required this.description,
     required this.type,
     required this.status,
-    this.config = const {},
+    required this.createdAt, required this.updatedAt, this.config = const {},
     this.permissions = const [],
     this.iconUrl,
     this.websiteUrl,
     this.documentationUrl,
     this.isEnabled = false,
     this.isRequired = false,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory Integration.fromDocument(DocumentSnapshot doc) {
@@ -36,7 +34,7 @@ class Integration {
         orElse: () => IntegrationStatus.disconnected,
       ),
       config: Map<String, dynamic>.from(
-          (data['config'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['config'] as Map<dynamic, dynamic>?) ?? {},),
       permissions:
           List<String>.from((data['permissions'] as List<dynamic>?) ?? []),
       iconUrl: data['iconUrl'] as String?,
@@ -211,10 +209,8 @@ class IntegrationSettings {
   const IntegrationSettings({
     required this.integrationId,
     required this.userId,
-    this.settings = const {},
+    required this.createdAt, required this.updatedAt, this.settings = const {},
     this.isEnabled = false,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory IntegrationSettings.fromDocument(DocumentSnapshot doc) {
@@ -224,7 +220,7 @@ class IntegrationSettings {
       integrationId: data['integrationId'] as String? ?? '',
       userId: data['userId'] as String? ?? '',
       settings: Map<String, dynamic>.from(
-          (data['settings'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['settings'] as Map<dynamic, dynamic>?) ?? {},),
       isEnabled: data['isEnabled'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -271,11 +267,8 @@ class IntegrationEvent {
     required this.integrationId,
     required this.userId,
     required this.type,
-    this.data = const {},
-    required this.status,
+    required this.status, required this.createdAt, required this.updatedAt, this.data = const {},
     this.errorMessage,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory IntegrationEvent.fromDocument(DocumentSnapshot doc) {
@@ -290,7 +283,7 @@ class IntegrationEvent {
         orElse: () => IntegrationEventType.other,
       ),
       data: Map<String, dynamic>.from(
-          (data['data'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['data'] as Map<dynamic, dynamic>?) ?? {},),
       status: IntegrationEventStatus.values.firstWhere(
         (s) => s.name == data['status'],
         orElse: () => IntegrationEventStatus.pending,
@@ -357,10 +350,9 @@ class LocationData {
   const LocationData({
     required this.latitude,
     required this.longitude,
-    this.accuracy,
+    required this.timestamp, this.accuracy,
     this.altitude,
     this.speed,
-    required this.timestamp,
   });
 
   factory LocationData.fromMap(Map<String, dynamic> map) => LocationData(

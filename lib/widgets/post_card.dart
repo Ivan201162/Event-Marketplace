@@ -1,26 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/post.dart';
 import 'package:flutter/material.dart';
-
-import '../models/post.dart';
 
 /// Widget for displaying a post card
 class PostCard extends StatelessWidget {
-  final Post post;
-  final VoidCallback? onTap;
-  final VoidCallback? onLike;
-  final VoidCallback? onComment;
-  final VoidCallback? onShare;
-  final bool showActions;
 
   const PostCard({
-    super.key,
-    required this.post,
+    required this.post, super.key,
     this.onTap,
     this.onLike,
     this.onComment,
     this.onShare,
     this.showActions = true,
   });
+  final Post post;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onShare;
+  final bool showActions;
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +37,21 @@ class PostCard extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Post content
-              if (post.text != null && post.text!.isNotEmpty) ...[
-                Text(post.text!, style: const TextStyle(fontSize: 16)),
+              if (post.text.isNotEmpty) ...[
+                Text(post.text, style: const TextStyle(fontSize: 16)),
                 const SizedBox(height: 12),
               ],
 
               // Media content
               if (post.hasMedia) ...[
                 _buildMediaContent(context),
-                const SizedBox(height: 12)
+                const SizedBox(height: 12),
               ],
 
               // Tags
               if (post.tags.isNotEmpty) ...[
                 _buildTags(),
-                const SizedBox(height: 12)
+                const SizedBox(height: 12),
               ],
 
               // Location
@@ -65,7 +63,7 @@ class PostCard extends StatelessWidget {
               // Actions
               if (showActions) ...[
                 _buildActions(context),
-                const SizedBox(height: 8)
+                const SizedBox(height: 8),
               ],
 
               // Stats
@@ -101,7 +99,7 @@ class PostCard extends StatelessWidget {
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text(post.timeAgo,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),),
             ],
           ),
         ),
@@ -136,7 +134,7 @@ class PostCard extends StatelessWidget {
       return Container(
         height: 200,
         decoration: BoxDecoration(
-            color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[200], borderRadius: BorderRadius.circular(8),),
         child: Stack(
           children: [
             Center(
@@ -144,10 +142,10 @@ class PostCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.play_circle_filled,
-                      size: 60, color: Colors.grey[600]),
+                      size: 60, color: Colors.grey[600],),
                   const SizedBox(height: 8),
                   Text('Видео',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16),),
                 ],
               ),
             ),
@@ -161,7 +159,7 @@ class PostCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: const Text('🎥',
-                    style: TextStyle(color: Colors.white, fontSize: 12)),
+                    style: TextStyle(color: Colors.white, fontSize: 12),),
               ),
             ),
           ],
@@ -188,7 +186,7 @@ class PostCard extends StatelessWidget {
             style: TextStyle(
                 color: Colors.blue[700],
                 fontSize: 12,
-                fontWeight: FontWeight.w500),
+                fontWeight: FontWeight.w500,),
           ),
         );
       }).toList(),
@@ -201,7 +199,7 @@ class PostCard extends StatelessWidget {
         Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
         const SizedBox(width: 4),
         Text(post.location!,
-            style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),),
       ],
     );
   }
@@ -253,7 +251,7 @@ class PostCard extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                  color: color, fontSize: 12, fontWeight: FontWeight.w500),
+                  color: color, fontSize: 12, fontWeight: FontWeight.w500,),
             ),
           ],
         ),

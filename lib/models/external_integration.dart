@@ -7,14 +7,11 @@ class ExternalIntegration {
     required this.name,
     required this.description,
     required this.type,
-    this.status = IntegrationStatus.inactive,
-    required this.baseUrl,
+    required this.baseUrl, required this.createdAt, required this.updatedAt, this.status = IntegrationStatus.inactive,
     this.headers = const {},
     this.configuration = const {},
     this.authType = AuthenticationType.none,
     this.credentials = const {},
-    required this.createdAt,
-    required this.updatedAt,
     this.createdBy,
     this.lastSyncAt,
     this.lastError,
@@ -38,7 +35,7 @@ class ExternalIntegration {
       ),
       baseUrl: data['baseUrl'] as String? ?? '',
       headers: Map<String, String>.from(
-          (data['headers'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['headers'] as Map<dynamic, dynamic>?) ?? {},),
       configuration: Map<String, dynamic>.from(
         (data['configuration'] as Map<dynamic, dynamic>?) ?? {},
       ),
@@ -47,7 +44,7 @@ class ExternalIntegration {
         orElse: () => AuthenticationType.none,
       ),
       credentials: Map<String, String>.from(
-          (data['credentials'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['credentials'] as Map<dynamic, dynamic>?) ?? {},),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       createdBy: data['createdBy'] as String?,
@@ -56,7 +53,7 @@ class ExternalIntegration {
           : null,
       lastError: data['lastError'] as String?,
       metadata: Map<String, dynamic>.from(
-          (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
     );
   }
 
@@ -76,7 +73,7 @@ class ExternalIntegration {
         ),
         baseUrl: data['baseUrl'] as String? ?? '',
         headers: Map<String, String>.from(
-            (data['headers'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['headers'] as Map<dynamic, dynamic>?) ?? {},),
         configuration: Map<String, dynamic>.from(
           (data['configuration'] as Map<dynamic, dynamic>?) ?? {},
         ),
@@ -85,7 +82,7 @@ class ExternalIntegration {
           orElse: () => AuthenticationType.none,
         ),
         credentials: Map<String, String>.from(
-            (data['credentials'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['credentials'] as Map<dynamic, dynamic>?) ?? {},),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
         createdBy: data['createdBy'] as String?,
@@ -94,7 +91,7 @@ class ExternalIntegration {
             : null,
         lastError: data['lastError'] as String?,
         metadata: Map<String, dynamic>.from(
-            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
       );
   final String id;
   final String name;
@@ -236,12 +233,10 @@ class DataSync {
     required this.id,
     required this.integrationId,
     required this.direction,
-    this.status = SyncStatus.pending,
-    required this.dataType,
+    required this.dataType, required this.startedAt, this.status = SyncStatus.pending,
     this.totalRecords = 0,
     this.syncedRecords = 0,
     this.failedRecords = 0,
-    required this.startedAt,
     this.completedAt,
     this.errorMessage,
     this.metadata = const {},
@@ -271,7 +266,7 @@ class DataSync {
           : null,
       errorMessage: data['errorMessage'] as String?,
       metadata: Map<String, dynamic>.from(
-          (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
     );
   }
 
@@ -297,7 +292,7 @@ class DataSync {
             : null,
         errorMessage: data['errorMessage'] as String?,
         metadata: Map<String, dynamic>.from(
-            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
       );
   final String id;
   final String integrationId;

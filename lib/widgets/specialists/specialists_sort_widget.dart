@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет сортировки специалистов
 class SpecialistsSortWidget extends StatelessWidget {
   const SpecialistsSortWidget(
-      {super.key, required this.selectedSort, required this.onSortChanged});
+      {required this.selectedSort, required this.onSortChanged, super.key,});
 
   final String selectedSort;
   final ValueChanged<String> onSortChanged;

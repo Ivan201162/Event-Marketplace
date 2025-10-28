@@ -2,33 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Расширенная модель специалиста с рейтингами и категориями
 class SpecialistEnhanced {
-  final String id;
-  final String name;
-  final String specialization;
-  final String city;
-  final String region;
-  final String? avatarUrl;
-  final String? bio;
-  final double rating;
-  final int totalOrders;
-  final int successfulOrders;
-  final List<String> categories;
-  final List<String> languages;
-  final Map<String, dynamic> pricing;
-  final List<String> availableDates;
-  final List<String> imageUrls;
-  final bool isVerified;
-  final bool isTopWeek;
-  final bool isNewcomer;
-  final DateTime createdAt;
-  final DateTime lastActive;
-  final Map<String, dynamic> location;
-  final Map<String, dynamic> socialLinks;
-  final List<String> skills;
-  final String experience;
-  final String education;
-  final List<Review> reviews;
-  final Map<String, dynamic> stats;
 
   const SpecialistEnhanced({
     required this.id,
@@ -36,32 +9,12 @@ class SpecialistEnhanced {
     required this.specialization,
     required this.city,
     required this.region,
-    this.avatarUrl,
+    required this.rating, required this.totalOrders, required this.successfulOrders, required this.categories, required this.languages, required this.pricing, required this.availableDates, required this.imageUrls, required this.isVerified, required this.isTopWeek, required this.isNewcomer, required this.createdAt, required this.lastActive, required this.location, required this.socialLinks, required this.skills, required this.experience, required this.education, required this.reviews, required this.stats, this.avatarUrl,
     this.bio,
-    required this.rating,
-    required this.totalOrders,
-    required this.successfulOrders,
-    required this.categories,
-    required this.languages,
-    required this.pricing,
-    required this.availableDates,
-    required this.imageUrls,
-    required this.isVerified,
-    required this.isTopWeek,
-    required this.isNewcomer,
-    required this.createdAt,
-    required this.lastActive,
-    required this.location,
-    required this.socialLinks,
-    required this.skills,
-    required this.experience,
-    required this.education,
-    required this.reviews,
-    required this.stats,
   });
 
   factory SpecialistEnhanced.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SpecialistEnhanced(
       id: doc.id,
       name: data['name'] ?? '',
@@ -94,6 +47,33 @@ class SpecialistEnhanced {
       stats: Map<String, dynamic>.from(data['stats'] ?? {}),
     );
   }
+  final String id;
+  final String name;
+  final String specialization;
+  final String city;
+  final String region;
+  final String? avatarUrl;
+  final String? bio;
+  final double rating;
+  final int totalOrders;
+  final int successfulOrders;
+  final List<String> categories;
+  final List<String> languages;
+  final Map<String, dynamic> pricing;
+  final List<String> availableDates;
+  final List<String> imageUrls;
+  final bool isVerified;
+  final bool isTopWeek;
+  final bool isNewcomer;
+  final DateTime createdAt;
+  final DateTime lastActive;
+  final Map<String, dynamic> location;
+  final Map<String, dynamic> socialLinks;
+  final List<String> skills;
+  final String experience;
+  final String education;
+  final List<Review> reviews;
+  final Map<String, dynamic> stats;
 
   Map<String, dynamic> toFirestore() {
     return {
@@ -128,23 +108,23 @@ class SpecialistEnhanced {
 
   /// Получить успешность в процентах
   double get successRate {
-    if (totalOrders == 0) return 0.0;
+    if (totalOrders == 0) return 0;
     return (successfulOrders / totalOrders) * 100;
   }
 
   /// Получить минимальную цену
   double get minPrice {
-    if (pricing.isEmpty) return 0.0;
+    if (pricing.isEmpty) return 0;
     final prices = pricing.values.whereType<double>().toList();
-    if (prices.isEmpty) return 0.0;
+    if (prices.isEmpty) return 0;
     return prices.reduce((a, b) => a < b ? a : b);
   }
 
   /// Получить максимальную цену
   double get maxPrice {
-    if (pricing.isEmpty) return 0.0;
+    if (pricing.isEmpty) return 0;
     final prices = pricing.values.whereType<double>().toList();
-    if (prices.isEmpty) return 0.0;
+    if (prices.isEmpty) return 0;
     return prices.reduce((a, b) => a > b ? a : b);
   }
 
@@ -233,14 +213,6 @@ class SpecialistEnhanced {
 
 /// Модель отзыва
 class Review {
-  final String id;
-  final String userId;
-  final String userName;
-  final String userAvatar;
-  final double rating;
-  final String comment;
-  final DateTime createdAt;
-  final List<String> images;
 
   const Review({
     required this.id,
@@ -265,6 +237,14 @@ class Review {
       images: List<String>.from(data['images'] ?? []),
     );
   }
+  final String id;
+  final String userId;
+  final String userName;
+  final String userAvatar;
+  final double rating;
+  final String comment;
+  final DateTime createdAt;
+  final List<String> images;
 
   Map<String, dynamic> toMap() {
     return {
@@ -318,21 +298,6 @@ enum SpecialistCategory {
 
 /// Фильтры поиска
 class SearchFilters {
-  final String? city;
-  final String? region;
-  final List<String> categories;
-  final double? minRating;
-  final double? maxRating;
-  final double? minPrice;
-  final double? maxPrice;
-  final List<String> availableDates;
-  final double? radiusKm;
-  final List<String> languages;
-  final bool? isVerified;
-  final bool? isTopWeek;
-  final bool? isNewcomer;
-  final String? experience;
-  final String? sortBy;
 
   const SearchFilters({
     this.city,
@@ -351,6 +316,21 @@ class SearchFilters {
     this.experience,
     this.sortBy,
   });
+  final String? city;
+  final String? region;
+  final List<String> categories;
+  final double? minRating;
+  final double? maxRating;
+  final double? minPrice;
+  final double? maxPrice;
+  final List<String> availableDates;
+  final double? radiusKm;
+  final List<String> languages;
+  final bool? isVerified;
+  final bool? isTopWeek;
+  final bool? isNewcomer;
+  final String? experience;
+  final String? sortBy;
 
   SearchFilters copyWith({
     String? city,

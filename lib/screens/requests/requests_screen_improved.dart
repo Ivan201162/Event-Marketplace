@@ -60,7 +60,7 @@ class RequestsScreenImproved extends ConsumerWidget {
       'Видеосъемка',
       'Диджей',
       'Ведущий',
-      'Декор'
+      'Декор',
     ];
     return categories[index % categories.length];
   }
@@ -72,14 +72,6 @@ class RequestsScreenImproved extends ConsumerWidget {
 }
 
 class _RequestCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final String budget;
-  final String deadline;
-  final String category;
-  final String status;
-  final VoidCallback onTap;
-  final VoidCallback onApply;
 
   const _RequestCard({
     required this.title,
@@ -91,6 +83,14 @@ class _RequestCard extends StatelessWidget {
     required this.onTap,
     required this.onApply,
   });
+  final String title;
+  final String description;
+  final String budget;
+  final String deadline;
+  final String category;
+  final String status;
+  final VoidCallback onTap;
+  final VoidCallback onApply;
 
   @override
   Widget build(BuildContext context) {

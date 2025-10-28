@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/services/share_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/booking.dart';
-import '../models/event.dart';
-import '../models/user.dart';
-import '../services/share_service.dart';
 
 /// Виджет для шаринга контента
 class ShareWidget extends ConsumerWidget {
@@ -89,21 +88,21 @@ class ShareWidget extends ConsumerWidget {
             await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
         success = await ShareService.shareProfile(user!,
-            customMessage: customMessage);
+            customMessage: customMessage,);
       } else if (booking != null) {
         success = await ShareService.shareBooking(booking!,
-            customMessage: customMessage);
+            customMessage: customMessage,);
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
         success = await ShareService.shareFile(filePath!,
-            text: customMessage, subject: title);
+            text: customMessage, subject: title,);
       } else if (filePaths != null) {
         success = await ShareService.shareFiles(filePaths!,
-            text: customMessage, subject: title);
+            text: customMessage, subject: title,);
       } else if (url != null) {
         success = await ShareService.shareLink(url!,
-            title: title, description: customMessage);
+            title: title, description: customMessage,);
       }
 
       if (success) {
@@ -111,7 +110,7 @@ class ShareWidget extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Контент успешно поделен'),
-                backgroundColor: Colors.green),
+                backgroundColor: Colors.green,),
           );
         }
         onSuccess?.call();
@@ -133,7 +132,7 @@ class ShareWidget extends ConsumerWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
       onError?.call();
     }
@@ -143,8 +142,7 @@ class ShareWidget extends ConsumerWidget {
 /// Виджет для шаринга события
 class EventShareWidget extends StatelessWidget {
   const EventShareWidget({
-    super.key,
-    required this.event,
+    required this.event, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -175,8 +173,7 @@ class EventShareWidget extends StatelessWidget {
 /// Виджет для шаринга профиля
 class ProfileShareWidget extends StatelessWidget {
   const ProfileShareWidget({
-    super.key,
-    required this.user,
+    required this.user, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -207,8 +204,7 @@ class ProfileShareWidget extends StatelessWidget {
 /// Виджет для шаринга бронирования
 class BookingShareWidget extends StatelessWidget {
   const BookingShareWidget({
-    super.key,
-    required this.booking,
+    required this.booking, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -239,8 +235,7 @@ class BookingShareWidget extends StatelessWidget {
 /// Виджет для шаринга текста
 class TextShareWidget extends StatelessWidget {
   const TextShareWidget({
-    super.key,
-    required this.text,
+    required this.text, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -268,8 +263,7 @@ class TextShareWidget extends StatelessWidget {
 /// Виджет для шаринга ссылки
 class LinkShareWidget extends StatelessWidget {
   const LinkShareWidget({
-    super.key,
-    required this.url,
+    required this.url, super.key,
     this.title,
     this.description,
     this.icon,
@@ -330,7 +324,7 @@ class ShareDialog extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('ОК')),
+              child: const Text('ОК'),),
         ],
       );
     }
@@ -378,7 +372,7 @@ class ShareDialog extends StatelessWidget {
       actions: [
         TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена')),
+            child: const Text('Отмена'),),
       ],
     );
   }
@@ -409,21 +403,21 @@ class ShareDialog extends StatelessWidget {
             await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
         success = await ShareService.shareProfile(user!,
-            customMessage: customMessage);
+            customMessage: customMessage,);
       } else if (booking != null) {
         success = await ShareService.shareBooking(booking!,
-            customMessage: customMessage);
+            customMessage: customMessage,);
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
         success = await ShareService.shareFile(filePath!,
-            text: customMessage, subject: title);
+            text: customMessage, subject: title,);
       } else if (filePaths != null) {
         success = await ShareService.shareFiles(filePaths!,
-            text: customMessage, subject: title);
+            text: customMessage, subject: title,);
       } else if (url != null) {
         success = await ShareService.shareLink(url!,
-            title: title, description: customMessage);
+            title: title, description: customMessage,);
       }
 
       if (context.mounted) {
@@ -431,7 +425,7 @@ class ShareDialog extends StatelessWidget {
           SnackBar(
             content: Text(success
                 ? 'Контент успешно поделен'
-                : 'Ошибка при попытке поделиться'),
+                : 'Ошибка при попытке поделиться',),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
         );
@@ -443,7 +437,7 @@ class ShareDialog extends StatelessWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -559,6 +553,6 @@ class ShareUtils {
 
   /// Быстрый шаринг ссылки
   static Future<bool> quickShareLink(String url,
-          {String? title, String? description}) async =>
+          {String? title, String? description,}) async =>
       ShareService.shareLink(url, title: title, description: description);
 }

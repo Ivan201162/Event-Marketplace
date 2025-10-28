@@ -85,7 +85,7 @@ class SignatureService {
         signatureType = 'digital';
       } else {
         throw Exception(
-            'Необходимо предоставить либо подпись от руки, либо цифровую подпись');
+            'Необходимо предоставить либо подпись от руки, либо цифровую подпись',);
       }
 
       return {
@@ -223,7 +223,7 @@ class _SignaturePadState extends State<SignaturePad> {
 /// Художник для отрисовки подписи
 class SignaturePainter extends CustomPainter {
   const SignaturePainter(
-      {required this.points, required this.penColor, required this.penWidth});
+      {required this.points, required this.penColor, required this.penWidth,});
 
   final List<Offset> points;
   final Color penColor;

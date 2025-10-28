@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/models/enhanced_order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../models/enhanced_order.dart';
 
 /// Виджет карточки заявки
 class OrderCardWidget extends StatelessWidget {
   const OrderCardWidget({
-    super.key,
-    required this.order,
+    required this.order, super.key,
     this.onTap,
     this.onEdit,
     this.onCancel,
@@ -37,7 +35,7 @@ class OrderCardWidget extends StatelessWidget {
                       child: Text(
                         order.title,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     _buildStatusChip(),
@@ -100,7 +98,7 @@ class OrderCardWidget extends StatelessWidget {
                 // Действия
                 if (_shouldShowActions()) ...[
                   const SizedBox(height: 12),
-                  _buildActionButtons()
+                  _buildActionButtons(),
                 ],
               ],
             ),
@@ -116,23 +114,18 @@ class OrderCardWidget extends StatelessWidget {
       case OrderStatus.pending:
         color = Colors.orange;
         text = 'Ожидает';
-        break;
       case OrderStatus.accepted:
         color = Colors.blue;
         text = 'Принята';
-        break;
       case OrderStatus.inProgress:
         color = Colors.blue;
         text = 'В работе';
-        break;
       case OrderStatus.completed:
         color = Colors.green;
         text = 'Завершена';
-        break;
       case OrderStatus.cancelled:
         color = Colors.red;
         text = 'Отменена';
-        break;
     }
 
     return Container(
@@ -152,7 +145,7 @@ class OrderCardWidget extends StatelessWidget {
   Widget _buildDetailChip(
           {required IconData icon,
           required String text,
-          required Color color}) =>
+          required Color color,}) =>
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
@@ -167,7 +160,7 @@ class OrderCardWidget extends StatelessWidget {
             Text(
               text,
               style: TextStyle(
-                  color: color, fontSize: 12, fontWeight: FontWeight.w500),
+                  color: color, fontSize: 12, fontWeight: FontWeight.w500,),
             ),
           ],
         ),
@@ -181,19 +174,15 @@ class OrderCardWidget extends StatelessWidget {
       case OrderPriority.low:
         color = Colors.green;
         text = 'Низкий';
-        break;
       case OrderPriority.medium:
         color = Colors.orange;
         text = 'Средний';
-        break;
       case OrderPriority.high:
         color = Colors.red;
         text = 'Высокий';
-        break;
       case OrderPriority.urgent:
         color = Colors.purple;
         text = 'Срочный';
-        break;
     }
 
     return Container(
@@ -219,7 +208,7 @@ class OrderCardWidget extends StatelessWidget {
         child: Text(
           order.category ?? 'Не указана',
           style: const TextStyle(
-              color: Colors.blue, fontSize: 10, fontWeight: FontWeight.w500),
+              color: Colors.blue, fontSize: 10, fontWeight: FontWeight.w500,),
         ),
       );
 

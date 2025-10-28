@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/price_range.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/real_specialists_providers.dart';
+import 'package:event_marketplace_app/services/mock_data_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/common_types.dart';
-import '../models/price_range.dart';
-import '../models/specialist.dart';
-import '../services/mock_data_service.dart';
-import 'real_specialists_providers.dart';
-import '../core/feature_flags.dart';
 
 /// Категории специалистов
 enum SpecialistCategory {
@@ -97,7 +96,7 @@ class SpecialistFilters {
 
   @override
   int get hashCode => Object.hash(minPrice, maxPrice, minRating, maxRating,
-      city, availableDate, searchQuery);
+      city, availableDate, searchQuery,);
 }
 
 /// Провайдер фильтров для специалистов
@@ -111,7 +110,7 @@ final specialistsProvider = FutureProvider.family<List<Specialist>, String>(
     if (FeatureFlags.useRealSpecialists) {
       return ref.read(
           RealSpecialistsProviders.specialistsByCategoryProvider(category)
-              .future);
+              .future,);
     }
     return MockDataService.getSpecialistsByCategory(category);
   },
@@ -120,7 +119,7 @@ final specialistsProvider = FutureProvider.family<List<Specialist>, String>(
 /// Провайдер для пагинированной загрузки специалистов (мигрирован с StateNotifierProvider)
 final paginatedSpecialistsProvider = NotifierProvider.family<
     PaginatedSpecialistsNotifier, AsyncValue<List<Specialist>>, String>(
-  () => PaginatedSpecialistsNotifier(),
+  PaginatedSpecialistsNotifier.new,
 );
 
 /// Провайдер для получения уникальных городов специалистов по категории
@@ -162,7 +161,7 @@ final searchSpecialistsProvider =
   (ref, query) async {
     if (FeatureFlags.useRealSpecialists) {
       return ref.read(
-          RealSpecialistsProviders.searchSpecialistsProvider(query).future);
+          RealSpecialistsProviders.searchSpecialistsProvider(query).future,);
     }
     return MockDataService.searchSpecialists(query);
   },
@@ -478,35 +477,35 @@ PriceRange _getPriceRangeForCategory(SpecialistCategory category, int index) {
     case SpecialistCategory.host:
       final minPrice = 10000 + (index % 10) * 5000;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 20000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 20000).toDouble(),);
     case SpecialistCategory.dj:
       final minPrice = 8000 + (index % 8) * 3000;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 15000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 15000).toDouble(),);
     case SpecialistCategory.photographer:
       final minPrice = 15000 + (index % 12) * 4000;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 25000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 25000).toDouble(),);
     case SpecialistCategory.animator:
       final minPrice = 5000 + (index % 6) * 2000;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 10000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 10000).toDouble(),);
     case SpecialistCategory.videographer:
       final minPrice = 20000 + (index % 8) * 5000;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 30000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 30000).toDouble(),);
     case SpecialistCategory.decorator:
       final minPrice = 12000 + (index % 5) * 4000;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 18000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 18000).toDouble(),);
     case SpecialistCategory.musician:
       final minPrice = 6000 + (index % 7) * 2000;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 12000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 12000).toDouble(),);
     case SpecialistCategory.makeup:
       final minPrice = 3000 + (index % 6) * 1500;
       return PriceRange(
-          min: minPrice.toDouble(), max: (minPrice + 8000).toDouble());
+          min: minPrice.toDouble(), max: (minPrice + 8000).toDouble(),);
   }
 }
 

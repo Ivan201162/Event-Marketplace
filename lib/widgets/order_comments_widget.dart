@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/models/enhanced_order.dart';
 import 'package:flutter/material.dart';
-import '../models/enhanced_order.dart';
 
 /// Виджет комментариев к заявке
 class OrderCommentsWidget extends StatefulWidget {
   const OrderCommentsWidget({
-    super.key,
-    required this.comments,
-    required this.currentUserId,
+    required this.comments, required this.currentUserId, super.key,
     this.onAddComment,
     this.onAddAttachment,
   });
@@ -39,7 +37,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
               const Icon(Icons.comment, color: Colors.blue),
               const SizedBox(width: 8),
               const Text('Комментарии',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const Spacer(),
               Text(
                 '${widget.comments.length} комментариев',
@@ -98,7 +96,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                     color:
-                        isCurrentUser ? Colors.blue[200]! : Colors.grey[200]!),
+                        isCurrentUser ? Colors.blue[200]! : Colors.grey[200]!,),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +118,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                              horizontal: 6, vertical: 2,),
                           decoration: BoxDecoration(
                             color: Colors.orange[100],
                             borderRadius: BorderRadius.circular(8),
@@ -148,7 +146,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                   // Текст комментария
                   Text(comment.text,
                       style:
-                          const TextStyle(fontSize: 14, color: Colors.black87)),
+                          const TextStyle(fontSize: 14, color: Colors.black87),),
 
                   // Вложения
                   if (comment.attachments.isNotEmpty) ...[
@@ -185,12 +183,12 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(attachment.type.icon,
-                          style: const TextStyle(fontSize: 12)),
+                          style: const TextStyle(fontSize: 12),),
                       const SizedBox(width: 4),
                       Text(
                         attachment.name,
                         style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                            fontSize: 12, fontWeight: FontWeight.w500,),
                       ),
                     ],
                   ),
@@ -305,7 +303,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK')),
+              child: const Text('OK'),),
         ],
       ),
     );

@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/referral.dart';
+import 'package:event_marketplace_app/services/referral_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-
-import '../models/referral.dart';
-import '../services/referral_service.dart';
 
 /// Экран партнёрской программы
 class PartnerProgramScreen extends ConsumerStatefulWidget {
@@ -40,7 +39,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _loadData();
   }
@@ -119,7 +118,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
                   children: [
                     _buildOverviewTab(),
                     _buildReferralsTab(),
-                    _buildBonusesTab()
+                    _buildBonusesTab(),
                   ],
                 ),
               ),
@@ -170,7 +169,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
           gradient: LinearGradient(
             colors: [
               status.color.withValues(alpha: 0.1),
-              status.color.withValues(alpha: 0.05)
+              status.color.withValues(alpha: 0.05),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -279,7 +278,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(const SnackBar(
-                            content: Text('Ссылка скопирована')));
+                            content: Text('Ссылка скопирована'),),);
                       },
                     ),
                   ],
@@ -413,7 +412,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
       );
 
   Widget _buildStatItem(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -524,7 +523,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
                   '+${referral.bonus}',
                   style: TextStyle(
                       color: Colors.green.shade600,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
                 Text('бонусов', style: Theme.of(context).textTheme.bodySmall),
               ],
@@ -542,7 +541,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.card_giftcard_outlined,
-                size: 64, color: Colors.grey.shade400),
+                size: 64, color: Colors.grey.shade400,),
             const SizedBox(height: 16),
             Text(
               'Пока нет бонусов',
@@ -581,7 +580,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
               ),
             ),
             title: Text(bonus.description,
-                style: const TextStyle(fontWeight: FontWeight.w600)),
+                style: const TextStyle(fontWeight: FontWeight.w600),),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -637,7 +636,7 @@ class _PartnerProgramScreenState extends ConsumerState<PartnerProgramScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

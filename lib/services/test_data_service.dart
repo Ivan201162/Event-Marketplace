@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/utils/storage_guard.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/storage_guard.dart';
 
 /// Сервис для создания и управления тестовыми данными в Firestore
 class TestDataService {
@@ -25,7 +24,7 @@ class TestDataService {
       'subcategories': [
         'Свадебный ведущий',
         'Корпоративный ведущий',
-        'Детский ведущий'
+        'Детский ведущий',
       ],
       'isActive': true,
       'sortOrder': 1,
@@ -40,7 +39,7 @@ class TestDataService {
       'subcategories': [
         'Свадебная фотосъемка',
         'Портретная фотосъемка',
-        'Студийная фотосъемка'
+        'Студийная фотосъемка',
       ],
       'isActive': true,
       'sortOrder': 2,
@@ -55,7 +54,7 @@ class TestDataService {
       'subcategories': [
         'Свадебная флористика',
         'Корпоративная флористика',
-        'Праздничная флористика'
+        'Праздничная флористика',
       ],
       'isActive': true,
       'sortOrder': 3,
@@ -70,7 +69,7 @@ class TestDataService {
       'subcategories': [
         'Свадебная музыка',
         'Корпоративная музыка',
-        'Детская музыка'
+        'Детская музыка',
       ],
       'isActive': true,
       'sortOrder': 4,
@@ -85,7 +84,7 @@ class TestDataService {
       'subcategories': [
         'Свадебное оформление',
         'Корпоративное оформление',
-        'Детское оформление'
+        'Детское оформление',
       ],
       'isActive': true,
       'sortOrder': 5,
@@ -117,7 +116,7 @@ class TestDataService {
         'Неограниченные заявки',
         'Приоритет в поиске',
         'Расширенная аналитика',
-        'Премиум поддержка'
+        'Премиум поддержка',
       ],
       'isActive': true,
       'isPopular': true,
@@ -134,7 +133,7 @@ class TestDataService {
         'Все возможности Профессионального',
         'Персональный менеджер',
         'VIP поддержка',
-        'Эксклюзивные возможности'
+        'Эксклюзивные возможности',
       ],
       'isActive': true,
       'isPopular': false,
@@ -1183,16 +1182,16 @@ class TestDataService {
 
       // Заполняем данные параллельно где возможно
       await Future.wait(
-          [_populateSpecialists(), _populateChats(), _populateBookings()]);
+          [_populateSpecialists(), _populateChats(), _populateBookings()],);
 
       await Future.wait(
-          [_populatePosts(), _populateIdeas(), _populateNotifications()]);
+          [_populatePosts(), _populateIdeas(), _populateNotifications()],);
 
       await Future.wait([createTestPromotions(), _populateReviews()]);
 
       stopwatch.stop();
       debugPrint(
-          '✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms');
+          '✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms',);
     } on FirebaseException catch (e) {
       debugPrint('❌ Ошибка Firebase при заполнении данных: ${e.message}');
       rethrow;
@@ -1791,7 +1790,7 @@ class TestDataService {
 
             totalDeleted += snapshot.docs.length;
             debugPrint(
-                '  ✅ Удалено ${snapshot.docs.length} документов из $collection');
+                '  ✅ Удалено ${snapshot.docs.length} документов из $collection',);
           }
         } on FirebaseException catch (e) {
           debugPrint('  ⚠️ Ошибка при удалении из $collection: ${e.message}');
@@ -1843,7 +1842,7 @@ class TestDataService {
           stats[collection] = snapshot.docs.length;
         } on FirebaseException catch (e) {
           debugPrint(
-              '⚠️ Ошибка при получении статистики для $collection: ${e.message}');
+              '⚠️ Ошибка при получении статистики для $collection: ${e.message}',);
           stats[collection] = 0;
         }
       }
@@ -1873,7 +1872,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 5)),
         'photos': [
           'https://picsum.photos/400?random=201',
-          'https://picsum.photos/400?random=202'
+          'https://picsum.photos/400?random=202',
         ],
         'likes': 12,
         'responses': [
@@ -1948,7 +1947,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 20)),
         'photos': [
           'https://picsum.photos/400?random=204',
-          'https://picsum.photos/400?random=205'
+          'https://picsum.photos/400?random=205',
         ],
         'likes': 3,
         'responses': <String>[],
@@ -1999,7 +1998,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 3)),
         'photos': [
           'https://picsum.photos/400?random=207',
-          'https://picsum.photos/400?random=208'
+          'https://picsum.photos/400?random=208',
         ],
         'likes': 18,
         'responses': [
@@ -2047,7 +2046,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 12)),
         'photos': [
           'https://picsum.photos/400?random=210',
-          'https://picsum.photos/400?random=211'
+          'https://picsum.photos/400?random=211',
         ],
         'likes': 22,
         'responses': [
@@ -2401,7 +2400,7 @@ class TestDataService {
       });
     }
     debugPrint(
-        'Добавлено ${monetizationUsers.length} пользователей с монетизацией');
+        'Добавлено ${monetizationUsers.length} пользователей с монетизацией',);
   }
 
   /// Получить тестовые промоакции
@@ -2802,7 +2801,7 @@ class TestDataService {
   Future<void> createTestCategories() async {
     try {
       final batch = _firestore.batch();
-      int count = 0;
+      var count = 0;
 
       for (final category in _testCategories) {
         final docRef = _firestore.collection('categories').doc(category['id']);
@@ -2833,7 +2832,7 @@ class TestDataService {
   Future<void> createTestTariffs() async {
     try {
       final batch = _firestore.batch();
-      int count = 0;
+      var count = 0;
 
       for (final tariff in _testTariffs) {
         final docRef = _firestore.collection('tariffs').doc(tariff['id']);
@@ -2864,7 +2863,7 @@ class TestDataService {
   Future<void> createTestPosts() async {
     try {
       final batch = _firestore.batch();
-      int count = 0;
+      var count = 0;
 
       for (final post in _testPosts) {
         final docRef = _firestore.collection('posts').doc(post['id']);

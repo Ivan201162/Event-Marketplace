@@ -1,17 +1,11 @@
+import 'package:event_marketplace_app/services/bank_integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/bank_integration_service.dart';
 
 /// Виджет для выбора банка и оплаты
 class BankPaymentWidget extends ConsumerStatefulWidget {
   const BankPaymentWidget({
-    super.key,
-    required this.amount,
-    required this.currency,
-    required this.orderId,
-    required this.description,
-    required this.customerEmail,
-    required this.customerPhone,
+    required this.amount, required this.currency, required this.orderId, required this.description, required this.customerEmail, required this.customerPhone, super.key,
     this.onPaymentInitiated,
     this.onPaymentCompleted,
   });
@@ -86,7 +80,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                 Text(
                   '${widget.amount.toStringAsFixed(2)} ${widget.currency}',
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18, fontWeight: FontWeight.bold,),
                 ),
               ],
             ),
@@ -110,7 +104,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                   Text(
                     '${_bankFee!.totalFee.toStringAsFixed(2)} ${_bankFee!.currency}',
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w500),
+                        fontSize: 14, fontWeight: FontWeight.w500,),
                   ),
                 ],
               ),
@@ -121,7 +115,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
 
           // Выбор банка
           const Text('Выберите банк:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 12),
 
           ..._bankService.getSupportedBanks().map(_buildBankOption),
@@ -130,14 +124,14 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
 
           // Выбор способа оплаты
           const Text('Способ оплаты:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 12),
 
           _buildPaymentMethodOption(
-              'card', 'Банковская карта', Icons.credit_card),
+              'card', 'Банковская карта', Icons.credit_card,),
           _buildPaymentMethodOption('qr', 'QR-код', Icons.qr_code),
           _buildPaymentMethodOption(
-              'sbp', 'Система быстрых платежей', Icons.payment),
+              'sbp', 'Система быстрых платежей', Icons.payment,),
 
           const SizedBox(height: 24),
 
@@ -153,7 +147,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),),
               ),
               child: _isLoading
                   ? const Row(
@@ -196,7 +190,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                       const Text(
                         'Платеж инициализирован',
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
+                            fontWeight: FontWeight.w600, fontSize: 16,),
                       ),
                     ],
                   ),
@@ -260,7 +254,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                     Text(
                       bank.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 16),
+                          fontWeight: FontWeight.w500, fontSize: 16,),
                     ),
                     Text(
                       'Поддерживаемые методы: ${bank.supportedMethods.join(', ')}',
@@ -304,7 +298,7 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
             children: [
               Icon(icon,
                   size: 24,
-                  color: isSelected ? Colors.blue[600] : Colors.grey[600]),
+                  color: isSelected ? Colors.blue[600] : Colors.grey[600],),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -384,13 +378,13 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showInfo(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.blue));
+        SnackBar(content: Text(message), backgroundColor: Colors.blue),);
   }
 }

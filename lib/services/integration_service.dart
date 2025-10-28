@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/external_integration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
-
-import '../models/external_integration.dart';
 
 /// Сервис интеграций с внешними сервисами
 class IntegrationService {
@@ -185,14 +184,13 @@ class IntegrationService {
 
   /// Добавить аутентификацию в заголовки
   void _addAuthentication(
-      Map<String, String> headers, ExternalIntegration integration) {
+      Map<String, String> headers, ExternalIntegration integration,) {
     switch (integration.authType) {
       case AuthenticationType.apiKey:
         final apiKey = integration.credentials['apiKey'];
         if (apiKey != null) {
           headers['X-API-Key'] = apiKey;
         }
-        break;
       case AuthenticationType.basic:
         final username = integration.credentials['username'];
         final password = integration.credentials['password'];
@@ -200,25 +198,21 @@ class IntegrationService {
           final credentials = base64.encode(utf8.encode('$username:$password'));
           headers['Authorization'] = 'Basic $credentials';
         }
-        break;
       case AuthenticationType.bearer:
         final token = integration.credentials['token'];
         if (token != null) {
           headers['Authorization'] = 'Bearer $token';
         }
-        break;
       case AuthenticationType.oauth2:
         final token = integration.credentials['accessToken'];
         if (token != null) {
           headers['Authorization'] = 'Bearer $token';
         }
-        break;
       case AuthenticationType.custom:
         // Пользовательская аутентификация
         for (final entry in integration.credentials.entries) {
           headers[entry.key] = entry.value;
         }
-        break;
       case AuthenticationType.none:
         // Без аутентификации
         break;
@@ -283,40 +277,29 @@ class IntegrationService {
       switch (integration.type) {
         case IntegrationType.api:
           await _syncApiData(integration);
-          break;
         case IntegrationType.webhook:
           // Webhook не требует активной синхронизации
           break;
         case IntegrationType.sftp:
           await _syncSftpData(integration);
-          break;
         case IntegrationType.email:
           await _syncEmailData(integration);
-          break;
         case IntegrationType.sms:
           await _syncSmsData(integration);
-          break;
         case IntegrationType.payment:
           await _syncPaymentData(integration);
-          break;
         case IntegrationType.calendar:
           await _syncCalendarData(integration);
-          break;
         case IntegrationType.social:
           await _syncSocialData(integration);
-          break;
         case IntegrationType.analytics:
           await _syncAnalyticsData(integration);
-          break;
         case IntegrationType.crm:
           await _syncCrmData(integration);
-          break;
         case IntegrationType.erp:
           await _syncErpData(integration);
-          break;
         case IntegrationType.other:
           await _syncOtherData(integration);
-          break;
       }
 
       if (kDebugMode) {
@@ -363,18 +346,14 @@ class IntegrationService {
         switch (method.toUpperCase()) {
           case 'GET':
             response = await http.get(fullUrl, headers: headers);
-            break;
           case 'POST':
             final body = endpointData['body'] as String?;
             response = await http.post(fullUrl, headers: headers, body: body);
-            break;
           case 'PUT':
             final body = endpointData['body'] as String?;
             response = await http.put(fullUrl, headers: headers, body: body);
-            break;
           case 'DELETE':
             response = await http.delete(fullUrl, headers: headers);
-            break;
           default:
             throw Exception('Неподдерживаемый HTTP метод: $method');
         }
@@ -495,13 +474,10 @@ class IntegrationService {
       switch (method.toUpperCase()) {
         case 'POST':
           response = await http.post(fullUrl, headers: headers, body: body);
-          break;
         case 'PUT':
           response = await http.put(fullUrl, headers: headers, body: body);
-          break;
         case 'PATCH':
           response = await http.patch(fullUrl, headers: headers, body: body);
-          break;
         default:
           throw Exception('Неподдерживаемый HTTP метод для отправки: $method');
       }
@@ -721,7 +697,7 @@ class IntegrationService {
 
   /// Получить статистику синхронизации
   Future<List<DataSync>> getSyncHistory(String integrationId,
-      {int limit = 50}) async {
+      {int limit = 50,}) async {
     try {
       final snapshot = await _firestore
           .collection('dataSyncs')
@@ -919,7 +895,7 @@ class IntegrationService {
 
   /// Получить адрес по координатам
   Future<String> getAddressFromCoordinates(
-      double latitude, double longitude) async {
+      double latitude, double longitude,) async {
     try {
       // Заглушка для получения адреса по координатам
       // В реальном приложении здесь будет использоваться geocoding
@@ -931,7 +907,7 @@ class IntegrationService {
 
   /// Поделиться контентом
   Future<void> shareContent(
-      {required String content, String? subject, String? title}) async {
+      {required String content, String? subject, String? title,}) async {
     try {
       // Заглушка для шаринга контента
       // В реальном приложении здесь будет использоваться share_plus

@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/transaction.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/payment_providers.dart';
+import 'package:event_marketplace_app/widgets/transaction_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/transaction.dart';
-import '../../providers/auth_providers.dart';
-import '../../providers/payment_providers.dart';
-import '../../widgets/transaction_card.dart';
 
 /// Screen for displaying transaction history
 class TransactionsScreen extends ConsumerStatefulWidget {
@@ -223,8 +222,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
           children: [
             // Balance Card
             balanceAsync.when(
-              data: (balance) => _buildBalanceCard(balance),
-              loading: () => _buildLoadingCard(),
+              data: _buildBalanceCard,
+              loading: _buildLoadingCard,
               error: (error, stack) => _buildErrorCard(),
             ),
             const SizedBox(height: 16),
@@ -242,8 +241,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
                 Expanded(
                   child: monthlyIncomeAsync.when(
                     data: (income) => _buildStatCard(
-                        'Доходы', income, Colors.green, Icons.trending_up),
-                    loading: () => _buildLoadingStatCard(),
+                        'Доходы', income, Colors.green, Icons.trending_up,),
+                    loading: _buildLoadingStatCard,
                     error: (error, stack) => _buildErrorStatCard(),
                   ),
                 ),
@@ -251,8 +250,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
                 Expanded(
                   child: monthlyExpenseAsync.when(
                     data: (expense) => _buildStatCard(
-                        'Расходы', expense, Colors.red, Icons.trending_down),
-                    loading: () => _buildLoadingStatCard(),
+                        'Расходы', expense, Colors.red, Icons.trending_down,),
+                    loading: _buildLoadingStatCard,
                     error: (error, stack) => _buildErrorStatCard(),
                   ),
                 ),
@@ -278,7 +277,7 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
                       Colors.green,
                       Icons.account_balance_wallet,
                     ),
-                    loading: () => _buildLoadingStatCard(),
+                    loading: _buildLoadingStatCard,
                     error: (error, stack) => _buildErrorStatCard(),
                   ),
                 ),
@@ -286,8 +285,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
                 Expanded(
                   child: totalExpenseAsync.when(
                     data: (expense) => _buildStatCard('Общие расходы', expense,
-                        Colors.red, Icons.shopping_cart),
-                    loading: () => _buildLoadingStatCard(),
+                        Colors.red, Icons.shopping_cart,),
+                    loading: _buildLoadingStatCard,
                     error: (error, stack) => _buildErrorStatCard(),
                   ),
                 ),
@@ -530,9 +529,9 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
 
 /// Bottom sheet for displaying transaction details
 class TransactionDetailsSheet extends StatelessWidget {
-  final Transaction transaction;
 
-  const TransactionDetailsSheet({super.key, required this.transaction});
+  const TransactionDetailsSheet({required this.transaction, super.key});
+  final Transaction transaction;
 
   @override
   Widget build(BuildContext context) {
@@ -570,7 +569,7 @@ class TransactionDetailsSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(transaction.typeIcon,
-                          style: const TextStyle(fontSize: 24)),
+                          style: const TextStyle(fontSize: 24),),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -629,7 +628,7 @@ class TransactionDetailsSheet extends StatelessWidget {
                     _buildDetailRow('ID транзакции', transaction.id),
                     _buildDetailRow('Тип', transaction.type.displayName),
                     _buildDetailRow(
-                        'Сумма', transaction.formattedAbsoluteAmount),
+                        'Сумма', transaction.formattedAbsoluteAmount,),
                     _buildDetailRow('Валюта', transaction.currency),
                     _buildDetailRow('Дата', transaction.formattedDateTime),
                     if (transaction.category != null)
@@ -659,12 +658,12 @@ class TransactionDetailsSheet extends StatelessWidget {
             child: Text(
               label,
               style: const TextStyle(
-                  color: Colors.grey, fontWeight: FontWeight.w500),
+                  color: Colors.grey, fontWeight: FontWeight.w500,),
             ),
           ),
           Expanded(
             child: Text(value,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
           ),
         ],
       ),

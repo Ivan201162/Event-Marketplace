@@ -64,20 +64,13 @@ class IdeasScreen extends ConsumerWidget {
       'Корпоратив',
       'День рождения',
       'Детский праздник',
-      'Фестиваль'
+      'Фестиваль',
     ];
     return categories[index % categories.length];
   }
 }
 
 class _IdeaCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final int likesCount;
-  final String author;
-  final String category;
-  final VoidCallback onTap;
-  final VoidCallback onLike;
 
   const _IdeaCard({
     required this.title,
@@ -88,6 +81,13 @@ class _IdeaCard extends StatelessWidget {
     required this.onTap,
     required this.onLike,
   });
+  final String title;
+  final String description;
+  final int likesCount;
+  final String author;
+  final String category;
+  final VoidCallback onTap;
+  final VoidCallback onLike;
 
   @override
   Widget build(BuildContext context) {

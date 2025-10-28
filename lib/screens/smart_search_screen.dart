@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/smart_specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/ai_assistant_service.dart';
+import 'package:event_marketplace_app/services/smart_search_service.dart';
+import 'package:event_marketplace_app/widgets/ai_assistant_dialog.dart';
+import 'package:event_marketplace_app/widgets/smart_search_filters.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/smart_specialist.dart';
-import '../models/specialist.dart';
-import '../services/ai_assistant_service.dart';
-import '../services/smart_search_service.dart';
-import '../widgets/ai_assistant_dialog.dart';
-import '../widgets/smart_search_filters.dart';
-import '../widgets/specialist_card.dart';
 
 // Временное определение для совместимости
 enum SpecialistSortOption {
@@ -186,7 +185,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text(message), backgroundColor: Colors.red));
+          SnackBar(content: Text(message), backgroundColor: Colors.red),);
     }
   }
 
@@ -226,7 +225,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
                     },
                   ),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
                 onSubmitted: (_) => _performSearch(),
               ),
@@ -284,7 +283,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
                       child: Text(
                         '🔮 Вам подойдут эти специалисты',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -320,7 +319,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(Icons.search_off,
-                                  size: 64, color: Colors.grey),
+                                  size: 64, color: Colors.grey,),
                               SizedBox(height: 16),
                               Text(
                                 'Специалисты не найдены',
@@ -386,6 +385,6 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
 
     // Переходим к профилю специалиста
     Navigator.pushNamed(context, '/specialist_profile',
-        arguments: specialist.id);
+        arguments: specialist.id,);
   }
 }

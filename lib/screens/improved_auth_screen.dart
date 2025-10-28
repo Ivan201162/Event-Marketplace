@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../services/supabase_service.dart';
 
 /// Улучшенный экран авторизации с вкладками и интеграцией Supabase
 class ImprovedAuthScreen extends ConsumerStatefulWidget {
@@ -114,7 +113,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text(
-                  'Регистрация успешна! Проверьте email для подтверждения.')),
+                  'Регистрация успешна! Проверьте email для подтверждения.',),),
         );
 
         context.go('/main');
@@ -162,7 +161,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('SMS код отправлен на ваш номер')));
+            const SnackBar(content: Text('SMS код отправлен на ваш номер')),);
       }
     } on AuthException catch (e) {
       setState(() {
@@ -252,7 +251,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
   String _generateUsername(String name) {
     final base = name
         .toLowerCase()
-        .replaceAll(RegExp(r'[^a-zа-я0-9]'), '')
+        .replaceAll(RegExp('[^a-zа-я0-9]'), '')
         .substring(0, name.length > 10 ? 10 : name.length);
     return '$base${DateTime.now().millisecondsSinceEpoch % 1000}';
   }
@@ -350,7 +349,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                 children: [
                   _buildEmailTab(),
                   _buildPhoneTab(),
-                  _buildGuestTab()
+                  _buildGuestTab(),
                 ],
               ),
             ),
@@ -480,7 +479,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                 suffixIcon: IconButton(
                   icon: Icon(_isPasswordVisible
                       ? Icons.visibility
-                      : Icons.visibility_off),
+                      : Icons.visibility_off,),
                   onPressed: () =>
                       setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
@@ -505,7 +504,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
                   ? null
                   : (_isLoginMode ? _signInWithEmail : _signUpWithEmail),
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),),
               child: _isLoading
                   ? const SizedBox(
                       height: 20,
@@ -571,7 +570,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
             ElevatedButton(
               onPressed: _isLoading ? null : _signInWithPhone,
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),),
               child: _isLoading
                   ? const SizedBox(
                       height: 20,
@@ -601,7 +600,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
             ElevatedButton(
               onPressed: _isLoading ? null : _verifySmsCode,
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),),
               child: _isLoading
                   ? const SizedBox(
                       height: 20,
@@ -704,7 +703,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
               context.go('/main');
             },
             style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16)),
+                padding: const EdgeInsets.symmetric(vertical: 16),),
             child: const Text('Продолжить как гость'),
           ),
           const SizedBox(height: 16),
@@ -713,7 +712,7 @@ class _ImprovedAuthScreenState extends ConsumerState<ImprovedAuthScreen>
               _tabController.animateTo(0);
             },
             style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16)),
+                padding: const EdgeInsets.symmetric(vertical: 16),),
             child: const Text('Создать аккаунт'),
           ),
         ],

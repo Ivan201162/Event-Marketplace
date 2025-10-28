@@ -1,17 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/generated/l10n/app_localizations.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/models/story_type.dart';
+import 'package:event_marketplace_app/providers/story_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../generated/l10n/app_localizations.dart';
-import '../models/story.dart';
-import '../models/story_type.dart';
-import '../providers/story_providers.dart';
-
 /// Виджет для отображения сториса
 class StoryWidget extends ConsumerWidget {
   const StoryWidget(
-      {super.key, required this.story, this.onTap, this.showProgress = true});
+      {required this.story, super.key, this.onTap, this.showProgress = true,});
   final Story story;
   final VoidCallback? onTap;
   final bool showProgress;
@@ -69,7 +68,7 @@ class StoryWidget extends ConsumerWidget {
                       bottom: 4,
                       right: 4,
                       child: Icon(Icons.play_circle_fill,
-                          color: Colors.white, size: 16),
+                          color: Colors.white, size: 16,),
                     ),
                   ],
                 )
@@ -111,9 +110,7 @@ class StoryWidget extends ConsumerWidget {
 /// Виджет для создания сториса
 class CreateStoryWidget extends ConsumerStatefulWidget {
   const CreateStoryWidget({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.specialistPhotoUrl,
     this.onStoryCreated,
   });
@@ -199,17 +196,16 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
       final service = ref.read(storyServiceProvider);
       final story = Story(
         id: '',
-        specialistId: widget.specialistId,
-        title: 'Story',
-        mediaUrl: file.path,
-        thumbnailUrl: file.path,
+        authorId: widget.specialistId,
+        authorName: widget.specialistName,
+        text: 'Story',
+        media: [file.path],
+        isViewed: false,
+        type: type == StoryType.image ? StoryType.image : StoryType.video,
+        privacy: StoryPrivacy.public,
         createdAt: DateTime.now(),
         expiresAt: DateTime.now().add(const Duration(hours: 24)),
-        metadata: {
-          'specialistName': widget.specialistName,
-          'specialistPhotoUrl': widget.specialistPhotoUrl,
-          'mediaType': type == StoryType.image ? 'image' : 'video',
-        },
+        authorAvatar: widget.specialistPhotoUrl,
       );
       await service.createStory(story);
 
@@ -227,7 +223,7 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('${l10n.errorCreatingStory}: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -242,7 +238,7 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
 
 /// Виджет для отображения списка сторисов
 class StoriesListWidget extends ConsumerWidget {
-  const StoriesListWidget({super.key, required this.stories, this.onStoryTap});
+  const StoriesListWidget({required this.stories, super.key, this.onStoryTap});
   final List<Story> stories;
   final void Function(Story)? onStoryTap;
 
@@ -273,7 +269,7 @@ class StoriesListWidget extends ConsumerWidget {
 
 /// Виджет для просмотра сториса в полноэкранном режиме
 class StoryViewerWidget extends ConsumerStatefulWidget {
-  const StoryViewerWidget({super.key, required this.story, this.onClose});
+  const StoryViewerWidget({required this.story, super.key, this.onClose});
   final Story story;
   final VoidCallback? onClose;
 
@@ -315,17 +311,17 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                           const Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => const Center(
                           child:
-                              Icon(Icons.error, color: Colors.white, size: 64)),
+                              Icon(Icons.error, color: Colors.white, size: 64),),
                     )
                   : widget.story.type == StoryType.video
                       ? const Center(
                           child: Icon(Icons.play_circle_fill,
-                              color: Colors.white, size: 64))
+                              color: Colors.white, size: 64,),)
                       : Center(
                           child: Text(
                             widget.story.caption,
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 24),
+                                color: Colors.white, fontSize: 24,),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -340,7 +336,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                 children: [
                   CircleAvatar(
                       backgroundImage:
-                          NetworkImage(widget.story.specialistPhotoUrl)),
+                          NetworkImage(widget.story.specialistPhotoUrl),),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -357,7 +353,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                         Text(
                           _formatTimeAgo(widget.story.createdAt),
                           style: const TextStyle(
-                              color: Colors.white70, fontSize: 12),
+                              color: Colors.white70, fontSize: 12,),
                         ),
                       ],
                     ),
@@ -406,7 +402,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                     ),
                   ),
                   Text(widget.story.likes.toString(),
-                      style: const TextStyle(color: Colors.white)),
+                      style: const TextStyle(color: Colors.white),),
                 ],
               ),
             ),

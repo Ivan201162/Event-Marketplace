@@ -1,8 +1,6 @@
+import 'package:event_marketplace_app/core/app_router_minimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'core/app_router_minimal.dart';
-import 'screens/about_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: EventMarketplaceApp()));

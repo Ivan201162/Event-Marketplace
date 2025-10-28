@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-
-import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Feed and Stories Tests', () {
     testWidgets('Feed loads with stories and posts',
-        (WidgetTester tester) async {
+        (tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -31,7 +30,7 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('Search functionality works', (WidgetTester tester) async {
+    testWidgets('Search functionality works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -52,7 +51,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Filter functionality works', (WidgetTester tester) async {
+    testWidgets('Filter functionality works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -75,7 +74,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Post interactions work', (WidgetTester tester) async {
+    testWidgets('Post interactions work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -95,7 +94,7 @@ void main() {
       }
     });
 
-    testWidgets('Pull to refresh works', (WidgetTester tester) async {
+    testWidgets('Pull to refresh works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -107,7 +106,7 @@ void main() {
       expect(find.byType(Card), findsWidgets);
     });
 
-    testWidgets('Stories interaction works', (WidgetTester tester) async {
+    testWidgets('Stories interaction works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 

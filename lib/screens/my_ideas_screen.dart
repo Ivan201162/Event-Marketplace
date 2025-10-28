@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/screens/idea_detail_screen.dart';
+import 'package:event_marketplace_app/services/event_ideas_service.dart';
+import 'package:event_marketplace_app/widgets/idea_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event_idea.dart';
-import '../services/event_ideas_service.dart';
-import '../widgets/idea_card.dart';
-import 'idea_detail_screen.dart';
-
 /// Экран моих сохраненных идей
 class MyIdeasScreen extends ConsumerStatefulWidget {
-  const MyIdeasScreen({super.key, required this.userId});
+  const MyIdeasScreen({required this.userId, super.key});
 
   final String userId;
 
@@ -72,7 +71,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
                 .toLowerCase()
                 .contains(_searchQuery.toLowerCase()) ||
             idea.tags.any((tag) =>
-                tag.toLowerCase().contains(_searchQuery.toLowerCase()));
+                tag.toLowerCase().contains(_searchQuery.toLowerCase()),);
 
         final matchesCategory =
             _selectedCategory == null || idea.category == _selectedCategory;
@@ -95,10 +94,10 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
           ),
           actions: [
             IconButton(
-                onPressed: _showSearchDialog, icon: const Icon(Icons.search)),
+                onPressed: _showSearchDialog, icon: const Icon(Icons.search),),
             IconButton(
                 onPressed: _showFilterDialog,
-                icon: const Icon(Icons.filter_list)),
+                icon: const Icon(Icons.filter_list),),
           ],
         ),
         body: TabBarView(
@@ -190,7 +189,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -198,7 +197,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -229,7 +228,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -237,7 +236,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -257,7 +256,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-          builder: (context) => IdeaDetailScreen(idea: idea)),
+          builder: (context) => IdeaDetailScreen(idea: idea),),
     ).then((_) {
       // Обновляем данные после возврата
       _loadData();
@@ -305,7 +304,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
   }
 
   void _updateIdeaInLists(
-      String ideaId, EventIdea Function(EventIdea) updater) {
+      String ideaId, EventIdea Function(EventIdea) updater,) {
     setState(() {
       // Обновляем в сохраненных
       final savedIndex = _savedIdeas.indexWhere((idea) => idea.id == ideaId);
@@ -350,7 +349,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
           ),
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -403,7 +402,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

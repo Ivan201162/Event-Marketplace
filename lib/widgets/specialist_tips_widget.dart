@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/specialist_tip.dart';
+import 'package:event_marketplace_app/services/specialist_tips_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist_tip.dart';
-import '../services/specialist_tips_service.dart';
-
 /// Виджет рекомендаций для специалистов
 class SpecialistTipsWidget extends ConsumerStatefulWidget {
-  const SpecialistTipsWidget({super.key, required this.userId, this.onTipTap});
+  const SpecialistTipsWidget({required this.userId, super.key, this.onTipTap});
   final String userId;
   final VoidCallback? onTipTap;
 
@@ -36,7 +35,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _loadTips();
   }
@@ -110,7 +109,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
             Row(
               children: [
                 Icon(Icons.lightbulb_outline,
-                    color: Colors.amber.shade600, size: 24),
+                    color: Colors.amber.shade600, size: 24,),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендации по улучшению профиля',
@@ -135,7 +134,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
             Row(
               children: [
                 Icon(Icons.lightbulb_outline,
-                    color: Colors.amber.shade600, size: 24),
+                    color: Colors.amber.shade600, size: 24,),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендации по улучшению профиля',
@@ -157,7 +156,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
               child: Row(
                 children: [
                   Icon(Icons.check_circle,
-                      color: Colors.green.shade600, size: 24),
+                      color: Colors.green.shade600, size: 24,),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -241,7 +240,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: tip.priority.color.withValues(alpha: 0.3)),
+                    color: tip.priority.color.withValues(alpha: 0.3),),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +255,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(tip.priority.icon,
-                            color: tip.priority.color, size: 16),
+                            color: tip.priority.color, size: 16,),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -271,7 +270,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: tip.priority.color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -313,17 +312,17 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                             // TODO: Переход к соответствующему экрану
                           },
                           icon: Icon(Icons.edit,
-                              size: 16, color: tip.priority.color),
+                              size: 16, color: tip.priority.color,),
                           label: Text(
                             tip.action,
                             style: TextStyle(
                                 color: tip.priority.color,
-                                fontWeight: FontWeight.w600),
+                                fontWeight: FontWeight.w600,),
                           ),
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: tip.priority.color),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
+                                borderRadius: BorderRadius.circular(8),),
                           ),
                         ),
                       ),
@@ -331,7 +330,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                       IconButton(
                         onPressed: () => _markAsCompleted(tip),
                         icon: Icon(Icons.check_circle_outline,
-                            color: Colors.green.shade600),
+                            color: Colors.green.shade600,),
                         tooltip: 'Отметить как выполненное',
                       ),
                     ],
@@ -373,7 +372,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка: $e'), backgroundColor: Colors.red.shade600));
+            content: Text('Ошибка: $e'), backgroundColor: Colors.red.shade600,),);
       }
     }
   }
@@ -381,7 +380,7 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
 
 /// Виджет прогресса профиля
 class ProfileProgressWidget extends StatelessWidget {
-  const ProfileProgressWidget({super.key, required this.stats});
+  const ProfileProgressWidget({required this.stats, super.key});
   final ProfileStats stats;
 
   @override
@@ -391,7 +390,7 @@ class ProfileProgressWidget extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.blue.shade50,
-              Colors.blue.shade100.withValues(alpha: 0.3)
+              Colors.blue.shade100.withValues(alpha: 0.3),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

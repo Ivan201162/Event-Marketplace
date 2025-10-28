@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/release_management.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../core/feature_flags.dart';
-import '../models/release_management.dart';
 
 /// Сервис для управления релизами
 class ReleaseManagementService {
@@ -113,8 +112,7 @@ class ReleaseManagementService {
   Future<Release> createRelease({
     required String version,
     required String name,
-    String? description,
-    required ReleaseType type,
+    required ReleaseType type, String? description,
     String? branch,
     String? commitHash,
     List<String>? features,
@@ -274,7 +272,7 @@ class ReleaseManagementService {
     if (releases.isEmpty) return null;
 
     releases.sort((a, b) =>
-        b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0);
+        b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0,);
     return releases.first;
   }
 
@@ -654,7 +652,7 @@ class ReleaseManagementService {
 
   /// Группировка деплоев по окружению
   Map<String, int> _groupDeploymentsByEnvironment(
-      List<Deployment> deployments) {
+      List<Deployment> deployments,) {
     final groups = <String, int>{};
     for (final deployment in deployments) {
       groups[deployment.environment] =

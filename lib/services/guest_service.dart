@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/event.dart';
-import '../models/guest.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/guest.dart';
 
 /// Сервис для работы с гостями мероприятий
 class GuestService {
@@ -256,7 +256,7 @@ class GuestService {
         .map(
           (snapshot) => snapshot.docs
               .map(
-                  (doc) => GuestGreeting.fromMap({'id': doc.id, ...doc.data()}))
+                  (doc) => GuestGreeting.fromMap({'id': doc.id, ...doc.data()}),)
               .toList(),
         );
   }
@@ -266,8 +266,7 @@ class GuestService {
     required String eventId,
     required String guestId,
     required String guestName,
-    String? guestAvatar,
-    required GreetingType type,
+    required GreetingType type, String? guestAvatar,
     String? text,
     String? imageUrl,
     String? videoUrl,
@@ -322,7 +321,7 @@ class GuestService {
         }
 
         final greeting = GuestGreeting.fromMap(
-            {'id': greetingDoc.id, ...greetingDoc.data()!});
+            {'id': greetingDoc.id, ...greetingDoc.data()!},);
 
         final isLiked = greeting.likedBy.contains(userId);
         final newLikedBy = List<String>.from(greeting.likedBy);
@@ -334,7 +333,7 @@ class GuestService {
         }
 
         transaction.update(greetingRef,
-            {'likedBy': newLikedBy, 'likesCount': newLikedBy.length});
+            {'likedBy': newLikedBy, 'likesCount': newLikedBy.length},);
       });
     } catch (e) {
       debugPrint('Error toggling greeting like: $e');
@@ -431,7 +430,7 @@ class GuestService {
 
   /// Получить события организатора
   Future<List<Map<String, dynamic>>> getOrganizerEvents(
-      String organizerId) async {
+      String organizerId,) async {
     try {
       final snapshot = await _firestore
           .collection('events')

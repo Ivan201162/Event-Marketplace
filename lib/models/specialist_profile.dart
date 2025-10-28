@@ -25,9 +25,8 @@ class PortfolioItem {
     required this.id,
     required this.type,
     required this.url,
-    this.title,
+    required this.createdAt, this.title,
     this.description,
-    required this.createdAt,
   });
 
   factory PortfolioItem.fromMap(Map<String, dynamic> data) => PortfolioItem(
@@ -61,7 +60,7 @@ class PortfolioItem {
 class SpecialistProfile {
   const SpecialistProfile({
     required this.userId,
-    this.name,
+    required this.createdAt, required this.updatedAt, this.name,
     this.photoURL,
     this.bio,
     this.categories = const [],
@@ -107,8 +106,6 @@ class SpecialistProfile {
     this.settings = const {},
     this.notifications = const {},
     this.metadata = const {},
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать профиль из документа Firestore
@@ -513,7 +510,7 @@ class SpecialistProfile {
     final newBusyDates = busyDates
         .where((d) => !(d.year == date.year &&
             d.month == date.month &&
-            d.day == date.day))
+            d.day == date.day),)
         .toList();
     final newAvailability = Map<String, dynamic>.from(availability);
     newAvailability['busyDates'] =

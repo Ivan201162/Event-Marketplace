@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 // import 'dart:typed_data';
 // import 'package:record/record.dart';  // Temporarily disabled
 
 // import 'package:firebase_storage/firebase_storage.dart';
-import '../models/chat_message_extended.dart';
+import 'package:event_marketplace_app/models/chat_message_extended.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Сервис для работы с голосовыми сообщениями
 // Temporarily disabled due to record package compatibility issues
@@ -48,7 +48,7 @@ class VoiceMessageService {
       // Начинаем запись
       await _recorder.start(
         const RecordConfig(
-            encoder: AudioEncoder.aacLc, bitRate: 128000, sampleRate: 44100),
+            encoder: AudioEncoder.aacLc, bitRate: 128000, sampleRate: 44100,),
         path: _currentRecordingPath!,
       );
 
@@ -99,7 +99,7 @@ class VoiceMessageService {
 
   /// Загрузить голосовое сообщение в Firebase Storage
   Future<String?> uploadVoiceMessage(
-      String filePath, String chatId, String senderId) async {
+      String filePath, String chatId, String senderId,) async {
     try {
       final file = File(filePath);
       if (!await file.exists()) return null;
@@ -196,9 +196,7 @@ class VoiceMessageService {
     required String chatId,
     required String senderId,
     required String senderName,
-    String? senderAvatar,
-    required String audioUrl,
-    required int duration,
+    required String audioUrl, required int duration, String? senderAvatar,
     String? waveform,
   }) async {
     try {

@@ -2,13 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Note filters model
 class NoteFilters extends Equatable {
-  final String? searchQuery;
-  final List<String>? tags;
-  final DateTime? dateFrom;
-  final DateTime? dateTo;
-  final bool? isPinned;
-  final String? category;
-  final String? authorId;
 
   const NoteFilters({
     this.searchQuery,
@@ -33,6 +26,13 @@ class NoteFilters extends Equatable {
       authorId: data['authorId'],
     );
   }
+  final String? searchQuery;
+  final List<String>? tags;
+  final DateTime? dateFrom;
+  final DateTime? dateTo;
+  final bool? isPinned;
+  final String? category;
+  final String? authorId;
 
   /// Convert NoteFilters to Map
   Map<String, dynamic> toMap() {

@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/services/monitoring_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../services/monitoring_service.dart';
 
 /// Провайдер сервиса мониторинга
 final monitoringServiceProvider =
@@ -68,7 +67,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       );
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 
@@ -85,22 +84,22 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       await monitoringService.recordError(error, stackTrace, context: reason);
 
       state = state.copyWith(
-          lastError: error.toString(), lastErrorTime: DateTime.now());
+          lastError: error.toString(), lastErrorTime: DateTime.now(),);
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 
   /// Запись пользовательского действия
   Future<void> logUserAction(String action,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, dynamic>? parameters,}) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
       await monitoringService.logUserAction('', action, parameters);
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 
@@ -115,7 +114,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 
@@ -130,7 +129,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 
@@ -142,7 +141,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       state = state.copyWith(metrics: metrics);
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 
@@ -153,7 +152,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       monitoringService.setUserId(userId);
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 
@@ -166,7 +165,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       state = state.copyWith(metrics: {}, activeTraces: []);
     } catch (e) {
       state = state.copyWith(
-          lastError: e.toString(), lastErrorTime: DateTime.now());
+          lastError: e.toString(), lastErrorTime: DateTime.now(),);
     }
   }
 }

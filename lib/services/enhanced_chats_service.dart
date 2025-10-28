@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/enhanced_chat.dart';
-import '../models/enhanced_message.dart';
+import 'package:event_marketplace_app/models/enhanced_chat.dart';
+import 'package:event_marketplace_app/models/enhanced_message.dart';
 
 /// Сервис для работы с расширенными чатами
 class EnhancedChatsService {
@@ -47,7 +47,7 @@ class EnhancedChatsService {
       return snapshot.docs
           .map(
             (doc) => EnhancedMessage.fromMap(
-                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
+                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)},),
           )
           .toList();
     } on Exception catch (e) {
@@ -199,7 +199,7 @@ class EnhancedChatsService {
 
   /// Редактировать сообщение
   Future<void> editMessage(
-      String chatId, String messageId, String newText) async {
+      String chatId, String messageId, String newText,) async {
     try {
       await _firestore
           .collection('chats')
@@ -226,7 +226,7 @@ class EnhancedChatsService {
           .update(
         {
           'deletedAt': FieldValue.serverTimestamp(),
-          'text': 'Сообщение удалено'
+          'text': 'Сообщение удалено',
         },
       );
     } on Exception catch (e) {
@@ -237,7 +237,7 @@ class EnhancedChatsService {
 
   /// Добавить реакцию на сообщение
   Future<void> addReaction(
-      String chatId, String messageId, String userId, String emoji) async {
+      String chatId, String messageId, String userId, String emoji,) async {
     try {
       await _firestore
           .collection('chats')
@@ -257,7 +257,7 @@ class EnhancedChatsService {
 
   /// Удалить реакцию с сообщения
   Future<void> removeReaction(
-      String chatId, String messageId, String userId, String emoji) async {
+      String chatId, String messageId, String userId, String emoji,) async {
     try {
       await _firestore
           .collection('chats')
@@ -277,7 +277,7 @@ class EnhancedChatsService {
 
   /// Отметить сообщения как прочитанные
   Future<void> markMessagesAsRead(
-      String chatId, String userId, List<String> messageIds) async {
+      String chatId, String userId, List<String> messageIds,) async {
     try {
       final batch = _firestore.batch();
       final now = DateTime.now();
@@ -337,11 +337,11 @@ class EnhancedChatsService {
           ChatMember(
               userId: userId1,
               role: ChatMemberRole.member,
-              joinedAt: DateTime.now()),
+              joinedAt: DateTime.now(),),
           ChatMember(
               userId: userId2,
               role: ChatMemberRole.member,
-              joinedAt: DateTime.now()),
+              joinedAt: DateTime.now(),),
         ],
         createdAt: DateTime.now(),
       );
@@ -366,12 +366,12 @@ class EnhancedChatsService {
         ChatMember(
             userId: creatorId,
             role: ChatMemberRole.owner,
-            joinedAt: DateTime.now()),
+            joinedAt: DateTime.now(),),
         ...memberIds.map(
           (userId) => ChatMember(
               userId: userId,
               role: ChatMemberRole.member,
-              joinedAt: DateTime.now()),
+              joinedAt: DateTime.now(),),
         ),
       ];
 
@@ -500,7 +500,7 @@ class EnhancedChatsService {
 
   /// Поиск по сообщениям в чате
   Future<List<EnhancedMessage>> searchMessages(
-      String chatId, String query) async {
+      String chatId, String query,) async {
     try {
       final snapshot = await _firestore
           .collection('chats')
@@ -521,7 +521,7 @@ class EnhancedChatsService {
 
   /// Получить тип сообщения на основе вложений
   MessageType _getMessageTypeFromAttachments(
-      List<MessageAttachment> attachments) {
+      List<MessageAttachment> attachments,) {
     if (attachments.isEmpty) return MessageType.text;
 
     final firstAttachment = attachments.first;

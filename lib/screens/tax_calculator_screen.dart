@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/tax_info.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/services/tax_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/tax_info.dart';
-import '../models/user.dart';
-import '../services/tax_service.dart';
-
 /// Экран калькулятора налогов
 class TaxCalculatorScreen extends ConsumerStatefulWidget {
-  const TaxCalculatorScreen({super.key, required this.user});
+  const TaxCalculatorScreen({required this.user, super.key});
 
   final AppUser user;
 
@@ -70,7 +69,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
                           child: Text(
                             'Калькулятор поможет рассчитать сумму налога на основе вашего дохода и типа налогообложения.',
                             style: TextStyle(
-                                color: Colors.blue[800], fontSize: 14),
+                                color: Colors.blue[800], fontSize: 14,),
                           ),
                         ),
                       ],
@@ -96,7 +95,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
                       title: Row(
                         children: [
                           Text(taxType.icon,
-                              style: const TextStyle(fontSize: 20)),
+                              style: const TextStyle(fontSize: 20),),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Column(
@@ -105,12 +104,12 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
                                 Text(
                                   taxType.displayName,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w500,),
                                 ),
                                 Text(
                                   taxType.description,
                                   style: const TextStyle(
-                                      fontSize: 12, color: Colors.grey),
+                                      fontSize: 12, color: Colors.grey,),
                                 ),
                               ],
                             ),
@@ -189,7 +188,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
                     icon: const Icon(Icons.calculate),
                     label: const Text('Рассчитать налог'),
                     style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16)),
+                        padding: const EdgeInsets.symmetric(vertical: 16),),
                   ),
                 ),
 
@@ -255,7 +254,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
               ),
               const SizedBox(height: 8),
               _buildResultRow('Сумма дохода', '${_incomeController.text} ₽',
-                  Icons.monetization_on),
+                  Icons.monetization_on,),
               const SizedBox(height: 8),
               _buildResultRow(
                 'Сумма налога',
@@ -275,12 +274,12 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
       );
 
   Widget _buildResultRow(String label, String value, IconData icon,
-          {bool isHighlighted = false}) =>
+          {bool isHighlighted = false,}) =>
       Row(
         children: [
           Icon(icon,
               size: 20,
-              color: isHighlighted ? Colors.green[700] : Colors.grey[600]),
+              color: isHighlighted ? Colors.green[700] : Colors.grey[600],),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -351,7 +350,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Расчёт сохранён успешно'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
 
         // Очищаем форму
@@ -366,7 +365,7 @@ class _TaxCalculatorScreenState extends ConsumerState<TaxCalculatorScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка сохранения: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }

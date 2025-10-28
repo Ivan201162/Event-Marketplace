@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/fcm_service.dart';
+import 'package:event_marketplace_app/services/firestore_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../services/fcm_service.dart';
-import '../services/firestore_service.dart';
 
 final firestoreServiceProvider =
     Provider<FirestoreService>((ref) => FirestoreService());

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/contract.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/contract.dart';
 
 /// Сервис для подписания актов выполненных работ
 class WorkAcceptanceService {
@@ -296,10 +296,9 @@ class WorkAcceptanceAct {
     required this.finalAmount,
     required this.createdAt,
     required this.updatedAt,
-    this.signedAt,
+    required this.metadata, this.signedAt,
     this.specialistSignedAt,
     this.customerSignedAt,
-    required this.metadata,
   });
 
   /// Создать из документа Firestore

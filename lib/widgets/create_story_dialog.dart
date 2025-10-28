@@ -1,15 +1,13 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/models/story_content_type.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
+import 'package:event_marketplace_app/widgets/radio_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/story_content_type.dart';
-import '../services/story_service.dart';
 import 'package:image_picker/image_picker.dart';
-import 'radio_group.dart';
-
-import '../models/story.dart';
-import '../providers/auth_providers.dart';
-import '../services/story_service.dart';
 
 /// Диалог создания сторис
 class CreateStoryDialog extends ConsumerStatefulWidget {
@@ -78,7 +76,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(_error!,
-                              style: TextStyle(color: Colors.red[600])),
+                              style: TextStyle(color: Colors.red[600]),),
                         ),
                       ],
                     ),
@@ -111,7 +109,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Тип контента',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           RadioGroup<StoryContentType>(
             value: _selectedType,
@@ -175,7 +173,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Текст сторис',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextFormField(
             controller: _textController,
@@ -198,7 +196,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Выберите файл',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           if (_selectedFile == null) ...[
             Row(
@@ -248,7 +246,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                         ),
                         Text(
                           _formatFileSize(
-                              File(_selectedFile!.path).lengthSync()),
+                              File(_selectedFile!.path).lengthSync(),),
                           style:
                               TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
@@ -276,7 +274,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Настройки текста',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
 
           // Цвет фона

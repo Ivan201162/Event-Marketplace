@@ -1,16 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/enhanced_feed_post.dart';
-
 /// Виджет поста в ленте
 class FeedPostWidget extends ConsumerStatefulWidget {
   const FeedPostWidget({
-    super.key,
-    required this.post,
+    required this.post, super.key,
     this.onUserTap,
     this.onLike,
     this.onComment,
@@ -108,7 +106,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                   Text(
                     'Пользователь ${widget.post.authorId}',
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                        fontWeight: FontWeight.bold, fontSize: 16,),
                   ),
                   Text(
                     _formatDate(widget.post.createdAt),
@@ -122,7 +120,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
             if (widget.post.isSponsored)
               const Icon(Icons.ads_click, color: Colors.blue, size: 16),
             IconButton(
-                onPressed: widget.onMore, icon: const Icon(Icons.more_vert)),
+                onPressed: widget.onMore, icon: const Icon(Icons.more_vert),),
           ],
         ),
       );
@@ -176,7 +174,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                     ),
                     child: Text('#$tag',
                         style:
-                            TextStyle(color: Colors.blue[800], fontSize: 12)),
+                            TextStyle(color: Colors.blue[800], fontSize: 12),),
                   ),
                 ),
               )
@@ -191,7 +189,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
             Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
             const SizedBox(width: 4),
             Text(widget.post.location!,
-                style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),),
           ],
         ),
       );
@@ -231,7 +229,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
               errorWidget: (context, url, error) => Container(
                   height: 200,
                   color: Colors.grey[300],
-                  child: const Icon(Icons.error)),
+                  child: const Icon(Icons.error),),
             ),
           ),
         );
@@ -284,7 +282,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
             ),
             if (!_videoController!.value.isPlaying)
               const Icon(Icons.play_circle_fill,
-                  size: 64, color: Colors.white70),
+                  size: 64, color: Colors.white70,),
           ],
         ),
       ),
@@ -346,10 +344,10 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
             ),
             const SizedBox(width: 16),
             _buildActionButton(
-                icon: Icons.chat_bubble_outline, onTap: widget.onComment),
+                icon: Icons.chat_bubble_outline, onTap: widget.onComment,),
             const SizedBox(width: 16),
             _buildActionButton(
-                icon: Icons.share_outlined, onTap: widget.onShare),
+                icon: Icons.share_outlined, onTap: widget.onShare,),
             const Spacer(),
             _buildActionButton(
               icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
@@ -366,7 +364,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
       );
 
   Widget _buildActionButton(
-          {required IconData icon, Color? color, VoidCallback? onTap}) =>
+          {required IconData icon, Color? color, VoidCallback? onTap,}) =>
       GestureDetector(
         onTap: onTap,
         child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
@@ -408,7 +406,7 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                         TextSpan(
                           text: 'Пользователь ${comment.authorId} ',
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
+                              fontWeight: FontWeight.bold, color: Colors.black,),
                         ),
                         TextSpan(
                           text: comment.text,

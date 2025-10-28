@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../services/supabase_service.dart';
 
 /// Экран создания заявки
 class CreateRequestScreen extends ConsumerStatefulWidget {
@@ -47,7 +46,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
   }
 
   Future<void> _selectDeadline() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
       initialDate:
           _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
@@ -91,7 +90,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Заявка создана успешно!'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         context.pop();
       } else {
@@ -102,7 +101,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания заявки: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -187,7 +186,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
                 ),
                 items: _categories.map((category) {
                   return DropdownMenuItem(
-                      value: category, child: Text(category));
+                      value: category, child: Text(category),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -270,12 +269,12 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
                   color: theme.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: theme.primaryColor.withValues(alpha: 0.3)),
+                      color: theme.primaryColor.withValues(alpha: 0.3),),
                 ),
                 child: Row(
                   children: [
                     Icon(Icons.info_outline,
-                        color: theme.primaryColor, size: 20),
+                        color: theme.primaryColor, size: 20,),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(

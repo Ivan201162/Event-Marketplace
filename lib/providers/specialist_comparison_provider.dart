@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_comparison.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../models/specialist_comparison.dart';
 
 /// Провайдер для управления сравнением специалистов (мигрирован с StateNotifierProvider)
 final specialistComparisonProvider =
     NotifierProvider<SpecialistComparisonNotifier, SpecialistComparison>(
-  () => SpecialistComparisonNotifier(),
+  SpecialistComparisonNotifier.new,
 );
 
 /// Нотификатор для сравнения специалистов (мигрирован с StateNotifier)
@@ -166,22 +165,16 @@ final comparisonResultsProvider = Provider<List<ComparisonResult>>((ref) {
       switch (criteria) {
         case ComparisonCriteria.rating:
           value = specialist.rating;
-          break;
         case ComparisonCriteria.price:
           value = specialist.hourlyRate;
-          break;
         case ComparisonCriteria.experience:
           value = specialist.yearsOfExperience;
-          break;
         case ComparisonCriteria.reviews:
           value = specialist.reviewCount;
-          break;
         case ComparisonCriteria.availability:
           value = specialist.isAvailable;
-          break;
         case ComparisonCriteria.location:
           value = specialist.location ?? '';
-          break;
       }
 
       values[specialist.id] = value;
@@ -195,29 +188,25 @@ final comparisonResultsProvider = Provider<List<ComparisonResult>>((ref) {
         case ComparisonCriteria.reviews:
           winner = values.entries
               .reduce((a, b) =>
-                  (a.value as Comparable).compareTo(b.value) > 0 ? a : b)
+                  (a.value as Comparable).compareTo(b.value) > 0 ? a : b,)
               .key;
-          break;
         case ComparisonCriteria.price:
           winner = values.entries
               .reduce(
-                  (a, b) => (a.value as double) < (b.value as double) ? a : b)
+                  (a, b) => (a.value as double) < (b.value as double) ? a : b,)
               .key;
-          break;
         case ComparisonCriteria.availability:
           winner = values.entries
               .firstWhere((e) => e.value == true,
-                  orElse: () => values.entries.first)
+                  orElse: () => values.entries.first,)
               .key;
-          break;
         case ComparisonCriteria.location:
           winner = null; // Все равны по локации
-          break;
       }
     }
 
     results.add(
-        ComparisonResult(criteria: criteria, values: values, winner: winner));
+        ComparisonResult(criteria: criteria, values: values, winner: winner),);
   }
 
   return results;

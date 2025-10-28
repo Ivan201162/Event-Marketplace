@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// Виджет с ленивой загрузкой
 class LazyLoadWidget extends StatefulWidget {
   const LazyLoadWidget(
-      {super.key, required this.child, this.height, this.onVisible});
+      {required this.child, super.key, this.height, this.onVisible,});
   final Widget child;
   final double? height;
   final VoidCallback? onVisible;
@@ -38,7 +38,7 @@ class _LazyLoadWidgetState extends State<LazyLoadWidget> {
 /// Простой детектор видимости
 class VisibilityDetector extends StatefulWidget {
   const VisibilityDetector(
-      {super.key, required this.child, required this.onVisibilityChanged});
+      {required this.child, required this.onVisibilityChanged, super.key,});
   final Widget child;
   final void Function(VisibilityInfo) onVisibilityChanged;
 
@@ -76,7 +76,7 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
         final visibleFraction = visibleHeight / size.height;
 
         widget.onVisibilityChanged(
-            VisibilityInfo(visibleFraction: visibleFraction));
+            VisibilityInfo(visibleFraction: visibleFraction),);
       }
     }
   }
@@ -91,8 +91,7 @@ class VisibilityInfo {
 /// Виджет с кэшированием изображений
 class CachedImageWidget extends StatelessWidget {
   const CachedImageWidget({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit,
@@ -118,7 +117,7 @@ class CachedImageWidget extends StatelessWidget {
           errorWidget: (context, url, error) =>
               errorWidget ??
               Container(
-                  color: Colors.grey[300], child: const Icon(Icons.error)),
+                  color: Colors.grey[300], child: const Icon(Icons.error),),
         ),
       );
 }
@@ -126,9 +125,7 @@ class CachedImageWidget extends StatelessWidget {
 /// Виджет с виртуализацией списка
 class VirtualizedList extends StatelessWidget {
   const VirtualizedList({
-    super.key,
-    required this.itemCount,
-    required this.itemBuilder,
+    required this.itemCount, required this.itemBuilder, super.key,
     this.itemHeight,
     this.padding,
   });
@@ -148,7 +145,7 @@ class VirtualizedList extends StatelessWidget {
       );
     } else {
       return ListView.builder(
-          padding: padding, itemCount: itemCount, itemBuilder: itemBuilder);
+          padding: padding, itemCount: itemCount, itemBuilder: itemBuilder,);
     }
   }
 }
@@ -156,9 +153,7 @@ class VirtualizedList extends StatelessWidget {
 /// Виджет с пагинацией
 class PaginatedList extends StatefulWidget {
   const PaginatedList({
-    super.key,
-    required this.loadData,
-    required this.itemBuilder,
+    required this.loadData, required this.itemBuilder, super.key,
     this.itemsPerPage = 20,
     this.loadingWidget,
     this.errorWidget,
@@ -280,8 +275,7 @@ class _PaginatedListState extends State<PaginatedList> {
 /// Виджет с дебаунсом
 class DebouncedWidget extends StatefulWidget {
   const DebouncedWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = const Duration(milliseconds: 300),
     this.onDebounce,
   });
@@ -317,8 +311,7 @@ class _DebouncedWidgetState extends State<DebouncedWidget> {
 /// Виджет с троттлингом
 class ThrottledWidget extends StatefulWidget {
   const ThrottledWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.interval = const Duration(milliseconds: 1000),
     this.onThrottle,
   });
@@ -349,9 +342,7 @@ class _ThrottledWidgetState extends State<ThrottledWidget> {
 /// Виджет с предзагрузкой
 class PreloadWidget extends StatefulWidget {
   const PreloadWidget({
-    super.key,
-    required this.child,
-    required this.preloadFunction,
+    required this.child, required this.preloadFunction, super.key,
     this.loadingWidget,
   });
   final Widget child;

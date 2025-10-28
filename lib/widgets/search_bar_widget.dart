@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 ///
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({
-    super.key,
-    required this.hintText,
+    required this.hintText, super.key,
     this.onChanged,
     this.onFilterTap,
     this.initialValue,

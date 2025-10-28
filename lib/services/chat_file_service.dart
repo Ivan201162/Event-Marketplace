@@ -2,10 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/app_constants.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-import '../core/app_constants.dart';
-import '../core/feature_flags.dart';
 
 /// Сервис для работы с файлами в чате
 class ChatFileService {

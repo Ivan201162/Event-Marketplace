@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/city_region.dart';
+import 'package:event_marketplace_app/services/city_region_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../models/city_region.dart';
-import '../services/city_region_service.dart';
 
 /// Провайдер сервиса городов и регионов
 final cityRegionServiceProvider =
@@ -204,7 +203,7 @@ class NearbyCitiesNotifier extends Notifier<AsyncValue<List<CityRegion>>> {
       final position = await _service.getCurrentLocation();
       if (position != null) {
         await getNearbyCities(
-            latitude: position.latitude, longitude: position.longitude);
+            latitude: position.latitude, longitude: position.longitude,);
       } else {
         state =
             const AsyncValue.error('Не удалось получить местоположение', null);

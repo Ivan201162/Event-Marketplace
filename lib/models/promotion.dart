@@ -10,13 +10,10 @@ class Promotion {
     required this.discount,
     required this.startDate,
     required this.endDate,
-    this.imageUrl,
-    required this.specialistId,
+    required this.specialistId, required this.createdAt, required this.updatedAt, this.imageUrl,
     this.specialistName,
     this.city,
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создание из Firestore документа

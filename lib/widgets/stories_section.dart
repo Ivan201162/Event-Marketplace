@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/core/constants/app_routes.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../core/constants/app_routes.dart';
-import '../models/story.dart';
-import '../services/story_service.dart';
 
 /// Виджет секции сторисов специалистов
 class StoriesSection extends ConsumerStatefulWidget {
@@ -30,7 +29,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
       setState(() => _isLoading = true);
 
       // Получаем список специалистов с активными сторисами
-      final allStories = await _storyService.getAllActiveStories();
+      final allStories = _storyService.getAllActiveStories();
 
       // Группируем сторисы по пользователям
       final userStories = <String, List<Story>>{};
@@ -51,7 +50,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки сторисов: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -118,7 +117,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
         margin: const EdgeInsets.symmetric(vertical: 16),
         child: const Center(
           child: Text('Пока нет активных сторисов',
-              style: TextStyle(color: Colors.grey, fontSize: 16)),
+              style: TextStyle(color: Colors.grey, fontSize: 16),),
         ),
       );
 
@@ -151,7 +150,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
                 backgroundColor:
                     Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 child: Icon(Icons.person,
-                    color: Theme.of(context).primaryColor, size: 30),
+                    color: Theme.of(context).primaryColor, size: 30,),
               ),
             ),
             const SizedBox(height: 4),
@@ -189,14 +188,14 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
 
   void _openStoriesView(String userId, List<Story> stories) {
     context.push(AppRoutes.storiesView,
-        extra: {'userId': userId, 'stories': stories});
+        extra: {'userId': userId, 'stories': stories},);
   }
 }
 
 /// Экран просмотра сторисов
 class StoriesViewScreen extends ConsumerStatefulWidget {
   const StoriesViewScreen(
-      {super.key, required this.userId, required this.stories});
+      {required this.userId, required this.stories, super.key,});
   final String userId;
   final List<Story> stories;
 
@@ -277,7 +276,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
         ),
         body: const Center(
           child: Text('Нет активных сторисов',
-              style: TextStyle(color: Colors.white, fontSize: 18)),
+              style: TextStyle(color: Colors.white, fontSize: 18),),
         ),
       );
     }
@@ -329,15 +328,15 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return const Center(
-              child: CircularProgressIndicator(color: Colors.white));
+              child: CircularProgressIndicator(color: Colors.white),);
         },
         errorBuilder: (context, error, stackTrace) => const Center(
-            child: Icon(Icons.error, color: Colors.white, size: 50)),
+            child: Icon(Icons.error, color: Colors.white, size: 50),),
       );
 
   Widget _buildVideoContent(Story story) {
     // В реальном приложении здесь бы использовался video_player
-    return Container(
+    return ColoredBox(
       color: Colors.grey.shade900,
       child: const Center(
         child: Column(
@@ -346,7 +345,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
             Icon(Icons.play_circle_outline, color: Colors.white, size: 80),
             SizedBox(height: 16),
             Text('Видео контент',
-                style: TextStyle(color: Colors.white, fontSize: 18)),
+                style: TextStyle(color: Colors.white, fontSize: 18),),
           ],
         ),
       ),
@@ -370,7 +369,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
                       child: Container(
                         height: 3,
                         margin: EdgeInsets.only(
-                            right: index < widget.stories.length - 1 ? 4 : 0),
+                            right: index < widget.stories.length - 1 ? 4 : 0,),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(2),
@@ -395,7 +394,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
                       icon: const Icon(Icons.close,
-                          color: Colors.white, size: 28),
+                          color: Colors.white, size: 28,),
                     ),
                     Text(
                       '${_currentIndex + 1}/${widget.stories.length}',
@@ -438,18 +437,18 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
             children: [
               if (story.caption.isNotEmpty)
                 Text(story.caption,
-                    style: const TextStyle(color: Colors.white, fontSize: 16)),
+                    style: const TextStyle(color: Colors.white, fontSize: 16),),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Icon(Icons.visibility,
-                      color: Colors.white.withValues(alpha: 0.7), size: 16),
+                      color: Colors.white.withValues(alpha: 0.7), size: 16,),
                   const SizedBox(width: 4),
                   Text(
                     '${story.viewCount}',
                     style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.7),
-                        fontSize: 14),
+                        fontSize: 14,),
                   ),
                 ],
               ),

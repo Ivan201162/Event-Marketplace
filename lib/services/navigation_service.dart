@@ -1,16 +1,15 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 
 /// Сервис для управления навигацией с логированием
 class NavigationService {
   static final List<String> _navigationHistory = [];
-  static final int _maxHistorySize = 50;
+  static const int _maxHistorySize = 50;
 
   /// Логировать переход
   static void logNavigation(String from, String to,
-      {Map<String, dynamic>? data}) {
+      {Map<String, dynamic>? data,}) {
     try {
       final timestamp = DateTime.now().toIso8601String();
       final logEntry = {
@@ -42,11 +41,11 @@ class NavigationService {
 
   /// Безопасный переход с обработкой ошибок
   static Future<void> safeGo(BuildContext context, String path,
-      {Object? extra}) async {
+      {Object? extra,}) async {
     try {
       final currentPath = GoRouterState.of(context).uri.path;
       logNavigation(currentPath, path,
-          data: extra != null ? {'extra': extra.toString()} : null);
+          data: extra != null ? {'extra': extra.toString()} : null,);
 
       context.go(path, extra: extra);
     } catch (e) {
@@ -64,11 +63,11 @@ class NavigationService {
 
   /// Безопасный push с обработкой ошибок
   static Future<void> safePush(BuildContext context, String path,
-      {Object? extra}) async {
+      {Object? extra,}) async {
     try {
       final currentPath = GoRouterState.of(context).uri.path;
       logNavigation(currentPath, path,
-          data: {'action': 'push', 'extra': extra?.toString()});
+          data: {'action': 'push', 'extra': extra?.toString()},);
 
       context.push(path, extra: extra);
     } catch (e) {
@@ -151,7 +150,7 @@ class NavigationService {
       // Если мы на главной странице, показываем диалог выхода
       if (currentPath == '/main' || currentPath == '/') {
         final shouldExit = await _showExitDialog(context);
-        if (shouldExit == true) {
+        if (shouldExit ?? false) {
           return true; // Разрешаем выход из приложения
         }
         return false; // Отменяем выход
@@ -213,7 +212,7 @@ class NavigationService {
     // Проверяем параметризованные маршруты
     for (final validRoute in validRoutes) {
       if (validRoute.contains(':')) {
-        final pattern = validRoute.replaceAll(RegExp(r':\w+'), r'[^/]+');
+        final pattern = validRoute.replaceAll(RegExp(r':\w+'), '[^/]+');
         if (RegExp('^$pattern\$').hasMatch(route)) {
           return true;
         }

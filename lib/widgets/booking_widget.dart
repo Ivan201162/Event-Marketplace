@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist.dart';
-
 /// Widget for booking specialist services
 class BookingWidget extends ConsumerStatefulWidget {
-  final Specialist specialist;
-  final Function(BookingData) onBookingConfirmed;
 
   const BookingWidget(
-      {super.key, required this.specialist, required this.onBookingConfirmed});
+      {required this.specialist, required this.onBookingConfirmed, super.key,});
+  final Specialist specialist;
+  final Function(BookingData) onBookingConfirmed;
 
   @override
   ConsumerState<BookingWidget> createState() => _BookingWidgetState();
@@ -64,7 +63,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                       Text(
                         widget.specialist.name,
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       Text(
                         widget.specialist.specialization,
@@ -160,7 +159,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                   onPressed: _canBook() ? _confirmBooking : null,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 12),
+                        horizontal: 32, vertical: 12,),
                   ),
                   child: const Text('Забронировать'),
                 ),
@@ -177,7 +176,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Выберите услугу',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         const SizedBox(height: 12),
         if (widget.specialist.services.isNotEmpty)
           ...widget.specialist.services.map(
@@ -195,7 +194,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
         else
           const Card(
             child: Padding(
-                padding: EdgeInsets.all(16), child: Text('Услуги не указаны')),
+                padding: EdgeInsets.all(16), child: Text('Услуги не указаны'),),
           ),
       ],
     );
@@ -206,7 +205,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Выберите дату',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         const SizedBox(height: 12),
         InkWell(
           onTap: _selectDate,
@@ -247,7 +246,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Выберите время',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         const SizedBox(height: 12),
         InkWell(
           onTap: _selectTime,
@@ -288,7 +287,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Длительность',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -368,7 +367,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
               children: [
                 const Text('Итого:',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                 Text(
                   '$totalPrice ₽',
                   style: const TextStyle(
@@ -414,7 +413,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
   }
 
   int _calculateTotalPrice() {
-    return (widget.specialist.pricePerHour * _duration).round();
+    return widget.specialist.pricePerHour * _duration;
   }
 
   bool _canBook() {
@@ -444,14 +443,6 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
 
 /// Data class for booking information
 class BookingData {
-  final String specialistId;
-  final String specialistName;
-  final String service;
-  final DateTime date;
-  final TimeOfDay time;
-  final int duration;
-  final int totalPrice;
-  final String notes;
 
   BookingData({
     required this.specialistId,
@@ -463,4 +454,12 @@ class BookingData {
     required this.totalPrice,
     required this.notes,
   });
+  final String specialistId;
+  final String specialistName;
+  final String service;
+  final DateTime date;
+  final TimeOfDay time;
+  final int duration;
+  final int totalPrice;
+  final String notes;
 }

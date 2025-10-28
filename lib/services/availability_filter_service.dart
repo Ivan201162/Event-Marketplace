@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/specialist_schedule.dart';
-import '../models/user.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist_schedule.dart';
+import 'package:event_marketplace_app/models/user.dart';
 
 /// Модель фильтра доступности
 class AvailabilityFilter {
@@ -85,13 +85,7 @@ class SpecialistAvailability {
   const SpecialistAvailability({
     required this.specialistId,
     required this.specialistName,
-    this.specialistPhoto,
-    required this.availableSlots,
-    required this.busySlots,
-    required this.weeklyAvailability,
-    required this.availabilityScore,
-    required this.availableDays,
-    required this.availableHours,
+    required this.availableSlots, required this.busySlots, required this.weeklyAvailability, required this.availabilityScore, required this.availableDays, required this.availableHours, this.specialistPhoto,
   });
 
   /// Создать из Map
@@ -182,8 +176,8 @@ class AvailabilityFilterService {
           .where('specialistId', isEqualTo: specialistId)
           .where('status', whereIn: [
             BookingStatus.pending.name,
-            BookingStatus.confirmed.name
-          ])
+            BookingStatus.confirmed.name,
+          ],)
           .where('eventDate', isGreaterThanOrEqualTo: start)
           .where('eventDate', isLessThanOrEqualTo: end)
           .get();
@@ -223,7 +217,7 @@ class AvailabilityFilterService {
 
   /// Получить список специалистов с фильтрацией по доступности
   Future<List<SpecialistAvailability>> getAvailableSpecialists(
-      AvailabilityFilter filter) async {
+      AvailabilityFilter filter,) async {
     if (!FeatureFlags.availabilityFilterEnabled) {
       return _createMockSpecialistsList();
     }
@@ -280,8 +274,8 @@ class AvailabilityFilterService {
           .where('specialistId', isEqualTo: specialistId)
           .where('status', whereIn: [
             BookingStatus.pending.name,
-            BookingStatus.confirmed.name
-          ])
+            BookingStatus.confirmed.name,
+          ],)
           .where('eventDate', isGreaterThanOrEqualTo: now)
           .where('eventDate', isLessThanOrEqualTo: endDate)
           .get();
@@ -294,7 +288,7 @@ class AvailabilityFilterService {
         // Добавляем дату события как занятую
         busyDates.add(
           DateTime(booking.eventDate.year, booking.eventDate.month,
-              booking.eventDate.day),
+              booking.eventDate.day,),
         );
       }
 
@@ -335,8 +329,8 @@ class AvailabilityFilterService {
           .where('eventDate', isLessThan: endOfDay)
           .where('status', whereIn: [
         BookingStatus.pending.name,
-        BookingStatus.confirmed.name
-      ]).get();
+        BookingStatus.confirmed.name,
+      ],).get();
 
       final scheduleEvents = scheduleQuery.docs
           .map((doc) => ScheduleEvent.fromMap({'id': doc.id, ...doc.data()}))
@@ -360,7 +354,7 @@ class AvailabilityFilterService {
 
   /// Проверить, соответствует ли специалист фильтру
   bool _matchesFilter(
-      SpecialistAvailability availability, AvailabilityFilter filter) {
+      SpecialistAvailability availability, AvailabilityFilter filter,) {
     if (!filter.onlyAvailable) return true;
 
     // Проверяем предпочитаемые дни
@@ -503,7 +497,7 @@ class AvailabilityFilterService {
       'thursday',
       'friday',
       'saturday',
-      'sunday'
+      'sunday',
     ];
     return days[dayIndex];
   }
@@ -544,7 +538,7 @@ class AvailabilityFilterService {
       'tuesday',
       'wednesday',
       'thursday',
-      'friday'
+      'friday',
     ];
     final availableHours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/enhanced_feed_post.dart';
-import '../core/feature_flags.dart';
 
 /// Провайдеры для реальных данных ленты
 class RealFeedProviders {
@@ -94,7 +94,7 @@ class RealFeedProviders {
     final snapshot = await FirebaseFirestore.instance
         .collection('posts')
         .where('content', isGreaterThanOrEqualTo: query)
-        .where('content', isLessThanOrEqualTo: query + '\uf8ff')
+        .where('content', isLessThanOrEqualTo: '$query\uf8ff')
         .orderBy('content')
         .orderBy('createdAt', descending: true)
         .limit(20)

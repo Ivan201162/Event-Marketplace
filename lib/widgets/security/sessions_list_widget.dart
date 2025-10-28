@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
 
 /// Виджет списка активных сессий
 class SessionsListWidget extends StatefulWidget {
   const SessionsListWidget({
-    super.key,
-    required this.sessions,
+    required this.sessions, super.key,
   });
 
   final List<UserSession> sessions;
@@ -47,7 +46,7 @@ class _SessionsListWidgetState extends State<SessionsListWidget> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       setState(() => _isLoading = true);
 
       try {
@@ -101,7 +100,7 @@ class _SessionsListWidgetState extends State<SessionsListWidget> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       setState(() => _isLoading = true);
 
       try {

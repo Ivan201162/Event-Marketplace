@@ -1,20 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/notification_template.dart';
+import 'package:event_marketplace_app/models/subscription.dart';
+import 'package:event_marketplace_app/models/subscription_notification.dart';
+import 'package:event_marketplace_app/providers/subscription_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/notification_template.dart';
-import '../models/subscription.dart';
-import '../models/subscription_notification.dart';
-import '../providers/subscription_providers.dart';
 
 /// Виджет кнопки подписки
 class SubscribeButton extends ConsumerStatefulWidget {
   const SubscribeButton({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, required this.userId, super.key,
     this.specialistPhotoUrl,
-    required this.userId,
     this.onSubscriptionChanged,
   });
   final String specialistId;
@@ -35,7 +31,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
     final isSubscribedAsync = ref.watch(
       isSubscribedProvider(
         IsSubscribedParams(
-            userId: widget.userId, specialistId: widget.specialistId),
+            userId: widget.userId, specialistId: widget.specialistId,),
       ),
     );
 
@@ -58,7 +54,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       loading: () => const CircularProgressIndicator(),
       error: (error, stack) => TextButton(
           onPressed: () => _toggleSubscription(false),
-          child: const Text('Подписаться')),
+          child: const Text('Подписаться'),),
     );
   }
 
@@ -72,7 +68,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
 
       if (isSubscribed) {
         await service.unsubscribeFromSpecialist(
-            widget.userId, widget.specialistId);
+            widget.userId, widget.specialistId,);
       } else {
         await service.subscribeToSpecialist(
           userId: widget.userId,
@@ -86,7 +82,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       ref.invalidate(
         isSubscribedProvider(
           IsSubscribedParams(
-              userId: widget.userId, specialistId: widget.specialistId),
+              userId: widget.userId, specialistId: widget.specialistId,),
         ),
       );
 
@@ -109,7 +105,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {
@@ -123,7 +119,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
 
 /// Виджет списка подписок
 class SubscriptionsListWidget extends ConsumerWidget {
-  const SubscriptionsListWidget({super.key, required this.userId});
+  const SubscriptionsListWidget({required this.userId, super.key});
   final String userId;
 
   @override
@@ -140,7 +136,7 @@ class SubscriptionsListWidget extends ConsumerWidget {
                 Icon(Icons.person_add, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
                 Text('Нет подписок',
-                    style: TextStyle(fontSize: 18, color: Colors.grey)),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),),
                 SizedBox(height: 8),
                 Text(
                   'Подпишитесь на специалистов, чтобы видеть их посты',
@@ -171,7 +167,7 @@ class SubscriptionsListWidget extends ConsumerWidget {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки подписок',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -209,7 +205,7 @@ class SubscriptionsListWidget extends ConsumerWidget {
 /// Виджет элемента подписки
 class SubscriptionTile extends StatelessWidget {
   const SubscriptionTile(
-      {super.key, required this.subscription, this.onUnsubscribe});
+      {required this.subscription, super.key, this.onUnsubscribe,});
   final Subscription subscription;
   final VoidCallback? onUnsubscribe;
 
@@ -223,7 +219,6 @@ class SubscriptionTile extends StatelessWidget {
             switch (value) {
               case 'unsubscribe':
                 onUnsubscribe?.call();
-                break;
               case 'view_profile':
                 // TODO(developer): Перейти к профилю специалиста
                 break;
@@ -235,8 +230,8 @@ class SubscriptionTile extends StatelessWidget {
               child: Row(children: [
                 Icon(Icons.person, size: 20),
                 SizedBox(width: 8),
-                Text('Профиль')
-              ]),
+                Text('Профиль'),
+              ],),
             ),
             const PopupMenuItem(
               value: 'unsubscribe',
@@ -244,7 +239,7 @@ class SubscriptionTile extends StatelessWidget {
                 children: [
                   Icon(Icons.person_remove, size: 20),
                   SizedBox(width: 8),
-                  Text('Отписаться')
+                  Text('Отписаться'),
                 ],
               ),
             ),
@@ -257,7 +252,7 @@ class SubscriptionTile extends StatelessWidget {
 
 /// Виджет уведомлений о подписках
 class SubscriptionNotificationsWidget extends ConsumerWidget {
-  const SubscriptionNotificationsWidget({super.key, required this.userId});
+  const SubscriptionNotificationsWidget({required this.userId, super.key});
   final String userId;
 
   @override
@@ -274,7 +269,7 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
                 Icon(Icons.notifications_none, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
                 Text('Нет уведомлений',
-                    style: TextStyle(fontSize: 18, color: Colors.grey)),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),),
               ],
             ),
           );
@@ -346,7 +341,7 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
 
 /// Виджет элемента уведомления
 class NotificationTile extends StatelessWidget {
-  const NotificationTile({super.key, required this.notification, this.onTap});
+  const NotificationTile({required this.notification, super.key, this.onTap});
   final SubscriptionNotification notification;
   final VoidCallback? onTap;
 
@@ -374,7 +369,7 @@ class NotificationTile extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: const BoxDecoration(
-                    color: Colors.blue, shape: BoxShape.circle),
+                    color: Colors.blue, shape: BoxShape.circle,),
               ),
           ],
         ),

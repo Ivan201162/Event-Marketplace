@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 /// Анимированная кнопка
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
-    required this.child,
-    required this.onPressed,
+    required this.child, required this.onPressed, super.key,
     this.duration = const Duration(milliseconds: 150),
     this.scale = 0.95,
   });
@@ -49,7 +47,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
         child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) => Transform.scale(
-              scale: _scaleAnimation.value, child: widget.child),
+              scale: _scaleAnimation.value, child: widget.child,),
         ),
       );
 }

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/services/specialist_price_management_service.dart';
 import 'package:flutter/material.dart';
-import '../services/specialist_price_management_service.dart';
 
 /// Виджет для управления ценами специалиста
 class SpecialistPriceManagementWidget extends StatefulWidget {
   const SpecialistPriceManagementWidget({
-    super.key,
-    required this.specialistId,
+    required this.specialistId, super.key,
     this.onPriceAdded,
     this.onPriceUpdated,
     this.onPriceDeleted,
@@ -277,7 +276,7 @@ class _SpecialistPriceManagementWidgetState
             _ErrorWidget(error: _error!, onRetry: _loadPrices),
           if (!_isLoading && _error == null) ...[
             if (_showAddForm) _buildAddForm(),
-            _buildPricesList()
+            _buildPricesList(),
           ],
         ],
       );
@@ -318,7 +317,7 @@ class _SpecialistPriceManagementWidgetState
                       ? 'Добавить цену'
                       : 'Редактировать цену',
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -365,7 +364,7 @@ class _SpecialistPriceManagementWidgetState
                     ),
                     const SizedBox(width: 8),
                     TextButton(
-                        onPressed: _hideAddForm, child: const Text('Отмена')),
+                        onPressed: _hideAddForm, child: const Text('Отмена'),),
                   ],
                 ),
               ],
@@ -394,14 +393,14 @@ class _SpecialistPriceManagementWidgetState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   Future<bool> _showDeleteConfirmation(String serviceName) async =>
@@ -410,7 +409,7 @@ class _SpecialistPriceManagementWidgetState
         builder: (context) => AlertDialog(
           title: const Text('Удалить цену'),
           content: Text(
-              'Вы уверены, что хотите удалить цену для услуги "$serviceName"?'),
+              'Вы уверены, что хотите удалить цену для услуги "$serviceName"?',),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -439,7 +438,7 @@ class _LoadingWidget extends StatelessWidget {
             SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2)),
+                child: CircularProgressIndicator(strokeWidth: 2),),
             SizedBox(width: 12),
             Text('Загружаем цены...'),
           ],
@@ -506,14 +505,14 @@ class _PriceCard extends StatelessWidget {
                           Text(
                             price.serviceName,
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,),
                           ),
                           if (price.description != null) ...[
                             const SizedBox(height: 4),
                             Text(
                               price.description!,
                               style: const TextStyle(
-                                  fontSize: 12, color: Colors.grey),
+                                  fontSize: 12, color: Colors.grey,),
                             ),
                           ],
                         ],
@@ -521,7 +520,7 @@ class _PriceCard extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: price.isActive ? Colors.green : Colors.grey,
                         borderRadius: BorderRadius.circular(12),
@@ -570,7 +569,7 @@ class _PriceCard extends StatelessWidget {
                       onPressed: onToggleStatus,
                       icon: Icon(
                           price.isActive ? Icons.pause : Icons.play_arrow,
-                          size: 20),
+                          size: 20,),
                       tooltip:
                           price.isActive ? 'Деактивировать' : 'Активировать',
                     ),

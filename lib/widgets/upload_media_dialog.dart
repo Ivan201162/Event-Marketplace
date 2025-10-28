@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/gallery_item.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/gallery_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../models/gallery_item.dart';
-import '../providers/auth_providers.dart';
-import '../services/gallery_service.dart';
 
 /// Диалог загрузки медиа в галерею
 class UploadMediaDialog extends ConsumerStatefulWidget {
@@ -59,7 +58,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
                 // Поля формы
                 if (_selectedFile != null) ...[
                   _buildFormFields(),
-                  const SizedBox(height: 16)
+                  const SizedBox(height: 16),
                 ],
 
                 // Ошибка
@@ -77,7 +76,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(_error!,
-                              style: TextStyle(color: Colors.red[600])),
+                              style: TextStyle(color: Colors.red[600]),),
                         ),
                       ],
                     ),
@@ -148,7 +147,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Выберите файл',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           if (_selectedFile == null) ...[
             Row(
@@ -198,7 +197,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
                         ),
                         Text(
                           _formatFileSize(
-                              File(_selectedFile!.path).lengthSync()),
+                              File(_selectedFile!.path).lengthSync(),),
                           style:
                               TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
@@ -227,7 +226,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
           TextFormField(
             controller: _titleController,
             decoration: const InputDecoration(
-                labelText: 'Название *', border: OutlineInputBorder()),
+                labelText: 'Название *', border: OutlineInputBorder(),),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Введите название';
@@ -241,7 +240,7 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
           TextFormField(
             controller: _descriptionController,
             decoration: const InputDecoration(
-                labelText: 'Описание', border: OutlineInputBorder()),
+                labelText: 'Описание', border: OutlineInputBorder(),),
             maxLines: 3,
           ),
           const SizedBox(height: 16),

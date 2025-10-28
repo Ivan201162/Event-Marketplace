@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 /// Оптимизированная кнопка
 class OptimizedButton extends StatelessWidget {
   const OptimizedButton({
-    super.key,
-    required this.onPressed,
-    required this.child,
+    required this.onPressed, required this.child, super.key,
     this.style,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
   });
@@ -28,8 +26,7 @@ class OptimizedButton extends StatelessWidget {
 /// Оптимизированная карточка
 class OptimizedCard extends StatelessWidget {
   const OptimizedCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.margin = const EdgeInsets.all(8),
     this.padding = const EdgeInsets.all(16),
     this.elevation = 2,
@@ -47,7 +44,7 @@ class OptimizedCard extends StatelessWidget {
         margin: margin,
         elevation: elevation,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius)),
+            borderRadius: BorderRadius.circular(borderRadius),),
         child: Padding(padding: padding, child: child),
       );
 }
@@ -85,9 +82,7 @@ class OptimizedListTile extends StatelessWidget {
 /// Оптимизированный контейнер с градиентом
 class OptimizedGradientContainer extends StatelessWidget {
   const OptimizedGradientContainer({
-    super.key,
-    required this.child,
-    required this.gradient,
+    required this.child, required this.gradient, super.key,
     this.padding = const EdgeInsets.all(16),
     this.borderRadius = 8,
   });
@@ -130,7 +125,7 @@ class OptimizedText extends StatelessWidget {
       style: style,
       textAlign: textAlign,
       maxLines: maxLines,
-      overflow: overflow);
+      overflow: overflow,);
 }
 
 /// Оптимизированная иконка
@@ -186,8 +181,7 @@ class OptimizedSpacing extends StatelessWidget {
 /// Оптимизированный контейнер с тенью
 class OptimizedShadowContainer extends StatelessWidget {
   const OptimizedShadowContainer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding = const EdgeInsets.all(16),
     this.margin = const EdgeInsets.all(8),
     this.borderRadius = 8,
@@ -223,7 +217,7 @@ class OptimizedShadowContainer extends StatelessWidget {
 /// Оптимизированный индикатор загрузки
 class OptimizedLoadingIndicator extends StatelessWidget {
   const OptimizedLoadingIndicator(
-      {super.key, this.size = 24, this.strokeWidth = 2, this.color});
+      {super.key, this.size = 24, this.strokeWidth = 2, this.color,});
 
   final double size;
   final double strokeWidth;
@@ -236,7 +230,7 @@ class OptimizedLoadingIndicator extends StatelessWidget {
         child: CircularProgressIndicator(
           strokeWidth: strokeWidth,
           valueColor: AlwaysStoppedAnimation<Color>(
-              color ?? Theme.of(context).primaryColor),
+              color ?? Theme.of(context).primaryColor,),
         ),
       );
 }

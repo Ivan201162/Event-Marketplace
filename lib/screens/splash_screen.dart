@@ -177,11 +177,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
             const SizedBox(height: 20),
             Text('Status: $_statusText',
-                style: const TextStyle(color: Colors.white, fontSize: 16)),
+                style: const TextStyle(color: Colors.white, fontSize: 16),),
             const SizedBox(height: 10),
             Text(
               'Progress: ${(_progress * 100).toInt()}%',

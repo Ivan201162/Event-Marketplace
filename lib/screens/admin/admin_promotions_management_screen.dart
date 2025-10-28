@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/admin_models.dart';
+import 'package:event_marketplace_app/services/marketing_admin_service.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../models/admin_models.dart';
-import '../../services/marketing_admin_service.dart';
 
 class AdminPromotionsManagementScreen extends StatefulWidget {
   const AdminPromotionsManagementScreen({super.key});
@@ -44,7 +43,7 @@ class _AdminPromotionsManagementScreen
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => _showCreatePromotionDialog()),
+              onPressed: _showCreatePromotionDialog,),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -72,7 +71,7 @@ class _AdminPromotionsManagementScreen
             itemCount: campaigns.length,
             itemBuilder: (context, index) {
               final campaignData =
-                  campaigns[index].data() as Map<String, dynamic>;
+                  campaigns[index].data()! as Map<String, dynamic>;
               final campaign = MarketingCampaign.fromMap(campaignData);
 
               return Card(
@@ -81,16 +80,16 @@ class _AdminPromotionsManagementScreen
                   leading: CircleAvatar(
                     backgroundColor: _getCampaignColor(campaign.status),
                     child: Icon(_getCampaignIcon(campaign.type),
-                        color: Colors.white),
+                        color: Colors.white,),
                   ),
                   title: Text(campaign.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                      style: const TextStyle(fontWeight: FontWeight.bold),),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Тип: ${_getCampaignTypeName(campaign.type)}'),
                       Text(
-                          'Статус: ${_getCampaignStatusName(campaign.status)}'),
+                          'Статус: ${_getCampaignStatusName(campaign.status)}',),
                       if (campaign.budget != null)
                         Text('Бюджет: ${campaign.budget}₽'),
                       Text('Начало: ${_formatDate(campaign.startDate)}'),
@@ -114,7 +113,7 @@ class _AdminPromotionsManagementScreen
                         child: ListTile(
                           leading: Icon(Icons.play_arrow, color: Colors.green),
                           title: Text('Активировать',
-                              style: TextStyle(color: Colors.green)),
+                              style: TextStyle(color: Colors.green),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -123,7 +122,7 @@ class _AdminPromotionsManagementScreen
                         child: ListTile(
                           leading: Icon(Icons.pause, color: Colors.orange),
                           title: Text('Приостановить',
-                              style: TextStyle(color: Colors.orange)),
+                              style: TextStyle(color: Colors.orange),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -132,7 +131,7 @@ class _AdminPromotionsManagementScreen
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
                           title: Text('Удалить',
-                              style: TextStyle(color: Colors.red)),
+                              style: TextStyle(color: Colors.red),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -198,7 +197,7 @@ class _AdminPromotionsManagementScreen
                 ),
                 items: MarketingCampaignType.values.map((type) {
                   return DropdownMenuItem(
-                      value: type, child: Text(_getCampaignTypeName(type)));
+                      value: type, child: Text(_getCampaignTypeName(type)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -229,7 +228,7 @@ class _AdminPromotionsManagementScreen
               ListTile(
                 title: const Text('Дата начала'),
                 subtitle: Text(
-                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                    '${_startDate.day}.${_startDate.month}.${_startDate.year}',),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
@@ -246,9 +245,9 @@ class _AdminPromotionsManagementScreen
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
-              onPressed: _createPromotion, child: const Text('Создать')),
+              onPressed: _createPromotion, child: const Text('Создать'),),
         ],
       ),
     );
@@ -278,7 +277,7 @@ class _AdminPromotionsManagementScreen
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Заполните название кампании')));
+          const SnackBar(content: Text('Заполните название кампании')),);
       return;
     }
 
@@ -314,12 +313,12 @@ class _AdminPromotionsManagementScreen
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Промо-кампания создана успешно')));
+            const SnackBar(content: Text('Промо-кампания создана успешно')),);
       } else {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка создания промо-кампании')));
+            const SnackBar(content: Text('Ошибка создания промо-кампании')),);
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -331,16 +330,12 @@ class _AdminPromotionsManagementScreen
     switch (action) {
       case 'edit':
         _showEditCampaignDialog(campaign);
-        break;
       case 'activate':
         _toggleCampaignStatus(campaign, MarketingCampaignStatus.active);
-        break;
       case 'pause':
         _toggleCampaignStatus(campaign, MarketingCampaignStatus.paused);
-        break;
       case 'delete':
         _deleteCampaign(campaign);
-        break;
     }
   }
 
@@ -395,7 +390,7 @@ class _AdminPromotionsManagementScreen
                 ),
                 items: MarketingCampaignType.values.map((type) {
                   return DropdownMenuItem(
-                      value: type, child: Text(_getCampaignTypeName(type)));
+                      value: type, child: Text(_getCampaignTypeName(type)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -426,7 +421,7 @@ class _AdminPromotionsManagementScreen
               ListTile(
                 title: const Text('Дата начала'),
                 subtitle: Text(
-                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                    '${_startDate.day}.${_startDate.month}.${_startDate.year}',),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
@@ -443,7 +438,7 @@ class _AdminPromotionsManagementScreen
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => _updateCampaign(campaign),
             child: const Text('Сохранить'),
@@ -484,12 +479,12 @@ class _AdminPromotionsManagementScreen
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Промо-кампания обновлена успешно')));
+            const SnackBar(content: Text('Промо-кампания обновлена успешно')),);
       } else {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка обновления промо-кампании')));
+            const SnackBar(content: Text('Ошибка обновления промо-кампании')),);
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -517,14 +512,14 @@ class _AdminPromotionsManagementScreen
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Статус кампании изменен на ${_getCampaignStatusName(newStatus)}'),
+                'Статус кампании изменен на ${_getCampaignStatusName(newStatus)}',),
           ),
         );
       } else {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка изменения статуса кампании')));
+            const SnackBar(content: Text('Ошибка изменения статуса кампании')),);
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -542,7 +537,7 @@ class _AdminPromotionsManagementScreen
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -552,7 +547,7 @@ class _AdminPromotionsManagementScreen
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         await FirebaseFirestore.instance
             .collection('marketing_campaigns')

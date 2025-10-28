@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/core/responsive_utils.dart';
+import 'package:event_marketplace_app/providers/app_review_provider.dart';
+import 'package:event_marketplace_app/services/app_review_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/responsive_utils.dart';
-import '../providers/app_review_provider.dart';
-import '../services/app_review_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Виджет для отображения диалога запроса отзыва
 class AppReviewDialog extends ConsumerWidget {
@@ -28,7 +27,7 @@ class AppReviewDialog extends ConsumerWidget {
             ),
             SizedBox(height: 16),
             Text(
-                'Ваша оценка поможет другим пользователям найти наше приложение.'),
+                'Ваша оценка поможет другим пользователям найти наше приложение.',),
           ],
         ),
         actions: [
@@ -68,7 +67,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
               const Icon(Icons.star),
               const SizedBox(width: 12),
               const Expanded(
-                  child: ResponsiveText('Отзывы о приложении', isTitle: true)),
+                  child: ResponsiveText('Отзывы о приложении', isTitle: true),),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => ref.read(appReviewProvider.notifier).refresh(),
@@ -103,15 +102,15 @@ class AppReviewSettingsWidget extends ConsumerWidget {
             data: (stats) => Column(
               children: [
                 _buildInfoRow('Запусков приложения', '${stats.appLaunchCount}',
-                    Icons.play_arrow),
+                    Icons.play_arrow,),
                 _buildInfoRow('Запросов отзыва', '${stats.reviewRequestCount}',
-                    Icons.star),
+                    Icons.star,),
                 if (stats.lastReviewRequest != null)
                   _buildInfoRow('Последний запрос', stats.formattedLastRequest,
-                      Icons.access_time),
+                      Icons.access_time,),
                 if (stats.lastFeatureUsed != null)
                   _buildInfoRow('Последняя функция', stats.lastFeatureUsed!,
-                      Icons.functions),
+                      Icons.functions,),
               ],
             ),
             loading: () => const CircularProgressIndicator(),
@@ -138,7 +137,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
                       : const Icon(Icons.star),
                   label: Text(reviewState.isRequesting
                       ? 'Запрос...'
-                      : 'Запросить отзыв'),
+                      : 'Запросить отзыв',),
                 ),
               ),
               const SizedBox(width: 8),
@@ -232,7 +231,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
             const SizedBox(width: 12),
             Expanded(child: ResponsiveText(label, isSubtitle: true)),
             ResponsiveText(value,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
           ],
         ),
       );
@@ -248,7 +247,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -339,7 +338,7 @@ class ReviewStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatRow(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(
@@ -372,11 +371,11 @@ class ReviewRecommendationsWidget extends ConsumerWidget {
           Row(
             children: [
               Text(ref.watch(reviewTimingIconProvider),
-                  style: const TextStyle(fontSize: 24)),
+                  style: const TextStyle(fontSize: 24),),
               const SizedBox(width: 12),
               const Expanded(
                   child:
-                      ResponsiveText('Рекомендации по отзывам', isTitle: true)),
+                      ResponsiveText('Рекомендации по отзывам', isTitle: true),),
             ],
           ),
           const SizedBox(height: 16),
@@ -389,12 +388,12 @@ class ReviewRecommendationsWidget extends ConsumerWidget {
                   .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                  color: Color(ref.watch(reviewTimingColorProvider))),
+                  color: Color(ref.watch(reviewTimingColorProvider)),),
             ),
             child: Row(
               children: [
                 Icon(Icons.info,
-                    color: Color(ref.watch(reviewTimingColorProvider))),
+                    color: Color(ref.watch(reviewTimingColorProvider)),),
                 const SizedBox(width: 8),
                 Expanded(
                   child: ResponsiveText(
@@ -419,10 +418,10 @@ class ReviewRecommendationsWidget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Icon(Icons.check_circle_outline,
-                      size: 16, color: Colors.green),
+                      size: 16, color: Colors.green,),
                   const SizedBox(width: 8),
                   Expanded(
-                      child: ResponsiveText(recommendation, isSubtitle: true)),
+                      child: ResponsiveText(recommendation, isSubtitle: true),),
                 ],
               ),
             ),
@@ -477,13 +476,13 @@ class QuickReviewButton extends ConsumerWidget {
           ? const SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2))
+              child: CircularProgressIndicator(strokeWidth: 2),)
           : Icon(icon ?? Icons.star),
       label: Text(reviewState.isRequesting
           ? 'Запрос...'
-          : (text ?? 'Оценить приложение')),
+          : (text ?? 'Оценить приложение'),),
       style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.amber, foregroundColor: Colors.white),
+          backgroundColor: Colors.amber, foregroundColor: Colors.white,),
     );
   }
 }

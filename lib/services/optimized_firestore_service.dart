@@ -130,7 +130,7 @@ class OptimizedFirestoreService {
 
   /// Создание документа с оптимизацией
   static Future<String?> createDocument(
-      String collection, Map<String, dynamic> data) async {
+      String collection, Map<String, dynamic> data,) async {
     try {
       final docRef = await _firestore.collection(collection).add(data);
 
@@ -165,7 +165,7 @@ class OptimizedFirestoreService {
 
   /// Удаление документа с оптимизацией
   static Future<bool> deleteDocument(
-      String collection, String documentId) async {
+      String collection, String documentId,) async {
     try {
       await _firestore.collection(collection).doc(documentId).delete();
 

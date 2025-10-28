@@ -23,17 +23,6 @@ class TaxCalculation {
     this.metadata,
   });
 
-  final String id;
-  final String paymentId;
-  final double grossAmount;
-  final double taxAmount;
-  final double netAmount;
-  final double taxRate;
-  final TaxStatus taxStatus;
-  final DateTime calculatedAt;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-
   /// Создать из Map
   factory TaxCalculation.fromMap(Map<String, dynamic> data) {
     return TaxCalculation(
@@ -65,6 +54,17 @@ class TaxCalculation {
 
     return TaxCalculation.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String paymentId;
+  final double grossAmount;
+  final double taxAmount;
+  final double netAmount;
+  final double taxRate;
+  final TaxStatus taxStatus;
+  final DateTime calculatedAt;
+  final String? description;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -179,13 +179,13 @@ extension TaxStatusExtension on TaxStatus {
   double get defaultRate {
     switch (this) {
       case TaxStatus.none:
-        return 0.0;
+        return 0;
       case TaxStatus.professionalIncome:
-        return 4.0; // 4% для самозанятых
+        return 4; // 4% для самозанятых
       case TaxStatus.simplifiedTax:
-        return 6.0; // 6% УСН "доходы"
+        return 6; // 6% УСН "доходы"
       case TaxStatus.vat:
-        return 20.0; // 20% НДС
+        return 20; // 20% НДС
     }
   }
 }

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
 import 'package:flutter/material.dart';
-import '../models/event_idea.dart';
 
 /// Карточка идеи мероприятия в стиле Pinterest
 class EventIdeaCard extends StatelessWidget {
   const EventIdeaCard({
-    super.key,
-    required this.idea,
+    required this.idea, super.key,
     this.onTap,
     this.onLike,
     this.onComment,
@@ -110,7 +109,7 @@ class EventIdeaCard extends StatelessWidget {
               color: Colors.grey[200],
               child: const Center(
                   child:
-                      Icon(Icons.broken_image, color: Colors.grey, size: 48)),
+                      Icon(Icons.broken_image, color: Colors.grey, size: 48),),
             ),
           ),
         ),
@@ -164,7 +163,7 @@ class EventIdeaCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.photo_library,
-                            color: Colors.white, size: 16),
+                            color: Colors.white, size: 16,),
                         const SizedBox(width: 4),
                         Text(
                           '${idea.images.length}',
@@ -190,14 +189,14 @@ class EventIdeaCard extends StatelessWidget {
           // Бюджет
           if (idea.budget != null) ...[
             _buildMetadataItem(
-                icon: Icons.attach_money, text: idea.formattedBudget),
+                icon: Icons.attach_money, text: idea.formattedBudget,),
             const SizedBox(width: 16),
           ],
 
           // Длительность
           if (idea.duration != null) ...[
             _buildMetadataItem(
-                icon: Icons.access_time, text: idea.formattedDuration),
+                icon: Icons.access_time, text: idea.formattedDuration,),
             const SizedBox(width: 16),
           ],
 
@@ -236,7 +235,7 @@ class EventIdeaCard extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 10,
                       color: Colors.blue[700],
-                      fontWeight: FontWeight.w500),
+                      fontWeight: FontWeight.w500,),
                 ),
               ),
             )
@@ -247,30 +246,30 @@ class EventIdeaCard extends StatelessWidget {
         children: [
           // Лайки
           _buildActionButton(
-              icon: Icons.favorite_border, count: idea.likes, onTap: onLike),
+              icon: Icons.favorite_border, count: idea.likes, onTap: onLike,),
           const SizedBox(width: 16),
 
           // Комментарии
           _buildActionButton(
               icon: Icons.comment_outlined,
               count: idea.comments,
-              onTap: onComment),
+              onTap: onComment,),
           const SizedBox(width: 16),
 
           // Просмотры
           _buildActionButton(
-              icon: Icons.visibility_outlined, count: idea.views),
+              icon: Icons.visibility_outlined, count: idea.views,),
 
           const Spacer(),
 
           // Время
           Text(idea.timeAgo,
-              style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              style: TextStyle(fontSize: 12, color: Colors.grey[500]),),
         ],
       );
 
   Widget _buildActionButton(
-          {required IconData icon, required int count, VoidCallback? onTap}) =>
+          {required IconData icon, required int count, VoidCallback? onTap,}) =>
       GestureDetector(
         onTap: onTap,
         child: Row(
@@ -280,7 +279,7 @@ class EventIdeaCard extends StatelessWidget {
             if (count > 0) ...[
               const SizedBox(width: 4),
               Text(count.toString(),
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
             ],
           ],
         ),

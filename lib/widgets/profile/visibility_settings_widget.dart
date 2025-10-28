@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
 
 /// Виджет настроек видимости профиля
 class VisibilitySettingsWidget extends StatefulWidget {
@@ -85,7 +85,7 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
                                 });
                               }
                             },
-                          )),
+                          ),),
                 ],
               ),
             ),
@@ -225,16 +225,16 @@ class _VisibilitySettingsWidgetState extends State<VisibilitySettingsWidget> {
           // Информационная карточка
           Card(
             color: Colors.blue[50],
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+            child: const Padding(
+              padding: EdgeInsets.all(16),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.info_outline,
                     color: Colors.blue,
                   ),
-                  const SizedBox(width: 12),
-                  const Expanded(
+                  SizedBox(width: 12),
+                  Expanded(
                     child: Text(
                       'Настройки видимости помогают контролировать, какая информация о вас доступна другим пользователям.',
                       style: TextStyle(color: Colors.blue),

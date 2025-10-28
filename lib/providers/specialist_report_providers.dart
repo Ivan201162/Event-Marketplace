@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/specialist_report_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/specialist_report_service.dart';
 
 /// Провайдер сервиса отчетов
 final specialistReportServiceProvider =

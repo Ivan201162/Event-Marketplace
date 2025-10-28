@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:event_marketplace_app/models/customer_portfolio.dart';
+import 'package:event_marketplace_app/services/customer_portfolio_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
-import '../models/customer_portfolio.dart';
-import 'customer_portfolio_service.dart';
 
 /// Сервис для отправки напоминаний о годовщинах
 class AnniversaryNotificationService {
@@ -140,7 +139,7 @@ class AnniversaryNotificationService {
 
   /// Отправка уведомления о приближающейся годовщине
   Future<void> _sendUpcomingAnniversaryNotification(
-      CustomerPortfolio customer) async {
+      CustomerPortfolio customer,) async {
     if (!customer.anniversaryRemindersEnabled) return;
 
     final upcomingAnniversaries = customer.upcomingAnniversaries;
@@ -247,7 +246,7 @@ class AnniversaryNotificationService {
 
   /// Отмена уведомления о годовщине
   Future<void> cancelAnniversaryNotification(
-      String customerId, DateTime anniversary) async {
+      String customerId, DateTime anniversary,) async {
     final notificationId = customerId.hashCode + anniversary.hashCode;
     await _notifications.cancel(notificationId);
   }
@@ -307,7 +306,7 @@ class AnniversaryNotificationService {
 
     if (iosPlugin != null) {
       final granted = await iosPlugin.requestPermissions(
-          alert: true, badge: true, sound: true);
+          alert: true, badge: true, sound: true,);
       if (!granted) return false;
     }
 

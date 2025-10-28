@@ -1,28 +1,25 @@
+import 'package:event_marketplace_app/models/post.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/post.dart';
-import '../providers/auth_providers.dart';
-import '../providers/feed_providers.dart';
-
 /// Animated post card with smooth appearance animation
 class AnimatedPostCard extends ConsumerStatefulWidget {
-  final Post post;
-  final VoidCallback? onTap;
-  final VoidCallback? onLike;
-  final VoidCallback? onComment;
-  final VoidCallback? onShare;
-  final int index;
 
   const AnimatedPostCard({
-    super.key,
-    required this.post,
+    required this.post, super.key,
     this.onTap,
     this.onLike,
     this.onComment,
     this.onShare,
     this.index = 0,
   });
+  final Post post;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onShare;
+  final int index;
 
   @override
   ConsumerState<AnimatedPostCard> createState() => _AnimatedPostCardState();
@@ -43,12 +40,12 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -56,7 +53,7 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeOut,
-    ));
+    ),);
 
     // Start animation with delay
     Future.delayed(Duration(milliseconds: widget.index * 100), () {
@@ -138,10 +135,8 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
                               switch (value) {
                                 case 'share':
                                   widget.onShare?.call();
-                                  break;
                                 case 'report':
                                   _showReportDialog();
-                                  break;
                               }
                             },
                             itemBuilder: (context) => [
@@ -173,13 +168,13 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
                       const SizedBox(height: 12),
 
                       // Post content
-                      if (widget.post.text != null) ...[
-                        Text(
-                          widget.post.text!,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
+                      ...[
+                      Text(
+                        widget.post.text,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
 
                       // Media content
                       if (widget.post.hasMedia) ...[

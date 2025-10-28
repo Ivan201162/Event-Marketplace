@@ -3,22 +3,21 @@ import 'package:flutter/material.dart';
 
 /// Widget for displaying user avatars
 class AvatarWidget extends StatelessWidget {
+
+  const AvatarWidget({
+    required this.name, super.key,
+    this.imageUrl,
+    this.size = 40,
+    this.onTap,
+    this.showBorder = false,
+    this.borderColor,
+  });
   final String? imageUrl;
   final String name;
   final double size;
   final VoidCallback? onTap;
   final bool showBorder;
   final Color? borderColor;
-
-  const AvatarWidget({
-    super.key,
-    this.imageUrl,
-    required this.name,
-    this.size = 40,
-    this.onTap,
-    this.showBorder = false,
-    this.borderColor,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class AvatarWidget extends StatelessWidget {
         color: backgroundColor,
         border: showBorder
             ? Border.all(
-                color: borderColor ?? Theme.of(context).primaryColor, width: 2)
+                color: borderColor ?? Theme.of(context).primaryColor, width: 2,)
             : null,
       ),
       child: imageUrl != null && imageUrl!.isNotEmpty
@@ -65,7 +64,7 @@ class AvatarWidget extends StatelessWidget {
         style: TextStyle(
             color: Colors.white,
             fontSize: size * 0.4,
-            fontWeight: FontWeight.bold),
+            fontWeight: FontWeight.bold,),
       ),
     );
   }

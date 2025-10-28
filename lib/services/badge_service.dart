@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/badge.dart';
+import 'package:event_marketplace_app/models/badge.dart';
 // import '../models/user.dart';
-import '../models/booking.dart';
+import 'package:event_marketplace_app/models/booking.dart';
 // import '../models/review.dart';
 
 /// Сервис для управления бейджами и достижениями
@@ -26,7 +26,7 @@ class BadgeService {
 
   /// Проверить и выдать бейджи после создания бронирования
   Future<void> checkBookingBadges(
-      String customerId, String specialistId) async {
+      String customerId, String specialistId,) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerBookingBadges(customerId);
@@ -40,7 +40,7 @@ class BadgeService {
 
   /// Проверить и выдать бейджи после создания отзыва
   Future<void> checkReviewBadges(
-      String customerId, String specialistId, int rating) async {
+      String customerId, String specialistId, int rating,) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerReviewBadges(customerId);
@@ -135,7 +135,7 @@ class BadgeService {
 
   /// Проверить бейджи специалиста после отзыва
   Future<void> _checkSpecialistReviewBadges(
-      String specialistId, int rating) async {
+      String specialistId, int rating,) async {
     // Получаем средний рейтинг специалиста
     final reviewsSnapshot = await _db
         .collection('reviews')
@@ -257,7 +257,7 @@ class BadgeService {
 
   /// Получить топ пользователей по бейджам
   Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard(
-      {int limit = 10}) async {
+      {int limit = 10,}) async {
     try {
       // Получаем всех пользователей с бейджами
       final badgesSnapshot = await _db.collection('badges').get();

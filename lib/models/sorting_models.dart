@@ -96,10 +96,6 @@ class SortingSettings {
     this.isCustom = false,
   });
 
-  final SortBy sortBy;
-  final SortOrder sortOrder;
-  final bool isCustom;
-
   /// Создать из Map
   factory SortingSettings.fromMap(Map<String, dynamic> data) {
     return SortingSettings(
@@ -108,6 +104,10 @@ class SortingSettings {
       isCustom: data['isCustom'] as bool? ?? false,
     );
   }
+
+  final SortBy sortBy;
+  final SortOrder sortOrder;
+  final bool isCustom;
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
@@ -118,7 +118,7 @@ class SortingSettings {
 
   /// Копировать с изменениями
   SortingSettings copyWith(
-          {SortBy? sortBy, SortOrder? sortOrder, bool? isCustom}) =>
+          {SortBy? sortBy, SortOrder? sortOrder, bool? isCustom,}) =>
       SortingSettings(
         sortBy: sortBy ?? this.sortBy,
         sortOrder: sortOrder ?? this.sortOrder,

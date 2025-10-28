@@ -1,17 +1,11 @@
+import 'package:event_marketplace_app/services/media_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../services/media_upload_service.dart';
 
 /// Виджет для выбора и прикрепления файлов в чате
 class ChatAttachmentPicker extends StatelessWidget {
   const ChatAttachmentPicker({
-    super.key,
-    required this.onFileSelected,
-    required this.onImageSelected,
-    required this.onVideoSelected,
-    required this.onDocumentSelected,
-    required this.onAudioSelected,
+    required this.onFileSelected, required this.onImageSelected, required this.onVideoSelected, required this.onDocumentSelected, required this.onAudioSelected, super.key,
   });
 
   final Function(MediaUploadResult) onFileSelected;
@@ -149,7 +143,7 @@ class ChatAttachmentPicker extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                    color: color, fontSize: 10, fontWeight: FontWeight.w500),
+                    color: color, fontSize: 10, fontWeight: FontWeight.w500,),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -280,16 +274,14 @@ class ChatAttachmentPicker extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 }
 
 /// Виджет для отображения прогресса загрузки файла
 class FileUploadProgressWidget extends StatelessWidget {
   const FileUploadProgressWidget({
-    super.key,
-    required this.fileName,
-    required this.progress,
+    required this.fileName, required this.progress, super.key,
     this.onCancel,
   });
 

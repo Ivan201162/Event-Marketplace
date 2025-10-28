@@ -1,5 +1,5 @@
-import '../models/specialist.dart';
-import '../services/calendar_service.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/calendar_service.dart';
 
 /// Тестовые данные для календаря специалистов
 class CalendarTestData {

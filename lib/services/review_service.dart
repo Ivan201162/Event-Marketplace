@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/review.dart';
+import 'package:event_marketplace_app/models/review.dart';
 
 /// Service for managing reviews
 class ReviewService {
@@ -54,7 +54,7 @@ class ReviewService {
 
   /// Get reviews by specialist
   Future<List<Review>> getReviewsBySpecialist(String specialistId,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection(_reviewsCollection)
@@ -63,7 +63,7 @@ class ReviewService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Review.fromFirestore).toList();
     } catch (e) {
       throw Exception('Error getting reviews: $e');
     }
@@ -83,7 +83,7 @@ class ReviewService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Review.fromFirestore).toList();
     } catch (e) {
       throw Exception('Error getting reviews: $e');
     }
@@ -124,7 +124,7 @@ class ReviewService {
       }
 
       final reviews =
-          snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+          snapshot.docs.map(Review.fromFirestore).toList();
 
       if (reviews.isEmpty) {
         return null;
@@ -144,7 +144,7 @@ class ReviewService {
       final verifiedReviews = reviews.where((r) => r.isVerified).length;
       final recentReviews = reviews
           .where((r) => r.createdAt
-              .isAfter(DateTime.now().subtract(const Duration(days: 30))))
+              .isAfter(DateTime.now().subtract(const Duration(days: 30))),)
           .length;
 
       return ReviewStats(
@@ -172,7 +172,7 @@ class ReviewService {
       }
 
       final reviews =
-          snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+          snapshot.docs.map(Review.fromFirestore).toList();
 
       if (reviews.isEmpty) {
         return null;
@@ -221,7 +221,7 @@ class ReviewService {
         verifiedReviews: reviews.where((r) => r.isVerified).length,
         recentReviews: reviews
             .where((r) => r.createdAt
-                .isAfter(DateTime.now().subtract(const Duration(days: 30))))
+                .isAfter(DateTime.now().subtract(const Duration(days: 30))),)
             .length,
         topTags: topTagsList,
       );

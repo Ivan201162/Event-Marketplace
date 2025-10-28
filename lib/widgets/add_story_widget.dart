@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/story.dart';
-import '../services/story_service.dart';
-
 /// Виджет для добавления сториса
 class AddStoryWidget extends ConsumerStatefulWidget {
-  const AddStoryWidget({super.key, required this.userId, this.onStoryAdded});
+  const AddStoryWidget({required this.userId, super.key, this.onStoryAdded});
 
   final String userId;
   final VoidCallback? onStoryAdded;
@@ -81,9 +80,9 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
-              onPressed: _showSourceDialog, child: const Text('Продолжить')),
+              onPressed: _showSourceDialog, child: const Text('Продолжить'),),
         ],
       ),
     );
@@ -157,13 +156,13 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Сторис успешно добавлен!'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         widget.onStoryAdded?.call();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Файл не выбран'), backgroundColor: Colors.orange),
+              content: Text('Файл не выбран'), backgroundColor: Colors.orange,),
         );
       }
     } catch (e) {
@@ -171,7 +170,7 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки сториса: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -185,8 +184,7 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
 /// Виджет для отображения сторисов пользователя в профиле
 class UserStoriesWidget extends ConsumerWidget {
   const UserStoriesWidget({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.showAddButton = false,
     this.onStoryAdded,
   });
@@ -273,7 +271,7 @@ class UserStoriesWidget extends ConsumerWidget {
                   radius: 27,
                   backgroundColor: Colors.blue.withValues(alpha: 0.1),
                   child: const Icon(Icons.auto_stories,
-                      color: Colors.blue, size: 24),
+                      color: Colors.blue, size: 24,),
                 ),
               ),
               const SizedBox(height: 4),

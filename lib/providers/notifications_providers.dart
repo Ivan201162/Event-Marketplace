@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/notification.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/notification.dart';
-import '../services/notification_service.dart';
 
 /// Notification service provider
 final notificationServiceProvider = Provider<NotificationService>((ref) {
@@ -72,7 +71,7 @@ final unreadNotificationsStreamProvider =
 final unreadCountProvider =
     FutureProvider.family<int, String>((ref, userId) async {
   final service = ref.read(notificationServiceProvider);
-  return await service.getUnreadCount(userId);
+  return service.getUnreadCount(userId);
 });
 
 /// Stream of unread count provider

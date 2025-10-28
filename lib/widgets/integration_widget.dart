@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/models/integration.dart';
 import 'package:flutter/material.dart';
-import '../models/integration.dart';
 
 /// Виджет интеграции
 class IntegrationWidget extends StatelessWidget {
-  const IntegrationWidget({super.key, required this.integration, this.onTap});
+  const IntegrationWidget({required this.integration, super.key, this.onTap});
   final Integration integration;
   final VoidCallback? onTap;
 
@@ -30,7 +30,7 @@ class IntegrationWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(integration.typeIcon,
-                          color: integration.typeColor, size: 24),
+                          color: integration.typeColor, size: 24,),
                     ),
 
                     const SizedBox(width: 12),
@@ -43,13 +43,13 @@ class IntegrationWidget extends StatelessWidget {
                           Text(
                             integration.name,
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             integration.description,
                             style: TextStyle(
-                                fontSize: 14, color: Colors.grey[600]),
+                                fontSize: 14, color: Colors.grey[600],),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -60,13 +60,13 @@ class IntegrationWidget extends StatelessWidget {
                     // Статус
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: integration.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                             color:
-                                integration.statusColor.withValues(alpha: 0.3)),
+                                integration.statusColor.withValues(alpha: 0.3),),
                       ),
                       child: Text(
                         integration.statusText,
@@ -88,7 +88,7 @@ class IntegrationWidget extends StatelessWidget {
                     // Тип
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: integration.typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -97,7 +97,7 @@ class IntegrationWidget extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(integration.typeIcon,
-                              size: 14, color: integration.typeColor),
+                              size: 14, color: integration.typeColor,),
                           const SizedBox(width: 4),
                           Text(
                             _getTypeText(integration.type),
@@ -148,7 +148,7 @@ class IntegrationWidget extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text('Сайт',
                           style:
-                              TextStyle(fontSize: 12, color: Colors.grey[600])),
+                              TextStyle(fontSize: 12, color: Colors.grey[600]),),
                     ],
                   ],
                 ),
@@ -184,7 +184,7 @@ class IntegrationWidget extends StatelessWidget {
 
 /// Виджет для отображения интеграции в списке
 class IntegrationListTile extends StatelessWidget {
-  const IntegrationListTile({super.key, required this.integration, this.onTap});
+  const IntegrationListTile({required this.integration, super.key, this.onTap});
   final Integration integration;
   final VoidCallback? onTap;
 
@@ -198,15 +198,15 @@ class IntegrationListTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(integration.typeIcon,
-              color: integration.typeColor, size: 24),
+              color: integration.typeColor, size: 24,),
         ),
         title: Text(integration.name,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontWeight: FontWeight.bold),),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(integration.description,
-                maxLines: 2, overflow: TextOverflow.ellipsis),
+                maxLines: 2, overflow: TextOverflow.ellipsis,),
             const SizedBox(height: 4),
             Row(
               children: [
@@ -281,7 +281,7 @@ class IntegrationListTile extends StatelessWidget {
 
 /// Виджет для отображения интеграции в сетке
 class IntegrationGridTile extends StatelessWidget {
-  const IntegrationGridTile({super.key, required this.integration, this.onTap});
+  const IntegrationGridTile({required this.integration, super.key, this.onTap});
   final Integration integration;
   final VoidCallback? onTap;
 
@@ -306,7 +306,7 @@ class IntegrationGridTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(integration.typeIcon,
-                          color: integration.typeColor, size: 20),
+                          color: integration.typeColor, size: 20,),
                     ),
                     const Spacer(),
                     Container(
@@ -314,7 +314,7 @@ class IntegrationGridTile extends StatelessWidget {
                       height: 8,
                       decoration: BoxDecoration(
                           color: integration.statusColor,
-                          shape: BoxShape.circle),
+                          shape: BoxShape.circle,),
                     ),
                   ],
                 ),
@@ -325,7 +325,7 @@ class IntegrationGridTile extends StatelessWidget {
                 Text(
                   integration.name,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
+                      fontSize: 14, fontWeight: FontWeight.bold,),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

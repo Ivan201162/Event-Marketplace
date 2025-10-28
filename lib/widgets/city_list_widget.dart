@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/models/city_region.dart';
 import 'package:flutter/material.dart';
-
-import '../models/city_region.dart';
 
 /// Виджет списка городов
 class CityListWidget extends StatelessWidget {
   const CityListWidget({
-    super.key,
-    required this.cities,
+    required this.cities, super.key,
     this.onCitySelected,
     this.showDistance = false,
     this.userLocation,
@@ -42,7 +40,7 @@ class CityListWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.location_city_outlined,
-              size: 64, color: theme.colorScheme.onSurfaceVariant),
+              size: 64, color: theme.colorScheme.onSurfaceVariant,),
           const SizedBox(height: 16),
           Text(
             emptyMessage,
@@ -96,18 +94,18 @@ class CityListWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
               color: _getCityColor(city, theme).withValues(alpha: 0.3),
-              width: 2),
+              width: 2,),
         ),
         child: Center(
             child:
-                Text(city.citySize.icon, style: const TextStyle(fontSize: 20))),
+                Text(city.citySize.icon, style: const TextStyle(fontSize: 20)),),
       );
 
   Widget _buildCityInfo(CityRegion city, ThemeData theme) => Row(
         children: [
           if (city.population > 0) ...[
             Icon(Icons.people,
-                size: 14, color: theme.colorScheme.onSurfaceVariant),
+                size: 14, color: theme.colorScheme.onSurfaceVariant,),
             const SizedBox(width: 4),
             Text(
               _formatPopulation(city.population),
@@ -118,7 +116,7 @@ class CityListWidget extends StatelessWidget {
           ],
           if (city.totalSpecialists > 0) ...[
             Icon(Icons.work,
-                size: 14, color: theme.colorScheme.onSurfaceVariant),
+                size: 14, color: theme.colorScheme.onSurfaceVariant,),
             const SizedBox(width: 4),
             Text(
               '${city.totalSpecialists} специалистов',

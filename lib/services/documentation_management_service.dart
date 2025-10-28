@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/documentation_management.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../core/feature_flags.dart';
-import '../models/documentation_management.dart';
 
 /// Сервис для управления документацией
 class DocumentationManagementService {
@@ -113,9 +112,7 @@ class DocumentationManagementService {
   Future<Documentation> createDocument({
     required String title,
     required String content,
-    String? summary,
-    required DocumentType type,
-    required DocumentCategory category,
+    required DocumentType type, required DocumentCategory category, String? summary,
     String? version,
     String? parentId,
     List<String>? tags,

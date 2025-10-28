@@ -1,24 +1,23 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
+import 'package:event_marketplace_app/widgets/availability_calendar_widget.dart';
+import 'package:event_marketplace_app/widgets/back_button_handler.dart';
+import 'package:event_marketplace_app/widgets/portfolio_grid_widget.dart';
+import 'package:event_marketplace_app/widgets/price_list_widget.dart';
+import 'package:event_marketplace_app/widgets/rating_summary_widget.dart';
+import 'package:event_marketplace_app/widgets/review_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/booking.dart';
-import '../models/review.dart';
-import '../models/specialist.dart';
-import '../services/booking_service.dart';
-import '../services/review_service.dart';
-import '../services/specialist_service.dart';
-import '../widgets/availability_calendar_widget.dart';
-import '../widgets/back_button_handler.dart';
-import '../widgets/portfolio_grid_widget.dart';
-import '../widgets/price_list_widget.dart';
-import '../widgets/rating_summary_widget.dart';
-import '../widgets/review_card.dart';
-
 /// Расширенный экран профиля специалиста с портфолио, отзывами, прайс-листом и календарем
 class SpecialistProfileExtendedScreen extends ConsumerStatefulWidget {
   const SpecialistProfileExtendedScreen(
-      {super.key, required this.specialistId});
+      {required this.specialistId, super.key,});
   final String specialistId;
 
   @override
@@ -67,8 +66,8 @@ class _SpecialistProfileExtendedScreenState
 
       setState(() {
         _specialist = results[0] as Specialist?;
-        _reviews = results[1] as List<Review>;
-        _recentBookings = results[2] as List<Booking>;
+        _reviews = results[1]! as List<Review>;
+        _recentBookings = results[2]! as List<Booking>;
         _isLoading = false;
       });
     } on Exception catch (e) {
@@ -77,7 +76,7 @@ class _SpecialistProfileExtendedScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки профиля: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -94,13 +93,13 @@ class _SpecialistProfileExtendedScreenState
         SnackBar(
             content: Text(_isFavorite
                 ? 'Добавлено в избранное'
-                : 'Удалено из избранного')),
+                : 'Удалено из избранного',),),
       );
     } on Exception catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -108,7 +107,7 @@ class _SpecialistProfileExtendedScreenState
     // TODO(developer): Реализовать добавление работы в портфолио
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Добавление работы в портфолио будет реализовано')),
+          content: Text('Добавление работы в портфолио будет реализовано'),),
     );
   }
 
@@ -124,7 +123,7 @@ class _SpecialistProfileExtendedScreenState
           title: const Text('Профиль специалиста'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: const Center(child: Text('Специалист не найден')),
       );
@@ -149,7 +148,7 @@ class _SpecialistProfileExtendedScreenState
         expandedHeight: 300,
         pinned: true,
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(),),
         actions: [
           IconButton(
             icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -162,7 +161,7 @@ class _SpecialistProfileExtendedScreenState
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(const SnackBar(
-                  content: Text('Функция шаринга в разработке')));
+                  content: Text('Функция шаринга в разработке'),),);
             },
           ),
         ],
@@ -200,7 +199,7 @@ class _SpecialistProfileExtendedScreenState
                   style: const TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue),
+                      color: Colors.blue,),
                 ),
               ),
               const SizedBox(height: 16),
@@ -209,7 +208,7 @@ class _SpecialistProfileExtendedScreenState
                 style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                    color: Colors.white,),
               ),
             ],
           ),
@@ -232,32 +231,32 @@ class _SpecialistProfileExtendedScreenState
                         Text(
                           _specialist!.name,
                           style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                              fontSize: 24, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           _specialist!.category.displayName,
                           style: TextStyle(
-                              fontSize: 16, color: Colors.grey.shade600),
+                              fontSize: 16, color: Colors.grey.shade600,),
                         ),
                         const SizedBox(height: 8),
                         Row(
                           children: [
                             const Icon(Icons.star,
-                                color: Colors.amber, size: 20),
+                                color: Colors.amber, size: 20,),
                             const SizedBox(width: 4),
                             Text(
                               _specialist!.avgRating > 0
                                   ? _specialist!.avgRating.toStringAsFixed(1)
                                   : _specialist!.rating.toStringAsFixed(1),
                               style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold,),
                             ),
                             const SizedBox(width: 8),
                             Text(
                               '(${_reviews.length} отзывов)',
                               style: TextStyle(
-                                  color: Colors.grey.shade600, fontSize: 14),
+                                  color: Colors.grey.shade600, fontSize: 14,),
                             ),
                           ],
                         ),
@@ -276,7 +275,7 @@ class _SpecialistProfileExtendedScreenState
                         ),
                       ),
                       const Text('за час',
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
+                          style: TextStyle(fontSize: 14, color: Colors.grey),),
                     ],
                   ),
                 ],
@@ -290,7 +289,7 @@ class _SpecialistProfileExtendedScreenState
                 Row(
                   children: [
                     Icon(Icons.location_on,
-                        size: 16, color: Colors.grey.shade600),
+                        size: 16, color: Colors.grey.shade600,),
                     const SizedBox(width: 4),
                     Text(
                       _specialist!.location!,
@@ -321,7 +320,7 @@ class _SpecialistProfileExtendedScreenState
               if (_specialist!.description != null &&
                   _specialist!.description!.isNotEmpty) ...[
                 Text(_specialist!.description!,
-                    style: const TextStyle(fontSize: 14)),
+                    style: const TextStyle(fontSize: 14),),
                 const SizedBox(height: 16),
               ],
             ],
@@ -330,7 +329,7 @@ class _SpecialistProfileExtendedScreenState
       );
 
   Widget _buildTabBar() => SliverToBoxAdapter(
-        child: Container(
+        child: ColoredBox(
           color: Colors.white,
           child: TabBar(
             controller: _tabController,
@@ -354,7 +353,7 @@ class _SpecialistProfileExtendedScreenState
           _buildPortfolioTab(),
           _buildReviewsTab(),
           _buildPriceListTab(),
-          _buildCalendarTab()
+          _buildCalendarTab(),
         ],
       );
 
@@ -368,7 +367,7 @@ class _SpecialistProfileExtendedScreenState
               children: [
                 const Text('Портфолио',
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 if (_specialist!.userId ==
                     'current_user_id') // TODO(developer): Проверить, что это профиль текущего пользователя
                   IconButton(
@@ -387,7 +386,7 @@ class _SpecialistProfileExtendedScreenState
                     Icon(Icons.photo_library, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text('Портфолио пусто',
-                        style: TextStyle(color: Colors.grey, fontSize: 16)),
+                        style: TextStyle(color: Colors.grey, fontSize: 16),),
                     SizedBox(height: 8),
                     Text(
                       'Специалист еще не добавил работы в портфолио',
@@ -412,7 +411,7 @@ class _SpecialistProfileExtendedScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Отзывы',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
 
             // Сводка по рейтингу
@@ -435,7 +434,7 @@ class _SpecialistProfileExtendedScreenState
                     Icon(Icons.rate_review, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text('Отзывов пока нет',
-                        style: TextStyle(color: Colors.grey, fontSize: 16)),
+                        style: TextStyle(color: Colors.grey, fontSize: 16),),
                     SizedBox(height: 8),
                     Text(
                       'Станьте первым, кто оставит отзыв',
@@ -461,7 +460,7 @@ class _SpecialistProfileExtendedScreenState
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(const SnackBar(
-                        content: Text('Переход к полному списку отзывов')));
+                        content: Text('Переход к полному списку отзывов'),),);
                   },
                   child: const Text('Показать все отзывы'),
                 ),
@@ -476,7 +475,7 @@ class _SpecialistProfileExtendedScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Прайс-лист',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             PriceListWidget(
               servicesWithPrices: _specialist!.servicesWithPrices,
@@ -526,7 +525,7 @@ class _SpecialistProfileExtendedScreenState
                   // TODO(developer): Получить реальный chatId из ChatService
                   const chatId = 'temp_chat_id';
                   context.go(
-                      '/chat/$chatId?specialistName=${widget.specialistId}');
+                      '/chat/$chatId?specialistName=${widget.specialistId}',);
                 },
                 icon: const Icon(Icons.chat),
                 label: const Text('Написать'),

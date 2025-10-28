@@ -1,15 +1,14 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/specialist_profile.dart';
+import 'package:event_marketplace_app/providers/portfolio_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_profile.dart';
-import '../providers/portfolio_providers.dart';
 
 /// Виджет для загрузки портфолио
 class PortfolioUploadWidget extends ConsumerStatefulWidget {
   const PortfolioUploadWidget(
-      {super.key, required this.userId, this.onUploaded});
+      {required this.userId, super.key, this.onUploaded,});
 
   final String userId;
   final VoidCallback? onUploaded;
@@ -96,7 +95,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
                 value: uploadState.uploadProgress as double?,
                 backgroundColor: Colors.grey[300],
                 valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorScheme.primary),
+                    Theme.of(context).colorScheme.primary,),
               ),
               const SizedBox(height: 8),
               Text(
@@ -130,7 +129,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
                       onPressed: () {
                         ref
                             .read<PortfolioUploadNotifier>(
-                                portfolioUploadStateProvider.notifier)
+                                portfolioUploadStateProvider.notifier,)
                             .clearError();
                       },
                     ),
@@ -162,15 +161,15 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
         runSpacing: 8,
         children: [
           _buildUploadButton(
-              icon: Icons.photo, label: 'Фото', onPressed: _showImagePicker),
+              icon: Icons.photo, label: 'Фото', onPressed: _showImagePicker,),
           _buildUploadButton(
               icon: Icons.videocam,
               label: 'Видео',
-              onPressed: _showVideoPicker),
+              onPressed: _showVideoPicker,),
           _buildUploadButton(
               icon: Icons.description,
               label: 'Документ',
-              onPressed: _showFilePicker),
+              onPressed: _showFilePicker,),
         ],
       );
 
@@ -207,7 +206,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
                   Text(
                     item.title ?? 'Без названия',
                     style: const TextStyle(
-                        fontWeight: FontWeight.w500, fontSize: 12),
+                        fontWeight: FontWeight.w500, fontSize: 12,),
                   ),
                   if (item.description != null)
                     Text(
@@ -224,7 +223,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
               onPressed: () {
                 ref
                     .read<PortfolioUploadNotifier>(
-                        portfolioUploadStateProvider.notifier)
+                        portfolioUploadStateProvider.notifier,)
                     .removePortfolioItem(widget.userId, item.id);
               },
             ),

@@ -6,12 +6,9 @@ class Guest {
     required this.id,
     required this.eventId,
     required this.name,
-    this.email,
+    required this.status, required this.createdAt, required this.updatedAt, this.email,
     this.phone,
     this.avatar,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
     this.metadata = const {},
   });
 
@@ -30,7 +27,7 @@ class Guest {
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
         metadata: Map<String, dynamic>.from(
-            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
       );
   final String id;
   final String eventId;
@@ -168,16 +165,11 @@ class GuestGreeting {
     required this.eventId,
     required this.guestId,
     required this.guestName,
-    this.guestAvatar,
-    required this.type,
+    required this.type, required this.createdAt, required this.likedBy, required this.likesCount, required this.isPublic, this.guestAvatar,
     this.text,
     this.imageUrl,
     this.videoUrl,
     this.audioUrl,
-    required this.createdAt,
-    required this.likedBy,
-    required this.likesCount,
-    required this.isPublic,
   });
 
   /// Создать из Map

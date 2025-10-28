@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/models/event.dart';
 import 'package:flutter/material.dart';
-import '../models/event.dart';
 
 /// Координаты на карте
 @immutable
@@ -61,8 +61,7 @@ class PlaceSearchResult {
   const PlaceSearchResult({
     required this.id,
     required this.name,
-    this.address,
-    required this.coordinates,
+    required this.coordinates, this.address,
     this.placeId,
   });
   final String id;

@@ -8,20 +8,6 @@ enum RequestStatus {
 
 /// Модель заявки
 class Request {
-  final String id;
-  final String ownerId;
-  final String title;
-  final String description;
-  final String category;
-  final String subCategory;
-  final String city;
-  final double budgetMin;
-  final double budgetMax;
-  final DateTime dateTime;
-  final RequestStatus status;
-  final List<String> attachments;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const Request({
     required this.id,
@@ -64,6 +50,20 @@ class Request {
           DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
+  final String id;
+  final String ownerId;
+  final String title;
+  final String description;
+  final String category;
+  final String subCategory;
+  final String city;
+  final double budgetMin;
+  final double budgetMax;
+  final DateTime dateTime;
+  final RequestStatus status;
+  final List<String> attachments;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toMap() {
     return {

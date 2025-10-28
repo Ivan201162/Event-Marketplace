@@ -1,17 +1,15 @@
+import 'package:event_marketplace_app/models/request.dart';
+import 'package:event_marketplace_app/providers/requests_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../models/request.dart';
-import '../../providers/requests_providers.dart';
-
 /// Экран деталей заявки
 class RequestDetailsScreen extends ConsumerStatefulWidget {
-  final String requestId;
 
   const RequestDetailsScreen({
-    super.key,
-    required this.requestId,
+    required this.requestId, super.key,
   });
+  final String requestId;
 
   @override
   ConsumerState<RequestDetailsScreen> createState() =>
@@ -173,14 +171,12 @@ class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Редактирование заявки')),
         );
-        break;
       case 'delete':
         _deleteRequest();
-        break;
     }
   }
 
-  void _changeStatus(String newStatus) async {
+  Future<void> _changeStatus(String newStatus) async {
     try {
       await ref.read(requestsProvider.notifier).updateRequestStatus(
             _request!.id,
@@ -201,7 +197,7 @@ class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
     );
   }
 
-  void _deleteRequest() async {
+  Future<void> _deleteRequest() async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -220,7 +216,7 @@ class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         await ref.read(requestsProvider.notifier).deleteRequest(_request!.id);
         if (mounted) {
@@ -237,13 +233,13 @@ class _RequestDetailsScreenState extends ConsumerState<RequestDetailsScreen> {
 
 /// Карточка с информацией
 class _InfoCard extends StatelessWidget {
-  final String title;
-  final String content;
 
   const _InfoCard({
     required this.title,
     required this.content,
   });
+  final String title;
+  final String content;
 
   @override
   Widget build(BuildContext context) {
@@ -271,9 +267,9 @@ class _InfoCard extends StatelessWidget {
 
 /// Карточка с деталями
 class _DetailsCard extends StatelessWidget {
-  final Request request;
 
   const _DetailsCard({required this.request});
+  final Request request;
 
   @override
   Widget build(BuildContext context) {
@@ -333,15 +329,15 @@ class _DetailsCard extends StatelessWidget {
 
 /// Строка детали
 class _DetailRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
 
   const _DetailRow({
     required this.icon,
     required this.label,
     required this.value,
   });
+  final IconData icon;
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
@@ -369,9 +365,9 @@ class _DetailRow extends StatelessWidget {
 
 /// Карточка вложений
 class _AttachmentsCard extends StatelessWidget {
-  final List<String> attachments;
 
   const _AttachmentsCard({required this.attachments});
+  final List<String> attachments;
 
   @override
   Widget build(BuildContext context) {
@@ -398,7 +394,7 @@ class _AttachmentsCard extends StatelessWidget {
                       SnackBar(content: Text('Открытие вложения: $attachment')),
                     );
                   },
-                )),
+                ),),
           ],
         ),
       ),
@@ -408,15 +404,15 @@ class _AttachmentsCard extends StatelessWidget {
 
 /// Карточка действий
 class _ActionsCard extends StatelessWidget {
-  final Request request;
-  final ValueChanged<String> onStatusChange;
-  final VoidCallback onMessage;
 
   const _ActionsCard({
     required this.request,
     required this.onStatusChange,
     required this.onMessage,
   });
+  final Request request;
+  final ValueChanged<String> onStatusChange;
+  final VoidCallback onMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -471,9 +467,9 @@ class _ActionsCard extends StatelessWidget {
 
 /// Чип статуса
 class _StatusChip extends StatelessWidget {
-  final String status;
 
   const _StatusChip({required this.status});
+  final String status;
 
   @override
   Widget build(BuildContext context) {
@@ -484,19 +480,15 @@ class _StatusChip extends StatelessWidget {
       case 'OPEN':
         backgroundColor = Colors.green;
         statusText = 'Открыта';
-        break;
       case 'IN_PROGRESS':
         backgroundColor = Colors.orange;
         statusText = 'В работе';
-        break;
       case 'DONE':
         backgroundColor = Colors.blue;
         statusText = 'Завершена';
-        break;
       case 'CANCELED':
         backgroundColor = Colors.red;
         statusText = 'Отменена';
-        break;
       default:
         backgroundColor = Colors.grey;
         statusText = status;

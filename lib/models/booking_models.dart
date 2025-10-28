@@ -25,7 +25,7 @@ class Booking {
     required this.status,
     required this.date,
     required this.time,
-    this.duration,
+    required this.createdAt, this.duration,
     this.price,
     this.currency = 'RUB',
     this.description,
@@ -47,42 +47,8 @@ class Booking {
     this.reviewId,
     this.rating,
     this.feedback,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String customerId;
-  final String specialistId;
-  final String serviceId;
-  final BookingType type;
-  final BookingStatus status;
-  final DateTime date;
-  final DateTime time;
-  final Duration? duration;
-  final double? price;
-  final String currency;
-  final String? description;
-  final String? notes;
-  final String? location;
-  final Map<String, dynamic>? contactInfo;
-  final String? specialRequests;
-  final List<DateTime> reminders;
-  final List<String> attachments;
-  final Map<String, dynamic> metadata;
-  final DateTime? confirmedAt;
-  final DateTime? completedAt;
-  final DateTime? cancelledAt;
-  final DateTime? refundedAt;
-  final String? cancellationReason;
-  final String? refundReason;
-  final double? refundAmount;
-  final String? paymentId;
-  final String? reviewId;
-  final double? rating;
-  final String? feedback;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory Booking.fromMap(Map<String, dynamic> data) {
@@ -117,7 +83,7 @@ class Booking {
       specialRequests: data['specialRequests'] as String?,
       reminders: (data['reminders'] as List<dynamic>?)
               ?.map((e) =>
-                  e is Timestamp ? e.toDate() : DateTime.parse(e.toString()))
+                  e is Timestamp ? e.toDate() : DateTime.parse(e.toString()),)
               .toList() ??
           [],
       attachments: List<String>.from(data['attachments'] ?? []),
@@ -171,6 +137,39 @@ class Booking {
 
     return Booking.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String customerId;
+  final String specialistId;
+  final String serviceId;
+  final BookingType type;
+  final BookingStatus status;
+  final DateTime date;
+  final DateTime time;
+  final Duration? duration;
+  final double? price;
+  final String currency;
+  final String? description;
+  final String? notes;
+  final String? location;
+  final Map<String, dynamic>? contactInfo;
+  final String? specialRequests;
+  final List<DateTime> reminders;
+  final List<String> attachments;
+  final Map<String, dynamic> metadata;
+  final DateTime? confirmedAt;
+  final DateTime? completedAt;
+  final DateTime? cancelledAt;
+  final DateTime? refundedAt;
+  final String? cancellationReason;
+  final String? refundReason;
+  final double? refundAmount;
+  final String? paymentId;
+  final String? reviewId;
+  final double? rating;
+  final String? feedback;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -465,7 +464,7 @@ class Booking {
   List<bool> get stars {
     if (rating == null) return List.filled(5, false);
     final stars = <bool>[];
-    for (int i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 5; i++) {
       stars.add(i <= rating!);
     }
     return stars;

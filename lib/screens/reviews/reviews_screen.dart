@@ -1,18 +1,17 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/review_providers.dart';
+import 'package:event_marketplace_app/widgets/review_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../models/review.dart';
-import '../../providers/auth_providers.dart';
-import '../../providers/review_providers.dart';
-import '../../widgets/review_card.dart';
-
 /// Screen for viewing reviews
 class ReviewsScreen extends ConsumerStatefulWidget {
-  final String specialistId;
-  final String specialistName;
 
   const ReviewsScreen(
-      {super.key, required this.specialistId, required this.specialistName});
+      {required this.specialistId, required this.specialistName, super.key,});
+  final String specialistId;
+  final String specialistName;
 
   @override
   ConsumerState<ReviewsScreen> createState() => _ReviewsScreenState();
@@ -52,7 +51,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         actions: [
           IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: _showFilterDialog),
+              onPressed: _showFilterDialog,),
           IconButton(icon: const Icon(Icons.sort), onPressed: _showSortDialog),
         ],
       ),
@@ -61,7 +60,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         children: [
           _buildAllReviewsTab(),
           _buildReviewsWithPhotosTab(),
-          _buildStatisticsTab()
+          _buildStatisticsTab(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -86,7 +85,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         return RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(
-                specialistReviewsStreamProvider(widget.specialistId));
+                specialistReviewsStreamProvider(widget.specialistId),);
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -111,7 +110,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки отзывов',
-                style: TextStyle(fontSize: 18, color: Colors.red[700])),
+                style: TextStyle(fontSize: 18, color: Colors.red[700]),),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -122,7 +121,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    specialistReviewsStreamProvider(widget.specialistId));
+                    specialistReviewsStreamProvider(widget.specialistId),);
               },
               child: const Text('Повторить'),
             ),
@@ -144,14 +143,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.photo_library_outlined,
-                    size: 80, color: Colors.grey),
+                    size: 80, color: Colors.grey,),
                 SizedBox(height: 16),
                 Text(
                   'Нет отзывов с фото',
                   style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey,
-                      fontWeight: FontWeight.w500),
+                      fontWeight: FontWeight.w500,),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -166,7 +165,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         return RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(
-                reviewsWithImagesStreamProvider(widget.specialistId));
+                reviewsWithImagesStreamProvider(widget.specialistId),);
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -191,7 +190,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки отзывов',
-                style: TextStyle(fontSize: 18, color: Colors.red[700])),
+                style: TextStyle(fontSize: 18, color: Colors.red[700]),),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -202,7 +201,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    reviewsWithImagesStreamProvider(widget.specialistId));
+                    reviewsWithImagesStreamProvider(widget.specialistId),);
               },
               child: const Text('Повторить'),
             ),
@@ -275,7 +274,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                       const Text(
                         'Распределение оценок',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       ...List.generate(5, (index) {
@@ -292,13 +291,13 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                               Text(
                                 '$rating',
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w500),
+                                    fontWeight: FontWeight.w500,),
                                 textAlign: TextAlign.center,
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(width: 8),
                               const Icon(Icons.star,
-                                  color: Colors.orange, size: 16),
+                                  color: Colors.orange, size: 16,),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: LinearProgressIndicator(
@@ -351,7 +350,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    specialistReviewStatsProvider(widget.specialistId));
+                    specialistReviewStatsProvider(widget.specialistId),);
               },
               child: const Text('Повторить'),
             ),
@@ -371,11 +370,11 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           Text(
             'Пока нет отзывов',
             style: TextStyle(
-                fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
+                fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500,),
           ),
           SizedBox(height: 8),
           Text('Будьте первым, кто оставит отзыв!',
-              style: TextStyle(color: Colors.grey)),
+              style: TextStyle(color: Colors.grey),),
         ],
       ),
     );
@@ -395,19 +394,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
     switch (_sortBy) {
       case 'newest':
         filteredReviews.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        break;
       case 'oldest':
         filteredReviews.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-        break;
       case 'highest':
         filteredReviews.sort((a, b) => b.rating.compareTo(a.rating));
-        break;
       case 'lowest':
         filteredReviews.sort((a, b) => a.rating.compareTo(b.rating));
-        break;
       case 'most_liked':
         filteredReviews.sort((a, b) => b.likesCount.compareTo(a.likesCount));
-        break;
     }
 
     return filteredReviews;
@@ -538,7 +532,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Написание отзыва пока не реализовано')));
+        const SnackBar(content: Text('Написание отзыва пока не реализовано')),);
   }
 
   void _showReviewDetails(Review review) {
@@ -553,7 +547,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Войдите в аккаунт для лайков')));
+          const SnackBar(content: Text('Войдите в аккаунт для лайков')),);
       return;
     }
 
@@ -566,7 +560,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Ответ на отзыв пока не реализован')));
+        const SnackBar(content: Text('Ответ на отзыв пока не реализован')),);
   }
 
   Color _getRatingColor(int rating) {

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/idea_collection.dart';
 import 'package:flutter/material.dart';
-import '../models/idea_collection.dart';
 
 /// Виджет коллекции идей
 class IdeaCollectionWidget extends StatelessWidget {
   const IdeaCollectionWidget({
-    super.key,
-    required this.collection,
+    required this.collection, super.key,
     this.onTap,
     this.onEdit,
     this.onDelete,
@@ -33,18 +32,18 @@ class IdeaCollectionWidget extends StatelessWidget {
                       child: Text(
                         collection.name,
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     if (collection.isPublic)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.green.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                              color: Colors.green.withValues(alpha: 0.3)),
+                              color: Colors.green.withValues(alpha: 0.3),),
                         ),
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
@@ -68,7 +67,7 @@ class IdeaCollectionWidget extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Описание
-                if (collection.description?.isNotEmpty == true) ...[
+                if (collection.description?.isNotEmpty ?? false) ...[
                   Text(
                     collection.description!,
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
@@ -148,8 +147,7 @@ class IdeaCollectionWidget extends StatelessWidget {
 /// Виджет для отображения коллекции в списке
 class IdeaCollectionListTile extends StatelessWidget {
   const IdeaCollectionListTile({
-    super.key,
-    required this.collection,
+    required this.collection, super.key,
     this.onTap,
     this.onEdit,
     this.onDelete,
@@ -169,16 +167,16 @@ class IdeaCollectionListTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: const Icon(Icons.collections_bookmark,
-              color: Colors.blue, size: 24),
+              color: Colors.blue, size: 24,),
         ),
         title: Text(collection.name,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontWeight: FontWeight.bold),),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (collection.description?.isNotEmpty == true) ...[
+            if (collection.description?.isNotEmpty ?? false) ...[
               Text(collection.description!,
-                  maxLines: 2, overflow: TextOverflow.ellipsis),
+                  maxLines: 2, overflow: TextOverflow.ellipsis,),
               const SizedBox(height: 4),
             ],
             Row(
@@ -192,7 +190,7 @@ class IdeaCollectionListTile extends StatelessWidget {
                   const Icon(Icons.public, size: 12, color: Colors.green),
                   const SizedBox(width: 4),
                   const Text('Публичная',
-                      style: TextStyle(fontSize: 12, color: Colors.green)),
+                      style: TextStyle(fontSize: 12, color: Colors.green),),
                 ],
                 const Spacer(),
                 Text(
@@ -208,25 +206,22 @@ class IdeaCollectionListTile extends StatelessWidget {
             switch (value) {
               case 'view':
                 onTap?.call();
-                break;
               case 'edit':
                 onEdit?.call();
-                break;
               case 'delete':
                 onDelete?.call();
-                break;
             }
           },
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: 'view',
               child: ListTile(
-                  leading: Icon(Icons.visibility), title: Text('Просмотр')),
+                  leading: Icon(Icons.visibility), title: Text('Просмотр'),),
             ),
             const PopupMenuItem(
               value: 'edit',
               child: ListTile(
-                  leading: Icon(Icons.edit), title: Text('Редактировать')),
+                  leading: Icon(Icons.edit), title: Text('Редактировать'),),
             ),
             const PopupMenuItem(
               value: 'delete',
@@ -259,8 +254,7 @@ class IdeaCollectionListTile extends StatelessWidget {
 /// Виджет для отображения коллекции в сетке
 class IdeaCollectionGridTile extends StatelessWidget {
   const IdeaCollectionGridTile({
-    super.key,
-    required this.collection,
+    required this.collection, super.key,
     this.onTap,
     this.onEdit,
     this.onDelete,
@@ -291,7 +285,7 @@ class IdeaCollectionGridTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Icon(Icons.collections_bookmark,
-                          color: Colors.blue, size: 20),
+                          color: Colors.blue, size: 20,),
                     ),
                     const Spacer(),
                     if (collection.isPublic)
@@ -305,7 +299,7 @@ class IdeaCollectionGridTile extends StatelessWidget {
                 Text(
                   collection.name,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -313,7 +307,7 @@ class IdeaCollectionGridTile extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Описание
-                if (collection.description?.isNotEmpty == true) ...[
+                if (collection.description?.isNotEmpty ?? false) ...[
                   Text(
                     collection.description!,
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
@@ -340,13 +334,10 @@ class IdeaCollectionGridTile extends StatelessWidget {
                         switch (value) {
                           case 'view':
                             onTap?.call();
-                            break;
                           case 'edit':
                             onEdit?.call();
-                            break;
                           case 'delete':
                             onDelete?.call();
-                            break;
                         }
                       },
                       itemBuilder: (context) => [
@@ -354,25 +345,25 @@ class IdeaCollectionGridTile extends StatelessWidget {
                           value: 'view',
                           child: ListTile(
                               leading: Icon(Icons.visibility),
-                              title: Text('Просмотр')),
+                              title: Text('Просмотр'),),
                         ),
                         const PopupMenuItem(
                           value: 'edit',
                           child: ListTile(
                               leading: Icon(Icons.edit),
-                              title: Text('Редактировать')),
+                              title: Text('Редактировать'),),
                         ),
                         const PopupMenuItem(
                           value: 'delete',
                           child: ListTile(
                             leading: Icon(Icons.delete, color: Colors.red),
                             title: Text('Удалить',
-                                style: TextStyle(color: Colors.red)),
+                                style: TextStyle(color: Colors.red),),
                           ),
                         ),
                       ],
                       child: Icon(Icons.more_vert,
-                          size: 16, color: Colors.grey[600]),
+                          size: 16, color: Colors.grey[600],),
                     ),
                   ],
                 ),

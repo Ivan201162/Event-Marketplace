@@ -17,7 +17,6 @@ class AppThemeEnhanced {
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColor,
-        brightness: Brightness.light,
       ),
 
       // AppBar

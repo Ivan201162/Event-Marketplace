@@ -1,16 +1,15 @@
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/customer_service.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
+import 'package:event_marketplace_app/widgets/back_button_handler.dart';
+import 'package:event_marketplace_app/widgets/booking_card_widget.dart';
+import 'package:event_marketplace_app/widgets/specialist_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/app_user.dart';
-import '../models/booking.dart';
-import '../models/specialist.dart';
-import '../services/booking_service.dart';
-import '../services/customer_service.dart';
-import '../services/specialist_service.dart';
-import '../widgets/back_button_handler.dart';
-import '../widgets/booking_card_widget.dart';
-import '../widgets/specialist_card_widget.dart';
 
 /// Расширенный экран профиля заказчика с историей заявок, избранным и годовщинами
 class CustomerProfileExtendedScreen extends ConsumerStatefulWidget {
@@ -89,7 +88,7 @@ class _CustomerProfileExtendedScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки профиля: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -103,7 +102,7 @@ class _CustomerProfileExtendedScreenState
           // Удаляем из избранного
           _customer = _customer!.copyWith(
             favoriteSpecialists: _customer!.favoriteSpecialists
-                .where((String id) => id != specialistId)
+                .where((id) => id != specialistId)
                 .toList(),
           );
           _favoriteSpecialists.removeWhere((s) => s.id == specialistId);
@@ -112,7 +111,7 @@ class _CustomerProfileExtendedScreenState
           _customer = _customer!.copyWith(
             favoriteSpecialists: [
               ..._customer!.favoriteSpecialists,
-              specialistId
+              specialistId,
             ],
           );
         }
@@ -145,7 +144,7 @@ class _CustomerProfileExtendedScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -155,7 +154,7 @@ class _CustomerProfileExtendedScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Добавление годовщины будет реализовано')));
+        content: Text('Добавление годовщины будет реализовано'),),);
   }
 
   @override
@@ -170,7 +169,7 @@ class _CustomerProfileExtendedScreenState
           title: const Text('Профиль заказчика'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: const Center(child: Text('Заказчик не найден')),
       );
@@ -182,7 +181,7 @@ class _CustomerProfileExtendedScreenState
           title: const Text('Мой профиль'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit),
@@ -191,7 +190,7 @@ class _CustomerProfileExtendedScreenState
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content:
-                          Text('Редактирование профиля будет реализовано')),
+                          Text('Редактирование профиля будет реализовано'),),
                 );
               },
             ),
@@ -238,11 +237,11 @@ class _CustomerProfileExtendedScreenState
               style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.white,),
             ),
             const SizedBox(height: 4),
             const Text('Не указано',
-                style: TextStyle(fontSize: 16, color: Colors.white70)),
+                style: TextStyle(fontSize: 16, color: Colors.white70),),
 
             // TODO: Добавить годовщины
             const SizedBox(height: 16),
@@ -265,15 +264,15 @@ class _CustomerProfileExtendedScreenState
           Text(
             value,
             style: const TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white,),
           ),
           const SizedBox(height: 4),
           Text(label,
-              style: const TextStyle(fontSize: 12, color: Colors.white70)),
+              style: const TextStyle(fontSize: 12, color: Colors.white70),),
         ],
       );
 
-  Widget _buildTabBar() => Container(
+  Widget _buildTabBar() => ColoredBox(
         color: Colors.white,
         child: TabBar(
           controller: _tabController,
@@ -293,7 +292,7 @@ class _CustomerProfileExtendedScreenState
         children: [
           _buildBookingsTab(),
           _buildFavoritesTab(),
-          _buildAnniversariesTab()
+          _buildAnniversariesTab(),
         ],
       );
 
@@ -303,7 +302,7 @@ class _CustomerProfileExtendedScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('История заявок',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             if (_bookings.isEmpty)
               const Center(
@@ -312,7 +311,7 @@ class _CustomerProfileExtendedScreenState
                     Icon(Icons.event_note, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text('Заявок пока нет',
-                        style: TextStyle(color: Colors.grey, fontSize: 16)),
+                        style: TextStyle(color: Colors.grey, fontSize: 16),),
                     SizedBox(height: 8),
                     Text(
                       'Создайте первую заявку для бронирования специалиста',
@@ -333,7 +332,7 @@ class _CustomerProfileExtendedScreenState
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(
-                          content: Text('Переход к заявке: ${booking.id}')));
+                          content: Text('Переход к заявке: ${booking.id}'),),);
                     },
                   ),
                 ),
@@ -418,7 +417,7 @@ class _CustomerProfileExtendedScreenState
                   Icon(Icons.cake, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Годовщин пока нет',
-                      style: TextStyle(color: Colors.grey, fontSize: 16)),
+                      style: TextStyle(color: Colors.grey, fontSize: 16),),
                   SizedBox(height: 8),
                   Text(
                     'Добавьте важные даты для напоминаний',

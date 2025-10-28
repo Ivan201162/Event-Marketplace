@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/event_filter.dart';
+import 'package:event_marketplace_app/screens/event_detail_screen.dart';
+import 'package:event_marketplace_app/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/event.dart';
-import '../models/event_filter.dart';
-import '../widgets/event_card.dart';
-import 'event_detail_screen.dart';
 
 /// Экран каталога мероприятий с поиском и фильтрацией
 class EventsCatalogScreen extends ConsumerStatefulWidget {
@@ -111,9 +110,9 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
               children: [
                 const Text('Фильтры',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 TextButton(
-                    onPressed: _clearFilters, child: const Text('Сбросить')),
+                    onPressed: _clearFilters, child: const Text('Сбросить'),),
               ],
             ),
             const SizedBox(height: 16),
@@ -139,7 +138,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Категория',
-              style: TextStyle(fontWeight: FontWeight.w500)),
+              style: TextStyle(fontWeight: FontWeight.w500),),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -152,7 +151,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
                 onSelected: (selected) {
                   setState(() {
                     final categories = List<EventCategory>.from(
-                        _currentFilter.categories ?? []);
+                        _currentFilter.categories ?? [],);
                     if (selected) {
                       categories.add(category);
                     } else {
@@ -272,7 +271,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: EventCard(
-                      event: event, onTap: () => _navigateToEventDetail(event)),
+                      event: event, onTap: () => _navigateToEventDetail(event),),
                 );
               },
             ),
@@ -297,7 +296,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
               Text('Ошибка загрузки: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                  onPressed: _performSearch, child: const Text('Повторить')),
+                  onPressed: _performSearch, child: const Text('Повторить'),),
             ],
           ),
         ),
@@ -319,11 +318,11 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
             ),
             const SizedBox(height: 8),
             Text('Попробуйте изменить параметры поиска',
-                style: TextStyle(color: Colors.grey[500])),
+                style: TextStyle(color: Colors.grey[500]),),
             const SizedBox(height: 24),
             ElevatedButton(
                 onPressed: _clearFilters,
-                child: const Text('Сбросить фильтры')),
+                child: const Text('Сбросить фильтры'),),
           ],
         ),
       );
@@ -387,6 +386,6 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => EventDetailScreen(event: event)));
+        builder: (context) => EventDetailScreen(event: event),),);
   }
 }

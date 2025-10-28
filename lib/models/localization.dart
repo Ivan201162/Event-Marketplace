@@ -51,7 +51,7 @@ enum SupportedLanguage {
   portuguese('pt', 'BR', 'Português', 'Português');
 
   const SupportedLanguage(
-      this.languageCode, this.countryCode, this.displayName, this.nativeName);
+      this.languageCode, this.countryCode, this.displayName, this.nativeName,);
 
   final String languageCode;
   final String countryCode;
@@ -65,10 +65,9 @@ enum SupportedLanguage {
 class LocalizationSettings {
   const LocalizationSettings({
     required this.currentLanguage,
-    this.autoDetectLanguage = true,
+    required this.lastUpdated, this.autoDetectLanguage = true,
     this.showNativeNames = false,
     this.preferredLanguages = const [],
-    required this.lastUpdated,
   });
 
   factory LocalizationSettings.fromMap(Map<String, dynamic> map) =>
@@ -116,12 +115,10 @@ class Translation {
     required this.key,
     required this.value,
     required this.language,
-    this.context,
+    required this.createdAt, required this.updatedAt, this.context,
     this.description,
     this.isPlural = false,
     this.pluralForms,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory Translation.fromMap(Map<String, dynamic> map) => Translation(

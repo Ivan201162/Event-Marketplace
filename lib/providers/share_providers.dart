@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/services/share_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../services/share_service.dart';
 
 /// Провайдер для проверки доступности шаринга
 final shareAvailableProvider =
@@ -49,21 +48,21 @@ final shareTextProvider = FutureProvider.family<bool, String>(
 final shareLinkProvider = FutureProvider.family<bool,
     ({String url, String? title, String? description})>(
   (ref, params) async => ShareService.shareLink(params.url,
-      title: params.title, description: params.description),
+      title: params.title, description: params.description,),
 );
 
 /// Провайдер для шаринга файла
 final shareFileProvider = FutureProvider.family<bool,
     ({String filePath, String? text, String? subject})>(
   (ref, params) async => ShareService.shareFile(params.filePath,
-      text: params.text, subject: params.subject),
+      text: params.text, subject: params.subject,),
 );
 
 /// Провайдер для шаринга нескольких файлов
 final shareFilesProvider = FutureProvider.family<bool,
     ({List<String> filePaths, String? text, String? subject})>(
   (ref, params) async => ShareService.shareFiles(params.filePaths,
-      text: params.text, subject: params.subject),
+      text: params.text, subject: params.subject,),
 );
 
 /// Провайдер для открытия ссылки
@@ -75,7 +74,7 @@ final openLinkProvider = FutureProvider.family<bool, String>(
 final openEmailProvider = FutureProvider.family<bool,
     ({String email, String? subject, String? body})>(
   (ref, params) async => ShareService.openEmail(params.email,
-      subject: params.subject, body: params.body),
+      subject: params.subject, body: params.body,),
 );
 
 /// Провайдер для открытия телефона

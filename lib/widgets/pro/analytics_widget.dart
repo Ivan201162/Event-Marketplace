@@ -98,7 +98,7 @@ class AnalyticsWidget extends StatelessWidget {
   }
 
   Widget _buildStatItem(
-      String title, String value, IconData icon, Color color) {
+      String title, String value, IconData icon, Color color,) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -217,13 +217,13 @@ class AnalyticsWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Всего заявок'),
-                      const SizedBox(height: 4),
-                      const Text(
+                      Text('Всего заявок'),
+                      SizedBox(height: 4),
+                      Text(
                         '56',
                         style: TextStyle(
                           fontSize: 24,
@@ -231,12 +231,12 @@ class AnalyticsWidget extends StatelessWidget {
                           color: Colors.green,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      const Text('+12% к прошлому месяцу'),
-                      const SizedBox(height: 16),
-                      const Text('CTR кнопки "Забронировать"'),
-                      const SizedBox(height: 4),
-                      const Text(
+                      SizedBox(height: 8),
+                      Text('+12% к прошлому месяцу'),
+                      SizedBox(height: 16),
+                      Text('CTR кнопки "Забронировать"'),
+                      SizedBox(height: 4),
+                      Text(
                         '12.5%',
                         style: TextStyle(
                           fontSize: 24,
@@ -382,7 +382,7 @@ class AnalyticsWidget extends StatelessWidget {
   }
 
   Widget _buildReachItem(
-      String title, String value, IconData icon, Color color) {
+      String title, String value, IconData icon, Color color,) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

@@ -1,14 +1,12 @@
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/user.dart';
-import '../providers/auth_providers.dart';
 
 /// Виджет-защитник для проверки аутентификации
 class AuthGuard extends ConsumerWidget {
   const AuthGuard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.loadingWidget,
     this.unauthenticatedWidget,
     this.allowedRoles,
@@ -73,14 +71,14 @@ class AuthGuard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.lock_outline,
-                    size: 64, color: Theme.of(context).colorScheme.primary),
+                    size: 64, color: Theme.of(context).colorScheme.primary,),
                 const SizedBox(height: 24),
                 Text(
                   'Требуется авторизация',
                   style: Theme.of(
                     context,
                   ).textTheme.headlineSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface),
+                      color: Theme.of(context).colorScheme.onSurface,),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -101,7 +99,7 @@ class AuthGuard extends ConsumerWidget {
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(const SnackBar(
-                        content: Text('Переход к экрану авторизации')));
+                        content: Text('Переход к экрану авторизации'),),);
                   },
                   icon: const Icon(Icons.login),
                   label: const Text('Войти'),
@@ -122,7 +120,7 @@ class AuthGuard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.block,
-                    size: 64, color: Theme.of(context).colorScheme.error),
+                    size: 64, color: Theme.of(context).colorScheme.error,),
                 const SizedBox(height: 24),
                 Text(
                   'Недостаточно прав',
@@ -168,7 +166,7 @@ class AuthGuard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.error_outline,
-                    size: 64, color: Theme.of(context).colorScheme.error),
+                    size: 64, color: Theme.of(context).colorScheme.error,),
                 const SizedBox(height: 24),
                 Text(
                   'Ошибка авторизации',
@@ -182,7 +180,7 @@ class AuthGuard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Произошла ошибка при проверке авторизации: ${error.toString()}',
+                  'Произошла ошибка при проверке авторизации: $error',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
@@ -198,7 +196,7 @@ class AuthGuard extends ConsumerWidget {
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(const SnackBar(
-                        content: Text('Попытка повторной авторизации')));
+                        content: Text('Попытка повторной авторизации'),),);
                   },
                   icon: const Icon(Icons.refresh),
                   label: const Text('Повторить'),
@@ -213,9 +211,7 @@ class AuthGuard extends ConsumerWidget {
 /// Виджет для условного отображения контента в зависимости от роли
 class RoleBasedWidget extends ConsumerWidget {
   const RoleBasedWidget({
-    super.key,
-    required this.customerWidget,
-    required this.specialistWidget,
+    required this.customerWidget, required this.specialistWidget, super.key,
     this.guestWidget,
     this.adminWidget,
     this.fallbackWidget,
@@ -259,7 +255,7 @@ class RoleBasedWidget extends ConsumerWidget {
 
 /// Виджет для отображения информации о пользователе с fallback
 class UserInfoWidget extends ConsumerWidget {
-  const UserInfoWidget({super.key, required this.builder, this.fallbackWidget});
+  const UserInfoWidget({required this.builder, super.key, this.fallbackWidget});
   final Widget Function(AppUser user) builder;
   final Widget? fallbackWidget;
 

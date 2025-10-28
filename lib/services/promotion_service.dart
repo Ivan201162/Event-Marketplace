@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/promotion_boost.dart';
-import '../models/transaction.dart' as transaction_model;
-import '../services/payment_service.dart';
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/models/transaction.dart' as transaction_model;
+import 'package:event_marketplace_app/services/payment_service.dart';
 
 class PromotionService {
-  static final PromotionService _instance = PromotionService._internal();
   factory PromotionService() => _instance;
   PromotionService._internal();
+  static final PromotionService _instance = PromotionService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final PaymentService _paymentService = PaymentService();
@@ -15,7 +15,7 @@ class PromotionService {
   Future<List<PromotionPackage>> getAvailablePackages() async {
     try {
       debugPrint(
-          'INFO: [promotion_service] Получение доступных пакетов продвижения');
+          'INFO: [promotion_service] Получение доступных пакетов продвижения',);
 
       final snapshot = await _firestore
           .collection('promotion_packages')
@@ -69,7 +69,7 @@ class PromotionService {
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [promotion_service] Ошибка получения активных продвижений: $e');
+          'ERROR: [promotion_service] Ошибка получения активных продвижений: $e',);
       return [];
     }
   }
@@ -88,7 +88,7 @@ class PromotionService {
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [promotion_service] Ошибка получения продвижений пользователя: $e');
+          'ERROR: [promotion_service] Ошибка получения продвижений пользователя: $e',);
       return [];
     }
   }
@@ -113,7 +113,7 @@ class PromotionService {
       final package = await getPackageById(packageId);
       if (package == null) {
         return PaymentResult(
-            success: false, errorMessage: 'Пакет продвижения не найден');
+            success: false, errorMessage: 'Пакет продвижения не найден',);
       }
 
       // Создаем платеж
@@ -175,7 +175,7 @@ class PromotionService {
   }) async {
     try {
       debugPrint(
-          'INFO: [promotion_service] Активация продвижения для пользователя $userId');
+          'INFO: [promotion_service] Активация продвижения для пользователя $userId',);
 
       final package = await getPackageById(packageId);
       if (package == null) {
@@ -256,7 +256,7 @@ class PromotionService {
       });
 
       debugPrint(
-          'INFO: [promotion_service] Продвижение успешно поставлено на паузу');
+          'INFO: [promotion_service] Продвижение успешно поставлено на паузу',);
       return true;
     } catch (e) {
       debugPrint('ERROR: [promotion_service] Ошибка паузы продвижения: $e');
@@ -268,7 +268,7 @@ class PromotionService {
   Future<bool> resumePromotion(String promotionId) async {
     try {
       debugPrint(
-          'INFO: [promotion_service] Возобновление продвижения $promotionId');
+          'INFO: [promotion_service] Возобновление продвижения $promotionId',);
 
       await _firestore.collection('promotions').doc(promotionId).update({
         'status': PromotionStatus.active.toString().split('.').last,
@@ -279,7 +279,7 @@ class PromotionService {
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [promotion_service] Ошибка возобновления продвижения: $e');
+          'ERROR: [promotion_service] Ошибка возобновления продвижения: $e',);
       return false;
     }
   }
@@ -292,7 +292,7 @@ class PromotionService {
   }) async {
     try {
       final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now())
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       };
 
       if (impressions != null) {
@@ -358,7 +358,7 @@ class PromotionService {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [promotion_service] Ошибка проверки истекших продвижений: $e');
+          'ERROR: [promotion_service] Ошибка проверки истекших продвижений: $e',);
     }
   }
 
@@ -399,12 +399,12 @@ class PromotionService {
       return snapshot.docs
           .map(
             (doc) => PromotionBoost.fromMap(
-                {'id': doc.id, ...doc.data() as Map<String, dynamic>}),
+                {'id': doc.id, ...doc.data()! as Map<String, dynamic>},),
           )
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [promotion_service] Ошибка получения продвинутых профилей: $e');
+          'ERROR: [promotion_service] Ошибка получения продвинутых профилей: $e',);
       return [];
     }
   }
@@ -416,7 +416,7 @@ class PromotionService {
       return promotions.any((promotion) => promotion.type == type);
     } catch (e) {
       debugPrint(
-          'ERROR: [promotion_service] Ошибка проверки активного продвижения: $e');
+          'ERROR: [promotion_service] Ошибка проверки активного продвижения: $e',);
       return false;
     }
   }
@@ -426,12 +426,12 @@ class PromotionService {
     try {
       final snapshot = await _firestore.collection('promotions').get();
 
-      int activeCount = 0;
-      int expiredCount = 0;
-      int cancelledCount = 0;
-      double totalRevenue = 0.0;
-      int totalImpressions = 0;
-      int totalClicks = 0;
+      var activeCount = 0;
+      var expiredCount = 0;
+      var cancelledCount = 0;
+      var totalRevenue = 0;
+      var totalImpressions = 0;
+      var totalClicks = 0;
 
       for (final doc in snapshot.docs) {
         final data = doc.data();
@@ -443,13 +443,10 @@ class PromotionService {
         switch (status) {
           case 'active':
             activeCount++;
-            break;
           case 'expired':
             expiredCount++;
-            break;
           case 'cancelled':
             cancelledCount++;
-            break;
         }
         totalRevenue += price;
         totalImpressions += impressions;

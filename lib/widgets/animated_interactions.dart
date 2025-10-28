@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 /// Анимированная кнопка с эффектами нажатия
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
-    required this.onPressed,
-    required this.child,
+    required this.onPressed, required this.child, super.key,
     this.backgroundColor,
     this.foregroundColor,
     this.elevation = 2,
@@ -121,9 +119,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 /// Анимированная иконка с эффектами
 class AnimatedIconButton extends StatefulWidget {
   const AnimatedIconButton({
-    super.key,
-    required this.icon,
-    required this.onPressed,
+    required this.icon, required this.onPressed, super.key,
     this.size = 24,
     this.color,
     this.hapticFeedback = true,
@@ -222,9 +218,7 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
 /// Анимированная кнопка лайка
 class AnimatedLikeButton extends StatefulWidget {
   const AnimatedLikeButton({
-    super.key,
-    required this.isLiked,
-    required this.onPressed,
+    required this.isLiked, required this.onPressed, super.key,
     this.size = 24,
     this.likedColor = Colors.red,
     this.unlikedColor,
@@ -307,8 +301,7 @@ class _AnimatedLikeButtonState extends State<AnimatedLikeButton>
 /// Анимированная кнопка репоста
 class AnimatedShareButton extends StatefulWidget {
   const AnimatedShareButton({
-    super.key,
-    required this.onPressed,
+    required this.onPressed, super.key,
     this.size = 24,
     this.color,
     this.hapticFeedback = true,
@@ -380,9 +373,7 @@ class _AnimatedShareButtonState extends State<AnimatedShareButton>
 /// Анимированная кнопка сохранения
 class AnimatedSaveButton extends StatefulWidget {
   const AnimatedSaveButton({
-    super.key,
-    required this.isSaved,
-    required this.onPressed,
+    required this.isSaved, required this.onPressed, super.key,
     this.size = 24,
     this.savedColor = Colors.blue,
     this.unsavedColor,
@@ -459,8 +450,7 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
 /// Анимированная кнопка с пульсацией
 class PulsingButton extends StatefulWidget {
   const PulsingButton({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onPressed,
     this.pulseDuration = const Duration(seconds: 2),
     this.scaleRange = 0.1,
@@ -523,7 +513,7 @@ class _PulsingButtonState extends State<PulsingButton>
         child: AnimatedBuilder(
           animation: _pulseAnimation,
           builder: (context, child) => Transform.scale(
-              scale: _pulseAnimation.value, child: widget.child),
+              scale: _pulseAnimation.value, child: widget.child,),
         ),
       );
 }

@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/dependency_management.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../core/feature_flags.dart';
-import '../models/dependency_management.dart';
 
 /// Сервис для управления зависимостями
 class DependencyManagementService {
@@ -274,7 +273,7 @@ class DependencyManagementService {
             currentVersion: dependency.version,
             newVersion: dependency.latestVersion!,
             type: _determineUpdateType(
-                dependency.version, dependency.latestVersion!),
+                dependency.version, dependency.latestVersion!,),
             priority: _determineUpdatePriority(dependency),
             breakingChanges: [],
             securityFixes: [],

@@ -1,8 +1,9 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/event_idea.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/event_idea.dart';
 
 /// Сервис для работы с идеями мероприятий
 class EventIdeaService {
@@ -276,7 +277,7 @@ class EventIdeaService {
 
   /// Получить комментарии к идее
   Future<List<IdeaComment>> getIdeaComments(String ideaId,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection('idea_comments')

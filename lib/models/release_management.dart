@@ -6,28 +6,14 @@ class Release {
     required this.id,
     required this.version,
     required this.name,
-    this.description,
-    required this.type,
-    required this.status,
+    required this.type, required this.status, required this.features, required this.bugFixes, required this.breakingChanges, required this.dependencies, required this.metadata, required this.tags, required this.isPreRelease, required this.isDraft, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.description,
     this.branch,
     this.commitHash,
-    required this.features,
-    required this.bugFixes,
-    required this.breakingChanges,
-    required this.dependencies,
-    required this.metadata,
-    required this.tags,
-    required this.isPreRelease,
-    required this.isDraft,
     this.releaseNotes,
     this.downloadUrl,
     this.changelogUrl,
     this.scheduledDate,
     this.releasedDate,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory Release.fromMap(Map<String, dynamic> map) => Release(
@@ -46,7 +32,7 @@ class Release {
         dependencies:
             List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
-            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+            map['metadata'] as Map<dynamic, dynamic>? ?? {},),
         tags: List<String>.from(map['tags'] as List<dynamic>? ?? []),
         isPreRelease: map['isPreRelease'] as bool? ?? false,
         isDraft: map['isDraft'] as bool? ?? true,
@@ -206,7 +192,7 @@ enum ReleaseType {
 
   static ReleaseType fromString(String value) =>
       ReleaseType.values.firstWhere((type) => type.value == value,
-          orElse: () => ReleaseType.patch);
+          orElse: () => ReleaseType.patch,);
 
   String get icon {
     switch (this) {
@@ -323,14 +309,9 @@ class ReleasePlan {
     required this.releaseIds,
     required this.milestones,
     required this.requirements,
-    this.targetDate,
+    required this.status, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.targetDate,
     this.actualDate,
-    required this.status,
     this.notes,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory ReleasePlan.fromMap(Map<String, dynamic> map) => ReleasePlan(
@@ -500,17 +481,11 @@ class Deployment {
     required this.releaseId,
     required this.environment,
     required this.status,
-    this.buildUrl,
+    required this.config, required this.logs, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.buildUrl,
     this.deployUrl,
-    required this.config,
-    required this.logs,
     this.startedAt,
     this.completedAt,
     this.errorMessage,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory Deployment.fromMap(Map<String, dynamic> map) => Deployment(

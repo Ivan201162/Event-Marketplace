@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/app_notification.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/app_notification.dart';
-import '../services/notification_service.dart';
 
 /// Провайдеры для уведомлений
 class NotificationProviders {
@@ -15,14 +15,14 @@ class NotificationProviders {
       FutureProvider.family<List<AppNotification>, String>((ref, userId) async {
     final service = ref.watch(notificationServiceProvider);
     final notifications = await service.getNotificationsForUser(userId);
-    return notifications.map((data) => AppNotification.fromMap(data)).toList();
+    return notifications.map(AppNotification.fromMap).toList();
   });
 
   /// Количество непрочитанных уведомлений
   static final unreadCountProvider =
       FutureProvider.family<int, String>((ref, userId) async {
     final service = ref.watch(notificationServiceProvider);
-    return await service.getUnreadCount(userId);
+    return service.getUnreadCount(userId);
   });
 
   /// Последние уведомления (для бейджа)
@@ -30,6 +30,6 @@ class NotificationProviders {
       FutureProvider.family<List<AppNotification>, String>((ref, userId) async {
     final service = ref.watch(notificationServiceProvider);
     final notifications = await service.getNotificationsForUser(userId);
-    return notifications.map((data) => AppNotification.fromMap(data)).toList();
+    return notifications.map(AppNotification.fromMap).toList();
   });
 }

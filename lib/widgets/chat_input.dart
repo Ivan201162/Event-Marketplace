@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 
 /// Виджет ввода сообщения в чате
 class ChatInput extends StatefulWidget {
+
+  const ChatInput({
+    required this.controller, required this.onSend, super.key,
+    this.onAttach,
+  });
   final TextEditingController controller;
   final ValueChanged<String> onSend;
   final VoidCallback? onAttach;
-
-  const ChatInput({
-    super.key,
-    required this.controller,
-    required this.onSend,
-    this.onAttach,
-  });
 
   @override
   State<ChatInput> createState() => _ChatInputState();
@@ -47,7 +45,6 @@ class _ChatInputState extends State<ChatInput> {
         border: Border(
           top: BorderSide(
             color: Colors.grey[300]!,
-            width: 1,
           ),
         ),
       ),

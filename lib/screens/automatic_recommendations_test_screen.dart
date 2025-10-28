@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/widgets/automatic_recommendations_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-import '../widgets/automatic_recommendations_widget.dart';
 
 /// Экран для тестирования автоматических рекомендаций
 class AutomaticRecommendationsTestScreen extends ConsumerStatefulWidget {
@@ -67,7 +67,7 @@ class _AutomaticRecommendationsTestScreenState
               Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _buildSelectedSpecialistChips()),
+                  children: _buildSelectedSpecialistChips(),),
             ],
           ],
         ),
@@ -78,15 +78,15 @@ class _AutomaticRecommendationsTestScreenState
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
       _TestSpecialist('photographer_1', 'Фотограф Алексей',
-          SpecialistCategory.photographer),
+          SpecialistCategory.photographer,),
       _TestSpecialist(
-          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer,),
       _TestSpecialist(
-          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator,),
       _TestSpecialist(
-          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician,),
       _TestSpecialist(
-          'animator_1', 'Аниматор Анна', SpecialistCategory.animator),
+          'animator_1', 'Аниматор Анна', SpecialistCategory.animator,),
     ];
 
     return testSpecialists.map((specialist) {
@@ -137,15 +137,15 @@ class _AutomaticRecommendationsTestScreenState
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
       _TestSpecialist('photographer_1', 'Фотограф Алексей',
-          SpecialistCategory.photographer),
+          SpecialistCategory.photographer,),
       _TestSpecialist(
-          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer,),
       _TestSpecialist(
-          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator,),
       _TestSpecialist(
-          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician,),
       _TestSpecialist(
-          'animator_1', 'Аниматор Анна', SpecialistCategory.animator),
+          'animator_1', 'Аниматор Анна', SpecialistCategory.animator,),
     ];
 
     return testSpecialists.firstWhere((s) => s.id == id);

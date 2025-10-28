@@ -13,7 +13,7 @@ class BookingsRepository {
   Stream<List<Map<String, dynamic>>> getCustomerBookings(String customerId) {
     try {
       debugPrint(
-          'BookingsRepository.getCustomerBookings: customerId=$customerId');
+          'BookingsRepository.getCustomerBookings: customerId=$customerId',);
 
       return _firestore
           .collection('bookings')
@@ -38,10 +38,10 @@ class BookingsRepository {
 
   /// Получение заявок специалиста
   Stream<List<Map<String, dynamic>>> getSpecialistBookings(
-      String specialistId) {
+      String specialistId,) {
     try {
       debugPrint(
-          'BookingsRepository.getSpecialistBookings: specialistId=$specialistId');
+          'BookingsRepository.getSpecialistBookings: specialistId=$specialistId',);
 
       return _firestore
           .collection('bookings')
@@ -60,7 +60,7 @@ class BookingsRepository {
       });
     } catch (e) {
       debugPrint(
-          'BookingsRepository.getSpecialistBookings: ошибка запроса: $e');
+          'BookingsRepository.getSpecialistBookings: ошибка запроса: $e',);
       return Stream.value([]);
     }
   }
@@ -99,7 +99,7 @@ class BookingsRepository {
       if (doc.exists) {
         final data = doc.data() ?? {};
         debugPrint(
-            'BookingsRepository.getById: заявка найдена, поля: ${data.keys.toList()}');
+            'BookingsRepository.getById: заявка найдена, поля: ${data.keys.toList()}',);
         return {'id': doc.id, ...data};
       }
       debugPrint('BookingsRepository.getById: заявка не найдена');
@@ -119,7 +119,7 @@ class BookingsRepository {
 
       final docRef = await _firestore.collection('bookings').add(bookingData);
       debugPrint(
-          'BookingsRepository.create: заявка создана с ID: ${docRef.id}');
+          'BookingsRepository.create: заявка создана с ID: ${docRef.id}',);
       return docRef.id;
     } catch (e) {
       debugPrint('BookingsRepository.create: ошибка создания заявки: $e');
@@ -159,7 +159,7 @@ class BookingsRepository {
 
   /// Обновление статуса заявки
   Future<bool> updateStatus(String bookingId, String status,
-      {String? notes}) async {
+      {String? notes,}) async {
     try {
       debugPrint(
         'BookingsRepository.updateStatus: обновление статуса заявки $bookingId на $status',
@@ -176,11 +176,11 @@ class BookingsRepository {
 
       await _firestore.collection('bookings').doc(bookingId).update(updates);
       debugPrint(
-          'BookingsRepository.updateStatus: статус заявки обновлен успешно');
+          'BookingsRepository.updateStatus: статус заявки обновлен успешно',);
       return true;
     } catch (e) {
       debugPrint(
-          'BookingsRepository.updateStatus: ошибка обновления статуса: $e');
+          'BookingsRepository.updateStatus: ошибка обновления статуса: $e',);
       return false;
     }
   }
@@ -213,10 +213,10 @@ class BookingsRepository {
 
   /// Получение заявок по дате события
   Stream<List<Map<String, dynamic>>> getBookingsByEventDate(
-      DateTime eventDate) {
+      DateTime eventDate,) {
     try {
       debugPrint(
-          'BookingsRepository.getBookingsByEventDate: eventDate=$eventDate');
+          'BookingsRepository.getBookingsByEventDate: eventDate=$eventDate',);
 
       final startOfDay =
           DateTime(eventDate.year, eventDate.month, eventDate.day);
@@ -226,7 +226,7 @@ class BookingsRepository {
       return _firestore
           .collection('bookings')
           .where('eventDate',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),)
           .where('eventDate', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
           .orderBy('eventDate', descending: false)
           .snapshots()
@@ -242,7 +242,7 @@ class BookingsRepository {
       });
     } catch (e) {
       debugPrint(
-          'BookingsRepository.getBookingsByEventDate: ошибка запроса: $e');
+          'BookingsRepository.getBookingsByEventDate: ошибка запроса: $e',);
       return Stream.value([]);
     }
   }

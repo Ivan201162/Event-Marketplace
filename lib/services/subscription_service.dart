@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/subscription_plan.dart';
-import '../models/transaction.dart' as transaction_model;
-import '../services/payment_service.dart';
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/models/transaction.dart' as transaction_model;
+import 'package:event_marketplace_app/services/payment_service.dart';
 
 class SubscriptionService {
-  static final SubscriptionService _instance = SubscriptionService._internal();
   factory SubscriptionService() => _instance;
   SubscriptionService._internal();
+  static final SubscriptionService _instance = SubscriptionService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final PaymentService _paymentService = PaymentService();
@@ -15,7 +15,7 @@ class SubscriptionService {
   Future<List<SubscriptionPlan>> getAvailablePlans() async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Получение доступных планов подписки');
+          'INFO: [subscription_service] Получение доступных планов подписки',);
 
       final snapshot = await _firestore
           .collection('subscription_plans')
@@ -70,7 +70,7 @@ class SubscriptionService {
       return null;
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка получения активной подписки: $e');
+          'ERROR: [subscription_service] Ошибка получения активной подписки: $e',);
       return null;
     }
   }
@@ -89,7 +89,7 @@ class SubscriptionService {
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка получения подписок пользователя: $e');
+          'ERROR: [subscription_service] Ошибка получения подписок пользователя: $e',);
       return [];
     }
   }
@@ -103,13 +103,13 @@ class SubscriptionService {
   }) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Покупка подписки $planId для пользователя $userId');
+          'INFO: [subscription_service] Покупка подписки $planId для пользователя $userId',);
 
       // Получаем план подписки
       final plan = await getPlanById(planId);
       if (plan == null) {
         return PaymentResult(
-            success: false, errorMessage: 'План подписки не найден');
+            success: false, errorMessage: 'План подписки не найден',);
       }
 
       // Создаем платеж
@@ -167,7 +167,7 @@ class SubscriptionService {
   }) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Активация подписки для пользователя $userId');
+          'INFO: [subscription_service] Активация подписки для пользователя $userId',);
 
       final plan = await getPlanById(planId);
       if (plan == null) {
@@ -242,7 +242,7 @@ class SubscriptionService {
   Future<bool> cancelSubscription(String subscriptionId) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Отмена подписки $subscriptionId');
+          'INFO: [subscription_service] Отмена подписки $subscriptionId',);
 
       await _firestore
           .collection('user_subscriptions')
@@ -265,7 +265,7 @@ class SubscriptionService {
   Future<bool> renewSubscription(String subscriptionId) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Продление подписки $subscriptionId');
+          'INFO: [subscription_service] Продление подписки $subscriptionId',);
 
       final doc = await _firestore
           .collection('user_subscriptions')
@@ -333,7 +333,7 @@ class SubscriptionService {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка проверки истекших подписок: $e');
+          'ERROR: [subscription_service] Ошибка проверки истекших подписок: $e',);
     }
   }
 
@@ -344,7 +344,7 @@ class SubscriptionService {
       return subscription != null && subscription.isActive;
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка проверки активной подписки: $e');
+          'ERROR: [subscription_service] Ошибка проверки активной подписки: $e',);
       return false;
     }
   }
@@ -361,7 +361,7 @@ class SubscriptionService {
       return plan?.tier ?? SubscriptionTier.free;
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка получения уровня подписки: $e');
+          'ERROR: [subscription_service] Ошибка получения уровня подписки: $e',);
       return SubscriptionTier.free;
     }
   }
@@ -373,7 +373,7 @@ class SubscriptionService {
       return tier == SubscriptionTier.premium || tier == SubscriptionTier.pro;
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка проверки премиум доступа: $e');
+          'ERROR: [subscription_service] Ошибка проверки премиум доступа: $e',);
       return false;
     }
   }
@@ -383,10 +383,10 @@ class SubscriptionService {
     try {
       final snapshot = await _firestore.collection('user_subscriptions').get();
 
-      int activeCount = 0;
-      int expiredCount = 0;
-      int cancelledCount = 0;
-      double totalRevenue = 0.0;
+      var activeCount = 0;
+      var expiredCount = 0;
+      var cancelledCount = 0;
+      var totalRevenue = 0;
 
       for (final doc in snapshot.docs) {
         final data = doc.data();
@@ -396,13 +396,10 @@ class SubscriptionService {
         switch (status) {
           case 'active':
             activeCount++;
-            break;
           case 'expired':
             expiredCount++;
-            break;
           case 'cancelled':
             cancelledCount++;
-            break;
         }
         totalRevenue += amount;
       }
@@ -416,7 +413,7 @@ class SubscriptionService {
       };
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка получения статистики: $e');
+          'ERROR: [subscription_service] Ошибка получения статистики: $e',);
       return {};
     }
   }
@@ -430,7 +427,7 @@ class SubscriptionService {
   }) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Подписка на специалиста $specialistId');
+          'INFO: [subscription_service] Подписка на специалиста $specialistId',);
 
       await _firestore.collection('subscriptions').add({
         'subscriber_id': userId,
@@ -442,7 +439,7 @@ class SubscriptionService {
       });
 
       debugPrint(
-          'INFO: [subscription_service] Успешная подписка на специалиста');
+          'INFO: [subscription_service] Успешная подписка на специалиста',);
     } catch (e) {
       debugPrint('ERROR: [subscription_service] Ошибка подписки: $e');
       rethrow;
@@ -451,10 +448,10 @@ class SubscriptionService {
 
   /// Отписка от специалиста
   Future<void> unsubscribeFromSpecialist(
-      String userId, String specialistId) async {
+      String userId, String specialistId,) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Отписка от специалиста $specialistId');
+          'INFO: [subscription_service] Отписка от специалиста $specialistId',);
 
       final query = await _firestore
           .collection('subscriptions')
@@ -471,7 +468,7 @@ class SubscriptionService {
       }
 
       debugPrint(
-          'INFO: [subscription_service] Успешная отписка от специалиста');
+          'INFO: [subscription_service] Успешная отписка от специалиста',);
     } catch (e) {
       debugPrint('ERROR: [subscription_service] Ошибка отписки: $e');
       rethrow;
@@ -482,7 +479,7 @@ class SubscriptionService {
   Future<void> markNotificationAsRead(String notificationId) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Отметка уведомления как прочитанного');
+          'INFO: [subscription_service] Отметка уведомления как прочитанного',);
 
       await _firestore.collection('notifications').doc(notificationId).update({
         'is_read': true,
@@ -490,10 +487,10 @@ class SubscriptionService {
       });
 
       debugPrint(
-          'INFO: [subscription_service] Уведомление отмечено как прочитанное');
+          'INFO: [subscription_service] Уведомление отмечено как прочитанное',);
     } catch (e) {
       debugPrint(
-          'ERROR: [subscription_service] Ошибка отметки уведомления: $e');
+          'ERROR: [subscription_service] Ошибка отметки уведомления: $e',);
       rethrow;
     }
   }

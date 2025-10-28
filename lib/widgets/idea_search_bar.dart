@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет поиска идей
 class IdeaSearchBar extends StatefulWidget {
   const IdeaSearchBar({
-    super.key,
-    required this.onSearch,
+    required this.onSearch, super.key,
     this.initialValue = '',
     this.hintText = 'Поиск идей...',
   });
@@ -71,14 +70,14 @@ class _IdeaSearchBarState extends State<IdeaSearchBar> {
         decoration: InputDecoration(
           hintText: widget.hintText,
           hintStyle: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),),
           prefixIcon:
               Icon(Icons.search, color: theme.colorScheme.onSurfaceVariant),
           suffixIcon: _isSearching
               ? IconButton(
                   onPressed: _clearSearch,
                   icon: Icon(Icons.clear,
-                      color: theme.colorScheme.onSurfaceVariant),
+                      color: theme.colorScheme.onSurfaceVariant,),
                 )
               : null,
           border: InputBorder.none,

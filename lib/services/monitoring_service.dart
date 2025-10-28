@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/monitoring.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/monitoring.dart';
 
 /// Сервис мониторинга и алертов
 class MonitoringService {
@@ -712,7 +711,7 @@ class MonitoringService {
 
   /// Записать ошибку
   Future<void> recordError(error, StackTrace? stackTrace,
-      {String? context}) async {
+      {String? context,}) async {
     try {
       final errorData = {
         'id': _uuid.v4(),
@@ -733,7 +732,7 @@ class MonitoringService {
 
   /// Логировать действие пользователя
   Future<void> logUserAction(
-      String userId, String action, Map<String, dynamic>? data) async {
+      String userId, String action, Map<String, dynamic>? data,) async {
     try {
       final actionData = {
         'id': _uuid.v4(),
@@ -857,7 +856,7 @@ class MonitoringService {
     } catch (e) {
       return {
         'error': e.toString(),
-        'timestamp': DateTime.now().toIso8601String()
+        'timestamp': DateTime.now().toIso8601String(),
       };
     }
   }
@@ -877,7 +876,7 @@ class MonitoringService {
     } catch (e) {
       return {
         'error': e.toString(),
-        'timestamp': DateTime.now().toIso8601String()
+        'timestamp': DateTime.now().toIso8601String(),
       };
     }
   }
@@ -895,7 +894,7 @@ class MonitoringService {
     } catch (e) {
       return {
         'error': e.toString(),
-        'timestamp': DateTime.now().toIso8601String()
+        'timestamp': DateTime.now().toIso8601String(),
       };
     }
   }
@@ -913,7 +912,7 @@ class MonitoringService {
     } catch (e) {
       return {
         'error': e.toString(),
-        'timestamp': DateTime.now().toIso8601String()
+        'timestamp': DateTime.now().toIso8601String(),
       };
     }
   }
@@ -933,7 +932,7 @@ class MonitoringService {
     } catch (e) {
       return {
         'error': e.toString(),
-        'timestamp': DateTime.now().toIso8601String()
+        'timestamp': DateTime.now().toIso8601String(),
       };
     }
   }
@@ -951,7 +950,7 @@ class MonitoringService {
     } catch (e) {
       return {
         'error': e.toString(),
-        'timestamp': DateTime.now().toIso8601String()
+        'timestamp': DateTime.now().toIso8601String(),
       };
     }
   }

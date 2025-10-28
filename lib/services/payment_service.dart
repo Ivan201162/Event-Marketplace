@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/models/transaction.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
-import '../models/payment.dart';
-import '../models/transaction.dart';
 
 /// Service for managing payments
 class PaymentService {
@@ -84,7 +83,7 @@ class PaymentService {
 
         // Update payment status to completed
         await _updatePaymentStatus(paymentId, PaymentStatus.completed,
-            completedAt: DateTime.now());
+            completedAt: DateTime.now(),);
 
         // Create transaction record
         await _createTransaction(
@@ -143,7 +142,7 @@ class PaymentService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Payment.fromFirestore(doc))
+          .map(Payment.fromFirestore)
           .toList();
     } catch (e) {
       debugPrint('Error getting user payments: $e');
@@ -161,7 +160,7 @@ class PaymentService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Payment.fromFirestore(doc))
+          .map(Payment.fromFirestore)
           .toList();
     } catch (e) {
       debugPrint('Error getting specialist payments: $e');
@@ -197,7 +196,7 @@ class PaymentService {
       // In real app, this would call Stripe refund API
       // For now, we'll just update the status
       await _updatePaymentStatus(paymentId, PaymentStatus.refunded,
-          updatedAt: DateTime.now());
+          updatedAt: DateTime.now(),);
 
       // Create refund transaction
       await _createTransaction(
@@ -227,7 +226,7 @@ class PaymentService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Transaction.fromFirestore(doc))
+          .map(Transaction.fromFirestore)
           .toList();
     } catch (e) {
       debugPrint('Error getting user transactions: $e');
@@ -240,7 +239,7 @@ class PaymentService {
     try {
       final transactions = await getUserTransactions(userId);
 
-      int balance = 0;
+      var balance = 0;
       for (final transaction in transactions) {
         if (transaction.isIncome) {
           balance += transaction.amount;
@@ -306,7 +305,7 @@ class PaymentService {
     try {
       final updateData = <String, dynamic>{
         'status': status.name,
-        'updatedAt': Timestamp.now()
+        'updatedAt': Timestamp.now(),
       };
 
       if (failureReason != null) {
@@ -331,12 +330,9 @@ class PaymentService {
   /// Create transaction record
   Future<void> _createTransaction({
     required String userId,
-    String? specialistId,
+    required TransactionType type, required int amount, required String description, String? specialistId,
     String? paymentId,
     String? bookingId,
-    required TransactionType type,
-    required int amount,
-    required String description,
     String? category,
     Map<String, dynamic>? metadata,
   }) async {
@@ -396,7 +392,7 @@ class PaymentService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromFirestore(doc)).toList());
+            snapshot.docs.map(Payment.fromFirestore).toList(),);
   }
 
   /// Get transactions stream for user
@@ -407,8 +403,8 @@ class PaymentService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => Transaction.fromFirestore(doc))
-            .toList());
+            .map(Transaction.fromFirestore)
+            .toList(),);
   }
 
   /// Get payments for a specific booking
@@ -420,7 +416,7 @@ class PaymentService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Payment.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Payment.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting booking payments: $e');
       return [];

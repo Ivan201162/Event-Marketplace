@@ -1,6 +1,7 @@
 import 'dart:typed_data';
+
+import 'package:event_marketplace_app/models/social_models.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/social_models.dart';
 
 class SupabaseService {
   static final SupabaseClient _client = Supabase.instance.client;
@@ -39,7 +40,7 @@ class SupabaseService {
 
   // Получение топ специалистов недели
   static Future<List<WeeklyLeader>> getWeeklyLeaders(
-      {String? city, int limit = 10}) async {
+      {String? city, int limit = 10,}) async {
     try {
       final response = await _client.rpc(
         'get_weekly_leaders',
@@ -165,7 +166,7 @@ class SupabaseService {
             profiles!inner(id, username, name, avatar_url)
           ''').eq('user_id', currentUserId);
 
-      final List<ChatListItem> chats = [];
+      final chats = <ChatListItem>[];
 
       for (final item in response) {
         final chatId = item['chat_id'] as String;
@@ -244,7 +245,7 @@ class SupabaseService {
 
       // Обновляем время последнего обновления чата
       await _client.from('chats').update(
-          {'updated_at': DateTime.now().toIso8601String()}).eq('id', chatId);
+          {'updated_at': DateTime.now().toIso8601String()},).eq('id', chatId);
 
       return true;
     } catch (e) {
@@ -335,7 +336,7 @@ class SupabaseService {
 
   // Получение идей с пагинацией
   static Future<List<Idea>> getIdeas(
-      {int limit = 20, int offset = 0, String? category}) async {
+      {int limit = 20, int offset = 0, String? category,}) async {
     try {
       final query = _client
           .from('ideas')
@@ -514,7 +515,7 @@ class SupabaseService {
 
   // Обновление статуса заявки
   static Future<bool> updateRequestStatus(
-      String requestId, String status) async {
+      String requestId, String status,) async {
     try {
       await _client
           .from('requests')
@@ -533,7 +534,7 @@ class SupabaseService {
       await _client
           .from('requests')
           .update({'assigned_to': assigneeId, 'status': 'in_progress'}).eq(
-              'id', requestId);
+              'id', requestId,);
 
       return true;
     } catch (e) {
@@ -576,7 +577,7 @@ class SupabaseService {
 
   // Загрузка аватара
   static Future<String?> uploadAvatar(
-      String filePath, List<int> fileBytes) async {
+      String filePath, List<int> fileBytes,) async {
     try {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;

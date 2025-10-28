@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../providers/auth_providers.dart';
 
 class CreateBookingScreen extends ConsumerStatefulWidget {
   const CreateBookingScreen({super.key});
@@ -34,17 +33,17 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
     {
       'id': 'specialist1',
       'name': 'Александр Иванов',
-      'category': 'Свадьбы и корпоративы'
+      'category': 'Свадьбы и корпоративы',
     },
     {
       'id': 'specialist2',
       'name': 'Мария Смирнова',
-      'category': 'Детские праздники'
+      'category': 'Детские праздники',
     },
     {
       'id': 'specialist3',
       'name': 'Дмитрий Петров',
-      'category': 'Банкеты и фуршеты'
+      'category': 'Банкеты и фуршеты',
     },
   ];
 
@@ -145,7 +144,7 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Заявка успешно создана!'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         context.pop();
       }
@@ -154,7 +153,7 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания заявки: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -172,7 +171,7 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
           title: const Text('Создать заявку'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: Form(
           key: _formKey,
@@ -425,7 +424,7 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                 TextFormField(
                   controller: _customerEmailController,
                   decoration: const InputDecoration(
-                      labelText: 'Email *', border: OutlineInputBorder()),
+                      labelText: 'Email *', border: OutlineInputBorder(),),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {

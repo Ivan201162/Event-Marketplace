@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/event_organizer.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/event_organizer.dart';
-import 'error_logging_service.dart';
 
 /// Сервис для работы с организаторами мероприятий
 class EventOrganizerService {
@@ -91,7 +90,7 @@ class EventOrganizerService {
       if (eventTypes != null && eventTypes.isNotEmpty) {
         organizers = organizers
             .where((organizer) =>
-                eventTypes.any((type) => organizer.eventTypes.contains(type)))
+                eventTypes.any((type) => organizer.eventTypes.contains(type)),)
             .toList();
       }
 
@@ -118,15 +117,13 @@ class EventOrganizerService {
   Future<EventOrganizer?> createOrganizer({
     required String userId,
     required String companyName,
-    String? description,
+    required List<String> eventTypes, required List<String> specializations, String? description,
     String? website,
     String? phone,
     String? email,
     String? address,
     String? city,
     String? region,
-    required List<String> eventTypes,
-    required List<String> specializations,
     Map<String, dynamic>? socialLinks,
     List<String>? portfolioImages,
     Map<String, dynamic>? businessHours,
@@ -187,7 +184,7 @@ class EventOrganizerService {
 
   /// Обновить организатора
   Future<bool> updateOrganizer(
-      String organizerId, Map<String, dynamic> updates) async {
+      String organizerId, Map<String, dynamic> updates,) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
 
@@ -288,7 +285,7 @@ class EventOrganizerService {
       if (eventTypes != null && eventTypes.isNotEmpty) {
         organizers = organizers
             .where((organizer) =>
-                eventTypes.any((type) => organizer.eventTypes.contains(type)))
+                eventTypes.any((type) => organizer.eventTypes.contains(type)),)
             .toList();
       }
 
@@ -304,7 +301,7 @@ class EventOrganizerService {
       if (maxRating != null) {
         organizers = organizers
             .where((organizer) =>
-                organizer.rating == null || organizer.rating! <= maxRating)
+                organizer.rating == null || organizer.rating! <= maxRating,)
             .toList();
       }
 
@@ -320,7 +317,7 @@ class EventOrganizerService {
 
   /// Получить топ организаторов
   Future<List<EventOrganizer>> getTopOrganizers(
-      {int limit = 10, String? city}) async {
+      {int limit = 10, String? city,}) async {
     try {
       Query query = _firestore.collection('event_organizers');
 
@@ -347,7 +344,7 @@ class EventOrganizerService {
 
   /// Обновить рейтинг организатора
   Future<bool> updateOrganizerRating(
-      String organizerId, double newRating) async {
+      String organizerId, double newRating,) async {
     try {
       await _firestore.collection('event_organizers').doc(organizerId).update({
         'rating': newRating,
@@ -366,7 +363,7 @@ class EventOrganizerService {
 
   /// Увеличить счетчик мероприятий
   Future<bool> incrementEventCount(String organizerId,
-      {bool completed = false}) async {
+      {bool completed = false,}) async {
     try {
       final updates = <String, dynamic>{
         'totalEvents': FieldValue.increment(1),

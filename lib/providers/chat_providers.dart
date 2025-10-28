@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/models/chat_message.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat.dart';
-import '../models/chat_message.dart';
-import '../services/chat_service.dart';
 
 /// Провайдер сервиса чатов
 final chatServiceProvider = Provider<ChatService>((ref) {
@@ -12,14 +11,14 @@ final chatServiceProvider = Provider<ChatService>((ref) {
 /// Провайдер списка чатов
 final chatsProvider = FutureProvider<List<Chat>>((ref) async {
   final chatService = ref.read(chatServiceProvider);
-  return await chatService.getChats();
+  return chatService.getChats();
 });
 
 /// Провайдер сообщений чата
 final chatMessagesProvider =
     FutureProvider.family<List<ChatMessage>, String>((ref, chatId) async {
   final chatService = ref.read(chatServiceProvider);
-  return await chatService.getMessages(chatId);
+  return chatService.getMessages(chatId);
 });
 
 /// Провайдер для отправки сообщения

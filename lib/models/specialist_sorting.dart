@@ -1,5 +1,5 @@
-import 'price_range.dart';
-import 'specialist.dart';
+import 'package:event_marketplace_app/models/price_range.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Опции сортировки для специалистов
 enum SpecialistSortOption {
@@ -75,13 +75,13 @@ enum SpecialistSortOption {
 /// Класс для управления сортировкой специалистов
 class SpecialistSorting {
   const SpecialistSorting(
-      {this.sortOption = SpecialistSortOption.none, this.isAscending = true});
+      {this.sortOption = SpecialistSortOption.none, this.isAscending = true,});
   final SpecialistSortOption sortOption;
   final bool isAscending;
 
   /// Создать копию с изменениями
   SpecialistSorting copyWith(
-          {SpecialistSortOption? sortOption, bool? isAscending}) =>
+          {SpecialistSortOption? sortOption, bool? isAscending,}) =>
       SpecialistSorting(
         sortOption: sortOption ?? this.sortOption,
         isAscending: isAscending ?? this.isAscending,
@@ -116,7 +116,7 @@ class SpecialistSorting {
 class SpecialistSortingUtils {
   /// Сортировать список специалистов
   static List<Specialist> sortSpecialists(
-      List<Specialist> specialists, SpecialistSorting sorting) {
+      List<Specialist> specialists, SpecialistSorting sorting,) {
     if (!sorting.isActive) {
       return specialists;
     }
@@ -126,28 +126,20 @@ class SpecialistSortingUtils {
     switch (sorting.sortOption) {
       case SpecialistSortOption.priceAsc:
         sortedList.sort((a, b) => _comparePrice(a, b, true));
-        break;
       case SpecialistSortOption.priceDesc:
         sortedList.sort((a, b) => _comparePrice(a, b, false));
-        break;
       case SpecialistSortOption.rating:
         sortedList.sort((a, b) => _compareRating(a, b, false));
-        break;
       case SpecialistSortOption.popularity:
         sortedList.sort((a, b) => _comparePopularity(a, b, false));
-        break;
       case SpecialistSortOption.nameAsc:
         sortedList.sort((a, b) => _compareName(a, b, true));
-        break;
       case SpecialistSortOption.nameDesc:
         sortedList.sort((a, b) => _compareName(a, b, false));
-        break;
       case SpecialistSortOption.dateNewest:
         sortedList.sort((a, b) => _compareDate(a, b, false));
-        break;
       case SpecialistSortOption.dateOldest:
         sortedList.sort((a, b) => _compareDate(a, b, true));
-        break;
       case SpecialistSortOption.none:
         // Без сортировки
         break;
@@ -211,10 +203,10 @@ class SpecialistSortingUtils {
 
   /// Получить статистику сортировки
   static SortStats getSortStats(
-      List<Specialist> specialists, SpecialistSorting sorting) {
+      List<Specialist> specialists, SpecialistSorting sorting,) {
     if (specialists.isEmpty) {
       return const SortStats(
-          totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0);
+          totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0,);
     }
 
     var minPrice = double.infinity;

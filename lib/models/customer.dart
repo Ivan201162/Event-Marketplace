@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'user.dart';
+import 'package:event_marketplace_app/models/user.dart';
 
 /// Модель заказчика
 class Customer {
@@ -7,7 +7,7 @@ class Customer {
     required this.id,
     required this.name,
     required this.email,
-    this.avatarUrl,
+    required this.createdAt, this.avatarUrl,
     this.phoneNumber,
     this.maritalStatus = MaritalStatus.single,
     this.weddingDate,
@@ -16,7 +16,6 @@ class Customer {
     this.ordersHistory = const [],
     this.anniversaries = const [],
     this.anniversaryRemindersEnabled = false,
-    required this.createdAt,
     this.lastLoginAt,
     this.additionalData,
   });

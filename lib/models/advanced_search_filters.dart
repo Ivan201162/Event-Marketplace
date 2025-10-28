@@ -1,6 +1,6 @@
-import 'city_region.dart';
-import 'common_types.dart';
-import 'specialist.dart';
+import 'package:event_marketplace_app/models/city_region.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Расширенные фильтры для поиска специалистов по всей России
 class AdvancedSearchFilters {
@@ -443,7 +443,7 @@ class AdvancedSearchState {
       AdvancedSearchState(
         results: (json['results'] as List<dynamic>?)
                 ?.map((e) =>
-                    AdvancedSearchResult.fromJson(e as Map<String, dynamic>))
+                    AdvancedSearchResult.fromJson(e as Map<String, dynamic>),)
                 .toList() ??
             [],
         isLoading: json['isLoading'] as bool? ?? false,
@@ -451,7 +451,7 @@ class AdvancedSearchState {
         error: json['error'] as String? ?? '',
         filters: json['filters'] != null
             ? AdvancedSearchFilters.fromJson(
-                json['filters'] as Map<String, dynamic>)
+                json['filters'] as Map<String, dynamic>,)
             : const AdvancedSearchFilters(),
         totalCount: json['totalCount'] as int? ?? 0,
         searchTime: json['searchTime'] as int? ?? 0,

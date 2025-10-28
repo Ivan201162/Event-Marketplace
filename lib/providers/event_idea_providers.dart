@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/services/event_idea_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/event_idea.dart';
-import '../services/event_idea_service.dart';
 
 /// Провайдер сервиса идей мероприятий
 final eventIdeaServiceProvider =
@@ -65,7 +65,7 @@ final uploadIdeaImagesProvider =
 ) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.uploadIdeaImages(
-      authorId: params.authorId, imageFiles: params.imageFiles);
+      authorId: params.authorId, imageFiles: params.imageFiles,);
 });
 
 /// Провайдер для лайка идеи
@@ -99,7 +99,7 @@ final addCommentProvider =
 /// Параметры для получения идей
 class EventIdeasParams {
   const EventIdeasParams(
-      {this.limit = 20, this.category, this.tags, this.searchQuery});
+      {this.limit = 20, this.category, this.tags, this.searchQuery,});
 
   final int limit;
   final String? category;
@@ -110,7 +110,7 @@ class EventIdeasParams {
 /// Параметры для загрузки изображений идеи
 class UploadIdeaImagesParams {
   const UploadIdeaImagesParams(
-      {required this.authorId, required this.imageFiles});
+      {required this.authorId, required this.imageFiles,});
 
   final String authorId;
   final List<dynamic> imageFiles; // List<XFile>

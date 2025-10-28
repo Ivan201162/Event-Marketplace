@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/screens/profile_edit_screen.dart';
+import 'package:event_marketplace_app/widgets/auth_guard_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/app_theme.dart';
-import '../models/user.dart';
-import '../widgets/auth_guard_widget.dart';
-import 'profile_edit_screen.dart';
 
 /// Страница профиля пользователя
 class ProfilePage extends ConsumerStatefulWidget {
@@ -20,7 +19,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         child: UserInfoWidget(
           builder: (user) => _buildProfileContent(context, user),
           fallbackWidget: const Scaffold(
-              body: Center(child: Text('Пользователь не авторизован'))),
+              body: Center(child: Text('Пользователь не авторизован')),),
         ),
       );
 
@@ -36,11 +35,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 title: const Text(
                   'Мой профиль',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
+                      fontWeight: FontWeight.bold, color: Colors.white,),
                 ),
                 background: Container(
                   decoration: const BoxDecoration(
-                      gradient: BrandColors.primaryGradient),
+                      gradient: BrandColors.primaryGradient,),
                   child: SafeArea(
                     child: Padding(
                       padding:
@@ -134,14 +133,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     // Роль пользователя
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                          horizontal: 12, vertical: 6,),
                       decoration: BoxDecoration(
                         color:
                             _getRoleColor(appUser.role).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                             color: _getRoleColor(appUser.role)
-                                .withValues(alpha: 0.3)),
+                                .withValues(alpha: 0.3),),
                       ),
                       child: Text(
                         _getRoleText(appUser.role),
@@ -187,12 +186,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             ),
                             const SizedBox(height: 12),
                             _buildInfoRow('Дата регистрации',
-                                _formatDate(appUser.createdAt)),
+                                _formatDate(appUser.createdAt),),
                             if (appUser.lastLoginAt != null)
                               _buildInfoRow('Последний вход',
-                                  _formatDate(appUser.lastLoginAt!)),
+                                  _formatDate(appUser.lastLoginAt!),),
                             _buildInfoRow('Статус',
-                                appUser.isActive ? 'Активен' : 'Заблокирован'),
+                                appUser.isActive ? 'Активен' : 'Заблокирован',),
                             if (appUser.socialProvider != null)
                               _buildInfoRow(
                                 'Вход через',
@@ -218,12 +217,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             SizedBox(
               width: 120,
               child: Text(label,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),),
             ),
             Expanded(
               child: Text(value,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w500, fontSize: 14)),
+                      fontWeight: FontWeight.w500, fontSize: 14,),),
             ),
           ],
         ),

@@ -1,12 +1,13 @@
 import 'dart:async';
+
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
 import 'package:flutter/material.dart';
-import '../models/booking.dart';
-import '../services/booking_service.dart';
 
 /// Виджет таймера подтверждения бронирования
 class BookingConfirmationTimer extends StatefulWidget {
   const BookingConfirmationTimer(
-      {super.key, required this.booking, required this.bookingService});
+      {required this.booking, required this.bookingService, super.key,});
   final Booking booking;
   final BookingService bookingService;
 
@@ -82,7 +83,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
                 Text(
                   'Ожидает подтверждения',
                   style: TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.orange[800]),
+                      fontWeight: FontWeight.w600, color: Colors.orange[800],),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -104,7 +105,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
                 style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red[700]),
+                    color: Colors.red[700],),
               ),
             ),
         ],
@@ -116,7 +117,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
 /// Виджет для отображения статуса подтверждения
 class BookingConfirmationStatus extends StatelessWidget {
   const BookingConfirmationStatus(
-      {super.key, required this.booking, required this.bookingService});
+      {required this.booking, required this.bookingService, super.key,});
   final Booking booking;
   final BookingService bookingService;
 
@@ -125,7 +126,7 @@ class BookingConfirmationStatus extends StatelessWidget {
     switch (booking.status) {
       case BookingStatus.pending:
         return BookingConfirmationTimer(
-            booking: booking, bookingService: bookingService);
+            booking: booking, bookingService: bookingService,);
       case BookingStatus.confirmed:
         return Container(
           padding: const EdgeInsets.all(12),
@@ -142,7 +143,7 @@ class BookingConfirmationStatus extends StatelessWidget {
               Text(
                 'Бронирование подтверждено',
                 style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.green[800]),
+                    fontWeight: FontWeight.w600, color: Colors.green[800],),
               ),
             ],
           ),
@@ -163,7 +164,7 @@ class BookingConfirmationStatus extends StatelessWidget {
               Text(
                 'Бронирование отменено',
                 style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.red[800]),
+                    fontWeight: FontWeight.w600, color: Colors.red[800],),
               ),
             ],
           ),
@@ -184,7 +185,7 @@ class BookingConfirmationStatus extends StatelessWidget {
               Text(
                 'Бронирование отклонено',
                 style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.red[800]),
+                    fontWeight: FontWeight.w600, color: Colors.red[800],),
               ),
             ],
           ),
@@ -205,7 +206,7 @@ class BookingConfirmationStatus extends StatelessWidget {
               Text(
                 'Мероприятие завершено',
                 style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.blue[800]),
+                    fontWeight: FontWeight.w600, color: Colors.blue[800],),
               ),
             ],
           ),

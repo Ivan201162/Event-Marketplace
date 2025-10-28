@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для плавного появления с анимацией
 class FadeInWidget extends StatefulWidget {
   const FadeInWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.delay = Duration.zero,
     this.curve = Curves.easeInOut,
@@ -62,8 +61,7 @@ class _FadeInWidgetState extends State<FadeInWidget>
 /// Виджет для плавного появления с масштабированием
 class ScaleInWidget extends StatefulWidget {
   const ScaleInWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.delay = Duration.zero,
     this.curve = Curves.easeInOut,
@@ -121,8 +119,7 @@ class _ScaleInWidgetState extends State<ScaleInWidget>
 /// Виджет для плавного появления с движением
 class SlideInWidget extends StatefulWidget {
   const SlideInWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.delay = Duration.zero,
     this.curve = Curves.easeInOut,
@@ -198,8 +195,7 @@ enum SlideDirection { fromTop, fromBottom, fromLeft, fromRight }
 /// Виджет для комбинированной анимации
 class AnimatedEntranceWidget extends StatefulWidget {
   const AnimatedEntranceWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 500),
     this.delay = Duration.zero,
     this.curve = Curves.easeInOut,
@@ -290,45 +286,38 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
       case AnimationType.fadeIn:
         animatedChild =
             FadeTransition(opacity: _fadeAnimation, child: animatedChild);
-        break;
       case AnimationType.scaleIn:
         animatedChild =
             ScaleTransition(scale: _scaleAnimation, child: animatedChild);
-        break;
       case AnimationType.slideIn:
         animatedChild =
             SlideTransition(position: _slideAnimation, child: animatedChild);
-        break;
       case AnimationType.fadeScaleIn:
         animatedChild = FadeTransition(
           opacity: _fadeAnimation,
           child: ScaleTransition(scale: _scaleAnimation, child: animatedChild),
         );
-        break;
       case AnimationType.fadeSlideIn:
         animatedChild = FadeTransition(
           opacity: _fadeAnimation,
           child:
               SlideTransition(position: _slideAnimation, child: animatedChild),
         );
-        break;
       case AnimationType.scaleSlideIn:
         animatedChild = ScaleTransition(
           scale: _scaleAnimation,
           child:
               SlideTransition(position: _slideAnimation, child: animatedChild),
         );
-        break;
       case AnimationType.allIn:
         animatedChild = FadeTransition(
           opacity: _fadeAnimation,
           child: ScaleTransition(
             scale: _scaleAnimation,
             child: SlideTransition(
-                position: _slideAnimation, child: animatedChild),
+                position: _slideAnimation, child: animatedChild,),
           ),
         );
-        break;
     }
 
     return animatedChild;
@@ -349,8 +338,7 @@ enum AnimationType {
 /// Виджет для анимации появления списка элементов
 class AnimatedListWidget extends StatefulWidget {
   const AnimatedListWidget({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.delay = const Duration(milliseconds: 100),
     this.curve = Curves.easeInOut,
@@ -394,9 +382,7 @@ class _AnimatedListWidgetState extends State<AnimatedListWidget> {
 /// Виджет для анимации нажатия
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
-    required this.child,
-    required this.onPressed,
+    required this.child, required this.onPressed, super.key,
     this.duration = const Duration(milliseconds: 150),
     this.scale = 0.95,
     this.curve = Curves.easeInOut,
@@ -458,8 +444,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 /// Виджет для анимации появления с задержкой
 class StaggeredAnimationWidget extends StatefulWidget {
   const StaggeredAnimationWidget({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.delay = const Duration(milliseconds: 100),
     this.curve = Curves.easeInOut,

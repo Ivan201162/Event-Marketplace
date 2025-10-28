@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/local_data_providers.dart';
+import 'package:event_marketplace_app/widgets/category_grid_widget.dart';
+import 'package:event_marketplace_app/widgets/search_filters_widget.dart';
+import 'package:event_marketplace_app/widgets/weekly_popular_specialists_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/app_user.dart';
-import '../models/search_filters.dart';
-import '../providers/auth_providers.dart';
-import '../providers/local_data_providers.dart';
-import '../widgets/category_grid_widget.dart';
-import '../widgets/search_filters_widget.dart';
-import '../widgets/weekly_popular_specialists_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -100,7 +99,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             CircleAvatar(
               radius: 30,
               backgroundColor: Colors.white,
-              child: user?.avatarUrl?.isNotEmpty == true
+              child: user?.avatarUrl?.isNotEmpty ?? false
                   ? ClipOval(
                       child: Image.network(
                         user?.avatarUrl ?? '',
@@ -109,7 +108,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(Icons.person,
-                                size: 30, color: Colors.grey),
+                                size: 30, color: Colors.grey,),
                       ),
                     )
                   : const Icon(Icons.person, size: 30, color: Colors.grey),
@@ -136,14 +135,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Row(
                     children: [
                       const Icon(Icons.location_on,
-                          color: Colors.white70, size: 16),
+                          color: Colors.white70, size: 16,),
                       const SizedBox(width: 4),
                       Text(
-                        user?.city?.trim().isNotEmpty == true
+                        user?.city?.trim().isNotEmpty ?? false
                             ? user!.city!
                             : 'Город не указан',
                         style: const TextStyle(
-                            color: Colors.white70, fontSize: 12),
+                            color: Colors.white70, fontSize: 12,),
                       ),
                     ],
                   ),
@@ -153,7 +152,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             IconButton(
               onPressed: () => context.push('/profile'),
               icon: const Icon(Icons.arrow_forward_ios,
-                  color: Colors.white, size: 20),
+                  color: Colors.white, size: 20,),
             ),
           ],
         ),
@@ -165,7 +164,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Найти специалиста',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -203,7 +202,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   label: const Text('Фильтры'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                        horizontal: 16, vertical: 12,),
                   ),
                 ),
               ],
@@ -227,7 +226,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Популярные категории',
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context).textTheme.titleMedium,),
           const SizedBox(height: 12),
           const CategoryGridWidget(),
         ],
@@ -263,7 +262,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Быстрые действия',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -329,11 +328,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text(error,
                 style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {

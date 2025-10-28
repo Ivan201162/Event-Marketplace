@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Виджет для отображения статистики заказчика
 class CustomerStats extends ConsumerWidget {
-  const CustomerStats({super.key, required this.userId});
+  const CustomerStats({required this.userId, super.key});
   final String userId;
 
   @override
@@ -29,7 +29,7 @@ class CustomerStats extends ConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.2)),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.2),),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

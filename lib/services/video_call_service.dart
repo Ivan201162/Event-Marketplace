@@ -1,4 +1,4 @@
-import '../core/feature_flags.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
 /// Сервис для видеозвонков и аудиозвонков
 class VideoCallService {
@@ -131,7 +131,7 @@ class VideoCallService {
 
   /// Получить историю звонков
   Future<List<VideoCall>> getCallHistory(
-      {required String userId, int limit = 50}) async {
+      {required String userId, int limit = 50,}) async {
     try {
       // TODO(developer): Получить историю звонков из Firestore
       return [];
@@ -149,14 +149,10 @@ class VideoCall {
     required this.callerName,
     required this.receiverId,
     required this.receiverName,
-    this.chatId,
-    required this.type,
-    required this.status,
-    required this.createdAt,
+    required this.type, required this.status, required this.createdAt, required this.metadata, this.chatId,
     this.startedAt,
     this.endedAt,
     this.duration,
-    required this.metadata,
   });
   final String id;
   final String callerId;

@@ -1,14 +1,13 @@
+// import '../models/app_user.dart';
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/photographer_studio_link_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// import '../models/app_user.dart';
-import '../models/photo_studio.dart';
-import '../providers/auth_providers.dart';
-import '../services/photographer_studio_link_service.dart';
-
 /// Диалог предложения фотостудии
 class SuggestStudioDialog extends ConsumerStatefulWidget {
-  const SuggestStudioDialog({super.key, required this.bookingId});
+  const SuggestStudioDialog({required this.bookingId, super.key});
 
   final String bookingId;
 
@@ -73,7 +72,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки фотостудий: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -149,7 +148,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                           child: Column(
                             children: [
                               const Icon(Icons.photo_camera,
-                                  size: 48, color: Colors.grey),
+                                  size: 48, color: Colors.grey,),
                               const SizedBox(height: 8),
                               Text(
                                 'Нет доступных фотостудий',
@@ -317,7 +316,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Выберите фотостудию'),
-            backgroundColor: Colors.orange),
+            backgroundColor: Colors.orange,),
       );
       return;
     }
@@ -364,7 +363,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {

@@ -1,22 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/chat.dart';
 import 'package:flutter/material.dart';
-
-import '../models/chat.dart';
 
 /// Widget for displaying a chat card
 class ChatCard extends StatelessWidget {
+
+  const ChatCard({
+    required this.chat, required this.currentUserId, super.key,
+    this.onTap,
+    this.onLongPress,
+  });
   final Chat chat;
   final String currentUserId;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
-
-  const ChatCard({
-    super.key,
-    required this.chat,
-    required this.currentUserId,
-    this.onTap,
-    this.onLongPress,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +92,7 @@ class ChatCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: Colors.blue[600],
                               borderRadius: BorderRadius.circular(12),
@@ -135,7 +132,7 @@ class ChatCard extends StatelessWidget {
               avatarUrl != null ? CachedNetworkImageProvider(avatarUrl) : null,
           child: avatarUrl == null
               ? Icon(isGroup ? Icons.group : Icons.person,
-                  size: 24, color: Colors.grey[600])
+                  size: 24, color: Colors.grey[600],)
               : null,
         ),
         // Online indicator (placeholder for future implementation)

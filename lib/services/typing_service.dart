@@ -31,7 +31,7 @@ class TypingService {
 
   /// Остановить индикацию печатания
   Future<void> stopTyping(
-      {required String chatId, required String userId}) async {
+      {required String chatId, required String userId,}) async {
     try {
       await _firestore
           .collection(_typingCollection)
@@ -59,7 +59,7 @@ class TypingService {
 
   /// Обновить активность печатания (для поддержания индикации)
   Future<void> updateTypingActivity(
-      {required String chatId, required String userId}) async {
+      {required String chatId, required String userId,}) async {
     try {
       await _firestore
           .collection(_typingCollection)

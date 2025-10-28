@@ -1,14 +1,13 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/enums.dart';
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/booking.dart';
-import '../models/event_idea.dart';
-import '../models/review.dart';
-import '../models/specialist.dart';
-import '../models/user.dart';
-import '../models/enums.dart';
 
 /// Генератор тестовых данных для Event Marketplace
 class TestDataGenerator {
@@ -649,7 +648,7 @@ class TestDataGenerator {
         return [
           'Свадебная фотография',
           'Портретная съемка',
-          'Событийная фотография'
+          'Событийная фотография',
         ];
       case SpecialistCategory.videographer:
         return ['Свадебное видео', 'Корпоративные ролики', 'Музыкальные клипы'];
@@ -657,13 +656,13 @@ class TestDataGenerator {
         return [
           'Свадебный диджей',
           'Корпоративные мероприятия',
-          'Клубная музыка'
+          'Клубная музыка',
         ];
       case SpecialistCategory.host:
         return [
           'Свадебный ведущий',
           'Корпоративные мероприятия',
-          'Детские праздники'
+          'Детские праздники',
         ];
       case SpecialistCategory.florist:
         return ['Свадебная флористика', 'Букеты', 'Декор мероприятий'];
@@ -713,7 +712,7 @@ class TestDataGenerator {
           'Профессиональный фотоаппарат',
           'Штатив',
           'Освещение',
-          'Объективы'
+          'Объективы',
         ];
       case SpecialistCategory.videographer:
         return ['Видеокамера 4K', 'Стабилизатор', 'Микрофоны', 'Освещение'];
@@ -736,7 +735,7 @@ class TestDataGenerator {
         return [
           'Музыкальное сопровождение',
           'Световое шоу',
-          'Ведение программы'
+          'Ведение программы',
         ];
       case SpecialistCategory.host:
         return ['Ведение мероприятий', 'Конкурсы', 'Интерактивы'];
@@ -795,7 +794,7 @@ class TestDataGenerator {
     final statuses = [
       BookingStatus.pending,
       BookingStatus.confirmed,
-      BookingStatus.completed
+      BookingStatus.completed,
     ];
     final weights = [0.2, 0.5, 0.3]; // Веса для статусов
 

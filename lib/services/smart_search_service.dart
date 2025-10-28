@@ -211,17 +211,13 @@ class SmartSearchService {
       switch (sortBy) {
         case SpecialistSortOption.rating:
           queryBuilder = queryBuilder.orderBy('rating', descending: true);
-          break;
         case SpecialistSortOption.price:
           queryBuilder = queryBuilder.orderBy('price', descending: false);
-          break;
         case SpecialistSortOption.popularity:
           queryBuilder = queryBuilder.orderBy('views', descending: true);
-          break;
         case SpecialistSortOption.distance:
           // TODO(developer): Реализовать сортировку по расстоянию
           queryBuilder = queryBuilder.orderBy('rating', descending: true);
-          break;
         default:
           queryBuilder = queryBuilder.orderBy('rating', descending: true);
       }
@@ -370,7 +366,7 @@ class SmartSearchService {
 
   /// Вычислить расстояние между двумя точками
   double _calculateDistance(
-          double lat1, double lng1, double lat2, double lng2) =>
+          double lat1, double lng1, double lat2, double lng2,) =>
       Geolocator.distanceBetween(lat1, lng1, lat2, lng2);
 
   /// Получить популярные города для автозаполнения

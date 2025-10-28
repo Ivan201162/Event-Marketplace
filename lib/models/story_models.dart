@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'story_content_type.dart';
+import 'package:event_marketplace_app/models/story_content_type.dart';
 
 /// Статус истории
 enum StoryStatus { draft, published, archived, deleted }
@@ -11,7 +11,7 @@ class Story {
     required this.specialistId,
     required this.contentType,
     required this.status,
-    this.title,
+    required this.createdAt, this.title,
     this.description,
     this.mediaUrl,
     this.thumbnailUrl,
@@ -26,31 +26,8 @@ class Story {
     this.isViewed = false,
     this.isShared = false,
     this.expiresAt,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String specialistId;
-  final StoryContentType contentType;
-  final StoryStatus status;
-  final String? title;
-  final String? description;
-  final String? mediaUrl;
-  final String? thumbnailUrl;
-  final Duration? duration;
-  final String? text;
-  final Map<String, dynamic> metadata;
-  final int views;
-  final int likes;
-  final int comments;
-  final int shares;
-  final bool isLiked;
-  final bool isViewed;
-  final bool isShared;
-  final DateTime? expiresAt;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory Story.fromMap(Map<String, dynamic> data) {
@@ -102,6 +79,28 @@ class Story {
 
     return Story.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String specialistId;
+  final StoryContentType contentType;
+  final StoryStatus status;
+  final String? title;
+  final String? description;
+  final String? mediaUrl;
+  final String? thumbnailUrl;
+  final Duration? duration;
+  final String? text;
+  final Map<String, dynamic> metadata;
+  final int views;
+  final int likes;
+  final int comments;
+  final int shares;
+  final bool isLiked;
+  final bool isViewed;
+  final bool isShared;
+  final DateTime? expiresAt;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -314,14 +313,6 @@ class StoryView {
     this.metadata = const {},
   });
 
-  final String id;
-  final String storyId;
-  final String userId;
-  final DateTime viewedAt;
-  final Duration? duration;
-  final bool isCompleted;
-  final Map<String, dynamic> metadata;
-
   /// Создать из Map
   factory StoryView.fromMap(Map<String, dynamic> data) {
     return StoryView(
@@ -350,6 +341,14 @@ class StoryView {
 
     return StoryView.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String storyId;
+  final String userId;
+  final DateTime viewedAt;
+  final Duration? duration;
+  final bool isCompleted;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -411,17 +410,6 @@ class CreateStory {
     this.expiresAt,
   });
 
-  final String specialistId;
-  final StoryContentType contentType;
-  final String? title;
-  final String? description;
-  final String? mediaUrl;
-  final String? thumbnailUrl;
-  final Duration? duration;
-  final String? text;
-  final Map<String, dynamic> metadata;
-  final DateTime? expiresAt;
-
   /// Создать из Map
   factory CreateStory.fromMap(Map<String, dynamic> data) {
     return CreateStory(
@@ -443,6 +431,17 @@ class CreateStory {
           : null,
     );
   }
+
+  final String specialistId;
+  final StoryContentType contentType;
+  final String? title;
+  final String? description;
+  final String? mediaUrl;
+  final String? thumbnailUrl;
+  final Duration? duration;
+  final String? text;
+  final Map<String, dynamic> metadata;
+  final DateTime? expiresAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -507,8 +506,9 @@ class CreateStory {
   /// Проверить, валидна ли история для создания
   bool get isValid {
     if (specialistId.isEmpty) return false;
-    if (contentType == StoryContentType.text && (text?.isEmpty ?? true))
+    if (contentType == StoryContentType.text && (text?.isEmpty ?? true)) {
       return false;
+    }
     if (contentType.isMedia && (mediaUrl?.isEmpty ?? true)) return false;
     return true;
   }

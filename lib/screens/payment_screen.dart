@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/payment.dart';
-import '../services/payment_service.dart';
 
 /// Экран управления платежами
 class PaymentScreen extends ConsumerStatefulWidget {
@@ -47,7 +46,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
           children: [
             _buildPendingPaymentsTab(),
             _buildCompletedPaymentsTab(),
-            _buildStatisticsTab()
+            _buildStatisticsTab(),
           ],
         ),
       );
@@ -70,7 +69,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -80,7 +79,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
           final pendingPayments = payments
               .where((p) =>
                   p.status == PaymentStatus.pending ||
-                  p.status == PaymentStatus.processing)
+                  p.status == PaymentStatus.processing,)
               .toList();
 
           if (pendingPayments.isEmpty) {
@@ -91,7 +90,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                   Icon(Icons.pending_outlined, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Нет ожидающих платежей',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                 ],
               ),
             );
@@ -126,7 +125,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -148,10 +147,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.check_circle_outline,
-                      size: 64, color: Colors.grey),
+                      size: 64, color: Colors.grey,),
                   SizedBox(height: 16),
                   Text('Нет завершенных платежей',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                 ],
               ),
             );
@@ -188,7 +187,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -293,7 +292,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                         Text(
                           payment.description ?? 'Платеж',
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -394,11 +393,11 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                   children: [
                     Text(title,
                         style:
-                            TextStyle(fontSize: 14, color: Colors.grey[600])),
+                            TextStyle(fontSize: 14, color: Colors.grey[600]),),
                     const SizedBox(height: 4),
                     Text(value,
                         style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
+                            fontSize: 20, fontWeight: FontWeight.bold,),),
                   ],
                 ),
               ),
@@ -423,15 +422,15 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                 children: [
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500)),
+                          fontSize: 16, fontWeight: FontWeight.w500,),),
                   const SizedBox(height: 4),
                   Text(subtitle,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
                 ],
               ),
               Text(value,
                   style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold)),
+                      fontSize: 24, fontWeight: FontWeight.bold,),),
             ],
           ),
         ),
@@ -453,10 +452,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                 children: [
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500)),
+                          fontSize: 16, fontWeight: FontWeight.w500,),),
                   Text(value,
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold)),
+                          fontSize: 18, fontWeight: FontWeight.bold,),),
                 ],
               ),
               const SizedBox(height: 12),
@@ -541,7 +540,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                'Сумма: ${payment.amount.toStringAsFixed(2)} ${payment.currency}'),
+                'Сумма: ${payment.amount.toStringAsFixed(2)} ${payment.currency}',),
             const SizedBox(height: 16),
             const Text('Выберите способ оплаты:'),
             const SizedBox(height: 16),
@@ -559,7 +558,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               onTap: () {
                 Navigator.of(context).pop();
                 _processPaymentWithProvider(
-                    payment, PaymentProvider.cloudPayments);
+                    payment, PaymentProvider.cloudPayments,);
               },
             ),
             ListTile(
@@ -575,14 +574,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
         ],
       ),
     );
   }
 
   Future<void> _processPaymentWithProvider(
-      Payment payment, PaymentProvider provider) async {
+      Payment payment, PaymentProvider provider,) async {
     try {
       final result = await _paymentService.processPaymentWithProvider(
         paymentId: payment.id,
@@ -592,7 +591,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         returnUrl: 'https://yourapp.com/payment/return',
         metadata: {
           'bookingId': payment.bookingId,
-          'customerId': payment.customerId
+          'customerId': payment.customerId,
         },
       );
 
@@ -601,7 +600,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(
-            content: Text('Перенаправление на страницу оплаты...')));
+            content: Text('Перенаправление на страницу оплаты...'),),);
       } else {
         ScaffoldMessenger.of(
           context,

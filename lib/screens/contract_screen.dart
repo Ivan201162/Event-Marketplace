@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/contract.dart';
+import 'package:event_marketplace_app/services/contract_service.dart';
+import 'package:event_marketplace_app/widgets/contract_signing_widget.dart';
 import 'package:flutter/material.dart';
-import '../models/contract.dart';
-import '../services/contract_service.dart';
-import '../widgets/contract_signing_widget.dart';
 
 class ContractScreen extends StatefulWidget {
   const ContractScreen(
-      {super.key, required this.contractId, required this.currentUserId});
+      {required this.contractId, required this.currentUserId, super.key,});
   final String contractId;
   final String currentUserId;
 
@@ -55,7 +55,7 @@ class _ContractScreenState extends State<ContractScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(Icons.error_outline,
-                            size: 64, color: Colors.red),
+                            size: 64, color: Colors.red,),
                         const SizedBox(height: 16),
                         Text(
                           _errorMessage ?? 'Договор не найден',
@@ -65,7 +65,7 @@ class _ContractScreenState extends State<ContractScreen> {
                         const SizedBox(height: 16),
                         ElevatedButton(
                             onPressed: _loadContract,
-                            child: const Text('Повторить')),
+                            child: const Text('Повторить'),),
                       ],
                     ),
                   )
@@ -111,7 +111,7 @@ class _ContractScreenState extends State<ContractScreen> {
           child: Row(
             children: [
               Icon(_getStatusIcon(),
-                  color: _contract!.status.statusColor, size: 32),
+                  color: _contract!.status.statusColor, size: 32,),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -185,7 +185,7 @@ class _ContractScreenState extends State<ContractScreen> {
               _buildInfoRow('Действует до', _formatDate(_contract!.expiresAt)),
               if (_contract!.totalAmount != null)
                 _buildInfoRow('Общая сумма',
-                    '${_contract!.totalAmount!.toStringAsFixed(2)} ₽'),
+                    '${_contract!.totalAmount!.toStringAsFixed(2)} ₽',),
             ],
           ),
         ),
@@ -214,7 +214,7 @@ class _ContractScreenState extends State<ContractScreen> {
                   border: Border.all(color: Colors.grey.shade300),
                 ),
                 child: Text(_contract!.content,
-                    style: Theme.of(context).textTheme.bodyMedium),
+                    style: Theme.of(context).textTheme.bodyMedium,),
               ),
             ],
           ),
@@ -234,7 +234,7 @@ class _ContractScreenState extends State<ContractScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(_errorMessage!,
-                  style: TextStyle(color: Colors.red.shade600)),
+                  style: TextStyle(color: Colors.red.shade600),),
             ),
           ],
         ),
@@ -251,7 +251,7 @@ class _ContractScreenState extends State<ContractScreen> {
               label: const Text('Скачать договор'),
               style: OutlinedButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),),
               ),
             ),
           ),
@@ -275,7 +275,7 @@ class _ContractScreenState extends State<ContractScreen> {
             ),
             Expanded(
                 child:
-                    Text(value, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(value, style: Theme.of(context).textTheme.bodyMedium),),
           ],
         ),
       );
@@ -321,7 +321,7 @@ class _ContractScreenState extends State<ContractScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Договор сохранен: $pdfPath'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {

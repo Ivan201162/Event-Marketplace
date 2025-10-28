@@ -1,13 +1,9 @@
+import 'package:event_marketplace_app/models/payment.dart';
 import 'package:flutter/material.dart';
-
-import '../models/payment.dart';
 
 class PaymentMethodCard extends StatelessWidget {
   const PaymentMethodCard({
-    super.key,
-    required this.methodInfo,
-    required this.isSelected,
-    required this.onTap,
+    required this.methodInfo, required this.isSelected, required this.onTap, super.key,
   });
   final PaymentMethod methodInfo;
   final bool isSelected;
@@ -105,7 +101,7 @@ class PaymentMethodCard extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.check,
-                      color: theme.colorScheme.onPrimary, size: 16),
+                      color: theme.colorScheme.onPrimary, size: 16,),
                 )
               else if (!methodInfo.isAvailable)
                 Icon(

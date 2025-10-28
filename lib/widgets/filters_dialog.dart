@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 /// Диалог фильтров для поиска специалистов
 class FiltersDialog extends StatefulWidget {
-  final String? selectedCity;
-  final String? selectedCategory;
 
   const FiltersDialog({super.key, this.selectedCity, this.selectedCategory});
+  final String? selectedCity;
+  final String? selectedCategory;
 
   @override
   State<FiltersDialog> createState() => _FiltersDialogState();
@@ -47,14 +47,14 @@ class _FiltersDialogState extends State<FiltersDialog> {
     'Любой рейтинг',
     '4.5+ звезд',
     '4.0+ звезд',
-    '3.5+ звезд'
+    '3.5+ звезд',
   ];
 
   final List<String> _types = [
     'Любой тип',
     'Физическое лицо',
     'ИП',
-    'Организация'
+    'Организация',
   ];
 
   @override
@@ -262,7 +262,7 @@ class _FiltersDialogState extends State<FiltersDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       child: const Text('Применить',
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(color: Colors.white),),
                     ),
                   ),
                 ],
@@ -290,7 +290,7 @@ class _FiltersDialogState extends State<FiltersDialog> {
             const SizedBox(width: 8),
             Text(title,
                 style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           ],
         ),
         const SizedBox(height: 12),

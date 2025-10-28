@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/providers/localization_providers.dart';
+import 'package:event_marketplace_app/services/localization_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/localization_providers.dart';
-import '../services/localization_service.dart';
 
 /// Экран управления переводами
 class TranslationManagementScreen extends ConsumerStatefulWidget {
@@ -24,7 +24,7 @@ class _TranslationManagementScreenState
         appBar: AppBar(
           title: const Text('Управление переводами'),
           actions: [
-            IconButton(icon: const Icon(Icons.add), onPressed: _addTranslation)
+            IconButton(icon: const Icon(Icons.add), onPressed: _addTranslation),
           ],
         ),
         body: Column(
@@ -108,14 +108,14 @@ class _TranslationManagementScreenState
                       DropdownMenuItem(value: 'all', child: Text('Все')),
                       DropdownMenuItem(value: 'general', child: Text('Общие')),
                       DropdownMenuItem(
-                          value: 'navigation', child: Text('Навигация')),
+                          value: 'navigation', child: Text('Навигация'),),
                       DropdownMenuItem(value: 'events', child: Text('События')),
                       DropdownMenuItem(
-                          value: 'profile', child: Text('Профиль')),
+                          value: 'profile', child: Text('Профиль'),),
                       DropdownMenuItem(
-                          value: 'settings', child: Text('Настройки')),
+                          value: 'settings', child: Text('Настройки'),),
                       DropdownMenuItem(
-                          value: 'notifications', child: Text('Уведомления')),
+                          value: 'notifications', child: Text('Уведомления'),),
                       DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
                       DropdownMenuItem(value: 'success', child: Text('Успех')),
                     ],
@@ -165,7 +165,7 @@ class _TranslationManagementScreenState
             Icon(Icons.translate, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Нет переводов',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             SizedBox(height: 8),
             Text(
               'Попробуйте изменить фильтры или добавить новые переводы',
@@ -237,13 +237,13 @@ class _TranslationManagementScreenState
             child: Text(
               label,
               style: TextStyle(
-                  fontWeight: FontWeight.w500, color: Colors.grey[600]),
+                  fontWeight: FontWeight.w500, color: Colors.grey[600],),
             ),
           ),
           const Text(': '),
           Expanded(
             child: Text(value,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
           ),
         ],
       );
@@ -267,7 +267,7 @@ class _TranslationManagementScreenState
     if (_selectedCategory != 'all') {
       filtered = Map.fromEntries(
         filtered.entries.where(
-            (entry) => _getCategoryFromKey(entry.key) == _selectedCategory),
+            (entry) => _getCategoryFromKey(entry.key) == _selectedCategory,),
       );
     }
 
@@ -316,7 +316,7 @@ class _TranslationManagementScreenState
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                  'Функция добавления перевода будет доступна в следующих обновлениях'),
+                  'Функция добавления перевода будет доступна в следующих обновлениях',),
             ),
           );
         },
@@ -350,7 +350,7 @@ class _TranslationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-            'Функция копирования перевода будет доступна в следующих обновлениях'),
+            'Функция копирования перевода будет доступна в следующих обновлениях',),
       ),
     );
   }
@@ -360,9 +360,8 @@ class _TranslationManagementScreenState
 class _TranslationDialog extends StatefulWidget {
   const _TranslationDialog({
     required this.language,
-    this.initialKey,
+    required this.onSave, this.initialKey,
     this.initialValue,
-    required this.onSave,
   });
   final String language;
   final String? initialKey;
@@ -397,7 +396,7 @@ class _TranslationDialogState extends State<_TranslationDialog> {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(widget.initialKey == null
             ? 'Добавить перевод'
-            : 'Редактировать перевод'),
+            : 'Редактировать перевод',),
         content: Form(
           key: _formKey,
           child: Column(
@@ -407,16 +406,16 @@ class _TranslationDialogState extends State<_TranslationDialog> {
               DropdownButtonFormField<String>(
                 initialValue: _selectedCategory,
                 decoration: const InputDecoration(
-                    labelText: 'Категория', border: OutlineInputBorder()),
+                    labelText: 'Категория', border: OutlineInputBorder(),),
                 items: const [
                   DropdownMenuItem(value: 'general', child: Text('Общие')),
                   DropdownMenuItem(
-                      value: 'navigation', child: Text('Навигация')),
+                      value: 'navigation', child: Text('Навигация'),),
                   DropdownMenuItem(value: 'events', child: Text('События')),
                   DropdownMenuItem(value: 'profile', child: Text('Профиль')),
                   DropdownMenuItem(value: 'settings', child: Text('Настройки')),
                   DropdownMenuItem(
-                      value: 'notifications', child: Text('Уведомления')),
+                      value: 'notifications', child: Text('Уведомления'),),
                   DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
                   DropdownMenuItem(value: 'success', child: Text('Успех')),
                 ],
@@ -469,9 +468,9 @@ class _TranslationDialogState extends State<_TranslationDialog> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
-              onPressed: _saveTranslation, child: const Text('Сохранить')),
+              onPressed: _saveTranslation, child: const Text('Сохранить'),),
         ],
       );
 

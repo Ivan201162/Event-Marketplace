@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/payment_providers.dart';
+import 'package:event_marketplace_app/widgets/payment_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/payment.dart';
-import '../../providers/auth_providers.dart';
-import '../../providers/payment_providers.dart';
-import '../../widgets/payment_card.dart';
 
 /// Screen for displaying payment history
 class PaymentsHistoryScreen extends ConsumerStatefulWidget {
@@ -116,7 +115,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemBuilder: (context, index) {
               final payment = payments[index];
               return PaymentCard(
-                  payment: payment, onTap: () => _showPaymentDetails(payment));
+                  payment: payment, onTap: () => _showPaymentDetails(payment),);
             },
           ),
         );
@@ -150,7 +149,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemBuilder: (context, index) {
               final payment = payments[index];
               return PaymentCard(
-                  payment: payment, onTap: () => _showPaymentDetails(payment));
+                  payment: payment, onTap: () => _showPaymentDetails(payment),);
             },
           ),
         );
@@ -183,7 +182,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemBuilder: (context, index) {
               final payment = payments[index];
               return PaymentCard(
-                  payment: payment, onTap: () => _showPaymentDetails(payment));
+                  payment: payment, onTap: () => _showPaymentDetails(payment),);
             },
           ),
         );
@@ -259,9 +258,9 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
 
 /// Bottom sheet for displaying payment details
 class PaymentDetailsSheet extends StatelessWidget {
-  final Payment payment;
 
-  const PaymentDetailsSheet({super.key, required this.payment});
+  const PaymentDetailsSheet({required this.payment, super.key});
+  final Payment payment;
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +302,7 @@ class PaymentDetailsSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(payment.description,
-                              style: Theme.of(context).textTheme.titleLarge),
+                              style: Theme.of(context).textTheme.titleLarge,),
                           Text(
                             payment.formattedAmount,
                             style: Theme.of(context)
@@ -319,7 +318,7 @@ class PaymentDetailsSheet extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                          horizontal: 12, vertical: 6,),
                       decoration: BoxDecoration(
                         color: _getStatusColor(payment.status).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
@@ -344,24 +343,24 @@ class PaymentDetailsSheet extends StatelessWidget {
                     _buildDetailRow('ID платежа', payment.id),
                     _buildDetailRow('Тип', payment.type.displayName),
                     _buildDetailRow(
-                        'Способ оплаты', payment.method.displayName),
+                        'Способ оплаты', payment.method.displayName,),
                     _buildDetailRow('Сумма', payment.formattedAmount),
                     _buildDetailRow('Комиссия', payment.formattedCommission),
                     _buildDetailRow('К получению', payment.formattedNetAmount),
                     _buildDetailRow('Валюта', payment.currency),
                     _buildDetailRow(
-                        'Создан', _formatDateTime(payment.createdAt)),
+                        'Создан', _formatDateTime(payment.createdAt),),
                     if (payment.completedAt != null)
                       _buildDetailRow(
-                          'Завершен', _formatDateTime(payment.completedAt!)),
+                          'Завершен', _formatDateTime(payment.completedAt!),),
                     if (payment.failedAt != null)
                       _buildDetailRow(
-                          'Неудачен', _formatDateTime(payment.failedAt!)),
+                          'Неудачен', _formatDateTime(payment.failedAt!),),
                     if (payment.failureReason != null)
                       _buildDetailRow('Причина ошибки', payment.failureReason!),
                     if (payment.stripePaymentIntentId != null)
                       _buildDetailRow(
-                          'Stripe ID', payment.stripePaymentIntentId!),
+                          'Stripe ID', payment.stripePaymentIntentId!,),
                   ],
                 ),
               ),
@@ -377,7 +376,7 @@ class PaymentDetailsSheet extends StatelessWidget {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Функция возврата в разработке')),
+                              content: Text('Функция возврата в разработке'),),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -406,12 +405,12 @@ class PaymentDetailsSheet extends StatelessWidget {
             child: Text(
               label,
               style: const TextStyle(
-                  color: Colors.grey, fontWeight: FontWeight.w500),
+                  color: Colors.grey, fontWeight: FontWeight.w500,),
             ),
           ),
           Expanded(
             child: Text(value,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
           ),
         ],
       ),

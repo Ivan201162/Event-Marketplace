@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/specialist.dart';
-import '../models/specialist_tip.dart';
-import '../services/specialist_service.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_tip.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
 
 /// Сервис для работы с рекомендациями специалистам
 class SpecialistTipsService {
@@ -448,7 +448,7 @@ class SpecialistTipsService {
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
         debugPrint(
-            'Удалено ${querySnapshot.docs.length} старых выполненных советов');
+            'Удалено ${querySnapshot.docs.length} старых выполненных советов',);
       }
 
       return querySnapshot.docs.length;

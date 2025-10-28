@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/recommendation_interaction.dart';
+import 'package:event_marketplace_app/services/recommendation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/recommendation_interaction.dart';
-import '../services/recommendation_service.dart';
 
 /// Провайдер сервиса рекомендаций
 final recommendationServiceProvider = Provider<RecommendationService>(

@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/models/photographer_studio_link.dart';
+import 'package:event_marketplace_app/services/fcm_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/app_user.dart';
-import '../models/photo_studio.dart';
-import '../models/photographer_studio_link.dart';
-import 'fcm_service.dart';
 
 /// Сервис для работы со связками фотографов и фотостудий
 class PhotographerStudioLinkService {
@@ -19,7 +18,7 @@ class PhotographerStudioLinkService {
 
   /// Создать связку фотографа и фотостудии
   Future<PhotographerStudioLink> createLink(
-      CreatePhotographerStudioLink data) async {
+      CreatePhotographerStudioLink data,) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -35,7 +34,7 @@ class PhotographerStudioLinkService {
 
     // Проверить, не существует ли уже связка
     final existingLink = await _getLinkByPhotographerAndStudio(
-        data.photographerId, data.studioId);
+        data.photographerId, data.studioId,);
     if (existingLink != null) {
       throw Exception('Связка с этой фотостудией уже существует');
     }
@@ -124,7 +123,7 @@ class PhotographerStudioLinkService {
 
   /// Получить связки фотографа
   Future<List<PhotographerStudioLink>> getPhotographerLinks(
-      String photographerId) async {
+      String photographerId,) async {
     final snapshot = await _firestore
         .collection(_linksCollection)
         .where('photographerId', isEqualTo: photographerId)
@@ -171,7 +170,7 @@ class PhotographerStudioLinkService {
 
     if (currentUser.uid != studioOwnerId) {
       throw Exception(
-          'Только владелец фотостудии может изменять статус связки');
+          'Только владелец фотостудии может изменять статус связки',);
     }
 
     await _firestore.collection(_linksCollection).doc(linkId).update({
@@ -408,14 +407,14 @@ class PhotographerStudioLinkService {
 
   /// Подписаться на изменения связок фотографа
   Stream<List<PhotographerStudioLink>> watchPhotographerLinks(
-          String photographerId) =>
+          String photographerId,) =>
       _firestore
           .collection(_linksCollection)
           .where('photographerId', isEqualTo: photographerId)
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(PhotographerStudioLink.fromDocument).toList());
+              snapshot.docs.map(PhotographerStudioLink.fromDocument).toList(),);
 
   /// Подписаться на изменения связок фотостудии
   Stream<List<PhotographerStudioLink>> watchStudioLinks(String studioId) =>
@@ -425,7 +424,7 @@ class PhotographerStudioLinkService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(PhotographerStudioLink.fromDocument).toList());
+              snapshot.docs.map(PhotographerStudioLink.fromDocument).toList(),);
 
   /// Подписаться на изменения предложений для заказа
   Stream<List<StudioSuggestion>> watchBookingSuggestions(String bookingId) =>
@@ -435,5 +434,5 @@ class PhotographerStudioLinkService {
           .orderBy('suggestedAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(StudioSuggestion.fromDocument).toList());
+              snapshot.docs.map(StudioSuggestion.fromDocument).toList(),);
 }

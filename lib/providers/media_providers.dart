@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/media_item.dart';
+import 'package:event_marketplace_app/services/media_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../models/media_item.dart';
-import '../services/media_service.dart';
 
 /// Провайдер сервиса медиафайлов
 final mediaServiceProvider = Provider<MediaService>((ref) => MediaService());
@@ -65,7 +64,7 @@ class MediaUploadState {
 /// Провайдер состояния загрузки медиафайлов (мигрирован с StateNotifierProvider)
 final mediaUploadStateProvider =
     NotifierProvider<MediaUploadNotifier, MediaUploadState>(
-  () => MediaUploadNotifier(),
+  MediaUploadNotifier.new,
 );
 
 /// Нотификатор для управления загрузкой медиафайлов (мигрирован с StateNotifier)
@@ -194,10 +193,10 @@ class MediaUploadNotifier extends Notifier<MediaUploadState> {
 
   /// Обновить информацию о медиафайле
   Future<void> updateMedia(String mediaId,
-      {String? title, String? description}) async {
+      {String? title, String? description,}) async {
     try {
       await _mediaService.updateMedia(mediaId,
-          title: title, description: description);
+          title: title, description: description,);
     } on Exception catch (e) {
       state = state.copyWith(error: e.toString());
     }

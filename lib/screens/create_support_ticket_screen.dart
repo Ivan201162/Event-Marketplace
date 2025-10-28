@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/support_ticket.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/support_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/support_ticket.dart';
-import '../providers/auth_providers.dart';
-import '../services/support_service.dart';
 
 /// Экран создания тикета поддержки
 class CreateSupportTicketScreen extends ConsumerStatefulWidget {
@@ -44,7 +43,7 @@ class _CreateSupportTicketScreenState
           actions: [
             TextButton(
                 onPressed: _isLoading ? null : _submitTicket,
-                child: const Text('Отправить')),
+                child: const Text('Отправить'),),
           ],
         ),
         body: Form(
@@ -182,7 +181,7 @@ class _CreateSupportTicketScreenState
               DropdownButtonFormField<SupportPriority>(
                 initialValue: _selectedPriority,
                 decoration: const InputDecoration(
-                    labelText: 'Приоритет', border: OutlineInputBorder()),
+                    labelText: 'Приоритет', border: OutlineInputBorder(),),
                 items: SupportPriority.values
                     .map(
                       (priority) => DropdownMenuItem(
@@ -225,10 +224,10 @@ class _CreateSupportTicketScreenState
                 children: [
                   const Text('Вложения',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   const Spacer(),
                   Text('${_attachments.length}/5',
-                      style: TextStyle(color: Colors.grey[600])),
+                      style: TextStyle(color: Colors.grey[600]),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -271,12 +270,12 @@ class _CreateSupportTicketScreenState
                               Text(
                                 file.path.split('/').last,
                                 style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
+                                    fontSize: 14, fontWeight: FontWeight.w500,),
                               ),
                               Text(
                                 '${(file.lengthSync() / 1024).toStringAsFixed(1)} KB',
                                 style: TextStyle(
-                                    fontSize: 12, color: Colors.grey[600]),
+                                    fontSize: 12, color: Colors.grey[600],),
                               ),
                             ],
                           ),
@@ -316,7 +315,7 @@ class _CreateSupportTicketScreenState
           'pdf',
           'doc',
           'docx',
-          'txt'
+          'txt',
         ],
       );
 
@@ -397,13 +396,13 @@ class _CreateSupportTicketScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 }

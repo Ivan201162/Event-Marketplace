@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/theme_provider.dart';
 
 /// Виджет для переключения тем
 class ThemeSwitcherWidget extends ConsumerWidget {
@@ -13,19 +13,16 @@ class ThemeSwitcherWidget extends ConsumerWidget {
 
     return PopupMenuButton<ThemeMode>(
       icon: Icon(_getThemeIcon(themeMode),
-          color: Theme.of(context).colorScheme.onSurface),
+          color: Theme.of(context).colorScheme.onSurface,),
       tooltip: 'Переключить тему',
       onSelected: (mode) {
         switch (mode) {
           case ThemeMode.light:
             themeNotifier.setLightTheme();
-            break;
           case ThemeMode.dark:
             themeNotifier.setDarkTheme();
-            break;
           case ThemeMode.system:
             themeNotifier.setSystemTheme();
-            break;
         }
       },
       itemBuilder: (context) => [

@@ -3,10 +3,7 @@ import 'package:signature/signature.dart';
 
 class SignatureWidget extends StatelessWidget {
   const SignatureWidget({
-    super.key,
-    required this.signatureController,
-    required this.onSign,
-    required this.onCancel,
+    required this.signatureController, required this.onSign, required this.onCancel, super.key,
   });
   final SignatureController signatureController;
   final VoidCallback onSign;
@@ -34,7 +31,7 @@ class SignatureWidget extends StatelessWidget {
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                      icon: const Icon(Icons.close), onPressed: onCancel),
+                      icon: const Icon(Icons.close), onPressed: onCancel,),
                 ],
               ),
               const Divider(),
@@ -55,7 +52,7 @@ class SignatureWidget extends StatelessWidget {
                       child: Text(
                         'Поставьте свою подпись в поле ниже. Подпись будет прикреплена к договору.',
                         style: TextStyle(
-                            color: Colors.blue.shade700, fontSize: 14),
+                            color: Colors.blue.shade700, fontSize: 14,),
                       ),
                     ),
                   ],
@@ -72,7 +69,7 @@ class SignatureWidget extends StatelessWidget {
                   ),
                   child: Signature(
                       controller: signatureController,
-                      backgroundColor: Colors.white),
+                      backgroundColor: Colors.white,),
                 ),
               ),
               const SizedBox(height: 16),
@@ -87,7 +84,7 @@ class SignatureWidget extends StatelessWidget {
                       label: const Text('Очистить'),
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),),
                       ),
                     ),
                   ),
@@ -101,7 +98,7 @@ class SignatureWidget extends StatelessWidget {
                         backgroundColor: Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),),
                       ),
                     ),
                   ),

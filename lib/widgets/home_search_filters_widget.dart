@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Виджет фильтров для поиска специалистов на главном экране
 class HomeSearchFiltersWidget extends ConsumerStatefulWidget {
-  const HomeSearchFiltersWidget({super.key, required this.onFiltersChanged});
+  const HomeSearchFiltersWidget({required this.onFiltersChanged, super.key});
 
   final Function(Map<String, dynamic>) onFiltersChanged;
 
@@ -70,10 +70,10 @@ class _HomeSearchFiltersWidgetState
                 const SizedBox(width: 8),
                 const Text('Фильтры',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                 const Spacer(),
                 TextButton(
-                    onPressed: _resetFilters, child: const Text('Сбросить')),
+                    onPressed: _resetFilters, child: const Text('Сбросить'),),
               ],
             ),
 
@@ -157,7 +157,7 @@ class _HomeSearchFiltersWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Город',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: _selectedCity,
@@ -169,7 +169,7 @@ class _HomeSearchFiltersWidgetState
             items: [
               const DropdownMenuItem<String>(child: Text('Все города')),
               ..._cities.map((city) =>
-                  DropdownMenuItem<String>(value: city, child: Text(city))),
+                  DropdownMenuItem<String>(value: city, child: Text(city)),),
             ],
             onChanged: (value) {
               setState(() {
@@ -186,7 +186,7 @@ class _HomeSearchFiltersWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Категория',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: _selectedCategory,
@@ -199,7 +199,7 @@ class _HomeSearchFiltersWidgetState
               const DropdownMenuItem<String>(child: Text('Все категории')),
               ..._categories.map(
                 (category) => DropdownMenuItem<String>(
-                    value: category['value'], child: Text(category['name'])),
+                    value: category['value'], child: Text(category['name']),),
               ),
             ],
             onChanged: (value) {
@@ -217,7 +217,7 @@ class _HomeSearchFiltersWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Дата мероприятия',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),),
           const SizedBox(height: 8),
           InkWell(
             onTap: _selectDate,
@@ -238,7 +238,7 @@ class _HomeSearchFiltersWidgetState
                     style: TextStyle(
                         color: _selectedDate != null
                             ? Colors.black
-                            : Colors.grey[600]),
+                            : Colors.grey[600],),
                   ),
                   const Spacer(),
                   if (_selectedDate != null)

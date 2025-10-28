@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/core/navigation/app_navigator.dart';
+import 'package:event_marketplace_app/providers/bookings_provider.dart';
+import 'package:event_marketplace_app/screens/booking_details_screen.dart';
+import 'package:event_marketplace_app/screens/chat_screen.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/navigation/app_navigator.dart';
-import '../providers/bookings_provider.dart';
-import '../services/booking_service.dart';
-import '../services/firebase_auth_service.dart';
-import 'booking_details_screen.dart';
-import 'chat_screen.dart';
 
 /// Полноценный экран заявок и бронирований
 class BookingsScreenFull extends ConsumerStatefulWidget {
@@ -112,11 +111,11 @@ class _MyBookingsTab extends ConsumerWidget {
   }
 
   void _navigateToBookingDetails(
-      BuildContext context, Map<String, dynamic> booking) {
+      BuildContext context, Map<String, dynamic> booking,) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-          builder: (context) => BookingDetailsScreen(booking: booking)),
+          builder: (context) => BookingDetailsScreen(booking: booking),),
     );
   }
 
@@ -162,7 +161,7 @@ class _IncomingBookingsTab extends ConsumerWidget {
                 ),
                 SizedBox(height: 10),
                 Text('Заявки от заказчиков появятся здесь',
-                    style: TextStyle(color: Colors.grey)),
+                    style: TextStyle(color: Colors.grey),),
               ],
             ),
           );
@@ -190,11 +189,11 @@ class _IncomingBookingsTab extends ConsumerWidget {
   }
 
   void _navigateToBookingDetails(
-      BuildContext context, Map<String, dynamic> booking) {
+      BuildContext context, Map<String, dynamic> booking,) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-          builder: (context) => BookingDetailsScreen(booking: booking)),
+          builder: (context) => BookingDetailsScreen(booking: booking),),
     );
   }
 
@@ -211,7 +210,7 @@ class _IncomingBookingsTab extends ConsumerWidget {
   }
 
   Future<void> _confirmBooking(
-      BuildContext context, Map<String, dynamic> booking) async {
+      BuildContext context, Map<String, dynamic> booking,) async {
     try {
       await BookingService()
           .updateBookingStatus(booking['id'] ?? '', 'Подтверждено');
@@ -227,7 +226,7 @@ class _IncomingBookingsTab extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Заявка подтверждена'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -235,13 +234,13 @@ class _IncomingBookingsTab extends ConsumerWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
 
   Future<void> _rejectBooking(
-      BuildContext context, Map<String, dynamic> booking) async {
+      BuildContext context, Map<String, dynamic> booking,) async {
     try {
       await BookingService()
           .updateBookingStatus(booking['id'] ?? '', 'Отклонено');
@@ -257,7 +256,7 @@ class _IncomingBookingsTab extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Заявка отклонена'),
-              backgroundColor: Colors.orange),
+              backgroundColor: Colors.orange,),
         );
       }
     } on Exception catch (e) {
@@ -265,7 +264,7 @@ class _IncomingBookingsTab extends ConsumerWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -308,13 +307,13 @@ class _BookingCard extends StatelessWidget {
                           Text(
                             booking['eventType'] ?? 'Заявка на мероприятие',
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             booking['eventDate'] ?? 'Дата не указана',
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
+                                fontSize: 14, color: Colors.grey,),
                           ),
                         ],
                       ),
@@ -326,7 +325,7 @@ class _BookingCard extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.attach_money,
-                        size: 16, color: Colors.green[700]),
+                        size: 16, color: Colors.green[700],),
                     const SizedBox(width: 4),
                     Text(
                       '${(booking['totalPrice'] ?? 0.0).toStringAsFixed(0)} ₽',
@@ -415,37 +414,32 @@ class _StatusChip extends StatelessWidget {
         backgroundColor = Colors.orange[100]!;
         textColor = Colors.orange[800]!;
         text = 'В обработке';
-        break;
       case 'Подтверждено':
         backgroundColor = Colors.green[100]!;
         textColor = Colors.green[800]!;
         text = 'Подтверждено';
-        break;
       case 'Отклонено':
         backgroundColor = Colors.red[100]!;
         textColor = Colors.red[800]!;
         text = 'Отклонено';
-        break;
       case 'Завершено':
         backgroundColor = Colors.blue[100]!;
         textColor = Colors.blue[800]!;
         text = 'Завершено';
-        break;
       default:
         backgroundColor = Colors.grey[100]!;
         textColor = Colors.grey[800]!;
         text = status;
-        break;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-          color: backgroundColor, borderRadius: BorderRadius.circular(12)),
+          color: backgroundColor, borderRadius: BorderRadius.circular(12),),
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 12, fontWeight: FontWeight.w500, color: textColor),
+            fontSize: 12, fontWeight: FontWeight.w500, color: textColor,),
       ),
     );
   }

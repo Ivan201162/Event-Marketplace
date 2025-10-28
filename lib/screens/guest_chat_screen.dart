@@ -1,18 +1,17 @@
+import 'package:event_marketplace_app/core/logger.dart';
+import 'package:event_marketplace_app/models/chat_attachment.dart';
+import 'package:event_marketplace_app/models/guest_access.dart';
+import 'package:event_marketplace_app/services/attachment_service.dart';
+import 'package:event_marketplace_app/services/chat_bot_service.dart';
+import 'package:event_marketplace_app/services/guest_access_service.dart';
+import 'package:event_marketplace_app/widgets/chat_attachment_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/logger.dart';
-import '../models/chat_attachment.dart';
-import '../models/guest_access.dart';
-import '../services/attachment_service.dart';
-import '../services/chat_bot_service.dart';
-import '../services/guest_access_service.dart';
-import '../widgets/chat_attachment_widget.dart';
-
 /// Экран чата для гостей
 class GuestChatScreen extends ConsumerStatefulWidget {
-  const GuestChatScreen({super.key, required this.accessCode});
+  const GuestChatScreen({required this.accessCode, super.key});
   final String accessCode;
 
   @override
@@ -76,7 +75,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
       );
     } on Exception catch (e, stackTrace) {
       AppLogger.logE('Ошибка загрузки гостевого доступа', 'guest_chat_screen',
-          e, stackTrace);
+          e, stackTrace,);
       if (mounted) {
         _showErrorDialog('Ошибка загрузки чата');
       }
@@ -137,7 +136,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
             'timestamp': botResponse.createdAt,
             'quickReplies': botResponse.quickReplies
                 ?.map(
-                    (reply) => {'title': reply.title, 'payload': reply.payload})
+                    (reply) => {'title': reply.title, 'payload': reply.payload},)
                 .toList(),
             'cards': botResponse.cards
                 ?.map(
@@ -155,7 +154,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
       }
     } on Exception catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка отправки сообщения', 'guest_chat_screen', e, stackTrace);
+          'Ошибка отправки сообщения', 'guest_chat_screen', e, stackTrace,);
       _showErrorSnackBar('Ошибка отправки сообщения');
     } finally {
       setState(() => _isSendingMessage = false);
@@ -214,7 +213,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
       }
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка прикрепления файла', 'guest_chat_screen', e, stackTrace);
+          'Ошибка прикрепления файла', 'guest_chat_screen', e, stackTrace,);
       _showErrorSnackBar('Ошибка прикрепления файла');
     } finally {
       setState(() => _isUploadingFile = false);
@@ -242,7 +241,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK')),
+              child: const Text('OK'),),
         ],
       ),
     );
@@ -252,14 +251,14 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   @override
@@ -332,7 +331,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                   Text(
                     _guestAccess!.guestName!,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
+                        fontSize: 12, fontWeight: FontWeight.bold,),
                   ),
               ],
             ),
@@ -423,7 +422,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(message['message'] as String,
-                    style: const TextStyle(color: Colors.white)),
+                    style: const TextStyle(color: Colors.white),),
               ),
             ),
           ],
@@ -447,7 +446,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                     Row(
                       children: [
                         Icon(Icons.smart_toy,
-                            size: 16, color: Colors.grey[600]),
+                            size: 16, color: Colors.grey[600],),
                         const SizedBox(width: 8),
                         Text(
                           'Бот-помощник',
@@ -461,7 +460,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(message['message'] as String,
-                        style: const TextStyle(color: Colors.black87)),
+                        style: const TextStyle(color: Colors.black87),),
                   ],
                 ),
               ),
@@ -479,7 +478,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
         children: [
           Flexible(
               child: ChatAttachmentWidget(
-                  attachment: attachment, isFromCurrentUser: true)),
+                  attachment: attachment, isFromCurrentUser: true,),),
         ],
       ),
     );

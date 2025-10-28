@@ -14,7 +14,7 @@ class MediaUploadService {
     'jpeg',
     'png',
     'gif',
-    'webp'
+    'webp',
   ];
   static const List<String> _allowedVideoTypes = [
     'mp4',
@@ -22,14 +22,14 @@ class MediaUploadService {
     'mov',
     'wmv',
     'flv',
-    'webm'
+    'webm',
   ];
   static const List<String> _allowedAudioTypes = [
     'mp3',
     'wav',
     'aac',
     'ogg',
-    'm4a'
+    'm4a',
   ];
   static const List<String> _allowedDocumentTypes = [
     'pdf',
@@ -191,7 +191,7 @@ class MediaUploadService {
       final mediaType = _getMediaTypeFromExtension(extension);
 
       return await _uploadFile(
-          file: file, chatId: chatId, userId: userId, mediaType: mediaType);
+          file: file, chatId: chatId, userId: userId, mediaType: mediaType,);
     } catch (e) {
       throw Exception('Ошибка загрузки файла: $e');
     }
@@ -312,8 +312,7 @@ class MediaUploadResult {
     required this.fileType,
     required this.fileSize,
     required this.mediaType,
-    this.thumbnailUrl,
-    required this.storagePath,
+    required this.storagePath, this.thumbnailUrl,
   });
 
   final String fileUrl;

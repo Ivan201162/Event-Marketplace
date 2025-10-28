@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/services/payment_integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../services/payment_integration_service.dart';
-
 class ContractCard extends StatelessWidget {
   const ContractCard(
-      {super.key, required this.contract, this.onTap, this.onStatusUpdate});
+      {required this.contract, super.key, this.onTap, this.onStatusUpdate,});
   final Contract contract;
   final VoidCallback? onTap;
   final Function(ContractStatus)? onStatusUpdate;
@@ -179,7 +178,7 @@ class ContractCard extends StatelessWidget {
                         onPressed: () =>
                             onStatusUpdate?.call(ContractStatus.cancelled),
                         style: OutlinedButton.styleFrom(
-                            foregroundColor: theme.colorScheme.error),
+                            foregroundColor: theme.colorScheme.error,),
                         child: const Text('Отменить'),
                       ),
                     ),
@@ -194,7 +193,7 @@ class ContractCard extends StatelessWidget {
   }
 
   Widget _buildPaymentInfo(
-          ThemeData theme, String label, String value, IconData icon) =>
+          ThemeData theme, String label, String value, IconData icon,) =>
       Column(
         children: [
           Icon(icon, size: 16, color: theme.colorScheme.primary),
@@ -207,7 +206,7 @@ class ContractCard extends StatelessWidget {
           ),
           Text(value,
               style: theme.textTheme.bodySmall
-                  ?.copyWith(fontWeight: FontWeight.w600)),
+                  ?.copyWith(fontWeight: FontWeight.w600),),
         ],
       );
 

@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/review.dart';
-import '../services/review_service.dart';
 
 /// Экран редактирования отзыва
 class EditReviewScreen extends ConsumerStatefulWidget {
-  const EditReviewScreen({super.key, required this.review});
+  const EditReviewScreen({required this.review, super.key});
 
   final Review review;
 
@@ -56,7 +56,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Отзыв успешно обновлен'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         Navigator.of(context).pop(true);
       }
@@ -105,7 +105,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Отзыв удален'), backgroundColor: Colors.orange),
+                content: Text('Отзыв удален'), backgroundColor: Colors.orange,),
           );
           Navigator.of(context).pop(true);
         }
@@ -169,7 +169,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(_error!,
-                              style: TextStyle(color: Colors.red[600])),
+                              style: TextStyle(color: Colors.red[600]),),
                         ),
                       ],
                     ),
@@ -199,7 +199,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
+                                      Colors.white,),
                                 ),
                               )
                             : const Text('Сохранить'),
@@ -368,7 +368,7 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary, width: 2),
+                    color: Theme.of(context).colorScheme.primary, width: 2,),
               ),
             ),
             validator: (value) {

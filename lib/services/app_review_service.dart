@@ -103,7 +103,7 @@ class AppReviewService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_lastFeatureUsedKey, featureName);
       await prefs.setInt(
-          '${_lastFeatureUsedKey}_time', DateTime.now().millisecondsSinceEpoch);
+          '${_lastFeatureUsedKey}_time', DateTime.now().millisecondsSinceEpoch,);
     } catch (e) {
       debugPrint('Ошибка отметки использования функции: $e');
     }
@@ -157,7 +157,7 @@ class AppReviewService {
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
       return const ReviewStats(
-          appLaunchCount: 0, reviewRequestCount: 0, isDismissed: false);
+          appLaunchCount: 0, reviewRequestCount: 0, isDismissed: false,);
     }
   }
 
@@ -180,7 +180,7 @@ class AppReviewService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(
-          _lastReviewRequestKey, DateTime.now().millisecondsSinceEpoch);
+          _lastReviewRequestKey, DateTime.now().millisecondsSinceEpoch,);
     } catch (e) {
       debugPrint('Ошибка обновления времени запроса: $e');
     }
@@ -289,8 +289,7 @@ class ReviewStats {
   const ReviewStats({
     required this.appLaunchCount,
     required this.reviewRequestCount,
-    this.lastReviewRequest,
-    required this.isDismissed,
+    required this.isDismissed, this.lastReviewRequest,
     this.lastFeatureUsed,
     this.lastFeatureUsedTime,
   });

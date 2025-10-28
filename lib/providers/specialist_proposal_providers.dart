@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/specialist_proposal.dart';
+import 'package:event_marketplace_app/services/specialist_proposal_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist_proposal.dart';
-import '../services/specialist_proposal_service.dart';
 
 /// Сервис предложений специалистов
 final specialistProposalServiceProvider = Provider<SpecialistProposalService>(
@@ -92,7 +92,7 @@ final organizerStatsProvider = FutureProvider.family<Map<String, int>, String>((
 /// Параметры для принятия предложения
 class AcceptProposalParams {
   const AcceptProposalParams(
-      {required this.proposalId, required this.specialistId});
+      {required this.proposalId, required this.specialistId,});
 
   final String proposalId;
   final String specialistId;

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/customer_review.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/customer_review.dart';
-import 'error_logging_service.dart';
 
 /// Сервис для работы с отзывами заказчиков
 class CustomerReviewService {
@@ -157,7 +156,7 @@ class CustomerReviewService {
       if (user == null) return false;
 
       final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (rating != null) updates['rating'] = rating;
@@ -273,7 +272,7 @@ class CustomerReviewService {
 
   /// Получить статистику отзывов специалиста
   Future<CustomerReviewStats?> getSpecialistReviewStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final DocumentSnapshot doc =
           await _firestore.collection('review_stats').doc(specialistId).get();
@@ -424,7 +423,7 @@ class CustomerReviewService {
 
   /// Вычислить и сохранить статистику отзывов
   Future<CustomerReviewStats?> _calculateAndSaveReviewStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('customer_reviews')

@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/utils/transliterate.dart';
 import 'package:flutter/material.dart';
-import '../utils/transliterate.dart';
 
 /// Демонстрационный экран для тестирования транслитерации
 class TransliterateDemoScreen extends StatefulWidget {
@@ -68,7 +68,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Генератор username',
-                          style: Theme.of(context).textTheme.headlineSmall),
+                          style: Theme.of(context).textTheme.headlineSmall,),
                       const SizedBox(height: 16),
                       TextField(
                         controller: _nameController,
@@ -104,7 +104,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
                             children: [
                               Text('Результат:',
                                   style:
-                                      Theme.of(context).textTheme.titleSmall),
+                                      Theme.of(context).textTheme.titleSmall,),
                               const SizedBox(height: 4),
                               Text(
                                 '@$_generatedUsername',
@@ -128,7 +128,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
               ),
               const SizedBox(height: 24),
               Text('Примеры транслитерации:',
-                  style: Theme.of(context).textTheme.headlineSmall),
+                  style: Theme.of(context).textTheme.headlineSmall,),
               const SizedBox(height: 16),
               ..._examples.map(
                 (example) => Card(
@@ -136,7 +136,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
                   child: ListTile(
                     title: Text(example),
                     subtitle: Text(
-                        '@${TransliterateUtils.transliterateNameToUsername(example)}'),
+                        '@${TransliterateUtils.transliterateNameToUsername(example)}',),
                     trailing: const Icon(Icons.copy),
                     onTap: () => _generateFromExample(example),
                   ),
@@ -150,7 +150,7 @@ class _TransliterateDemoScreenState extends State<TransliterateDemoScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Как это работает:',
-                          style: Theme.of(context).textTheme.titleMedium),
+                          style: Theme.of(context).textTheme.titleMedium,),
                       const SizedBox(height: 8),
                       const Text(
                         '• Кириллические буквы транслитерируются в латиницу\n'

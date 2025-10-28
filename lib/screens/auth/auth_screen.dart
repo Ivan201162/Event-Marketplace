@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Главный экран авторизации с поддержкой разных способов входа
 class AuthScreen extends ConsumerStatefulWidget {
@@ -99,7 +98,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         context.go('/main');
       }
     } on FirebaseAuthException catch (e) {
-      final String errorMessage = _getErrorMessage(e.code);
+      final errorMessage = _getErrorMessage(e.code);
 
       // Если email уже используется с Google, предлагаем войти через Google
       if (e.code == 'email-already-in-use-google') {
@@ -142,38 +141,29 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         context.go('/main');
       }
     } catch (e) {
-      String errorMessage = 'Ошибка входа через Google';
+      var errorMessage = 'Ошибка входа через Google';
 
       if (e is FirebaseAuthException) {
         switch (e.code) {
           case 'account-exists-with-different-credential':
             errorMessage =
                 'Аккаунт с таким email уже существует с другим способом входа';
-            break;
           case 'invalid-credential':
             errorMessage = 'Неверные учетные данные Google';
-            break;
           case 'operation-not-allowed':
             errorMessage = 'Вход через Google не разрешен';
-            break;
           case 'user-disabled':
             errorMessage = 'Аккаунт заблокирован';
-            break;
           case 'user-not-found':
             errorMessage = 'Пользователь не найден';
-            break;
           case 'wrong-password':
             errorMessage = 'Неверный пароль';
-            break;
           case 'invalid-verification-code':
             errorMessage = 'Неверный код подтверждения';
-            break;
           case 'invalid-verification-id':
             errorMessage = 'Неверный ID подтверждения';
-            break;
           case 'network-request-failed':
             errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
-            break;
           default:
             errorMessage = 'Ошибка Google Sign-In: ${e.message ?? e.code}';
         }
@@ -181,7 +171,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         errorMessage =
             'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
       } else {
-        errorMessage = 'Ошибка входа через Google: ${e.toString()}';
+        errorMessage = 'Ошибка входа через Google: $e';
       }
 
       setState(() {
@@ -236,7 +226,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -278,7 +268,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Icon(Icons.event,
-                            size: 40, color: Colors.white),
+                            size: 40, color: Colors.white,),
                       ),
 
                       const SizedBox(height: 24),
@@ -503,7 +493,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text('или',
-                                style: TextStyle(color: Colors.grey[600])),
+                                style: TextStyle(color: Colors.grey[600]),),
                           ),
                           const Expanded(child: Divider()),
                         ],
@@ -530,8 +520,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           onPressed: _isLoading ? null : _signInWithGoogle,
                           icon: Image.asset(
                             'assets/icons/google_logo.png',
-                            height: 24.0,
-                            width: 24.0,
+                            height: 24,
+                            width: 24,
                             errorBuilder: (context, error, stackTrace) =>
                                 const Icon(Icons.login),
                           ),

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 
 /// Виджет поиска чатов
 class ChatSearchBar extends StatefulWidget {
-  final ValueChanged<String> onSearchChanged;
 
   const ChatSearchBar({
-    super.key,
-    required this.onSearchChanged,
+    required this.onSearchChanged, super.key,
   });
+  final ValueChanged<String> onSearchChanged;
 
   @override
   State<ChatSearchBar> createState() => _ChatSearchBarState();

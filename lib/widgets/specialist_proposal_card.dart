@@ -1,16 +1,12 @@
+import 'package:event_marketplace_app/models/specialist_profile.dart';
+import 'package:event_marketplace_app/models/specialist_proposal.dart';
+import 'package:event_marketplace_app/services/specialist_proposal_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/specialist_profile.dart';
-import '../models/specialist_proposal.dart';
-import '../services/specialist_proposal_service.dart';
 
 /// Карточка предложения специалистов
 class SpecialistProposalCard extends StatefulWidget {
   const SpecialistProposalCard({
-    super.key,
-    required this.proposal,
-    required this.onAccept,
-    required this.onReject,
+    required this.proposal, required this.onAccept, required this.onReject, super.key,
     this.showActions = true,
   });
 
@@ -125,7 +121,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
 
             // Описание
             Text(widget.proposal.description,
-                style: theme.textTheme.bodyMedium),
+                style: theme.textTheme.bodyMedium,),
             const SizedBox(height: 16),
 
             // Специалисты
@@ -141,7 +137,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
               const Center(
                 child: Padding(
                     padding: EdgeInsets.all(16),
-                    child: CircularProgressIndicator()),
+                    child: CircularProgressIndicator(),),
               ),
             ],
             const SizedBox(height: 16),
@@ -189,7 +185,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                 child: Row(
                   children: [
                     const Icon(Icons.check_circle,
-                        color: Colors.green, size: 20),
+                        color: Colors.green, size: 20,),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -397,7 +393,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                             Row(
                               children: [
                                 const Icon(Icons.star,
-                                    size: 16, color: Colors.amber),
+                                    size: 16, color: Colors.amber,),
                                 const SizedBox(width: 4),
                                 Text(specialist.rating.toStringAsFixed(1)),
                               ],
@@ -434,7 +430,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Предложение принято!'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -442,7 +438,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {
@@ -487,7 +483,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Предложение отклонено'),
-                backgroundColor: Colors.orange),
+                backgroundColor: Colors.orange,),
           );
         }
       } catch (e) {
@@ -495,7 +491,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(
-              content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+              content: Text('Ошибка: $e'), backgroundColor: Colors.red,),);
         }
       } finally {
         if (mounted) {

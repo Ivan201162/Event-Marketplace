@@ -6,7 +6,7 @@ class IdeaCategory {
     required this.id,
     required this.name,
     required this.description,
-    this.icon,
+    required this.createdAt, this.icon,
     this.color,
     this.parentId,
     this.children = const [],
@@ -16,28 +16,8 @@ class IdeaCategory {
     this.order = 0,
     this.ideasCount = 0,
     this.metadata = const {},
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String name;
-  final String description;
-  final String? icon;
-  final String? color;
-  final String? parentId;
-  final List<IdeaCategory> children;
-  final List<String> tags;
-  final bool isActive;
-  final bool isFeatured;
-  final int order;
-  final int ideasCount;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-
-  /// Get display name (alias for name)
-  String get displayName => name;
 
   /// Создать из Map
   factory IdeaCategory.fromMap(Map<String, dynamic> data) {
@@ -80,6 +60,25 @@ class IdeaCategory {
 
     return IdeaCategory.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String name;
+  final String description;
+  final String? icon;
+  final String? color;
+  final String? parentId;
+  final List<IdeaCategory> children;
+  final List<String> tags;
+  final bool isActive;
+  final bool isFeatured;
+  final int order;
+  final int ideasCount;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+
+  /// Get display name (alias for name)
+  String get displayName => name;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

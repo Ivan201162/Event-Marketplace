@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/firebase_options.dart';
+import 'package:event_marketplace_app/test_data/chat_data_generator.dart';
+import 'package:event_marketplace_app/test_data/test_data_generator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-import '../firebase_options.dart';
-import 'chat_data_generator.dart';
-import 'test_data_generator.dart';
 
 /// Виджет для запуска генерации тестовых данных через UI
 class TestDataGeneratorApp extends StatelessWidget {
@@ -64,7 +63,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
     try {
       _addLog('🚀 Инициализация Firebase...');
       await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
+          options: DefaultFirebaseOptions.currentPlatform,);
       _addLog('✅ Firebase инициализирован');
 
       final generator = TestDataGenerator();
@@ -123,7 +122,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
 
       _addLog('🔔 Создание уведомлений...');
       await chatGenerator.generateNotifications(
-          customers, specialists, bookings);
+          customers, specialists, bookings,);
       _addLog('✅ Уведомления созданы');
 
       _addLog('🔍 ЭТАП 4: Проверка данных');
@@ -133,7 +132,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       _addLog('📋 Данные готовы для использования в приложении');
     } catch (e, stackTrace) {
       _addLog('❌ ОШИБКА: $e');
-      _addLog('📍 Stack trace: ${stackTrace.toString()}');
+      _addLog('📍 Stack trace: $stackTrace');
 
       // Показываем диалог с ошибкой
       if (mounted) {
@@ -145,7 +144,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
             actions: [
               TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('OK')),
+                  child: const Text('OK'),),
             ],
           ),
         );
@@ -221,7 +220,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                         child: Row(
                           children: [
                             Icon(Icons.warning_amber,
-                                color: Colors.orange[700]),
+                                color: Colors.orange[700],),
                             const SizedBox(width: 8),
                             const Expanded(
                               child: Text(
@@ -281,7 +280,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                             const Icon(Icons.terminal),
                             const SizedBox(width: 8),
                             Text('Лог генерации',
-                                style: Theme.of(context).textTheme.titleMedium),
+                                style: Theme.of(context).textTheme.titleMedium,),
                             const Spacer(),
                             if (_logs.isNotEmpty)
                               TextButton.icon(
@@ -300,7 +299,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                                   child: Text(
                                     'Нажмите "Запустить генерацию данных" для начала',
                                     style: TextStyle(
-                                        color: Colors.grey, fontSize: 16),
+                                        color: Colors.grey, fontSize: 16,),
                                   ),
                                 )
                               : ListView.builder(
@@ -310,7 +309,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                                     final log = _logs[index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 2),
+                                          vertical: 2,),
                                       child: Text(
                                         log,
                                         style: TextStyle(

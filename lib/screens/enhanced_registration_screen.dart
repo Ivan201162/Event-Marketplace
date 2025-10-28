@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/core/responsive_utils.dart';
+import 'package:event_marketplace_app/models/user_registration_data.dart';
+import 'package:event_marketplace_app/widgets/radio_group.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/responsive_utils.dart';
-import '../models/user_registration_data.dart';
-import '../widgets/responsive_layout.dart';
-import '../widgets/radio_group.dart';
 
 /// Экран улучшенной регистрации
 class EnhancedRegistrationScreen extends ConsumerStatefulWidget {
@@ -248,7 +247,7 @@ class _EnhancedRegistrationScreenState
               SizedBox(
                 width: 300,
                 child: Column(
-                    children: [const SizedBox(height: 20), _buildHelpPanel()]),
+                    children: [const SizedBox(height: 20), _buildHelpPanel()],),
               ),
             ],
           ),
@@ -263,7 +262,7 @@ class _EnhancedRegistrationScreenState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ResponsiveText('Шаг ${_currentPage + 1} из $_totalPages',
-                    isSubtitle: true),
+                    isSubtitle: true,),
                 ResponsiveText(
                   '${((_currentPage + 1) / _totalPages * 100).round()}%',
                   isSubtitle: true,
@@ -776,7 +775,7 @@ class _EnhancedRegistrationScreenState
               child: ElevatedButton(
                 onPressed: _canProceedToNextPage() ? _nextPage : null,
                 child: Text(
-                    _currentPage == _totalPages - 1 ? 'Завершить' : 'Далее'),
+                    _currentPage == _totalPages - 1 ? 'Завершить' : 'Далее',),
               ),
             ),
           ],

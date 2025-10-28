@@ -1,49 +1,15 @@
 /// Модель профиля пользователя
 class UserProfile {
-  final String id;
-  final String displayName;
-  final String username;
-  final String email;
-  final String? phone;
-  final String bio;
-  final String city;
-  final String? website;
-  final Map<String, String> socialLinks;
-  final String? avatarUrl;
-  final String? coverUrl;
-  final bool isPro;
-  final bool isVerified;
-  final int followersCount;
-  final int followingCount;
-  final int postsCount;
-  final int ideasCount;
-  final int requestsCount;
-  final bool isFollowing;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const UserProfile({
     required this.id,
     required this.displayName,
     required this.username,
     required this.email,
-    this.phone,
-    required this.bio,
-    required this.city,
+    required this.bio, required this.city, required this.socialLinks, required this.isPro, required this.isVerified, required this.followersCount, required this.followingCount, required this.postsCount, required this.ideasCount, required this.requestsCount, required this.isFollowing, required this.createdAt, required this.updatedAt, this.phone,
     this.website,
-    required this.socialLinks,
     this.avatarUrl,
     this.coverUrl,
-    required this.isPro,
-    required this.isVerified,
-    required this.followersCount,
-    required this.followingCount,
-    required this.postsCount,
-    required this.ideasCount,
-    required this.requestsCount,
-    required this.isFollowing,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory UserProfile.fromMap(Map<String, dynamic> map, String id) {
@@ -73,6 +39,27 @@ class UserProfile {
           DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
+  final String id;
+  final String displayName;
+  final String username;
+  final String email;
+  final String? phone;
+  final String bio;
+  final String city;
+  final String? website;
+  final Map<String, String> socialLinks;
+  final String? avatarUrl;
+  final String? coverUrl;
+  final bool isPro;
+  final bool isVerified;
+  final int followersCount;
+  final int followingCount;
+  final int postsCount;
+  final int ideasCount;
+  final int requestsCount;
+  final bool isFollowing;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toMap() {
     return {

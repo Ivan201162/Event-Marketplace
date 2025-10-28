@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/maps/map_service.dart';
+import 'package:event_marketplace_app/models/event.dart';
 import 'package:flutter/material.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/event.dart';
-import 'map_service.dart';
 
 /// Mock-реализация сервиса карт
 class MapServiceMock implements MapService {
@@ -123,7 +122,7 @@ class MapServiceMock implements MapService {
     }
 
     return const MapCoordinates(
-        latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
+        latitude: 55.7558, longitude: 37.6176,); // Москва по умолчанию
   }
 
   @override
@@ -200,7 +199,7 @@ class MapServiceMock implements MapService {
     await Future.delayed(const Duration(milliseconds: 1000));
 
     return const MapCoordinates(
-        latitude: 55.7558, longitude: 37.6176); // Москва
+        latitude: 55.7558, longitude: 37.6176,); // Москва
   }
 
   @override
@@ -292,7 +291,7 @@ class MapServiceMock implements MapService {
   /// Построить отключенную карту
   Widget _buildDisabledMap() => Container(
         decoration: BoxDecoration(
-            color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[200], borderRadius: BorderRadius.circular(8),),
         child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -304,7 +303,7 @@ class MapServiceMock implements MapService {
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey),
+                    color: Colors.grey,),
               ),
               SizedBox(height: 8),
               Text(
@@ -382,7 +381,7 @@ class MapServiceMock implements MapService {
                       border: Border.all(color: Colors.white, width: 2),
                     ),
                     child: Icon(marker.icon ?? Icons.place,
-                        size: 16, color: Colors.white),
+                        size: 16, color: Colors.white,),
                   ),
                 ),
               ),
@@ -395,7 +394,7 @@ class MapServiceMock implements MapService {
   MapCoordinates _getEventsCenter(List<Event> events) {
     if (events.isEmpty) {
       return const MapCoordinates(
-          latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
+          latitude: 55.7558, longitude: 37.6176,); // Москва по умолчанию
     }
 
     double totalLat = 0;
@@ -410,7 +409,7 @@ class MapServiceMock implements MapService {
     }
 
     return MapCoordinates(
-        latitude: totalLat / count, longitude: totalLng / count);
+        latitude: totalLat / count, longitude: totalLng / count,);
   }
 
   /// Парсить местоположение события в координаты

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/category.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/specialist.dart';
-import '../models/category.dart';
 
 /// Оптимизированный сервис для работы с данными
 class OptimizedDataService {
@@ -14,8 +13,8 @@ class OptimizedDataService {
   static const Duration _cacheExpiry = Duration(minutes: 30);
 
   // Кэш для специалистов
-  Map<String, List<Specialist>> _specialistsCache = {};
-  Map<String, DateTime> _specialistsCacheTime = {};
+  final Map<String, List<Specialist>> _specialistsCache = {};
+  final Map<String, DateTime> _specialistsCacheTime = {};
 
   /// Получить категории с кэшированием
   Future<List<Category>> getCategories({bool forceRefresh = false}) async {
@@ -143,13 +142,10 @@ class OptimizedDataService {
       switch (sortBy) {
         case 'popularity':
           query = query.orderBy('reviewCount', descending: true);
-          break;
         case 'rating':
           query = query.orderBy('rating', descending: true);
-          break;
         case 'price':
           query = query.orderBy('price', descending: false);
-          break;
         default:
           query = query.orderBy('createdAt', descending: true);
       }

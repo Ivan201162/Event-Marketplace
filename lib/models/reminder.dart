@@ -27,13 +27,12 @@ class Reminder {
     required this.message,
     required this.scheduledTime,
     required this.status,
-    this.eventId,
+    required this.createdAt, this.eventId,
     this.bookingId,
     this.anniversaryDate,
     this.isRecurring = false,
     this.recurrenceInterval,
     this.metadata,
-    required this.createdAt,
     this.sentAt,
     this.cancelledAt,
   });
@@ -219,7 +218,7 @@ class Reminder {
 class ReminderSettings {
   const ReminderSettings({
     required this.userId,
-    this.eventRemindersEnabled = true,
+    required this.updatedAt, this.eventRemindersEnabled = true,
     this.anniversaryRemindersEnabled = true,
     this.weekBeforeReminder = true,
     this.dayBeforeReminder = true,
@@ -228,7 +227,6 @@ class ReminderSettings {
     this.quietHoursEnd,
     this.timezone = 'Europe/Moscow',
     this.language = 'ru',
-    required this.updatedAt,
   });
 
   /// Создать настройки из документа Firestore

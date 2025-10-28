@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
-
-import '../models/common_types.dart';
-import '../models/specialist.dart';
 
 /// Виджет карточки специалиста
 class SpecialistCardWidget extends StatelessWidget {
   const SpecialistCardWidget({
-    super.key,
-    required this.specialist,
+    required this.specialist, super.key,
     this.isFavorite = false,
     this.onTap,
     this.onFavoriteToggle,
@@ -45,7 +43,7 @@ class SpecialistCardWidget extends StatelessWidget {
                                   ? specialist.name[0].toUpperCase()
                                   : 'С',
                               style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold,),
                             )
                           : null,
                     ),
@@ -60,19 +58,19 @@ class SpecialistCardWidget extends StatelessWidget {
                           Text(
                             specialist.name,
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             specialist.category?.displayName ?? 'Категория',
                             style: TextStyle(
-                                fontSize: 14, color: Colors.grey.shade600),
+                                fontSize: 14, color: Colors.grey.shade600,),
                           ),
                           const SizedBox(height: 4),
                           Row(
                             children: [
                               const Icon(Icons.star,
-                                  color: Colors.amber, size: 16),
+                                  color: Colors.amber, size: 16,),
                               const SizedBox(width: 4),
                               Text(
                                 (specialist.avgRating ?? 0) > 0
@@ -80,13 +78,13 @@ class SpecialistCardWidget extends StatelessWidget {
                                         .toStringAsFixed(1)
                                     : specialist.rating.toStringAsFixed(1),
                                 style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
+                                    fontSize: 14, fontWeight: FontWeight.w500,),
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 '(${specialist.reviewCount} отзывов)',
                                 style: TextStyle(
-                                    fontSize: 12, color: Colors.grey.shade600),
+                                    fontSize: 12, color: Colors.grey.shade600,),
                               ),
                             ],
                           ),
@@ -126,13 +124,13 @@ class SpecialistCardWidget extends StatelessWidget {
                     if (specialist.location != null &&
                         specialist.location!.isNotEmpty) ...[
                       Icon(Icons.location_on,
-                          size: 14, color: Colors.grey.shade600),
+                          size: 14, color: Colors.grey.shade600,),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           specialist.location!,
                           style: TextStyle(
-                              fontSize: 12, color: Colors.grey.shade600),
+                              fontSize: 12, color: Colors.grey.shade600,),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -146,7 +144,7 @@ class SpecialistCardWidget extends StatelessWidget {
                       Text(
                         '${specialist.yearsOfExperience ?? 0} лет',
                         style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600),
+                            fontSize: 12, color: Colors.grey.shade600,),
                       ),
                     ],
                   ],
@@ -176,7 +174,7 @@ class SpecialistCardWidget extends StatelessWidget {
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                            horizontal: 16, vertical: 8,),
                       ),
                       child: const Text('Забронировать'),
                     ),

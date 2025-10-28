@@ -24,7 +24,7 @@ class Idea {
     required this.description,
     required this.type,
     required this.status,
-    this.category,
+    required this.createdAt, this.category,
     this.tags = const [],
     this.images = const [],
     this.videos = const [],
@@ -55,49 +55,8 @@ class Idea {
     this.publishedAt,
     this.archivedAt,
     this.deletedAt,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String authorId;
-  final String title;
-  final String description;
-  final IdeaType type;
-  final IdeaStatus status;
-  final String? category;
-  final List<String> tags;
-  final List<String> images;
-  final List<String> videos;
-  final List<String> attachments;
-  final double? budget;
-  final Duration? duration;
-  final int? difficulty; // 1-5
-  final List<String> materials;
-  final List<String> tools;
-  final List<String> steps;
-  final List<String> tips;
-  final List<String> warnings;
-  final String? source;
-  final String? credits;
-  final String? license;
-  final int views;
-  final int likes;
-  final int saves;
-  final int shares;
-  final int comments;
-  final bool isLiked;
-  final bool isSaved;
-  final bool isShared;
-  final bool isPublic;
-  final bool isFeatured;
-  final bool isVerified;
-  final Map<String, dynamic> metadata;
-  final DateTime? publishedAt;
-  final DateTime? archivedAt;
-  final DateTime? deletedAt;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory Idea.fromMap(Map<String, dynamic> data) {
@@ -175,6 +134,46 @@ class Idea {
 
     return Idea.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String authorId;
+  final String title;
+  final String description;
+  final IdeaType type;
+  final IdeaStatus status;
+  final String? category;
+  final List<String> tags;
+  final List<String> images;
+  final List<String> videos;
+  final List<String> attachments;
+  final double? budget;
+  final Duration? duration;
+  final int? difficulty; // 1-5
+  final List<String> materials;
+  final List<String> tools;
+  final List<String> steps;
+  final List<String> tips;
+  final List<String> warnings;
+  final String? source;
+  final String? credits;
+  final String? license;
+  final int views;
+  final int likes;
+  final int saves;
+  final int shares;
+  final int comments;
+  final bool isLiked;
+  final bool isSaved;
+  final bool isShared;
+  final bool isPublic;
+  final bool isFeatured;
+  final bool isVerified;
+  final Map<String, dynamic> metadata;
+  final DateTime? publishedAt;
+  final DateTime? archivedAt;
+  final DateTime? deletedAt;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -520,7 +519,7 @@ class Idea {
   List<bool> get difficultyStars {
     if (difficulty == null) return List.filled(5, false);
     final stars = <bool>[];
-    for (int i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 5; i++) {
       stars.add(i <= difficulty!);
     }
     return stars;

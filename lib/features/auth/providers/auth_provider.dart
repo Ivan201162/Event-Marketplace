@@ -26,10 +26,10 @@ class AuthService {
 
   /// Войти с email и паролем
   Future<UserCredential?> signInWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password,) async {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: email, password: password,);
       return credential;
     } catch (e) {
       debugPrint('Error signing in: $e');
@@ -39,7 +39,7 @@ class AuthService {
 
   /// Зарегистрироваться с email и паролем
   Future<UserCredential?> createUserWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password,) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,

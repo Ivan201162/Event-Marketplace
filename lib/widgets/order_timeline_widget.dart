@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/enhanced_order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/enhanced_order.dart';
-
 /// Виджет таймлайна заявки
 class OrderTimelineWidget extends StatelessWidget {
-  const OrderTimelineWidget({super.key, required this.timeline});
+  const OrderTimelineWidget({required this.timeline, super.key});
   final List<OrderTimelineEvent> timeline;
 
   @override
@@ -35,7 +34,7 @@ class OrderTimelineWidget extends StatelessWidget {
                 width: 12,
                 height: 12,
                 decoration: BoxDecoration(
-                    color: _getTypeColor(event.type), shape: BoxShape.circle),
+                    color: _getTypeColor(event.type), shape: BoxShape.circle,),
               ),
               if (!isLast)
                 Container(width: 2, height: 40, color: Colors.grey[300]),
@@ -51,11 +50,11 @@ class OrderTimelineWidget extends StatelessWidget {
               children: [
                 Text(event.title,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14)),
+                        fontWeight: FontWeight.bold, fontSize: 14,),),
                 if (event.description.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(event.description,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),),
                 ],
                 const SizedBox(height: 4),
                 Text(

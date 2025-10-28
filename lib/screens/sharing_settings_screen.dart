@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/services/integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/integration_service.dart';
 
 /// Экран настроек шаринга
 class SharingSettingsScreen extends ConsumerStatefulWidget {
@@ -244,7 +244,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8),),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -253,13 +253,13 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
               children: [
                 Text(title,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500)),
+                        fontSize: 16, fontWeight: FontWeight.w500,),),
                 TextButton(onPressed: onEdit, child: const Text('Изменить')),
               ],
             ),
             const SizedBox(height: 8),
             Text(template,
-                style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
           ],
         ),
       );
@@ -306,7 +306,7 @@ https://eventmarketplace.com
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Не удалось поделиться профилем: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -333,7 +333,7 @@ https://eventmarketplace.com
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Не удалось поделиться событием: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -357,7 +357,7 @@ https://eventmarketplace.com
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Не удалось поделиться отзывом: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -372,7 +372,7 @@ https://eventmarketplace.com
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

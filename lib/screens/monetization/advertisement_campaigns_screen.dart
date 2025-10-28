@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/screens/monetization/create_advertisement_screen.dart';
+import 'package:event_marketplace_app/services/advertisement_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/advertisement.dart';
-import '../../services/advertisement_service.dart';
-import 'create_advertisement_screen.dart';
 
 class AdvertisementCampaignsScreen extends StatefulWidget {
   const AdvertisementCampaignsScreen({super.key});
@@ -66,7 +65,7 @@ class _AdvertisementCampaignsScreenState
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const CreateAdvertisementScreen()),
+                    builder: (context) => const CreateAdvertisementScreen(),),
               );
             },
             icon: const Icon(Icons.add),
@@ -117,7 +116,7 @@ class _AdvertisementCampaignsScreenState
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const CreateAdvertisementScreen()),
+                    builder: (context) => const CreateAdvertisementScreen(),),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -191,7 +190,7 @@ class _AdvertisementCampaignsScreenState
             _buildDetailRow('Бюджет:', '${campaign.budget.toInt()} ₽'),
             _buildDetailRow('Потрачено:', '${campaign.spentAmount.toInt()} ₽'),
             _buildDetailRow(
-                'Остаток:', '${campaign.remainingBudget.toInt()} ₽'),
+                'Остаток:', '${campaign.remainingBudget.toInt()} ₽',),
             _buildDetailRow('Показы:', campaign.impressions.toString()),
             _buildDetailRow('Клики:', campaign.clicks.toString()),
             _buildDetailRow('CTR:', '${campaign.ctr.toStringAsFixed(2)}%'),
@@ -354,7 +353,7 @@ class _AdvertisementCampaignsScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -365,7 +364,7 @@ class _AdvertisementCampaignsScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-            'Функция управления кампанией будет реализована в следующей версии'),
+            'Функция управления кампанией будет реализована в следующей версии',),
       ),
     );
   }

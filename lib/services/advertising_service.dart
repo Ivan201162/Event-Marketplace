@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/advertisement.dart';
-import '../models/pro_subscription.dart';
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/models/pro_subscription.dart';
 
 /// Сервис для работы с рекламой
 class AdvertisingService {
@@ -152,7 +152,7 @@ class AdvertisingService {
   }) async {
     try {
       final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (title != null) updates['title'] = title;

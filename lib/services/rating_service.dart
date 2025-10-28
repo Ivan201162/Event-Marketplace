@@ -41,7 +41,7 @@ class RatingService {
 
   /// Получение отзывов специалиста
   Future<List<Map<String, dynamic>>> getSpecialistReviews(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final querySnapshot = await _firestore
           .collection('reviews')
@@ -76,7 +76,7 @@ class RatingService {
       }
 
       double totalRating = 0;
-      Map<int, int> ratingDistribution = {};
+      final ratingDistribution = <int, int>{};
 
       for (final review in reviews) {
         final rating = review['rating'] as double;
@@ -194,7 +194,7 @@ class RatingService {
     try {
       final querySnapshot = await _firestore.collection('reviews').get();
 
-      Map<String, int> tagCounts = {};
+      final tagCounts = <String, int>{};
 
       for (final doc in querySnapshot.docs) {
         final data = doc.data();
@@ -229,7 +229,7 @@ class RatingService {
       }
 
       double totalRating = 0;
-      Map<int, int> ratingDistribution = {};
+      final ratingDistribution = <int, int>{};
 
       for (final doc in querySnapshot.docs) {
         final data = doc.data();

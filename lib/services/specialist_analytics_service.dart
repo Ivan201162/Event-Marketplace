@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/booking.dart';
-import '../models/payment.dart';
-import '../models/review.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/models/review.dart';
 
 /// Статистика доходов специалиста
 class SpecialistIncomeStats {
@@ -31,9 +31,9 @@ class SpecialistIncomeStats {
         cancelledBookings: (data['cancelledBookings'] as int?) ?? 0,
         completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
         incomeByMonth: Map<String, double>.from(
-            data['incomeByMonth'] as Map<String, dynamic>? ?? {}),
+            data['incomeByMonth'] as Map<String, dynamic>? ?? {},),
         bookingsByMonth: Map<String, int>.from(
-            data['bookingsByMonth'] as Map<String, dynamic>? ?? {}),
+            data['bookingsByMonth'] as Map<String, dynamic>? ?? {},),
       );
   final double totalIncome;
   final double monthlyIncome;
@@ -87,7 +87,7 @@ class SpecialistReviewStats {
         twoStarReviews: (data['twoStarReviews'] as int?) ?? 0,
         oneStarReviews: (data['oneStarReviews'] as int?) ?? 0,
         reviewsByMonth: Map<String, int>.from(
-            data['reviewsByMonth'] as Map<String, dynamic>? ?? {}),
+            data['reviewsByMonth'] as Map<String, dynamic>? ?? {},),
         commonTags:
             List<String>.from(data['commonTags'] as List<dynamic>? ?? []),
         responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
@@ -133,9 +133,9 @@ class SpecialistAnalytics {
       SpecialistAnalytics(
         specialistId: (data['specialistId'] as String?) ?? '',
         incomeStats: SpecialistIncomeStats.fromMap(
-            data['incomeStats'] as Map<String, dynamic>? ?? {}),
+            data['incomeStats'] as Map<String, dynamic>? ?? {},),
         reviewStats: SpecialistReviewStats.fromMap(
-            data['reviewStats'] as Map<String, dynamic>? ?? {}),
+            data['reviewStats'] as Map<String, dynamic>? ?? {},),
         lastUpdated:
             (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
         additionalMetrics: Map<String, dynamic>.from(
@@ -164,7 +164,7 @@ class SpecialistAnalyticsService {
 
   /// Получить аналитику специалиста
   Future<SpecialistAnalytics?> getSpecialistAnalytics(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final doc = await _firestore
           .collection('specialist_analytics')
@@ -177,7 +177,7 @@ class SpecialistAnalyticsService {
       }
 
       return SpecialistAnalytics.fromMap(
-          {'specialistId': doc.id, ...doc.data()!});
+          {'specialistId': doc.id, ...doc.data()!},);
     } on Exception catch (e) {
       debugPrint('Error getting specialist analytics: $e');
       return null;
@@ -249,7 +249,7 @@ class SpecialistAnalyticsService {
 
   /// Генерировать статистику доходов
   SpecialistIncomeStats _generateIncomeStats(
-      List<Booking> bookings, List<Payment> payments) {
+      List<Booking> bookings, List<Payment> payments,) {
     final now = DateTime.now();
     final thisMonth = DateTime(now.year, now.month);
     final lastWeek = now.subtract(const Duration(days: 7));
@@ -262,13 +262,13 @@ class SpecialistAnalyticsService {
     final monthlyIncome = payments
         .where((p) =>
             p.status == PaymentStatus.completed &&
-            p.createdAt.isAfter(thisMonth))
+            p.createdAt.isAfter(thisMonth),)
         .fold(0, (sum, p) => sum + p.amount);
 
     final weeklyIncome = payments
         .where((p) =>
             p.status == PaymentStatus.completed &&
-            p.createdAt.isAfter(lastWeek))
+            p.createdAt.isAfter(lastWeek),)
         .fold(0, (sum, p) => sum + p.amount);
 
     final completedBookings =
@@ -305,7 +305,7 @@ class SpecialistAnalyticsService {
       final monthBookings = bookings
           .where((b) =>
               b.createdAt.year == month.year &&
-              b.createdAt.month == month.month)
+              b.createdAt.month == month.month,)
           .length;
 
       incomeByMonth[monthKey] = monthIncome.toDouble();
@@ -364,7 +364,7 @@ class SpecialistAnalyticsService {
       final monthReviews = reviews
           .where((r) =>
               r.createdAt.year == month.year &&
-              r.createdAt.month == month.month)
+              r.createdAt.month == month.month,)
           .length;
 
       reviewsByMonth[monthKey] = monthReviews;
@@ -468,7 +468,7 @@ class SpecialistAnalyticsService {
 
   /// Получить сравнительную аналитику
   Future<Map<String, dynamic>> getComparativeAnalytics(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final specialistAnalytics = await getSpecialistAnalytics(specialistId);
       if (specialistAnalytics == null) {
@@ -538,7 +538,7 @@ class SpecialistAnalyticsService {
           .where('status', isEqualTo: 'completed')
           .where('type', whereIn: ['deposit', 'finalPayment'])
           .where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo),)
           .orderBy('createdAt', descending: true)
           .get();
 
@@ -571,7 +571,7 @@ class SpecialistAnalyticsService {
           .where('specialistId', isEqualTo: specialistId)
           .where('status', isEqualTo: 'completed')
           .where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo),)
           .orderBy('createdAt', descending: true)
           .get();
 
@@ -603,7 +603,7 @@ class SpecialistAnalyticsService {
           .where('specialistId', isEqualTo: specialistId)
           .where('isPublic', isEqualTo: true)
           .where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(twelveMonthsAgo),)
           .orderBy('createdAt', descending: true)
           .get();
 

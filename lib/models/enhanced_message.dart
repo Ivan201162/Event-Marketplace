@@ -28,7 +28,7 @@ class EnhancedMessage {
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         attachments: (map['attachments'] as List?)
                 ?.map((attachment) => MessageAttachment.fromMap(
-                    attachment as Map<String, dynamic>))
+                    attachment as Map<String, dynamic>,),)
                 .toList() ??
             [],
         replyTo: map['replyTo'] != null
@@ -36,7 +36,7 @@ class EnhancedMessage {
             : null,
         forwardedFrom: map['forwardedFrom'] != null
             ? MessageForward.fromMap(
-                map['forwardedFrom'] as Map<String, dynamic>)
+                map['forwardedFrom'] as Map<String, dynamic>,)
             : null,
         status: MessageStatus.fromString(map['status'] as String? ?? 'sent'),
         editedAt: map['editedAt'] != null
@@ -55,7 +55,7 @@ class EnhancedMessage {
         readBy: Map<String, DateTime>.from(
           (map['readBy'] as Map?)?.map(
                 (key, value) => MapEntry(key as String,
-                    DateTime.fromMillisecondsSinceEpoch(value as int)),
+                    DateTime.fromMillisecondsSinceEpoch(value as int),),
               ) ??
               {},
         ),

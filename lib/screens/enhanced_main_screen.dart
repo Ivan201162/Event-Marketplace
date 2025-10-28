@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/screens/enhanced_chats_screen.dart';
+import 'package:event_marketplace_app/screens/enhanced_feed_screen.dart';
+import 'package:event_marketplace_app/screens/enhanced_home_screen_v2.dart';
+import 'package:event_marketplace_app/screens/enhanced_ideas_screen.dart';
+import 'package:event_marketplace_app/screens/enhanced_requests_screen.dart';
+import 'package:event_marketplace_app/widgets/swipe_back_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../widgets/swipe_back_wrapper.dart';
-import 'enhanced_chats_screen.dart';
-import 'enhanced_feed_screen.dart';
-import 'enhanced_home_screen_v2.dart';
-import 'enhanced_ideas_screen.dart';
-import 'enhanced_requests_screen.dart';
 
 /// Улучшенный главный экран с поддержкой свайпов
 class EnhancedMainScreen extends ConsumerStatefulWidget {
@@ -137,10 +136,10 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
           ),
           floatingActionButton: _currentIndex == 1 // Лента
               ? FloatingActionButton(
-                  onPressed: _createPost, child: const Icon(Icons.add))
+                  onPressed: _createPost, child: const Icon(Icons.add),)
               : _currentIndex == 4 // Идеи
                   ? FloatingActionButton(
-                      onPressed: _createIdea, child: const Icon(Icons.add))
+                      onPressed: _createIdea, child: const Icon(Icons.add),)
                   : null,
         ),
       );
@@ -188,7 +187,7 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание поста будет реализовано')));
+        const SnackBar(content: Text('Создание поста будет реализовано')),);
   }
 
   /// Создать новую идею
@@ -197,7 +196,7 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание идеи будет реализовано')));
+        const SnackBar(content: Text('Создание идеи будет реализовано')),);
   }
 
   /// Анимированное переключение на вкладку
@@ -255,7 +254,7 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

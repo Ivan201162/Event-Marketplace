@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter/material.dart';
-import '../../../models/review.dart';
 
 class ReputationWidget extends StatelessWidget {
-  const ReputationWidget({super.key, required this.reputation});
+  const ReputationWidget({required this.reputation, super.key});
   final SpecialistReputation reputation;
 
   @override
@@ -65,7 +65,7 @@ class ReputationWidget extends StatelessWidget {
               style: TextStyle(
                   color: _getStatusColor(),
                   fontWeight: FontWeight.bold,
-                  fontSize: 12),
+                  fontSize: 12,),
             ),
           ],
         ),
@@ -120,7 +120,7 @@ class ReputationWidget extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(
             label,
@@ -197,7 +197,7 @@ class ReputationWidget extends StatelessWidget {
             Text(
               '$value (${percentage.toStringAsFixed(1)}%)',
               style: TextStyle(
-                  fontSize: 12, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 12, fontWeight: FontWeight.bold, color: color,),
             ),
           ],
         ),
@@ -227,7 +227,7 @@ class ReputationWidget extends StatelessWidget {
 
 /// Компактный виджет репутации для использования в списках
 class CompactReputationWidget extends StatelessWidget {
-  const CompactReputationWidget({super.key, required this.reputation});
+  const CompactReputationWidget({required this.reputation, super.key});
   final SpecialistReputation reputation;
 
   @override
@@ -253,7 +253,7 @@ class CompactReputationWidget extends StatelessWidget {
 
           // Количество отзывов
           Text('(${reputation.reviewsCount})',
-              style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              style: TextStyle(color: Colors.grey[600], fontSize: 12),),
           const SizedBox(width: 8),
 
           // Статус репутации
@@ -267,14 +267,14 @@ class CompactReputationWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(reputation.status.emoji,
-                    style: const TextStyle(fontSize: 10)),
+                    style: const TextStyle(fontSize: 10),),
                 const SizedBox(width: 2),
                 Text(
                   reputation.status.displayName,
                   style: TextStyle(
                       color: _getStatusColor(),
                       fontWeight: FontWeight.bold,
-                      fontSize: 10),
+                      fontSize: 10,),
                 ),
               ],
             ),

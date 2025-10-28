@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/environment_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../core/feature_flags.dart';
-import '../models/environment_config.dart';
 
 /// Сервис для управления конфигурацией окружения
 class EnvironmentConfigService {
@@ -533,14 +532,14 @@ class EnvironmentConfigService {
 
   /// Получение конфигураций развертывания для окружения
   List<DeploymentConfig> getDeploymentConfigsForEnvironment(
-          String environmentId) =>
+          String environmentId,) =>
       _deploymentCache.values
           .where((deployment) => deployment.environmentId == environmentId)
           .toList();
 
   /// Экспорт конфигурации окружения
   Future<String> exportEnvironmentConfig(String id,
-      {String format = 'json'}) async {
+      {String format = 'json',}) async {
     try {
       final config = _environmentCache[id];
       if (config == null) throw Exception('Environment config not found');
@@ -573,7 +572,7 @@ class EnvironmentConfigService {
 
   /// Импорт конфигурации окружения
   Future<EnvironmentConfig> importEnvironmentConfig(String data,
-      {String format = 'json'}) async {
+      {String format = 'json',}) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('User not authenticated');
@@ -595,7 +594,7 @@ class EnvironmentConfigService {
         id: _generateId(),
         name: environmentData['name'] ?? 'Imported Environment',
         type: EnvironmentType.fromString(
-            environmentData['type'] ?? 'development'),
+            environmentData['type'] ?? 'development',),
         config: Map<String, dynamic>.from(environmentData['config'] ?? {}),
         secrets: Map<String, dynamic>.from(environmentData['secrets'] ?? {}),
         featureFlags:
@@ -609,7 +608,7 @@ class EnvironmentConfigService {
         loggingConfig:
             Map<String, dynamic>.from(environmentData['loggingConfig'] ?? {}),
         monitoringConfig: Map<String, dynamic>.from(
-            environmentData['monitoringConfig'] ?? {}),
+            environmentData['monitoringConfig'] ?? {},),
         securityConfig:
             Map<String, dynamic>.from(environmentData['securityConfig'] ?? {}),
         isActive: false,
@@ -636,7 +635,7 @@ class EnvironmentConfigService {
           key: variableData['key'] ?? '',
           value: variableData['value'] ?? '',
           type: EnvironmentVariableType.fromString(
-              variableData['type'] ?? 'string'),
+              variableData['type'] ?? 'string',),
           isSecret: variableData['isSecret'] ?? false,
           description: variableData['description'],
           defaultValue: variableData['defaultValue'],
@@ -673,11 +672,11 @@ class EnvironmentConfigService {
           scalingConfig:
               Map<String, dynamic>.from(deploymentData['scalingConfig'] ?? {}),
           networkingConfig: Map<String, dynamic>.from(
-              deploymentData['networkingConfig'] ?? {}),
+              deploymentData['networkingConfig'] ?? {},),
           storageConfig:
               Map<String, dynamic>.from(deploymentData['storageConfig'] ?? {}),
           monitoringConfig: Map<String, dynamic>.from(
-              deploymentData['monitoringConfig'] ?? {}),
+              deploymentData['monitoringConfig'] ?? {},),
           description: deploymentData['description'],
           metadata: Map<String, dynamic>.from(deploymentData['metadata'] ?? {}),
           createdAt: now,
@@ -742,7 +741,7 @@ class EnvironmentConfigService {
       for (final variable in _variableCache.values) {
         if (variable.isRequired && !config.config.containsKey(variable.key)) {
           errors.add(
-              'Required environment variable "${variable.key}" is missing');
+              'Required environment variable "${variable.key}" is missing',);
         }
       }
 
@@ -795,7 +794,7 @@ class EnvironmentConfigService {
 
   /// Группировка окружений по типу
   Map<String, int> _groupEnvironmentsByType(
-      List<EnvironmentConfig> environments) {
+      List<EnvironmentConfig> environments,) {
     final groups = <String, int>{};
     for (final env in environments) {
       groups[env.type.value] = (groups[env.type.value] ?? 0) + 1;
@@ -814,7 +813,7 @@ class EnvironmentConfigService {
 
   /// Группировка развертываний по статусу
   Map<String, int> _groupDeploymentsByStatus(
-      List<DeploymentConfig> deployments) {
+      List<DeploymentConfig> deployments,) {
     final groups = <String, int>{};
     for (final deployment in deployments) {
       groups[deployment.status.value] =

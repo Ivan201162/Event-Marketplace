@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-import 'analytics_service.dart';
 
 /// Сервис для еженедельных отчётов и уведомлений
 class WeeklyReportsService {
@@ -83,7 +82,7 @@ class WeeklyReportsService {
           .where('user_id', isEqualTo: customerId)
           .where('event_name', isEqualTo: 'create_request')
           .where('timestamp',
-              isGreaterThan: DateTime.now().subtract(const Duration(days: 7)))
+              isGreaterThan: DateTime.now().subtract(const Duration(days: 7)),)
           .get();
 
       final totalRequests = requestsQuery.docs.length;
@@ -107,7 +106,7 @@ class WeeklyReportsService {
 
       // Отправляем уведомление
       await _sendCustomerNotification(
-          customerId, totalRequests, viewedRequests);
+          customerId, totalRequests, viewedRequests,);
 
       // Логирование:'Еженедельный отчёт отправлен заказчику $customerId');
     } on Exception {
@@ -117,7 +116,7 @@ class WeeklyReportsService {
 
   /// Отправка уведомления специалисту
   Future<void> _sendSpecialistNotification(
-      String specialistId, int views, int requests) async {
+      String specialistId, int views, int requests,) async {
     try {
       const title = '📊 Ваша недельная статистика';
       final body =
@@ -184,7 +183,7 @@ class WeeklyReportsService {
 
   /// Отправка push-уведомления через FCM
   Future<void> _sendPushNotification(
-      String userId, String title, String body) async {
+      String userId, String title, String body,) async {
     try {
       // Получаем FCM токен пользователя
       final userDoc = await _firestore.collection('users').doc(userId).get();
@@ -213,7 +212,7 @@ class WeeklyReportsService {
           .collection('requests')
           .where('customerId', isEqualTo: customerId)
           .where('createdAt',
-              isGreaterThan: DateTime.now().subtract(const Duration(days: 7)))
+              isGreaterThan: DateTime.now().subtract(const Duration(days: 7)),)
           .get();
 
       var viewedCount = 0;
@@ -239,7 +238,7 @@ class WeeklyReportsService {
       final usersQuery = await _firestore
           .collection('users')
           .where('lastActiveAt',
-              isGreaterThan: DateTime.now().subtract(const Duration(days: 30)))
+              isGreaterThan: DateTime.now().subtract(const Duration(days: 30)),)
           .get();
 
       var specialistCount = 0;
@@ -274,7 +273,7 @@ class WeeklyReportsService {
 
   /// Получение истории отчётов пользователя
   Future<List<Map<String, dynamic>>> getUserReportsHistory(
-      String userId) async {
+      String userId,) async {
     try {
       final reportsQuery = await _firestore
           .collection('weekly_reports')

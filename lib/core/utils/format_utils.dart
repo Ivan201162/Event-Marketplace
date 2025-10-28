@@ -23,7 +23,7 @@ String formatTime(DateTime time, [String pattern = 'HH:mm']) {
 
 /// Форматирование даты и времени
 String formatDateTime(DateTime dateTime,
-    [String pattern = 'dd.MM.yyyy HH:mm']) {
+    [String pattern = 'dd.MM.yyyy HH:mm',]) {
   final formatter = DateFormat(pattern, 'ru_RU');
   return formatter.format(dateTime);
 }

@@ -87,7 +87,7 @@ enum ScreenType { mobile, tablet, desktop }
 /// Адаптивный виджет, который изменяет свой контент в зависимости от размера экрана
 class ResponsiveWidget extends StatelessWidget {
   const ResponsiveWidget(
-      {super.key, required this.mobile, this.tablet, this.desktop});
+      {required this.mobile, super.key, this.tablet, this.desktop,});
 
   final Widget mobile;
   final Widget? tablet;
@@ -111,8 +111,7 @@ class ResponsiveWidget extends StatelessWidget {
 /// Адаптивная сетка
 class ResponsiveGrid extends StatelessWidget {
   const ResponsiveGrid({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.mobileColumns = 2,
     this.tabletColumns = 3,
     this.desktopColumns = 4,
@@ -156,8 +155,7 @@ class ResponsiveGrid extends StatelessWidget {
 /// Адаптивный контейнер
 class ResponsiveContainer extends StatelessWidget {
   const ResponsiveContainer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.mobilePadding,
     this.tabletPadding,
     this.desktopPadding,
@@ -203,19 +201,16 @@ class ResponsiveContainer extends StatelessWidget {
         margin = mobileMargin;
         width = mobileWidth;
         maxWidth = mobileMaxWidth;
-        break;
       case ScreenType.tablet:
         padding = tabletPadding;
         margin = tabletMargin;
         width = tabletWidth;
         maxWidth = tabletMaxWidth;
-        break;
       case ScreenType.desktop:
         padding = desktopPadding;
         margin = desktopMargin;
         width = desktopWidth;
         maxWidth = desktopMaxWidth;
-        break;
     }
 
     return Container(
@@ -258,29 +253,24 @@ class ResponsiveText extends StatelessWidget {
     switch (screenType) {
       case ScreenType.mobile:
         style = mobileStyle;
-        break;
       case ScreenType.tablet:
         style = tabletStyle;
-        break;
       case ScreenType.desktop:
         style = desktopStyle;
-        break;
     }
 
     return Text(text,
         style: style,
         textAlign: textAlign,
         maxLines: maxLines,
-        overflow: overflow);
+        overflow: overflow,);
   }
 }
 
 /// Адаптивная кнопка
 class ResponsiveButton extends StatelessWidget {
   const ResponsiveButton({
-    super.key,
-    required this.onPressed,
-    required this.child,
+    required this.onPressed, required this.child, super.key,
     this.mobileStyle,
     this.tabletStyle,
     this.desktopStyle,
@@ -309,15 +299,12 @@ class ResponsiveButton extends StatelessWidget {
       case ScreenType.mobile:
         style = mobileStyle;
         padding = mobilePadding;
-        break;
       case ScreenType.tablet:
         style = tabletStyle;
         padding = tabletPadding;
-        break;
       case ScreenType.desktop:
         style = desktopStyle;
         padding = desktopPadding;
-        break;
     }
 
     return ElevatedButton(
@@ -331,8 +318,7 @@ class ResponsiveButton extends StatelessWidget {
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
   const ResponsiveList({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.mobileSpacing = 8,
     this.tabletSpacing = 12,
     this.desktopSpacing = 16,
@@ -360,15 +346,12 @@ class ResponsiveList extends StatelessWidget {
       case ScreenType.mobile:
         spacing = mobileSpacing;
         padding = mobilePadding;
-        break;
       case ScreenType.tablet:
         spacing = tabletSpacing;
         padding = tabletPadding;
-        break;
       case ScreenType.desktop:
         spacing = desktopSpacing;
         padding = desktopPadding;
-        break;
     }
 
     return ListView.separated(
@@ -385,8 +368,7 @@ class ResponsiveList extends StatelessWidget {
 /// Адаптивная карточка
 class ResponsiveCard extends StatelessWidget {
   const ResponsiveCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.mobileElevation = 2,
     this.tabletElevation = 4,
     this.desktopElevation = 6,
@@ -430,19 +412,16 @@ class ResponsiveCard extends StatelessWidget {
         margin = mobileMargin;
         padding = mobilePadding;
         borderRadius = mobileBorderRadius;
-        break;
       case ScreenType.tablet:
         elevation = tabletElevation;
         margin = tabletMargin;
         padding = tabletPadding;
         borderRadius = tabletBorderRadius;
-        break;
       case ScreenType.desktop:
         elevation = desktopElevation;
         margin = desktopMargin;
         padding = desktopPadding;
         borderRadius = desktopBorderRadius;
-        break;
     }
 
     return Card(
@@ -458,10 +437,10 @@ class ResponsiveCard extends StatelessWidget {
 
 /// Адаптивный LayoutBuilder
 class ResponsiveLayoutBuilder extends StatelessWidget {
-  const ResponsiveLayoutBuilder({super.key, required this.builder});
+  const ResponsiveLayoutBuilder({required this.builder, super.key});
 
   final Widget Function(BuildContext context, ScreenType screenType,
-      BoxConstraints constraints) builder;
+      BoxConstraints constraints,) builder;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(

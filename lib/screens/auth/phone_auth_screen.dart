@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Экран ввода номера телефона для авторизации
 class PhoneAuthScreen extends ConsumerStatefulWidget {
@@ -59,7 +58,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.sending);
 
     try {
-      String phoneNumber = _phoneController.text.trim();
+      var phoneNumber = _phoneController.text.trim();
 
       // Нормализуем номер телефона
       if (phoneNumber.startsWith('8')) {
@@ -91,25 +90,20 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
         context.push('/phone-verification', extra: phoneNumber);
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Ошибка отправки SMS';
+      var errorMessage = 'Ошибка отправки SMS';
 
       switch (e.code) {
         case 'invalid-phone-number':
           errorMessage = 'Неверный формат номера телефона';
-          break;
         case 'too-many-requests':
           errorMessage = 'Слишком много запросов. Попробуйте позже';
-          break;
         case 'quota-exceeded':
           errorMessage = 'Превышена квота SMS. Попробуйте позже';
-          break;
         case 'network-request-failed':
           errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
-          break;
         case 'billing-not-enabled':
           errorMessage =
               'Phone Authentication не настроена. Обратитесь к администратору';
-          break;
         default:
           errorMessage = 'Ошибка отправки SMS: ${e.message ?? e.code}';
       }
@@ -125,7 +119,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
       ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
-        _errorMessage = 'Произошла ошибка: ${e.toString()}';
+        _errorMessage = 'Произошла ошибка: $e';
       });
     } finally {
       if (mounted) {
@@ -142,11 +136,11 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
       appBar: AppBar(
         title: const Text('Вход по телефону'),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(),),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24),
           child: Form(
             key: _formKey,
             child: Column(
@@ -220,7 +214,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text('Отправить код',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16),),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -240,7 +234,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(_errorMessage!,
-                              style: TextStyle(color: Colors.red.shade700)),
+                              style: TextStyle(color: Colors.red.shade700),),
                         ),
                       ],
                     ),

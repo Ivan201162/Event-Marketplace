@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/dj_playlist.dart';
+import 'package:event_marketplace_app/services/dj_playlist_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/feature_flags.dart';
-import '../models/dj_playlist.dart';
-import '../services/dj_playlist_service.dart';
-
 /// Экран управления плейлистами диджеев
 class DJPlaylistScreen extends ConsumerStatefulWidget {
-  const DJPlaylistScreen({super.key, required this.djId});
+  const DJPlaylistScreen({required this.djId, super.key});
   final String djId;
 
   @override
@@ -79,7 +78,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
         children: [
           _buildPlaylistsTab(),
           _buildMediaFilesTab(),
-          _buildVKImportTab()
+          _buildVKImportTab(),
         ],
       ),
     );
@@ -103,7 +102,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -118,7 +117,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                   Icon(Icons.playlist_add, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('У вас пока нет плейлистов',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text(
                     'Создайте плейлист или импортируйте из VK',
@@ -160,10 +159,10 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(playlist.coverImagePath!,
-                                fit: BoxFit.cover),
+                                fit: BoxFit.cover,),
                           )
                         : Icon(Icons.music_note,
-                            color: Colors.purple[600], size: 30),
+                            color: Colors.purple[600], size: 30,),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -173,35 +172,35 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                         Text(
                           playlist.name,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         if (playlist.description != null) ...[
                           const SizedBox(height: 4),
                           Text(
                             playlist.description!,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 14),
+                                color: Colors.grey[600], fontSize: 14,),
                           ),
                         ],
                         const SizedBox(height: 8),
                         Row(
                           children: [
                             Icon(Icons.music_note,
-                                size: 16, color: Colors.grey[600]),
+                                size: 16, color: Colors.grey[600],),
                             const SizedBox(width: 4),
                             Text(
                               '${playlist.trackCount} треков',
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 12),
+                                  color: Colors.grey[600], fontSize: 12,),
                             ),
                             const SizedBox(width: 16),
                             Icon(Icons.access_time,
-                                size: 16, color: Colors.grey[600]),
+                                size: 16, color: Colors.grey[600],),
                             const SizedBox(width: 4),
                             Text(
                               playlist.formattedDuration,
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 12),
+                                  color: Colors.grey[600], fontSize: 12,),
                             ),
                           ],
                         ),
@@ -218,7 +217,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                           children: [
                             Icon(Icons.edit),
                             SizedBox(width: 8),
-                            Text('Редактировать')
+                            Text('Редактировать'),
                           ],
                         ),
                       ),
@@ -228,11 +227,11 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                           children: [
                             Icon(playlist.isPublic
                                 ? Icons.visibility_off
-                                : Icons.visibility),
+                                : Icons.visibility,),
                             const SizedBox(width: 8),
                             Text(playlist.isPublic
                                 ? 'Сделать приватным'
-                                : 'Сделать публичным'),
+                                : 'Сделать публичным',),
                           ],
                         ),
                       ),
@@ -243,7 +242,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                             Icon(Icons.delete, color: Colors.red),
                             SizedBox(width: 8),
                             Text('Удалить',
-                                style: TextStyle(color: Colors.red)),
+                                style: TextStyle(color: Colors.red),),
                           ],
                         ),
                       ),
@@ -257,7 +256,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                   if (playlist.isPublic) ...[
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green[100],
                         borderRadius: BorderRadius.circular(12),
@@ -266,7 +265,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.public,
-                              size: 14, color: Colors.green[600]),
+                              size: 14, color: Colors.green[600],),
                           const SizedBox(width: 4),
                           Text(
                             'Публичный',
@@ -292,7 +291,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.play_arrow,
-                            size: 14, color: Colors.blue[600]),
+                            size: 14, color: Colors.blue[600],),
                         const SizedBox(width: 4),
                         Text(
                           '${playlist.playCount} прослушиваний',
@@ -331,7 +330,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
 
           if (snapshot.hasError) {
             return Center(
-                child: Text('Ошибка загрузки медиафайлов: ${snapshot.error}'));
+                child: Text('Ошибка загрузки медиафайлов: ${snapshot.error}'),);
           }
 
           final mediaFiles = snapshot.data ?? [];
@@ -402,15 +401,15 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(_getMediaTypeIcon(mediaFile.type),
-                color: Colors.white, size: 24),
+                color: Colors.white, size: 24,),
           ),
           title: Text(mediaFile.originalName,
-              style: const TextStyle(fontWeight: FontWeight.w500)),
+              style: const TextStyle(fontWeight: FontWeight.w500),),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                  '${mediaFile.formattedFileSize} • ${mediaFile.formattedDuration}'),
+                  '${mediaFile.formattedFileSize} • ${mediaFile.formattedDuration}',),
               if (mediaFile.metadata['artist'] != null)
                 Text(
                   'Исполнитель: ${mediaFile.metadata['artist']}',
@@ -426,8 +425,8 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                 child: Row(children: [
                   Icon(Icons.download),
                   SizedBox(width: 8),
-                  Text('Скачать')
-                ]),
+                  Text('Скачать'),
+                ],),
               ),
               const PopupMenuItem(
                 value: 'delete',
@@ -548,7 +547,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
               SwitchListTile(
                 title: const Text('Публичный плейлист'),
                 subtitle: const Text(
-                    'Другие пользователи смогут видеть этот плейлист'),
+                    'Другие пользователи смогут видеть этот плейлист',),
                 value: _isPublic,
                 onChanged: (value) {
                   setState(() {
@@ -586,7 +585,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Помощь',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               _buildHelpItem(
                 Icons.info,
@@ -621,10 +620,10 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                      style: const TextStyle(fontWeight: FontWeight.w500),),
                   const SizedBox(height: 4),
                   Text(description,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
                 ],
               ),
             ),
@@ -694,7 +693,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Файл успешно загружен!'),
-                backgroundColor: Colors.green),
+                backgroundColor: Colors.green,),
           );
         } catch (e) {
           Navigator.of(context).pop(); // Закрываем диалог загрузки
@@ -705,7 +704,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -727,7 +726,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Введите название плейлиста'),
-            backgroundColor: Colors.orange),
+            backgroundColor: Colors.orange,),
       );
       return;
     }
@@ -781,7 +780,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка импорта: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка импорта: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -789,13 +788,10 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
     switch (action) {
       case 'edit':
         _editPlaylist(playlist);
-        break;
       case 'toggle_public':
         _togglePlaylistVisibility(playlist);
-        break;
       case 'delete':
         _deletePlaylist(playlist);
-        break;
     }
   }
 
@@ -803,10 +799,8 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
     switch (action) {
       case 'download':
         _downloadMediaFile(mediaFile);
-        break;
       case 'delete':
         _deleteMediaFile(mediaFile);
-        break;
     }
   }
 
@@ -815,7 +809,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция редактирования будет добавлена')));
+        content: Text('Функция редактирования будет добавлена'),),);
   }
 
   Future<void> _togglePlaylistVisibility(DJPlaylist playlist) async {
@@ -837,7 +831,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка обновления: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка обновления: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -850,7 +844,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -859,13 +853,13 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Плейлист удален'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка удаления: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -882,7 +876,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция скачивания будет добавлена')));
+        const SnackBar(content: Text('Функция скачивания будет добавлена')),);
   }
 
   void _deleteMediaFile(MediaFile mediaFile) {
@@ -894,7 +888,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -903,13 +897,13 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Файл удален'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка удаления: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },

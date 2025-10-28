@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/services/news_feed_service.dart';
+import 'package:event_marketplace_app/widgets/news_feed_widget.dart';
+import 'package:event_marketplace_app/widgets/specialist_subscription_widget.dart';
 import 'package:flutter/material.dart';
-import '../services/news_feed_service.dart';
-import '../widgets/news_feed_widget.dart';
-import '../widgets/specialist_subscription_widget.dart';
 
 /// Тестовый экран для проверки функциональности ленты новостей
 class NewsFeedTestScreen extends StatefulWidget {
@@ -28,7 +28,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
           foregroundColor: Colors.white,
           bottom: TabBar(
             controller: TabController(
-                length: 3, vsync: this, initialIndex: _selectedTabIndex),
+                length: 3, vsync: this, initialIndex: _selectedTabIndex,),
             onTap: (index) => setState(() => _selectedTabIndex = index),
             tabs: const [
               Tab(icon: Icon(Icons.newspaper), text: 'Лента'),
@@ -39,11 +39,11 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         ),
         body: TabBarView(
           controller: TabController(
-              length: 3, vsync: this, initialIndex: _selectedTabIndex),
+              length: 3, vsync: this, initialIndex: _selectedTabIndex,),
           children: [
             _buildNewsFeedTab(),
             _buildSubscriptionsTab(),
-            _buildCreateNewsTab()
+            _buildCreateNewsTab(),
           ],
         ),
       );
@@ -71,7 +71,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Подписки обновлены'),
-                      backgroundColor: Colors.blue),
+                      backgroundColor: Colors.blue,),
                 );
               },
             ),
@@ -80,7 +80,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
       );
 
   Widget _buildCreateNewsTab() => SingleChildScrollView(
-      child: Column(children: [_buildTestInfo(), _buildCreateNewsForm()]));
+      child: Column(children: [_buildTestInfo(), _buildCreateNewsForm()]),);
 
   Widget _buildTestInfo() => Container(
         margin: const EdgeInsets.all(16),
@@ -200,7 +200,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
                           : '?',
                       style: TextStyle(
                           color: Colors.blue.shade700,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -211,7 +211,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
                         Text(
                           newsItem.authorName,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold, fontSize: 16,),
                         ),
                         Text(
                           newsItem.formattedDate,
@@ -247,7 +247,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -285,7 +285,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -306,7 +306,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Тестовые новости созданы'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -335,7 +335,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Идея создана'), backgroundColor: Colors.green),
+              content: Text('Идея создана'), backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -343,7 +343,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания идеи: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -363,7 +363,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Акция создана'), backgroundColor: Colors.green),
+              content: Text('Акция создана'), backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -371,7 +371,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания акции: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -391,7 +391,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('История создана'), backgroundColor: Colors.green),
+              content: Text('История создана'), backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -399,7 +399,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания истории: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }

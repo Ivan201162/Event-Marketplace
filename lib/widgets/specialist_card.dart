@@ -1,20 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
-
-import '../models/specialist.dart';
 
 /// Card widget for displaying specialist information
 class SpecialistCard extends StatelessWidget {
-  final Specialist specialist;
-  final VoidCallback? onTap;
-  final bool showFullInfo;
 
   const SpecialistCard({
-    super.key,
-    required this.specialist,
+    required this.specialist, super.key,
     this.onTap,
     this.showFullInfo = false,
   });
+  final Specialist specialist;
+  final VoidCallback? onTap;
+  final bool showFullInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +50,7 @@ class SpecialistCard extends StatelessWidget {
                         Text(
                           specialist.name,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -64,12 +62,12 @@ class SpecialistCard extends StatelessWidget {
                         Row(
                           children: [
                             Icon(Icons.location_on,
-                                size: 16, color: Colors.grey[600]),
+                                size: 16, color: Colors.grey[600],),
                             const SizedBox(width: 4),
                             Text(
                               specialist.city,
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 14),
+                                  color: Colors.grey[600], fontSize: 14,),
                             ),
                           ],
                         ),
@@ -88,7 +86,7 @@ class SpecialistCard extends StatelessWidget {
                           Text(
                             specialist.rating.toStringAsFixed(1),
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14),
+                                fontWeight: FontWeight.bold, fontSize: 14,),
                           ),
                         ],
                       ),
@@ -128,7 +126,7 @@ class SpecialistCard extends StatelessWidget {
                       .map(
                         (service) => Chip(
                           label: Text(service,
-                              style: const TextStyle(fontSize: 12)),
+                              style: const TextStyle(fontSize: 12),),
                           backgroundColor: Colors.blue.withValues(alpha: 0.1),
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
@@ -161,7 +159,7 @@ class SpecialistCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
                                 color: Colors.grey[200],
-                                child: const Icon(Icons.image)),
+                                child: const Icon(Icons.image),),
                             errorWidget: (context, url, error) => Container(
                               color: Colors.grey[200],
                               child: const Icon(Icons.broken_image),
@@ -188,7 +186,7 @@ class SpecialistCard extends StatelessWidget {
                   if (specialist.isAvailable)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -205,7 +203,7 @@ class SpecialistCard extends StatelessWidget {
                   else
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.red.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),

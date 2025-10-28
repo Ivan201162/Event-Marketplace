@@ -12,8 +12,9 @@ class FollowService {
     try {
       final currentUserId = _auth.currentUser?.uid;
       if (currentUserId == null) throw Exception('User not authenticated');
-      if (currentUserId == targetUserId)
+      if (currentUserId == targetUserId) {
         throw Exception('Cannot follow yourself');
+      }
 
       final batch = _firestore.batch();
 
@@ -64,8 +65,9 @@ class FollowService {
     try {
       final currentUserId = _auth.currentUser?.uid;
       if (currentUserId == null) throw Exception('User not authenticated');
-      if (currentUserId == targetUserId)
+      if (currentUserId == targetUserId) {
         throw Exception('Cannot unfollow yourself');
+      }
 
       final batch = _firestore.batch();
 
@@ -192,7 +194,7 @@ class FollowService {
 
   /// Получить рекомендуемых пользователей для подписки
   Future<List<FollowUser>> getRecommendedUsers(String userId,
-      {int limit = 10}) async {
+      {int limit = 10,}) async {
     try {
       // Получаем пользователей, на которых подписан текущий пользователь
       final followingSnapshot = await _firestore
@@ -235,11 +237,11 @@ class FollowService {
       final snapshot = await _firestore
           .collection('users')
           .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThanOrEqualTo: query + '\uf8ff')
+          .where('name', isLessThanOrEqualTo: '$query\uf8ff')
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => FollowUser.fromFirestore(doc)).toList();
+      return snapshot.docs.map(FollowUser.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error searching users: $e');
       return [];
@@ -249,31 +251,18 @@ class FollowService {
 
 /// Модель пользователя для подписок
 class FollowUser {
-  final String id;
-  final String name;
-  final String? avatarUrl;
-  final String? bio;
-  final int followersCount;
-  final int followingCount;
-  final bool isVerified;
-  final bool isProAccount;
-  final DateTime? lastActiveAt;
 
   const FollowUser({
     required this.id,
     required this.name,
-    this.avatarUrl,
+    required this.followersCount, required this.followingCount, required this.isVerified, required this.isProAccount, this.avatarUrl,
     this.bio,
-    required this.followersCount,
-    required this.followingCount,
-    required this.isVerified,
-    required this.isProAccount,
     this.lastActiveAt,
   });
 
   /// Создать пользователя из Firestore документа
   factory FollowUser.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return FollowUser(
       id: doc.id,
       name: data['name'] ?? data['displayName'] ?? 'Пользователь',
@@ -288,6 +277,15 @@ class FollowUser {
           : null,
     );
   }
+  final String id;
+  final String name;
+  final String? avatarUrl;
+  final String? bio;
+  final int followersCount;
+  final int followingCount;
+  final bool isVerified;
+  final bool isProAccount;
+  final DateTime? lastActiveAt;
 
   /// Конвертировать пользователя в Firestore документ
   Map<String, dynamic> toFirestore() {

@@ -143,7 +143,7 @@ class NavigationAnimations {
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(
-                  rotationAnimation.value * 1.5708), // 90 градусов в радианах
+                  rotationAnimation.value * 1.5708,), // 90 градусов в радианах
             child: child,
           );
         },
@@ -220,7 +220,7 @@ class NavigationAnimations {
             begin: const Offset(0, 1),
             end: Offset.zero,
           ).animate(
-              CurvedAnimation(parent: animation, curve: Curves.elasticOut));
+              CurvedAnimation(parent: animation, curve: Curves.elasticOut),);
 
           final scaleAnimation = Tween<double>(begin: 0.8, end: 1).animate(
             CurvedAnimation(
@@ -275,8 +275,7 @@ extension NavigationAnimationsExtension on NavigatorState {
 /// Виджет для поддержки жестов свайп назад
 class SwipeBackGestureDetector extends StatelessWidget {
   const SwipeBackGestureDetector({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onSwipeBack,
     this.threshold = 50.0,
   });
@@ -305,8 +304,7 @@ class SwipeBackGestureDetector extends StatelessWidget {
 /// Виджет для поддержки жестов свайп вниз (закрытие модальных окон)
 class SwipeDownGestureDetector extends StatelessWidget {
   const SwipeDownGestureDetector({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onSwipeDown,
     this.threshold = 50.0,
   });

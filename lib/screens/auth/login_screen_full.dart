@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Полноценный экран входа с Google Sign-In
 class LoginScreenFull extends ConsumerStatefulWidget {
@@ -253,7 +252,7 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             ),
                             child: _isLoading
                                 ? const CircularProgressIndicator(
-                                    color: Colors.white)
+                                    color: Colors.white,)
                                 : const Text(
                                     'Войти',
                                     style: TextStyle(
@@ -326,7 +325,7 @@ class _LoginScreenFullState extends ConsumerState<LoginScreenFull> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                    'Функция восстановления пароля в разработке'),
+                                    'Функция восстановления пароля в разработке',),
                               ),
                             );
                           },

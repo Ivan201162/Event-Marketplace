@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/guest.dart';
+import 'package:event_marketplace_app/utils/color_utils.dart';
 import 'package:flutter/material.dart';
-import '../models/guest.dart';
-import '../utils/color_utils.dart';
 
 /// Виджет гостя
 class GuestWidget extends StatelessWidget {
   const GuestWidget({
-    super.key,
-    required this.guest,
+    required this.guest, super.key,
     this.onTap,
     this.onCheckIn,
     this.onCheckOut,
@@ -57,7 +56,7 @@ class GuestWidget extends StatelessWidget {
                       Text(
                         guest.guestName,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
 
                       const SizedBox(height: 4),
@@ -86,7 +85,7 @@ class GuestWidget extends StatelessWidget {
                           // Статус
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: ColorUtils.getStatusColor(
                                 guest.statusColor,
@@ -103,7 +102,7 @@ class GuestWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12,
                                 color: ColorUtils.getStatusColor(
-                                    guest.statusColor),
+                                    guest.statusColor,),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -116,7 +115,7 @@ class GuestWidget extends StatelessWidget {
                             Row(
                               children: [
                                 Icon(Icons.celebration,
-                                    size: 16, color: Colors.pink[600]),
+                                    size: 16, color: Colors.pink[600],),
                                 const SizedBox(width: 4),
                                 Text(
                                   guest.greetingsCount.toString(),
@@ -146,16 +145,12 @@ class GuestWidget extends StatelessWidget {
                       switch (value) {
                         case 'checkin':
                           onCheckIn?.call();
-                          break;
                         case 'checkout':
                           onCheckOut?.call();
-                          break;
                         case 'cancel':
                           onCancel?.call();
-                          break;
                         case 'share':
                           onShare?.call();
-                          break;
                       }
                     },
                     itemBuilder: (context) => [
@@ -202,7 +197,7 @@ class GuestWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.share),
                               SizedBox(width: 8),
-                              Text('Поделиться')
+                              Text('Поделиться'),
                             ],
                           ),
                         ),
@@ -219,8 +214,7 @@ class GuestWidget extends StatelessWidget {
 /// Виджет для отображения гостя в списке
 class GuestListTile extends StatelessWidget {
   const GuestListTile({
-    super.key,
-    required this.guest,
+    required this.guest, super.key,
     this.onTap,
     this.onCheckIn,
     this.onCheckOut,
@@ -250,7 +244,7 @@ class GuestListTile extends StatelessWidget {
               : null,
         ),
         title: Text(guest.guestName,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontWeight: FontWeight.bold),),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -285,7 +279,7 @@ class GuestListTile extends StatelessWidget {
                   Row(
                     children: [
                       Icon(Icons.celebration,
-                          size: 14, color: Colors.pink[600]),
+                          size: 14, color: Colors.pink[600],),
                       const SizedBox(width: 2),
                       Text(
                         guest.greetingsCount.toString(),
@@ -327,7 +321,7 @@ class GuestListTile extends StatelessWidget {
               IconButton(
                   icon: const Icon(Icons.share),
                   onPressed: onShare,
-                  tooltip: 'Поделиться'),
+                  tooltip: 'Поделиться',),
           ],
         ),
         onTap: onTap,
@@ -337,8 +331,7 @@ class GuestListTile extends StatelessWidget {
 /// Виджет для отображения гостя в сетке
 class GuestGridTile extends StatelessWidget {
   const GuestGridTile({
-    super.key,
-    required this.guest,
+    required this.guest, super.key,
     this.onTap,
     this.onCheckIn,
     this.onCheckOut,
@@ -384,7 +377,7 @@ class GuestGridTile extends StatelessWidget {
                 Text(
                   guest.guestName,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
+                      fontSize: 14, fontWeight: FontWeight.bold,),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -423,7 +416,7 @@ class GuestGridTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.celebration,
-                          size: 12, color: Colors.pink[600]),
+                          size: 12, color: Colors.pink[600],),
                       const SizedBox(width: 2),
                       Text(
                         guest.greetingsCount.toString(),
@@ -444,7 +437,7 @@ class GuestGridTile extends StatelessWidget {
 
 /// Виджет для отображения статистики гостя
 class GuestStatsWidget extends StatelessWidget {
-  const GuestStatsWidget({super.key, required this.guest});
+  const GuestStatsWidget({required this.guest, super.key});
   final Guest guest;
 
   @override
@@ -473,13 +466,13 @@ class GuestStatsWidget extends StatelessWidget {
               // Временные метки
               if (guest.registeredAt != null)
                 _buildInfoRow(
-                    'Зарегистрирован', _formatDateTime(guest.registeredAt!)),
+                    'Зарегистрирован', _formatDateTime(guest.registeredAt!),),
               if (guest.confirmedAt != null)
                 _buildInfoRow(
-                    'Подтвержден', _formatDateTime(guest.confirmedAt!)),
+                    'Подтвержден', _formatDateTime(guest.confirmedAt!),),
               if (guest.checkedInAt != null)
                 _buildInfoRow(
-                    'На мероприятии', _formatDateTime(guest.checkedInAt!)),
+                    'На мероприятии', _formatDateTime(guest.checkedInAt!),),
               if (guest.checkedOutAt != null)
                 _buildInfoRow('Покинул', _formatDateTime(guest.checkedOutAt!)),
 
@@ -503,7 +496,7 @@ class GuestStatsWidget extends StatelessWidget {
               child: Text(
                 '$label:',
                 style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.grey),
+                    fontWeight: FontWeight.w500, color: Colors.grey,),
               ),
             ),
             Expanded(child: Text(value)),

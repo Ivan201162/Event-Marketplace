@@ -21,29 +21,14 @@ class ExternalIntegration {
     required this.name,
     required this.type,
     required this.status,
-    this.description,
+    required this.createdAt, this.description,
     this.config = const {},
     this.credentials = const {},
     this.lastSyncAt,
     this.errorMessage,
     this.metadata = const {},
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String userId;
-  final String name;
-  final IntegrationType type;
-  final IntegrationStatus status;
-  final String? description;
-  final Map<String, dynamic> config;
-  final Map<String, dynamic> credentials;
-  final DateTime? lastSyncAt;
-  final String? errorMessage;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory ExternalIntegration.fromMap(Map<String, dynamic> data) {
@@ -85,6 +70,20 @@ class ExternalIntegration {
 
     return ExternalIntegration.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final String name;
+  final IntegrationType type;
+  final IntegrationStatus status;
+  final String? description;
+  final Map<String, dynamic> config;
+  final Map<String, dynamic> credentials;
+  final DateTime? lastSyncAt;
+  final String? errorMessage;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -226,25 +225,14 @@ class ExternalIntegration {
 class IntegrationSettings {
   const IntegrationSettings({
     required this.userId,
-    this.enabledIntegrations = const [],
+    required this.createdAt, this.enabledIntegrations = const [],
     this.syncFrequency = 60, // минуты
     this.autoSync = true,
     this.notifications = true,
     this.errorReporting = true,
     this.metadata = const {},
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String userId;
-  final List<String> enabledIntegrations;
-  final int syncFrequency;
-  final bool autoSync;
-  final bool notifications;
-  final bool errorReporting;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory IntegrationSettings.fromMap(Map<String, dynamic> data) {
@@ -268,6 +256,16 @@ class IntegrationSettings {
           : null,
     );
   }
+
+  final String userId;
+  final List<String> enabledIntegrations;
+  final int syncFrequency;
+  final bool autoSync;
+  final bool notifications;
+  final bool errorReporting;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -338,21 +336,10 @@ class IntegrationEvent {
     required this.userId,
     required this.eventType,
     required this.eventData,
-    this.status = 'pending',
+    required this.createdAt, this.status = 'pending',
     this.errorMessage,
     this.processedAt,
-    required this.createdAt,
   });
-
-  final String id;
-  final String integrationId;
-  final String userId;
-  final String eventType;
-  final Map<String, dynamic> eventData;
-  final String status;
-  final String? errorMessage;
-  final DateTime? processedAt;
-  final DateTime createdAt;
 
   /// Создать из Map
   factory IntegrationEvent.fromMap(Map<String, dynamic> data) {
@@ -386,6 +373,16 @@ class IntegrationEvent {
 
     return IntegrationEvent.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String integrationId;
+  final String userId;
+  final String eventType;
+  final Map<String, dynamic> eventData;
+  final String status;
+  final String? errorMessage;
+  final DateTime? processedAt;
+  final DateTime createdAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

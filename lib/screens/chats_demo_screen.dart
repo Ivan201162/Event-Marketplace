@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/screens/chat_extended_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/app_theme.dart';
-import 'chat_extended_screen.dart';
 
 /// Демо экран для показа расширенного чата
 class ChatsDemoScreen extends ConsumerWidget {
@@ -19,11 +19,11 @@ class ChatsDemoScreen extends ConsumerWidget {
                 title: const Text(
                   'Чаты',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
+                      fontWeight: FontWeight.bold, color: Colors.white,),
                 ),
                 background: Container(
                   decoration: const BoxDecoration(
-                      gradient: BrandColors.primaryGradient),
+                      gradient: BrandColors.primaryGradient,),
                   child: SafeArea(
                     child: Padding(
                       padding:
@@ -82,7 +82,7 @@ class ChatsDemoScreen extends ConsumerWidget {
                                   'Новые возможности чата',
                                   style: TextStyle(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,),
                                 ),
                               ],
                             ),
@@ -151,7 +151,7 @@ class ChatsDemoScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Недавние чаты',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         ...demoChats.map((chat) => _buildChatItem(context, chat)),
       ],
@@ -169,11 +169,11 @@ class ChatsDemoScreen extends ConsumerWidget {
               chat['name'][0].toUpperCase(),
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
           ),
           title: Text(chat['name'],
-              style: const TextStyle(fontWeight: FontWeight.w500)),
+              style: const TextStyle(fontWeight: FontWeight.w500),),
           subtitle: Row(
             children: [
               if (chat['isVoice'])
@@ -193,7 +193,7 @@ class ChatsDemoScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(chat['time'],
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),),
               if (chat['unread'] > 0) ...[
                 const SizedBox(height: 4),
                 Container(
@@ -242,10 +242,10 @@ class ChatsDemoScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Новый чат'),
         content: const Text(
-            'Функция создания нового чата будет добавлена в следующих версиях.'),
+            'Функция создания нового чата будет добавлена в следующих версиях.',),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+              onPressed: () => Navigator.pop(context), child: const Text('OK'),),
         ],
       ),
     );

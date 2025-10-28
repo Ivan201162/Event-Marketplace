@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
-
 /// Экран чата с Realtime сообщениями
 class ChatScreen extends ConsumerStatefulWidget {
-  final String chatId;
 
-  const ChatScreen({super.key, required this.chatId});
+  const ChatScreen({required this.chatId, super.key});
+  final String chatId;
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -106,14 +105,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Ошибка отправки сообщения'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -135,7 +134,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         : null,
                     child: _otherUser!.avatarUrl == null
                         ? Icon(Icons.person,
-                            size: 16, color: theme.primaryColor)
+                            size: 16, color: theme.primaryColor,)
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -190,7 +189,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadMessages, child: const Text('Повторить')),
+                onPressed: _loadMessages, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -204,10 +203,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Начните общение',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text('Отправьте первое сообщение',
-                style: TextStyle(color: Colors.grey[500])),
+                style: TextStyle(color: Colors.grey[500]),),
           ],
         ),
       );
@@ -252,7 +251,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.7),
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color:
@@ -299,7 +298,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           .currentUser?.userMetadata?['avatar_url'] !=
                       null
                   ? NetworkImage(
-                      SupabaseService.currentUser!.userMetadata!['avatar_url'])
+                      SupabaseService.currentUser!.userMetadata!['avatar_url'],)
                   : null,
               child: SupabaseService.currentUser?.userMetadata?['avatar_url'] ==
                       null
@@ -349,7 +348,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           const SizedBox(width: 8),
           Container(
             decoration: BoxDecoration(
-                color: theme.primaryColor, shape: BoxShape.circle),
+                color: theme.primaryColor, shape: BoxShape.circle,),
             child: IconButton(
               icon: const Icon(Icons.send, color: Colors.white),
               onPressed: _sendMessage,

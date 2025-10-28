@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Компонент блока с доступными датами
 class AvailabilityBlock extends StatelessWidget {
   const AvailabilityBlock({
-    super.key,
-    required this.availableDates,
+    required this.availableDates, super.key,
     this.onDateSelected,
     this.selectedDate,
   });

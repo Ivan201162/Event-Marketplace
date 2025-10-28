@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/core/navigation/back_utils.dart';
+import 'package:event_marketplace_app/services/dev_seed_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../core/navigation/back_utils.dart';
-import '../services/dev_seed_service.dart';
 
 /// Экран для управления тестовыми данными (только в debug режиме)
 class DevSeedScreen extends StatefulWidget {
@@ -27,7 +26,7 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
         appBar: BackUtils.buildAppBar(context, title: 'Тестовые данные'),
         body: const Center(
           child: Text('Этот экран доступен только в debug режиме',
-              style: TextStyle(fontSize: 16)),
+              style: TextStyle(fontSize: 16),),
         ),
       );
     }

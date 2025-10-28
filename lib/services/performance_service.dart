@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
+
+import 'package:event_marketplace_app/services/logger_service.dart';
+import 'package:event_marketplace_app/services/monitoring_service.dart';
 import 'package:flutter/foundation.dart';
-import 'logger_service.dart';
-import 'monitoring_service.dart';
 
 /// Сервис для оптимизации производительности приложения
 class PerformanceService {
@@ -71,7 +72,7 @@ class PerformanceService {
 
   /// Кэширование результата функции
   Future<T> cache<T>(String key, Future<T> Function() computation,
-      {Duration? expiration}) async {
+      {Duration? expiration,}) async {
     final now = DateTime.now();
     final exp = expiration ?? _cacheExpiration;
 
@@ -119,7 +120,7 @@ class PerformanceService {
 
   /// Выполнение операции с ограничением количества одновременных операций
   Future<T> executeWithLimit<T>(Future<T> Function() operation,
-      {String? operationName}) async {
+      {String? operationName,}) async {
     if (_currentOperations >= _maxConcurrentOperations) {
       // Добавляем в очередь
       final completer = Completer<T>();
@@ -190,7 +191,7 @@ class PerformanceService {
     int limit = 20,
     int initialOffset = 0,
   }) async {
-    final key = 'lazy_load_${T.toString()}_${initialOffset}_$limit';
+    final key = 'lazy_load_${T}_${initialOffset}_$limit';
 
     return cache(key, () async => loader(initialOffset, limit));
   }
@@ -206,7 +207,7 @@ class PerformanceService {
   List<T> optimizeList<T>(List<T> list, {int? maxItems}) {
     if (maxItems != null && list.length > maxItems) {
       _logger.debug('Optimized list from ${list.length} to $maxItems items',
-          tag: 'PERFORMANCE');
+          tag: 'PERFORMANCE',);
       return list.take(maxItems).toList();
     }
     return list;
@@ -248,11 +249,11 @@ class PerformanceService {
         },
         'heavyOperations': {
           'queued': _heavyOperationsQueue.length,
-          'processing': _isProcessingQueue
+          'processing': _isProcessingQueue,
         },
         'timers': {
           'debounce': _debounceTimers.length,
-          'throttle': _throttleTimers.length
+          'throttle': _throttleTimers.length,
         },
       };
 
@@ -261,7 +262,7 @@ class PerformanceService {
     if (maxConcurrentOperations != null) {
       _maxConcurrentOperations = maxConcurrentOperations;
       _logger.info('Set max concurrent operations to $maxConcurrentOperations',
-          tag: 'PERFORMANCE');
+          tag: 'PERFORMANCE',);
     }
 
     if (cacheExpiration != null) {
@@ -325,7 +326,7 @@ class PerformanceService {
 
     if (expiredKeys.isNotEmpty) {
       _logger.debug('Cleaned up ${expiredKeys.length} expired cache entries',
-          tag: 'PERFORMANCE');
+          tag: 'PERFORMANCE',);
     }
   }
 

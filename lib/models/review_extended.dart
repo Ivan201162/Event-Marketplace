@@ -11,16 +11,13 @@ class ReviewExtended {
     required this.bookingId,
     required this.rating,
     required this.comment,
-    this.media = const [],
+    required this.stats, required this.createdAt, required this.updatedAt, this.media = const [],
     this.likes = const [],
     this.tags = const [],
-    required this.stats,
     this.isVerified = false,
     this.isModerated = false,
     this.isApproved = true,
     this.moderationComment,
-    required this.createdAt,
-    required this.updatedAt,
     this.metadata = const {},
   });
 
@@ -176,7 +173,7 @@ class ReviewMedia {
         url: map['url'] ?? '',
         thumbnailUrl: map['thumbnailUrl'] ?? '',
         type: MediaType.values.firstWhere((t) => t.name == map['type'],
-            orElse: () => MediaType.photo),
+            orElse: () => MediaType.photo,),
         fileName: map['fileName'] ?? '',
         fileSize: map['fileSize'] ?? 0,
         duration: map['duration'] != null

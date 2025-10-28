@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/favorites_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../services/favorites_service.dart';
-import 'auth_providers.dart';
 
 /// Провайдер сервиса избранного
 final favoritesServiceProvider =
@@ -43,7 +42,7 @@ final isFavoriteProvider =
   }
 
   return favoritesService.isFavorite(
-      userId: currentUser.value!.uid, specialistId: specialistId);
+      userId: currentUser.value!.uid, specialistId: specialistId,);
 });
 
 /// Провайдер для переключения статуса избранного

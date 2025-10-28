@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/host_profile.dart';
+import 'package:event_marketplace_app/models/smart_specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/real_hosts_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/host_profile.dart';
-import '../models/specialist.dart';
-import '../models/smart_specialist.dart';
-import 'real_hosts_providers.dart';
-import '../core/feature_flags.dart';
 
 /// Фильтры для поиска ведущих
 class HostFilters {
@@ -69,7 +68,7 @@ class HostFilters {
 
   @override
   int get hashCode => Object.hash(minPrice, maxPrice, minRating, maxRating,
-      city, availableDate, searchQuery);
+      city, availableDate, searchQuery,);
 }
 
 /// Провайдер фильтров для ведущих
@@ -90,13 +89,13 @@ final hostsProvider = FutureProvider.family<List<Specialist>, HostFilters>(
 /// Провайдер для пагинированной загрузки ведущих (мигрирован с StateNotifierProvider)
 final paginatedHostsProvider =
     NotifierProvider<PaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-  () => PaginatedHostsNotifier(),
+  PaginatedHostsNotifier.new,
 );
 
 /// Провайдер для получения mock-данных ведущих (для тестирования) (мигрирован с StateNotifierProvider)
 final mockPaginatedHostsProvider =
     NotifierProvider<MockPaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-  () => MockPaginatedHostsNotifier(),
+  MockPaginatedHostsNotifier.new,
 );
 
 /// Провайдер для получения уникальных городов ведущих
@@ -248,7 +247,7 @@ class PaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
 
       if (_currentFilters.minRating != null) {
         query = query.where('rating',
-            isGreaterThanOrEqualTo: _currentFilters.minRating);
+            isGreaterThanOrEqualTo: _currentFilters.minRating,);
       }
 
       if (_lastDocument != null) {
@@ -311,7 +310,7 @@ List<Specialist> _generateMockHosts() {
     'Санкт-Петербург',
     'Новосибирск',
     'Екатеринбург',
-    'Казань'
+    'Казань',
   ];
   final names = [
     ('Алексей', 'Смирнов'),
@@ -344,7 +343,7 @@ List<Specialist> _generateMockHosts() {
       city: city,
       category: SpecialistCategory.other,
       subcategories: const ['Свадьбы', 'Корпоративы', 'Дни рождения'],
-      priceRangeString: '${minPrice.toInt()}-${maxPrice.toInt()} руб/час',
+      priceRangeString: '$minPrice-$maxPrice руб/час',
       rating: rating,
       totalReviews: 10 + (index % 50),
       description:

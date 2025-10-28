@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
+import 'package:event_marketplace_app/services/user_profile_service.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
+import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
+import 'package:event_marketplace_app/widgets/pro/analytics_widget.dart';
+import 'package:event_marketplace_app/widgets/pro/monetization_widget.dart';
+import 'package:event_marketplace_app/widgets/pro/promotion_widget.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
-import '../../services/user_profile_service.dart';
-import '../../widgets/common/custom_app_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
-import '../../widgets/pro/analytics_widget.dart';
-import '../../widgets/pro/promotion_widget.dart';
-import '../../widgets/pro/monetization_widget.dart';
 
 /// Экран PRO-аккаунта
 class ProAccountScreen extends StatefulWidget {
@@ -233,7 +233,7 @@ class _ProAccountScreenState extends State<ProAccountScreen> {
                 onPressed: _toggleProAccount,
                 icon: Icon(_isProAccount ? Icons.cancel : Icons.star),
                 label: Text(
-                    _isProAccount ? 'Деактивировать PRO' : 'Активировать PRO'),
+                    _isProAccount ? 'Деактивировать PRO' : 'Активировать PRO',),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _isProAccount ? Colors.red : Colors.amber,
                   foregroundColor: Colors.white,

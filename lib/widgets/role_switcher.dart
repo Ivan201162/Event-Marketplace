@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/user_role_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/user.dart';
-import '../providers/user_role_provider.dart';
 
 class RoleSwitcher extends ConsumerWidget {
   const RoleSwitcher({super.key});
@@ -27,7 +26,7 @@ class RoleSwitcher extends ConsumerWidget {
                 Text(
                   'Текущая роль: $roleString',
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                 ),
               ],
             ),

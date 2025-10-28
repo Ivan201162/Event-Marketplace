@@ -1,18 +1,15 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
+import 'package:event_marketplace_app/widgets/create_review_dialog.dart';
+import 'package:event_marketplace_app/widgets/review_card.dart';
+import 'package:event_marketplace_app/widgets/review_stats_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/review.dart';
-import '../services/review_service.dart';
-import '../widgets/create_review_dialog.dart';
-import '../widgets/review_card.dart';
-import '../widgets/review_stats_widget.dart';
 
 /// Раздел отзывов в профиле специалиста
 class ReviewsSection extends ConsumerStatefulWidget {
   const ReviewsSection({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.showAllReviews = false,
   });
 
@@ -68,7 +65,7 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
     if (_isLoading) {
       return const Center(
         child: Padding(
-            padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+            padding: EdgeInsets.all(32), child: CircularProgressIndicator(),),
       );
     }
 
@@ -81,7 +78,7 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
               Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text('Ошибка загрузки отзывов',
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context).textTheme.titleMedium,),
               const SizedBox(height: 8),
               Text(
                 _error!,
@@ -93,7 +90,7 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                  onPressed: _loadReviews, child: const Text('Повторить')),
+                  onPressed: _loadReviews, child: const Text('Повторить'),),
             ],
           ),
         ),
@@ -221,7 +218,7 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
 /// Экран со всеми отзывами специалиста
 class AllReviewsScreen extends ConsumerStatefulWidget {
   const AllReviewsScreen(
-      {super.key, required this.specialistId, required this.specialistName});
+      {required this.specialistId, required this.specialistName, super.key,});
 
   final String specialistId;
   final String specialistName;
@@ -272,7 +269,7 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-            title: Text('Отзывы ${widget.specialistName}'), elevation: 0),
+            title: Text('Отзывы ${widget.specialistName}'), elevation: 0,),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _error != null
@@ -281,10 +278,10 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.error_outline,
-                            size: 48, color: Colors.grey[400]),
+                            size: 48, color: Colors.grey[400],),
                         const SizedBox(height: 16),
                         Text('Ошибка загрузки отзывов',
-                            style: Theme.of(context).textTheme.titleMedium),
+                            style: Theme.of(context).textTheme.titleMedium,),
                         const SizedBox(height: 8),
                         Text(
                           _error!,
@@ -297,7 +294,7 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
                         const SizedBox(height: 16),
                         ElevatedButton(
                             onPressed: _loadAllReviews,
-                            child: const Text('Повторить')),
+                            child: const Text('Повторить'),),
                       ],
                     ),
                   )

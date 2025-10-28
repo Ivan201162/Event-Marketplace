@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/review_extended.dart';
+import 'package:event_marketplace_app/services/review_extended_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/review_extended.dart';
-import '../services/review_extended_service.dart';
 
 /// Провайдер для сервиса расширенных отзывов
 final reviewExtendedServiceProvider = Provider<ReviewExtendedService>(
@@ -173,7 +173,7 @@ final searchReviewsProvider =
                         .toLowerCase()
                         .contains(query.toLowerCase()) ||
                     review.tags.any((tag) =>
-                        tag.toLowerCase().contains(query.toLowerCase())),
+                        tag.toLowerCase().contains(query.toLowerCase()),),
               )
               .toList();
 
@@ -310,7 +310,7 @@ final reviewsWithPhotosProvider =
       .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
       .when(
         data: (reviews) => Stream.value(
-            reviews.where((review) => review.photos.isNotEmpty).toList()),
+            reviews.where((review) => review.photos.isNotEmpty).toList(),),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
       ),
@@ -323,7 +323,7 @@ final reviewsWithVideosProvider =
       .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
       .when(
         data: (reviews) => Stream.value(
-            reviews.where((review) => review.videos.isNotEmpty).toList()),
+            reviews.where((review) => review.videos.isNotEmpty).toList(),),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
       ),
@@ -336,7 +336,7 @@ final reviewsWithLikesProvider =
       .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
       .when(
         data: (reviews) => Stream.value(
-            reviews.where((review) => review.likesCount > 0).toList()),
+            reviews.where((review) => review.likesCount > 0).toList(),),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
       ),
@@ -349,7 +349,7 @@ final reviewsWithoutLikesProvider =
       .watch(specialistReviewsProvider((specialistId, const ReviewFilter())))
       .when(
         data: (reviews) => Stream.value(
-            reviews.where((review) => review.likesCount == 0).toList()),
+            reviews.where((review) => review.likesCount == 0).toList(),),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
       ),

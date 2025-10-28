@@ -7,15 +7,13 @@ class AppSettings {
     required this.key,
     required this.value,
     required this.type,
-    this.description,
+    required this.createdAt, required this.updatedAt, this.description,
     this.category,
     this.isPublic = false,
     this.isRequired = false,
     this.defaultValue,
     this.allowedValues,
     this.validation,
-    required this.createdAt,
-    required this.updatedAt,
     this.updatedBy,
   });
 
@@ -40,7 +38,7 @@ class AppSettings {
           : null,
       validation: data['validation'] != null
           ? Map<String, dynamic>.from(
-              data['validation'] as Map<dynamic, dynamic>)
+              data['validation'] as Map<dynamic, dynamic>,)
           : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -67,7 +65,7 @@ class AppSettings {
             : null,
         validation: data['validation'] != null
             ? Map<String, dynamic>.from(
-                data['validation'] as Map<dynamic, dynamic>)
+                data['validation'] as Map<dynamic, dynamic>,)
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -312,10 +310,8 @@ class AppConfiguration {
     required this.description,
     required this.config,
     required this.type,
-    this.environment,
+    required this.createdAt, required this.updatedAt, this.environment,
     this.isActive = false,
-    required this.createdAt,
-    required this.updatedAt,
     this.createdBy,
     this.updatedBy,
   });
@@ -328,7 +324,7 @@ class AppConfiguration {
       name: (data['name'] as String?) ?? '',
       description: (data['description'] as String?) ?? '',
       config: Map<String, dynamic>.from(
-          data['config'] as Map<dynamic, dynamic>? ?? {}),
+          data['config'] as Map<dynamic, dynamic>? ?? {},),
       type: ConfigurationType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => ConfigurationType.general,
@@ -349,7 +345,7 @@ class AppConfiguration {
         name: (data['name'] as String?) ?? '',
         description: (data['description'] as String?) ?? '',
         config: Map<String, dynamic>.from(
-            data['config'] as Map<dynamic, dynamic>? ?? {}),
+            data['config'] as Map<dynamic, dynamic>? ?? {},),
         type: ConfigurationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => ConfigurationType.general,
@@ -471,8 +467,7 @@ class SettingsHistory {
     required this.oldValue,
     required this.newValue,
     required this.changedBy,
-    this.reason,
-    required this.changedAt,
+    required this.changedAt, this.reason,
     this.metadata = const {},
   });
 
@@ -489,7 +484,7 @@ class SettingsHistory {
       reason: data['reason'] as String?,
       changedAt: (data['changedAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},),
     );
   }
 
@@ -504,7 +499,7 @@ class SettingsHistory {
         reason: data['reason'] as String?,
         changedAt: (data['changedAt'] as Timestamp).toDate(),
         metadata: Map<String, dynamic>.from(
-            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+            data['metadata'] as Map<dynamic, dynamic>? ?? {},),
       );
   final String id;
   final String settingId;

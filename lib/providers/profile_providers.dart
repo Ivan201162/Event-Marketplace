@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/services/profile_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/user_profile.dart';
-import '../services/profile_service.dart';
 
 /// Провайдер сервиса профиля
 final profileServiceProvider = Provider<ProfileService>((ref) {
@@ -16,11 +15,11 @@ final profileProvider =
 
 /// Notifier для управления состоянием профиля
 class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile>> {
-  final ProfileService _profileService;
 
   ProfileNotifier(this._profileService) : super(const AsyncValue.loading()) {
     _loadProfile();
   }
+  final ProfileService _profileService;
 
   Future<void> _loadProfile() async {
     try {
@@ -51,7 +50,7 @@ class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile>> {
       await _profileService.toggleFollow();
       // Обновить состояние профиля
       if (state.hasValue) {
-        final currentProfile = state.value!;
+        final currentProfile = state.value;
         final updatedProfile = currentProfile.copyWith(
           isFollowing: !currentProfile.isFollowing,
           followersCount: currentProfile.isFollowing
@@ -69,7 +68,7 @@ class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile>> {
     try {
       final avatarUrl = await _profileService.uploadAvatar(imagePath);
       if (state.hasValue) {
-        final currentProfile = state.value!;
+        final currentProfile = state.value;
         final updatedProfile = currentProfile.copyWith(avatarUrl: avatarUrl);
         state = AsyncValue.data(updatedProfile);
       }
@@ -83,7 +82,7 @@ class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile>> {
     try {
       final coverUrl = await _profileService.uploadCover(imagePath);
       if (state.hasValue) {
-        final currentProfile = state.value!;
+        final currentProfile = state.value;
         final updatedProfile = currentProfile.copyWith(coverUrl: coverUrl);
         state = AsyncValue.data(updatedProfile);
       }

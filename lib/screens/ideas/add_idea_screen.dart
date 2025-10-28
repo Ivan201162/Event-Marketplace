@@ -1,13 +1,12 @@
+import 'dart:io';
+
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/image_upload_service.dart';
+import 'package:event_marketplace_app/widgets/animations/animated_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-
-import '../../models/app_user.dart';
-import '../../providers/auth_providers.dart';
-import '../../services/image_upload_service.dart';
-import '../../widgets/animations/animated_content.dart';
 
 /// Экран добавления новой идеи
 class AddIdeaScreen extends ConsumerStatefulWidget {
@@ -35,7 +34,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
 
   bool _isLoading = false;
   bool _isUploadingImage = false;
-  List<String> _selectedImages = [];
+  final List<String> _selectedImages = [];
   DateTime? _selectedDate;
 
   final List<String> _popularLocations = [
@@ -68,12 +67,12 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -81,7 +80,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
     ).animate(CurvedAnimation(
       parent: _slideController,
       curve: Curves.easeOutCubic,
-    ));
+    ),);
 
     _fadeController.forward();
     _slideController.forward();
@@ -101,7 +100,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
 
   Future<void> _pickImages() async {
     try {
-      final List<XFile> images = await _picker.pickMultiImage(
+      final images = await _picker.pickMultiImage(
         maxWidth: 1024,
         maxHeight: 1024,
         imageQuality: 85,
@@ -147,7 +146,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
   }
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
@@ -239,7 +238,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
         context.pop();
       }
     } catch (e) {
-      _showError('Ошибка сохранения: ${e.toString()}');
+      _showError('Ошибка сохранения: $e');
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -304,7 +303,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
           ),
         ),
       ),
-    );
+    )
   }
 
   Widget _buildBasicInfoSection(ThemeData theme) {
@@ -403,7 +402,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
                   width: double.infinity,
                   height: 120,
                   decoration: BoxDecoration(
-                    border: Border.all(color: theme.primaryColor, style: BorderStyle.solid),
+                    border: Border.all(color: theme.primaryColor),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(

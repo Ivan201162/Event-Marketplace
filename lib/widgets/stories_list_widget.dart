@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/specialist_story.dart';
+import 'package:event_marketplace_app/screens/story_viewer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist_story.dart';
-import '../screens/story_viewer_screen.dart';
-
 class StoriesListWidget extends ConsumerWidget {
   const StoriesListWidget(
-      {super.key, required this.storyGroups, required this.userId});
+      {required this.storyGroups, required this.userId, super.key,});
   final List<SpecialistStoryGroup> storyGroups;
   final String userId;
 
@@ -137,9 +136,7 @@ class StoriesListWidget extends ConsumerWidget {
 /// Виджет для отображения сторис в профиле специалиста
 class SpecialistStoriesWidget extends ConsumerWidget {
   const SpecialistStoriesWidget({
-    super.key,
-    required this.specialistId,
-    required this.userId,
+    required this.specialistId, required this.userId, super.key,
     this.isOwner = false,
   });
   final String specialistId;
@@ -157,7 +154,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
 
           if (snapshot.hasError) {
             return Center(
-                child: Text('Ошибка загрузки сторис: ${snapshot.error}'));
+                child: Text('Ошибка загрузки сторис: ${snapshot.error}'),);
           }
 
           final stories = snapshot.data ?? [];
@@ -175,7 +172,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
         child: Column(
           children: [
             Icon(Icons.auto_stories,
-                size: 64, color: Theme.of(context).colorScheme.outline),
+                size: 64, color: Theme.of(context).colorScheme.outline,),
             const SizedBox(height: 16),
             Text(
               isOwner
@@ -209,7 +206,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
       );
 
   Widget _buildStoriesGrid(
-          BuildContext context, List<SpecialistStory> stories) =>
+          BuildContext context, List<SpecialistStory> stories,) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -220,7 +217,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
               children: [
                 const Text('Сторис',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 const Spacer(),
                 if (isOwner)
                   IconButton(
@@ -275,16 +272,16 @@ class SpecialistStoriesWidget extends ConsumerWidget {
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
-                    errorBuilder: (context, error, stackTrace) => Container(
+                    errorBuilder: (context, error, stackTrace) => ColoredBox(
                         color: Colors.grey.shade200,
-                        child: const Icon(Icons.error)),
+                        child: const Icon(Icons.error),),
                   )
                 else if (story.contentType == StoryContentType.video)
-                  Container(
+                  const ColoredBox(
                     color: Colors.black,
-                    child: const Center(
+                    child: Center(
                       child: Icon(Icons.play_circle_outline,
-                          color: Colors.white, size: 32),
+                          color: Colors.white, size: 32,),
                     ),
                   )
                 else
@@ -322,7 +319,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(story.contentTypeIcon,
-                        style: const TextStyle(fontSize: 12)),
+                        style: const TextStyle(fontSize: 12),),
                   ),
                 ),
 
@@ -338,7 +335,7 @@ class SpecialistStoriesWidget extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Icon(Icons.check,
-                          color: Colors.white, size: 12),
+                          color: Colors.white, size: 12,),
                     ),
                   ),
               ],

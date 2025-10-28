@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/organizer_proposal.dart';
+import 'package:event_marketplace_app/models/organizer_proposal.dart';
 
 /// Сервис для управления предложениями организаторов
 class OrganizerProposalService {
@@ -135,7 +135,7 @@ class OrganizerProposalService {
 
   /// Принять предложение
   Future<void> acceptProposal(
-      String proposalId, String customerResponse) async {
+      String proposalId, String customerResponse,) async {
     try {
       await _firestore
           .collection('organizer_proposals')
@@ -154,7 +154,7 @@ class OrganizerProposalService {
 
   /// Отклонить предложение
   Future<void> rejectProposal(
-      String proposalId, String customerResponse) async {
+      String proposalId, String customerResponse,) async {
     try {
       await _firestore
           .collection('organizer_proposals')

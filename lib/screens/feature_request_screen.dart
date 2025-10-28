@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/feature_request.dart';
+import 'package:event_marketplace_app/services/feature_request_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../models/feature_request.dart';
-import '../services/feature_request_service.dart';
 
 /// Экран предложений по функционалу
 class FeatureRequestScreen extends ConsumerStatefulWidget {
@@ -84,7 +83,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
         children: [
           _buildAllRequestsTab(),
           _buildCreateRequestTab(),
-          _buildSearchTab()
+          _buildSearchTab(),
         ],
       ),
     );
@@ -108,7 +107,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -123,10 +122,10 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                   Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Пока нет предложений',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text('Будьте первым, кто предложит улучшение!',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: Colors.grey),),
                 ],
               ),
             );
@@ -159,7 +158,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                         Text(
                           request.title,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -174,7 +173,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: request.statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -192,7 +191,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                       const SizedBox(height: 4),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: request.priorityColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -241,7 +240,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                   Icon(Icons.thumb_up, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text('${request.votes}',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),),
                   const SizedBox(width: 16),
                   Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
@@ -263,7 +262,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                       backgroundColor: Colors.blue[600],
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                          horizontal: 12, vertical: 8,),
                     ),
                   ),
                 ],
@@ -280,7 +279,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
           children: [
             _buildCreateForm(),
             const SizedBox(height: 24),
-            _buildSubmitButton()
+            _buildSubmitButton(),
           ],
         ),
       );
@@ -329,7 +328,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                     .map(
                       (category) => DropdownMenuItem(
                           value: category,
-                          child: Text(_getCategoryText(category))),
+                          child: Text(_getCategoryText(category)),),
                     )
                     .toList(),
                 onChanged: (value) {
@@ -350,7 +349,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                     .map(
                       (priority) => DropdownMenuItem(
                           value: priority,
-                          child: Text(_getPriorityText(priority))),
+                          child: Text(_getPriorityText(priority)),),
                     )
                     .toList(),
                 onChanged: (value) {
@@ -372,7 +371,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
               ? const SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2))
+                  child: CircularProgressIndicator(strokeWidth: 2),)
               : const Icon(Icons.send),
           label: Text(_isLoading ? 'Отправка...' : 'Отправить предложение'),
           style: ElevatedButton.styleFrom(
@@ -543,7 +542,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка отправки: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка отправки: $e'), backgroundColor: Colors.red,),);
     } finally {
       setState(() {
         _isLoading = false;
@@ -563,7 +562,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка поиска: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка поиска: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -598,7 +597,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(request.description,
-                          style: const TextStyle(fontSize: 16)),
+                          style: const TextStyle(fontSize: 16),),
                       if (request.adminComment != null) ...[
                         const SizedBox(height: 16),
                         Container(
@@ -644,13 +643,13 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Ваш голос учтен!'), backgroundColor: Colors.green),
+            content: Text('Ваш голос учтен!'), backgroundColor: Colors.green,),
       );
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка голосования: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }

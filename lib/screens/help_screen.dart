@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/faq.dart';
+import 'package:event_marketplace_app/providers/support_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/faq.dart';
-import '../providers/support_providers.dart';
 
 /// Экран помощи и FAQ
 class HelpScreen extends ConsumerStatefulWidget {
@@ -100,7 +99,7 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                        size: 64, color: Colors.red,),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки: $error'),
                     const SizedBox(height: 16),
@@ -124,7 +123,7 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                 icon: const Icon(Icons.support_agent),
                 label: const Text('Связаться с поддержкой'),
                 style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16)),
+                    padding: const EdgeInsets.symmetric(vertical: 16),),
               ),
             ),
           ),
@@ -158,7 +157,7 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
         margin: const EdgeInsets.only(bottom: 8),
         child: ExpansionTile(
           title: Text(faq.question,
-              style: const TextStyle(fontWeight: FontWeight.w500)),
+              style: const TextStyle(fontWeight: FontWeight.w500),),
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
@@ -174,11 +173,11 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Связаться с поддержкой'),
         content: const Text(
-            'Выберите удобный способ связи с нашей службой поддержки:'),
+            'Выберите удобный способ связи с нашей службой поддержки:',),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

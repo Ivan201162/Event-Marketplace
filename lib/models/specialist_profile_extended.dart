@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Расширенная модель профиля специалиста
 class SpecialistProfileExtended {
@@ -9,7 +9,7 @@ class SpecialistProfileExtended {
     required this.name,
     required this.email,
     required this.phone,
-    this.avatarUrl,
+    required this.createdAt, required this.updatedAt, required this.lastUpdated, this.avatarUrl,
     this.bio,
     this.location,
     this.categories = const [],
@@ -19,8 +19,6 @@ class SpecialistProfileExtended {
     this.reviewCount = 0,
     this.isAvailable = true,
     this.isVerified = false,
-    required this.createdAt,
-    required this.updatedAt,
     this.languages = const [],
     this.specializations = const [],
     this.equipment = const [],
@@ -50,7 +48,6 @@ class SpecialistProfileExtended {
     this.awards = const [],
     this.testimonials = const [],
     this.additionalInfo = const {},
-    required this.lastUpdated,
   });
 
   factory SpecialistProfileExtended.fromSpecialist(Specialist specialist) =>
@@ -163,7 +160,7 @@ class SpecialistProfileExtended {
           [],
       portfolioVideos: (data['portfolioVideos'] as List?)
               ?.map((video) =>
-                  PortfolioVideo.fromMap(video as Map<String, dynamic>))
+                  PortfolioVideo.fromMap(video as Map<String, dynamic>),)
               .toList() ??
           [],
       certifications: List<String>.from(data['certifications'] as List? ?? []),
@@ -379,9 +376,7 @@ class FAQItem {
     required this.answer,
     required this.category,
     required this.order,
-    this.isPublished = true,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.isPublished = true,
   });
 
   factory FAQItem.fromMap(Map<String, dynamic> map) => FAQItem(
@@ -446,11 +441,9 @@ class PortfolioVideo {
     required this.thumbnailUrl,
     required this.platform,
     required this.duration,
-    this.tags = const [],
+    required this.uploadedAt, required this.updatedAt, this.tags = const [],
     this.isPublic = true,
     this.viewCount = 0,
-    required this.uploadedAt,
-    required this.updatedAt,
   });
 
   factory PortfolioVideo.fromMap(Map<String, dynamic> map) => PortfolioVideo(

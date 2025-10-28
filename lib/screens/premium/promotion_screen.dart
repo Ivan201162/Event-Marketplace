@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/config/payment_config.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/widgets/premium/premium_plan_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../config/payment_config.dart';
-import '../../services/payment_service.dart';
-import '../../widgets/premium/premium_plan_card.dart';
 
 class PromotionScreen extends ConsumerStatefulWidget {
-  const PromotionScreen({super.key, required this.userId});
+  const PromotionScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -51,7 +51,7 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -127,14 +127,14 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
                     backgroundColor: Colors.purple,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),),
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(
                           'Оплатить ${PaymentConfig.premiumPlans[_selectedPlan] ?? 0} ₽',
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                 ),
               ),
@@ -173,9 +173,9 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
                 children: [
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold)),
+                          fontSize: 16, fontWeight: FontWeight.bold,),),
                   Text(description,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),),
                 ],
               ),
             ),
@@ -191,7 +191,7 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
     });
 
     try {
-      final amount = PaymentConfig.premiumPlans[_selectedPlan!]!;
+      final amount = PaymentConfig.premiumPlans[_selectedPlan!];
       final success = await _paymentService.processPremiumPromotion(
         userId: widget.userId,
         plan: _selectedPlan!,
@@ -258,7 +258,7 @@ class _PromotionScreenState extends ConsumerState<PromotionScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Понятно')),
+              child: const Text('Понятно'),),
         ],
       ),
     );

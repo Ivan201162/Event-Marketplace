@@ -1,12 +1,11 @@
 import 'dart:async';
 
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../models/app_user.dart';
-import '../../providers/auth_providers.dart';
 
 /// Screen for checking authentication status
 class AuthCheckScreen extends ConsumerStatefulWidget {
@@ -32,7 +31,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
     super.dispose();
   }
 
-  void _startAuthCheck() async {
+  Future<void> _startAuthCheck() async {
     // Set timeout for auth check
     _timeoutTimer = Timer(const Duration(seconds: 5), () {
       if (!_hasNavigated) {
@@ -126,7 +125,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
                 style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                    color: Colors.white,),
               ),
               SizedBox(height: 8),
 

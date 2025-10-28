@@ -1,16 +1,16 @@
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
+import 'package:event_marketplace_app/providers/specialist_profile_extended_providers.dart';
+import 'package:event_marketplace_app/services/specialist_profile_extended_service.dart';
+import 'package:event_marketplace_app/widgets/video_card_widget.dart';
+import 'package:event_marketplace_app/widgets/video_editor_widget.dart';
+import 'package:event_marketplace_app/widgets/video_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist_profile_extended.dart';
-import '../providers/specialist_profile_extended_providers.dart';
-import '../services/specialist_profile_extended_service.dart';
-import '../widgets/video_card_widget.dart';
-import '../widgets/video_editor_widget.dart';
-import '../widgets/video_filter_widget.dart';
 
 /// Экран управления портфолио видео специалиста
 class SpecialistPortfolioVideosScreen extends ConsumerStatefulWidget {
   const SpecialistPortfolioVideosScreen(
-      {super.key, required this.specialistId});
+      {required this.specialistId, super.key,});
   final String specialistId;
 
   @override
@@ -58,10 +58,10 @@ class _SpecialistPortfolioVideosScreenState
         ),
         actions: [
           IconButton(
-              icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+              icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
           IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: _showFilterDialog),
+              onPressed: _showFilterDialog,),
         ],
       ),
       body: Column(
@@ -101,7 +101,7 @@ class _SpecialistPortfolioVideosScreenState
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem(
-                  'Всего видео', stats.totalVideos, Icons.video_library),
+                  'Всего видео', stats.totalVideos, Icons.video_library,),
               _buildStatItem('Публичных', stats.publicVideos, Icons.public),
               _buildStatItem('Платформ', _getPlatformsCount(), Icons.devices),
             ],
@@ -116,7 +116,7 @@ class _SpecialistPortfolioVideosScreenState
           const SizedBox(height: 4),
           Text(value.toString(),
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       );
@@ -261,7 +261,7 @@ class _SpecialistPortfolioVideosScreenState
             const SizedBox(height: 16),
             Text(title,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Text(
               subtitle,
@@ -282,7 +282,7 @@ class _SpecialistPortfolioVideosScreenState
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => ref.refresh(
-                  specialistPortfolioVideosProvider(widget.specialistId)),
+                  specialistPortfolioVideosProvider(widget.specialistId),),
               child: const Text('Повторить'),
             ),
           ],
@@ -317,7 +317,7 @@ class _SpecialistPortfolioVideosScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               final query = _searchController.text.trim();
@@ -393,14 +393,14 @@ class _SpecialistPortfolioVideosScreenState
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 const Icon(Icons.video_library,
-                                    size: 64, color: Colors.grey),
+                                    size: 64, color: Colors.grey,),
                           ),
                         ),
                       ),
                       const SizedBox(height: 16),
 
                       Text(video.description,
-                          style: const TextStyle(fontSize: 16)),
+                          style: const TextStyle(fontSize: 16),),
                       const SizedBox(height: 16),
 
                       Row(
@@ -414,7 +414,7 @@ class _SpecialistPortfolioVideosScreenState
                           Text(
                             'Длительность: ${video.duration}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                                color: Colors.grey, fontSize: 12,),
                           ),
                         ],
                       ),
@@ -440,13 +440,13 @@ class _SpecialistPortfolioVideosScreenState
                           Text(
                             'Загружено: ${_formatDate(video.uploadedAt)}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                                color: Colors.grey, fontSize: 12,),
                           ),
                           const SizedBox(width: 16),
                           Text(
                             'Просмотров: ${video.viewCount}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                                color: Colors.grey, fontSize: 12,),
                           ),
                         ],
                       ),
@@ -484,7 +484,7 @@ class _SpecialistPortfolioVideosScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -492,7 +492,7 @@ class _SpecialistPortfolioVideosScreenState
                   ref.read(specialistProfileExtendedServiceProvider);
               await service.removePortfolioVideo(widget.specialistId, video.id);
               ref.refresh(
-                  specialistPortfolioVideosProvider(widget.specialistId));
+                  specialistPortfolioVideosProvider(widget.specialistId),);
               ref.refresh(specialistProfileStatsProvider(widget.specialistId));
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -516,7 +516,7 @@ class _SpecialistPortfolioVideosScreenState
       context,
       MaterialPageRoute<void>(
         builder: (context) => VideosByPlatformScreen(
-            specialistId: widget.specialistId, platform: platform),
+            specialistId: widget.specialistId, platform: platform,),
       ),
     );
   }
@@ -526,7 +526,7 @@ class _SpecialistPortfolioVideosScreenState
       context,
       MaterialPageRoute<void>(
         builder: (context) => VideoSearchResultsScreen(
-            specialistId: widget.specialistId, query: query),
+            specialistId: widget.specialistId, query: query,),
       ),
     );
   }
@@ -586,7 +586,7 @@ class _SpecialistPortfolioVideosScreenState
 /// Экран видео по платформе
 class VideosByPlatformScreen extends ConsumerWidget {
   const VideosByPlatformScreen(
-      {super.key, required this.specialistId, required this.platform});
+      {required this.specialistId, required this.platform, super.key,});
   final String specialistId;
   final String platform;
 
@@ -646,7 +646,7 @@ class VideosByPlatformScreen extends ConsumerWidget {
   }
 
   void _showEditVideoDialog(
-      BuildContext context, WidgetRef ref, PortfolioVideo video) {
+      BuildContext context, WidgetRef ref, PortfolioVideo video,) {
     // TODO(developer): Редактировать видео
   }
 
@@ -655,7 +655,7 @@ class VideosByPlatformScreen extends ConsumerWidget {
   }
 
   void _togglePublish(
-      BuildContext context, WidgetRef ref, PortfolioVideo video) {
+      BuildContext context, WidgetRef ref, PortfolioVideo video,) {
     // TODO(developer): Переключить публикацию
   }
 }
@@ -663,7 +663,7 @@ class VideosByPlatformScreen extends ConsumerWidget {
 /// Экран результатов поиска видео
 class VideoSearchResultsScreen extends ConsumerWidget {
   const VideoSearchResultsScreen(
-      {super.key, required this.specialistId, required this.query});
+      {required this.specialistId, required this.query, super.key,});
   final String specialistId;
   final String query;
 
@@ -706,7 +706,7 @@ class VideoSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showEditVideoDialog(
-      BuildContext context, WidgetRef ref, PortfolioVideo video) {
+      BuildContext context, WidgetRef ref, PortfolioVideo video,) {
     // TODO(developer): Редактировать видео
   }
 
@@ -715,7 +715,7 @@ class VideoSearchResultsScreen extends ConsumerWidget {
   }
 
   void _togglePublish(
-      BuildContext context, WidgetRef ref, PortfolioVideo video) {
+      BuildContext context, WidgetRef ref, PortfolioVideo video,) {
     // TODO(developer): Переключить публикацию
   }
 }

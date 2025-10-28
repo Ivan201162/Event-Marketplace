@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/favorites_providers.dart';
+import 'package:event_marketplace_app/screens/event_detail_screen.dart';
+import 'package:event_marketplace_app/widgets/event_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/auth_providers.dart';
-import '../providers/favorites_providers.dart';
-import '../widgets/event_card.dart';
-import 'event_detail_screen.dart';
 
 /// Экран избранных событий
 class FavoritesPage extends ConsumerWidget {
@@ -35,7 +35,7 @@ class FavoritesPage extends ConsumerWidget {
                         child: Text(
                           '$count',
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                       ),
                     );

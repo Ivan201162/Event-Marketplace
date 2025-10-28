@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/pro_subscription.dart';
+import 'package:event_marketplace_app/services/pro_subscription_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/pro_subscription.dart';
-import '../services/pro_subscription_service.dart';
 
 /// Провайдер сервиса PRO подписок
 final proSubscriptionServiceProvider = Provider<ProSubscriptionService>(
@@ -138,7 +137,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
       );
 
       state = state.copyWith(
-          subscription: subscription, isPaymentInProgress: false);
+          subscription: subscription, isPaymentInProgress: false,);
     } catch (e) {
       state = state.copyWith(isPaymentInProgress: false, error: e.toString());
     }
@@ -153,7 +152,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
 
     try {
       await _service.updateSubscription(
-          subscriptionId: subscriptionId, plan: plan);
+          subscriptionId: subscriptionId, plan: plan,);
 
       // Перезагружаем подписку после обновления
       if (state.subscription != null) {
@@ -200,7 +199,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
         }
 
         state = state.copyWith(
-            subscription: subscription, isPaymentInProgress: false);
+            subscription: subscription, isPaymentInProgress: false,);
       }
     } catch (e) {
       state = state.copyWith(isPaymentInProgress: false, error: e.toString());

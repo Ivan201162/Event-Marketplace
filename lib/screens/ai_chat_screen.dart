@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/models/ai_chat.dart';
+import 'package:event_marketplace_app/services/ai_chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/ai_chat.dart';
-import '../services/ai_chat_service.dart';
 
 /// Экран AI-чата
 class AiChatScreen extends ConsumerStatefulWidget {
@@ -36,7 +36,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _initializeChat();
   }
@@ -81,7 +81,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка инициализации чата: $e')));
+            SnackBar(content: Text('Ошибка инициализации чата: $e')),);
       }
     }
   }
@@ -98,7 +98,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
 
       // Отправляем сообщение пользователя
       final userMessage = await _aiChatService.sendUserMessage(
-          _currentSessionId!, userId, message);
+          _currentSessionId!, userId, message,);
 
       if (userMessage != null) {
         setState(() {
@@ -113,7 +113,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
       });
 
       final aiResponse = await _aiChatService.getAiResponse(
-          _currentSessionId!, userId, message);
+          _currentSessionId!, userId, message,);
 
       if (aiResponse != null) {
         setState(() {
@@ -135,7 +135,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка отправки сообщения: $e')));
+            SnackBar(content: Text('Ошибка отправки сообщения: $e')),);
       }
     }
   }
@@ -165,7 +165,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(Icons.smart_toy,
-                    color: Colors.blue.shade600, size: 20),
+                    color: Colors.blue.shade600, size: 20,),
               ),
               const SizedBox(width: 12),
               const Text('AI-помощник'),
@@ -176,7 +176,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
           foregroundColor: Colors.blue.shade800,
           actions: [
             IconButton(
-                icon: const Icon(Icons.refresh), onPressed: _initializeChat)
+                icon: const Icon(Icons.refresh), onPressed: _initializeChat,),
           ],
         ),
         body: _isLoading && _messages.isEmpty
@@ -233,7 +233,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.75),
+                  maxWidth: MediaQuery.of(context).size.width * 0.75,),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isUser ? Colors.blue.shade600 : Colors.grey.shade100,
@@ -256,7 +256,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
                       message.content,
                       style: TextStyle(
                           color: isUser ? Colors.white : Colors.black87,
-                          fontSize: 16),
+                          fontSize: 16,),
                     ),
                   if (message.metadata?['quickReplies'] != null)
                     _buildQuickReplies(message.metadata!['quickReplies']),
@@ -290,7 +290,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Рекомендуемые специалисты:',
-            style: TextStyle(fontWeight: FontWeight.w600)),
+            style: TextStyle(fontWeight: FontWeight.w600),),
         const SizedBox(height: 8),
         ...specialists.map(
           (specialist) =>
@@ -327,7 +327,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
                   Text(
                     specialist['name'],
                     style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 14),
+                        fontWeight: FontWeight.w600, fontSize: 14,),
                   ),
                   Text(
                     specialist['category'],
@@ -338,7 +338,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
                       Icon(Icons.star, size: 12, color: Colors.amber.shade600),
                       const SizedBox(width: 4),
                       Text(specialist['rating'].toString(),
-                          style: const TextStyle(fontSize: 12)),
+                          style: const TextStyle(fontSize: 12),),
                       const Spacer(),
                       Text(
                         '${specialist['price']} ₽',
@@ -433,7 +433,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
               width: 6,
               height: 6,
               decoration: BoxDecoration(
-                  color: Colors.grey.shade600, shape: BoxShape.circle),
+                  color: Colors.grey.shade600, shape: BoxShape.circle,),
             ),
           );
         },
@@ -480,7 +480,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen>
             const SizedBox(width: 8),
             Container(
               decoration: BoxDecoration(
-                  color: Colors.blue.shade600, shape: BoxShape.circle),
+                  color: Colors.blue.shade600, shape: BoxShape.circle,),
               child: IconButton(
                 icon: const Icon(Icons.send, color: Colors.white),
                 onPressed: _isLoading

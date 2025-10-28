@@ -7,26 +7,13 @@ class SecurityAudit {
     required this.userId,
     required this.action,
     required this.resource,
-    this.details,
+    required this.timestamp, this.details,
     this.ipAddress,
     this.userAgent,
     this.location,
     this.riskLevel,
-    required this.timestamp,
     this.metadata = const {},
   });
-
-  final String id;
-  final String userId;
-  final String action;
-  final String resource;
-  final String? details;
-  final String? ipAddress;
-  final String? userAgent;
-  final String? location;
-  final String? riskLevel;
-  final DateTime timestamp;
-  final Map<String, dynamic> metadata;
 
   /// Создать из Map
   factory SecurityAudit.fromMap(Map<String, dynamic> data) {
@@ -58,6 +45,18 @@ class SecurityAudit {
 
     return SecurityAudit.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final String action;
+  final String resource;
+  final String? details;
+  final String? ipAddress;
+  final String? userAgent;
+  final String? location;
+  final String? riskLevel;
+  final DateTime timestamp;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -131,25 +130,12 @@ class SecurityDevice {
     required this.deviceId,
     required this.deviceName,
     required this.deviceType,
-    this.os,
+    required this.createdAt, this.os,
     this.browser,
     this.isTrusted = false,
     this.lastSeen,
-    required this.createdAt,
     this.metadata = const {},
   });
-
-  final String id;
-  final String userId;
-  final String deviceId;
-  final String deviceName;
-  final String deviceType;
-  final String? os;
-  final String? browser;
-  final bool isTrusted;
-  final DateTime? lastSeen;
-  final DateTime createdAt;
-  final Map<String, dynamic> metadata;
 
   /// Создать из Map
   factory SecurityDevice.fromMap(Map<String, dynamic> data) {
@@ -185,6 +171,18 @@ class SecurityDevice {
 
     return SecurityDevice.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final String deviceId;
+  final String deviceName;
+  final String deviceType;
+  final String? os;
+  final String? browser;
+  final bool isTrusted;
+  final DateTime? lastSeen;
+  final DateTime createdAt;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -265,17 +263,6 @@ class SecuritySettings {
     this.allowRememberDevice = true,
   });
 
-  final bool twoFactorEnabled;
-  final bool loginNotifications;
-  final bool deviceNotifications;
-  final bool suspiciousActivityAlerts;
-  final bool dataEncryption;
-  final int sessionTimeout;
-  final int maxFailedAttempts;
-  final int lockoutDuration;
-  final bool requireStrongPassword;
-  final bool allowRememberDevice;
-
   /// Создать из Map
   factory SecuritySettings.fromMap(Map<String, dynamic> data) {
     return SecuritySettings(
@@ -292,6 +279,17 @@ class SecuritySettings {
       allowRememberDevice: data['allowRememberDevice'] as bool? ?? true,
     );
   }
+
+  final bool twoFactorEnabled;
+  final bool loginNotifications;
+  final bool deviceNotifications;
+  final bool suspiciousActivityAlerts;
+  final bool dataEncryption;
+  final int sessionTimeout;
+  final int maxFailedAttempts;
+  final int lockoutDuration;
+  final bool requireStrongPassword;
+  final bool allowRememberDevice;
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {

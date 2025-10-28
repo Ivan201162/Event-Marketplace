@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../../models/review.dart';
+import 'package:event_marketplace_app/models/review.dart';
 
 /// Repository for managing reviews
 class ReviewRepository {
@@ -19,7 +19,7 @@ class ReviewRepository {
 
   /// Get reviews by specialist
   Future<List<Review>> getReviewsBySpecialist(String specialistId,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection(_reviewsCollection)
@@ -28,7 +28,7 @@ class ReviewRepository {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Review.fromFirestore).toList();
     } catch (e) {
       return [];
     }
@@ -43,7 +43,7 @@ class ReviewRepository {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Review.fromFirestore).toList();
     } catch (e) {
       return [];
     }
@@ -57,7 +57,7 @@ class ReviewRepository {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
+            snapshot.docs.map(Review.fromFirestore).toList(),);
   }
 
   /// Get review by booking ID
@@ -80,7 +80,7 @@ class ReviewRepository {
 
   /// Update a review
   Future<bool> updateReview(
-      String reviewId, Map<String, dynamic> updates) async {
+      String reviewId, Map<String, dynamic> updates,) async {
     try {
       await _firestore
           .collection(_reviewsCollection)
@@ -115,7 +115,7 @@ class ReviewRepository {
       }
 
       final reviews =
-          snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+          snapshot.docs.map(Review.fromFirestore).toList();
 
       if (reviews.isEmpty) {
         return null;
@@ -135,7 +135,7 @@ class ReviewRepository {
       final verifiedReviews = reviews.where((r) => r.isVerified).length;
       final recentReviews = reviews
           .where((r) => r.createdAt
-              .isAfter(DateTime.now().subtract(const Duration(days: 30))))
+              .isAfter(DateTime.now().subtract(const Duration(days: 30))),)
           .length;
 
       return ReviewStats(

@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/customer_profile_extended.dart';
+import 'package:event_marketplace_app/services/customer_profile_extended_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/customer_profile_extended.dart';
-import '../services/customer_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля
 final customerProfileExtendedServiceProvider =

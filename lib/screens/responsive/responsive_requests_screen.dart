@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/utils/responsive_utils.dart';
+import 'package:event_marketplace_app/widgets/responsive/responsive_widgets.dart';
 import 'package:flutter/material.dart';
-import '../../utils/responsive_utils.dart';
-import '../../widgets/responsive/responsive_widgets.dart';
 
 /// Адаптивный экран заявок
 class ResponsiveRequestsScreen extends StatelessWidget {
@@ -9,7 +9,7 @@ class ResponsiveRequestsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
-      appBar: ResponsiveAppBar(
+      appBar: const ResponsiveAppBar(
         title: 'Заявки',
         actions: [
           ResponsiveIcon(Icons.search),
@@ -19,9 +19,9 @@ class ResponsiveRequestsScreen extends StatelessWidget {
         ],
       ),
       body: ResponsiveLayoutBuilder(
-        mobile: (context) => _buildMobileLayout(context),
-        tablet: (context) => _buildTabletLayout(context),
-        desktop: (context) => _buildDesktopLayout(context),
+        mobile: _buildMobileLayout,
+        tablet: _buildTabletLayout,
+        desktop: _buildDesktopLayout,
       ),
     );
   }
@@ -39,12 +39,12 @@ class ResponsiveRequestsScreen extends StatelessWidget {
   Widget _buildTabletLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 2,
         children: [
           _buildCreateRequestSection(context),
           _buildFiltersSection(context),
           _buildRequestsSection(context),
         ],
-        crossAxisCount: 2,
       ),
     );
   }
@@ -52,12 +52,12 @@ class ResponsiveRequestsScreen extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 3,
         children: [
           _buildCreateRequestSection(context),
           _buildFiltersSection(context),
           _buildRequestsSection(context),
         ],
-        crossAxisCount: 3,
       ),
     );
   }
@@ -71,12 +71,14 @@ class ResponsiveRequestsScreen extends StatelessWidget {
             'Создать заявку',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveGrid(
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 2, desktop: 2,),
             children: [
               ResponsiveButton(
                 text: 'Новая заявка',
@@ -89,8 +91,6 @@ class ResponsiveRequestsScreen extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
-                mobile: 2, tablet: 2, desktop: 2),
           ),
         ],
       ),
@@ -106,20 +106,20 @@ class ResponsiveRequestsScreen extends StatelessWidget {
             'Фильтры',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveGrid(
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 2, tablet: 4, desktop: 4,),
             children: [
               _buildFilterChip(context, 'Все', true),
               _buildFilterChip(context, 'Активные', false),
               _buildFilterChip(context, 'Завершенные', false),
               _buildFilterChip(context, 'Отклоненные', false),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
-                mobile: 2, tablet: 4, desktop: 4),
           ),
         ],
       ),
@@ -146,19 +146,19 @@ class ResponsiveRequestsScreen extends StatelessWidget {
             'Мои заявки',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveList(
             children: [
               _buildRequestItem(context, 'Ведущий на свадьбу', 'Активная',
-                  '2 дня назад', 5, 2),
+                  '2 дня назад', 5, 2,),
               _buildRequestItem(context, 'Фотограф на корпоратив', 'Завершена',
-                  '1 неделя назад', 3, 1),
+                  '1 неделя назад', 3, 1,),
               _buildRequestItem(context, 'Кейтеринг на день рождения',
-                  'Отклонена', '3 дня назад', 2, 0),
+                  'Отклонена', '3 дня назад', 2, 0,),
             ],
           ),
         ],
@@ -167,18 +167,15 @@ class ResponsiveRequestsScreen extends StatelessWidget {
   }
 
   Widget _buildRequestItem(BuildContext context, String title, String status,
-      String time, int responses, int selected) {
+      String time, int responses, int selected,) {
     Color statusColor;
     switch (status) {
       case 'Активная':
         statusColor = Colors.green;
-        break;
       case 'Завершена':
         statusColor = Colors.blue;
-        break;
       case 'Отклонена':
         statusColor = Colors.red;
-        break;
       default:
         statusColor = Colors.grey;
     }
@@ -194,7 +191,7 @@ class ResponsiveRequestsScreen extends StatelessWidget {
                   title,
                   style: TextStyle(
                     fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                        mobile: 16.0, tablet: 18.0, desktop: 20.0),
+                        mobile: 16, tablet: 18, desktop: 20,),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -204,7 +201,7 @@ class ResponsiveRequestsScreen extends StatelessWidget {
                   status,
                   style: TextStyle(
                     fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                        mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                        mobile: 12, tablet: 14, desktop: 16,),
                     color: statusColor,
                     fontWeight: FontWeight.bold,
                   ),
@@ -212,18 +209,18 @@ class ResponsiveRequestsScreen extends StatelessWidget {
               ),
             ],
           ),
-          ResponsiveSpacing(height: 8),
+          const ResponsiveSpacing(height: 8),
           ResponsiveText(
             time,
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                  mobile: 12, tablet: 14, desktop: 16,),
               color: Colors.grey[600],
             ),
           ),
-          ResponsiveSpacing(height: 16),
-          ResponsiveDivider(),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
+          const ResponsiveDivider(),
+          const ResponsiveSpacing(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -231,7 +228,7 @@ class ResponsiveRequestsScreen extends StatelessWidget {
                 'Откликов: $responses',
                 style: TextStyle(
                   fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                      mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                      mobile: 12, tablet: 14, desktop: 16,),
                   color: Colors.grey[600],
                 ),
               ),
@@ -239,14 +236,16 @@ class ResponsiveRequestsScreen extends StatelessWidget {
                 'Выбрано: $selected',
                 style: TextStyle(
                   fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                      mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                      mobile: 12, tablet: 14, desktop: 16,),
                   color: Colors.grey[600],
                 ),
               ),
             ],
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveGrid(
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 3, tablet: 3,),
             children: [
               ResponsiveButton(
                 text: 'Подробнее',
@@ -264,8 +263,6 @@ class ResponsiveRequestsScreen extends StatelessWidget {
                 backgroundColor: Colors.red,
               ),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
-                mobile: 3, tablet: 3, desktop: 3),
           ),
         ],
       ),

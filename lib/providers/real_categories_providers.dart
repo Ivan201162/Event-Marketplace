@@ -1,18 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/feature_flags.dart';
 
 /// Модель категории
 class Category {
-  final String id;
-  final String name;
-  final String displayName;
-  final String description;
-  final String icon;
-  final String color;
-  final List<String> subcategories;
-  final bool isActive;
-  final int sortOrder;
 
   const Category({
     required this.id,
@@ -27,7 +18,7 @@ class Category {
   });
 
   factory Category.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Category(
       id: doc.id,
       name: data['name'] ?? '',
@@ -40,6 +31,15 @@ class Category {
       sortOrder: data['sortOrder'] ?? 0,
     );
   }
+  final String id;
+  final String name;
+  final String displayName;
+  final String description;
+  final String icon;
+  final String color;
+  final List<String> subcategories;
+  final bool isActive;
+  final int sortOrder;
 
   Map<String, dynamic> toFirestore() {
     return {

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/calendar_event.dart';
 import 'package:flutter/material.dart';
-import '../models/calendar_event.dart';
 
 /// Виджет календарного события
 class CalendarEventWidget extends StatelessWidget {
   const CalendarEventWidget({
-    super.key,
-    required this.event,
+    required this.event, super.key,
     this.onTap,
     this.onEdit,
     this.onDelete,
@@ -60,7 +59,7 @@ class CalendarEventWidget extends StatelessWidget {
                       Text(
                         event.title,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -71,12 +70,12 @@ class CalendarEventWidget extends StatelessWidget {
                       Row(
                         children: [
                           Icon(Icons.access_time,
-                              size: 14, color: Colors.grey[600]),
+                              size: 14, color: Colors.grey[600],),
                           const SizedBox(width: 4),
                           Text(
                             _formatTime(event.startTime, event.endTime),
                             style: TextStyle(
-                                fontSize: 14, color: Colors.grey[600]),
+                                fontSize: 14, color: Colors.grey[600],),
                           ),
                         ],
                       ),
@@ -87,13 +86,13 @@ class CalendarEventWidget extends StatelessWidget {
                         Row(
                           children: [
                             Icon(Icons.location_on,
-                                size: 14, color: Colors.grey[600]),
+                                size: 14, color: Colors.grey[600],),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 event.location,
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.grey[600]),
+                                    fontSize: 14, color: Colors.grey[600],),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -108,7 +107,7 @@ class CalendarEventWidget extends StatelessWidget {
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 2),
+                                horizontal: 6, vertical: 2,),
                             decoration: BoxDecoration(
                               color: _getStatusColor(event.status)
                                   .withValues(alpha: 0.1),
@@ -131,12 +130,12 @@ class CalendarEventWidget extends StatelessWidget {
                           if (event.isAllDay)
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
+                                  horizontal: 6, vertical: 2,),
                               decoration: BoxDecoration(
                                 color: Colors.blue.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                    color: Colors.blue.withValues(alpha: 0.3)),
+                                    color: Colors.blue.withValues(alpha: 0.3),),
                               ),
                               child: const Text(
                                 'Весь день',
@@ -161,10 +160,8 @@ class CalendarEventWidget extends StatelessWidget {
                       switch (value) {
                         case 'edit':
                           onEdit?.call();
-                          break;
                         case 'delete':
                           onDelete?.call();
-                          break;
                       }
                     },
                     itemBuilder: (context) => [
@@ -175,7 +172,7 @@ class CalendarEventWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.edit),
                               SizedBox(width: 8),
-                              Text('Редактировать')
+                              Text('Редактировать'),
                             ],
                           ),
                         ),
@@ -243,8 +240,7 @@ class CalendarEventWidget extends StatelessWidget {
 /// Виджет для отображения события в списке
 class CalendarEventListTile extends StatelessWidget {
   const CalendarEventListTile({
-    super.key,
-    required this.event,
+    required this.event, super.key,
     this.onTap,
     this.onEdit,
     this.onDelete,
@@ -266,7 +262,7 @@ class CalendarEventListTile extends StatelessWidget {
           child: Icon(event.eventIcon, color: event.eventColor, size: 20),
         ),
         title: Text(event.title,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontWeight: FontWeight.bold),),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -284,7 +280,7 @@ class CalendarEventListTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                     color:
-                        _getStatusColor(event.status).withValues(alpha: 0.3)),
+                        _getStatusColor(event.status).withValues(alpha: 0.3),),
               ),
               child: Text(
                 _getStatusText(event.status),
@@ -302,10 +298,8 @@ class CalendarEventListTile extends StatelessWidget {
                   switch (value) {
                     case 'edit':
                       onEdit?.call();
-                      break;
                     case 'delete':
                       onDelete?.call();
-                      break;
                   }
                 },
                 itemBuilder: (context) => [
@@ -316,7 +310,7 @@ class CalendarEventListTile extends StatelessWidget {
                         children: [
                           Icon(Icons.edit),
                           SizedBox(width: 8),
-                          Text('Редактировать')
+                          Text('Редактировать'),
                         ],
                       ),
                     ),
@@ -380,7 +374,7 @@ class CalendarEventListTile extends StatelessWidget {
 
 /// Виджет для отображения события в календаре
 class CalendarEventMarker extends StatelessWidget {
-  const CalendarEventMarker({super.key, required this.event, this.onTap});
+  const CalendarEventMarker({required this.event, super.key, this.onTap});
   final CalendarEvent event;
   final VoidCallback? onTap;
 
@@ -391,11 +385,11 @@ class CalendarEventMarker extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           decoration: BoxDecoration(
-              color: event.eventColor, borderRadius: BorderRadius.circular(4)),
+              color: event.eventColor, borderRadius: BorderRadius.circular(4),),
           child: Text(
             event.title,
             style: const TextStyle(
-                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold,),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

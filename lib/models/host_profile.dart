@@ -6,18 +6,8 @@ class HostProfile {
     required this.id,
     required this.firstName,
     required this.lastName,
-    this.photoUrl,
-    required this.city,
-    required this.eventCategories,
-    required this.priceRange,
-    required this.about,
-    required this.rating,
-    required this.totalReviews,
-    required this.reviews,
-    required this.availableDates,
+    required this.city, required this.eventCategories, required this.priceRange, required this.about, required this.rating, required this.totalReviews, required this.reviews, required this.availableDates, required this.createdAt, required this.updatedAt, this.photoUrl,
     this.isVerified = false,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory HostProfile.fromFirestore(DocumentSnapshot doc) {
@@ -33,7 +23,7 @@ class HostProfile {
           List<String>.from((data['eventCategories'] as List<dynamic>?) ?? []),
       priceRange: PriceRange.fromMap(
         Map<String, dynamic>.from(
-            (data['priceRange'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['priceRange'] as Map<dynamic, dynamic>?) ?? {},),
       ),
       about: data['about'] as String? ?? '',
       rating: (data['rating'] as num? ?? 0.0).toDouble(),
@@ -130,7 +120,7 @@ class HostProfile {
 /// Модель ценового диапазона
 class PriceRange {
   const PriceRange(
-      {required this.minPrice, required this.maxPrice, this.currency = 'RUB'});
+      {required this.minPrice, required this.maxPrice, this.currency = 'RUB',});
 
   factory PriceRange.fromMap(Map<String, dynamic> map) => PriceRange(
         minPrice: (map['minPrice'] as num? ?? 0.0).toDouble(),
@@ -154,11 +144,7 @@ class Review {
     required this.id,
     required this.userId,
     required this.userName,
-    this.userPhotoUrl,
-    required this.rating,
-    required this.comment,
-    required this.createdAt,
-    required this.eventType,
+    required this.rating, required this.comment, required this.createdAt, required this.eventType, this.userPhotoUrl,
   });
 
   factory Review.fromMap(Map<String, dynamic> map) => Review(

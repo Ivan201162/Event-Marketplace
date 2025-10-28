@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
 
 /// Виджет настройки двухфакторной аутентификации
 class TwoFactorSetupWidget extends StatefulWidget {
@@ -185,16 +185,16 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
             // Информация о безопасности
             Card(
               color: Colors.blue[50],
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.security, color: Colors.blue),
-                        const SizedBox(width: 8),
-                        const Text(
+                        Icon(Icons.security, color: Colors.blue),
+                        SizedBox(width: 8),
+                        Text(
                           'Безопасность',
                           style: TextStyle(
                             fontSize: 16,
@@ -204,8 +204,8 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       'Двухфакторная аутентификация добавляет дополнительный уровень безопасности к вашему аккаунту.',
                       style: TextStyle(color: Colors.blue),
                     ),
@@ -218,16 +218,16 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
             // Рекомендации
             Card(
               color: Colors.orange[50],
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+              child: const Padding(
+                padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.lightbulb, color: Colors.orange),
-                        const SizedBox(width: 8),
-                        const Text(
+                        Icon(Icons.lightbulb, color: Colors.orange),
+                        SizedBox(width: 8),
+                        Text(
                           'Рекомендации',
                           style: TextStyle(
                             fontSize: 16,
@@ -237,8 +237,8 @@ class _TwoFactorSetupWidgetState extends State<TwoFactorSetupWidget> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       '• Используйте приложение-аутентификатор для максимальной безопасности\n'
                       '• Сохраните резервные коды в безопасном месте\n'
                       '• Регулярно проверяйте активные сессии',
@@ -326,7 +326,7 @@ class _MethodSelectionDialogState extends State<_MethodSelectionDialog> {
                       setState(() => _selectedMethod = value);
                     }
                   },
-                ))
+                ),)
             .toList(),
       ),
       actions: [

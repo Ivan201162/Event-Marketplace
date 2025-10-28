@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:developer' as developer;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
 import 'package:flutter/foundation.dart';
-
-import 'error_logging_service.dart';
 
 /// Сервис для интеграции с календарями Google/Apple
 class CalendarIntegrationService {
@@ -63,7 +62,7 @@ class CalendarIntegrationService {
         additionalData: {
           'eventId': eventId,
           'orderId': orderId,
-          'title': title
+          'title': title,
         },
       );
 
@@ -184,11 +183,11 @@ class CalendarIntegrationService {
 
       if (startDate != null) {
         query = query.where('startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('endTime',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       query = query.orderBy('startTime').limit(limit);
@@ -208,7 +207,7 @@ class CalendarIntegrationService {
 
   /// Получить события по заказу
   Future<List<Map<String, dynamic>>> getOrderCalendarEvents(
-      String orderId) async {
+      String orderId,) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('calendar_events')
@@ -230,7 +229,7 @@ class CalendarIntegrationService {
 
   /// Синхронизировать с внешним календарем
   Future<void> _syncWithExternalCalendar(
-      String eventId, Map<String, dynamic> event) async {
+      String eventId, Map<String, dynamic> event,) async {
     try {
       // Здесь должна быть интеграция с Google Calendar API или Apple EventKit
       // Пока что имитируем успешную синхронизацию
@@ -333,13 +332,13 @@ class CalendarIntegrationService {
 
   /// Обновить настройки календаря
   Future<bool> updateCalendarSettings(
-      String userId, Map<String, dynamic> settings) async {
+      String userId, Map<String, dynamic> settings,) async {
     try {
       await _firestore.collection('calendar_settings').doc(userId).set({
         ...settings,
         'userId': userId,
         'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
 
       await _errorLogger.logInfo(
         message: 'Calendar settings updated',
@@ -422,11 +421,11 @@ class CalendarIntegrationService {
 
       if (startDate != null) {
         query = query.where('reminderTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('reminderTime',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       if (isTriggered != null) {
         query = query.where('isTriggered', isEqualTo: isTriggered);

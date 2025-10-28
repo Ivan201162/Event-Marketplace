@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/services/payment_integration_service.dart';
+import 'package:event_marketplace_app/widgets/contract_card.dart';
+import 'package:event_marketplace_app/widgets/contract_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../services/payment_integration_service.dart';
-import '../widgets/contract_card.dart';
-import '../widgets/contract_details_dialog.dart';
-
 class ContractsScreen extends ConsumerStatefulWidget {
   const ContractsScreen(
-      {super.key, required this.userId, this.isSpecialist = false});
+      {required this.userId, super.key, this.isSpecialist = false,});
   final String userId;
   final bool isSpecialist;
 
@@ -34,7 +33,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
         foregroundColor: theme.colorScheme.onPrimary,
         actions: [
           IconButton(
-              icon: const Icon(Icons.filter_list), onPressed: _showFilters)
+              icon: const Icon(Icons.filter_list), onPressed: _showFilters,),
         ],
       ),
       body: Column(
@@ -86,7 +85,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withValues(alpha: 0.8)
+                theme.colorScheme.primary.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -147,12 +146,12 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
   }
 
   Widget _buildStatItem(
-          ThemeData theme, String label, String value, IconData icon) =>
+          ThemeData theme, String label, String value, IconData icon,) =>
       Column(
         children: [
           Icon(icon,
               color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
-              size: 20),
+              size: 20,),
           const SizedBox(height: 4),
           Text(
             value,
@@ -183,10 +182,10 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.error_outline,
-                      size: 64, color: Theme.of(context).colorScheme.error),
+                      size: 64, color: Theme.of(context).colorScheme.error,),
                   const SizedBox(height: 16),
                   Text('Ошибка загрузки контрактов',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   const SizedBox(height: 8),
                   Text(
                     snapshot.error.toString(),
@@ -216,7 +215,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text('Нет контрактов',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   const SizedBox(height: 8),
                   Text(
                     'Здесь будут отображаться ваши контракты',
@@ -318,14 +317,14 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
   }
 
   Future<void> _updateContractStatus(
-      String contractId, ContractStatus status) async {
+      String contractId, ContractStatus status,) async {
     try {
       await _paymentIntegrationService.updateContractStatus(contractId, status);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Статус контракта обновлен'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -343,12 +342,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
 
 class ContractFiltersSheet extends StatefulWidget {
   const ContractFiltersSheet({
-    super.key,
-    required this.selectedStatus,
-    required this.startDate,
-    required this.endDate,
-    required this.onApplyFilters,
-    required this.onClearFilters,
+    required this.selectedStatus, required this.startDate, required this.endDate, required this.onApplyFilters, required this.onClearFilters, super.key,
   });
   final ContractStatus? selectedStatus;
   final DateTime? startDate;
@@ -410,7 +404,7 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
           // Status filter
           Text('Статус',
               style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w500)),
+                  ?.copyWith(fontWeight: FontWeight.w500),),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -434,7 +428,7 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
           // Date range
           Text('Период',
               style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w500)),
+                  ?.copyWith(fontWeight: FontWeight.w500),),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -478,7 +472,7 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => widget.onApplyFilters(
-                      _selectedStatus, _startDate, _endDate),
+                      _selectedStatus, _startDate, _endDate,),
                   child: const Text('Применить'),
                 ),
               ),

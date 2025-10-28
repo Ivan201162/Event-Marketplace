@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Упрощенный главный экран
 class HomeScreenSimple extends ConsumerWidget {
@@ -134,7 +133,7 @@ class HomeScreenSimple extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
 
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: _StatCard(
@@ -144,7 +143,7 @@ class HomeScreenSimple extends ConsumerWidget {
                         subtitle: 'Активных заявок',
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: _StatCard(
                         title: 'Идеи',
@@ -215,10 +214,6 @@ class HomeScreenSimple extends ConsumerWidget {
 }
 
 class _ActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
 
   const _ActionCard({
     required this.icon,
@@ -226,6 +221,10 @@ class _ActionCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -271,10 +270,6 @@ class _ActionCard extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final String subtitle;
 
   const _StatCard({
     required this.title,
@@ -282,6 +277,10 @@ class _StatCard extends StatelessWidget {
     required this.icon,
     required this.subtitle,
   });
+  final String title;
+  final String value;
+  final IconData icon;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -326,10 +325,6 @@ class _StatCard extends StatelessWidget {
 }
 
 class _RecommendationCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final VoidCallback onTap;
 
   const _RecommendationCard({
     required this.title,
@@ -337,6 +332,10 @@ class _RecommendationCard extends StatelessWidget {
     required this.icon,
     required this.onTap,
   });
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {

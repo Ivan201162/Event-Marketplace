@@ -1,14 +1,14 @@
+import 'package:event_marketplace_app/models/enhanced_chat.dart';
+import 'package:event_marketplace_app/models/enhanced_message.dart';
+import 'package:event_marketplace_app/services/enhanced_chats_service.dart';
+import 'package:event_marketplace_app/widgets/message_bubble_widget.dart';
+import 'package:event_marketplace_app/widgets/message_input_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/enhanced_chat.dart';
-import '../models/enhanced_message.dart';
-import '../services/enhanced_chats_service.dart';
-import '../widgets/message_bubble_widget.dart';
-import '../widgets/message_input_widget.dart';
 
 /// Расширенный экран чата
 class EnhancedChatScreen extends ConsumerStatefulWidget {
-  const EnhancedChatScreen({super.key, required this.chatId});
+  const EnhancedChatScreen({required this.chatId, super.key});
 
   final String chatId;
 
@@ -177,11 +177,11 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(_chat!.name ?? 'Чат',
-                      style: const TextStyle(fontSize: 16)),
+                      style: const TextStyle(fontSize: 16),),
                   if (_chat!.type == ChatType.direct) ...[
                     Text(_getOnlineStatus(),
                         style:
-                            const TextStyle(fontSize: 12, color: Colors.grey)),
+                            const TextStyle(fontSize: 12, color: Colors.grey),),
                   ],
                 ],
               ),
@@ -211,22 +211,22 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
                 value: 'media',
                 child: ListTile(
                     leading: Icon(Icons.photo_library),
-                    title: Text('Медиафайлы')),
+                    title: Text('Медиафайлы'),),
               ),
               const PopupMenuItem(
                 value: 'settings',
                 child: ListTile(
-                    leading: Icon(Icons.settings), title: Text('Настройки')),
+                    leading: Icon(Icons.settings), title: Text('Настройки'),),
               ),
               const PopupMenuItem(
                 value: 'pin',
                 child: ListTile(
-                    leading: Icon(Icons.push_pin), title: Text('Закрепить')),
+                    leading: Icon(Icons.push_pin), title: Text('Закрепить'),),
               ),
               const PopupMenuItem(
                 value: 'mute',
                 child: ListTile(
-                    leading: Icon(Icons.volume_off), title: Text('Заглушить')),
+                    leading: Icon(Icons.volume_off), title: Text('Заглушить'),),
               ),
             ],
           ),
@@ -242,10 +242,10 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
             Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Начните общение',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             SizedBox(height: 8),
             Text('Отправьте первое сообщение',
-                style: TextStyle(fontSize: 14, color: Colors.grey)),
+                style: TextStyle(fontSize: 14, color: Colors.grey),),
           ],
         ),
       );
@@ -294,7 +294,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('Печатает',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),),
                   const SizedBox(width: 8),
                   SizedBox(
                     width: 16,
@@ -341,19 +341,14 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
     switch (action) {
       case 'search':
         _searchMessages();
-        break;
       case 'media':
         _showMediaFiles();
-        break;
       case 'settings':
         _showChatSettings();
-        break;
       case 'pin':
         _pinChat();
-        break;
       case 'mute':
         _muteChat();
-        break;
     }
   }
 
@@ -427,7 +422,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   void _sendMediaMessage(List<MessageAttachment> attachments,
-      {String? caption}) {
+      {String? caption,}) {
     // TODO: Реализовать отправку медиа сообщения
     debugPrint('Отправка медиа сообщения: ${attachments.length} файлов');
   }
@@ -478,7 +473,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.pop(context);

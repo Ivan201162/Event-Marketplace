@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/hosts_providers.dart';
+import 'package:event_marketplace_app/widgets/host_card.dart';
+import 'package:event_marketplace_app/widgets/host_filters_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/specialist.dart';
-import '../providers/hosts_providers.dart';
-import '../widgets/host_card.dart';
-import '../widgets/host_filters_widget.dart';
 
 /// Экран со списком всех ведущих
 class AllHostsScreen extends ConsumerStatefulWidget {
@@ -180,7 +179,7 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
+              valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),),
           const SizedBox(height: 16),
           Text(
             'Загрузка ведущих...',

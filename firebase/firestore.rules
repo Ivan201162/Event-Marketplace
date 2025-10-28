@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+
+    // Профили пользователей
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(uid);
+      allow update, delete: if isOwner(uid);
+    }
+
+    // Посты и сторис
+    match /posts/{postId} {
+      allow read: if true; // публичная лента
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+    }
+    match /stories/{storyId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+    }
+
+    // Заявки
+    match /applications/{appId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (request.resource.data.customerId == request.auth.uid || request.resource.data.specialistId == request.auth.uid);
+    }
+
+    // Чаты и сообщения
+    match /chats/{chatId} {
+      allow read, write: if isSignedIn() && chatId in request.auth.token.chats; // или замените на проверку участников
+    }
+    match /chats/{chatId}/messages/{msgId} {
+      allow read, write: if isSignedIn(); // при проде лучше сузить до участников чата
+    }
+
+    // Идеи
+    match /ideas/{ideaId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+    }
+  }
+}

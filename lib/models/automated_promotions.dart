@@ -14,20 +14,6 @@ enum PromotionTrigger {
 enum PromotionStatus { draft, active, completed, paused }
 
 class AutomatedPromotion {
-  final String id;
-  final String name;
-  final String description;
-  final PromotionTrigger trigger;
-  final Map<String, dynamic> conditions;
-  final Map<String, dynamic> actions;
-  final PromotionStatus status;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? targetAudience;
-  final Map<String, dynamic>? metadata;
 
   AutomatedPromotion({
     required this.id,
@@ -39,31 +25,10 @@ class AutomatedPromotion {
     required this.status,
     required this.startDate,
     required this.endDate,
-    this.isActive = false,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.isActive = false,
     this.targetAudience,
     this.metadata,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'trigger': trigger.name,
-      'conditions': conditions,
-      'actions': actions,
-      'status': status.name,
-      'startDate': Timestamp.fromDate(startDate),
-      'endDate': Timestamp.fromDate(endDate),
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'targetAudience': targetAudience,
-      'metadata': metadata,
-    };
-  }
 
   factory AutomatedPromotion.fromMap(Map<String, dynamic> map) {
     return AutomatedPromotion(
@@ -83,5 +48,38 @@ class AutomatedPromotion {
       targetAudience: map['targetAudience'],
       metadata: map['metadata'],
     );
+  }
+  final String id;
+  final String name;
+  final String description;
+  final PromotionTrigger trigger;
+  final Map<String, dynamic> conditions;
+  final Map<String, dynamic> actions;
+  final PromotionStatus status;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? targetAudience;
+  final Map<String, dynamic>? metadata;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'trigger': trigger.name,
+      'conditions': conditions,
+      'actions': actions,
+      'status': status.name,
+      'startDate': Timestamp.fromDate(startDate),
+      'endDate': Timestamp.fromDate(endDate),
+      'isActive': isActive,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'targetAudience': targetAudience,
+      'metadata': metadata,
+    };
   }
 }

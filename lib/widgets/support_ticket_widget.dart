@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/models/support_ticket.dart';
 import 'package:flutter/material.dart';
-import '../models/support_ticket.dart';
 
 /// Виджет тикета поддержки
 class SupportTicketWidget extends StatelessWidget {
-  const SupportTicketWidget({super.key, required this.ticket, this.onTap});
+  const SupportTicketWidget({required this.ticket, super.key, this.onTap});
   final SupportTicket ticket;
   final VoidCallback? onTap;
 
@@ -25,7 +25,7 @@ class SupportTicketWidget extends StatelessWidget {
                       child: Text(
                         ticket.subject,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -33,12 +33,12 @@ class SupportTicketWidget extends StatelessWidget {
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: ticket.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: ticket.statusColor.withValues(alpha: 0.3)),
+                            color: ticket.statusColor.withValues(alpha: 0.3),),
                       ),
                       child: Text(
                         ticket.statusText,
@@ -68,22 +68,22 @@ class SupportTicketWidget extends StatelessWidget {
                 Row(
                   children: [
                     Icon(ticket.categoryIcon,
-                        size: 16, color: Colors.grey[600]),
+                        size: 16, color: Colors.grey[600],),
                     const SizedBox(width: 4),
                     Text(ticket.categoryText,
                         style:
-                            TextStyle(fontSize: 12, color: Colors.grey[600])),
+                            TextStyle(fontSize: 12, color: Colors.grey[600]),),
                     const SizedBox(width: 16),
                     Container(
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                          color: ticket.priorityColor, shape: BoxShape.circle),
+                          color: ticket.priorityColor, shape: BoxShape.circle,),
                     ),
                     const SizedBox(width: 4),
                     Text(ticket.priorityText,
                         style:
-                            TextStyle(fontSize: 12, color: Colors.grey[600])),
+                            TextStyle(fontSize: 12, color: Colors.grey[600]),),
                   ],
                 ),
 
@@ -133,7 +133,7 @@ class SupportTicketWidget extends StatelessWidget {
 
 /// Виджет для отображения тикета в списке
 class SupportTicketListTile extends StatelessWidget {
-  const SupportTicketListTile({super.key, required this.ticket, this.onTap});
+  const SupportTicketListTile({required this.ticket, super.key, this.onTap});
   final SupportTicket ticket;
   final VoidCallback? onTap;
 
@@ -166,7 +166,7 @@ class SupportTicketListTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(ticket.description,
-                maxLines: 2, overflow: TextOverflow.ellipsis),
+                maxLines: 2, overflow: TextOverflow.ellipsis,),
             const SizedBox(height: 4),
             Row(
               children: [
@@ -191,11 +191,11 @@ class SupportTicketListTile extends StatelessWidget {
                   width: 6,
                   height: 6,
                   decoration: BoxDecoration(
-                      color: ticket.priorityColor, shape: BoxShape.circle),
+                      color: ticket.priorityColor, shape: BoxShape.circle,),
                 ),
                 const SizedBox(width: 4),
                 Text(ticket.priorityText,
-                    style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                    style: TextStyle(fontSize: 10, color: Colors.grey[600]),),
                 const Spacer(),
                 Text(
                   _formatDate(ticket.createdAt),
@@ -238,7 +238,7 @@ class SupportTicketListTile extends StatelessWidget {
 
 /// Виджет для отображения тикета в сетке
 class SupportTicketGridTile extends StatelessWidget {
-  const SupportTicketGridTile({super.key, required this.ticket, this.onTap});
+  const SupportTicketGridTile({required this.ticket, super.key, this.onTap});
   final SupportTicket ticket;
   final VoidCallback? onTap;
 
@@ -265,7 +265,7 @@ class SupportTicketGridTile extends StatelessWidget {
                     const Spacer(),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                          horizontal: 6, vertical: 2,),
                       decoration: BoxDecoration(
                         color: ticket.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -288,7 +288,7 @@ class SupportTicketGridTile extends StatelessWidget {
                 Text(
                   ticket.subject,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
+                      fontSize: 14, fontWeight: FontWeight.bold,),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -312,12 +312,12 @@ class SupportTicketGridTile extends StatelessWidget {
                       width: 6,
                       height: 6,
                       decoration: BoxDecoration(
-                          color: ticket.priorityColor, shape: BoxShape.circle),
+                          color: ticket.priorityColor, shape: BoxShape.circle,),
                     ),
                     const SizedBox(width: 4),
                     Text(ticket.priorityText,
                         style:
-                            TextStyle(fontSize: 10, color: Colors.grey[600])),
+                            TextStyle(fontSize: 10, color: Colors.grey[600]),),
                     const Spacer(),
                     Text(
                       _formatDate(ticket.createdAt),

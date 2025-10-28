@@ -1,18 +1,13 @@
+import 'package:event_marketplace_app/features/reviews/data/models/review.dart';
+import 'package:event_marketplace_app/features/reviews/data/repositories/review_repository.dart';
+import 'package:event_marketplace_app/features/reviews/presentation/add_review_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../data/models/review.dart';
-import '../data/repositories/review_repository.dart';
-import 'add_review_screen.dart';
 
 /// Экран отзывов специалиста
 class SpecialistReviewsScreen extends StatefulWidget {
   const SpecialistReviewsScreen({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
-    required this.avgRating,
-    required this.reviewsCount,
+    required this.specialistId, required this.specialistName, required this.avgRating, required this.reviewsCount, super.key,
   });
   final String specialistId;
   final String specialistName;
@@ -63,7 +58,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.error_outline,
-                              size: 64, color: Colors.grey[400]),
+                              size: 64, color: Colors.grey[400],),
                           const SizedBox(height: 16),
                           Text(
                             'Ошибка загрузки отзывов',
@@ -93,10 +88,10 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.rate_review_outlined,
-                              size: 64, color: Colors.grey[400]),
+                              size: 64, color: Colors.grey[400],),
                           const SizedBox(height: 16),
                           Text('Пока нет отзывов',
-                              style: Theme.of(context).textTheme.headlineSmall),
+                              style: Theme.of(context).textTheme.headlineSmall,),
                           const SizedBox(height: 8),
                           Text(
                             'Станьте первым, кто оставит отзыв об этом специалисте',
@@ -198,7 +193,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                           backgroundColor: Colors.white,
                           foregroundColor: Theme.of(context).primaryColor,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
+                              horizontal: 24, vertical: 12,),
                         ),
                       );
                     }
@@ -290,7 +285,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
 
               // Комментарий
               Text(review.comment,
-                  style: Theme.of(context).textTheme.bodyMedium),
+                  style: Theme.of(context).textTheme.bodyMedium,),
 
               // Индикатор редактирования
               if (review.edited) ...[

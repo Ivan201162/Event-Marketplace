@@ -17,21 +17,10 @@ class SupportMessage {
     required this.senderId,
     required this.senderType, // 'user' или 'support'
     required this.message,
-    this.attachments = const [],
+    required this.createdAt, this.attachments = const [],
     this.isRead = false,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String ticketId;
-  final String senderId;
-  final String senderType;
-  final String message;
-  final List<String> attachments;
-  final bool isRead;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory SupportMessage.fromMap(Map<String, dynamic> data) {
@@ -65,6 +54,16 @@ class SupportMessage {
 
     return SupportMessage.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String ticketId;
+  final String senderId;
+  final String senderType;
+  final String message;
+  final List<String> attachments;
+  final bool isRead;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -119,24 +118,12 @@ class FAQItem {
     required this.question,
     required this.answer,
     required this.category,
-    this.tags = const [],
+    required this.createdAt, this.tags = const [],
     this.views = 0,
     this.isPublished = true,
     this.order = 0,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String question;
-  final String answer;
-  final String category;
-  final List<String> tags;
-  final int views;
-  final bool isPublished;
-  final int order;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory FAQItem.fromMap(Map<String, dynamic> data) {
@@ -171,6 +158,17 @@ class FAQItem {
 
     return FAQItem.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String question;
+  final String answer;
+  final String category;
+  final List<String> tags;
+  final int views;
+  final bool isPublished;
+  final int order;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -232,16 +230,6 @@ class SupportStats {
     this.period,
   });
 
-  final String userId;
-  final int totalTickets;
-  final int openTickets;
-  final int resolvedTickets;
-  final int closedTickets;
-  final double averageResponseTime;
-  final double satisfactionRating;
-  final DateTime? lastTicketAt;
-  final String? period;
-
   /// Создать из Map
   factory SupportStats.fromMap(Map<String, dynamic> data) {
     return SupportStats(
@@ -262,6 +250,16 @@ class SupportStats {
       period: data['period'] as String?,
     );
   }
+
+  final String userId;
+  final int totalTickets;
+  final int openTickets;
+  final int resolvedTickets;
+  final int closedTickets;
+  final double averageResponseTime;
+  final double satisfactionRating;
+  final DateTime? lastTicketAt;
+  final String? period;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -303,13 +301,13 @@ class SupportStats {
 
   /// Получить процент решенных тикетов
   double get resolutionRate {
-    if (totalTickets == 0) return 0.0;
+    if (totalTickets == 0) return 0;
     return (resolvedTickets / totalTickets) * 100;
   }
 
   /// Получить процент закрытых тикетов
   double get closureRate {
-    if (totalTickets == 0) return 0.0;
+    if (totalTickets == 0) return 0;
     return (closedTickets / totalTickets) * 100;
   }
 

@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat.dart';
-import '../services/chat_service.dart';
 
 /// Chat service provider
 final chatServiceProvider = Provider<ChatService>((ref) {

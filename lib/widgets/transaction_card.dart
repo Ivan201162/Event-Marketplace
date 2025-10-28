@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/transaction.dart';
 import 'package:flutter/material.dart';
-
-import '../models/transaction.dart';
 
 /// Widget for displaying a transaction card
 class TransactionCard extends StatelessWidget {
+
+  const TransactionCard({required this.transaction, super.key, this.onTap});
   final Transaction transaction;
   final VoidCallback? onTap;
-
-  const TransactionCard({super.key, required this.transaction, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class TransactionCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(transaction.typeIcon,
-                    style: const TextStyle(fontSize: 20)),
+                    style: const TextStyle(fontSize: 20),),
               ),
               const SizedBox(width: 12),
               // Content
@@ -52,7 +51,7 @@ class TransactionCard extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                              horizontal: 8, vertical: 2,),
                           decoration: BoxDecoration(
                             color: _getTypeColor(transaction.type)
                                 .withValues(alpha: 0.1),
@@ -71,7 +70,7 @@ class TransactionCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
+                                horizontal: 8, vertical: 2,),
                             decoration: BoxDecoration(
                               color: Colors.grey.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
@@ -92,7 +91,7 @@ class TransactionCard extends StatelessWidget {
                     Row(
                       children: [
                         Icon(Icons.access_time,
-                            size: 14, color: Colors.grey[600]),
+                            size: 14, color: Colors.grey[600],),
                         const SizedBox(width: 4),
                         Text(
                           transaction.formattedDate,

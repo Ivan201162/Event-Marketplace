@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/admin_models.dart';
+import 'package:event_marketplace_app/services/marketing_admin_service.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../models/admin_models.dart';
-import '../../services/marketing_admin_service.dart';
 
 class AdminNewsletterManagementScreen extends StatefulWidget {
   const AdminNewsletterManagementScreen({super.key});
@@ -44,7 +43,7 @@ class _AdminNewsletterManagementScreenState
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => _showCreateNewsletterDialog()),
+              onPressed: _showCreateNewsletterDialog,),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -71,7 +70,7 @@ class _AdminNewsletterManagementScreenState
             itemCount: newsletters.length,
             itemBuilder: (context, index) {
               final newsletterData =
-                  newsletters[index].data() as Map<String, dynamic>;
+                  newsletters[index].data()! as Map<String, dynamic>;
               final newsletter = MarketingNewsletter.fromMap(newsletterData);
 
               return Card(
@@ -80,7 +79,7 @@ class _AdminNewsletterManagementScreenState
                   leading: CircleAvatar(
                     backgroundColor: _getNewsletterColor(newsletter.status),
                     child: Icon(_getNewsletterIcon(newsletter.type),
-                        color: Colors.white),
+                        color: Colors.white,),
                   ),
                   title: Text(
                     newsletter.title,
@@ -91,7 +90,7 @@ class _AdminNewsletterManagementScreenState
                     children: [
                       Text('Тип: ${_getNewsletterTypeName(newsletter.type)}'),
                       Text(
-                          'Статус: ${_getNewsletterStatusName(newsletter.status)}'),
+                          'Статус: ${_getNewsletterStatusName(newsletter.status)}',),
                       if (newsletter.totalRecipients != null)
                         Text('Получателей: ${newsletter.totalRecipients}'),
                       if (newsletter.deliveredCount != null)
@@ -119,7 +118,7 @@ class _AdminNewsletterManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.send, color: Colors.green),
                           title: Text('Отправить',
-                              style: TextStyle(color: Colors.green)),
+                              style: TextStyle(color: Colors.green),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -128,7 +127,7 @@ class _AdminNewsletterManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.schedule, color: Colors.blue),
                           title: Text('Запланировать',
-                              style: TextStyle(color: Colors.blue)),
+                              style: TextStyle(color: Colors.blue),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -137,7 +136,7 @@ class _AdminNewsletterManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.cancel, color: Colors.red),
                           title: Text('Отменить',
-                              style: TextStyle(color: Colors.red)),
+                              style: TextStyle(color: Colors.red),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -146,7 +145,7 @@ class _AdminNewsletterManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
                           title: Text('Удалить',
-                              style: TextStyle(color: Colors.red)),
+                              style: TextStyle(color: Colors.red),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -211,7 +210,7 @@ class _AdminNewsletterManagementScreenState
                 ),
                 items: NewsletterType.values.map((type) {
                   return DropdownMenuItem(
-                      value: type, child: Text(_getNewsletterTypeName(type)));
+                      value: type, child: Text(_getNewsletterTypeName(type)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -228,14 +227,14 @@ class _AdminNewsletterManagementScreenState
                 ),
                 items: const [
                   DropdownMenuItem(
-                      value: 'all', child: Text('Все пользователи')),
+                      value: 'all', child: Text('Все пользователи'),),
                   DropdownMenuItem(
-                      value: 'active', child: Text('Активные пользователи')),
+                      value: 'active', child: Text('Активные пользователи'),),
                   DropdownMenuItem(
-                      value: 'premium', child: Text('Premium пользователи')),
+                      value: 'premium', child: Text('Premium пользователи'),),
                   DropdownMenuItem(
                       value: 'inactive',
-                      child: Text('Неактивные пользователи')),
+                      child: Text('Неактивные пользователи'),),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -252,7 +251,7 @@ class _AdminNewsletterManagementScreenState
                       : 'Немедленно',
                 ),
                 trailing: const Icon(Icons.schedule),
-                onTap: () => _selectScheduleTime(),
+                onTap: _selectScheduleTime,
               ),
             ],
           ),
@@ -260,9 +259,9 @@ class _AdminNewsletterManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
-              onPressed: _createNewsletter, child: const Text('Создать')),
+              onPressed: _createNewsletter, child: const Text('Создать'),),
         ],
       ),
     );
@@ -296,7 +295,7 @@ class _AdminNewsletterManagementScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Заполните все обязательные поля')));
+          const SnackBar(content: Text('Заполните все обязательные поля')),);
       return;
     }
 
@@ -330,12 +329,12 @@ class _AdminNewsletterManagementScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Рассылка создана успешно')));
+            const SnackBar(content: Text('Рассылка создана успешно')),);
       } else {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка создания рассылки')));
+            const SnackBar(content: Text('Ошибка создания рассылки')),);
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -347,19 +346,14 @@ class _AdminNewsletterManagementScreenState
     switch (action) {
       case 'edit':
         _showEditNewsletterDialog(newsletter);
-        break;
       case 'send':
         _sendNewsletter(newsletter);
-        break;
       case 'schedule':
         _scheduleNewsletter(newsletter);
-        break;
       case 'cancel':
         _cancelNewsletter(newsletter);
-        break;
       case 'delete':
         _deleteNewsletter(newsletter);
-        break;
     }
   }
 
@@ -413,7 +407,7 @@ class _AdminNewsletterManagementScreenState
                 ),
                 items: NewsletterType.values.map((type) {
                   return DropdownMenuItem(
-                      value: type, child: Text(_getNewsletterTypeName(type)));
+                      value: type, child: Text(_getNewsletterTypeName(type)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -430,14 +424,14 @@ class _AdminNewsletterManagementScreenState
                 ),
                 items: const [
                   DropdownMenuItem(
-                      value: 'all', child: Text('Все пользователи')),
+                      value: 'all', child: Text('Все пользователи'),),
                   DropdownMenuItem(
-                      value: 'active', child: Text('Активные пользователи')),
+                      value: 'active', child: Text('Активные пользователи'),),
                   DropdownMenuItem(
-                      value: 'premium', child: Text('Premium пользователи')),
+                      value: 'premium', child: Text('Premium пользователи'),),
                   DropdownMenuItem(
                       value: 'inactive',
-                      child: Text('Неактивные пользователи')),
+                      child: Text('Неактивные пользователи'),),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -451,7 +445,7 @@ class _AdminNewsletterManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => _updateNewsletter(newsletter),
             child: const Text('Сохранить'),
@@ -483,7 +477,7 @@ class _AdminNewsletterManagementScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Рассылка обновлена успешно')));
+          const SnackBar(content: Text('Рассылка обновлена успешно')),);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
@@ -510,7 +504,7 @@ class _AdminNewsletterManagementScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка отправки рассылки')));
+            const SnackBar(content: Text('Ошибка отправки рассылки')),);
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -566,7 +560,7 @@ class _AdminNewsletterManagementScreenState
           .doc(newsletter.id)
           .update({
         'status': NewsletterStatus.cancelled.name,
-        'updatedAt': DateTime.now()
+        'updatedAt': DateTime.now(),
       });
 
       ScaffoldMessenger.of(
@@ -584,11 +578,11 @@ class _AdminNewsletterManagementScreenState
       builder: (context) => AlertDialog(
         title: const Text('Удалить рассылку'),
         content: Text(
-            'Вы уверены, что хотите удалить рассылку "${newsletter.title}"?'),
+            'Вы уверены, что хотите удалить рассылку "${newsletter.title}"?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -598,7 +592,7 @@ class _AdminNewsletterManagementScreenState
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         await FirebaseFirestore.instance
             .collection('marketing_newsletters')

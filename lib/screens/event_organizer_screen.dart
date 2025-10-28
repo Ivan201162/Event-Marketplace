@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/event_organizer.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
+import 'package:event_marketplace_app/services/event_organizer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/event_organizer.dart';
-import '../services/error_logging_service.dart';
-import '../services/event_organizer_service.dart';
 
 /// Экран режима организатора мероприятий
 class EventOrganizerScreen extends ConsumerStatefulWidget {
@@ -58,7 +57,7 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
     final result = await Navigator.of(
       context,
     ).push(MaterialPageRoute(
-        builder: (context) => const CreateOrganizerProfileScreen()));
+        builder: (context) => const CreateOrganizerProfileScreen(),),);
 
     if (result == true) {
       _loadData();
@@ -69,7 +68,7 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   @override
@@ -127,7 +126,7 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
                           backgroundColor: Colors.purple,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
+                              horizontal: 24, vertical: 12,),
                         ),
                       ),
                     ),
@@ -171,13 +170,13 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
                         Text(
                           organizer.companyName,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         if (organizer.city != null)
                           Text(
                             organizer.city!,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 14),
+                                color: Colors.grey[600], fontSize: 14,),
                           ),
                       ],
                     ),
@@ -187,7 +186,7 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
                   if (organizer.rating != null)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.amber[100],
                         borderRadius: BorderRadius.circular(12),
@@ -239,7 +238,7 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
                       .map(
                         (type) => Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                              horizontal: 8, vertical: 2,),
                           decoration: BoxDecoration(
                             color: Colors.purple[50],
                             borderRadius: BorderRadius.circular(8),
@@ -247,7 +246,7 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
                           ),
                           child: Text(type,
                               style: TextStyle(
-                                  color: Colors.purple[700], fontSize: 10)),
+                                  color: Colors.purple[700], fontSize: 10,),),
                         ),
                       )
                       .toList(),
@@ -259,10 +258,10 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
               Row(
                 children: [
                   _buildStatItem(
-                      'Мероприятий', '${organizer.totalEvents}', Icons.event),
+                      'Мероприятий', '${organizer.totalEvents}', Icons.event,),
                   const SizedBox(width: 16),
                   _buildStatItem('Завершено', '${organizer.completedEvents}',
-                      Icons.check_circle),
+                      Icons.check_circle,),
                   const Spacer(),
 
                   // Кнопка просмотра
@@ -287,9 +286,9 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
             children: [
               Text(value,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 14)),
+                      fontWeight: FontWeight.bold, fontSize: 14,),),
               Text(label,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 10)),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 10),),
             ],
           ),
         ],
@@ -299,7 +298,7 @@ class _EventOrganizerScreenState extends ConsumerState<EventOrganizerScreen> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(
-        builder: (context) => OrganizerDetailsScreen(organizer: organizer)));
+        builder: (context) => OrganizerDetailsScreen(organizer: organizer),),);
   }
 }
 
@@ -417,14 +416,14 @@ class _CreateOrganizerProfileScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   @override
@@ -447,7 +446,7 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Основная информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
 
@@ -480,7 +479,7 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Контактная информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
 
@@ -536,7 +535,7 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Типы мероприятий *',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
 
@@ -567,7 +566,7 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Специализации *',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
 
@@ -598,7 +597,7 @@ class _CreateOrganizerProfileScreenState
                       const Text(
                         'Юридическая информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
 
@@ -631,7 +630,7 @@ class _CreateOrganizerProfileScreenState
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           child: const Text('Создать профиль',
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(fontSize: 16),),
                         ),
                       ),
                     ],
@@ -643,7 +642,7 @@ class _CreateOrganizerProfileScreenState
 
 /// Экран деталей организатора
 class OrganizerDetailsScreen extends StatelessWidget {
-  const OrganizerDetailsScreen({super.key, required this.organizer});
+  const OrganizerDetailsScreen({required this.organizer, super.key});
   final EventOrganizer organizer;
 
   @override
@@ -668,7 +667,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Основная информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       if (organizer.description != null) ...[
@@ -731,7 +730,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Типы мероприятий',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       Wrap(
@@ -740,7 +739,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
                         children: organizer.eventTypes
                             .map((type) => Chip(
                                 label: Text(type),
-                                backgroundColor: Colors.purple[50]))
+                                backgroundColor: Colors.purple[50],),)
                             .toList(),
                       ),
                     ],
@@ -760,7 +759,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Специализации',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       Wrap(
@@ -769,7 +768,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
                         children: organizer.specializations
                             .map((spec) => Chip(
                                 label: Text(spec),
-                                backgroundColor: Colors.blue[50]))
+                                backgroundColor: Colors.blue[50],),)
                             .toList(),
                       ),
                     ],
@@ -789,7 +788,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
                       const Text(
                         'Статистика',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -832,7 +831,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
       );
 
   Widget _buildStatCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -847,7 +846,7 @@ class OrganizerDetailsScreen extends StatelessWidget {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,

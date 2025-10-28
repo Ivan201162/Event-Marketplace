@@ -1,13 +1,13 @@
+import 'package:event_marketplace_app/models/organizer_profile.dart';
+import 'package:event_marketplace_app/services/organizer_service.dart';
+import 'package:event_marketplace_app/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/organizer_profile.dart';
-import '../services/organizer_service.dart';
-import '../widgets/common_widgets.dart';
 
 /// Экран профиля организатора
 class OrganizerProfileScreen extends ConsumerStatefulWidget {
   const OrganizerProfileScreen(
-      {super.key, this.organizerId, this.isEditMode = false});
+      {super.key, this.organizerId, this.isEditMode = false,});
 
   final String? organizerId;
   final bool isEditMode;
@@ -155,14 +155,14 @@ class _OrganizerProfileScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   @override
@@ -181,7 +181,7 @@ class _OrganizerProfileScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            _isEditing ? 'Редактирование профиля' : 'Профиль организатора'),
+            _isEditing ? 'Редактирование профиля' : 'Профиль организатора',),
         actions: [
           if (!_isEditing && widget.isEditMode)
             IconButton(
@@ -263,7 +263,7 @@ class _OrganizerProfileScreenState
                     Text(
                       _profile!.name,
                       style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
+                          fontSize: 24, fontWeight: FontWeight.bold,),
                     ),
                     const SizedBox(height: 4),
                     if (_profile!.description != null)
@@ -303,7 +303,7 @@ class _OrganizerProfileScreenState
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,),
                   ),
                 ),
             ],
@@ -355,7 +355,7 @@ class _OrganizerProfileScreenState
                 ),
               const SizedBox(height: 16),
               const Text('Специализации',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 8),
               if (_profile!.specializations.isEmpty)
                 const Text('Специализации не указаны')
@@ -401,14 +401,14 @@ class _OrganizerProfileScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Портфолио',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               if (!_profile!.hasPortfolio)
                 const Text('Портфолио пусто')
               else ...[
                 if (_profile!.portfolioImages.isNotEmpty) ...[
                   const Text('Изображения:',
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                      style: TextStyle(fontWeight: FontWeight.w500),),
                   const SizedBox(height: 8),
                   SizedBox(
                     height: 100,
@@ -433,7 +433,7 @@ class _OrganizerProfileScreenState
                 ],
                 if (_profile!.pastEvents.isNotEmpty) ...[
                   const Text('Завершенные проекты:',
-                      style: TextStyle(fontWeight: FontWeight.w500)),
+                      style: TextStyle(fontWeight: FontWeight.w500),),
                   const SizedBox(height: 8),
                   Text('${_profile!.projectCount} проектов'),
                 ],
@@ -450,19 +450,19 @@ class _OrganizerProfileScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Статистика',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildStatItem(
-                      'Рейтинг', _profile!.formattedRating, Icons.star),
+                      'Рейтинг', _profile!.formattedRating, Icons.star,),
                   _buildStatItem('Отзывы', _profile!.reviewCount.toString(),
-                      Icons.rate_review),
+                      Icons.rate_review,),
                   _buildStatItem(
-                      'Проекты', _profile!.projectCount.toString(), Icons.work),
+                      'Проекты', _profile!.projectCount.toString(), Icons.work,),
                   _buildStatItem('Команда',
-                      _profile!.teamMembers.length.toString(), Icons.group),
+                      _profile!.teamMembers.length.toString(), Icons.group,),
                 ],
               ),
             ],
@@ -478,7 +478,7 @@ class _OrganizerProfileScreenState
             SizedBox(
               width: 120,
               child: Text('$label:',
-                  style: const TextStyle(fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontWeight: FontWeight.w500),),
             ),
             Expanded(child: Text(value)),
           ],
@@ -502,7 +502,7 @@ class _OrganizerProfileScreenState
           const SizedBox(height: 4),
           Text(value,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         ],
       );
@@ -518,7 +518,7 @@ class _OrganizerProfileScreenState
               _buildEditSection('Основная информация', [
                 _buildTextField(_nameController, 'Название организации', true),
                 _buildTextField(_descriptionController, 'Описание', false,
-                    maxLines: 3),
+                    maxLines: 3,),
                 _buildTextField(_locationController, 'Локация', false),
                 _buildTextField(
                   _experienceController,
@@ -583,7 +583,7 @@ class _OrganizerProfileScreenState
             children: [
               Text(title,
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
+                      fontSize: 18, fontWeight: FontWeight.bold,),),
               const SizedBox(height: 16),
               ...children,
             ],
@@ -603,7 +603,7 @@ class _OrganizerProfileScreenState
         child: TextFormField(
           controller: controller,
           decoration: InputDecoration(
-              labelText: label, border: const OutlineInputBorder()),
+              labelText: label, border: const OutlineInputBorder(),),
           maxLines: maxLines,
           keyboardType: keyboardType,
           validator: required

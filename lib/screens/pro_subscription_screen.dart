@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/pro_subscription.dart';
+import 'package:event_marketplace_app/providers/pro_subscription_providers.dart';
+import 'package:event_marketplace_app/widgets/pro_subscription_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/pro_subscription.dart';
-import '../providers/pro_subscription_providers.dart';
-import '../widgets/pro_subscription_widgets.dart';
-
 /// Экран управления PRO подписками
 class ProSubscriptionScreen extends ConsumerStatefulWidget {
-  const ProSubscriptionScreen({super.key, required this.userId});
+  const ProSubscriptionScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -78,7 +77,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
             // История платежей
             SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
-                child: _buildPaymentHistoryTab()),
+                child: _buildPaymentHistoryTab(),),
           ],
         ),
       );
@@ -92,7 +91,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
         if (subscription == null) {
           return const Center(
             child: Text('У вас нет активной подписки',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           );
         }
 
@@ -122,7 +121,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
             ),
             const SizedBox(height: 16),
             const Text('Включенные функции:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             ...plan.features.map(
               (feature) => Padding(
@@ -130,7 +129,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
                 child: Row(
                   children: [
                     const Icon(Icons.check_circle,
-                        color: Colors.green, size: 16),
+                        color: Colors.green, size: 16,),
                     const SizedBox(width: 8),
                     Expanded(child: Text(feature)),
                   ],
@@ -142,7 +141,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -164,13 +163,13 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('План: ${plan.displayName}',
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+                style: const TextStyle(fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Text('Стоимость: ${plan.monthlyPrice}₽/месяц',
-                style: const TextStyle(fontSize: 16)),
+                style: const TextStyle(fontSize: 16),),
             const SizedBox(height: 16),
             const Text('Выберите способ оплаты:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.credit_card),
@@ -195,7 +194,7 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
         ],
       ),
     );

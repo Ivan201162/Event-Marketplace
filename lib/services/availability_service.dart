@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/availability_calendar.dart';
+import 'package:event_marketplace_app/models/availability_calendar.dart';
 
 /// Сервис для управления календарем доступности специалистов
 class AvailabilityService {
@@ -20,12 +20,12 @@ class AvailabilityService {
 
       if (startDate != null) {
         query = query.where('date',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('date',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final querySnapshot = await query.orderBy('date').get();
@@ -48,7 +48,7 @@ class AvailabilityService {
 
     if (startDate != null) {
       query = query.where('date',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
     }
 
     if (endDate != null) {
@@ -57,12 +57,12 @@ class AvailabilityService {
     }
 
     return query.orderBy('date').snapshots().map((querySnapshot) =>
-        querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList());
+        querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList(),);
   }
 
   /// Добавить занятую дату
   Future<bool> addBusyDate(String specialistId, DateTime date,
-      {String? note}) async {
+      {String? note,}) async {
     try {
       final calendarId =
           '${specialistId}_${date.toIso8601String().split('T')[0]}';
@@ -86,7 +86,7 @@ class AvailabilityService {
 
   /// Добавить временной слот
   Future<bool> addTimeSlot(
-      String specialistId, DateTime date, TimeSlot timeSlot) async {
+      String specialistId, DateTime date, TimeSlot timeSlot,) async {
     try {
       final calendarId =
           '${specialistId}_${date.toIso8601String().split('T')[0]}';
@@ -160,7 +160,7 @@ class AvailabilityService {
 
   /// Разблокировать временной слот (отмена бронирования)
   Future<bool> unblockTimeSlot(
-      String specialistId, DateTime date, String timeSlotId) async {
+      String specialistId, DateTime date, String timeSlotId,) async {
     try {
       final calendarId =
           '${specialistId}_${date.toIso8601String().split('T')[0]}';
@@ -204,7 +204,7 @@ class AvailabilityService {
 
   /// Проверить доступность специалиста в указанное время
   Future<bool> isSpecialistAvailable(
-      String specialistId, DateTime dateTime) async {
+      String specialistId, DateTime dateTime,) async {
     try {
       final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
       final calendarId =
@@ -224,7 +224,7 @@ class AvailabilityService {
 
   /// Получить доступные временные слоты на дату
   Future<List<TimeSlot>> getAvailableTimeSlots(
-      String specialistId, DateTime date) async {
+      String specialistId, DateTime date,) async {
     try {
       final calendarId =
           '${specialistId}_${date.toIso8601String().split('T')[0]}';

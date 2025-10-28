@@ -3,15 +3,6 @@ import 'package:equatable/equatable.dart';
 
 /// Модель уведомления
 class AppNotification extends Equatable {
-  final String id;
-  final String title;
-  final String message;
-  final String type;
-  final String userId;
-  final String? senderId;
-  final bool isRead;
-  final DateTime createdAt;
-  final Map<String, dynamic>? data;
 
   const AppNotification({
     required this.id,
@@ -19,15 +10,14 @@ class AppNotification extends Equatable {
     required this.message,
     required this.type,
     required this.userId,
-    this.senderId,
+    required this.createdAt, this.senderId,
     this.isRead = false,
-    required this.createdAt,
     this.data,
   });
 
   /// Создает уведомление из Firestore документа
   factory AppNotification.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppNotification(
       id: doc.id,
       title: data['title'] ?? '',
@@ -57,6 +47,15 @@ class AppNotification extends Equatable {
       data: data['data'] as Map<String, dynamic>?,
     );
   }
+  final String id;
+  final String title;
+  final String message;
+  final String type;
+  final String userId;
+  final String? senderId;
+  final bool isRead;
+  final DateTime createdAt;
+  final Map<String, dynamic>? data;
 
   /// Преобразует уведомление в Map для Firestore
   Map<String, dynamic> toFirestore() {

@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/portfolio_item.dart';
+import 'package:event_marketplace_app/models/profile_statistics.dart';
+import 'package:event_marketplace_app/models/social_link.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/portfolio_widget.dart';
+import 'package:event_marketplace_app/widgets/profile_statistics_widget.dart';
+import 'package:event_marketplace_app/widgets/social_links_widget.dart';
+import 'package:event_marketplace_app/widgets/specialist_badges_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/portfolio_item.dart';
-import '../models/profile_statistics.dart';
-import '../models/social_link.dart';
-import '../providers/auth_providers.dart';
-import '../widgets/portfolio_widget.dart';
-import '../widgets/profile_statistics_widget.dart';
-import '../widgets/social_links_widget.dart';
-import '../widgets/specialist_badges_widget.dart';
 
 /// Улучшенный экран профиля специалиста/пользователя
 class EnhancedProfileScreen extends ConsumerStatefulWidget {
@@ -65,7 +64,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
             IconButton(icon: const Icon(Icons.share), onPressed: _shareProfile),
             IconButton(
                 icon: const Icon(Icons.favorite_border),
-                onPressed: _toggleFavorite),
+                onPressed: _toggleFavorite,),
           ],
         ],
       ),
@@ -135,7 +134,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                                   .toUpperCase() ??
                               '?',
                           style: const TextStyle(
-                              fontSize: 32, fontWeight: FontWeight.bold),
+                              fontSize: 32, fontWeight: FontWeight.bold,),
                         )
                       : null,
                 ),
@@ -164,7 +163,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
 
             const SizedBox(height: 4),
@@ -222,7 +221,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                   _buildActionButton(
                       icon: Icons.message,
                       label: 'Написать',
-                      onPressed: _sendMessage),
+                      onPressed: _sendMessage,),
                   _buildActionButton(
                     icon: Icons.assignment,
                     label: 'Заказать',
@@ -231,7 +230,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                   _buildActionButton(
                       icon: Icons.phone,
                       label: 'Позвонить',
-                      onPressed: _makeCall),
+                      onPressed: _makeCall,),
                 ],
               ),
           ],
@@ -250,11 +249,11 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
             onPressed: onPressed,
             icon: Icon(icon, color: Colors.white),
             style: IconButton.styleFrom(
-                backgroundColor: Colors.white.withValues(alpha: 0.2)),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),),
           ),
           const SizedBox(height: 4),
           Text(label,
-              style: const TextStyle(color: Colors.white, fontSize: 12)),
+              style: const TextStyle(color: Colors.white, fontSize: 12),),
         ],
       );
 
@@ -312,7 +311,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('О специалисте',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             const Text(
               'Профессиональный фотограф с 5-летним опытом работы. '
@@ -322,7 +321,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
             ),
             const SizedBox(height: 24),
             const Text('Специализация',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -336,13 +335,13 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                   .map(
                     (specialization) => Chip(
                         label: Text(specialization),
-                        backgroundColor: Colors.blue[50]),
+                        backgroundColor: Colors.blue[50],),
                   )
                   .toList(),
             ),
             const SizedBox(height: 24),
             const Text('Опыт работы',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             const Text('5 лет в сфере фотографии'),
             const Text('Более 200 успешных проектов'),
@@ -401,7 +400,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
               children: [
                 const Text('Отзывы',
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 TextButton(onPressed: () {}, child: const Text('Все отзывы')),
               ],
             ),
@@ -413,7 +412,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
               children: [
                 const Text('4.8',
                     style:
-                        TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
                 const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -423,7 +422,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                         5,
                         (index) => Icon(Icons.star,
                             color: index < 4 ? Colors.amber : Colors.grey,
-                            size: 20),
+                            size: 20,),
                       ),
                     ),
                     const Text('127 отзывов'),
@@ -505,7 +504,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                           Text(
                             review['date']! as String,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 12),
+                                color: Colors.grey[600], fontSize: 12,),
                           ),
                         ],
                       ),
@@ -528,7 +527,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Контакты',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
 
             // Социальные сети
@@ -646,7 +645,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция шаринга будет добавлена')));
+        const SnackBar(content: Text('Функция шаринга будет добавлена')),);
   }
 
   void _toggleFavorite() {
@@ -685,6 +684,6 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция звонков будет добавлена')));
+        const SnackBar(content: Text('Функция звонков будет добавлена')),);
   }
 }

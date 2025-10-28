@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_notification.dart' as app_notification;
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/app_notification.dart' as app_notification;
-import '../services/notification_service.dart';
 
 /// Провайдер для получения текущего пользователя
 final currentUserProvider = StreamProvider<User?>(
@@ -143,7 +142,7 @@ class NotificationNotifier
 
 final notificationNotifierProvider = NotifierProvider<NotificationNotifier,
     AsyncValue<List<app_notification.AppNotification>>>(
-  () => NotificationNotifier(),
+  NotificationNotifier.new,
 );
 
 /// Временный класс для совместимости с DocumentSnapshot

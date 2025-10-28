@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/incident_management.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../core/feature_flags.dart';
-import '../models/incident_management.dart';
 
 /// Сервис для управления инцидентами
 class IncidentManagementService {
@@ -641,7 +640,7 @@ class IncidentManagementService {
     // Заголовки для инцидентов
     buffer.writeln('Incidents:');
     buffer.writeln(
-        'Title,Type,Severity,Status,Priority,Assigned To,Reported At,Resolved At');
+        'Title,Type,Severity,Status,Priority,Assigned To,Reported At,Resolved At',);
 
     for (final incident in data['incidents']) {
       buffer.writeln(

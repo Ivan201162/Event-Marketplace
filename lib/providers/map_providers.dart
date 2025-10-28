@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/maps/map_service.dart';
+import 'package:event_marketplace_app/maps/map_service_mock.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../maps/map_service.dart';
-import '../maps/map_service_mock.dart';
 
 /// Провайдер сервиса карт
 final mapServiceProvider = Provider<MapService>((ref) {

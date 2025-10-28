@@ -29,25 +29,6 @@ enum PushNotificationPriority {
 
 /// Push notification model
 class PushNotification extends Equatable {
-  final String id;
-  final String userId;
-  final String title;
-  final String body;
-  final PushNotificationType type;
-  final PushNotificationPriority priority;
-  final Map<String, dynamic>? data;
-  final String? imageUrl;
-  final String? actionUrl;
-  final String? senderId;
-  final String? senderName;
-  final String? senderAvatarUrl;
-  final bool read;
-  final bool delivered;
-  final DateTime createdAt;
-  final DateTime? readAt;
-  final DateTime? deliveredAt;
-  final DateTime? scheduledAt;
-  final DateTime? expiresAt;
 
   const PushNotification({
     required this.id,
@@ -56,15 +37,12 @@ class PushNotification extends Equatable {
     required this.body,
     required this.type,
     required this.priority,
-    this.data,
+    required this.read, required this.delivered, required this.createdAt, this.data,
     this.imageUrl,
     this.actionUrl,
     this.senderId,
     this.senderName,
     this.senderAvatarUrl,
-    required this.read,
-    required this.delivered,
-    required this.createdAt,
     this.readAt,
     this.deliveredAt,
     this.scheduledAt,
@@ -73,7 +51,7 @@ class PushNotification extends Equatable {
 
   /// Create PushNotification from Firestore document
   factory PushNotification.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return PushNotification(
       id: doc.id,
@@ -111,6 +89,25 @@ class PushNotification extends Equatable {
           : null,
     );
   }
+  final String id;
+  final String userId;
+  final String title;
+  final String body;
+  final PushNotificationType type;
+  final PushNotificationPriority priority;
+  final Map<String, dynamic>? data;
+  final String? imageUrl;
+  final String? actionUrl;
+  final String? senderId;
+  final String? senderName;
+  final String? senderAvatarUrl;
+  final bool read;
+  final bool delivered;
+  final DateTime createdAt;
+  final DateTime? readAt;
+  final DateTime? deliveredAt;
+  final DateTime? scheduledAt;
+  final DateTime? expiresAt;
 
   /// Convert PushNotification to Firestore document
   Map<String, dynamic> toFirestore() {

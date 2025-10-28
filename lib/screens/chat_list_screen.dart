@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/core/navigation/app_navigator.dart';
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/screens/chat_screen.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/navigation/app_navigator.dart';
-import '../models/chat.dart';
-import '../providers/auth_providers.dart';
-import '../services/chat_service.dart';
-import 'chat_screen.dart';
 
 /// Экран списка чатов
 class ChatListScreen extends ConsumerStatefulWidget {
@@ -27,7 +26,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
       data: (user) {
         if (user == null) {
           return const Scaffold(
-              body: Center(child: Text('Необходимо войти в систему')));
+              body: Center(child: Text('Необходимо войти в систему')),);
         }
 
         return PopScope(
@@ -45,10 +44,10 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
               actions: [
                 IconButton(
                     icon: const Icon(Icons.search),
-                    onPressed: _showSearchDialog),
+                    onPressed: _showSearchDialog,),
                 IconButton(
                     icon: const Icon(Icons.more_vert),
-                    onPressed: _showOptionsMenu),
+                    onPressed: _showOptionsMenu,),
               ],
             ),
             body: _buildChatList(user.uid),
@@ -103,7 +102,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.grey[600],
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -154,7 +153,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                           ? otherParticipantName[0].toUpperCase()
                           : '?',
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18, fontWeight: FontWeight.bold,),
                     )
                   : null,
             ),
@@ -250,7 +249,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content:
-              Text('Создание нового чата будет доступно в следующей версии')),
+              Text('Создание нового чата будет доступно в следующей версии'),),
     );
   }
 
@@ -268,7 +267,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.pop(context);

@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/review.dart';
-import '../models/specialist.dart';
-import '../models/specialist_recommendation.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_recommendation.dart';
 
 /// Движок рекомендаций для специалистов
 class RecommendationEngine {
@@ -80,7 +80,7 @@ class RecommendationEngine {
         viewedEventsSnapshot.docs.map((doc) => doc.id).toList();
 
     return UserHistory(
-        bookings: bookings, reviews: reviews, viewedEventIds: viewedEventIds);
+        bookings: bookings, reviews: reviews, viewedEventIds: viewedEventIds,);
   }
 
   /// Анализ предпочтений пользователя
@@ -98,7 +98,7 @@ class RecommendationEngine {
       categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
       serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
 
-      priceRange.add(booking.totalPrice.toInt());
+      priceRange.add(booking.totalPrice);
     }
 
     // Анализируем отзывы
@@ -155,13 +155,13 @@ class RecommendationEngine {
     // Фильтр по категориям
     if (preferences.preferredCategories.isNotEmpty) {
       query = query.where('categories',
-          arrayContainsAny: preferences.preferredCategories);
+          arrayContainsAny: preferences.preferredCategories,);
     }
 
     // Фильтр по услугам
     if (preferences.preferredServices.isNotEmpty) {
       query = query.where('services',
-          arrayContainsAny: preferences.preferredServices);
+          arrayContainsAny: preferences.preferredServices,);
     }
 
     // Фильтр по локациям
@@ -171,7 +171,7 @@ class RecommendationEngine {
 
     // Фильтр по рейтингу
     query = query.where('rating',
-        isGreaterThanOrEqualTo: preferences.preferredRating);
+        isGreaterThanOrEqualTo: preferences.preferredRating,);
 
     // Фильтр по цене (в пределах бюджета)
     final maxPrice = (preferences.averageBudget * 1.5).round();
@@ -243,7 +243,7 @@ class UserHistory {
   const UserHistory(
       {required this.bookings,
       required this.reviews,
-      required this.viewedEventIds});
+      required this.viewedEventIds,});
   final List<Booking> bookings;
   final List<Review> reviews;
   final List<String> viewedEventIds;

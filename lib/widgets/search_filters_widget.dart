@@ -1,19 +1,16 @@
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/search_filters.dart';
-import '../providers/specialist_providers.dart';
-
 /// Widget for search filters
 class SearchFiltersWidget extends ConsumerStatefulWidget {
-  final SearchFilters initialFilters;
-  final void Function(SearchFilters) onApplyFilters;
 
   const SearchFiltersWidget({
-    super.key,
-    required this.initialFilters,
-    required this.onApplyFilters,
+    required this.initialFilters, required this.onApplyFilters, super.key,
   });
+  final SearchFilters initialFilters;
+  final void Function(SearchFilters) onApplyFilters;
 
   @override
   ConsumerState<SearchFiltersWidget> createState() =>
@@ -39,7 +36,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       appBar: AppBar(
         title: const Text('Фильтры поиска'),
         actions: [
-          TextButton(onPressed: _resetFilters, child: const Text('Сбросить'))
+          TextButton(onPressed: _resetFilters, child: const Text('Сбросить')),
         ],
       ),
       body: SingleChildScrollView(
@@ -132,7 +129,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
     return DropdownButtonFormField<String>(
       initialValue: _currentFilters.city,
       decoration: const InputDecoration(
-          border: OutlineInputBorder(), labelText: 'Выберите город'),
+          border: OutlineInputBorder(), labelText: 'Выберите город',),
       items: [
         const DropdownMenuItem(child: Text('Любой город')),
         ...cities
@@ -157,7 +154,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         const DropdownMenuItem(child: Text('Любая специализация')),
         ...specializations.map(
           (specialization) => DropdownMenuItem(
-              value: specialization, child: Text(specialization)),
+              value: specialization, child: Text(specialization),),
         ),
       ],
       onChanged: (value) {
@@ -179,7 +176,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           onChanged: (value) {
             setState(() {
               _currentFilters = _currentFilters.copyWith(
-                  minRating: value == 0 ? null : value);
+                  minRating: value == 0 ? null : value,);
             });
           },
         ),
@@ -246,7 +243,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
               onChanged: (value) {
                 setState(() {
                   final currentServices = _currentFilters.services ?? [];
-                  if (value == true) {
+                  if (value ?? false) {
                     _currentFilters = _currentFilters.copyWith(
                       services: [...currentServices, service],
                     );
@@ -279,7 +276,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         ),
       ],
       selected: {_currentFilters.isAvailable},
-      onSelectionChanged: (Set<bool?> selection) {
+      onSelectionChanged: (selection) {
         setState(() {
           _currentFilters =
               _currentFilters.copyWith(isAvailable: selection.first);
@@ -324,7 +321,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
             ),
           ],
           selected: {_currentFilters.sortAscending ?? true},
-          onSelectionChanged: (Set<bool> selection) {
+          onSelectionChanged: (selection) {
             setState(() {
               _currentFilters =
                   _currentFilters.copyWith(sortAscending: selection.first);

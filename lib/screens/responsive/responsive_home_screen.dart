@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/utils/responsive_utils.dart';
+import 'package:event_marketplace_app/widgets/responsive/responsive_widgets.dart';
 import 'package:flutter/material.dart';
-import '../../utils/responsive_utils.dart';
-import '../../widgets/responsive/responsive_widgets.dart';
 
 /// Адаптивный главный экран
 class ResponsiveHomeScreen extends StatelessWidget {
@@ -9,7 +9,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
-      appBar: ResponsiveAppBar(
+      appBar: const ResponsiveAppBar(
         title: 'Главная',
         actions: [
           ResponsiveIcon(Icons.search),
@@ -19,9 +19,9 @@ class ResponsiveHomeScreen extends StatelessWidget {
         ],
       ),
       body: ResponsiveLayoutBuilder(
-        mobile: (context) => _buildMobileLayout(context),
-        tablet: (context) => _buildTabletLayout(context),
-        desktop: (context) => _buildDesktopLayout(context),
+        mobile: _buildMobileLayout,
+        tablet: _buildTabletLayout,
+        desktop: _buildDesktopLayout,
       ),
     );
   }
@@ -41,6 +41,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
   Widget _buildTabletLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 2,
         children: [
           _buildSearchSection(context),
           _buildCategoriesSection(context),
@@ -48,7 +49,6 @@ class ResponsiveHomeScreen extends StatelessWidget {
           _buildTopSpecialistsSection(context),
           _buildNearbySection(context),
         ],
-        crossAxisCount: 2,
       ),
     );
   }
@@ -56,6 +56,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 3,
         children: [
           _buildSearchSection(context),
           _buildCategoriesSection(context),
@@ -63,7 +64,6 @@ class ResponsiveHomeScreen extends StatelessWidget {
           _buildTopSpecialistsSection(context),
           _buildNearbySection(context),
         ],
-        crossAxisCount: 3,
       ),
     );
   }
@@ -77,15 +77,15 @@ class ResponsiveHomeScreen extends StatelessWidget {
             'Поиск специалистов',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           TextField(
             decoration: InputDecoration(
               hintText: 'Введите имя, город или специализацию',
-              prefixIcon: ResponsiveIcon(Icons.search),
+              prefixIcon: const ResponsiveIcon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   ResponsiveUtils.getResponsiveBorderRadius(context),
@@ -93,7 +93,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveButton(
             text: 'Найти',
             onPressed: () {},
@@ -112,27 +112,27 @@ class ResponsiveHomeScreen extends StatelessWidget {
             'Категории',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveGrid(
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 2, tablet: 3, desktop: 4,),
             children: [
               _buildCategoryItem(context, 'Ведущие', Icons.mic, Colors.blue),
               _buildCategoryItem(
-                  context, 'Фотографы', Icons.camera_alt, Colors.purple),
+                  context, 'Фотографы', Icons.camera_alt, Colors.purple,),
               _buildCategoryItem(
-                  context, 'Кейтеринг', Icons.restaurant, Colors.orange),
+                  context, 'Кейтеринг', Icons.restaurant, Colors.orange,),
               _buildCategoryItem(
-                  context, 'Декор', Icons.celebration, Colors.pink),
+                  context, 'Декор', Icons.celebration, Colors.pink,),
               _buildCategoryItem(
-                  context, 'Музыка', Icons.music_note, Colors.green),
+                  context, 'Музыка', Icons.music_note, Colors.green,),
               _buildCategoryItem(
-                  context, 'Флористы', Icons.local_florist, Colors.teal),
+                  context, 'Флористы', Icons.local_florist, Colors.teal,),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
-                mobile: 2, tablet: 3, desktop: 4),
           ),
         ],
       ),
@@ -140,7 +140,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryItem(
-      BuildContext context, String title, IconData icon, Color color) {
+      BuildContext context, String title, IconData icon, Color color,) {
     return ResponsiveCard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -149,15 +149,15 @@ class ResponsiveHomeScreen extends StatelessWidget {
             icon,
             color: color,
             size: ResponsiveUtils.getResponsiveIconSize(context,
-                mobile: 32.0, tablet: 36.0, desktop: 40.0),
+                mobile: 32, tablet: 36, desktop: 40,),
           ),
-          ResponsiveSpacing(height: 8),
+          const ResponsiveSpacing(height: 8),
           ResponsiveText(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                  mobile: 12, tablet: 14, desktop: 16,),
             ),
           ),
         ],
@@ -174,24 +174,24 @@ class ResponsiveHomeScreen extends StatelessWidget {
             'Быстрые действия',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveGrid(
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 2, tablet: 4, desktop: 4,),
             children: [
               _buildQuickActionItem(context, 'Создать заявку',
-                  Icons.add_circle_outline, Colors.blue),
+                  Icons.add_circle_outline, Colors.blue,),
               _buildQuickActionItem(
-                  context, 'Найти специалиста', Icons.search, Colors.green),
+                  context, 'Найти специалиста', Icons.search, Colors.green,),
               _buildQuickActionItem(
-                  context, 'Мои заявки', Icons.assignment, Colors.orange),
+                  context, 'Мои заявки', Icons.assignment, Colors.orange,),
               _buildQuickActionItem(
-                  context, 'Избранное', Icons.favorite, Colors.red),
+                  context, 'Избранное', Icons.favorite, Colors.red,),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
-                mobile: 2, tablet: 4, desktop: 4),
           ),
         ],
       ),
@@ -199,7 +199,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
   }
 
   Widget _buildQuickActionItem(
-      BuildContext context, String title, IconData icon, Color color) {
+      BuildContext context, String title, IconData icon, Color color,) {
     return ResponsiveCard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -208,15 +208,15 @@ class ResponsiveHomeScreen extends StatelessWidget {
             icon,
             color: color,
             size: ResponsiveUtils.getResponsiveIconSize(context,
-                mobile: 28.0, tablet: 32.0, desktop: 36.0),
+                mobile: 28, tablet: 32, desktop: 36,),
           ),
-          ResponsiveSpacing(height: 8),
+          const ResponsiveSpacing(height: 8),
           ResponsiveText(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                  mobile: 12, tablet: 14, desktop: 16,),
             ),
           ),
         ],
@@ -233,19 +233,19 @@ class ResponsiveHomeScreen extends StatelessWidget {
             'ТОП специалисты',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveList(
             children: [
               _buildSpecialistItem(
-                  context, 'Анна Петрова', 'Ведущая', 4.9, 'Москва'),
+                  context, 'Анна Петрова', 'Ведущая', 4.9, 'Москва',),
               _buildSpecialistItem(
-                  context, 'Иван Сидоров', 'Фотограф', 4.8, 'Санкт-Петербург'),
+                  context, 'Иван Сидоров', 'Фотограф', 4.8, 'Санкт-Петербург',),
               _buildSpecialistItem(
-                  context, 'Мария Козлова', 'Кейтеринг', 4.7, 'Казань'),
+                  context, 'Мария Козлова', 'Кейтеринг', 4.7, 'Казань',),
             ],
           ),
         ],
@@ -254,24 +254,23 @@ class ResponsiveHomeScreen extends StatelessWidget {
   }
 
   Widget _buildSpecialistItem(BuildContext context, String name,
-      String specialization, double rating, String city) {
+      String specialization, double rating, String city,) {
     return ResponsiveCard(
       child: Row(
         children: [
           CircleAvatar(
             radius: ResponsiveUtils.getResponsiveIconSize(context,
-                mobile: 20.0, tablet: 24.0, desktop: 28.0),
+                mobile: 20, tablet: 24, desktop: 28,),
             backgroundColor: Colors.blue,
             child: ResponsiveText(
               name[0],
               style: TextStyle(
                 color: Colors.white,
-                fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                    mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context,),
               ),
             ),
           ),
-          ResponsiveSpacing(width: 16),
+          const ResponsiveSpacing(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,8 +278,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
                 ResponsiveText(
                   name,
                   style: TextStyle(
-                    fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                        mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(context,),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -288,7 +286,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
                   specialization,
                   style: TextStyle(
                     fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                        mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                        mobile: 12, tablet: 14, desktop: 16,),
                     color: Colors.grey[600],
                   ),
                 ),
@@ -296,7 +294,7 @@ class ResponsiveHomeScreen extends StatelessWidget {
                   '$rating ⭐ • $city',
                   style: TextStyle(
                     fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                        mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                        mobile: 12, tablet: 14, desktop: 16,),
                     color: Colors.grey[600],
                   ),
                 ),
@@ -321,20 +319,19 @@ class ResponsiveHomeScreen extends StatelessWidget {
             'Рядом с вами',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveText(
             'Специалисты в радиусе 5 км',
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 14.0, tablet: 16.0, desktop: 18.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,),
               color: Colors.grey[600],
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveButton(
             text: 'Показать на карте',
             onPressed: () {},

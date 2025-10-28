@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/maps/map_service.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/providers/event_providers.dart';
+import 'package:event_marketplace_app/providers/map_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../maps/map_service.dart';
-import '../models/event.dart';
-import '../providers/event_providers.dart';
-import '../providers/map_providers.dart';
 
 /// Экран карты событий
 class EventsMapPage extends ConsumerStatefulWidget {
@@ -73,7 +72,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             if (FeatureFlags.mapsEnabled)
               IconButton(
                   icon: const Icon(Icons.my_location),
-                  onPressed: _requestLocationPermission),
+                  onPressed: _requestLocationPermission,),
           ],
         ),
         body: _buildBody(),
@@ -87,7 +86,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Загрузка карты...')
+            Text('Загрузка карты...'),
           ],
         ),
       );
@@ -157,7 +156,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline,
-                size: 120, color: Theme.of(context).colorScheme.error),
+                size: 120, color: Theme.of(context).colorScheme.error,),
             const SizedBox(height: 32),
             Text(
               'Ошибка загрузки карты',
@@ -280,7 +279,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Row(
               children: [
                 Icon(Icons.info_outline,
-                    color: Theme.of(context).colorScheme.primary),
+                    color: Theme.of(context).colorScheme.primary,),
                 const SizedBox(width: 8),
                 Text(
                   'Информация о карте',
@@ -296,7 +295,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
               children: [
                 Expanded(
                     child: _buildInfoItem(
-                        'Событий на карте', '${_events.length}', Icons.event)),
+                        'Событий на карте', '${_events.length}', Icons.event,),),
                 Expanded(
                   child: _buildInfoItem(
                     'Текущее местоположение',
@@ -318,7 +317,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                 ),
                 Expanded(
                     child:
-                        _buildInfoItem('Тип карты', 'Mock карта', Icons.map)),
+                        _buildInfoItem('Тип карты', 'Mock карта', Icons.map),),
               ],
             ),
           ],
@@ -417,7 +416,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -506,7 +505,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Местоположение определено'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

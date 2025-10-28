@@ -1,22 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/post.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/post_service.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
+import 'package:event_marketplace_app/services/test_data_service.dart';
+import 'package:event_marketplace_app/widgets/editable_image.dart';
+import 'package:event_marketplace_app/widgets/post_grid_widget.dart';
+import 'package:event_marketplace_app/widgets/story_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/post.dart';
-import '../models/story.dart';
-import '../providers/auth_providers.dart';
-import '../services/post_service.dart';
-import '../services/story_service.dart';
-import '../services/test_data_service.dart';
-import '../widgets/editable_image.dart';
-import '../widgets/post_grid_widget.dart';
-import '../widgets/story_circle_widget.dart';
-
 /// Современный экран профиля в стиле Instagram
 class ModernProfileScreen extends ConsumerStatefulWidget {
   const ModernProfileScreen(
-      {super.key, required this.userId, this.isOwnProfile = false});
+      {required this.userId, super.key, this.isOwnProfile = false,});
 
   final String userId;
   final bool isOwnProfile;
@@ -47,7 +46,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
   void initState() {
     super.initState();
     _tabController = TabController(
-        length: 4, vsync: this); // Посты, Отзывы, Портфолио, Расписание
+        length: 4, vsync: this,); // Посты, Отзывы, Портфолио, Расписание
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -57,7 +56,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOut),);
 
     _animationController.forward();
     _loadProfileData();
@@ -78,7 +77,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
       _posts = await _postService.getPostsBySpecialist(widget.userId);
 
       // Загружаем сторисы
-      _stories = await _storyService.getStoriesBySpecialist(widget.userId);
+      _stories = _storyService.getStoriesBySpecialist(widget.userId);
 
       setState(() => _isLoading = false);
     } catch (e) {
@@ -129,7 +128,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         elevation: 0,
         actions: [
           IconButton(
-              icon: const Icon(Icons.more_vert), onPressed: _showOptionsMenu)
+              icon: const Icon(Icons.more_vert), onPressed: _showOptionsMenu,),
         ],
       ),
       body: _buildProfileContent(_specialist!),
@@ -179,11 +178,11 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     placeholder: (context, url) => Container(
                         color: Theme.of(context)
                             .primaryColor
-                            .withValues(alpha: 0.3)),
+                            .withValues(alpha: 0.3),),
                     errorWidget: (context, url, error) => Container(
                         color: Theme.of(context)
                             .primaryColor
-                            .withValues(alpha: 0.3)),
+                            .withValues(alpha: 0.3),),
                   ),
                 ),
               // Градиентный оверлей
@@ -194,7 +193,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withValues(alpha: 0.7)
+                      Colors.black.withValues(alpha: 0.7),
                     ],
                   ),
                 ),
@@ -237,7 +236,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                          color: Theme.of(context).primaryColor, width: 3),
+                          color: Theme.of(context).primaryColor, width: 3,),
                     ),
                     child: ClipOval(
                       child: widget.isOwnProfile
@@ -271,7 +270,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                       Text(
                         specialist['name'] as String,
                         style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 4),
                       if (specialist['city'] != null)
@@ -288,13 +287,13 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                           Text(
                             (specialist['rating'] as num).toStringAsFixed(1),
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 16, fontWeight: FontWeight.w600,),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             '(${specialist['reviewCount']} отзывов)',
                             style: TextStyle(
-                                fontSize: 14, color: Colors.grey[600]),
+                                fontSize: 14, color: Colors.grey[600],),
                           ),
                         ],
                       ),
@@ -318,7 +317,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest),
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
@@ -334,7 +333,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 _buildStatItem('Подписчики', '1.2K'),
                 _buildStatItem('Подписки', '156'),
                 _buildStatItem(
-                    'Проекты', specialist['totalBookings']?.toString() ?? '0'),
+                    'Проекты', specialist['totalBookings']?.toString() ?? '0',),
               ],
             ),
           ),
@@ -405,7 +404,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                           onPressed: _toggleFollow,
                           icon: Icon(_isFollowing
                               ? Icons.person_remove
-                              : Icons.person_add),
+                              : Icons.person_add,),
                           label:
                               Text(_isFollowing ? 'Отписаться' : 'Подписаться'),
                           style: FilledButton.styleFrom(
@@ -438,7 +437,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest),
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -451,7 +450,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('О специалисте',
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context).textTheme.titleMedium,),
               const SizedBox(height: 12),
               Text(
                 specialist['description'] as String,
@@ -469,7 +468,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                       .map(
                         (service) => Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                              horizontal: 12, vertical: 6,),
                           decoration: BoxDecoration(
                             color: Theme.of(context)
                                 .primaryColor
@@ -558,7 +557,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: Theme.of(context).primaryColor, width: 2),
+                      color: Theme.of(context).primaryColor, width: 2,),
                 ),
                 child: const Icon(Icons.add, color: Colors.grey),
               ),
@@ -628,7 +627,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             borderRadius: BorderRadius.circular(8),
           ),
           child: const Center(
-              child: Icon(Icons.favorite, color: Colors.red, size: 32)),
+              child: Icon(Icons.favorite, color: Colors.red, size: 32),),
         ),
       );
 
@@ -645,7 +644,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest),
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
@@ -665,7 +664,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   child: Text(
                     'U$index',
                     style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                        color: Colors.white, fontWeight: FontWeight.bold,),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -674,7 +673,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Пользователь $index',
-                          style: Theme.of(context).textTheme.titleSmall),
+                          style: Theme.of(context).textTheme.titleSmall,),
                       Row(
                         children: List.generate(
                           5,
@@ -689,7 +688,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   ),
                 ),
                 Text('${index + 1} дн. назад',
-                    style: Theme.of(context).textTheme.bodySmall),
+                    style: Theme.of(context).textTheme.bodySmall,),
               ],
             ),
             const SizedBox(height: 12),
@@ -734,7 +733,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     child: const Center(child: CircularProgressIndicator()),
                   ),
                   errorWidget: (context, url, error) => Container(
-                      color: Colors.grey[300], child: const Icon(Icons.error)),
+                      color: Colors.grey[300], child: const Icon(Icons.error),),
                 ),
               ),
             );
@@ -768,7 +767,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content:
-              Text('Редактирование профиля будет доступно в следующей версии')),
+              Text('Редактирование профиля будет доступно в следующей версии'),),
     );
   }
 
@@ -776,7 +775,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть экран создания поста
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Создание поста будет доступно в следующей версии')),
+          content: Text('Создание поста будет доступно в следующей версии'),),
     );
   }
 
@@ -784,7 +783,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть экран создания сторис
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Создание сторис будет доступно в следующей версии')),
+          content: Text('Создание сторис будет доступно в следующей версии'),),
     );
   }
 
@@ -792,7 +791,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть чат с пользователем
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Открытие чата будет доступно в следующей версии')),
+          content: Text('Открытие чата будет доступно в следующей версии'),),
     );
   }
 
@@ -800,7 +799,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть детали поста
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Просмотр поста будет доступен в следующей версии')),
+          content: Text('Просмотр поста будет доступен в следующей версии'),),
     );
   }
 
@@ -808,7 +807,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     // TODO: Открыть просмотр сторис
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Просмотр сторис будет доступен в следующей версии')),
+          content: Text('Просмотр сторис будет доступен в следующей версии'),),
     );
   }
 
@@ -817,7 +816,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content:
-              Text('Обновление изображения будет доступно в следующей версии')),
+              Text('Обновление изображения будет доступно в следующей версии'),),
     );
   }
 
@@ -859,7 +858,7 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                            'Для редактирования профиля войдите в систему.'),
+                            'Для редактирования профиля войдите в систему.',),
                         backgroundColor: Colors.orange,
                       ),
                     );
@@ -887,9 +886,9 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      Container(
-          color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
+          BuildContext context, double shrinkOffset, bool overlapsContent,) =>
+      ColoredBox(
+          color: Theme.of(context).scaffoldBackgroundColor, child: tabBar,);
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>

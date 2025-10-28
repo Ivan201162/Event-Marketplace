@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/price_history.dart';
+import 'package:event_marketplace_app/models/price_history.dart';
 
 /// Сервис для работы с историей цен
 class PriceHistoryService {
@@ -54,7 +54,7 @@ class PriceHistoryService {
 
   /// Получить историю цен для специалиста
   Future<List<PriceHistory>> getSpecialistPriceHistory(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       // Получаем все бронирования специалиста
       final bookingsSnapshot = await _firestore
@@ -138,7 +138,7 @@ class PriceHistoryService {
       var query = _firestore
           .collection('priceHistory')
           .where('changedAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),)
           .where('changedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
 
       if (specialistId != null) {

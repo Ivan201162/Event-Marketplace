@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/screens/monetization/payment_screen.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/subscription_plan.dart';
-import '../../services/subscription_service.dart';
-import 'payment_screen.dart';
 
 class SubscriptionPlansScreen extends StatefulWidget {
   const SubscriptionPlansScreen({super.key});
@@ -96,7 +95,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                   const SizedBox(height: 24),
 
                   // Планы подписки
-                  ..._plans.map((plan) => _buildPlanCard(plan)),
+                  ..._plans.map(_buildPlanCard),
                 ],
               ),
             ),
@@ -168,7 +167,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                     // TODO: Управление подпиской
                   },
                   child: const Text('Управлять',
-                      style: TextStyle(color: Colors.white)),
+                      style: TextStyle(color: Colors.white),),
                 ),
               ],
             ),
@@ -209,7 +208,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                     if (isPopular)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 4),
+                            horizontal: 12, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.amber,
                           borderRadius: BorderRadius.circular(12),
@@ -227,7 +226,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                     Row(
                       children: [
                         Icon(_getPlanIcon(plan.tier),
-                            color: _getPlanColor(plan.tier), size: 32),
+                            color: _getPlanColor(plan.tier), size: 32,),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -294,7 +293,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(8),
@@ -337,12 +336,12 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                         child: Row(
                           children: [
                             Icon(Icons.check_circle,
-                                color: _getPlanColor(plan.tier), size: 20),
+                                color: _getPlanColor(plan.tier), size: 20,),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(feature,
                                   style:
-                                      Theme.of(context).textTheme.bodyMedium),
+                                      Theme.of(context).textTheme.bodyMedium,),
                             ),
                           ],
                         ),
@@ -361,7 +360,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),),
                         ),
                         child: Text(
                           isCurrentPlan
@@ -370,7 +369,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
                                   ? 'Бесплатно'
                                   : 'Выбрать план',
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                       ),
                     ),
@@ -412,7 +411,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Вы уже используете бесплатный план')));
+          const SnackBar(content: Text('Вы уже используете бесплатный план')),);
       return;
     }
 
@@ -425,7 +424,7 @@ class _SubscriptionPlansScreenState extends State<SubscriptionPlansScreen> {
       ),
     );
 
-    if (result == true && mounted) {
+    if (result ?? false && mounted) {
       // Обновляем данные после успешной оплаты
       await _loadPlans();
       ScaffoldMessenger.of(context).showSnackBar(

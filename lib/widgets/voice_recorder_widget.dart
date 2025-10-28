@@ -1,18 +1,13 @@
+import 'package:event_marketplace_app/models/chat_message_extended.dart';
+import 'package:event_marketplace_app/services/voice_message_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat_message_extended.dart';
-import '../services/voice_message_service.dart';
 
 /// Виджет для записи голосовых сообщений
 class VoiceRecorderWidget extends ConsumerStatefulWidget {
   const VoiceRecorderWidget({
-    super.key,
-    required this.chatId,
-    required this.senderId,
-    required this.senderName,
+    required this.chatId, required this.senderId, required this.senderName, required this.onVoiceMessageSent, super.key,
     this.senderAvatar,
-    required this.onVoiceMessageSent,
   });
   final String chatId;
   final String senderId;
@@ -49,13 +44,13 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
       begin: 1,
       end: 1.2,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _pulseAnimation = Tween<double>(
       begin: 0.5,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
   }
 
   @override
@@ -115,7 +110,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
                   BoxShadow(
                       color: Colors.red.withValues(alpha: 0.3),
                       blurRadius: 12,
-                      spreadRadius: 2),
+                      spreadRadius: 2,),
                 ],
               ),
               child: const Icon(Icons.mic, color: Colors.white, size: 32),
@@ -153,11 +148,11 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
           Text(
             _formatDuration(_recordingDuration),
             style: const TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red,),
           ),
           const SizedBox(height: 8),
           const Text('Запись...',
-              style: TextStyle(fontSize: 16, color: Colors.grey)),
+              style: TextStyle(fontSize: 16, color: Colors.grey),),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -184,7 +179,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
           CircularProgressIndicator(),
           SizedBox(height: 16),
           Text('Отправка голосового сообщения...',
-              style: TextStyle(fontSize: 16, color: Colors.grey)),
+              style: TextStyle(fontSize: 16, color: Colors.grey),),
         ],
       );
 
@@ -199,7 +194,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-              color: color, borderRadius: BorderRadius.circular(20)),
+              color: color, borderRadius: BorderRadius.circular(20),),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -208,7 +203,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
               Text(
                 label,
                 style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w500),
+                    color: Colors.white, fontWeight: FontWeight.w500,),
               ),
             ],
           ),
@@ -346,6 +341,6 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 }

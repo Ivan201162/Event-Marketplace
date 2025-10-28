@@ -39,7 +39,7 @@ class CacheService {
     try {
       await _specialistsCache.put('specialists_list', specialists);
       await _specialistsCache.put(
-          'last_updated', DateTime.now().millisecondsSinceEpoch);
+          'last_updated', DateTime.now().millisecondsSinceEpoch,);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования специалистов: $e');
     }
@@ -77,7 +77,7 @@ class CacheService {
     try {
       await _postsCache.put('posts_list', posts);
       await _postsCache.put(
-          'last_updated', DateTime.now().millisecondsSinceEpoch);
+          'last_updated', DateTime.now().millisecondsSinceEpoch,);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования постов: $e');
     }
@@ -101,7 +101,7 @@ class CacheService {
     try {
       await _ideasCache.put('ideas_list', ideas);
       await _ideasCache.put(
-          'last_updated', DateTime.now().millisecondsSinceEpoch);
+          'last_updated', DateTime.now().millisecondsSinceEpoch,);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования идей: $e');
     }
@@ -125,7 +125,7 @@ class CacheService {
     try {
       await _storiesCache.put('stories_list', stories);
       await _storiesCache.put(
-          'last_updated', DateTime.now().millisecondsSinceEpoch);
+          'last_updated', DateTime.now().millisecondsSinceEpoch,);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования историй: $e');
     }
@@ -146,7 +146,7 @@ class CacheService {
 
   /// Кэширование пользовательских данных
   Future<void> cacheUserData(
-      String userId, Map<String, dynamic> userData) async {
+      String userId, Map<String, dynamic> userData,) async {
     try {
       await _userDataCache.put(userId, userData);
     } on Exception catch (e) {

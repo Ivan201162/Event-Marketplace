@@ -46,7 +46,7 @@ class SupabaseConfigValidator {
       SupabaseConfig.anonKey != 'your-anon-key-here';
 
   static List<String> get missingConfigs {
-    final List<String> missing = [];
+    final missing = <String>[];
 
     if (SupabaseConfig.url == 'https://your-project-id.supabase.co') {
       missing.add('Supabase URL');

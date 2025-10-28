@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/core/navigation_animations.dart';
 import 'package:flutter/material.dart';
-import '../core/navigation_animations.dart';
 
 /// Улучшенные переходы между страницами с поддержкой жестов
 class EnhancedPageTransition extends StatefulWidget {
   const EnhancedPageTransition({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.enableSwipeBack = true,
     this.enableSwipeDown = false,
     this.onSwipeBack,
@@ -41,13 +40,13 @@ class _EnhancedPageTransitionState extends State<EnhancedPageTransition>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
     ).animate(CurvedAnimation(
-        parent: _animationController, curve: Curves.easeOutCubic));
+        parent: _animationController, curve: Curves.easeOutCubic,),);
 
     _animationController.forward();
   }
@@ -88,8 +87,7 @@ class _EnhancedPageTransitionState extends State<EnhancedPageTransition>
 /// Виджет для анимированного появления контента
 class AnimatedContent extends StatefulWidget {
   const AnimatedContent({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
@@ -195,8 +193,7 @@ enum AnimationType {
 /// Виджет для анимированного списка
 class AnimatedList extends StatefulWidget {
   const AnimatedList({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.itemDelay = const Duration(milliseconds: 100),
     this.itemDuration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
@@ -234,8 +231,7 @@ class _AnimatedListState extends State<AnimatedList> {
 /// Виджет для анимированной сетки
 class AnimatedGrid extends StatefulWidget {
   const AnimatedGrid({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.crossAxisCount = 2,
     this.crossAxisSpacing = 8.0,
     this.mainAxisSpacing = 8.0,
@@ -282,8 +278,7 @@ class _AnimatedGridState extends State<AnimatedGrid> {
 /// Виджет для анимированной кнопки
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onPressed,
     this.duration = const Duration(milliseconds: 150),
     this.curve = Curves.easeInOut,

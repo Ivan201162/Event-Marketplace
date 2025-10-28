@@ -1,15 +1,13 @@
+import 'package:event_marketplace_app/models/badge.dart' as badge_model;
+import 'package:event_marketplace_app/providers/badge_providers.dart';
+import 'package:event_marketplace_app/widgets/animated_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/badge.dart' as badge_model;
-import '../providers/badge_providers.dart';
-import 'animated_page_transition.dart';
 
 /// Виджет для отображения бейджа
 class BadgeWidget extends StatelessWidget {
   const BadgeWidget({
-    super.key,
-    required this.badge,
+    required this.badge, super.key,
     this.size = 60,
     this.showTitle = false,
     this.showDescription = false,
@@ -56,7 +54,7 @@ class BadgeWidget extends StatelessWidget {
 /// Виджет для отображения бейджа с информацией
 class BadgeInfoWidget extends StatelessWidget {
   const BadgeInfoWidget(
-      {super.key, required this.badge, this.isCompact = false});
+      {required this.badge, super.key, this.isCompact = false,});
   final badge_model.Badge badge;
   final bool isCompact;
 
@@ -164,8 +162,7 @@ class BadgeInfoWidget extends StatelessWidget {
 /// Виджет для отображения коллекции бейджей
 class BadgeCollectionWidget extends ConsumerWidget {
   const BadgeCollectionWidget({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.category,
     this.limit,
     this.showTitle = true,
@@ -209,10 +206,10 @@ class BadgeCollectionWidget extends ConsumerWidget {
             ],
             if (category == null)
               _buildGridLayout(
-                  context, filteredBadges.cast<badge_model.Badge>())
+                  context, filteredBadges.cast<badge_model.Badge>(),)
             else
               _buildListLayout(
-                  context, filteredBadges.cast<badge_model.Badge>()),
+                  context, filteredBadges.cast<badge_model.Badge>(),),
           ],
         );
       },
@@ -222,7 +219,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
   }
 
   Widget _buildGridLayout(
-          BuildContext context, List<badge_model.Badge> badges) =>
+          BuildContext context, List<badge_model.Badge> badges,) =>
       Wrap(
         spacing: 12,
         runSpacing: 12,
@@ -231,14 +228,14 @@ class BadgeCollectionWidget extends ConsumerWidget {
               (badge) => BadgeWidget(
                   badge: badge,
                   size: 50,
-                  onTap: () => _showBadgeDetails(context, badge)),
+                  onTap: () => _showBadgeDetails(context, badge),),
             )
             .toList()
             .cast<Widget>(),
       );
 
   Widget _buildListLayout(
-          BuildContext context, List<badge_model.Badge> badges) =>
+          BuildContext context, List<badge_model.Badge> badges,) =>
       Column(
         children: badges
             .map(
@@ -294,7 +291,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
         child: Column(
           children: [
             Icon(Icons.error_outline,
-                size: 64, color: Theme.of(context).colorScheme.error),
+                size: 64, color: Theme.of(context).colorScheme.error,),
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки бейджей',
@@ -331,7 +328,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -340,7 +337,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
 
 /// Виджет для отображения статистики бейджей
 class BadgeStatsWidget extends ConsumerWidget {
-  const BadgeStatsWidget({super.key, required this.userId});
+  const BadgeStatsWidget({required this.userId, super.key});
   final String userId;
 
   @override
@@ -370,13 +367,13 @@ class BadgeStatsWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildStatItem(
-                    context, 'Всего', stats.totalBadges, Icons.emoji_events),
+                    context, 'Всего', stats.totalBadges, Icons.emoji_events,),
                 _buildStatItem(context, 'Специалист', stats.specialistBadges,
-                    Icons.person),
+                    Icons.person,),
                 _buildStatItem(
-                    context, 'Заказчик', stats.customerBadges, Icons.event),
+                    context, 'Заказчик', stats.customerBadges, Icons.event,),
                 _buildStatItem(
-                    context, 'Общие', stats.generalBadges, Icons.star),
+                    context, 'Общие', stats.generalBadges, Icons.star,),
               ],
             ),
           ],
@@ -384,7 +381,7 @@ class BadgeStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildStatItem(
-          BuildContext context, String label, int count, IconData icon) =>
+          BuildContext context, String label, int count, IconData icon,) =>
       Column(
         children: [
           Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
@@ -489,7 +486,7 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
                   style: Theme.of(
                     context,
                   ).textTheme.titleSmall?.copyWith(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                      color: Colors.white, fontWeight: FontWeight.bold,),
                 ),
               ),
             ),

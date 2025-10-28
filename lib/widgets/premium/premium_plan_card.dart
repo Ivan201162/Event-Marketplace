@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 class PremiumPlanCard extends StatelessWidget {
   const PremiumPlanCard({
-    super.key,
-    required this.plan,
-    required this.price,
-    required this.isSelected,
-    required this.onTap,
+    required this.plan, required this.price, required this.isSelected, required this.onTap, super.key,
   });
   final String plan;
   final double price;
@@ -39,7 +35,7 @@ class PremiumPlanCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(
                       color: isSelected ? Colors.purple : Colors.grey[400]!,
-                      width: 2),
+                      width: 2,),
                   color: isSelected ? Colors.purple : Colors.transparent,
                 ),
                 child: isSelected
@@ -124,13 +120,10 @@ class PremiumPlanCard extends StatelessWidget {
     switch (plan) {
       case '7_days':
         days = 7;
-        break;
       case '14_days':
         days = 14;
-        break;
       case '30_days':
         days = 30;
-        break;
       default:
         days = 1;
     }

@@ -164,7 +164,7 @@ class UILoading {
     Color? textColor,
     double size = 48,
   }) {
-    return Container(
+    return ColoredBox(
       color: backgroundColor ?? Colors.white.withOpacity(0.8),
       child: Center(
         child: Column(
@@ -202,7 +202,7 @@ class UILoading {
     Color? textColor,
     double size = 48,
   }) {
-    return Container(
+    return ColoredBox(
       color: backgroundColor ?? Colors.white.withOpacity(0.8),
       child: Center(
         child: Column(
@@ -248,7 +248,7 @@ class UILoading {
     Color? textColor,
     Color? progressColor,
   }) {
-    return Container(
+    return ColoredBox(
       color: backgroundColor ?? Colors.white.withOpacity(0.8),
       child: Center(
         child: Column(
@@ -296,14 +296,14 @@ class UILoading {
     Color? textColor,
     double size = 48,
   }) {
-    return Container(
+    return ColoredBox(
       color: backgroundColor ?? Colors.white.withOpacity(0.8),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0.0, end: 1.0),
+              tween: Tween(begin: 0, end: 1),
               duration: const Duration(seconds: 2),
               builder: (context, value, child) {
                 return Transform.rotate(

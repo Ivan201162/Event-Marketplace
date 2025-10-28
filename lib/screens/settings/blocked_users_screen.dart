@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/services/user_profile_service.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
+import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
-import '../../services/user_profile_service.dart';
-import '../../widgets/common/custom_app_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
 
 /// Экран заблокированных пользователей
 class BlockedUsersScreen extends StatefulWidget {
@@ -39,7 +38,6 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
             id: '1',
             name: 'Иван Петров',
             username: '@ivan_petrov',
-            avatarUrl: null,
             blockedAt: DateTime.now().subtract(const Duration(days: 5)),
             reason: 'Спам',
           ),
@@ -47,7 +45,6 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
             id: '2',
             name: 'Мария Сидорова',
             username: '@maria_sid',
-            avatarUrl: null,
             blockedAt: DateTime.now().subtract(const Duration(days: 10)),
             reason: 'Неприемлемое поведение',
           ),
@@ -83,7 +80,7 @@ class _BlockedUsersScreenState extends State<BlockedUsersScreen> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       setState(() => _isLoading = true);
 
       try {
@@ -277,8 +274,7 @@ class BlockedUser {
     required this.id,
     required this.name,
     required this.username,
-    this.avatarUrl,
-    required this.blockedAt,
+    required this.blockedAt, this.avatarUrl,
     this.reason,
   });
 

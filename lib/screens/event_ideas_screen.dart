@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/models/idea_comment.dart';
+import 'package:event_marketplace_app/services/event_ideas_service.dart';
+import 'package:event_marketplace_app/widgets/idea_card.dart';
+import 'package:event_marketplace_app/widgets/idea_filter_chip.dart';
+import 'package:event_marketplace_app/widgets/idea_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/event_idea.dart';
-import '../models/idea_comment.dart';
-import '../services/event_ideas_service.dart';
-import '../widgets/idea_card.dart';
-import '../widgets/idea_filter_chip.dart';
-import '../widgets/idea_search_bar.dart';
 
 /// Экран ленты идей мероприятий
 class EventIdeasScreen extends ConsumerStatefulWidget {
@@ -197,7 +196,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
           ),
           actions: [
             IconButton(
-                onPressed: _showAddIdeaDialog, icon: const Icon(Icons.add))
+                onPressed: _showAddIdeaDialog, icon: const Icon(Icons.add),),
           ],
         ),
         body: TabBarView(
@@ -205,7 +204,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
           children: [
             _buildAllIdeasTab(),
             _buildFavoriteIdeasTab(),
-            _buildRecommendedIdeasTab()
+            _buildRecommendedIdeasTab(),
           ],
         ),
       );
@@ -332,7 +331,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -340,7 +339,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
           ],
@@ -362,7 +361,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -370,7 +369,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
           ],
@@ -392,7 +391,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -400,7 +399,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
           ],
@@ -411,7 +410,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-          builder: (context) => IdeaDetailScreen(idea: idea)),
+          builder: (context) => IdeaDetailScreen(idea: idea),),
     );
   }
 
@@ -457,7 +456,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
   }
 
   void _updateIdeaInLists(
-      String ideaId, EventIdea Function(EventIdea) updater) {
+      String ideaId, EventIdea Function(EventIdea) updater,) {
     setState(() {
       // Обновляем в основном списке
       final index = _ideas.indexWhere((idea) => idea.id == ideaId);
@@ -487,7 +486,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Добавление идеи будет реализовано')));
+        const SnackBar(content: Text('Добавление идеи будет реализовано')),);
   }
 
   void _showErrorSnackBar(String message) {
@@ -503,7 +502,7 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
 
 /// Экран детального просмотра идеи
 class IdeaDetailScreen extends StatefulWidget {
-  const IdeaDetailScreen({super.key, required this.idea});
+  const IdeaDetailScreen({required this.idea, super.key});
 
   final EventIdea idea;
 
@@ -553,7 +552,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
                 child: Image.network(
                   widget.idea.imageUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+                  errorBuilder: (context, error, stackTrace) => ColoredBox(
                     color:
                         Theme.of(context).colorScheme.surfaceContainerHighest,
                     child: Icon(
@@ -591,7 +590,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
 
                     // Описание
                     Text(widget.idea.description,
-                        style: Theme.of(context).textTheme.bodyLarge),
+                        style: Theme.of(context).textTheme.bodyLarge,),
 
                     const SizedBox(height: 16),
 
@@ -639,13 +638,13 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
               const SizedBox(height: 12),
               if (widget.idea.budget != null)
                 _buildDetailRow(
-                    'Бюджет', '${widget.idea.budget!.toStringAsFixed(0)} ₽'),
+                    'Бюджет', '${widget.idea.budget!.toStringAsFixed(0)} ₽',),
               if (widget.idea.duration != null)
                 _buildDetailRow(
-                    'Длительность', '${widget.idea.duration} часов'),
+                    'Длительность', '${widget.idea.duration} часов',),
               if (widget.idea.guestCount != null)
                 _buildDetailRow(
-                    'Количество гостей', '${widget.idea.guestCount} человек'),
+                    'Количество гостей', '${widget.idea.guestCount} человек',),
               if (widget.idea.location != null)
                 _buildDetailRow('Локация', widget.idea.location!),
               if (widget.idea.season != null)
@@ -676,7 +675,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
             ),
             Expanded(
                 child:
-                    Text(value, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(value, style: Theme.of(context).textTheme.bodyMedium),),
           ],
         ),
       );
@@ -729,7 +728,7 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
               ),
               const SizedBox(height: 8),
               Text(comment.content,
-                  style: Theme.of(context).textTheme.bodyMedium),
+                  style: Theme.of(context).textTheme.bodyMedium,),
             ],
           ),
         ),

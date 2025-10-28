@@ -25,7 +25,7 @@ class TestNotificationsService {
 
       if (existingNotifications.docs.isNotEmpty) {
         debugPrint(
-            'Тестовые уведомления уже существуют для пользователя $userId');
+            'Тестовые уведомления уже существуют для пользователя $userId',);
         return;
       }
 
@@ -38,7 +38,7 @@ class TestNotificationsService {
           'data': {
             'chatId': 'chat_1',
             'senderId': 'specialist_2',
-            'senderName': 'Анна Лебедева'
+            'senderName': 'Анна Лебедева',
           },
           'isRead': false,
           'createdAt': FieldValue.serverTimestamp(),
@@ -66,7 +66,7 @@ class TestNotificationsService {
           'data': {
             'reviewId': 'review_1',
             'rating': 5,
-            'comment': 'Отличная организация!'
+            'comment': 'Отличная организация!',
           },
           'isRead': true,
           'createdAt': FieldValue.serverTimestamp(),
@@ -92,7 +92,7 @@ class TestNotificationsService {
           'data': {
             'reminderType': 'meeting',
             'time': '14:00',
-            'specialist': 'Анна Лебедева'
+            'specialist': 'Анна Лебедева',
           },
           'isRead': false,
           'createdAt': FieldValue.serverTimestamp(),
@@ -140,10 +140,10 @@ class TestNotificationsService {
       }
 
       debugPrint(
-          'Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей');
+          'Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей',);
     } catch (e) {
       debugPrint(
-          'Ошибка создания тестовых уведомлений для всех пользователей: $e');
+          'Ошибка создания тестовых уведомлений для всех пользователей: $e',);
     }
   }
 

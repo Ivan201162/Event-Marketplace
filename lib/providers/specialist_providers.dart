@@ -1,9 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/specialist_enhanced.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../models/specialist_enhanced.dart';
 
 /// Провайдер для получения ТОП специалистов по городу
 final topSpecialistsByCityProvider =
@@ -19,7 +18,7 @@ final topSpecialistsByCityProvider =
 
     final snapshot = await query.get();
     return snapshot.docs
-        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .map(SpecialistEnhanced.fromFirestore)
         .toList();
   } catch (e) {
     debugPrint('❌ Error fetching top specialists by city: $e');
@@ -41,7 +40,7 @@ final topSpecialistsByRussiaProvider =
 
     final snapshot = await query.get();
     return snapshot.docs
-        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .map(SpecialistEnhanced.fromFirestore)
         .toList();
   } catch (e) {
     debugPrint('❌ Error fetching top specialists by Russia: $e');
@@ -98,16 +97,12 @@ final searchSpecialistsProvider =
     switch (filters.sortBy) {
       case 'rating':
         query = query.orderBy('rating', descending: true);
-        break;
       case 'orders':
         query = query.orderBy('successfulOrders', descending: true);
-        break;
       case 'price':
         query = query.orderBy('pricing.minPrice', descending: false);
-        break;
       case 'newest':
         query = query.orderBy('createdAt', descending: true);
-        break;
       default:
         query = query.orderBy('rating', descending: true);
     }
@@ -117,7 +112,7 @@ final searchSpecialistsProvider =
 
     final snapshot = await query.get();
     var specialists = snapshot.docs
-        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .map(SpecialistEnhanced.fromFirestore)
         .toList();
 
     // Дополнительная фильтрация на клиенте (для сложных фильтров)
@@ -172,7 +167,7 @@ final nearbySpecialistsProvider =
 
     final snapshot = await query.get();
     final specialists = snapshot.docs
-        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .map(SpecialistEnhanced.fromFirestore)
         .toList();
 
     // Фильтруем по расстоянию (если есть координаты)
@@ -335,7 +330,7 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
 
   void removeFilter(int index) {
     final newList = <SearchFilters>[];
-    for (int i = 0; i < state.length; i++) {
+    for (var i = 0; i < state.length; i++) {
       if (i != index) {
         newList.add(state[i]);
       }

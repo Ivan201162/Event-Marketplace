@@ -1,18 +1,18 @@
+import 'package:event_marketplace_app/models/enhanced_idea.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/enhanced_idea.dart';
 // import '../test_data/mock_data.dart';
 
 /// Состояние идей
 class EnhancedIdeasState {
   const EnhancedIdeasState(
-      {this.ideas = const [], this.isLoading = false, this.error});
+      {this.ideas = const [], this.isLoading = false, this.error,});
   final List<EnhancedIdea> ideas;
   final bool isLoading;
   final String? error;
 
   EnhancedIdeasState copyWith(
-          {List<EnhancedIdea>? ideas, bool? isLoading, String? error}) =>
+          {List<EnhancedIdea>? ideas, bool? isLoading, String? error,}) =>
       EnhancedIdeasState(
         ideas: ideas ?? this.ideas,
         isLoading: isLoading ?? this.isLoading,

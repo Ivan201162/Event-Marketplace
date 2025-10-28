@@ -28,7 +28,7 @@ class NewsFeedService {
         final subscriptions = await _getUserSubscriptions(userId);
         return newsItems
             .where((item) =>
-                item.isPublic || subscriptions.contains(item.authorId))
+                item.isPublic || subscriptions.contains(item.authorId),)
             .toList();
       }
 
@@ -116,7 +116,7 @@ class NewsFeedService {
   }) async {
     try {
       final updateData = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (title != null) updateData['title'] = title;
@@ -178,7 +178,7 @@ class NewsFeedService {
 
       // Удаляем лайк из коллекции лайков
       batch.delete(
-          _firestore.collection('news_likes').doc('${newsItemId}_$userId'));
+          _firestore.collection('news_likes').doc('${newsItemId}_$userId'),);
 
       // Уменьшаем счетчик лайков
       batch.update(_firestore.collection('news_items').doc(newsItemId), {
@@ -247,7 +247,7 @@ class NewsFeedService {
 
   /// Отписаться от специалиста
   Future<void> unsubscribeFromSpecialist(
-      String userId, String specialistId) async {
+      String userId, String specialistId,) async {
     try {
       await _firestore
           .collection('subscriptions')
@@ -400,15 +400,9 @@ class NewsItem {
     required this.type,
     required this.title,
     required this.content,
-    this.imageUrl,
+    required this.isPublic, required this.likes, required this.shares, required this.views, required this.createdAt, required this.updatedAt, this.imageUrl,
     this.linkUrl,
     this.metadata = const {},
-    required this.isPublic,
-    required this.likes,
-    required this.shares,
-    required this.views,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory NewsItem.fromDocument(DocumentSnapshot doc) {

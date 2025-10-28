@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
 
 /// Виджет истории входов
 class LoginHistoryWidget extends StatelessWidget {
   const LoginHistoryWidget({
-    super.key,
-    required this.loginHistory,
+    required this.loginHistory, super.key,
   });
 
   final List<LoginHistory> loginHistory;

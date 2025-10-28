@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 /// Виджет для кэширования изображений с улучшенной производительностью
 class CachedImageWidget extends StatelessWidget {
   const CachedImageWidget({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -146,7 +145,7 @@ class CachedAvatar extends StatelessWidget {
           ? Text(
               name![0].toUpperCase(),
               style: TextStyle(
-                  fontSize: radius * 0.6, fontWeight: FontWeight.bold),
+                  fontSize: radius * 0.6, fontWeight: FontWeight.bold,),
             )
           : Icon(fallbackIcon ?? Icons.person, size: radius),
     );
@@ -156,8 +155,7 @@ class CachedAvatar extends StatelessWidget {
 /// Кэшированная сетка изображений
 class CachedImageGrid extends StatelessWidget {
   const CachedImageGrid({
-    super.key,
-    required this.imageUrls,
+    required this.imageUrls, super.key,
     this.crossAxisCount = 3,
     this.spacing = 4,
     this.childAspectRatio = 1.0,
@@ -218,7 +216,7 @@ class CachedImageGrid extends StatelessWidget {
           errorWidget: Container(
             color: Colors.grey[300],
             child: const Center(
-                child: Icon(Icons.broken_image, color: Colors.grey)),
+                child: Icon(Icons.broken_image, color: Colors.grey),),
           ),
         ),
       );
@@ -233,7 +231,7 @@ class CachedImageGrid extends StatelessWidget {
           child: Text(
             '+$remainingCount',
             style: const TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold,),
           ),
         ),
       );
@@ -242,8 +240,7 @@ class CachedImageGrid extends StatelessWidget {
 /// Кэшированный список изображений
 class CachedImageList extends StatelessWidget {
   const CachedImageList({
-    super.key,
-    required this.imageUrls,
+    required this.imageUrls, super.key,
     this.height = 200,
     this.spacing = 8,
     this.onImageTap,
@@ -264,7 +261,7 @@ class CachedImageList extends StatelessWidget {
           itemBuilder: (context, index) => Container(
             width: height,
             margin: EdgeInsets.only(
-                right: index < imageUrls.length - 1 ? spacing : 0),
+                right: index < imageUrls.length - 1 ? spacing : 0,),
             child: GestureDetector(
               onTap: onImageTap,
               child: CachedImageWidget(
@@ -275,12 +272,12 @@ class CachedImageList extends StatelessWidget {
                 placeholder: Container(
                   color: Colors.grey[200],
                   child: const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2)),
+                      child: CircularProgressIndicator(strokeWidth: 2),),
                 ),
                 errorWidget: Container(
                   color: Colors.grey[300],
                   child: const Center(
-                      child: Icon(Icons.broken_image, color: Colors.grey)),
+                      child: Icon(Icons.broken_image, color: Colors.grey),),
                 ),
               ),
             ),
@@ -292,8 +289,7 @@ class CachedImageList extends StatelessWidget {
 /// Кэшированное изображение с ленивой загрузкой
 class LazyCachedImage extends StatefulWidget {
   const LazyCachedImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -344,7 +340,7 @@ class _LazyCachedImageState extends State<LazyCachedImage> {
                 height: widget.height,
                 color: Colors.grey[200],
                 child: const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2)),
+                    child: CircularProgressIndicator(strokeWidth: 2),),
               ),
       );
 }
@@ -352,7 +348,7 @@ class _LazyCachedImageState extends State<LazyCachedImage> {
 /// Простой виджет для определения видимости (заглушка)
 class VisibilityDetector extends StatefulWidget {
   const VisibilityDetector(
-      {super.key, required this.child, required this.onVisibilityChanged});
+      {required this.child, required this.onVisibilityChanged, super.key,});
   final Widget child;
   final Function(VisibilityInfo) onVisibilityChanged;
 

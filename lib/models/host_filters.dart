@@ -2,16 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Host filters model
 class HostFilters extends Equatable {
-  final String? searchQuery;
-  final String? city;
-  final List<String>? categories;
-  final double? minRating;
-  final double? maxRating;
-  final int? minPrice;
-  final int? maxPrice;
-  final bool? isAvailable;
-  final bool? isVerified;
-  final String? experienceLevel;
 
   const HostFilters({
     this.searchQuery,
@@ -43,6 +33,16 @@ class HostFilters extends Equatable {
       experienceLevel: data['experienceLevel'],
     );
   }
+  final String? searchQuery;
+  final String? city;
+  final List<String>? categories;
+  final double? minRating;
+  final double? maxRating;
+  final int? minPrice;
+  final int? maxPrice;
+  final bool? isAvailable;
+  final bool? isVerified;
+  final String? experienceLevel;
 
   /// Convert HostFilters to Map
   Map<String, dynamic> toMap() {

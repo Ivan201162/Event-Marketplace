@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/idea.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/idea.dart';
 
 /// Репозиторий для работы с идеями в Firestore
 class IdeasRepository {
@@ -40,7 +39,7 @@ class IdeasRepository {
 
       return query.snapshots().map((snapshot) {
         debugPrint(
-            'IdeasRepository.streamList: получено ${snapshot.docs.length} документов');
+            'IdeasRepository.streamList: получено ${snapshot.docs.length} документов',);
 
         var ideas = snapshot.docs
             .map((doc) {
@@ -48,7 +47,7 @@ class IdeasRepository {
                 return Idea.fromFirestore(doc);
               } catch (e) {
                 debugPrint(
-                    'IdeasRepository.streamList: ошибка парсинга документа ${doc.id}: $e');
+                    'IdeasRepository.streamList: ошибка парсинга документа ${doc.id}: $e',);
                 return null;
               }
             })
@@ -89,7 +88,7 @@ class IdeasRepository {
           .snapshots()
           .map((snapshot) {
         debugPrint(
-            'IdeasRepository.getUserIdeas: получено ${snapshot.docs.length} документов');
+            'IdeasRepository.getUserIdeas: получено ${snapshot.docs.length} документов',);
 
         return snapshot.docs
             .map((doc) {
@@ -157,7 +156,7 @@ class IdeasRepository {
       if (doc.exists) {
         final data = doc.data() ?? {};
         debugPrint(
-            'IdeasRepository.getById: документ найден, поля: ${data.keys.toList()}');
+            'IdeasRepository.getById: документ найден, поля: ${data.keys.toList()}',);
         return Idea.fromFirestore(doc);
       }
       debugPrint('IdeasRepository.getById: документ не найден');
@@ -172,7 +171,7 @@ class IdeasRepository {
   Future<String?> create(Map<String, dynamic> ideaData) async {
     try {
       debugPrint(
-          'IdeasRepository.create: создание идеи с данными: ${ideaData.keys.toList()}');
+          'IdeasRepository.create: создание идеи с данными: ${ideaData.keys.toList()}',);
 
       final docRef = await _firestore.collection('ideas').add(ideaData);
       debugPrint('IdeasRepository.create: идея создана с ID: ${docRef.id}');
@@ -236,17 +235,17 @@ class IdeasRepository {
       });
     } catch (e) {
       debugPrint(
-          'IdeasRepository.getComments: ошибка получения комментариев: $e');
+          'IdeasRepository.getComments: ошибка получения комментариев: $e',);
       return Stream.value([]);
     }
   }
 
   /// Добавление комментария к идее
   Future<bool> addComment(
-      String ideaId, Map<String, dynamic> commentData) async {
+      String ideaId, Map<String, dynamic> commentData,) async {
     try {
       debugPrint(
-          'IdeasRepository.addComment: добавление комментария к идее $ideaId');
+          'IdeasRepository.addComment: добавление комментария к идее $ideaId',);
 
       await _firestore
           .collection('ideas')
@@ -257,7 +256,7 @@ class IdeasRepository {
       return true;
     } catch (e) {
       debugPrint(
-          'IdeasRepository.addComment: ошибка добавления комментария: $e');
+          'IdeasRepository.addComment: ошибка добавления комментария: $e',);
       return false;
     }
   }

@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/widgets/auth_gate.dart';
+import 'package:event_marketplace_app/widgets/back_button_handler.dart';
+import 'package:event_marketplace_app/widgets/booking_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/booking.dart';
-import '../services/booking_service.dart';
-import '../widgets/auth_gate.dart';
-import '../widgets/back_button_handler.dart';
-import '../widgets/booking_card.dart';
 
 class MyBookingsScreen extends ConsumerStatefulWidget {
   const MyBookingsScreen({super.key});
@@ -109,7 +108,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки заявок: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -150,12 +149,12 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
         'customerId': uid,
         'specialistId': 'spec_test_3',
         'eventDate': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(days: 7))),
+            DateTime.now().subtract(const Duration(days: 7)),),
         'status': 'completed',
         'details': 'Завершенная тестовая заявка',
         'totalPrice': 10000.0,
         'createdAt': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(days: 10))),
+            DateTime.now().subtract(const Duration(days: 10)),),
         'eventTitle': 'Фотосессия в студии',
         'customerName': 'Тестовый клиент',
         'customerPhone': '+7 (999) 123-45-67',
@@ -174,16 +173,12 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
     switch (_selectedFilter) {
       case 'Ожидают подтверждения':
         status = BookingStatus.pending;
-        break;
       case 'Подтверждены':
         status = BookingStatus.confirmed;
-        break;
       case 'Выполнены':
         status = BookingStatus.completed;
-        break;
       case 'Отменены':
         status = BookingStatus.cancelled;
-        break;
     }
 
     return _bookings.where((booking) => booking.status == status).toList();
@@ -198,7 +193,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Да, отменить'),
@@ -215,7 +210,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Заявка отменена'),
-                backgroundColor: Colors.green),
+                backgroundColor: Colors.green,),
           );
         }
       } on Exception catch (e) {
@@ -223,7 +218,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text('Ошибка отмены заявки: $e'),
-                backgroundColor: Colors.red),
+                backgroundColor: Colors.red,),
           );
         }
       }
@@ -267,14 +262,14 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildDetailRow(
-                          'Название', booking.eventTitle ?? 'Не указано'),
+                          'Название', booking.eventTitle ?? 'Не указано',),
                       _buildDetailRow('Дата', _formatDate(booking.eventDate)),
                       _buildDetailRow('Время', _formatTime(booking.eventDate)),
                       _buildDetailRow('Адрес', booking.address ?? 'Не указан'),
                       _buildDetailRow(
-                          'Участники', '${booking.participantsCount} чел.'),
+                          'Участники', '${booking.participantsCount} чел.',),
                       _buildDetailRow(
-                          'Стоимость', '${booking.totalPrice.toInt() ?? 0}₽'),
+                          'Стоимость', '${booking.totalPrice ?? 0}₽',),
                       _buildDetailRow('Статус', _getStatusText(booking.status)),
                       if (booking.description != null &&
                           booking.description!.isNotEmpty)
@@ -284,7 +279,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                         _buildDetailRow('Комментарий', booking.comment!),
                       if (booking.advancePaid == true)
                         _buildDetailRow(
-                            'Аванс', '${booking.advanceAmount?.toInt() ?? 0}₽'),
+                            'Аванс', '${booking.advanceAmount?.toInt() ?? 0}₽',),
                     ],
                   ),
                 ),
@@ -310,7 +305,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                                 content: Text(
-                                    'Чат будет доступен после реализации')),
+                                    'Чат будет доступен после реализации',),),
                           );
                         },
                         child: const Text('Написать'),
@@ -333,7 +328,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             SizedBox(
               width: 100,
               child: Text('$label:',
-                  style: const TextStyle(fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontWeight: FontWeight.w500),),
             ),
             Expanded(child: Text(value)),
           ],
@@ -372,7 +367,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             title: const Text('Мои заявки'),
             leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.pop()),
+                onPressed: () => context.pop(),),
             bottom: TabBar(
               controller: _tabController,
               tabs: const [
@@ -460,7 +455,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             const Icon(Icons.event_busy, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text('Заявки не найдены',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             const SizedBox(height: 8),
             const Text(
               'Создайте новую заявку, найдя специалиста',

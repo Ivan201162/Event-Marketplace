@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/services/smart_search_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/smart_search_service.dart';
 
 /// Виджет умного поиска с подсказками
 class SmartSearchWidget extends ConsumerStatefulWidget {
   const SmartSearchWidget({
-    super.key,
-    required this.onSearch,
-    required this.onSuggestionTap,
+    required this.onSearch, required this.onSuggestionTap, super.key,
     this.hintText = 'Поиск специалистов...',
   });
 
@@ -164,11 +162,11 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
 
   Widget _buildSuggestionItem(SearchSuggestion suggestion) => ListTile(
         leading: Icon(suggestion.icon,
-            color: _getSuggestionColor(suggestion.type), size: 20),
+            color: _getSuggestionColor(suggestion.type), size: 20,),
         title: Text(suggestion.text,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
+            style: const TextStyle(fontWeight: FontWeight.w500),),
         subtitle: Text(suggestion.subtitle,
-            style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),),
         trailing: _getSuggestionTrailing(suggestion.type),
         onTap: () => _onSuggestionSelected(suggestion),
       );

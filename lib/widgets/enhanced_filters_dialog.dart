@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EnhancedFiltersDialog extends ConsumerStatefulWidget {
-  final Map<String, dynamic> initialFilters;
-  final Function(Map<String, dynamic>) onApplyFilters;
 
   const EnhancedFiltersDialog({
-    super.key,
-    required this.initialFilters,
-    required this.onApplyFilters,
+    required this.initialFilters, required this.onApplyFilters, super.key,
   });
+  final Map<String, dynamic> initialFilters;
+  final Function(Map<String, dynamic>) onApplyFilters;
 
   @override
   ConsumerState<EnhancedFiltersDialog> createState() =>
@@ -46,7 +44,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
     'Все',
     'В студии/агентстве',
     'Самозанятый',
-    'ИП'
+    'ИП',
   ];
 
   @override
@@ -147,7 +145,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                            borderRadius: BorderRadius.circular(12),),
                       ),
                       child: const Text('Сбросить'),
                     ),
@@ -160,7 +158,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                            borderRadius: BorderRadius.circular(12),),
                       ),
                       child: const Text('Применить фильтры'),
                     ),
@@ -179,7 +177,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Город',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         TextField(
           controller: _cityController,
@@ -202,7 +200,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
             'Санкт-Петербург',
             'Казань',
             'Екатеринбург',
-          ].map((city) => _buildCityChip(city)).toList(),
+          ].map(_buildCityChip).toList(),
         ),
       ],
     );
@@ -229,7 +227,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Категория',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _selectedCategory,
@@ -262,7 +260,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Цена (₽)',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -274,7 +272,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                   hintText: 'От',
                   prefixIcon: const Icon(Icons.attach_money),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                   filled: true,
                   fillColor: Colors.grey[50],
                 ),
@@ -293,7 +291,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                   hintText: 'До',
                   prefixIcon: const Icon(Icons.attach_money),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                   filled: true,
                   fillColor: Colors.grey[50],
                 ),
@@ -314,7 +312,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Тип специалиста',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _selectedSpecialistType,
@@ -327,7 +325,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
           ),
           items: _specialistTypes.map((type) {
             return DropdownMenuItem(
-                value: type == 'Все' ? null : type, child: Text(type));
+                value: type == 'Все' ? null : type, child: Text(type),);
           }).toList(),
           onChanged: (value) {
             setState(() {

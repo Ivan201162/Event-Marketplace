@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/providers/booking_payments_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../providers/booking_payments_provider.dart';
 
 /// Виджет для отображения статуса платежа
 class PaymentStatusWidget extends ConsumerWidget {
   const PaymentStatusWidget({
-    super.key,
-    required this.bookingId,
+    required this.bookingId, super.key,
     this.showDetails = false,
     this.compact = false,
   });
@@ -54,7 +52,7 @@ class PaymentStatusWidget extends ConsumerWidget {
               style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey[600],
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
           ],
         ),
@@ -83,7 +81,7 @@ class PaymentStatusWidget extends ConsumerWidget {
               style: TextStyle(
                   fontSize: 12,
                   color: Colors.blue[600],
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
           ],
         ),
@@ -106,7 +104,7 @@ class PaymentStatusWidget extends ConsumerWidget {
               style: TextStyle(
                   fontSize: 12,
                   color: Colors.red[600],
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
           ],
         ),
@@ -166,38 +164,31 @@ class PaymentStatusWidget extends ConsumerWidget {
         backgroundColor = Colors.orange.withValues(alpha: 0.1);
         textColor = Colors.orange[700]!;
         icon = Icons.schedule;
-        break;
       case 'processing':
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         textColor = Colors.blue[700]!;
         icon = Icons.hourglass_empty;
-        break;
       case 'paid':
       case 'completed':
         backgroundColor = Colors.green.withValues(alpha: 0.1);
         textColor = Colors.green[700]!;
         icon = Icons.check_circle;
-        break;
       case 'failed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
         icon = Icons.error;
-        break;
       case 'cancelled':
         backgroundColor = Colors.grey.withValues(alpha: 0.1);
         textColor = Colors.grey[700]!;
         icon = Icons.cancel;
-        break;
       case 'refunded':
         backgroundColor = Colors.purple.withValues(alpha: 0.1);
         textColor = Colors.purple[700]!;
         icon = Icons.undo;
-        break;
       case 'disputed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
         icon = Icons.gavel;
-        break;
       default:
         backgroundColor = Colors.grey.withValues(alpha: 0.1);
         textColor = Colors.grey[700]!;
@@ -219,7 +210,7 @@ class PaymentStatusWidget extends ConsumerWidget {
           Text(
             '${amount.toStringAsFixed(0)} ₽',
             style: TextStyle(
-                fontSize: 12, color: textColor, fontWeight: FontWeight.w500),
+                fontSize: 12, color: textColor, fontWeight: FontWeight.w500,),
           ),
         ],
       ),
@@ -237,16 +228,16 @@ class PaymentStatusWidget extends ConsumerWidget {
               // Заголовок платежа
               Row(
                 children: [
-                  Icon(Icons.payment, size: 20),
+                  const Icon(Icons.payment, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Платеж',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 14),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14,),
                         ),
                         Text(
                           '${payment.amount.toStringAsFixed(0)} ₽',
@@ -284,7 +275,7 @@ class PaymentStatusWidget extends ConsumerWidget {
                       payment.status == 'completed') ...[
                     const SizedBox(width: 12),
                     Icon(Icons.check_circle,
-                        size: 14, color: Colors.green[500]),
+                        size: 14, color: Colors.green[500],),
                     const SizedBox(width: 4),
                     Text(
                       'Оплачен: ${_formatDate(payment.updatedAt)}',
@@ -306,36 +297,28 @@ class PaymentStatusWidget extends ConsumerWidget {
       case 'pending':
         backgroundColor = Colors.orange.withValues(alpha: 0.1);
         textColor = Colors.orange[700]!;
-        break;
       case 'processing':
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         textColor = Colors.blue[700]!;
-        break;
       case 'paid':
       case 'completed':
         backgroundColor = Colors.green.withValues(alpha: 0.1);
         textColor = Colors.green[700]!;
-        break;
       case 'failed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
-        break;
       case 'cancelled':
         backgroundColor = Colors.grey.withValues(alpha: 0.1);
         textColor = Colors.grey[700]!;
-        break;
       case 'refunded':
         backgroundColor = Colors.purple.withValues(alpha: 0.1);
         textColor = Colors.purple[700]!;
-        break;
       case 'disputed':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
-        break;
       default:
         backgroundColor = Colors.grey.withValues(alpha: 0.1);
         textColor = Colors.grey[700]!;
-        break;
     }
 
     return Container(
@@ -348,7 +331,7 @@ class PaymentStatusWidget extends ConsumerWidget {
       child: Text(
         _getStatusDisplayName(status),
         style: TextStyle(
-            fontSize: 10, color: textColor, fontWeight: FontWeight.w500),
+            fontSize: 10, color: textColor, fontWeight: FontWeight.w500,),
       ),
     );
   }
@@ -401,9 +384,9 @@ class PaymentStatusWidget extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           _buildSummaryRow(
-              'Общая сумма', '${totalAmount.toStringAsFixed(0)} ₽'),
+              'Общая сумма', '${totalAmount.toStringAsFixed(0)} ₽',),
           _buildSummaryRow('Оплачено',
-              '${completedAmount.toStringAsFixed(0)} ₽', Colors.green),
+              '${completedAmount.toStringAsFixed(0)} ₽', Colors.green,),
           if (pendingAmount > 0)
             _buildSummaryRow(
               'Ожидает оплаты',
@@ -422,7 +405,7 @@ class PaymentStatusWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
             Text(
               value,
               style: TextStyle(
@@ -441,7 +424,7 @@ class PaymentStatusWidget extends ConsumerWidget {
 
 /// Компактный виджет статуса платежа для списков
 class CompactPaymentStatusWidget extends StatelessWidget {
-  const CompactPaymentStatusWidget({super.key, required this.bookingId});
+  const CompactPaymentStatusWidget({required this.bookingId, super.key});
 
   final String bookingId;
 
@@ -453,7 +436,7 @@ class CompactPaymentStatusWidget extends StatelessWidget {
 /// Виджет для отображения кнопки оплаты
 class PaymentButtonWidget extends ConsumerWidget {
   const PaymentButtonWidget(
-      {super.key, required this.bookingId, this.onPaymentPressed});
+      {required this.bookingId, super.key, this.onPaymentPressed,});
 
   final String bookingId;
   final VoidCallback? onPaymentPressed;
@@ -498,7 +481,7 @@ class PaymentButtonWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);

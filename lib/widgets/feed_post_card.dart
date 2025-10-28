@@ -1,23 +1,21 @@
+import 'package:event_marketplace_app/models/post.dart';
 import 'package:flutter/material.dart';
-
-import '../models/post.dart';
 
 /// Карточка поста в ленте
 class FeedPostCard extends StatelessWidget {
-  final Post post;
-  final VoidCallback? onLike;
-  final VoidCallback? onComment;
-  final VoidCallback? onShare;
-  final VoidCallback? onSave;
 
   const FeedPostCard({
-    super.key,
-    required this.post,
+    required this.post, super.key,
     this.onLike,
     this.onComment,
     this.onShare,
     this.onSave,
   });
+  final Post post;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onShare;
+  final VoidCallback? onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +59,9 @@ class FeedPostCard extends StatelessWidget {
 
 /// Заголовок поста с аватаром и именем автора
 class _PostHeader extends StatelessWidget {
-  final Post post;
 
   const _PostHeader({required this.post});
+  final Post post;
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +145,9 @@ class _PostHeader extends StatelessWidget {
 
 /// Медиа контент поста
 class _PostMedia extends StatelessWidget {
-  final List<String> media;
 
   const _PostMedia({required this.media});
+  final List<String> media;
 
   @override
   Widget build(BuildContext context) {
@@ -203,11 +201,6 @@ class _PostMedia extends StatelessWidget {
 
 /// Действия с постом
 class _PostActions extends StatelessWidget {
-  final Post post;
-  final VoidCallback? onLike;
-  final VoidCallback? onComment;
-  final VoidCallback? onShare;
-  final VoidCallback? onSave;
 
   const _PostActions({
     required this.post,
@@ -216,6 +209,11 @@ class _PostActions extends StatelessWidget {
     this.onShare,
     this.onSave,
   });
+  final Post post;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onShare;
+  final VoidCallback? onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -254,9 +252,9 @@ class _PostActions extends StatelessWidget {
 
 /// Статистика поста
 class _PostStats extends StatelessWidget {
-  final Post post;
 
   const _PostStats({required this.post});
+  final Post post;
 
   @override
   Widget build(BuildContext context) {

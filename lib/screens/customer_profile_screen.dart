@@ -1,18 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/providers/user_profile_provider.dart';
+import 'package:event_marketplace_app/widgets/booking_history.dart';
+import 'package:event_marketplace_app/widgets/customer_stats.dart';
+import 'package:event_marketplace_app/widgets/favorite_specialists.dart';
+import 'package:event_marketplace_app/widgets/profile_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/user_profile.dart';
-import '../providers/user_profile_provider.dart';
-import '../widgets/booking_history.dart';
-import '../widgets/customer_stats.dart';
-import '../widgets/favorite_specialists.dart';
-import '../widgets/profile_header.dart';
 
 /// Экран профиля заказчика
 class CustomerProfileScreen extends ConsumerStatefulWidget {
   const CustomerProfileScreen(
-      {super.key, required this.userId, this.isOwnProfile = false});
+      {required this.userId, super.key, this.isOwnProfile = false,});
   final String userId;
   final bool isOwnProfile;
 
@@ -110,11 +109,11 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
                       placeholder: (context, url) => Container(
                           color: Theme.of(context)
                               .primaryColor
-                              .withValues(alpha: 0.3)),
+                              .withValues(alpha: 0.3),),
                       errorWidget: (context, url, error) => Container(
                           color: Theme.of(context)
                               .primaryColor
-                              .withValues(alpha: 0.3)),
+                              .withValues(alpha: 0.3),),
                     ),
                   ),
                 // Градиент поверх обложки
@@ -126,7 +125,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withValues(alpha: 0.3)
+                          Colors.black.withValues(alpha: 0.3),
                         ],
                       ),
                     ),
@@ -200,7 +199,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
             Icon(Icons.event, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Годовщины и напоминания',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text(
               'Здесь будут отображаться важные даты\nи напоминания о событиях',
@@ -219,18 +218,18 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         children: [
           _buildSettingsSection('Профиль', [
             _buildSettingsItem(Icons.person, 'Редактировать профиль',
-                () => _editProfile(profile)),
+                () => _editProfile(profile),),
             _buildSettingsItem(
-                Icons.notifications, 'Уведомления', _openNotificationsSettings),
+                Icons.notifications, 'Уведомления', _openNotificationsSettings,),
             _buildSettingsItem(
-                Icons.privacy_tip, 'Приватность', _openPrivacySettings),
+                Icons.privacy_tip, 'Приватность', _openPrivacySettings,),
           ]),
           const SizedBox(height: 24),
           _buildSettingsSection('Приложение', [
             _buildSettingsItem(Icons.help, 'Помощь', _openHelp),
             _buildSettingsItem(Icons.info, 'О приложении', _openAbout),
             _buildSettingsItem(Icons.logout, 'Выйти', _logout,
-                isDestructive: true),
+                isDestructive: true,),
           ]),
         ],
       );
@@ -275,7 +274,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
       ListTile(
         leading: Icon(icon, color: isDestructive ? Colors.red : null),
         title: Text(title,
-            style: TextStyle(color: isDestructive ? Colors.red : null)),
+            style: TextStyle(color: isDestructive ? Colors.red : null),),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: onTap,
       );
@@ -431,7 +430,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -439,7 +438,7 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(
-                  const SnackBar(content: Text('Выход из аккаунта')));
+                  const SnackBar(content: Text('Выход из аккаунта')),);
             },
             child: const Text('Выйти'),
           ),
@@ -462,9 +461,9 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      Container(
-          color: Theme.of(context).scaffoldBackgroundColor, child: _tabBar);
+          BuildContext context, double shrinkOffset, bool overlapsContent,) =>
+      ColoredBox(
+          color: Theme.of(context).scaffoldBackgroundColor, child: _tabBar,);
 
   @override
   bool shouldRebuild(_TabBarDelegate oldDelegate) => false;

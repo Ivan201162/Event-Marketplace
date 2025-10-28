@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/services/promotion_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/promotion_boost.dart';
-import '../../services/promotion_service.dart';
 
 class MyPromotionsScreen extends StatefulWidget {
   const MyPromotionsScreen({super.key});
@@ -46,7 +45,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка загрузки продвижений: $e')));
+            SnackBar(content: Text('Ошибка загрузки продвижений: $e')),);
       }
     }
   }
@@ -168,7 +167,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
 
             // Детали продвижения
             _buildDetailRow(
-                'Приоритет:', _getPriorityText(promotion.priorityLevel)),
+                'Приоритет:', _getPriorityText(promotion.priorityLevel),),
             _buildDetailRow('Цена:', '${promotion.price.toInt()} ₽'),
             _buildDetailRow('Начало:', _formatDate(promotion.startDate)),
             _buildDetailRow('Окончание:', _formatDate(promotion.endDate)),
@@ -178,7 +177,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
 
             if (promotion.isActive) ...[
               const SizedBox(height: 12),
-              _buildProgressBar(promotion)
+              _buildProgressBar(promotion),
             ],
 
             const SizedBox(height: 16),
@@ -298,7 +297,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
         style: TextStyle(
             color: _getStatusColor(status),
             fontWeight: FontWeight.w500,
-            fontSize: 12),
+            fontSize: 12,),
       ),
     );
   }
@@ -406,7 +405,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Продвижение возобновлено'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       } else {
         throw Exception('Не удалось возобновить продвижение');
@@ -428,7 +427,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -441,7 +440,7 @@ class _MyPromotionsScreenState extends State<MyPromotionsScreen> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         final success = await _promotionService.cancelPromotion(promotion.id);
         if (success) {

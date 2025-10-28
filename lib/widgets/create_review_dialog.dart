@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
+import 'package:event_marketplace_app/theme/brand_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../theme/brand_colors.dart';
-
-import '../core/app_theme.dart';
-import '../providers/auth_providers.dart';
-import '../services/review_service.dart';
 
 /// Диалог для создания отзыва
 class CreateReviewDialog extends ConsumerStatefulWidget {
   const CreateReviewDialog(
-      {super.key, required this.specialistId, required this.specialistName});
+      {required this.specialistId, required this.specialistName, super.key,});
   final String specialistId;
   final String specialistName;
 
@@ -105,7 +104,7 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                   hintText:
                       'Расскажите о своем опыте работы с этим специалистом...',
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: BrandColors.primary),
@@ -222,7 +221,7 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Отзыв успешно добавлен'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -231,7 +230,7 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -240,9 +239,7 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
 /// Кнопка для открытия диалога создания отзыва
 class CreateReviewButton extends ConsumerWidget {
   const CreateReviewButton({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.onReviewAdded,
   });
   final String specialistId;
@@ -264,7 +261,7 @@ class CreateReviewButton extends ConsumerWidget {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => CreateReviewDialog(
-          specialistId: specialistId, specialistName: specialistName),
+          specialistId: specialistId, specialistName: specialistName,),
     );
 
     if (result ?? false && onReviewAdded != null) {

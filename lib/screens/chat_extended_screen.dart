@@ -1,21 +1,16 @@
+import 'package:event_marketplace_app/models/chat_message_extended.dart';
+import 'package:event_marketplace_app/widgets/message_reactions_widget.dart';
+import 'package:event_marketplace_app/widgets/voice_player_widget.dart';
+// import '../models/user.dart';
+import 'package:event_marketplace_app/widgets/voice_recorder_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat_message_extended.dart';
-import '../widgets/message_reactions_widget.dart';
-import '../widgets/voice_player_widget.dart';
-// import '../models/user.dart';
-import '../widgets/voice_recorder_widget.dart';
 
 /// Расширенный экран чата с голосовыми сообщениями и реакциями
 class ChatExtendedScreen extends ConsumerStatefulWidget {
   const ChatExtendedScreen({
-    super.key,
-    required this.chatId,
-    required this.currentUserId,
-    required this.currentUserName,
+    required this.chatId, required this.currentUserId, required this.currentUserName, required this.otherUserName, super.key,
     this.currentUserAvatar,
-    required this.otherUserName,
     this.otherUserAvatar,
   });
   final String chatId;
@@ -76,11 +71,11 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                     Text(
                       widget.otherUserName,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
                     if (_isTyping)
                       const Text('печатает...',
-                          style: TextStyle(fontSize: 12, color: Colors.grey)),
+                          style: TextStyle(fontSize: 12, color: Colors.grey),),
                   ],
                 ),
               ),
@@ -88,9 +83,9 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
           ),
           actions: [
             IconButton(
-                icon: const Icon(Icons.videocam), onPressed: _startVideoCall),
+                icon: const Icon(Icons.videocam), onPressed: _startVideoCall,),
             IconButton(
-                icon: const Icon(Icons.phone), onPressed: _startVoiceCall),
+                icon: const Icon(Icons.phone), onPressed: _startVoiceCall,),
             PopupMenuButton<String>(
               onSelected: _handleMenuAction,
               itemBuilder: (context) => [
@@ -100,7 +95,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                     children: [
                       Icon(Icons.info_outline),
                       SizedBox(width: 8),
-                      Text('Информация о чате')
+                      Text('Информация о чате'),
                     ],
                   ),
                 ),
@@ -110,7 +105,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                     children: [
                       Icon(Icons.photo_library),
                       SizedBox(width: 8),
-                      Text('Медиафайлы')
+                      Text('Медиафайлы'),
                     ],
                   ),
                 ),
@@ -119,8 +114,8 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                   child: Row(children: [
                     Icon(Icons.search),
                     SizedBox(width: 8),
-                    Text('Поиск')
-                  ]),
+                    Text('Поиск'),
+                  ],),
                 ),
               ],
             ),
@@ -186,7 +181,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
             Flexible(
               child: Container(
                 constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.7),
+                    maxWidth: MediaQuery.of(context).size.width * 0.7,),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isOwnMessage
@@ -207,7 +202,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                     // Содержимое сообщения
                     if (message.type == MessageType.voice)
                       VoicePlayerWidget(
-                          message: message, isOwnMessage: isOwnMessage)
+                          message: message, isOwnMessage: isOwnMessage,)
                     else
                       Text(
                         message.content,
@@ -284,7 +279,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           border: Border(
-              top: BorderSide(color: Colors.grey.withValues(alpha: 0.3))),
+              top: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),),
         ),
         child: Row(
           children: [
@@ -432,20 +427,17 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Голосовой звонок (в разработке)')));
+        const SnackBar(content: Text('Голосовой звонок (в разработке)')),);
   }
 
   void _handleMenuAction(String action) {
     switch (action) {
       case 'info':
         _showChatInfo();
-        break;
       case 'media':
         _showMediaFiles();
-        break;
       case 'search':
         _showSearchDialog();
-        break;
     }
   }
 
@@ -496,7 +488,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -524,13 +516,13 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(
-                SnackBar(content: Text('Поиск: $query (в разработке)')));
+                SnackBar(content: Text('Поиск: $query (в разработке)')),);
           },
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'))
+              child: const Text('Отмена'),),
         ],
       ),
     );

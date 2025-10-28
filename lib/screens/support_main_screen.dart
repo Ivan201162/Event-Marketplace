@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/support_ticket.dart';
+import 'package:event_marketplace_app/screens/admin_support_screen.dart';
+import 'package:event_marketplace_app/screens/create_support_ticket_screen.dart';
+import 'package:event_marketplace_app/screens/faq_screen.dart';
+import 'package:event_marketplace_app/screens/support_ticket_detail_screen.dart';
+import 'package:event_marketplace_app/services/support_service.dart';
+import 'package:event_marketplace_app/widgets/support_ticket_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/support_ticket.dart';
-import '../services/support_service.dart';
-import '../widgets/support_ticket_widget.dart';
-import 'admin_support_screen.dart';
-import 'create_support_ticket_screen.dart';
-import 'faq_screen.dart';
-import 'support_ticket_detail_screen.dart';
 
 /// Главный экран поддержки
 class SupportMainScreen extends ConsumerStatefulWidget {
@@ -27,7 +26,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
           actions: [
             IconButton(
                 icon: const Icon(Icons.admin_panel_settings),
-                onPressed: _showAdminPanel),
+                onPressed: _showAdminPanel,),
           ],
         ),
         body: Column(
@@ -101,7 +100,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
+                      fontSize: 14, fontWeight: FontWeight.bold,),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
@@ -166,7 +165,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
                                   Row(
                                     children: [
                                       Icon(faqItem.category.icon,
-                                          size: 16, color: Colors.blue),
+                                          size: 16, color: Colors.blue,),
                                       const SizedBox(width: 4),
                                       Text(
                                         faqItem.category.categoryText,
@@ -178,13 +177,13 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
                                       ),
                                       const Spacer(),
                                       Icon(Icons.visibility,
-                                          size: 12, color: Colors.grey[600]),
+                                          size: 12, color: Colors.grey[600],),
                                       const SizedBox(width: 2),
                                       Text(
                                         '${faqItem.viewsCount}',
                                         style: TextStyle(
                                             fontSize: 10,
-                                            color: Colors.grey[600]),
+                                            color: Colors.grey[600],),
                                       ),
                                     ],
                                   ),
@@ -193,7 +192,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
                                     faqItem.question,
                                     style: const TextStyle(
                                         fontSize: 14,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -201,7 +200,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
                                   Text(
                                     faqItem.answer,
                                     style: TextStyle(
-                                        fontSize: 12, color: Colors.grey[600]),
+                                        fontSize: 12, color: Colors.grey[600],),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -309,9 +308,9 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   void _createTicket() {
     Navigator.of(context)
         .push(MaterialPageRoute<bool>(
-            builder: (context) => const CreateSupportTicketScreen()))
+            builder: (context) => const CreateSupportTicketScreen(),),)
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -325,7 +324,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -347,7 +346,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -368,7 +367,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('Создание тикета для: ${faqItem.question}')));
+        SnackBar(content: Text('Создание тикета для: ${faqItem.question}')),);
   }
 
   void _contactSupport() {
@@ -392,7 +391,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -409,6 +408,6 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => const AdminSupportScreen()));
+        builder: (context) => const AdminSupportScreen(),),);
   }
 }

@@ -271,8 +271,7 @@ class MediaFile {
     required this.downloadUrl,
     required this.fileSize,
     required this.mimeType,
-    this.description,
-    required this.uploadedAt,
+    required this.uploadedAt, this.description,
   });
 
   factory MediaFile.fromDocument(DocumentSnapshot doc) {

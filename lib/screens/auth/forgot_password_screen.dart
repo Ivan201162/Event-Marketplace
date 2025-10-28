@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Экран восстановления пароля
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
@@ -36,7 +35,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       appBar: AppBar(
         title: const Text('Восстановление пароля'),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(),),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -57,7 +56,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Icon(Icons.lock_reset,
-                      size: 40, color: theme.primaryColor),
+                      size: 40, color: theme.primaryColor,),
                 ),
 
                 const SizedBox(height: 24),
@@ -134,7 +133,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     child: Column(
                       children: [
                         const Icon(Icons.check_circle,
-                            color: Colors.green, size: 48),
+                            color: Colors.green, size: 48,),
                         const SizedBox(height: 16),
                         Text(
                           'Письмо отправлено!',

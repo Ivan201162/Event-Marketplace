@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/tax_info.dart';
+import 'package:event_marketplace_app/services/tax_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/tax_info.dart';
-import '../services/tax_service.dart';
 
 /// Провайдер для TaxService
 final taxServiceProvider = Provider<TaxService>((ref) => TaxService());
@@ -29,7 +28,7 @@ final taxSummaryProvider =
         (ref, params) async {
   final taxService = ref.read(taxServiceProvider);
   return taxService.getTaxSummary(
-      specialistId: params.specialistId, period: params.period);
+      specialistId: params.specialistId, period: params.period,);
 });
 
 /// Провайдер для получения напоминаний о налогах

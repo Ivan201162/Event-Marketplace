@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/receipt_system.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/receipt_system.dart';
 
 class ReceiptService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -21,16 +20,16 @@ class ReceiptService {
   }) async {
     try {
       // Получаем настройки пользователя
-      final ReceiptSettings? settings = await _getUserReceiptSettings(userId);
+      final settings = await _getUserReceiptSettings(userId);
 
       if (settings != null && !settings.autoGenerate) {
         debugPrint(
-            'INFO: [ReceiptService] Auto-generate disabled for user $userId');
+            'INFO: [ReceiptService] Auto-generate disabled for user $userId',);
         return '';
       }
 
       // Создаем чек
-      final Receipt receipt = Receipt(
+      final receipt = Receipt(
         id: _uuid.v4(),
         userId: userId,
         transactionId: transactionId,
@@ -65,20 +64,20 @@ class ReceiptService {
   Future<void> _generateReceipt(Receipt receipt) async {
     try {
       // Получаем шаблон чека
-      final ReceiptTemplate? template = await _getReceiptTemplate(receipt.type);
+      final template = await _getReceiptTemplate(receipt.type);
 
       if (template == null) {
         await _updateReceiptStatus(
-            receipt.id, ReceiptStatus.failed, 'Template not found');
+            receipt.id, ReceiptStatus.failed, 'Template not found',);
         return;
       }
 
       // Генерируем данные чека
-      final Map<String, dynamic> receiptData =
+      final receiptData =
           await _generateReceiptData(receipt, template);
 
       // Создаем фискальный чек (если требуется)
-      final FiscalReceipt? fiscalReceipt =
+      final fiscalReceipt =
           await _createFiscalReceipt(receipt, receiptData);
 
       // Обновляем чек
@@ -97,7 +96,7 @@ class ReceiptService {
     } catch (e) {
       debugPrint('ERROR: [ReceiptService] Failed to generate receipt: $e');
       await _updateReceiptStatus(
-          receipt.id, ReceiptStatus.failed, e.toString());
+          receipt.id, ReceiptStatus.failed, e.toString(),);
     }
   }
 
@@ -108,12 +107,12 @@ class ReceiptService {
           await _firestore.collection('receipt_settings').doc(userId).get();
 
       if (doc.exists) {
-        return ReceiptSettings.fromMap(doc.data() as Map<String, dynamic>);
+        return ReceiptSettings.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
       debugPrint(
-          'ERROR: [ReceiptService] Failed to get user receipt settings: $e');
+          'ERROR: [ReceiptService] Failed to get user receipt settings: $e',);
       return null;
     }
   }
@@ -130,7 +129,7 @@ class ReceiptService {
 
       if (snapshot.docs.isNotEmpty) {
         return ReceiptTemplate.fromMap(
-            snapshot.docs.first.data() as Map<String, dynamic>);
+            snapshot.docs.first.data()! as Map<String, dynamic>,);
       }
       return null;
     } catch (e) {
@@ -146,14 +145,14 @@ class ReceiptService {
   ) async {
     try {
       // Получаем данные транзакции
-      final Map<String, dynamic> transactionData =
+      final transactionData =
           await _getTransactionData(receipt.transactionId);
 
       // Получаем данные пользователя
-      final Map<String, dynamic> userData = await _getUserData(receipt.userId);
+      final userData = await _getUserData(receipt.userId);
 
       // Заполняем шаблон
-      final Map<String, dynamic> receiptData = {
+      final receiptData = <String, dynamic>{
         'receiptId': receipt.id,
         'transactionId': receipt.transactionId,
         'amount': receipt.amount,
@@ -187,7 +186,7 @@ class ReceiptService {
           await _firestore.collection('transactions').doc(transactionId).get();
 
       if (doc.exists) {
-        return doc.data() as Map<String, dynamic>;
+        return doc.data()! as Map<String, dynamic>;
       }
       return {};
     } catch (e) {
@@ -203,7 +202,7 @@ class ReceiptService {
           await _firestore.collection('users').doc(userId).get();
 
       if (doc.exists) {
-        return doc.data() as Map<String, dynamic>;
+        return doc.data()! as Map<String, dynamic>;
       }
       return {};
     } catch (e) {
@@ -214,7 +213,7 @@ class ReceiptService {
 
   /// Получение описания чека
   String _getReceiptDescription(
-      ReceiptType type, Map<String, dynamic> transactionData) {
+      ReceiptType type, Map<String, dynamic> transactionData,) {
     switch (type) {
       case ReceiptType.payment:
         return 'Оплата услуг';
@@ -286,14 +285,14 @@ class ReceiptService {
   /// Расчет налогов
   Map<String, dynamic> _calculateTaxes(double amount) {
     // Упрощенный расчет НДС (20%)
-    const double vatRate = 0.20;
-    final double vatAmount = amount * vatRate;
-    final double amountWithoutVat = amount - vatAmount;
+    const vatRate = 0.20;
+    final vatAmount = amount * vatRate;
+    final amountWithoutVat = amount - vatAmount;
 
     return {
       'vatRate': vatRate,
       'vatAmount': vatAmount,
-      'amountWithoutVat': amountWithoutVat
+      'amountWithoutVat': amountWithoutVat,
     };
   }
 
@@ -306,7 +305,7 @@ class ReceiptService {
       // Интеграция с 54-ФЗ (онлайн-касса)
       // В реальном приложении здесь будет вызов API фискального оператора
 
-      final FiscalReceipt fiscalReceipt = FiscalReceipt(
+      final fiscalReceipt = FiscalReceipt(
         id: _uuid.v4(),
         receiptId: receipt.id,
         fiscalDocumentNumber: _generateFiscalDocumentNumber(),
@@ -329,7 +328,7 @@ class ReceiptService {
           .set(fiscalReceipt.toMap());
 
       debugPrint(
-          'INFO: [ReceiptService] Fiscal receipt created: ${fiscalReceipt.id}');
+          'INFO: [ReceiptService] Fiscal receipt created: ${fiscalReceipt.id}',);
       return fiscalReceipt;
     } catch (e) {
       debugPrint('ERROR: [ReceiptService] Failed to create fiscal receipt: $e');
@@ -369,12 +368,12 @@ class ReceiptService {
   /// Отправка чека пользователю
   Future<void> _sendReceipt(Receipt receipt) async {
     try {
-      final ReceiptSettings? settings =
+      final settings =
           await _getUserReceiptSettings(receipt.userId);
 
       if (settings == null) return;
 
-      bool sent = false;
+      var sent = false;
 
       // Отправка по email
       if (settings.sendByEmail && receipt.email != null) {
@@ -396,7 +395,7 @@ class ReceiptService {
     } catch (e) {
       debugPrint('ERROR: [ReceiptService] Failed to send receipt: $e');
       await _updateReceiptStatus(
-          receipt.id, ReceiptStatus.failed, e.toString());
+          receipt.id, ReceiptStatus.failed, e.toString(),);
     }
   }
 
@@ -407,7 +406,7 @@ class ReceiptService {
       // В реальном приложении здесь будет вызов API email сервиса
 
       debugPrint(
-          'INFO: [ReceiptService] Receipt sent by email to ${receipt.email}');
+          'INFO: [ReceiptService] Receipt sent by email to ${receipt.email}',);
     } catch (e) {
       debugPrint('ERROR: [ReceiptService] Failed to send receipt by email: $e');
       rethrow;
@@ -421,7 +420,7 @@ class ReceiptService {
       // В реальном приложении здесь будет вызов API SMS сервиса
 
       debugPrint(
-          'INFO: [ReceiptService] Receipt sent by SMS to ${receipt.phone}');
+          'INFO: [ReceiptService] Receipt sent by SMS to ${receipt.phone}',);
     } catch (e) {
       debugPrint('ERROR: [ReceiptService] Failed to send receipt by SMS: $e');
       rethrow;
@@ -435,7 +434,7 @@ class ReceiptService {
     String? failedReason,
   ]) async {
     try {
-      final Map<String, dynamic> updateData = {
+      final updateData = <String, dynamic>{
         'status': status.toString().split('.').last,
         'updatedAt': FieldValue.serverTimestamp(),
       };
@@ -464,7 +463,7 @@ class ReceiptService {
           .get();
 
       return snapshot.docs
-          .map((doc) => Receipt.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => Receipt.fromMap(doc.data()! as Map<String, dynamic>))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [ReceiptService] Failed to get user receipts: $e');
@@ -479,7 +478,7 @@ class ReceiptService {
           await _firestore.collection('receipts').doc(receiptId).get();
 
       if (doc.exists) {
-        return Receipt.fromMap(doc.data() as Map<String, dynamic>);
+        return Receipt.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -497,10 +496,10 @@ class ReceiptService {
           .set(settings.toMap());
 
       debugPrint(
-          'INFO: [ReceiptService] Receipt settings updated for user ${settings.userId}');
+          'INFO: [ReceiptService] Receipt settings updated for user ${settings.userId}',);
     } catch (e) {
       debugPrint(
-          'ERROR: [ReceiptService] Failed to update receipt settings: $e');
+          'ERROR: [ReceiptService] Failed to update receipt settings: $e',);
       rethrow;
     }
   }
@@ -508,8 +507,8 @@ class ReceiptService {
   /// Создание шаблона чека
   Future<String> createReceiptTemplate(ReceiptTemplate template) async {
     try {
-      final String templateId = _uuid.v4();
-      final ReceiptTemplate newTemplate = ReceiptTemplate(
+      final templateId = _uuid.v4();
+      final newTemplate = ReceiptTemplate(
         id: templateId,
         name: template.name,
         type: template.type,
@@ -528,11 +527,11 @@ class ReceiptService {
           .set(newTemplate.toMap());
 
       debugPrint(
-          'INFO: [ReceiptService] Receipt template created: $templateId');
+          'INFO: [ReceiptService] Receipt template created: $templateId',);
       return templateId;
     } catch (e) {
       debugPrint(
-          'ERROR: [ReceiptService] Failed to create receipt template: $e');
+          'ERROR: [ReceiptService] Failed to create receipt template: $e',);
       rethrow;
     }
   }
@@ -540,7 +539,7 @@ class ReceiptService {
   /// Повторная отправка чека
   Future<void> resendReceipt(String receiptId) async {
     try {
-      final Receipt? receipt = await getReceipt(receiptId);
+      final receipt = await getReceipt(receiptId);
       if (receipt == null) {
         throw Exception('Receipt not found');
       }

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/subscription.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/subscription.dart';
-import '../providers/auth_providers.dart';
-import '../services/subscription_service.dart';
 
 /// Экран подписок
 class SubscriptionsPage extends ConsumerStatefulWidget {
@@ -58,7 +57,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
         controller: _tabController,
         children: [
           _buildPlansTab(currentUser),
-          _buildMySubscriptionTab(currentUser)
+          _buildMySubscriptionTab(currentUser),
         ],
       ),
     );
@@ -113,7 +112,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
 
   Widget _buildMySubscriptionTab(currentUser) => StreamBuilder<Subscription?>(
         stream: _subscriptionService.getUserSubscription(
-            currentUser.id, 'default_specialist'),
+            currentUser.id, 'default_specialist',),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -130,7 +129,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -179,10 +178,10 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           children: [
             Expanded(
                 child:
-                    _buildPeriodButton('Месячная', SubscriptionPeriod.monthly)),
+                    _buildPeriodButton('Месячная', SubscriptionPeriod.monthly),),
             Expanded(
                 child:
-                    _buildPeriodButton('Годовая', SubscriptionPeriod.yearly)),
+                    _buildPeriodButton('Годовая', SubscriptionPeriod.yearly),),
           ],
         ),
       );
@@ -380,7 +379,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                           ? 'Текущий план'
                           : 'Выбрать план',
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ),
@@ -411,11 +410,11 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                     children: [
                       Icon(Icons.check_circle,
                           color: Theme.of(context).colorScheme.primary,
-                          size: 20),
+                          size: 20,),
                       const SizedBox(width: 12),
                       Expanded(
                           child: Text(feature,
-                              style: Theme.of(context).textTheme.bodyMedium)),
+                              style: Theme.of(context).textTheme.bodyMedium,),),
                     ],
                   ),
                 ),
@@ -485,7 +484,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             const Icon(Icons.credit_card_off, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text('У вас нет активной подписки',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             const Text(
               'Выберите подходящий план, чтобы получить доступ к расширенным возможностям',
@@ -529,7 +528,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
   }
 
   Widget _buildCurrentPlanCard(
-          Subscription subscription, SubscriptionPlan? plan) =>
+          Subscription subscription, SubscriptionPlan? plan,) =>
       Card(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -604,7 +603,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                           'Подписка истекает через ${DateTime.now().difference(subscription.createdAt).inDays} дн.',
                           style: const TextStyle(
                               color: Colors.orange,
-                              fontWeight: FontWeight.w500),
+                              fontWeight: FontWeight.w500,),
                         ),
                       ),
                     ],
@@ -633,11 +632,11 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               _buildDetailRow('Период', 'Месячная'),
               _buildDetailRow('Цена', subscription.formattedPrice),
               _buildDetailRow(
-                  'Дата начала', _formatDate(subscription.createdAt)),
+                  'Дата начала', _formatDate(subscription.createdAt),),
               _buildDetailRow(
                 'Дата окончания',
                 _formatDate(
-                    subscription.createdAt.add(const Duration(days: 30))),
+                    subscription.createdAt.add(const Duration(days: 30)),),
               ),
               _buildDetailRow('Автопродление', 'Включено'),
               _buildDetailRow('Способ оплаты', 'Банковская карта'),
@@ -661,12 +660,12 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               ),
               const SizedBox(height: 16),
               _buildUsageItem(
-                  'События в месяц', 0, plan.getLimit('events_per_month')),
+                  'События в месяц', 0, plan.getLimit('events_per_month'),),
               _buildUsageItem('Уведомления в день', 0,
-                  plan.getLimit('notifications_per_day')),
+                  plan.getLimit('notifications_per_day'),),
               _buildUsageItem('Хранилище', 0, plan.getLimit('storage_mb')),
               _buildUsageItem(
-                  'Участники команды', 0, plan.getLimit('team_members')),
+                  'Участники команды', 0, plan.getLimit('team_members'),),
             ],
           ),
         ),
@@ -829,7 +828,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка активации подписки: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -854,7 +853,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 const Text(
                   'В демо-версии оплата не производится. Подписка будет активирована автоматически.',
                   style: TextStyle(
-                      fontStyle: FontStyle.italic, color: Colors.grey),
+                      fontStyle: FontStyle.italic, color: Colors.grey,),
                 ),
               ],
             ),
@@ -882,7 +881,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция будет реализована в следующей версии')));
+        content: Text('Функция будет реализована в следующей версии'),),);
   }
 
   void _cancelSubscription(Subscription subscription) {
@@ -896,7 +895,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -904,7 +903,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     content:
-                        Text('Функция будет реализована в следующей версии')),
+                        Text('Функция будет реализована в следующей версии'),),
               );
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),

@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../services/notification_service.dart';
-
 class NotificationBadge extends StatelessWidget {
-  const NotificationBadge({super.key, required this.child, this.userId});
+  const NotificationBadge({required this.child, super.key, this.userId});
   final Widget child;
   final String? userId;
 
@@ -18,8 +17,8 @@ class NotificationBadge extends StatelessWidget {
 
     return FutureBuilder<int>(
       future: NotificationService.getUnreadCount(currentUserId),
-      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-        final int unreadCount = snapshot.data ?? 0;
+      builder: (context, snapshot) {
+        final unreadCount = snapshot.data ?? 0;
 
         if (unreadCount == 0) {
           return child;

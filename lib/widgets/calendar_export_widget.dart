@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/calendar/ics_export.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../calendar/ics_export.dart';
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/booking.dart';
-import '../models/event.dart';
 
 /// Виджет для экспорта календаря
 class CalendarExportWidget extends ConsumerWidget {
@@ -104,13 +103,13 @@ class CalendarExportWidget extends ConsumerWidget {
       }
     } catch (e, stackTrace) {
       SafeLog.error(
-          'CalendarExportWidget: Error exporting calendar', e, stackTrace);
+          'CalendarExportWidget: Error exporting calendar', e, stackTrace,);
 
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
       onError?.call();
     }
@@ -120,8 +119,7 @@ class CalendarExportWidget extends ConsumerWidget {
 /// Виджет для экспорта одного события
 class EventCalendarExportWidget extends StatelessWidget {
   const EventCalendarExportWidget({
-    super.key,
-    required this.event,
+    required this.event, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -146,8 +144,7 @@ class EventCalendarExportWidget extends StatelessWidget {
 /// Виджет для экспорта одного бронирования
 class BookingCalendarExportWidget extends StatelessWidget {
   const BookingCalendarExportWidget({
-    super.key,
-    required this.booking,
+    required this.booking, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -172,8 +169,7 @@ class BookingCalendarExportWidget extends StatelessWidget {
 /// Виджет для экспорта нескольких событий
 class EventsCalendarExportWidget extends StatelessWidget {
   const EventsCalendarExportWidget({
-    super.key,
-    required this.events,
+    required this.events, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -204,8 +200,7 @@ class EventsCalendarExportWidget extends StatelessWidget {
 /// Виджет для экспорта нескольких бронирований
 class BookingsCalendarExportWidget extends StatelessWidget {
   const BookingsCalendarExportWidget({
-    super.key,
-    required this.bookings,
+    required this.bookings, super.key,
     this.title,
     this.icon,
     this.showAsButton = false,
@@ -236,7 +231,7 @@ class BookingsCalendarExportWidget extends StatelessWidget {
 /// Диалог для выбора типа экспорта
 class CalendarExportDialog extends StatelessWidget {
   const CalendarExportDialog(
-      {super.key, this.event, this.booking, this.events, this.bookings});
+      {super.key, this.event, this.booking, this.events, this.bookings,});
   final Event? event;
   final Booking? booking;
   final List<Event>? events;
@@ -251,7 +246,7 @@ class CalendarExportDialog extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('ОК')),
+              child: const Text('ОК'),),
         ],
       );
     }
@@ -276,7 +271,7 @@ class CalendarExportDialog extends StatelessWidget {
       actions: [
         TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена')),
+            child: const Text('Отмена'),),
       ],
     );
   }
@@ -311,13 +306,13 @@ class CalendarExportDialog extends StatelessWidget {
       }
     } catch (e, stackTrace) {
       SafeLog.error(
-          'CalendarExportDialog: Error exporting calendar', e, stackTrace);
+          'CalendarExportDialog: Error exporting calendar', e, stackTrace,);
 
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -351,7 +346,7 @@ class CalendarExportUtils {
 
   /// Показать диалог экспорта для бронирований
   static void showBookingsExportDialog(
-      BuildContext context, List<Booking> bookings) {
+      BuildContext context, List<Booking> bookings,) {
     showDialog<void>(
       context: context,
       builder: (context) => CalendarExportDialog(bookings: bookings),

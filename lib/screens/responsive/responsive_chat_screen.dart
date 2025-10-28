@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/utils/responsive_utils.dart';
+import 'package:event_marketplace_app/widgets/responsive/responsive_widgets.dart';
 import 'package:flutter/material.dart';
-import '../../utils/responsive_utils.dart';
-import '../../widgets/responsive/responsive_widgets.dart';
 
 /// Адаптивный экран чатов
 class ResponsiveChatScreen extends StatelessWidget {
@@ -9,7 +9,7 @@ class ResponsiveChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
-      appBar: ResponsiveAppBar(
+      appBar: const ResponsiveAppBar(
         title: 'Чаты',
         actions: [
           ResponsiveIcon(Icons.search),
@@ -19,9 +19,9 @@ class ResponsiveChatScreen extends StatelessWidget {
         ],
       ),
       body: ResponsiveLayoutBuilder(
-        mobile: (context) => _buildMobileLayout(context),
-        tablet: (context) => _buildTabletLayout(context),
-        desktop: (context) => _buildDesktopLayout(context),
+        mobile: _buildMobileLayout,
+        tablet: _buildTabletLayout,
+        desktop: _buildDesktopLayout,
       ),
     );
   }
@@ -38,11 +38,11 @@ class ResponsiveChatScreen extends StatelessWidget {
   Widget _buildTabletLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 2,
         children: [
           _buildSearchSection(context),
           _buildChatsSection(context),
         ],
-        crossAxisCount: 2,
       ),
     );
   }
@@ -50,11 +50,11 @@ class ResponsiveChatScreen extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 3,
         children: [
           _buildSearchSection(context),
           _buildChatsSection(context),
         ],
-        crossAxisCount: 3,
       ),
     );
   }
@@ -68,15 +68,15 @@ class ResponsiveChatScreen extends StatelessWidget {
             'Поиск чатов',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           TextField(
             decoration: InputDecoration(
               hintText: 'Поиск по имени или сообщению',
-              prefixIcon: ResponsiveIcon(Icons.search),
+              prefixIcon: const ResponsiveIcon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   ResponsiveUtils.getResponsiveBorderRadius(context),
@@ -98,19 +98,19 @@ class ResponsiveChatScreen extends StatelessWidget {
             'Чаты',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveList(
             children: [
               _buildChatItem(context, 'Анна Петрова',
-                  'Спасибо за отличную работу!', '2 часа назад', true, 2),
+                  'Спасибо за отличную работу!', '2 часа назад', true, 2,),
               _buildChatItem(context, 'Иван Сидоров',
-                  'Когда можем встретиться?', '4 часа назад', false, 0),
+                  'Когда можем встретиться?', '4 часа назад', false, 0,),
               _buildChatItem(context, 'Мария Козлова', 'Договорились на завтра',
-                  '1 день назад', false, 0),
+                  '1 день назад', false, 0,),
             ],
           ),
         ],
@@ -119,24 +119,23 @@ class ResponsiveChatScreen extends StatelessWidget {
   }
 
   Widget _buildChatItem(BuildContext context, String name, String lastMessage,
-      String time, bool isUnread, int unreadCount) {
+      String time, bool isUnread, int unreadCount,) {
     return ResponsiveCard(
       child: Row(
         children: [
           CircleAvatar(
             radius: ResponsiveUtils.getResponsiveIconSize(context,
-                mobile: 20.0, tablet: 24.0, desktop: 28.0),
+                mobile: 20, tablet: 24, desktop: 28,),
             backgroundColor: isUnread ? Colors.blue : Colors.grey,
             child: ResponsiveText(
               name[0],
               style: TextStyle(
                 color: Colors.white,
-                fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                    mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context,),
               ),
             ),
           ),
-          ResponsiveSpacing(width: 16),
+          const ResponsiveSpacing(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,10 +147,7 @@ class ResponsiveChatScreen extends StatelessWidget {
                         name,
                         style: TextStyle(
                           fontSize: ResponsiveUtils.getResponsiveFontSize(
-                              context,
-                              mobile: 14.0,
-                              tablet: 16.0,
-                              desktop: 18.0),
+                              context,),
                           fontWeight:
                               isUnread ? FontWeight.bold : FontWeight.normal,
                         ),
@@ -161,13 +157,13 @@ class ResponsiveChatScreen extends StatelessWidget {
                       time,
                       style: TextStyle(
                         fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                            mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                            mobile: 12, tablet: 14, desktop: 16,),
                         color: Colors.grey[600],
                       ),
                     ),
                   ],
                 ),
-                ResponsiveSpacing(height: 4),
+                const ResponsiveSpacing(height: 4),
                 Row(
                   children: [
                     Expanded(
@@ -176,9 +172,9 @@ class ResponsiveChatScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: ResponsiveUtils.getResponsiveFontSize(
                               context,
-                              mobile: 12.0,
-                              tablet: 14.0,
-                              desktop: 16.0),
+                              mobile: 12,
+                              tablet: 14,
+                              desktop: 16,),
                           color: isUnread ? Colors.black : Colors.grey[600],
                           fontWeight:
                               isUnread ? FontWeight.bold : FontWeight.normal,
@@ -194,9 +190,9 @@ class ResponsiveChatScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: ResponsiveUtils.getResponsiveFontSize(
                                 context,
-                                mobile: 10.0,
-                                tablet: 12.0,
-                                desktop: 14.0),
+                                mobile: 10,
+                                tablet: 12,
+                                desktop: 14,),
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

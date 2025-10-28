@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/gallery_item.dart';
+import 'package:event_marketplace_app/utils/storage_guard.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../models/gallery_item.dart';
-import '../utils/storage_guard.dart';
 
 /// Сервис для работы с галереей специалиста
 class GalleryService {
@@ -182,7 +181,7 @@ class GalleryService {
   }) async {
     try {
       final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now())
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       };
 
       if (title != null) updateData['title'] = title;
@@ -314,7 +313,7 @@ class GalleryService {
         'duration': null,
         'width': null,
         'height': null,
-        'fileSize': null
+        'fileSize': null,
       };
     }
   }

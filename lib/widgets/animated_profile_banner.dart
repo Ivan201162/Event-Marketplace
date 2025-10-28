@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/social_models.dart';
 import 'package:flutter/material.dart';
-
-import '../models/social_models.dart';
 
 /// Анимированный баннер профиля с плавным появлением/скрытием
 class AnimatedProfileBanner extends StatelessWidget {
+
+  const AnimatedProfileBanner({required this.profile, super.key, this.onTap});
   final Profile profile;
   final VoidCallback? onTap;
-
-  const AnimatedProfileBanner({super.key, required this.profile, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,7 @@ class AnimatedProfileBanner extends StatelessWidget {
                           : null,
                       child: profile.avatarUrl == null
                           ? Icon(Icons.person,
-                              size: 32, color: theme.primaryColor)
+                              size: 32, color: theme.primaryColor,)
                           : null,
                     ),
                   ),
@@ -67,7 +66,7 @@ class AnimatedProfileBanner extends StatelessWidget {
                         Text(
                           profile.name,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -76,12 +75,12 @@ class AnimatedProfileBanner extends StatelessWidget {
                           Row(
                             children: [
                               Icon(Icons.location_on_outlined,
-                                  size: 16, color: Colors.grey[600]),
+                                  size: 16, color: Colors.grey[600],),
                               const SizedBox(width: 4),
                               Text(
                                 profile.city!,
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.grey[600]),
+                                    fontSize: 14, color: Colors.grey[600],),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -93,7 +92,7 @@ class AnimatedProfileBanner extends StatelessWidget {
                           Text(
                             profile.skills.take(2).join(', '),
                             style: TextStyle(
-                                fontSize: 12, color: Colors.grey[500]),
+                                fontSize: 12, color: Colors.grey[500],),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -104,7 +103,7 @@ class AnimatedProfileBanner extends StatelessWidget {
 
                   // Стрелка
                   Icon(Icons.arrow_forward_ios,
-                      size: 16, color: Colors.grey[400]),
+                      size: 16, color: Colors.grey[400],),
                 ],
               ),
             ),

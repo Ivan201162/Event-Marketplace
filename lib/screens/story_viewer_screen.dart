@@ -1,15 +1,12 @@
+import 'package:event_marketplace_app/models/specialist_story.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist_story.dart';
-import '../services/story_service.dart';
-
 class StoryViewerScreen extends ConsumerStatefulWidget {
   const StoryViewerScreen({
-    super.key,
-    required this.stories,
+    required this.stories, required this.userId, super.key,
     this.initialIndex = 0,
-    required this.userId,
   });
   final List<SpecialistStory> stories;
   final int initialIndex;
@@ -132,7 +129,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
         backgroundColor: Colors.black,
         body: Center(
           child: Text('Нет сторис для просмотра',
-              style: TextStyle(color: Colors.white)),
+              style: TextStyle(color: Colors.white),),
         ),
       );
     }
@@ -175,7 +172,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
             // Индикатор загрузки
             if (_isLoading)
               const Center(
-                  child: CircularProgressIndicator(color: Colors.white)),
+                  child: CircularProgressIndicator(color: Colors.white),),
           ],
         ),
       ),
@@ -213,16 +210,16 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
               return child;
             }
             return const Center(
-                child: CircularProgressIndicator(color: Colors.white));
+                child: CircularProgressIndicator(color: Colors.white),);
           },
           errorBuilder: (context, error, stackTrace) => const Center(
-              child: Icon(Icons.error, color: Colors.white, size: 64)),
+              child: Icon(Icons.error, color: Colors.white, size: 64),),
         );
       case StoryContentType.video:
         // TODO(developer): Реализовать видео плеер
         return const Center(
           child: Text('Видео плеер будет реализован',
-              style: TextStyle(color: Colors.white)),
+              style: TextStyle(color: Colors.white),),
         );
       case StoryContentType.text:
         return Container(
@@ -271,7 +268,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                     Shadow(
                         offset: Offset(1, 1),
                         blurRadius: 3,
-                        color: Colors.black54)
+                        color: Colors.black54,),
                   ],
                 ),
               ),
@@ -286,7 +283,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                     Shadow(
                         offset: Offset(1, 1),
                         blurRadius: 3,
-                        color: Colors.black54)
+                        color: Colors.black54,),
                   ],
                 ),
               ),
@@ -353,7 +350,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                         ? story.specialistName[0].toUpperCase()
                         : '?',
                     style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                        color: Colors.black, fontWeight: FontWeight.bold,),
                   )
                 : null,
           ),
@@ -375,7 +372,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                       Shadow(
                           offset: Offset(1, 1),
                           blurRadius: 3,
-                          color: Colors.black54)
+                          color: Colors.black54,),
                     ],
                   ),
                 ),
@@ -388,7 +385,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                       Shadow(
                           offset: Offset(1, 1),
                           blurRadius: 3,
-                          color: Colors.black54)
+                          color: Colors.black54,),
                     ],
                   ),
                 ),

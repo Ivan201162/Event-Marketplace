@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/performance_metric.dart';
+import 'package:event_marketplace_app/services/performance_monitoring_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/performance_metric.dart';
-import '../services/performance_monitoring_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран мониторинга производительности
 class PerformanceMonitoringScreen extends ConsumerStatefulWidget {
@@ -58,13 +58,13 @@ class _PerformanceMonitoringScreenState
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('overview', 'Обзор', Icons.dashboard)),
+                child: _buildTabButton('overview', 'Обзор', Icons.dashboard),),
             Expanded(
-                child: _buildTabButton('metrics', 'Метрики', Icons.analytics)),
+                child: _buildTabButton('metrics', 'Метрики', Icons.analytics),),
             Expanded(child: _buildTabButton('alerts', 'Алерты', Icons.warning)),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.bar_chart)),
+                    'statistics', 'Статистика', Icons.bar_chart,),),
           ],
         ),
       );
@@ -90,7 +90,7 @@ class _PerformanceMonitoringScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -118,7 +118,7 @@ class _PerformanceMonitoringScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Текущие метрики',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   const SizedBox(height: 16),
                   if (_currentMetrics.isEmpty)
                     const Center(child: Text('Метрики не загружены'))
@@ -130,7 +130,7 @@ class _PerformanceMonitoringScreenState
                       childAspectRatio: 2.5,
                       children: _currentMetrics.entries
                           .map((entry) =>
-                              _buildCurrentMetricCard(entry.key, entry.value))
+                              _buildCurrentMetricCard(entry.key, entry.value),)
                           .toList(),
                     ),
                 ],
@@ -147,7 +147,7 @@ class _PerformanceMonitoringScreenState
                   Row(
                     children: [
                       Text('Активные алерты',
-                          style: Theme.of(context).textTheme.titleMedium),
+                          style: Theme.of(context).textTheme.titleMedium,),
                       const Spacer(),
                       ElevatedButton.icon(
                         onPressed: _loadAlerts,
@@ -187,16 +187,16 @@ class _PerformanceMonitoringScreenState
           Text(
             _getMetricDisplayName(metricName),
             style: TextStyle(
-                fontSize: 12, fontWeight: FontWeight.bold, color: color),
+                fontSize: 12, fontWeight: FontWeight.bold, color: color,),
           ),
           const SizedBox(height: 4),
           Text(
             formattedValue,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(category,
-              style: const TextStyle(fontSize: 10, color: Colors.grey)),
+              style: const TextStyle(fontSize: 10, color: Colors.grey),),
         ],
       ),
     );
@@ -216,7 +216,7 @@ class _PerformanceMonitoringScreenState
       child: Row(
         children: [
           Icon(_getSeverityIcon(alert.severity),
-              color: severityColor, size: 20),
+              color: severityColor, size: 20,),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -225,7 +225,7 @@ class _PerformanceMonitoringScreenState
                 Text(
                   alert.message,
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: severityColor),
+                      fontWeight: FontWeight.bold, color: severityColor,),
                 ),
                 Text(
                   '${alert.metricName}: ${alert.currentValue.toStringAsFixed(2)}',
@@ -255,7 +255,7 @@ class _PerformanceMonitoringScreenState
             child: Row(
               children: [
                 Text('Метрики производительности',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadMetrics,
@@ -295,7 +295,7 @@ class _PerformanceMonitoringScreenState
               const SizedBox(width: 8),
               Expanded(
                   child: Text(metric.name,
-                      style: Theme.of(context).textTheme.titleMedium)),
+                      style: Theme.of(context).textTheme.titleMedium,),),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -306,7 +306,7 @@ class _PerformanceMonitoringScreenState
                 child: Text(
                   metric.formattedValue,
                   style: TextStyle(
-                      fontSize: 12, color: color, fontWeight: FontWeight.bold),
+                      fontSize: 12, color: color, fontWeight: FontWeight.bold,),
                 ),
               ),
             ],
@@ -354,7 +354,7 @@ class _PerformanceMonitoringScreenState
             child: Row(
               children: [
                 Text('Алерты производительности',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadAlerts,
@@ -401,7 +401,7 @@ class _PerformanceMonitoringScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Статистика: ${stats.metricName}',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -457,7 +457,7 @@ class _PerformanceMonitoringScreenState
       );
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -472,7 +472,7 @@ class _PerformanceMonitoringScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -493,7 +493,7 @@ class _PerformanceMonitoringScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -680,7 +680,7 @@ class _PerformanceMonitoringScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки метрик: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -695,7 +695,7 @@ class _PerformanceMonitoringScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки алертов: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -738,12 +738,12 @@ class _PerformanceMonitoringScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Алерт решен'), backgroundColor: Colors.green));
+          content: Text('Алерт решен'), backgroundColor: Colors.green,),);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка решения алерта: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }

@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/smart_specialist.dart';
+import 'package:event_marketplace_app/screens/smart_search_screen.dart';
+import 'package:event_marketplace_app/services/ai_assistant_service.dart';
+import 'package:event_marketplace_app/services/smart_search_service.dart';
+import 'package:event_marketplace_app/services/smart_specialist_data_generator.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/smart_specialist.dart';
-import '../services/ai_assistant_service.dart';
-import '../services/smart_search_service.dart';
-import '../services/smart_specialist_data_generator.dart';
-import '../widgets/specialist_card.dart';
-import 'smart_search_screen.dart';
 
 /// Главный экран с интеграцией умного поиска
 class HomeScreenWithSmartSearch extends ConsumerStatefulWidget {
@@ -67,7 +66,7 @@ class _HomeScreenWithSmartSearchState
   /// Открыть умный поиск
   void _openSmartSearch() {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const SmartSearchScreen()));
+        MaterialPageRoute(builder: (context) => const SmartSearchScreen()),);
   }
 
   /// Открыть AI-помощника
@@ -103,7 +102,7 @@ class _HomeScreenWithSmartSearchState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   /// Показать успех
@@ -111,7 +110,7 @@ class _HomeScreenWithSmartSearchState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   @override
@@ -129,10 +128,8 @@ class _HomeScreenWithSmartSearchState
                 switch (value) {
                   case 'generate_data':
                     _generateTestData();
-                    break;
                   case 'refresh':
                     _loadData();
-                    break;
                 }
               },
               itemBuilder: (context) => [
@@ -158,7 +155,7 @@ class _HomeScreenWithSmartSearchState
                       const Text(
                         'Добро пожаловать!',
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 8),
                       const Text(
@@ -179,7 +176,7 @@ class _HomeScreenWithSmartSearchState
                         ),
                         const SizedBox(height: 16),
                         _buildSpecialistsList(_recommendations,
-                            showCompatibility: true),
+                            showCompatibility: true,),
                         const SizedBox(height: 32),
                       ],
 
@@ -200,7 +197,7 @@ class _HomeScreenWithSmartSearchState
                           label: const Text('Найти специалиста'),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
+                                horizontal: 24, vertical: 12,),
                           ),
                         ),
                       ),
@@ -266,13 +263,13 @@ class _HomeScreenWithSmartSearchState
               Text(
                 title,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: color, fontSize: 14),
+                    fontWeight: FontWeight.bold, color: color, fontSize: 14,),
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: TextStyle(
-                    color: color.withValues(alpha: 0.8), fontSize: 12),
+                    color: color.withValues(alpha: 0.8), fontSize: 12,),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -286,10 +283,10 @@ class _HomeScreenWithSmartSearchState
         children: [
           Text(title,
               style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
           const SizedBox(height: 4),
           Text(subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
         ],
       );
 
@@ -301,7 +298,7 @@ class _HomeScreenWithSmartSearchState
     if (specialists.isEmpty) {
       return const Center(
         child: Text('Специалисты не найдены',
-            style: TextStyle(color: Colors.grey)),
+            style: TextStyle(color: Colors.grey),),
       );
     }
 
@@ -338,6 +335,6 @@ class _HomeScreenWithSmartSearchState
 
     // Переходим к профилю специалиста
     Navigator.pushNamed(context, '/specialist_profile',
-        arguments: specialist.id);
+        arguments: specialist.id,);
   }
 }

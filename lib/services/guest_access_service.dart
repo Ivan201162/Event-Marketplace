@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/logger.dart';
-import '../models/guest_access.dart';
+import 'package:event_marketplace_app/core/logger.dart';
+import 'package:event_marketplace_app/models/guest_access.dart';
 
 /// Сервис для работы с гостевым доступом
 class GuestAccessService {
@@ -22,7 +22,7 @@ class GuestAccessService {
   }) async {
     try {
       AppLogger.logI('Создание гостевого доступа для мероприятия $eventId',
-          'guest_access_service');
+          'guest_access_service',);
 
       final accessCode = _generateAccessCode();
       final now = DateTime.now();
@@ -55,11 +55,11 @@ class GuestAccessService {
           .set(guestAccess.toMap());
 
       AppLogger.logI(
-          'Гостевой доступ создан: $accessCode', 'guest_access_service');
+          'Гостевой доступ создан: $accessCode', 'guest_access_service',);
       return guestAccess;
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка создания гостевого доступа',
-          'guest_access_service', e, stackTrace);
+          'guest_access_service', e, stackTrace,);
       return null;
     }
   }
@@ -94,14 +94,14 @@ class GuestAccessService {
       return guestAccess;
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка получения гостевого доступа',
-          'guest_access_service', e, stackTrace);
+          'guest_access_service', e, stackTrace,);
       return null;
     }
   }
 
   /// Использовать гостевой доступ
   Future<bool> useGuestAccess(String accessCode,
-      {String? guestName, String? guestEmail}) async {
+      {String? guestName, String? guestEmail,}) async {
     try {
       final guestAccess = await getGuestAccessByCode(accessCode);
       if (guestAccess == null) {
@@ -117,7 +117,7 @@ class GuestAccessService {
       });
 
       AppLogger.logI(
-          'Гостевой доступ использован: $accessCode', 'guest_access_service');
+          'Гостевой доступ использован: $accessCode', 'guest_access_service',);
       return true;
     } catch (e, stackTrace) {
       AppLogger.logE(
@@ -155,7 +155,7 @@ class GuestAccessService {
 
   /// Получить все гостевые доступы организатора
   Future<List<GuestAccess>> getOrganizerGuestAccesses(
-      String organizerId) async {
+      String organizerId,) async {
     try {
       final querySnapshot = await _firestore
           .collection('guest_access')
@@ -179,7 +179,7 @@ class GuestAccessService {
 
   /// Обновить статус гостевого доступа
   Future<bool> updateGuestAccessStatus(
-      String guestAccessId, GuestAccessStatus status) async {
+      String guestAccessId, GuestAccessStatus status,) async {
     try {
       await _firestore.collection('guest_access').doc(guestAccessId).update({
         'status': status.toString().split('.').last,
@@ -207,18 +207,18 @@ class GuestAccessService {
     try {
       await _firestore.collection('guest_access').doc(guestAccessId).delete();
       AppLogger.logI(
-          'Гостевой доступ удален: $guestAccessId', 'guest_access_service');
+          'Гостевой доступ удален: $guestAccessId', 'guest_access_service',);
       return true;
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка удаления гостевого доступа',
-          'guest_access_service', e, stackTrace);
+          'guest_access_service', e, stackTrace,);
       return false;
     }
   }
 
   /// Продлить срок действия гостевого доступа
   Future<bool> extendGuestAccess(
-      String guestAccessId, Duration extension) async {
+      String guestAccessId, Duration extension,) async {
     try {
       final doc =
           await _firestore.collection('guest_access').doc(guestAccessId).get();
@@ -240,7 +240,7 @@ class GuestAccessService {
       return true;
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка продления гостевого доступа',
-          'guest_access_service', e, stackTrace);
+          'guest_access_service', e, stackTrace,);
       return false;
     }
   }
@@ -251,7 +251,7 @@ class GuestAccessService {
     final random = Random();
     return String.fromCharCodes(
       Iterable.generate(
-          8, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
+          8, (_) => chars.codeUnitAt(random.nextInt(chars.length)),),
     );
   }
 

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/optimized_firestore_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/optimized_firestore_service.dart';
 
 /// Провайдер для получения специалистов с оптимизацией
 final specialistsProvider = StreamProvider<QuerySnapshot>(
@@ -81,13 +80,13 @@ final userProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
 final specialistProfileProvider =
     StreamProvider.family<DocumentSnapshot?, String>(
   (ref, specialistId) => Stream.fromFuture(
-      OptimizedFirestoreService.getDocument('specialists', specialistId)),
+      OptimizedFirestoreService.getDocument('specialists', specialistId),),
 );
 
 /// Провайдер для получения деталей события с оптимизацией
 final eventDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
   (ref, eventId) => Stream.fromFuture(
-      OptimizedFirestoreService.getDocument('events', eventId)),
+      OptimizedFirestoreService.getDocument('events', eventId),),
 );
 
 /// Провайдер для получения деталей идеи с оптимизацией
@@ -99,7 +98,7 @@ final ideaDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
 /// Провайдер для получения деталей бронирования с оптимизацией
 final bookingDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
   (ref, bookingId) => Stream.fromFuture(
-      OptimizedFirestoreService.getDocument('bookings', bookingId)),
+      OptimizedFirestoreService.getDocument('bookings', bookingId),),
 );
 
 /// Провайдер для поиска специалистов с оптимизацией

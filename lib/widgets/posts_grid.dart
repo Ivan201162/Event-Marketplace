@@ -1,15 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/providers/user_profile_provider.dart';
+import 'package:event_marketplace_app/widgets/post_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../models/user_profile.dart';
-import '../providers/user_profile_provider.dart';
-import 'post_detail_screen.dart';
-
 /// Виджет для отображения постов в виде сетки
 class PostsGrid extends ConsumerWidget {
-  const PostsGrid({super.key, required this.userId});
+  const PostsGrid({required this.userId, super.key});
   final String userId;
 
   @override
@@ -52,7 +51,7 @@ class PostsGrid extends ConsumerWidget {
         onTap: () => _openPostDetail(context, post),
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.grey[200], borderRadius: BorderRadius.circular(4)),
+              color: Colors.grey[200], borderRadius: BorderRadius.circular(4),),
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -78,12 +77,12 @@ class PostsGrid extends ConsumerWidget {
                           else
                             Container(
                                 color: Colors.grey[300],
-                                child: const Icon(Icons.video_library)),
+                                child: const Icon(Icons.video_library),),
                           const Positioned(
                             bottom: 4,
                             right: 4,
                             child: Icon(Icons.play_circle_filled,
-                                color: Colors.white, size: 20),
+                                color: Colors.white, size: 20,),
                           ),
                         ],
                       )
@@ -93,14 +92,14 @@ class PostsGrid extends ConsumerWidget {
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
                                 color: Colors.grey[300],
-                                child: const Icon(Icons.image)),
+                                child: const Icon(Icons.image),),
                             errorWidget: (context, url, error) => Container(
                                 color: Colors.grey[300],
-                                child: const Icon(Icons.image)),
+                                child: const Icon(Icons.image),),
                           )
                         : Container(
                             color: Colors.grey[300],
-                            child: const Icon(Icons.image)),
+                            child: const Icon(Icons.image),),
               ),
               // Индикатор множественных медиа
               if (post.isVideo)
@@ -122,7 +121,7 @@ class PostsGrid extends ConsumerWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withValues(alpha: 0.7)
+                        Colors.black.withValues(alpha: 0.7),
                       ],
                     ),
                   ),
@@ -133,7 +132,7 @@ class PostsGrid extends ConsumerWidget {
                       Row(
                         children: [
                           const Icon(Icons.favorite,
-                              color: Colors.white, size: 12),
+                              color: Colors.white, size: 12,),
                           const SizedBox(width: 2),
                           Text(
                             post.likes.toString(),
@@ -148,7 +147,7 @@ class PostsGrid extends ConsumerWidget {
                       Row(
                         children: [
                           const Icon(Icons.comment,
-                              color: Colors.white, size: 12),
+                              color: Colors.white, size: 12,),
                           const SizedBox(width: 2),
                           Text(
                             post.comments.toString(),
@@ -183,7 +182,7 @@ class PostsGrid extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(4)),
+                borderRadius: BorderRadius.circular(4),),
           ),
         ),
       );
@@ -244,6 +243,6 @@ class PostsGrid extends ConsumerWidget {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => PostDetailScreen(post: post)));
+        builder: (context) => PostDetailScreen(post: post),),);
   }
 }

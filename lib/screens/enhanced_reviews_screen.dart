@@ -1,18 +1,17 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/review_providers.dart';
+import 'package:event_marketplace_app/screens/create_review_screen.dart';
+import 'package:event_marketplace_app/services/enhanced_review_service.dart';
+import 'package:event_marketplace_app/widgets/review_card.dart';
+import 'package:event_marketplace_app/widgets/review_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/review.dart';
-import '../models/booking.dart';
-import '../providers/review_providers.dart';
-import '../services/enhanced_review_service.dart';
-import '../widgets/review_card.dart';
-import '../widgets/review_form.dart';
-import 'create_review_screen.dart';
 
 /// Улучшенный экран отзывов с полным функционалом
 class EnhancedReviewsScreen extends ConsumerStatefulWidget {
   const EnhancedReviewsScreen(
-      {super.key, required this.specialistId, this.specialistName});
+      {required this.specialistId, super.key, this.specialistName,});
 
   final String specialistId;
   final String? specialistName;
@@ -47,7 +46,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
         appBar: AppBar(
           title: Text(widget.specialistName != null
               ? 'Отзывы о ${widget.specialistName}'
-              : 'Отзывы'),
+              : 'Отзывы',),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           bottom: TabBar(
             controller: _tabController,
@@ -278,7 +277,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    specialistReviewStatsProvider(widget.specialistId));
+                    specialistReviewStatsProvider(widget.specialistId),);
               },
               child: const Text('Повторить'),
             ),
@@ -330,7 +329,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
 
   /// Построить элемент статистики
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Column(
         children: [
           Icon(icon, color: color, size: 32),
@@ -346,7 +345,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
           ),
           Text(label,
               style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center),
+              textAlign: TextAlign.center,),
         ],
       );
 
@@ -381,7 +380,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
                           value: percentage / 100,
                           backgroundColor: Colors.grey[300],
                           valueColor: AlwaysStoppedAnimation<Color>(
-                              _getRatingColor(rating)),
+                              _getRatingColor(rating),),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -453,7 +452,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
             ),
             const SizedBox(height: 8),
             Text('Станьте первым, кто оставит отзыв',
-                style: TextStyle(color: Colors.grey[500])),
+                style: TextStyle(color: Colors.grey[500]),),
           ],
         ),
       );
@@ -474,7 +473,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
             ),
             const SizedBox(height: 8),
             Text('Отзывы появятся после первых оценок',
-                style: TextStyle(color: Colors.grey[500])),
+                style: TextStyle(color: Colors.grey[500]),),
           ],
         ),
       );
@@ -495,7 +494,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
           }
 
           return FloatingActionButton(
-              onPressed: _createReview, child: const Icon(Icons.add));
+              onPressed: _createReview, child: const Icon(Icons.add),);
         },
       );
 
@@ -605,7 +604,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();

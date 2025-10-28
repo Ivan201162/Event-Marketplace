@@ -1,22 +1,22 @@
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 /// Сервис для работы с геолокацией
 class GeolocationService {
-  static final GeolocationService _instance = GeolocationService._internal();
   factory GeolocationService() => _instance;
   GeolocationService._internal();
+  static final GeolocationService _instance = GeolocationService._internal();
 
   /// Получение текущего местоположения
   Future<Position?> getCurrentPosition() async {
     try {
       // Проверка разрешений
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         throw Exception('Служба геолокации отключена');
       }
 
-      LocationPermission permission = await Geolocator.checkPermission();
+      var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
@@ -41,9 +41,9 @@ class GeolocationService {
 
   /// Получение города по координатам
   Future<String?> getCityFromCoordinates(
-      double latitude, double longitude) async {
+      double latitude, double longitude,) async {
     try {
-      List<Placemark> placemarks =
+      final placemarks =
           await placemarkFromCoordinates(latitude, longitude);
 
       if (placemarks.isNotEmpty) {
@@ -66,7 +66,7 @@ class GeolocationService {
       final position = await getCurrentPosition();
       if (position != null) {
         return await getCityFromCoordinates(
-            position.latitude, position.longitude);
+            position.latitude, position.longitude,);
       }
       return null;
     } catch (e) {
@@ -122,10 +122,10 @@ class GeolocationService {
   /// Проверка доступности геолокации
   Future<bool> isLocationAvailable() async {
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) return false;
 
-      LocationPermission permission = await Geolocator.checkPermission();
+      final permission = await Geolocator.checkPermission();
       return permission != LocationPermission.denied &&
           permission != LocationPermission.deniedForever;
     } catch (e) {
@@ -137,7 +137,7 @@ class GeolocationService {
   /// Запрос разрешения на геолокацию
   Future<bool> requestLocationPermission() async {
     try {
-      LocationPermission permission = await Geolocator.checkPermission();
+      var permission = await Geolocator.checkPermission();
 
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();

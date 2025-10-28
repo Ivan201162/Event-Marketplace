@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/providers/theme_provider.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/theme_provider.dart';
-import '../services/analytics_service.dart';
 
 /// Виджет для переключения темы
 class ThemeSwitch extends ConsumerWidget {
@@ -60,7 +60,7 @@ class ThemeSwitch extends ConsumerWidget {
                     },
                     style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
                     icon: Icon(Icons.arrow_drop_down,
-                        color: Theme.of(context).iconTheme.color),
+                        color: Theme.of(context).iconTheme.color,),
                   ),
                 )
               : InkWell(
@@ -71,7 +71,7 @@ class ThemeSwitch extends ConsumerWidget {
                     children: [
                       if (showIcon) ...[
                         _buildThemeIcon(themeMode),
-                        const SizedBox(width: 8)
+                        const SizedBox(width: 8),
                       ],
                       Text(
                         _getThemeName(themeMode),
@@ -94,11 +94,11 @@ class ThemeSwitch extends ConsumerWidget {
 
   List<DropdownMenuItem<ThemeMode>> _buildThemeItems(BuildContext context) => [
         DropdownMenuItem(
-            value: ThemeMode.light, child: _buildThemeItem(ThemeMode.light)),
+            value: ThemeMode.light, child: _buildThemeItem(ThemeMode.light),),
         DropdownMenuItem(
-            value: ThemeMode.dark, child: _buildThemeItem(ThemeMode.dark)),
+            value: ThemeMode.dark, child: _buildThemeItem(ThemeMode.dark),),
         DropdownMenuItem(
-            value: ThemeMode.system, child: _buildThemeItem(ThemeMode.system)),
+            value: ThemeMode.system, child: _buildThemeItem(ThemeMode.system),),
       ];
 
   Widget _buildThemeItem(ThemeMode themeMode) => Row(
@@ -114,13 +114,10 @@ class ThemeSwitch extends ConsumerWidget {
     switch (themeMode) {
       case ThemeMode.light:
         icon = Icons.light_mode;
-        break;
       case ThemeMode.dark:
         icon = Icons.dark_mode;
-        break;
       case ThemeMode.system:
         icon = Icons.brightness_auto;
-        break;
     }
 
     return Icon(icon, size: 20, color: Colors.grey[600]);
@@ -142,13 +139,10 @@ class ThemeSwitch extends ConsumerWidget {
     switch (themeMode) {
       case ThemeMode.light:
         notifier.setLightTheme();
-        break;
       case ThemeMode.dark:
         notifier.setDarkTheme();
-        break;
       case ThemeMode.system:
         notifier.setSystemTheme();
-        break;
     }
 
     // Логируем изменение темы
@@ -252,7 +246,7 @@ class CompactThemeSwitch extends ConsumerWidget {
         children: [
           if (showIcon) ...[
             _buildThemeIcon(themeMode),
-            if (showText) const SizedBox(width: 4)
+            if (showText) const SizedBox(width: 4),
           ],
           if (showText) ...[
             Text(
@@ -271,13 +265,10 @@ class CompactThemeSwitch extends ConsumerWidget {
     switch (themeMode) {
       case ThemeMode.light:
         icon = Icons.light_mode;
-        break;
       case ThemeMode.dark:
         icon = Icons.dark_mode;
-        break;
       case ThemeMode.system:
         icon = Icons.brightness_auto;
-        break;
     }
 
     return Icon(icon, size: 20, color: iconColor ?? Colors.grey[600]);
@@ -303,10 +294,10 @@ class CompactThemeSwitch extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildThemeOption(dialogContext, ref, ThemeMode.light,
-                Icons.light_mode, 'Светлая'),
+                Icons.light_mode, 'Светлая',),
             const SizedBox(height: 8),
             _buildThemeOption(
-                dialogContext, ref, ThemeMode.dark, Icons.dark_mode, 'Темная'),
+                dialogContext, ref, ThemeMode.dark, Icons.dark_mode, 'Темная',),
             const SizedBox(height: 8),
             _buildThemeOption(
               dialogContext,
@@ -347,13 +338,10 @@ class CompactThemeSwitch extends ConsumerWidget {
         switch (themeMode) {
           case ThemeMode.light:
             notifier.setLightTheme();
-            break;
           case ThemeMode.dark:
             notifier.setDarkTheme();
-            break;
           case ThemeMode.system:
             notifier.setSystemTheme();
-            break;
         }
         Navigator.of(context).pop();
         onChanged?.call();
@@ -401,13 +389,10 @@ class CurrentThemeDisplay extends ConsumerWidget {
     switch (themeMode) {
       case ThemeMode.light:
         icon = Icons.light_mode;
-        break;
       case ThemeMode.dark:
         icon = Icons.dark_mode;
-        break;
       case ThemeMode.system:
         icon = Icons.brightness_auto;
-        break;
     }
 
     return Icon(icon, size: 20, color: Colors.grey[600]);
@@ -439,7 +424,7 @@ class CurrentThemeDisplay extends ConsumerWidget {
 /// Виджет для быстрого переключения между светлой и темной темой
 class QuickThemeToggle extends ConsumerWidget {
   const QuickThemeToggle(
-      {super.key, this.showTooltip = true, this.iconColor, this.onChanged});
+      {super.key, this.showTooltip = true, this.iconColor, this.onChanged,});
   final bool showTooltip;
   final Color? iconColor;
   final VoidCallback? onChanged;

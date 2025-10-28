@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/theme_provider.dart';
 
 class ThemeSettingsScreen extends ConsumerWidget {
   const ThemeSettingsScreen({super.key});
@@ -27,7 +27,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
               title: 'Режим темы',
               children: [
                 _buildThemeModeCard(
-                    context: context, ref: ref, currentMode: themeMode)
+                    context: context, ref: ref, currentMode: themeMode,),
               ],
             ),
 
@@ -97,13 +97,13 @@ class ThemeSettingsScreen extends ConsumerWidget {
 
   /// Построить секцию
   Widget _buildSection(
-          {required String title, required List<Widget> children}) =>
+          {required String title, required List<Widget> children,}) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -226,7 +226,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                       ),
                       child: isSelected
                           ? const Icon(Icons.check,
-                              color: Colors.white, size: 24)
+                              color: Colors.white, size: 24,)
                           : null,
                     ),
                   );
@@ -250,7 +250,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                          color: currentColor, shape: BoxShape.circle),
+                          color: currentColor, shape: BoxShape.circle,),
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -360,7 +360,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(const SnackBar(
-                      content: Text('Пример кнопки - функция в разработке')));
+                      content: Text('Пример кнопки - функция в разработке'),),);
                 },
                 child: const Text('Кнопка'),
               ),
@@ -403,11 +403,11 @@ class ThemeSettingsScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Сбросить настройки'),
         content: const Text(
-            'Вы уверены, что хотите сбросить все настройки темы к умолчанию?'),
+            'Вы уверены, что хотите сбросить все настройки темы к умолчанию?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               ref
@@ -423,7 +423,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(const SnackBar(
-                  content: Text('Настройки сброшены к умолчанию')));
+                  content: Text('Настройки сброшены к умолчанию'),),);
             },
             child: const Text('Сбросить'),
           ),
@@ -440,7 +440,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
     // TODO(developer): Реализовать экспорт настроек
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Экспорт настроек будет реализован в следующем шаге')),
+          content: Text('Экспорт настроек будет реализован в следующем шаге'),),
     );
   }
 

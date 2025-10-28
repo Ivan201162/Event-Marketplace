@@ -178,7 +178,7 @@ class Advertisement {
 
   // Вычисляем эффективность рекламы
   double get effectiveness {
-    if (impressions == 0) return 0.0;
+    if (impressions == 0) return 0;
     return (clicks / impressions) * 100;
   }
 
@@ -190,7 +190,7 @@ class Advertisement {
 
   // Остаток бюджета
   double get remainingBudget {
-    if (budget == null) return 0.0;
+    if (budget == null) return 0;
     return budget! - spentAmount;
   }
 

@@ -47,7 +47,7 @@ class PerformanceOptimizer {
     // Обработчик ошибок в изолятах
     PlatformDispatcher.instance.onError = (error, stack) {
       developer.log('Platform Error: $error',
-          name: 'PERFORMANCE', error: error, stackTrace: stack);
+          name: 'PERFORMANCE', error: error, stackTrace: stack,);
 
       if (!kDebugMode) {
         try {
@@ -85,7 +85,7 @@ class PerformanceOptimizer {
     // Проверка лимита
     if (requestCount >= _maxRequestsPerMinute) {
       developer.log('Request limit exceeded for $requestType',
-          name: 'PERFORMANCE');
+          name: 'PERFORMANCE',);
       return false;
     }
 
@@ -150,7 +150,7 @@ class PerformanceOptimizer {
 
   /// Измерение производительности
   Future<T> measurePerformance<T>(
-      String operationName, Future<T> Function() operation) async {
+      String operationName, Future<T> Function() operation,) async {
     final stopwatch = Stopwatch()..start();
 
     try {
@@ -178,7 +178,7 @@ class PerformanceOptimizer {
 
   /// Оптимизация Firebase запросов
   dynamic optimizeFirebaseQuery(dynamic query,
-      {int? limit, bool useCache = true}) {
+      {int? limit, bool useCache = true,}) {
     // Добавляем лимит если не указан
     if (limit != null && query != null) {
       // query = query.limit(limit);
@@ -191,7 +191,7 @@ class PerformanceOptimizer {
   void checkMemoryUsage() {
     if (kDebugMode) {
       developer.log('Memory: Image cache size: ${_imageCache.length}',
-          name: 'PERFORMANCE');
+          name: 'PERFORMANCE',);
     }
   }
 }
@@ -204,12 +204,12 @@ extension PerformanceFutureExtension<T> on Future<T> {
 
   /// Выполнить с дебаунсом
   Future<T> withDebounce(String key,
-      {Duration delay = const Duration(milliseconds: 300)}) {
+      {Duration delay = const Duration(milliseconds: 300),}) {
     final completer = Completer<T>();
 
     PerformanceOptimizer().debounce(key, () {
       then(completer.complete).catchError(completer.completeError);
-    }, delay: delay);
+    }, delay: delay,);
 
     return completer.future;
   }

@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/screens/share_idea_screen.dart';
+import 'package:event_marketplace_app/screens/video_reels_viewer.dart';
+import 'package:event_marketplace_app/services/event_ideas_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event_idea.dart';
-import '../providers/auth_providers.dart';
-import '../services/event_ideas_service.dart';
-import 'share_idea_screen.dart';
-import 'video_reels_viewer.dart';
-
 class IdeaDetailScreen extends ConsumerStatefulWidget {
-  const IdeaDetailScreen({super.key, required this.idea});
+  const IdeaDetailScreen({required this.idea, super.key});
   final EventIdea idea;
 
   @override
@@ -43,7 +42,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
       appBar: AppBar(
         title: const Text('Идея'),
         actions: [
-          IconButton(icon: const Icon(Icons.share), onPressed: _shareIdea)
+          IconButton(icon: const Icon(Icons.share), onPressed: _shareIdea),
         ],
       ),
       body: Column(
@@ -93,7 +92,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                               Container(
                             color: Colors.grey[800],
                             child: const Icon(Icons.video_library,
-                                size: 80, color: Colors.white),
+                                size: 80, color: Colors.white,),
                           ),
                         ),
                         Center(
@@ -103,7 +102,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => VideoReelsViewer(
-                                      initialIdea: widget.idea),
+                                      initialIdea: widget.idea,),
                                 ),
                               );
                             },
@@ -114,7 +113,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(Icons.play_arrow,
-                                  color: Colors.white, size: 60),
+                                  color: Colors.white, size: 60,),
                             ),
                           ),
                         ),
@@ -126,7 +125,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                       errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.grey[800],
                         child: const Icon(Icons.image,
-                            size: 80, color: Colors.white),
+                            size: 80, color: Colors.white,),
                       ),
                     )
             else
@@ -194,7 +193,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: const BoxDecoration(
-              color: Colors.black54, shape: BoxShape.circle),
+              color: Colors.black54, shape: BoxShape.circle,),
           child: Column(
             children: [
               Icon(icon, color: color, size: 24),
@@ -204,7 +203,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
               ),
             ],
           ),
@@ -219,7 +218,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             // Заголовок
             Text(widget.idea.title,
                 style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
 
             // Автор
@@ -238,7 +237,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                 Text(
                   widget.idea.authorName ?? 'Неизвестный автор',
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500),
+                      fontSize: 16, fontWeight: FontWeight.w500,),
                 ),
                 const Spacer(),
                 Text(
@@ -252,7 +251,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             // Описание
             if (widget.idea.description.isNotEmpty) ...[
               Text(widget.idea.description,
-                  style: const TextStyle(fontSize: 16)),
+                  style: const TextStyle(fontSize: 16),),
               const SizedBox(height: 12),
             ],
 
@@ -285,7 +284,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                 widget.idea.category ?? 'Без категории',
                 style: TextStyle(
                     color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w500,),
               ),
             ),
           ],
@@ -301,7 +300,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
 
           if (snapshot.hasError) {
             return Center(
-                child: Text('Ошибка загрузки комментариев: ${snapshot.error}'));
+                child: Text('Ошибка загрузки комментариев: ${snapshot.error}'),);
           }
 
           final comments = snapshot.data ?? [];
@@ -413,7 +412,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                       Text(
                         comment.authorName ?? 'Неизвестный',
                         style: const TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                            fontWeight: FontWeight.w500, fontSize: 14,),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -432,10 +431,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                         child: Row(
                           children: [
                             const Icon(Icons.favorite_border,
-                                size: 16, color: Colors.grey),
+                                size: 16, color: Colors.grey,),
                             const SizedBox(width: 4),
                             Text(comment.likes.toString(),
-                                style: const TextStyle(fontSize: 12)),
+                                style: const TextStyle(fontSize: 12),),
                           ],
                         ),
                       ),
@@ -538,14 +537,14 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
   Widget _buildDetailItem(
           {required IconData icon,
           required String title,
-          required String value}) =>
+          required String value,}) =>
       Row(
         children: [
           Icon(icon, size: 20, color: Colors.grey[600]),
           const SizedBox(width: 12),
           Text(title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           const Spacer(),
           Text(value, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
         ],
@@ -569,7 +568,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => ShareIdeaScreen(idea: widget.idea)),
+          builder: (context) => ShareIdeaScreen(idea: widget.idea),),
     );
   }
 
@@ -594,7 +593,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка добавления комментария: $e')));
+          SnackBar(content: Text('Ошибка добавления комментария: $e')),);
     } finally {
       setState(() {
         _isCommenting = false;

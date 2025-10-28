@@ -22,25 +22,25 @@ class FirestoreSeederService {
           'id': 'u_customer_1',
           'name': 'Иван Петров',
           'city': 'Москва',
-          'role': 'customer'
+          'role': 'customer',
         },
         {
           'id': 'u_customer_2',
           'name': 'Елена Смирнова',
           'city': 'СПб',
-          'role': 'customer'
+          'role': 'customer',
         },
         {
           'id': 'u_spec_1',
           'name': 'Ведущий Артём',
           'city': 'Москва',
-          'role': 'specialist'
+          'role': 'specialist',
         },
         {
           'id': 'u_spec_2',
           'name': 'Фотограф Анна',
           'city': 'СПб',
-          'role': 'specialist'
+          'role': 'specialist',
         },
       ];
 
@@ -55,7 +55,7 @@ class FirestoreSeederService {
           'avatar': 'https://picsum.photos/seed/${u['id']}/200/200',
           'createdAt': FieldValue.serverTimestamp(),
           'updatedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
+        }, SetOptions(merge: true),);
         debugPrint('  ✅ Пользователь ${u['name']} создан');
       }
 
@@ -195,7 +195,7 @@ class FirestoreSeederService {
         'isAvailable': true,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
 
       await _firestore.collection('specialists').doc('u_spec_2').set({
         'userId': 'u_spec_2',
@@ -210,7 +210,7 @@ class FirestoreSeederService {
         'skills': [
           'Свадебная фотосъемка',
           'Семейная фотосъемка',
-          'Детская фотосъемка'
+          'Детская фотосъемка',
         ],
         'portfolio': [
           'https://picsum.photos/seed/photo1/300/200',
@@ -220,7 +220,7 @@ class FirestoreSeederService {
         'isAvailable': true,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
       debugPrint('  ✅ Профили специалистов созданы');
 
       debugPrint('✅ Seeder: тестовые данные успешно созданы');

@@ -1,17 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/providers/advertising_providers.dart';
+import 'package:event_marketplace_app/providers/user_profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:story_view/story_view.dart';
 
-import '../models/user_profile.dart';
-import '../models/advertisement.dart';
-import '../providers/user_profile_provider.dart';
-import '../providers/advertising_providers.dart';
-
 /// Виджет для отображения сторис пользователя
 class StoriesWidget extends ConsumerWidget {
   const StoriesWidget(
-      {super.key, required this.userId, this.isOwnProfile = false});
+      {required this.userId, super.key, this.isOwnProfile = false,});
   final String userId;
   final bool isOwnProfile;
 
@@ -118,7 +117,7 @@ class StoriesWidget extends ConsumerWidget {
                 shape: BoxShape.circle,
                 border: Border.all(
                     color: isViewed ? Colors.grey[300]! : Colors.blue,
-                    width: 2),
+                    width: 2,),
               ),
               child: ClipOval(
                 child: story.isVideo
@@ -148,7 +147,7 @@ class StoriesWidget extends ConsumerWidget {
                             bottom: 4,
                             right: 4,
                             child: Icon(Icons.play_circle_filled,
-                                color: Colors.white, size: 20),
+                                color: Colors.white, size: 20,),
                           ),
                         ],
                       )
@@ -160,14 +159,14 @@ class StoriesWidget extends ConsumerWidget {
                             height: 70,
                             placeholder: (context, url) => Container(
                                 color: Colors.grey[200],
-                                child: const Icon(Icons.image)),
+                                child: const Icon(Icons.image),),
                             errorWidget: (context, url, error) => Container(
                                 color: Colors.grey[200],
-                                child: const Icon(Icons.image)),
+                                child: const Icon(Icons.image),),
                           )
                         : Container(
                             color: Colors.grey[200],
-                            child: const Icon(Icons.image)),
+                            child: const Icon(Icons.image),),
               ),
             ),
           ),
@@ -197,7 +196,7 @@ class StoriesWidget extends ConsumerWidget {
                 width: 70,
                 height: 70,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.grey[200]),
+                    shape: BoxShape.circle, color: Colors.grey[200],),
               ),
               const SizedBox(height: 4),
               Container(width: 40, height: 12, color: Colors.grey[200]),

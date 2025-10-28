@@ -41,44 +41,44 @@ class PremiumTheme {
           scrolledUnderElevation: 0,
           centerTitle: true,
           titleTextStyle: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: whiteText),
+              fontSize: 20, fontWeight: FontWeight.bold, color: whiteText,),
           iconTheme: IconThemeData(color: whiteText),
         ),
 
         // Текстовая тема
         textTheme: const TextTheme(
           displayLarge: TextStyle(
-              fontSize: 32, fontWeight: FontWeight.bold, color: whiteText),
+              fontSize: 32, fontWeight: FontWeight.bold, color: whiteText,),
           displayMedium: TextStyle(
-              fontSize: 28, fontWeight: FontWeight.bold, color: whiteText),
+              fontSize: 28, fontWeight: FontWeight.bold, color: whiteText,),
           displaySmall: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: whiteText),
+              fontSize: 24, fontWeight: FontWeight.bold, color: whiteText,),
           headlineLarge: TextStyle(
-              fontSize: 22, fontWeight: FontWeight.w600, color: whiteText),
+              fontSize: 22, fontWeight: FontWeight.w600, color: whiteText,),
           headlineMedium: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w600, color: whiteText),
+              fontSize: 20, fontWeight: FontWeight.w600, color: whiteText,),
           headlineSmall: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.w600, color: whiteText),
+              fontSize: 18, fontWeight: FontWeight.w600, color: whiteText,),
           titleLarge: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w600, color: whiteText),
+              fontSize: 16, fontWeight: FontWeight.w600, color: whiteText,),
           titleMedium: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w500, color: whiteText),
+              fontSize: 14, fontWeight: FontWeight.w500, color: whiteText,),
           titleSmall: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w500, color: secondaryText),
+              fontSize: 12, fontWeight: FontWeight.w500, color: secondaryText,),
           bodyLarge: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.normal, color: whiteText),
+              fontSize: 16, fontWeight: FontWeight.normal, color: whiteText,),
           bodyMedium: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.normal, color: whiteText),
+              fontSize: 14, fontWeight: FontWeight.normal, color: whiteText,),
           bodySmall: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.normal,
-              color: secondaryText),
+              color: secondaryText,),
           labelLarge: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.w500, color: whiteText),
+              fontSize: 14, fontWeight: FontWeight.w500, color: whiteText,),
           labelMedium: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w500, color: secondaryText),
+              fontSize: 12, fontWeight: FontWeight.w500, color: secondaryText,),
           labelSmall: TextStyle(
-              fontSize: 10, fontWeight: FontWeight.w500, color: secondaryText),
+              fontSize: 10, fontWeight: FontWeight.w500, color: secondaryText,),
         ),
 
         // Карточки
@@ -181,7 +181,7 @@ class PremiumTheme {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           titleTextStyle: const TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: whiteText),
+              fontSize: 18, fontWeight: FontWeight.bold, color: whiteText,),
           contentTextStyle: const TextStyle(fontSize: 14, color: whiteText),
         ),
 
@@ -195,7 +195,7 @@ class PremiumTheme {
 
         // Divider
         dividerTheme: const DividerThemeData(
-            color: secondaryElements, thickness: 1, space: 1),
+            color: secondaryElements, thickness: 1, space: 1,),
 
         // Chip
         chipTheme: ChipThemeData(

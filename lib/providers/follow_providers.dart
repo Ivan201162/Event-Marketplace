@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/follow_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/follow_service.dart';
 
 /// Провайдеры для подписок
 class FollowProviders {

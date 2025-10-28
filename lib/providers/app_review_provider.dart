@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/app_review_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/app_review_service.dart';
 
 /// Провайдер для управления отзывами о приложении
 final appReviewProvider = NotifierProvider<AppReviewNotifier, AppReviewState>(

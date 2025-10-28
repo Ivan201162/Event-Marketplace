@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/recommendation.dart';
+import 'package:event_marketplace_app/services/recommendation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/recommendation.dart';
-import '../services/recommendation_service.dart';
 
 /// Провайдер для RecommendationService
 final recommendationServiceProvider = Provider<RecommendationService>(
@@ -125,20 +124,20 @@ final categoryRecommendationsProvider =
 /// Провайдер для управления состоянием рекомендаций (мигрирован с StateNotifierProvider)
 final recommendationStateProvider =
     NotifierProvider<RecommendationStateNotifier, RecommendationState>(
-  () => RecommendationStateNotifier(),
+  RecommendationStateNotifier.new,
 );
 
 /// Состояние рекомендаций
 class RecommendationState {
   const RecommendationState(
-      {this.isLoading = false, this.error, this.lastUpdated});
+      {this.isLoading = false, this.error, this.lastUpdated,});
 
   final bool isLoading;
   final String? error;
   final DateTime? lastUpdated;
 
   RecommendationState copyWith(
-          {bool? isLoading, String? error, DateTime? lastUpdated}) =>
+          {bool? isLoading, String? error, DateTime? lastUpdated,}) =>
       RecommendationState(
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,

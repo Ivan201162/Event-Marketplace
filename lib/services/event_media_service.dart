@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/event_media.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/event_media.dart';
 
 /// Сервис для работы с медиа-центром мероприятия
 class EventMediaService {
@@ -12,12 +12,8 @@ class EventMediaService {
     required String eventId,
     required String uploadedBy,
     required String uploadedByName,
-    String? uploadedByPhoto,
-    required String fileName,
-    required String fileUrl,
+    required String fileName, required String fileUrl, required MediaType type, required int fileSize, String? uploadedByPhoto,
     String? thumbnailUrl,
-    required MediaType type,
-    required int fileSize,
     String? mimeType,
     Duration? duration,
     Map<String, dynamic>? metadata,
@@ -88,7 +84,7 @@ class EventMediaService {
 
   /// Получить медиафайлы по типу
   Stream<List<EventMedia>> getEventMediaByType(
-          String eventId, MediaType type) =>
+          String eventId, MediaType type,) =>
       _firestore
           .collection('events')
           .doc(eventId)
@@ -193,7 +189,7 @@ class EventMediaService {
 
   /// Добавить теги к медиафайлу
   Future<void> addTagsToMedia(
-      String eventId, String mediaId, List<String> tags) async {
+      String eventId, String mediaId, List<String> tags,) async {
     try {
       await _firestore
           .collection('events')
@@ -214,7 +210,7 @@ class EventMediaService {
 
   /// Удалить теги из медиафайла
   Future<void> removeTagsFromMedia(
-      String eventId, String mediaId, List<String> tags) async {
+      String eventId, String mediaId, List<String> tags,) async {
     try {
       await _firestore
           .collection('events')
@@ -235,7 +231,7 @@ class EventMediaService {
 
   /// Сделать медиафайл рекомендуемым
   Future<void> setMediaFeatured(
-      String eventId, String mediaId, bool isFeatured) async {
+      String eventId, String mediaId, bool isFeatured,) async {
     try {
       await _firestore
           .collection('events')
@@ -256,7 +252,7 @@ class EventMediaService {
 
   /// Изменить публичность медиафайла
   Future<void> setMediaPublic(
-      String eventId, String mediaId, bool isPublic) async {
+      String eventId, String mediaId, bool isPublic,) async {
     try {
       await _firestore
           .collection('events')
@@ -342,7 +338,7 @@ class EventMediaService {
 
   /// Поиск медиафайлов по тегам
   Stream<List<EventMedia>> searchMediaByTags(
-          String eventId, List<String> tags) =>
+          String eventId, List<String> tags,) =>
       _firestore
           .collection('events')
           .doc(eventId)

@@ -9,9 +9,8 @@ class UpUser {
     required this.uid,
     required this.name,
     required this.email,
-    this.phone,
+    required this.role, this.phone,
     this.avatarUrl,
-    required this.role,
   });
 
   factory UpUser.fromMap(Map<String, dynamic> map) => UpUser(

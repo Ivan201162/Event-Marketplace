@@ -9,10 +9,7 @@ class ProfileStatistics {
     required this.completedOrders,
     required this.responseTime,
     required this.onlineStatus,
-    this.lastActive,
-    required this.portfolioItems,
-    required this.socialLinks,
-    required this.pinnedPosts,
+    required this.portfolioItems, required this.socialLinks, required this.pinnedPosts, this.lastActive,
   });
 
   /// Создать из Map

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomButton extends StatefulWidget {
   const CustomButton({
-    super.key,
-    required this.text,
+    required this.text, super.key,
     this.onPressed,
     this.backgroundColor,
     this.textColor,
@@ -66,12 +65,12 @@ class _CustomButtonState extends State<CustomButton> {
                   children: [
                     if (widget.icon != null) ...[
                       Icon(widget.icon, size: 20),
-                      const SizedBox(width: 8)
+                      const SizedBox(width: 8),
                     ],
                     Text(
                       widget.text,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
+                          fontSize: 16, fontWeight: FontWeight.w600,),
                     ),
                   ],
                 ),

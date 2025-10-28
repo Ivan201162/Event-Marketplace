@@ -1,14 +1,12 @@
+import 'package:event_marketplace_app/config/payment_config.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/widgets/donation/donation_amount_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../config/payment_config.dart';
-import '../../services/payment_service.dart';
-import '../../widgets/donation/donation_amount_card.dart';
 
 class DonationScreen extends ConsumerStatefulWidget {
   const DonationScreen({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.specialistAvatar,
   });
   final String specialistId;
@@ -66,7 +64,7 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                           : null,
                       child: widget.specialistAvatar == null
                           ? const Icon(Icons.person,
-                              size: 30, color: Colors.white)
+                              size: 30, color: Colors.white,)
                           : null,
                     ),
                     const SizedBox(width: 16),
@@ -86,7 +84,7 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                           Text(
                             widget.specialistName,
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 16),
+                                color: Colors.white70, fontSize: 16,),
                           ),
                         ],
                       ),
@@ -202,14 +200,14 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
                     backgroundColor: Colors.pink,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),),
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(
                           'Поблагодарить ${_selectedAmount?.toInt() ?? 0} ₽',
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                 ),
               ),
@@ -331,7 +329,7 @@ class _DonationScreenState extends ConsumerState<DonationScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Понятно')),
+              child: const Text('Понятно'),),
         ],
       ),
     );

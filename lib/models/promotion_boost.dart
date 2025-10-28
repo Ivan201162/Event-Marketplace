@@ -117,7 +117,7 @@ class PromotionBoost {
 
   // Вычисляем эффективность продвижения
   double get effectiveness {
-    if (impressions == 0) return 0.0;
+    if (impressions == 0) return 0;
     return (clicks / impressions) * 100;
   }
 

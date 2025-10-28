@@ -1,20 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'user.dart';
+import 'package:event_marketplace_app/models/user.dart';
 
 /// Модель пользователя с расширенными полями
 class ManagedUser {
   const ManagedUser({
     required this.id,
     required this.email,
-    this.displayName,
+    required this.createdAt, required this.updatedAt, this.displayName,
     this.photoUrl,
     this.role = UserRole.customer,
     this.status = UserStatus.active,
     this.profile = const {},
     this.permissions = const [],
-    required this.createdAt,
-    required this.updatedAt,
     this.lastLoginAt,
     this.createdBy,
     this.lastModifiedBy,
@@ -220,9 +218,7 @@ class UserRoleDefinition {
     required this.name,
     required this.description,
     required this.permissions,
-    this.isSystemRole = false,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.isSystemRole = false,
     this.createdBy,
   });
 
@@ -337,8 +333,7 @@ class Permission {
     required this.description,
     required this.category,
     required this.type,
-    this.isSystemPermission = false,
-    required this.createdAt,
+    required this.createdAt, this.isSystemPermission = false,
   });
 
   /// Создать из документа Firestore
@@ -424,7 +419,7 @@ class Permission {
 
   @override
   int get hashCode => Object.hash(
-      id, name, description, category, type, isSystemPermission, createdAt);
+      id, name, description, category, type, isSystemPermission, createdAt,);
 
   @override
   String toString() => 'Permission(id: $id, name: $name, type: $type)';
@@ -436,12 +431,11 @@ class UserAction {
     required this.id,
     required this.userId,
     required this.action,
-    this.targetId,
+    required this.timestamp, this.targetId,
     this.targetType,
     this.details = const {},
     this.ipAddress,
     this.userAgent,
-    required this.timestamp,
     this.sessionId,
   });
 

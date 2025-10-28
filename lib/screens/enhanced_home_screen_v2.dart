@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/animated_categories.dart';
+import 'package:event_marketplace_app/widgets/animated_interesting_section.dart';
+import 'package:event_marketplace_app/widgets/animated_search_bar.dart';
+import 'package:event_marketplace_app/widgets/animated_specialists_carousel.dart';
+import 'package:event_marketplace_app/widgets/animated_user_header.dart';
+import 'package:event_marketplace_app/widgets/filters_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../providers/auth_providers.dart';
-import '../widgets/animated_categories.dart';
-import '../widgets/animated_interesting_section.dart';
-import '../widgets/animated_search_bar.dart';
-import '../widgets/animated_specialists_carousel.dart';
-import '../widgets/animated_user_header.dart';
-import '../widgets/filters_dialog.dart';
 
 /// Улучшенный главный экран с анимациями и адаптивным скроллом
 class EnhancedHomeScreenV2 extends ConsumerStatefulWidget {
@@ -26,8 +25,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
   late Animation<double> _appBarOpacityAnimation;
 
   bool _isUserHeaderVisible = true;
-  double _lastScrollOffset = 0.0;
-  Map<String, dynamic> _currentFilters = {};
+  double _lastScrollOffset = 0;
+  final Map<String, dynamic> _currentFilters = {};
 
   @override
   void initState() {
@@ -39,10 +38,10 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
     );
 
     _appBarOpacityAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.0,
+      begin: 1,
+      end: 0,
     ).animate(CurvedAnimation(
-        parent: _appBarAnimationController, curve: Curves.easeInOut));
+        parent: _appBarAnimationController, curve: Curves.easeInOut,),);
 
     _scrollController.addListener(_onScroll);
   }
@@ -122,7 +121,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                     child: SafeArea(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
+                            horizontal: 20, vertical: 12,),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -183,7 +182,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                                       child: IconButton(
                                         icon: const Icon(
                                             Icons.notifications_outlined,
-                                            color: Colors.white),
+                                            color: Colors.white,),
                                         onPressed: () =>
                                             context.push('/notifications'),
                                       ),
@@ -210,7 +209,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                                   ),
                                   child: IconButton(
                                     icon: const Icon(Icons.settings_outlined,
-                                        color: Colors.white),
+                                        color: Colors.white,),
                                     onPressed: () => context.push('/settings'),
                                   ),
                                 ),
@@ -230,11 +229,11 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           SliverToBoxAdapter(
             child: currentUserAsync.when(
               data: (user) => AnimatedUserHeader(
-                  user: user, isVisible: _isUserHeaderVisible),
+                  user: user, isVisible: _isUserHeaderVisible,),
               loading: () => AnimatedUserHeader(
-                  user: null, isVisible: _isUserHeaderVisible),
+                  user: null, isVisible: _isUserHeaderVisible,),
               error: (_, __) => AnimatedUserHeader(
-                  user: null, isVisible: _isUserHeaderVisible),
+                  user: null, isVisible: _isUserHeaderVisible,),
             ),
           ),
 
@@ -271,9 +270,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           children: [
             Expanded(
               child: AnimatedSearchBar(
-                onSearch: (query) {
-                  _performSearch(query);
-                },
+                onSearch: _performSearch,
               ),
             ),
             const SizedBox(width: 12),
@@ -296,7 +293,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
   void _showFiltersDialog() {
     showDialog(
       context: context,
-      builder: (context) => FiltersDialog(),
+      builder: (context) => const FiltersDialog(),
     );
   }
 

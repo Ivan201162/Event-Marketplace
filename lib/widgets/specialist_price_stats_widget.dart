@@ -1,15 +1,13 @@
+import 'package:event_marketplace_app/models/specialist_price_stats.dart';
+import 'package:event_marketplace_app/services/specialist_price_stats_service.dart';
+import 'package:event_marketplace_app/ui/responsive/responsive_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_price_stats.dart';
-import '../services/specialist_price_stats_service.dart';
-import '../ui/responsive/responsive_widgets.dart';
 
 /// Виджет для отображения статистики цен специалиста
 class SpecialistPriceStatsWidget extends ConsumerWidget {
   const SpecialistPriceStatsWidget({
-    super.key,
-    required this.specialistId,
+    required this.specialistId, super.key,
     this.showOverallStats = true,
   });
   final String specialistId;
@@ -34,7 +32,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
                           const Icon(Icons.analytics, color: Colors.blue),
                           const SizedBox(width: 8),
                           Text('Статистика цен',
-                              style: Theme.of(context).textTheme.headlineSmall),
+                              style: Theme.of(context).textTheme.headlineSmall,),
                           const Spacer(),
                           IconButton(
                             onPressed: () => _refreshStats(ref),
@@ -54,7 +52,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
 
                       // Статистика по категориям
                       Text('По категориям',
-                          style: Theme.of(context).textTheme.headlineSmall),
+                          style: Theme.of(context).textTheme.headlineSmall,),
 
                       const SizedBox(height: 8),
 
@@ -82,10 +80,10 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
             const Icon(Icons.analytics_outlined, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text('Нет данных о ценах',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             const Text(
-                'Статистика цен будет доступна после завершения первых заказов.'),
+                'Статистика цен будет доступна после завершения первых заказов.',),
           ],
         ),
       );
@@ -109,7 +107,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text('Не удалось загрузить статистику: $error'),
           ],
@@ -117,14 +115,14 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildOverallStats(
-          BuildContext context, SpecialistPriceAggregate stats) =>
+          BuildContext context, SpecialistPriceAggregate stats,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.blue.withValues(alpha: 0.1),
-              Colors.blue.withValues(alpha: 0.05)
+              Colors.blue.withValues(alpha: 0.05),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -136,7 +134,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Общая статистика',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -184,7 +182,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildCategoryStatsCard(
-          BuildContext context, SpecialistPriceStats stats) =>
+          BuildContext context, SpecialistPriceStats stats,) =>
       Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
@@ -229,7 +227,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _buildCategoryStatItem(
-                      'Диапазон', stats.priceRange, Icons.trending_up),
+                      'Диапазон', stats.priceRange, Icons.trending_up,),
                 ),
                 Expanded(
                   child: _buildCategoryStatItem(
@@ -272,7 +270,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Column(
         children: [
           Icon(icon, color: color, size: 20),
@@ -280,7 +278,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
           Text(
             value,
             style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                fontSize: 16, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
@@ -296,9 +294,9 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(value,
-                    style: const TextStyle(fontWeight: FontWeight.w500)),
+                    style: const TextStyle(fontWeight: FontWeight.w500),),
                 Text(label,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),),
               ],
             ),
           ),
@@ -372,7 +370,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
 /// Виджет для отображения статистики цен в профиле специалиста
 class SpecialistProfilePriceStatsWidget extends ConsumerWidget {
   const SpecialistProfilePriceStatsWidget(
-      {super.key, required this.specialistId});
+      {required this.specialistId, super.key,});
   final String specialistId;
 
   @override
@@ -445,7 +443,7 @@ class SpecialistProfilePriceStatsWidget extends ConsumerWidget {
           Text(
             value,
             style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                fontSize: 16, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
@@ -464,7 +462,7 @@ class SpecialistProfilePriceStatsWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

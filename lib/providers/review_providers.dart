@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/review.dart';
-import '../services/review_service.dart';
 
 /// Review service provider
 final reviewServiceProvider = Provider<ReviewService>((ref) {
@@ -80,7 +79,7 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
 
   void removeTag(String tag) {
     state = state.copyWith(
-        selectedTags: state.selectedTags.where((t) => t != tag).toList());
+        selectedTags: state.selectedTags.where((t) => t != tag).toList(),);
   }
 
   void togglePublic() {
@@ -113,14 +112,14 @@ final reviewFormProvider =
 /// Review state
 class ReviewState {
   const ReviewState(
-      {this.reviews = const [], this.isLoading = false, this.error});
+      {this.reviews = const [], this.isLoading = false, this.error,});
 
   final List<Review> reviews;
   final bool isLoading;
   final String? error;
 
   ReviewState copyWith(
-      {List<Review>? reviews, bool? isLoading, String? error}) {
+      {List<Review>? reviews, bool? isLoading, String? error,}) {
     return ReviewState(
       reviews: reviews ?? this.reviews,
       isLoading: isLoading ?? this.isLoading,
@@ -158,11 +157,11 @@ class ReviewStateNotifier extends Notifier<ReviewState> {
   }
 
   Future<void> updateReview(
-      String reviewId, Map<String, dynamic> updates) async {
+      String reviewId, Map<String, dynamic> updates,) async {
     try {
       final service = ref.read(reviewServiceProvider);
       await service.updateReview(
-          reviewId, updates['rating'] ?? 0, updates['comment'] ?? '');
+          reviewId, updates['rating'] ?? 0, updates['comment'] ?? '',);
       // Reload reviews
       final currentReviews = state.reviews;
       final specialistId =

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 /// UI Kit для изображений
 class UIImages {
@@ -211,11 +211,10 @@ class UIImages {
   /// Изображение с градиентом
   static Widget withGradient({
     required String imageUrl,
-    double? width,
+    required Gradient gradient, double? width,
     double? height,
     BoxFit fit = BoxFit.cover,
     BorderRadius? borderRadius,
-    required Gradient gradient,
     Widget? child,
     VoidCallback? onTap,
     Color? backgroundColor,

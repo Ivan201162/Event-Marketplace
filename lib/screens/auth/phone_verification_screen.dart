@@ -1,17 +1,16 @@
 import 'dart:async';
 
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../providers/auth_providers.dart';
-
 /// Экран ввода SMS кода подтверждения
 class PhoneVerificationScreen extends ConsumerStatefulWidget {
-  final String phoneNumber;
 
-  const PhoneVerificationScreen({super.key, required this.phoneNumber});
+  const PhoneVerificationScreen({required this.phoneNumber, super.key});
+  final String phoneNumber;
 
   @override
   ConsumerState<PhoneVerificationScreen> createState() =>
@@ -112,21 +111,17 @@ class _PhoneVerificationScreenState
         context.go('/main');
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Ошибка проверки кода';
+      var errorMessage = 'Ошибка проверки кода';
 
       switch (e.code) {
         case 'invalid-verification-code':
           errorMessage = 'Неверный код подтверждения';
-          break;
         case 'code-expired':
           errorMessage = 'Код истёк. Запросите новый код';
-          break;
         case 'session-expired':
           errorMessage = 'Сессия истекла. Начните заново';
-          break;
         case 'network-request-failed':
           errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
-          break;
         default:
           errorMessage = 'Ошибка проверки кода: ${e.message ?? e.code}';
       }
@@ -142,7 +137,7 @@ class _PhoneVerificationScreenState
       ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
-        _errorMessage = 'Произошла ошибка: ${e.toString()}';
+        _errorMessage = 'Произошла ошибка: $e';
       });
     } finally {
       if (mounted) {
@@ -186,22 +181,19 @@ class _PhoneVerificationScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Код отправлен повторно'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Ошибка отправки кода';
+      var errorMessage = 'Ошибка отправки кода';
 
       switch (e.code) {
         case 'too-many-requests':
           errorMessage = 'Слишком много запросов. Попробуйте позже';
-          break;
         case 'quota-exceeded':
           errorMessage = 'Превышена квота SMS. Попробуйте позже';
-          break;
         case 'network-request-failed':
           errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
-          break;
         default:
           errorMessage = 'Ошибка отправки кода: ${e.message ?? e.code}';
       }
@@ -217,7 +209,7 @@ class _PhoneVerificationScreenState
       ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
-        _errorMessage = 'Произошла ошибка: ${e.toString()}';
+        _errorMessage = 'Произошла ошибка: $e';
       });
     } finally {
       if (mounted) {
@@ -234,11 +226,11 @@ class _PhoneVerificationScreenState
       appBar: AppBar(
         title: const Text('Подтверждение номера'),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(),),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24),
           child: Form(
             key: _formKey,
             child: Column(
@@ -299,7 +291,7 @@ class _PhoneVerificationScreenState
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text('Подтвердить',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16),),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -315,7 +307,7 @@ class _PhoneVerificationScreenState
                   TextButton(
                     onPressed: _isLoading ? null : _resendCode,
                     child: const Text('Отправить код повторно',
-                        style: TextStyle(fontSize: 16)),
+                        style: TextStyle(fontSize: 16),),
                   ),
 
                 const SizedBox(height: 16),
@@ -335,7 +327,7 @@ class _PhoneVerificationScreenState
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(_errorMessage!,
-                              style: TextStyle(color: Colors.red.shade700)),
+                              style: TextStyle(color: Colors.red.shade700),),
                         ),
                       ],
                     ),

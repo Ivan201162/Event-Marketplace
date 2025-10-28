@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/event_archive.dart';
+import 'package:event_marketplace_app/services/archive_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/event_archive.dart';
-import '../services/archive_service.dart';
 
 /// Провайдер сервиса архивов
 final archiveServiceProvider =
@@ -52,7 +51,7 @@ class ArchiveUploadState {
 /// Провайдер состояния загрузки архива (мигрирован с StateNotifierProvider)
 final archiveUploadStateProvider =
     NotifierProvider<ArchiveUploadNotifier, ArchiveUploadState>(
-  () => ArchiveUploadNotifier(),
+  ArchiveUploadNotifier.new,
 );
 
 /// Нотификатор для управления загрузкой архивов (мигрирован с StateNotifier)
@@ -127,7 +126,7 @@ class ArchiveUploadNotifier extends Notifier<ArchiveUploadState> {
 
   /// Обновить описание архива
   Future<void> updateArchiveDescription(
-      String archiveId, String description) async {
+      String archiveId, String description,) async {
     state = state.copyWith(isUploading: true);
     try {
       await _archiveService.updateArchiveDescription(archiveId, description);

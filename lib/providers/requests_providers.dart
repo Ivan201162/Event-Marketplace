@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/request.dart';
+import 'package:event_marketplace_app/services/requests_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/request.dart';
-import '../services/requests_service.dart';
 
 /// Провайдер сервиса заявок
 final requestsServiceProvider = Provider<RequestsService>((ref) {
@@ -11,7 +10,7 @@ final requestsServiceProvider = Provider<RequestsService>((ref) {
 /// Провайдер списка заявок
 final requestsProvider = FutureProvider<List<Request>>((ref) async {
   final requestsService = ref.read(requestsServiceProvider);
-  return await requestsService.getRequests();
+  return requestsService.getRequests();
 });
 
 /// Провайдер для создания заявки

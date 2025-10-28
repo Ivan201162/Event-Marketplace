@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/user_activity.dart';
-import '../services/specialist_service.dart';
+import 'package:event_marketplace_app/models/user_activity.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
 
 /// Сервис для работы с рекомендациями
 class RecommendationService {
@@ -38,7 +38,7 @@ class RecommendationService {
 
   /// Получить активность пользователя
   Future<List<UserActivity>> getUserActivity(String userId,
-      {int limit = 100}) async {
+      {int limit = 100,}) async {
     try {
       final querySnapshot = await _firestore
           .collection(_activityCollection)
@@ -258,7 +258,7 @@ class RecommendationService {
 
   /// Сохранить рекомендации
   Future<void> _saveRecommendations(
-      String userId, List<Recommendation> recommendations) async {
+      String userId, List<Recommendation> recommendations,) async {
     try {
       // Удаляем старые рекомендации
       final oldRecommendations = await _firestore
@@ -334,7 +334,7 @@ class RecommendationService {
           'totalActivities': 0,
           'categories': {},
           'cities': {},
-          'activityTypes': {}
+          'activityTypes': {},
         };
       }
 

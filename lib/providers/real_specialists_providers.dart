@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-import '../core/feature_flags.dart';
 
 /// Реальные провайдеры для специалистов из Firestore
 class RealSpecialistsProviders {
@@ -76,7 +76,7 @@ class RealSpecialistsProviders {
         .collection('specialists')
         .where('isActive', isEqualTo: true)
         .where('name', isGreaterThanOrEqualTo: query)
-        .where('name', isLessThan: query + 'z')
+        .where('name', isLessThan: '${query}z')
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {

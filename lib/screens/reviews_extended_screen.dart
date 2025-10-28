@@ -1,14 +1,14 @@
+import 'package:event_marketplace_app/models/review_extended.dart';
+import 'package:event_marketplace_app/screens/create_review_extended_screen.dart';
+import 'package:event_marketplace_app/services/review_extended_service.dart';
+import 'package:event_marketplace_app/widgets/review_extended_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/review_extended.dart';
-import '../services/review_extended_service.dart';
-import '../widgets/review_extended_widget.dart';
-import 'create_review_extended_screen.dart';
 
 /// Экран расширенных отзывов
 class ReviewsExtendedScreen extends ConsumerStatefulWidget {
   const ReviewsExtendedScreen(
-      {super.key, required this.specialistId, this.currentUserId});
+      {required this.specialistId, super.key, this.currentUserId,});
   final String specialistId;
   final String? currentUserId;
 
@@ -38,11 +38,11 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
           actions: [
             IconButton(
                 icon: const Icon(Icons.filter_list),
-                onPressed: _showFilterDialog),
+                onPressed: _showFilterDialog,),
             if (_showCreateButton)
               IconButton(
                   icon: const Icon(Icons.add),
-                  onPressed: _showCreateReviewDialog),
+                  onPressed: _showCreateReviewDialog,),
           ],
         ),
         body: Column(
@@ -83,7 +83,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
             Expanded(
               child: StreamBuilder<List<ReviewExtended>>(
                 stream: _reviewService.getSpecialistReviews(
-                    widget.specialistId, _filter),
+                    widget.specialistId, _filter,),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -137,7 +137,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
         floatingActionButton: _showCreateButton
             ? FloatingActionButton(
                 onPressed: _showCreateReviewDialog,
-                child: const Icon(Icons.add))
+                child: const Icon(Icons.add),)
             : null,
       );
 
@@ -197,7 +197,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                       const Text(
                         'Распределение рейтингов',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 8),
                       ...stats.ratingDistribution.entries.map((entry) {
@@ -214,7 +214,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                                   value: percentage / 100,
                                   backgroundColor: Colors.grey[300],
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      _getRatingColor(entry.key)),
+                                      _getRatingColor(entry.key),),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -231,7 +231,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                       const Text(
                         'Популярные теги',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 8),
                       Wrap(
@@ -258,7 +258,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
       );
 
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Column(
         children: [
           Icon(icon, color: color, size: 24),
@@ -266,7 +266,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
           Text(
             value,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         ],
@@ -279,10 +279,10 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
             const Icon(Icons.reviews, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text('Пока нет отзывов',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             const Text('Станьте первым, кто оставит отзыв',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
             const SizedBox(height: 16),
             if (_showCreateButton)
               ElevatedButton.icon(
@@ -337,7 +337,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -417,13 +417,13 @@ class _FilterDialogState extends State<_FilterDialog> {
                   child: DropdownButtonFormField<int?>(
                     initialValue: _filter.minRating,
                     decoration: const InputDecoration(
-                        labelText: 'От', border: OutlineInputBorder()),
+                        labelText: 'От', border: OutlineInputBorder(),),
                     items: [
                       const DropdownMenuItem(child: Text('Любой')),
                       ...List.generate(
                         5,
                         (index) => DropdownMenuItem(
-                            value: index + 1, child: Text('${index + 1} ⭐')),
+                            value: index + 1, child: Text('${index + 1} ⭐'),),
                       ),
                     ],
                     onChanged: (value) {
@@ -438,13 +438,13 @@ class _FilterDialogState extends State<_FilterDialog> {
                   child: DropdownButtonFormField<int?>(
                     initialValue: _filter.maxRating,
                     decoration: const InputDecoration(
-                        labelText: 'До', border: OutlineInputBorder()),
+                        labelText: 'До', border: OutlineInputBorder(),),
                     items: [
                       const DropdownMenuItem(child: Text('Любой')),
                       ...List.generate(
                         5,
                         (index) => DropdownMenuItem(
-                            value: index + 1, child: Text('${index + 1} ⭐')),
+                            value: index + 1, child: Text('${index + 1} ⭐'),),
                       ),
                     ],
                     onChanged: (value) {
@@ -487,10 +487,10 @@ class _FilterDialogState extends State<_FilterDialog> {
             DropdownButtonFormField<ReviewSortBy>(
               initialValue: _filter.sortBy,
               decoration: const InputDecoration(
-                  labelText: 'Сортировка', border: OutlineInputBorder()),
+                  labelText: 'Сортировка', border: OutlineInputBorder(),),
               items: ReviewSortBy.values
                   .map((sort) => DropdownMenuItem(
-                      value: sort, child: Text(_getSortText(sort))))
+                      value: sort, child: Text(_getSortText(sort)),),)
                   .toList(),
               onChanged: (value) {
                 setState(() {
@@ -503,7 +503,7 @@ class _FilterDialogState extends State<_FilterDialog> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               widget.onFilterChanged(_filter);

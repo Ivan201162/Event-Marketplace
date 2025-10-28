@@ -45,11 +45,9 @@ class AuditLog {
     required this.userId,
     required this.action,
     required this.resource,
-    this.resourceId,
-    required this.metadata,
+    required this.metadata, required this.timestamp, this.resourceId,
     this.ipAddress,
     this.userAgent,
-    required this.timestamp,
   });
 
   factory AuditLog.fromDocument(DocumentSnapshot doc) {
@@ -94,13 +92,8 @@ class SecuritySession {
     required this.id,
     required this.userId,
     required this.deviceId,
-    this.ipAddress,
+    required this.status, required this.createdAt, required this.lastActivityAt, required this.expiresAt, required this.metadata, this.ipAddress,
     this.userAgent,
-    required this.status,
-    required this.createdAt,
-    required this.lastActivityAt,
-    required this.expiresAt,
-    required this.metadata,
   });
 
   factory SecuritySession.fromDocument(DocumentSnapshot doc) {
@@ -180,8 +173,7 @@ class SecurityAlert {
     required this.status,
     required this.severity,
     required this.createdAt,
-    this.resolvedAt,
-    required this.metadata,
+    required this.metadata, this.resolvedAt,
   });
 
   factory SecurityAlert.fromDocument(DocumentSnapshot doc) {
@@ -238,11 +230,7 @@ class UserBlock {
     required this.id,
     required this.userId,
     required this.reason,
-    this.blockedBy,
-    required this.status,
-    required this.createdAt,
-    required this.expiresAt,
-    required this.metadata,
+    required this.status, required this.createdAt, required this.expiresAt, required this.metadata, this.blockedBy,
   });
 
   factory UserBlock.fromDocument(DocumentSnapshot doc) {

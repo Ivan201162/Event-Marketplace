@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/features/profile/data/models/customer_profile.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/customer_profile.dart';
 
 /// Репозиторий для работы с профилями заказчиков
 class CustomerProfileRepository {
@@ -39,7 +38,7 @@ class CustomerProfileRepository {
 
   /// Обновить профиль заказчика
   Future<bool> updateProfile(
-      String customerId, Map<String, dynamic> updates) async {
+      String customerId, Map<String, dynamic> updates,) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(customerId).update(updates);

@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для отображения прайс-листа специалиста
 class PriceListWidget extends StatelessWidget {
   const PriceListWidget({
-    super.key,
-    required this.servicesWithPrices,
-    required this.hourlyRate,
-    required this.price,
+    required this.servicesWithPrices, required this.hourlyRate, required this.price, super.key,
     this.onEditPrices,
   });
   final Map<String, double> servicesWithPrices;
@@ -23,7 +20,7 @@ class PriceListWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Услуги и цены',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               if (onEditPrices != null)
                 TextButton.icon(
                   onPressed: onEditPrices,
@@ -72,7 +69,7 @@ class PriceListWidget extends StatelessWidget {
                   Icon(Icons.list_alt, size: 48, color: Colors.grey),
                   SizedBox(height: 12),
                   Text('Дополнительные услуги не указаны',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: Colors.grey),),
                   SizedBox(height: 4),
                   Text(
                     'Специалист может добавить услуги с ценами',
@@ -122,7 +119,7 @@ class PriceListWidget extends StatelessWidget {
           color: isMain ? Colors.green.shade50 : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: isMain ? Colors.green.shade200 : Colors.grey.shade300),
+              color: isMain ? Colors.green.shade200 : Colors.grey.shade300,),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withValues(alpha: 0.1),
@@ -149,7 +146,7 @@ class PriceListWidget extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(description,
                       style:
-                          TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                          TextStyle(fontSize: 12, color: Colors.grey.shade600),),
                 ],
               ),
             ),
@@ -187,7 +184,7 @@ class PriceListWidget extends StatelessWidget {
               style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green),
+                  color: Colors.green,),
             ),
           ],
         ),

@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/services/advertisement_service.dart';
+import 'package:event_marketplace_app/services/priority_service.dart';
+import 'package:event_marketplace_app/services/promotion_service.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/advertisement.dart';
-import '../models/promotion_boost.dart';
-import '../models/subscription_plan.dart';
-import '../services/advertisement_service.dart';
-import '../services/priority_service.dart';
-import '../services/promotion_service.dart';
-import '../services/subscription_service.dart';
 
 class MonetizationProvider extends ChangeNotifier {
   final SubscriptionService _subscriptionService = SubscriptionService();
@@ -84,7 +83,7 @@ class MonetizationProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка загрузки планов подписки: $e');
+          'ERROR: [monetization_provider] Ошибка загрузки планов подписки: $e',);
     }
   }
 
@@ -95,7 +94,7 @@ class MonetizationProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка загрузки пакетов продвижения: $e');
+          'ERROR: [monetization_provider] Ошибка загрузки пакетов продвижения: $e',);
     }
   }
 
@@ -117,7 +116,7 @@ class MonetizationProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка загрузки продвижений: $e');
+          'ERROR: [monetization_provider] Ошибка загрузки продвижений: $e',);
     }
   }
 
@@ -143,7 +142,7 @@ class MonetizationProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка загрузки приоритета: $e');
+          'ERROR: [monetization_provider] Ошибка загрузки приоритета: $e',);
     }
   }
 
@@ -154,13 +153,13 @@ class MonetizationProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка загрузки статистики: $e');
+          'ERROR: [monetization_provider] Ошибка загрузки статистики: $e',);
     }
   }
 
   /// Покупка подписки
   Future<bool> purchaseSubscription(
-      {required String userId, required String planId}) async {
+      {required String userId, required String planId,}) async {
     _setLoading(true);
     _clearError();
 
@@ -183,7 +182,7 @@ class MonetizationProvider extends ChangeNotifier {
 
   /// Покупка продвижения
   Future<bool> purchasePromotion(
-      {required String userId, required String packageId}) async {
+      {required String userId, required String packageId,}) async {
     _setLoading(true);
     _clearError();
 
@@ -376,7 +375,7 @@ class MonetizationProvider extends ChangeNotifier {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка обновления статистики: $e');
+          'ERROR: [monetization_provider] Ошибка обновления статистики: $e',);
     }
   }
 
@@ -398,7 +397,7 @@ class MonetizationProvider extends ChangeNotifier {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка получения рекомендаций: $e');
+          'ERROR: [monetization_provider] Ошибка получения рекомендаций: $e',);
       return [];
     }
   }
@@ -419,7 +418,7 @@ class MonetizationProvider extends ChangeNotifier {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [monetization_provider] Ошибка получения топ пользователей: $e');
+          'ERROR: [monetization_provider] Ошибка получения топ пользователей: $e',);
       return [];
     }
   }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../logger.dart';
+import 'package:event_marketplace_app/core/logger.dart';
 
 /// Сервис для логирования ошибок аутентификации
 class ErrorLogger {

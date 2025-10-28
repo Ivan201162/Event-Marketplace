@@ -1,15 +1,10 @@
+import 'package:event_marketplace_app/models/customer_profile_extended.dart';
 import 'package:flutter/material.dart';
-import '../models/customer_profile_extended.dart';
 
 /// Виджет карточки заметки
 class NoteCardWidget extends StatelessWidget {
   const NoteCardWidget({
-    super.key,
-    required this.note,
-    required this.onTap,
-    required this.onEdit,
-    required this.onDelete,
-    required this.onTogglePin,
+    required this.note, required this.onTap, required this.onEdit, required this.onDelete, required this.onTogglePin, super.key,
   });
   final CustomerNote note;
   final VoidCallback onTap;
@@ -33,14 +28,14 @@ class NoteCardWidget extends StatelessWidget {
                   children: [
                     if (note.isPinned) ...[
                       const Icon(Icons.push_pin,
-                          color: Colors.orange, size: 16),
+                          color: Colors.orange, size: 16,),
                       const SizedBox(width: 4),
                     ],
                     Expanded(
                       child: Text(
                         note.title,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -50,13 +45,10 @@ class NoteCardWidget extends StatelessWidget {
                         switch (value) {
                           case 'pin':
                             onTogglePin();
-                            break;
                           case 'edit':
                             onEdit();
-                            break;
                           case 'delete':
                             onDelete();
-                            break;
                         }
                       },
                       itemBuilder: (context) => [
@@ -82,7 +74,7 @@ class NoteCardWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.edit),
                               SizedBox(width: 8),
-                              Text('Редактировать')
+                              Text('Редактировать'),
                             ],
                           ),
                         ),
@@ -93,7 +85,7 @@ class NoteCardWidget extends StatelessWidget {
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
                               Text('Удалить',
-                                  style: TextStyle(color: Colors.red)),
+                                  style: TextStyle(color: Colors.red),),
                             ],
                           ),
                         ),
@@ -159,7 +151,7 @@ class NoteCardWidget extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text('Событие',
                           style:
-                              TextStyle(fontSize: 12, color: Colors.blue[600])),
+                              TextStyle(fontSize: 12, color: Colors.blue[600]),),
                     ],
                     if (note.specialistId != null) ...[
                       const SizedBox(width: 16),
@@ -167,7 +159,7 @@ class NoteCardWidget extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text('Специалист',
                           style: TextStyle(
-                              fontSize: 12, color: Colors.green[600])),
+                              fontSize: 12, color: Colors.green[600],),),
                     ],
                   ],
                 ),

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/specialist.dart';
 
 /// Сервис для создания тестовых данных в dev/debug режиме
 class DevSeedService {

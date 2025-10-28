@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/event_idea_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event_idea.dart';
-import '../providers/auth_providers.dart';
-import '../services/event_idea_service.dart';
-
 /// Виджет комментариев к идее
 class IdeaCommentsWidget extends ConsumerStatefulWidget {
-  const IdeaCommentsWidget({super.key, required this.ideaId});
+  const IdeaCommentsWidget({required this.ideaId, super.key});
 
   final String ideaId;
 
@@ -84,7 +83,7 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Комментарий добавлен'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -92,7 +91,7 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       setState(() {
@@ -194,7 +193,7 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
             Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки комментариев',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -206,7 +205,7 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadComments, child: const Text('Повторить')),
+                onPressed: _loadComments, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -245,7 +244,7 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -261,7 +260,7 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
 /// Карточка комментария
 class CommentCard extends StatelessWidget {
   const CommentCard(
-      {super.key, required this.comment, this.onLike, this.onReply});
+      {required this.comment, super.key, this.onLike, this.onReply,});
 
   final IdeaComment comment;
   final VoidCallback? onLike;
@@ -349,13 +348,13 @@ class CommentCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.favorite_border,
-                            size: 16, color: Colors.grey[600]),
+                            size: 16, color: Colors.grey[600],),
                         if (comment.likes > 0) ...[
                           const SizedBox(width: 4),
                           Text(
                             comment.likes.toString(),
                             style: TextStyle(
-                                fontSize: 12, color: Colors.grey[600]),
+                                fontSize: 12, color: Colors.grey[600],),
                           ),
                         ],
                       ],
@@ -375,7 +374,7 @@ class CommentCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           Text('Ответить',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[600])),
+                                  fontSize: 12, color: Colors.grey[600],),),
                         ],
                       ),
                     ),

@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/environment_config.dart';
+import 'package:event_marketplace_app/services/environment_config_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/environment_config.dart';
-import '../services/environment_config_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления конфигурацией окружения
 class EnvironmentConfigScreen extends ConsumerStatefulWidget {
@@ -60,13 +60,13 @@ class _EnvironmentConfigScreenState
           children: [
             Expanded(
                 child:
-                    _buildTabButton('environments', 'Окружения', Icons.cloud)),
+                    _buildTabButton('environments', 'Окружения', Icons.cloud),),
             Expanded(
                 child:
-                    _buildTabButton('variables', 'Переменные', Icons.settings)),
+                    _buildTabButton('variables', 'Переменные', Icons.settings),),
             Expanded(
                 child: _buildTabButton(
-                    'deployments', 'Развертывания', Icons.rocket_launch)),
+                    'deployments', 'Развертывания', Icons.rocket_launch,),),
           ],
         ),
       );
@@ -89,7 +89,7 @@ class _EnvironmentConfigScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -116,7 +116,7 @@ class _EnvironmentConfigScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Статистика конфигураций',
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context).textTheme.titleMedium,),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -154,7 +154,7 @@ class _EnvironmentConfigScreenState
   }
 
   Widget _buildStatCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -169,12 +169,12 @@ class _EnvironmentConfigScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(title,
                 style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
           ],
         ),
       );
@@ -186,7 +186,7 @@ class _EnvironmentConfigScreenState
             child: Row(
               children: [
                 Text('Конфигурации окружений',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showCreateEnvironmentDialog,
@@ -237,11 +237,11 @@ class _EnvironmentConfigScreenState
                     Text(
                       environment.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     if (environment.description != null)
                       Text(environment.description!,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -257,7 +257,7 @@ class _EnvironmentConfigScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               if (environment.isActive)
@@ -287,31 +287,31 @@ class _EnvironmentConfigScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   if (!environment.isActive)
                     const PopupMenuItem(
                       value: 'activate',
                       child: ListTile(
                           leading: Icon(Icons.play_arrow),
-                          title: Text('Активировать')),
+                          title: Text('Активировать'),),
                     ),
                   const PopupMenuItem(
                     value: 'export',
                     child: ListTile(
-                        leading: Icon(Icons.download), title: Text('Экспорт')),
+                        leading: Icon(Icons.download), title: Text('Экспорт'),),
                   ),
                   const PopupMenuItem(
                     value: 'validate',
                     child: ListTile(
                         leading: Icon(Icons.check_circle),
-                        title: Text('Валидация')),
+                        title: Text('Валидация'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -330,7 +330,7 @@ class _EnvironmentConfigScreenState
                   .map(
                     (tag) => Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                          horizontal: 6, vertical: 2,),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -353,7 +353,7 @@ class _EnvironmentConfigScreenState
               ),
               const SizedBox(width: 8),
               _buildInfoChip('Секреты',
-                  '${environment.secrets.length} секретов', Colors.red),
+                  '${environment.secrets.length} секретов', Colors.red,),
             ],
           ),
 
@@ -387,7 +387,7 @@ class _EnvironmentConfigScreenState
             child: Row(
               children: [
                 Text('Переменные окружения',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showCreateVariableDialog,
@@ -438,11 +438,11 @@ class _EnvironmentConfigScreenState
                     Text(
                       variable.key,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     if (variable.description != null)
                       Text(variable.description!,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -458,7 +458,7 @@ class _EnvironmentConfigScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               if (variable.isSecret)
@@ -476,7 +476,7 @@ class _EnvironmentConfigScreenState
                     style: TextStyle(
                         fontSize: 12,
                         color: Colors.red,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,),
                   ),
                 ),
               if (variable.isRequired)
@@ -505,13 +505,13 @@ class _EnvironmentConfigScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -543,7 +543,7 @@ class _EnvironmentConfigScreenState
             children: [
               if (variable.defaultValue != null)
                 _buildInfoChip(
-                    'По умолчанию', variable.defaultValue!, Colors.green),
+                    'По умолчанию', variable.defaultValue!, Colors.green,),
               const SizedBox(width: 8),
               if (variable.allowedValues.isNotEmpty)
                 _buildInfoChip(
@@ -579,7 +579,7 @@ class _EnvironmentConfigScreenState
             child: Row(
               children: [
                 Text('Конфигурации развертывания',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showCreateDeploymentDialog,
@@ -646,7 +646,7 @@ class _EnvironmentConfigScreenState
           Row(
             children: [
               Text(deployment.status.icon,
-                  style: const TextStyle(fontSize: 24)),
+                  style: const TextStyle(fontSize: 24),),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -655,11 +655,11 @@ class _EnvironmentConfigScreenState
                     Text(
                       '${environment.name} v${deployment.version}',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     if (deployment.description != null)
                       Text(deployment.description!,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -675,7 +675,7 @@ class _EnvironmentConfigScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -686,13 +686,13 @@ class _EnvironmentConfigScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -706,7 +706,7 @@ class _EnvironmentConfigScreenState
           Row(
             children: [
               _buildInfoChip('Зависимости', '${deployment.dependencies.length}',
-                  Colors.blue),
+                  Colors.blue,),
               const SizedBox(width: 8),
               _buildInfoChip(
                 'Проверки здоровья',
@@ -744,7 +744,7 @@ class _EnvironmentConfigScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -826,7 +826,7 @@ class _EnvironmentConfigScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -874,19 +874,14 @@ class _EnvironmentConfigScreenState
     switch (action) {
       case 'view':
         _viewEnvironment(environment);
-        break;
       case 'edit':
         _editEnvironment(environment);
-        break;
       case 'activate':
         _activateEnvironment(environment);
-        break;
       case 'export':
         _exportEnvironment(environment);
-        break;
       case 'validate':
         _validateEnvironment(environment);
-        break;
     }
   }
 
@@ -894,10 +889,8 @@ class _EnvironmentConfigScreenState
     switch (action) {
       case 'view':
         _viewVariable(variable);
-        break;
       case 'edit':
         _editVariable(variable);
-        break;
     }
   }
 
@@ -905,10 +898,8 @@ class _EnvironmentConfigScreenState
     switch (action) {
       case 'view':
         _viewDeployment(deployment);
-        break;
       case 'edit':
         _editDeployment(deployment);
-        break;
     }
   }
 
@@ -917,7 +908,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Просмотр окружения "${environment.name}" будет реализован')),
+              'Просмотр окружения "${environment.name}" будет реализован',),),
     );
   }
 
@@ -926,7 +917,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование окружения "${environment.name}" будет реализовано')),
+              'Редактирование окружения "${environment.name}" будет реализовано',),),
     );
   }
 
@@ -944,7 +935,7 @@ class _EnvironmentConfigScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка активации: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка активации: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -956,12 +947,12 @@ class _EnvironmentConfigScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Экспорт окружения "${environment.name}" завершен')));
+          content: Text('Экспорт окружения "${environment.name}" завершен'),),);
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -990,7 +981,7 @@ class _EnvironmentConfigScreenState
             actions: [
               TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Закрыть')),
+                  child: const Text('Закрыть'),),
             ],
           ),
         );
@@ -999,7 +990,7 @@ class _EnvironmentConfigScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка валидации: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка валидации: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -1008,7 +999,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Просмотр переменной "${variable.key}" будет реализован')),
+              Text('Просмотр переменной "${variable.key}" будет реализован'),),
     );
   }
 
@@ -1017,7 +1008,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование переменной "${variable.key}" будет реализовано')),
+              'Редактирование переменной "${variable.key}" будет реализовано',),),
     );
   }
 
@@ -1026,7 +1017,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Просмотр развертывания "${deployment.version}" будет реализован')),
+              'Просмотр развертывания "${deployment.version}" будет реализован',),),
     );
   }
 
@@ -1035,7 +1026,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование развертывания "${deployment.version}" будет реализовано'),
+            'Редактирование развертывания "${deployment.version}" будет реализовано',),
       ),
     );
   }
@@ -1045,7 +1036,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание окружения будет реализовано')));
+        const SnackBar(content: Text('Создание окружения будет реализовано')),);
   }
 
   void _showCreateVariableDialog() {
@@ -1053,7 +1044,7 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание переменной будет реализовано')));
+        const SnackBar(content: Text('Создание переменной будет реализовано')),);
   }
 
   void _showCreateDeploymentDialog() {
@@ -1061,6 +1052,6 @@ class _EnvironmentConfigScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Создание развертывания будет реализовано')));
+        content: Text('Создание развертывания будет реализовано'),),);
   }
 }

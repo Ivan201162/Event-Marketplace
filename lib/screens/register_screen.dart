@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/core/services/error_logger.dart';
+import 'package:event_marketplace_app/models/tax_info.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/radio_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../core/services/error_logger.dart';
-import '../models/tax_info.dart';
-import '../models/user.dart';
-import '../providers/auth_providers.dart';
-import '../widgets/radio_group.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -163,7 +162,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                          borderRadius: BorderRadius.circular(8),),
                     ),
                     child: _isLoading
                         ? const SizedBox(
@@ -174,7 +173,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         : const Text(
                             'Зарегистрироваться',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 16, fontWeight: FontWeight.w600,),
                           ),
                   ),
 
@@ -196,7 +195,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             child: Text(
                               _errorMessage!,
                               style: const TextStyle(
-                                  color: Colors.red, fontSize: 14),
+                                  color: Colors.red, fontSize: 14,),
                             ),
                           ),
                         ],
@@ -222,7 +221,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Роль',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           const SizedBox(height: 8),
           RadioGroup<UserRole>(
             value: _selectedRole,
@@ -283,7 +282,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       title: Row(
                         children: [
                           Text(taxType.icon,
-                              style: const TextStyle(fontSize: 20)),
+                              style: const TextStyle(fontSize: 20),),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Column(
@@ -292,12 +291,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 Text(
                                   taxType.displayName,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w500),
+                                      fontWeight: FontWeight.w500,),
                                 ),
                                 Text(
                                   taxType.description,
                                   style: const TextStyle(
-                                      fontSize: 12, color: Colors.grey),
+                                      fontSize: 12, color: Colors.grey,),
                                 ),
                               ],
                             ),

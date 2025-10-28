@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/badge.dart' as models;
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/animated_page_transition.dart' as custom;
+import 'package:event_marketplace_app/widgets/badge_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/badge.dart' as models;
-import '../providers/auth_providers.dart';
-import '../widgets/animated_page_transition.dart' as custom;
-import '../widgets/badge_widget.dart';
 
 /// Экран бейджей и достижений
 class BadgesScreen extends ConsumerStatefulWidget {
@@ -96,7 +95,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
                 ),
                 const SizedBox(height: 16),
                 BadgeCollectionWidget(
-                    userId: userId, limit: 6, showTitle: false),
+                    userId: userId, limit: 6, showTitle: false,),
               ],
             ),
           ),
@@ -124,19 +123,19 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
 
   /// Вкладка с бейджами по категории
   Widget _buildCategoryBadgesTab(
-          String userId, models.BadgeCategory category) =>
+          String userId, models.BadgeCategory category,) =>
       custom.AnimatedList(
         children: [
           // Информация о категории
           Padding(
               padding: const EdgeInsets.all(16),
-              child: _buildCategoryInfo(category)),
+              child: _buildCategoryInfo(category),),
 
           // Бейджи категории
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: BadgeCollectionWidget(
-                userId: userId, category: category, showTitle: false),
+                userId: userId, category: category, showTitle: false,),
           ),
         ],
       );
@@ -146,7 +145,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
         children: [
           Padding(
               padding: EdgeInsets.all(16),
-              child: BadgeLeaderboardWidget(limit: 20))
+              child: BadgeLeaderboardWidget(limit: 20),),
         ],
       );
 
@@ -158,7 +157,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
       child: Column(
         children: [
           Icon(info.icon,
-              size: 48, color: Theme.of(context).colorScheme.primary),
+              size: 48, color: Theme.of(context).colorScheme.primary,),
           const SizedBox(height: 16),
           Text(
             info.title,
@@ -214,7 +213,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
 /// Информация о категории
 class CategoryInfo {
   const CategoryInfo(
-      {required this.title, required this.description, required this.icon});
+      {required this.title, required this.description, required this.icon,});
   final String title;
   final String description;
   final IconData icon;
@@ -222,7 +221,7 @@ class CategoryInfo {
 
 /// Экран детального просмотра бейджа
 class BadgeDetailScreen extends StatelessWidget {
-  const BadgeDetailScreen({super.key, required this.badge});
+  const BadgeDetailScreen({required this.badge, super.key});
   final models.Badge badge;
 
   @override
@@ -262,9 +261,9 @@ class BadgeDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             _buildInfoRow(context, 'Тип бейджа', badge.type.info.category.name,
-                Icons.category),
+                Icons.category,),
             _buildInfoRow(context, 'Дата получения',
-                _formatDate(badge.earnedAt), Icons.calendar_today),
+                _formatDate(badge.earnedAt), Icons.calendar_today,),
             _buildInfoRow(
               context,
               'Видимость',
@@ -276,7 +275,7 @@ class BadgeDetailScreen extends StatelessWidget {
       );
 
   Widget _buildInfoRow(
-          BuildContext context, String label, String value, IconData icon) =>
+          BuildContext context, String label, String value, IconData icon,) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(

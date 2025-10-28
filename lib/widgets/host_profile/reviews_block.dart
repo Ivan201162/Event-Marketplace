@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/host_profile.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/host_profile.dart';
 
 /// Компонент блока с отзывами
 class ReviewsBlock extends StatelessWidget {
-  const ReviewsBlock({super.key, required this.reviews, this.onViewAllReviews});
+  const ReviewsBlock({required this.reviews, super.key, this.onViewAllReviews});
   final List<Review> reviews;
   final VoidCallback? onViewAllReviews;
 
@@ -138,14 +137,14 @@ class ReviewsBlock extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2),),
                 ),
                 child: ClipOval(
                   child: review.userPhotoUrl != null
                       ? CachedNetworkImage(
                           imageUrl: review.userPhotoUrl!,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
+                          placeholder: (context, url) => ColoredBox(
                             color: theme.colorScheme.surface,
                             child: Icon(
                               Icons.person,
@@ -154,7 +153,7 @@ class ReviewsBlock extends StatelessWidget {
                                   .withValues(alpha: 0.5),
                             ),
                           ),
-                          errorWidget: (context, url, error) => Container(
+                          errorWidget: (context, url, error) => ColoredBox(
                             color: theme.colorScheme.surface,
                             child: Icon(
                               Icons.person,
@@ -164,7 +163,7 @@ class ReviewsBlock extends StatelessWidget {
                             ),
                           ),
                         )
-                      : Container(
+                      : ColoredBox(
                           color: theme.colorScheme.surface,
                           child: Icon(
                             Icons.person,

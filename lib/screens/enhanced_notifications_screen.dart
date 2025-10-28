@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/enhanced_notification.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/enhanced_notifications_providers.dart';
+import 'package:event_marketplace_app/widgets/notification_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/enhanced_notification.dart';
-import '../providers/auth_providers.dart';
-import '../providers/enhanced_notifications_providers.dart';
-import '../widgets/notification_card_widget.dart';
 
 /// Расширенный экран уведомлений
 class EnhancedNotificationsScreen extends ConsumerStatefulWidget {
@@ -44,10 +43,10 @@ class _EnhancedNotificationsScreenState
           actions: [
             IconButton(
                 onPressed: _showFiltersDialog,
-                icon: const Icon(Icons.filter_list)),
+                icon: const Icon(Icons.filter_list),),
             IconButton(
                 onPressed: _showMarkAllReadDialog,
-                icon: const Icon(Icons.mark_email_read)),
+                icon: const Icon(Icons.mark_email_read),),
           ],
           bottom: TabBar(
             controller: _tabController,
@@ -228,7 +227,7 @@ class _EnhancedNotificationsScreenState
             Icon(Icons.notifications_none, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Нет уведомлений',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Здесь будут отображаться ваши уведомления',
@@ -246,7 +245,7 @@ class _EnhancedNotificationsScreenState
             Icon(Icons.mark_email_read, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Все уведомления прочитаны',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'У вас нет непрочитанных уведомлений',
@@ -264,7 +263,7 @@ class _EnhancedNotificationsScreenState
             Icon(Icons.archive, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Архив пуст',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Здесь будут отображаться архивированные уведомления',
@@ -282,7 +281,7 @@ class _EnhancedNotificationsScreenState
             Icon(Icons.login, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Войдите в аккаунт',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Чтобы получать уведомления, необходимо войти в аккаунт',
@@ -300,7 +299,7 @@ class _EnhancedNotificationsScreenState
             Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки',
-                style: TextStyle(fontSize: 18, color: Colors.red[600])),
+                style: TextStyle(fontSize: 18, color: Colors.red[600]),),
             const SizedBox(height: 8),
             Text(
               error,
@@ -362,7 +361,7 @@ class _EnhancedNotificationsScreenState
                   const DropdownMenuItem(child: Text('Все приоритеты')),
                   ...NotificationPriority.values.map(
                     (priority) => DropdownMenuItem(
-                        value: priority, child: Text(priority.displayName)),
+                        value: priority, child: Text(priority.displayName),),
                   ),
                 ],
                 onChanged: (value) {
@@ -408,11 +407,11 @@ class _EnhancedNotificationsScreenState
       builder: (context) => AlertDialog(
         title: const Text('Отметить все как прочитанные'),
         content: const Text(
-            'Вы уверены, что хотите отметить все уведомления как прочитанные?'),
+            'Вы уверены, что хотите отметить все уведомления как прочитанные?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -457,7 +456,7 @@ class _EnhancedNotificationsScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка: $error'), backgroundColor: Colors.red));
+          content: Text('Ошибка: $error'), backgroundColor: Colors.red,),);
     });
   }
 
@@ -475,12 +474,12 @@ class _EnhancedNotificationsScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Все уведомления отмечены как прочитанные')));
+          content: Text('Все уведомления отмечены как прочитанные'),),);
     }).catchError((error) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка: $error'), backgroundColor: Colors.red));
+          content: Text('Ошибка: $error'), backgroundColor: Colors.red,),);
     });
   }
 
@@ -498,7 +497,7 @@ class _EnhancedNotificationsScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка: $error'), backgroundColor: Colors.red));
+          content: Text('Ошибка: $error'), backgroundColor: Colors.red,),);
     });
   }
 
@@ -511,7 +510,7 @@ class _EnhancedNotificationsScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -523,14 +522,14 @@ class _EnhancedNotificationsScreenState
                 if (currentUser != null) {
                   ref.invalidate(notificationsProvider(currentUser.uid));
                   ref.invalidate(
-                      archivedNotificationsProvider(currentUser.uid));
+                      archivedNotificationsProvider(currentUser.uid),);
                   ref.invalidate(notificationStatsProvider(currentUser.uid));
                 }
               }).catchError((error) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка: $error'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               });
             },
@@ -553,7 +552,7 @@ class _EnhancedNotificationsScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -574,12 +573,12 @@ class _EnhancedNotificationsScreenState
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(
-                    const SnackBar(content: Text('Все уведомления удалены')));
+                    const SnackBar(content: Text('Все уведомления удалены')),);
               }).catchError((error) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка: $error'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               });
             },
@@ -595,7 +594,7 @@ class _EnhancedNotificationsScreenState
     // TODO: Реализовать применение фильтров
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Фильтры применены'), duration: Duration(seconds: 2)),
+          content: Text('Фильтры применены'), duration: Duration(seconds: 2),),
     );
   }
 }

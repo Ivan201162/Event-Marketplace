@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/app_notification.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/notification_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/app_notification.dart';
-import '../providers/auth_providers.dart';
-import '../providers/notification_providers.dart';
 
 /// Виджет для отображения списка уведомлений
 class NotificationsWidget extends ConsumerWidget {
@@ -37,14 +36,14 @@ class NotificationsWidget extends ConsumerWidget {
                       try {
                         await ref.read(
                           markAllNotificationsAsReadProvider(
-                                  currentUser.id ?? '')
+                                  currentUser.id ?? '',)
                               .future,
                         );
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                  'Все уведомления отмечены как прочитанные'),
+                                  'Все уведомления отмечены как прочитанные',),
                               backgroundColor: Colors.green,
                             ),
                           );
@@ -54,7 +53,7 @@ class NotificationsWidget extends ConsumerWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                                 content: Text('Ошибка: $e'),
-                                backgroundColor: Colors.red),
+                                backgroundColor: Colors.red,),
                           );
                         }
                       }
@@ -154,7 +153,7 @@ class NotificationsWidget extends ConsumerWidget {
     // Отмечаем как прочитанное, если еще не прочитано
     if (notification['isRead'] != true) {
       ref.read(
-          markNotificationAsReadProvider(notification['id'].toString()).future);
+          markNotificationAsReadProvider(notification['id'].toString()).future,);
     }
 
     // Обрабатываем нажатие в зависимости от типа уведомления
@@ -162,31 +161,25 @@ class NotificationsWidget extends ConsumerWidget {
       case 'new_booking':
         // Переходим к заявке
         _navigateToBooking(
-            context, notification['data']?['bookingId']?.toString() ?? '');
-        break;
+            context, notification['data']?['bookingId']?.toString() ?? '',);
       case 'booking_confirmed':
       case 'booking_rejected':
         // Переходим к заявке
         _navigateToBooking(
-            context, notification['data']?['bookingId']?.toString() ?? '');
-        break;
+            context, notification['data']?['bookingId']?.toString() ?? '',);
       case 'chat_message':
         // Переходим к чату
         _navigateToChat(
-            context, notification['data']?['chatId']?.toString() ?? '');
-        break;
+            context, notification['data']?['chatId']?.toString() ?? '',);
       case 'system':
         // Показываем детали уведомления
         _showNotificationDetails(context, notification);
-        break;
       case 'discount':
         // Показываем детали уведомления
         _showNotificationDetails(context, notification);
-        break;
       default:
         // Обрабатываем неизвестные типы уведомлений
         _showNotificationDetails(context, notification);
-        break;
     }
   }
 
@@ -203,14 +196,14 @@ class NotificationsWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
                 await ref.read(
                     deleteNotificationProvider(notification['id'].toString())
-                        .future);
+                        .future,);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -224,7 +217,7 @@ class NotificationsWidget extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text('Ошибка удаления: $e'),
-                        backgroundColor: Colors.red),
+                        backgroundColor: Colors.red,),
                   );
                 }
               }
@@ -273,7 +266,7 @@ class NotificationsWidget extends ConsumerWidget {
   }
 
   void _showNotificationDetails(
-      BuildContext context, Map<String, dynamic> notification) {
+      BuildContext context, Map<String, dynamic> notification,) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -298,7 +291,7 @@ class NotificationsWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -323,10 +316,7 @@ class NotificationsWidget extends ConsumerWidget {
 /// Виджет для отображения отдельного уведомления
 class NotificationItem extends StatelessWidget {
   const NotificationItem({
-    super.key,
-    required this.notification,
-    required this.onTap,
-    required this.onDelete,
+    required this.notification, required this.onTap, required this.onDelete, super.key,
   });
 
   final AppNotification notification;
@@ -391,25 +381,25 @@ class NotificationItem extends StatelessWidget {
     Color iconColor = Colors.blue;
 
     // Простая логика для иконок уведомлений
-    if (notification.type.toString().contains('like')) {
+    if (notification.type.contains('like')) {
       iconData = Icons.favorite;
       iconColor = Colors.red;
-    } else if (notification.type.toString().contains('comment')) {
+    } else if (notification.type.contains('comment')) {
       iconData = Icons.comment;
       iconColor = Colors.blue;
-    } else if (notification.type.toString().contains('follow')) {
+    } else if (notification.type.contains('follow')) {
       iconData = Icons.person_add;
       iconColor = Colors.green;
-    } else if (notification.type.toString().contains('request')) {
+    } else if (notification.type.contains('request')) {
       iconData = Icons.event;
       iconColor = Colors.orange;
-    } else if (notification.type.toString().contains('message')) {
+    } else if (notification.type.contains('message')) {
       iconData = Icons.message;
       iconColor = Colors.purple;
-    } else if (notification.type.toString().contains('booking')) {
+    } else if (notification.type.contains('booking')) {
       iconData = Icons.calendar_today;
       iconColor = Colors.teal;
-    } else if (notification.type.toString().contains('system')) {
+    } else if (notification.type.contains('system')) {
       iconData = Icons.info;
       iconColor = Colors.grey;
     }
@@ -417,7 +407,7 @@ class NotificationItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-          color: iconColor.withValues(alpha: 0.1), shape: BoxShape.circle),
+          color: iconColor.withValues(alpha: 0.1), shape: BoxShape.circle,),
       child: Icon(iconData, color: iconColor, size: 20),
     );
   }

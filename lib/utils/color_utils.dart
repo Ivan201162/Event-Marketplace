@@ -69,7 +69,7 @@ class ColorUtils {
   /// Преобразовать hex строку в Color
   static Color parseHexColor(String hexString) {
     // Убираем # если есть
-    String hex = hexString.replaceAll('#', '');
+    var hex = hexString.replaceAll('#', '');
 
     // Добавляем FF для альфа-канала если строка 6 символов
     if (hex.length == 6) {

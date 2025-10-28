@@ -16,13 +16,7 @@ class EnvironmentConfig {
     required this.monitoringConfig,
     required this.securityConfig,
     required this.isActive,
-    this.description,
-    required this.tags,
-    required this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
+    required this.tags, required this.metadata, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.description,
   });
 
   factory EnvironmentConfig.fromMap(Map<String, dynamic> map) =>
@@ -32,20 +26,20 @@ class EnvironmentConfig {
         type:
             EnvironmentType.fromString(map['type'] as String? ?? 'development'),
         config: Map<String, dynamic>.from(
-            map['config'] as Map<dynamic, dynamic>? ?? {}),
+            map['config'] as Map<dynamic, dynamic>? ?? {},),
         secrets: Map<String, dynamic>.from(
-            map['secrets'] as Map<dynamic, dynamic>? ?? {}),
+            map['secrets'] as Map<dynamic, dynamic>? ?? {},),
         featureFlags: Map<String, dynamic>.from(
-            map['featureFlags'] as Map<dynamic, dynamic>? ?? {}),
+            map['featureFlags'] as Map<dynamic, dynamic>? ?? {},),
         apiEndpoints: Map<String, dynamic>.from(
-            map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {}),
+            map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {},),
         databaseConfig: Map<String, dynamic>.from(
           map['databaseConfig'] as Map<dynamic, dynamic>? ?? {},
         ),
         cacheConfig: Map<String, dynamic>.from(
-            map['cacheConfig'] as Map<dynamic, dynamic>? ?? {}),
+            map['cacheConfig'] as Map<dynamic, dynamic>? ?? {},),
         loggingConfig: Map<String, dynamic>.from(
-            map['loggingConfig'] as Map<dynamic, dynamic>? ?? {}),
+            map['loggingConfig'] as Map<dynamic, dynamic>? ?? {},),
         monitoringConfig: Map<String, dynamic>.from(
           map['monitoringConfig'] as Map<dynamic, dynamic>? ?? {},
         ),
@@ -56,7 +50,7 @@ class EnvironmentConfig {
         description: map['description'] as String?,
         tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
-            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
         createdBy: map['createdBy'] as String? ?? '',
@@ -223,16 +217,9 @@ class EnvironmentVariable {
     required this.value,
     required this.type,
     required this.isSecret,
-    this.description,
+    required this.isRequired, required this.allowedValues, required this.metadata, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.description,
     this.defaultValue,
-    required this.isRequired,
-    required this.allowedValues,
     this.validationPattern,
-    required this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory EnvironmentVariable.fromMap(Map<String, dynamic> map) =>
@@ -241,7 +228,7 @@ class EnvironmentVariable {
         key: map['key'] as String? ?? '',
         value: map['value'] as String? ?? '',
         type: EnvironmentVariableType.fromString(
-            map['type'] as String? ?? 'string'),
+            map['type'] as String? ?? 'string',),
         isSecret: map['isSecret'] as bool? ?? false,
         description: map['description'] as String?,
         defaultValue: map['defaultValue'] as String?,
@@ -250,7 +237,7 @@ class EnvironmentVariable {
             List<String>.from((map['allowedValues'] as List<dynamic>?) ?? []),
         validationPattern: map['validationPattern'] as String?,
         metadata: Map<String, dynamic>.from(
-            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
         createdBy: map['createdBy'] as String? ?? '',
@@ -358,7 +345,7 @@ enum EnvironmentVariableType {
 
   static EnvironmentVariableType fromString(String value) =>
       EnvironmentVariableType.values.firstWhere((type) => type.value == value,
-          orElse: () => EnvironmentVariableType.string);
+          orElse: () => EnvironmentVariableType.string,);
 
   String get icon {
     switch (this) {
@@ -399,12 +386,7 @@ class DeploymentConfig {
     required this.networkingConfig,
     required this.storageConfig,
     required this.monitoringConfig,
-    this.description,
-    required this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
+    required this.metadata, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.description,
   });
 
   factory DeploymentConfig.fromMap(Map<String, dynamic> map) =>
@@ -415,9 +397,9 @@ class DeploymentConfig {
         status:
             DeploymentStatus.fromString(map['status'] as String? ?? 'draft'),
         config: Map<String, dynamic>.from(
-            (map['config'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['config'] as Map<dynamic, dynamic>?) ?? {},),
         secrets: Map<String, dynamic>.from(
-            (map['secrets'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['secrets'] as Map<dynamic, dynamic>?) ?? {},),
         dependencies:
             List<String>.from((map['dependencies'] as List<dynamic>?) ?? []),
         healthChecks:
@@ -436,7 +418,7 @@ class DeploymentConfig {
         ),
         description: map['description'] as String?,
         metadata: Map<String, dynamic>.from(
-            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
         createdBy: map['createdBy'] as String? ?? '',

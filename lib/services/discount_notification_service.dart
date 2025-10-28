@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/discount_notification.dart';
+import 'package:event_marketplace_app/services/fcm_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/app_user.dart';
-import '../models/discount_notification.dart';
-import 'fcm_service.dart';
 
 /// Сервис для работы с уведомлениями о скидках
 class DiscountNotificationService {
@@ -16,7 +15,7 @@ class DiscountNotificationService {
 
   /// Создать уведомление о скидке
   Future<DiscountNotification> createDiscountNotification(
-      CreateDiscountNotification data) async {
+      CreateDiscountNotification data,) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -90,7 +89,7 @@ class DiscountNotificationService {
 
   /// Получить уведомления клиента
   Future<List<DiscountNotification>> getCustomerNotifications(
-      String customerId) async {
+      String customerId,) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -102,7 +101,7 @@ class DiscountNotificationService {
 
   /// Получить непрочитанные уведомления клиента
   Future<List<DiscountNotification>> getUnreadCustomerNotifications(
-      String customerId) async {
+      String customerId,) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -135,7 +134,7 @@ class DiscountNotificationService {
 
     if (notification.customerId != currentUser.uid) {
       throw Exception(
-          'Только получатель может отмечать уведомления как прочитанные');
+          'Только получатель может отмечать уведомления как прочитанные',);
     }
 
     await _firestore.collection(_collection).doc(notificationId).update({
@@ -153,7 +152,7 @@ class DiscountNotificationService {
 
     if (customerId != currentUser.uid) {
       throw Exception(
-          'Только владелец может отмечать уведомления как прочитанные');
+          'Только владелец может отмечать уведомления как прочитанные',);
     }
 
     final unreadNotifications =
@@ -163,7 +162,7 @@ class DiscountNotificationService {
     for (final notification in unreadNotifications) {
       final docRef = _firestore.collection(_collection).doc(notification.id);
       batch.update(docRef,
-          {'isRead': true, 'readAt': Timestamp.fromDate(DateTime.now())});
+          {'isRead': true, 'readAt': Timestamp.fromDate(DateTime.now())},);
     }
 
     await batch.commit();
@@ -233,18 +232,18 @@ class DiscountNotificationService {
 
   /// Подписаться на изменения уведомлений клиента
   Stream<List<DiscountNotification>> watchCustomerNotifications(
-          String customerId) =>
+          String customerId,) =>
       _firestore
           .collection(_collection)
           .where('customerId', isEqualTo: customerId)
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(DiscountNotification.fromDocument).toList());
+              snapshot.docs.map(DiscountNotification.fromDocument).toList(),);
 
   /// Подписаться на непрочитанные уведомления клиента
   Stream<List<DiscountNotification>> watchUnreadCustomerNotifications(
-          String customerId) =>
+          String customerId,) =>
       _firestore
           .collection(_collection)
           .where('customerId', isEqualTo: customerId)
@@ -252,7 +251,7 @@ class DiscountNotificationService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(DiscountNotification.fromDocument).toList());
+              snapshot.docs.map(DiscountNotification.fromDocument).toList(),);
 
   /// Подписаться на количество непрочитанных уведомлений
   Stream<int> watchUnreadCount(String customerId) => _firestore

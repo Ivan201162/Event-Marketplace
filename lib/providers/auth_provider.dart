@@ -5,7 +5,7 @@ class AuthState {
   const AuthState(
       {this.currentUserId,
       this.isAuthenticated = false,
-      this.isLoading = false});
+      this.isLoading = false,});
 
   final String? currentUserId;
   final bool isAuthenticated;
@@ -16,7 +16,7 @@ class AuthState {
       currentUserId != null ? {'id': currentUserId} : null;
 
   AuthState copyWith(
-      {String? currentUserId, bool? isAuthenticated, bool? isLoading}) {
+      {String? currentUserId, bool? isAuthenticated, bool? isLoading,}) {
     return AuthState(
       currentUserId: currentUserId ?? this.currentUserId,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
@@ -40,7 +40,7 @@ class AuthNotifier extends Notifier<AuthState> {
     await Future.delayed(const Duration(seconds: 1));
 
     state = state.copyWith(
-        currentUserId: userId, isAuthenticated: true, isLoading: false);
+        currentUserId: userId, isAuthenticated: true, isLoading: false,);
   }
 
   /// Выйти из системы

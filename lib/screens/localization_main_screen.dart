@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/screens/localization_settings_screen.dart';
+import 'package:event_marketplace_app/screens/translation_management_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'localization_settings_screen.dart';
-import 'translation_management_screen.dart';
 
 /// Главный экран локализации
 class LocalizationMainScreen extends ConsumerWidget {
@@ -22,14 +22,14 @@ class LocalizationMainScreen extends ConsumerWidget {
                   title: 'Настройки языка',
                   subtitle: 'Выбор языка и дополнительные настройки',
                   onTap: () => _navigateToScreen(
-                      context, const LocalizationSettingsScreen()),
+                      context, const LocalizationSettingsScreen(),),
                 ),
                 _buildSettingsTile(
                   icon: Icons.translate,
                   title: 'Управление переводами',
                   subtitle: 'Редактирование и управление переводами',
                   onTap: () => _navigateToScreen(
-                      context, const TranslationManagementScreen()),
+                      context, const TranslationManagementScreen(),),
                 ),
               ],
             ),
@@ -38,7 +38,7 @@ class LocalizationMainScreen extends ConsumerWidget {
 
             // Статистика
             _buildSection(
-                title: 'Статистика локализации', children: [_buildStatsCard()]),
+                title: 'Статистика локализации', children: [_buildStatsCard()],),
 
             const SizedBox(height: 24),
 
@@ -86,13 +86,13 @@ class LocalizationMainScreen extends ConsumerWidget {
       );
 
   Widget _buildSection(
-          {required String title, required List<Widget> children}) =>
+          {required String title, required List<Widget> children,}) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -118,9 +118,9 @@ class LocalizationMainScreen extends ConsumerWidget {
           ),
           title: Text(title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           subtitle: Text(subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
           trailing: const Icon(Icons.chevron_right),
           onTap: onTap,
         ),
@@ -147,9 +147,9 @@ class LocalizationMainScreen extends ConsumerWidget {
           ),
           title: Text(title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           subtitle: Text(subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
           trailing: const Icon(Icons.chevron_right),
           onTap: onTap,
         ),
@@ -176,7 +176,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                     data: (stats) {
                       if (stats.isEmpty) {
                         return const Center(
-                            child: Text('Нет данных о статистике'));
+                            child: Text('Нет данных о статистике'),);
                       }
 
                       return Column(
@@ -242,7 +242,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                                                 '${stat.translatedKeys}/${stat.totalKeys}',
                                                 style: TextStyle(
                                                     fontSize: 14,
-                                                    color: Colors.grey[600]),
+                                                    color: Colors.grey[600],),
                                               ),
                                             ],
                                           ),
@@ -290,7 +290,7 @@ class LocalizationMainScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('О локализации',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               const Text(
                 'Приложение поддерживает множественные языки и позволяет пользователям выбирать предпочитаемый язык интерфейса.',
@@ -316,7 +316,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                             label: Text(language.displayName),
                             backgroundColor: Colors.blue.withValues(alpha: 0.1),
                             labelStyle: const TextStyle(
-                                fontSize: 12, color: Colors.blue),
+                                fontSize: 12, color: Colors.blue,),
                           ),
                         )
                         .toList(),
@@ -325,7 +325,7 @@ class LocalizationMainScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               const Text('Функции:',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),),
               const SizedBox(height: 8),
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,7 +359,7 @@ class LocalizationMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -376,7 +376,7 @@ class LocalizationMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -393,14 +393,14 @@ class LocalizationMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               // TODO(developer): Реализовать очистку кэша
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                    content: Text('Кэш очищен'), backgroundColor: Colors.green),
+                    content: Text('Кэш очищен'), backgroundColor: Colors.green,),
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
@@ -420,7 +420,7 @@ class LocalizationMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -428,7 +428,7 @@ class LocalizationMainScreen extends ConsumerWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     content: Text('Переводы обновлены'),
-                    backgroundColor: Colors.green),
+                    backgroundColor: Colors.green,),
               );
             },
             child: const Text('Обновить'),

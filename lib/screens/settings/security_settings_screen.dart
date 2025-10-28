@@ -1,12 +1,12 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
+import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/services/user_profile_service.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
+import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
+import 'package:event_marketplace_app/widgets/security/login_history_widget.dart';
+import 'package:event_marketplace_app/widgets/security/sessions_list_widget.dart';
+import 'package:event_marketplace_app/widgets/security/two_factor_setup_widget.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
-import '../../services/user_profile_service.dart';
-import '../../services/auth_service.dart';
-import '../../widgets/common/custom_app_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
-import '../../widgets/security/two_factor_setup_widget.dart';
-import '../../widgets/security/sessions_list_widget.dart';
-import '../../widgets/security/login_history_widget.dart';
 
 /// Экран настроек безопасности
 class SecuritySettingsScreen extends StatefulWidget {
@@ -78,7 +78,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
       ),
     );
 
-    if (result == true) {
+    if (result ?? false) {
       _loadUserProfile();
     }
   }
@@ -195,7 +195,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         setState(() => _isLoading = true);
 
@@ -235,7 +235,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         setState(() => _isLoading = true);
 
@@ -459,10 +459,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               title: const Text('Google аккаунт'),
               subtitle: const Text('Привязать или отвязать Google'),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // TODO: Проверить статус привязки Google
-                _linkGoogleAccount();
-              },
+              onTap: _linkGoogleAccount,
             ),
           ],
         ),
@@ -550,7 +547,7 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                 suffixIcon: IconButton(
                   icon: Icon(_obscureCurrent
                       ? Icons.visibility
-                      : Icons.visibility_off),
+                      : Icons.visibility_off,),
                   onPressed: () =>
                       setState(() => _obscureCurrent = !_obscureCurrent),
                 ),
@@ -571,7 +568,7 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
-                      _obscureNew ? Icons.visibility : Icons.visibility_off),
+                      _obscureNew ? Icons.visibility : Icons.visibility_off,),
                   onPressed: () => setState(() => _obscureNew = !_obscureNew),
                 ),
               ),
@@ -595,7 +592,7 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
                 suffixIcon: IconButton(
                   icon: Icon(_obscureConfirm
                       ? Icons.visibility
-                      : Icons.visibility_off),
+                      : Icons.visibility_off,),
                   onPressed: () =>
                       setState(() => _obscureConfirm = !_obscureConfirm),
                 ),
@@ -736,7 +733,7 @@ class _ChangePhoneDialogState extends State<_ChangePhoneDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                'Текущий номер: ${widget.currentPhone.isEmpty ? 'Не указан' : widget.currentPhone}'),
+                'Текущий номер: ${widget.currentPhone.isEmpty ? 'Не указан' : widget.currentPhone}',),
             const SizedBox(height: 16),
             TextFormField(
               controller: _newPhoneController,

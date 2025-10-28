@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Современная навигационная панель с Material Design 3
 class ModernNavigationBar extends ConsumerStatefulWidget {
   const ModernNavigationBar(
-      {super.key, required this.currentIndex, required this.onTap});
+      {required this.currentIndex, required this.onTap, super.key,});
 
   final int currentIndex;
   final ValueChanged<int>? onTap;
@@ -31,7 +31,7 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
       begin: 1,
       end: 0.95,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
   }
 
   @override
@@ -82,7 +82,7 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
       ];
 
   Widget _buildNavItem(
-      int index, IconData icon, IconData activeIcon, String label) {
+      int index, IconData icon, IconData activeIcon, String label,) {
     final isSelected = widget.currentIndex == index;
 
     return Expanded(
@@ -139,8 +139,7 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
 /// Плавающая кнопка действий
 class ModernFAB extends StatefulWidget {
   const ModernFAB({
-    super.key,
-    required this.onPressed,
+    required this.onPressed, super.key,
     this.icon = Icons.add,
     this.tooltip = 'Создать',
   });
@@ -170,12 +169,12 @@ class _ModernFABState extends State<ModernFAB>
       begin: 1,
       end: 0.9,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
     _rotationAnimation = Tween<double>(
       begin: 0,
       end: 0.1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
   }
 
   @override
@@ -206,7 +205,7 @@ class _ModernFABState extends State<ModernFAB>
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16)),
+                  borderRadius: BorderRadius.circular(16),),
               child: Icon(widget.icon, size: 28),
             ),
           ),
@@ -217,8 +216,7 @@ class _ModernFABState extends State<ModernFAB>
 /// Контейнер для экрана с современной навигацией
 class ModernScaffold extends StatelessWidget {
   const ModernScaffold({
-    super.key,
-    required this.body,
+    required this.body, super.key,
     this.appBar,
     this.currentIndex = 0,
     this.onNavigationTap,
@@ -238,7 +236,7 @@ class ModernScaffold extends StatelessWidget {
         appBar: appBar,
         body: body,
         bottomNavigationBar: ModernNavigationBar(
-            currentIndex: currentIndex, onTap: onNavigationTap),
+            currentIndex: currentIndex, onTap: onNavigationTap,),
         floatingActionButton: fab,
         floatingActionButtonLocation: floatingActionButtonLocation,
       );

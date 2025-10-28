@@ -82,9 +82,9 @@ extension PaymentMethodExtension on PaymentMethod {
       case PaymentMethod.cryptocurrency:
         return 0.05; // 5%
       case PaymentMethod.cash:
-        return 0.0; // 0%
+        return 0; // 0%
       case PaymentMethod.sbp:
-        return 0.0; // 0%
+        return 0; // 0%
     }
   }
 }
@@ -225,52 +225,13 @@ enum TaxStatus {
 
 /// Payment model
 class Payment extends Equatable {
-  final String id;
-  final String userId;
-  final String? specialistId;
-  final String? bookingId;
-  final double amount;
-  final String currency;
-  final PaymentMethod method;
-  final PaymentStatus status;
-  final PaymentType type;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final DateTime? paidAt;
-  final String? transactionId;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-  final String? receiptUrl;
-  final double? fee;
-  final double? taxAmount;
-  final TaxStatus? taxStatus;
-  final String? typeDisplayName;
-  final String? methodDisplayName;
-  final String? taxStatusDisplayName;
-  final bool isCompleted;
-  final double? netAmount;
-  final DateTime? completedAt;
-  final bool isPending;
-  final String? failureReason;
-  final String? duration;
-  final String? formattedDuration;
-  final bool isFailed;
-  final String? commission;
-  final String? formattedCommission;
-  final String? formattedNetAmount;
-  final bool isSuccessful;
 
   const Payment({
     required this.id,
     required this.userId,
-    this.specialistId,
+    required this.amount, required this.method, required this.status, required this.type, required this.createdAt, this.specialistId,
     this.bookingId,
-    required this.amount,
     this.currency = 'RUB',
-    required this.method,
-    required this.status,
-    required this.type,
-    required this.createdAt,
     this.updatedAt,
     this.paidAt,
     this.transactionId,
@@ -299,7 +260,7 @@ class Payment extends Equatable {
 
   /// Create Payment from Firestore document
   factory Payment.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Payment(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -357,6 +318,40 @@ class Payment extends Equatable {
       isSuccessful: data['isSuccessful'] ?? false,
     );
   }
+  final String id;
+  final String userId;
+  final String? specialistId;
+  final String? bookingId;
+  final double amount;
+  final String currency;
+  final PaymentMethod method;
+  final PaymentStatus status;
+  final PaymentType type;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final DateTime? paidAt;
+  final String? transactionId;
+  final String? description;
+  final Map<String, dynamic>? metadata;
+  final String? receiptUrl;
+  final double? fee;
+  final double? taxAmount;
+  final TaxStatus? taxStatus;
+  final String? typeDisplayName;
+  final String? methodDisplayName;
+  final String? taxStatusDisplayName;
+  final bool isCompleted;
+  final double? netAmount;
+  final DateTime? completedAt;
+  final bool isPending;
+  final String? failureReason;
+  final String? duration;
+  final String? formattedDuration;
+  final bool isFailed;
+  final String? commission;
+  final String? formattedCommission;
+  final String? formattedNetAmount;
+  final bool isSuccessful;
 
   /// Convert Payment to Firestore document
   Map<String, dynamic> toFirestore() {

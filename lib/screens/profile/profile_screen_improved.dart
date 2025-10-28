@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../models/app_user.dart';
-import '../../models/story.dart';
-import '../../providers/auth_providers.dart';
-import '../../services/story_service.dart';
-
 /// Улучшенный экран профиля с шапкой и вкладками
 class ProfileScreenImproved extends ConsumerStatefulWidget {
-  final String userId;
 
-  const ProfileScreenImproved({super.key, required this.userId});
+  const ProfileScreenImproved({required this.userId, super.key});
+  final String userId;
 
   @override
   ConsumerState<ProfileScreenImproved> createState() =>
@@ -41,34 +40,24 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
     switch (action) {
       case 'edit_profile':
         context.go('/profile/edit');
-        break;
       case 'account_security':
         context.go('/account/security');
-        break;
       case 'appearance':
         context.go('/appearance');
-        break;
       case 'notifications':
         context.go('/notifications');
-        break;
       case 'privacy':
         context.go('/privacy');
-        break;
       case 'professional':
         context.go('/professional');
-        break;
       case 'monetization':
         context.go('/monetization');
-        break;
       case 'blocked':
         context.go('/blocked');
-        break;
       case 'report':
         context.go('/report');
-        break;
       case 'logout':
         _handleLogout(context);
-        break;
     }
   }
 
@@ -163,7 +152,7 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           value: 'notifications',
                           child: ListTile(
                             leading: Icon(Icons.notifications,
-                                color: Color(0xFF1E3A8A)),
+                                color: Color(0xFF1E3A8A),),
                             title: Text('Уведомления'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -172,7 +161,7 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           value: 'privacy',
                           child: ListTile(
                             leading: Icon(Icons.privacy_tip,
-                                color: Color(0xFF1E3A8A)),
+                                color: Color(0xFF1E3A8A),),
                             title: Text('Конфиденциальность'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -190,7 +179,7 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           value: 'monetization',
                           child: ListTile(
                             leading: Icon(Icons.attach_money,
-                                color: Color(0xFF1E3A8A)),
+                                color: Color(0xFF1E3A8A),),
                             title: Text('Монетизация'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -208,7 +197,7 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           value: 'report',
                           child: ListTile(
                             leading: Icon(Icons.bug_report,
-                                color: Color(0xFF1E3A8A)),
+                                color: Color(0xFF1E3A8A),),
                             title: Text('Сообщить о проблеме'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -218,7 +207,7 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           child: ListTile(
                             leading: Icon(Icons.logout, color: Colors.red),
                             title: Text('Выйти',
-                                style: TextStyle(color: Colors.red)),
+                                style: TextStyle(color: Colors.red),),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -256,7 +245,7 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
                           Tab(
                               icon: Icon(Icons.photo_library_outlined),
-                              text: 'Фото'),
+                              text: 'Фото',),
                           Tab(icon: Icon(Icons.movie_outlined), text: 'Видео'),
                           Tab(icon: Icon(Icons.star_outline), text: 'Отзывы'),
                         ],
@@ -285,10 +274,10 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
 }
 
 class _ProfileHeader extends ConsumerWidget {
-  final String userId;
-  final bool isOwnProfile;
 
   const _ProfileHeader({required this.userId, required this.isOwnProfile});
+  final String userId;
+  final bool isOwnProfile;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -338,7 +327,7 @@ class _ProfileHeader extends ConsumerWidget {
                           avatarUrl != null ? NetworkImage(avatarUrl) : null,
                       child: avatarUrl == null
                           ? const Icon(Icons.person,
-                              color: Colors.white, size: 38)
+                              color: Colors.white, size: 38,)
                           : null,
                     ),
                   ),
@@ -355,19 +344,19 @@ class _ProfileHeader extends ConsumerWidget {
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
-                                    fontWeight: FontWeight.w700),
+                                    fontWeight: FontWeight.w700,),
                               ),
                             ),
                             if (isVerified)
                               const Icon(Icons.verified,
-                                  color: Colors.blue, size: 20),
+                                  color: Colors.blue, size: 20,),
                           ],
                         ),
                         if (isProAccount && proCategory.isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
+                                horizontal: 8, vertical: 2,),
                             decoration: BoxDecoration(
                               color: Colors.orange.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(12),
@@ -387,14 +376,14 @@ class _ProfileHeader extends ConsumerWidget {
                         Text(
                           city,
                           style: const TextStyle(
-                              color: Colors.white70, fontSize: 14),
+                              color: Colors.white70, fontSize: 14,),
                         ),
                         if (bio.isNotEmpty) ...[
                           const SizedBox(height: 6),
                           Text(
                             bio,
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 14),
+                                color: Colors.white70, fontSize: 14,),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -412,7 +401,7 @@ class _ProfileHeader extends ConsumerWidget {
                 children: [
                   _Counter(label: 'Посты', value: postsCount.toString()),
                   _Counter(
-                      label: 'Подписчики', value: followersCount.toString()),
+                      label: 'Подписчики', value: followersCount.toString(),),
                   _Counter(label: 'Подписки', value: followingCount.toString()),
                 ],
               ),
@@ -490,9 +479,9 @@ class _ProfileHeader extends ConsumerWidget {
 }
 
 class _Counter extends StatelessWidget {
+  const _Counter({required this.label, required this.value});
   final String label;
   final String value;
-  const _Counter({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -502,7 +491,7 @@ class _Counter extends StatelessWidget {
           Text(
             value,
             style: const TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold,),
           ),
           const SizedBox(height: 2),
           Text(
@@ -516,9 +505,9 @@ class _Counter extends StatelessWidget {
 }
 
 class _StoriesSection extends ConsumerWidget {
-  final String userId;
 
   const _StoriesSection({required this.userId});
+  final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -604,10 +593,10 @@ class _AddStoryButton extends StatelessWidget {
 }
 
 class _StoryItem extends StatelessWidget {
-  final Story story;
-  final bool isViewed;
 
   const _StoryItem({required this.story, required this.isViewed});
+  final Story story;
+  final bool isViewed;
 
   @override
   Widget build(BuildContext context) {
@@ -675,8 +664,8 @@ class _StoryItem extends StatelessWidget {
 }
 
 class _PlaceholderTab extends StatelessWidget {
-  final String label;
   const _PlaceholderTab({required this.label});
+  final String label;
 
   @override
   Widget build(BuildContext context) {

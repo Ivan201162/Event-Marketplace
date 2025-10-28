@@ -1,17 +1,16 @@
+import 'package:event_marketplace_app/core/app_router.dart';
+import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_categories.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/screens/specialist_profile_screen.dart';
+import 'package:event_marketplace_app/screens/specialists_list_screen.dart';
+import 'package:event_marketplace_app/widgets/search_filters_widget.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../core/app_router.dart';
-import '../core/app_theme.dart';
-import '../models/specialist.dart';
-import '../models/specialist_categories.dart';
-import '../models/search_filters.dart';
-import '../providers/specialist_providers.dart';
-import '../widgets/search_filters_widget.dart';
-import '../widgets/specialist_card.dart';
-import 'specialist_profile_screen.dart';
-import 'specialists_list_screen.dart';
 
 class EnhancedSearchScreen extends ConsumerStatefulWidget {
   const EnhancedSearchScreen({super.key});
@@ -267,7 +266,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
           ),
         ),
         child: SearchFiltersWidget(
-          initialFilters: SearchFilters(),
+          initialFilters: const SearchFilters(),
           onApplyFilters: (filters) {
             _performSearch();
           },
@@ -307,7 +306,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
             const SizedBox(height: 16),
             CategoriesGrid(
                 categories: SpecialistCategoryInfo.all,
-                onCategoryTap: _navigateToCategory),
+                onCategoryTap: _navigateToCategory,),
           ],
         ),
       );
@@ -361,7 +360,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
             Text('Ошибка поиска: $error'),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _performSearch, child: const Text('Повторить')),
+                onPressed: _performSearch, child: const Text('Повторить'),),
           ],
         ),
       ),
@@ -419,7 +418,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
             ),
             const SizedBox(height: 8),
             Text('Попробуйте изменить параметры поиска',
-                style: TextStyle(color: Colors.grey[500])),
+                style: TextStyle(color: Colors.grey[500]),),
             const SizedBox(height: 24),
             if (searchHistory.isNotEmpty) ...[
               const Text('Недавние поиски:'),
@@ -477,7 +476,7 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
 
       Navigator.of(context).push(
         MaterialPageRoute<void>(
-            builder: (context) => SpecialistsListScreen(category: category)),
+            builder: (context) => SpecialistsListScreen(category: category),),
       );
     });
   }

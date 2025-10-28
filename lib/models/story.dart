@@ -1,34 +1,15 @@
-import 'story_type.dart';
-import 'story_privacy.dart';
+import 'package:event_marketplace_app/models/story_privacy.dart';
+import 'package:event_marketplace_app/models/story_type.dart';
 
 /// Модель истории
 class Story {
-  final String id;
-  final String authorId;
-  final String authorName;
-  final String? authorAvatar;
-  final String text;
-  final List<String> media;
-  final bool isViewed;
-  final StoryType type;
-  final StoryPrivacy privacy;
-  final String? content;
-  final DateTime createdAt;
-  final DateTime expiresAt;
 
   const Story({
     required this.id,
     required this.authorId,
     required this.authorName,
-    this.authorAvatar,
-    required this.text,
-    required this.media,
-    required this.isViewed,
-    required this.type,
-    required this.privacy,
+    required this.text, required this.media, required this.isViewed, required this.type, required this.privacy, required this.createdAt, required this.expiresAt, this.authorAvatar,
     this.content,
-    required this.createdAt,
-    required this.expiresAt,
   });
 
   factory Story.fromMap(Map<String, dynamic> map, String id) {
@@ -52,7 +33,7 @@ class Story {
       createdAt:
           DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
       expiresAt: DateTime.parse(map['expiresAt'] ??
-          DateTime.now().add(const Duration(hours: 24)).toIso8601String()),
+          DateTime.now().add(const Duration(hours: 24)).toIso8601String(),),
     );
   }
 
@@ -60,6 +41,18 @@ class Story {
     final data = doc.data() as Map<String, dynamic>;
     return Story.fromMap(data, doc.id);
   }
+  final String id;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatar;
+  final String text;
+  final List<String> media;
+  final bool isViewed;
+  final StoryType type;
+  final StoryPrivacy privacy;
+  final String? content;
+  final DateTime createdAt;
+  final DateTime expiresAt;
 
   Map<String, dynamic> toMap() {
     return {

@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:event_marketplace_app/models/user_activity.dart';
+import 'package:event_marketplace_app/services/recommendation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/user_activity.dart';
-import '../services/recommendation_service.dart';
 
 /// Виджет рекомендаций для главной страницы
 class RecommendationsWidget extends ConsumerStatefulWidget {
   const RecommendationsWidget(
-      {super.key, required this.userId, this.onSpecialistTap});
+      {required this.userId, super.key, this.onSpecialistTap,});
   final String userId;
   final VoidCallback? onSpecialistTap;
 
@@ -38,12 +38,12 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(CurvedAnimation(
-        parent: _animationController, curve: Curves.easeOutCubic));
+        parent: _animationController, curve: Curves.easeOutCubic,),);
 
     _loadRecommendations();
   }
@@ -94,7 +94,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
               Row(
                 children: [
                   Icon(Icons.auto_awesome,
-                      color: Colors.amber.shade600, size: 24),
+                      color: Colors.amber.shade600, size: 24,),
                   const SizedBox(width: 8),
                   Text(
                     'Рекомендации для вас',
@@ -142,7 +142,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
             Row(
               children: [
                 Icon(Icons.auto_awesome,
-                    color: Colors.amber.shade600, size: 24),
+                    color: Colors.amber.shade600, size: 24,),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендации для вас',
@@ -170,15 +170,15 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                             decoration: BoxDecoration(
                               color: Colors.grey.shade200,
                               borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(8)),
+                                  top: Radius.circular(8),),
                             ),
                             child: const Center(
-                                child: CircularProgressIndicator()),
+                                child: CircularProgressIndicator(),),
                           ),
                         ),
                         const Padding(
                             padding: EdgeInsets.all(8),
-                            child: Text('Загрузка...')),
+                            child: Text('Загрузка...'),),
                       ],
                     ),
                   ),
@@ -197,7 +197,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
             Row(
               children: [
                 Icon(Icons.auto_awesome,
-                    color: Colors.amber.shade600, size: 24),
+                    color: Colors.amber.shade600, size: 24,),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендации для вас',
@@ -269,7 +269,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                 child: Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                   child: InkWell(
                     onTap: () {
                       widget.onSpecialistTap?.call();
@@ -286,11 +286,11 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                             width: double.infinity,
                             decoration: BoxDecoration(
                               borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(12)),
+                                  top: Radius.circular(12),),
                               gradient: LinearGradient(
                                 colors: [
                                   Colors.amber.shade100,
-                                  Colors.amber.shade200
+                                  Colors.amber.shade200,
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -299,7 +299,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                             child: recommendation.photoUrl != null
                                 ? ClipRRect(
                                     borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(12)),
+                                        top: Radius.circular(12),),
                                     child: Image.network(
                                       recommendation.photoUrl!,
                                       fit: BoxFit.cover,
@@ -348,7 +348,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                                 Row(
                                   children: [
                                     Icon(Icons.star,
-                                        size: 12, color: Colors.amber.shade600),
+                                        size: 12, color: Colors.amber.shade600,),
                                     const SizedBox(width: 2),
                                     Text(
                                       recommendation.rating.toStringAsFixed(1),
@@ -386,7 +386,7 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                           decoration: BoxDecoration(
                             color: Colors.grey.shade200,
                             borderRadius: const BorderRadius.vertical(
-                                bottom: Radius.circular(12)),
+                                bottom: Radius.circular(12),),
                           ),
                           child: FractionallySizedBox(
                             alignment: Alignment.centerLeft,
@@ -396,11 +396,11 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
                                 gradient: LinearGradient(
                                   colors: [
                                     Colors.amber.shade400,
-                                    Colors.amber.shade600
+                                    Colors.amber.shade600,
                                   ],
                                 ),
                                 borderRadius: const BorderRadius.vertical(
-                                    bottom: Radius.circular(12)),
+                                    bottom: Radius.circular(12),),
                               ),
                             ),
                           ),
@@ -421,14 +421,14 @@ class _RecommendationsWidgetState extends ConsumerState<RecommendationsWidget>
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
         ),
         child: Center(
-            child: Icon(Icons.person, size: 40, color: Colors.amber.shade600)),
+            child: Icon(Icons.person, size: 40, color: Colors.amber.shade600),),
       );
 }
 
 /// Виджет для отображения причины рекомендации
 class RecommendationReasonWidget extends StatelessWidget {
   const RecommendationReasonWidget(
-      {super.key, required this.reason, required this.confidence});
+      {required this.reason, required this.confidence, super.key,});
   final String reason;
   final double confidence;
 
@@ -443,7 +443,7 @@ class RecommendationReasonWidget extends StatelessWidget {
         child: Row(
           children: [
             Icon(Icons.lightbulb_outline,
-                size: 16, color: Colors.amber.shade700),
+                size: 16, color: Colors.amber.shade700,),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

@@ -1,9 +1,9 @@
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Модель для сравнения специалистов
 class SpecialistComparison {
   const SpecialistComparison(
-      {required this.specialists, required this.createdAt});
+      {required this.specialists, required this.createdAt,});
 
   /// Создать пустое сравнение
   factory SpecialistComparison.empty() =>
@@ -18,7 +18,7 @@ class SpecialistComparison {
   SpecialistComparison addSpecialist(Specialist specialist) {
     if (specialists.length >= maxSpecialists) {
       throw Exception(
-          'Максимальное количество специалистов для сравнения: $maxSpecialists');
+          'Максимальное количество специалистов для сравнения: $maxSpecialists',);
     }
 
     if (specialists.any((s) => s.id == specialist.id)) {
@@ -26,7 +26,7 @@ class SpecialistComparison {
     }
 
     return SpecialistComparison(
-        specialists: [...specialists, specialist], createdAt: createdAt);
+        specialists: [...specialists, specialist], createdAt: createdAt,);
   }
 
   /// Удалить специалиста из сравнения
@@ -235,7 +235,7 @@ enum ComparisonCriteria {
 /// Результат сравнения по критерию
 class ComparisonResult {
   const ComparisonResult(
-      {required this.criteria, required this.values, this.winner});
+      {required this.criteria, required this.values, this.winner,});
   final ComparisonCriteria criteria;
   final Map<String, dynamic> values;
   final String? winner;

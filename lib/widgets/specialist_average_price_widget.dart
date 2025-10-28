@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/services/specialist_pricing_service.dart';
 import 'package:flutter/material.dart';
-import '../services/specialist_pricing_service.dart';
 
 /// Виджет для отображения среднего прайса специалиста
 class SpecialistAveragePriceWidget extends StatefulWidget {
   const SpecialistAveragePriceWidget({
-    super.key,
-    required this.specialistId,
+    required this.specialistId, super.key,
     this.showHistory = false,
   });
 
@@ -74,7 +73,7 @@ class _SpecialistAveragePriceWidgetState
     }
 
     return _PricingStatsWidget(
-        stats: _stats!, history: _history, showHistory: widget.showHistory);
+        stats: _stats!, history: _history, showHistory: widget.showHistory,);
   }
 }
 
@@ -90,7 +89,7 @@ class _PricingLoadingWidget extends StatelessWidget {
             SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2)),
+                child: CircularProgressIndicator(strokeWidth: 2),),
             SizedBox(width: 12),
             Text('Загружаем статистику цен...'),
           ],
@@ -136,7 +135,7 @@ class _NoPricingDataWidget extends StatelessWidget {
             Icon(Icons.info_outline, color: Colors.grey, size: 20),
             SizedBox(width: 12),
             Text('Нет данных о завершенных заказах',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -254,7 +253,7 @@ class _PricingStatsCard extends StatelessWidget {
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
+                            vertical: 8, horizontal: 12,),
                         decoration: BoxDecoration(
                           color: Colors.grey.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
@@ -306,7 +305,7 @@ class _PricingStatItem extends StatelessWidget {
               style: TextStyle(
                   fontSize: isMain ? 12 : 10,
                   color: color,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
             const SizedBox(height: 2),
             Text(
@@ -316,7 +315,7 @@ class _PricingStatItem extends StatelessWidget {
               style: TextStyle(
                   fontSize: isMain ? 16 : 12,
                   color: color,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
           ],
         ),
@@ -382,7 +381,7 @@ class _HistoryEntryWidget extends StatelessWidget {
               style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue),
+                  color: Colors.blue,),
             ),
             const SizedBox(width: 8),
             Text(

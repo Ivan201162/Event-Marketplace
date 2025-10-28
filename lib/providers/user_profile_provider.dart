@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/services/user_profile_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/user_profile.dart';
-import '../services/user_profile_service.dart';
 
 /// Провайдер для текущего профиля пользователя
 final currentUserProfileProvider = FutureProvider<UserProfile?>((ref) async {
@@ -105,7 +104,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
 
   /// Обновить прайс-лист
   Future<void> updateServices(
-      String userId, List<ServicePrice> services) async {
+      String userId, List<ServicePrice> services,) async {
     try {
       final success = await UserProfileService.updateServices(userId, services);
       if (success && state.hasValue) {
@@ -252,7 +251,7 @@ class UserStoriesNotifier extends Notifier<AsyncValue<List<UserStory>>> {
 /// Провайдер для UserStoriesNotifier
 final userStoriesNotifierProvider =
     NotifierProvider<UserStoriesNotifier, AsyncValue<List<UserStory>>>(
-        UserStoriesNotifier.new);
+        UserStoriesNotifier.new,);
 
 /// Провайдер для управления отзывами (мигрирован с StateNotifier)
 class ReviewsNotifier extends Notifier<AsyncValue<List<UserReview>>> {

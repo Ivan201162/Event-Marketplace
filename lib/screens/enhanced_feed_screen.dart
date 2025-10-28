@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
+import 'package:event_marketplace_app/providers/enhanced_feed_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/enhanced_feed_post.dart';
-import '../providers/enhanced_feed_providers.dart';
 
 class EnhancedFeedScreen extends ConsumerStatefulWidget {
   const EnhancedFeedScreen({super.key});
@@ -274,7 +273,7 @@ class _FeedPostCard extends ConsumerWidget {
                       Text(
                         post.authorName,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
                       Text(
                         _formatDate(post.createdAt),
@@ -289,11 +288,11 @@ class _FeedPostCard extends ConsumerWidget {
                   },
                   itemBuilder: (context) => [
                     const PopupMenuItem(
-                        value: 'save', child: Text('Сохранить')),
+                        value: 'save', child: Text('Сохранить'),),
                     const PopupMenuItem(
-                        value: 'share', child: Text('Поделиться')),
+                        value: 'share', child: Text('Поделиться'),),
                     const PopupMenuItem(
-                        value: 'report', child: Text('Пожаловаться')),
+                        value: 'report', child: Text('Пожаловаться'),),
                   ],
                 ),
               ],
@@ -311,7 +310,7 @@ class _FeedPostCard extends ConsumerWidget {
           if (post.media.isNotEmpty)
             Container(
                 margin: const EdgeInsets.all(16),
-                child: _buildMediaContent(post.media)),
+                child: _buildMediaContent(post.media),),
 
           // Теги
           if (post.tags.isNotEmpty)
@@ -328,7 +327,7 @@ class _FeedPostCard extends ConsumerWidget {
                             .withValues(alpha: 0.1),
                         labelStyle: TextStyle(
                             color: Theme.of(context).primaryColor,
-                            fontSize: 12),
+                            fontSize: 12,),
                       ),
                     )
                     .toList(),
@@ -421,7 +420,7 @@ class _FeedPostCard extends ConsumerWidget {
               ),
               const Center(
                   child: Icon(Icons.play_circle_filled,
-                      size: 64, color: Colors.white)),
+                      size: 64, color: Colors.white,),),
             ],
           ),
         );

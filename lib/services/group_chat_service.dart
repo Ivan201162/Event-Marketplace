@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/event.dart';
-import '../models/group_chat.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/group_chat.dart';
 
 /// Сервис для работы с групповыми чатами
 class GroupChatService {
@@ -66,7 +66,7 @@ class GroupChatService {
 
   /// Добавить участника в групповой чат
   Future<void> addParticipantToChat(
-      String chatId, GroupChatParticipant participant) async {
+      String chatId, GroupChatParticipant participant,) async {
     try {
       await _firestore.collection('group_chats').doc(chatId).update({
         'participants': FieldValue.arrayUnion([participant.toMap()]),
@@ -143,7 +143,7 @@ class GroupChatService {
       .map(
         (snapshot) => snapshot.docs
             .map((doc) =>
-                GroupChatMessage.fromMap({'id': doc.id, ...doc.data()}))
+                GroupChatMessage.fromMap({'id': doc.id, ...doc.data()}),)
             .toList(),
       );
 
@@ -187,7 +187,7 @@ class GroupChatService {
   Stream<List<GroupChat>> getUserGroupChats(String userId) => _firestore
       .collection('group_chats')
       .where('participants',
-          arrayContains: {'userId': userId, 'isActive': true})
+          arrayContains: {'userId': userId, 'isActive': true},)
       .orderBy('lastActivityAt', descending: true)
       .snapshots()
       .map(
@@ -198,7 +198,7 @@ class GroupChatService {
 
   /// Добавить гостя в чат по ссылке
   Future<void> addGuestToChat(
-      String chatId, String guestName, String? guestPhoto) async {
+      String chatId, String guestName, String? guestPhoto,) async {
     try {
       final guestId = 'guest_${DateTime.now().millisecondsSinceEpoch}';
       final guest = GroupChatParticipant(
@@ -277,7 +277,7 @@ class GroupChatService {
 
   /// Обновить настройки чата
   Future<void> updateChatSettings(
-      String chatId, Map<String, dynamic> settings) async {
+      String chatId, Map<String, dynamic> settings,) async {
     try {
       await _firestore.collection('group_chats').doc(chatId).update({
         'settings': settings,

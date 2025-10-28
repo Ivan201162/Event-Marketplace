@@ -2,11 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Intersection observer entry model
 class IntersectionObserverEntry extends Equatable {
-  final String targetId;
-  final bool isIntersecting;
-  final double intersectionRatio;
-  final DateTime timestamp;
-  final Map<String, dynamic>? metadata;
 
   const IntersectionObserverEntry({
     required this.targetId,
@@ -26,6 +21,11 @@ class IntersectionObserverEntry extends Equatable {
       metadata: data['metadata'] as Map<String, dynamic>?,
     );
   }
+  final String targetId;
+  final bool isIntersecting;
+  final double intersectionRatio;
+  final DateTime timestamp;
+  final Map<String, dynamic>? metadata;
 
   /// Convert IntersectionObserverEntry to Map
   Map<String, dynamic> toMap() {

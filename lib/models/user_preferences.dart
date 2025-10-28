@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserPreferences {
   const UserPreferences({
     required this.userId,
-    this.likedStyles = const [],
+    required this.createdAt, required this.updatedAt, this.likedStyles = const [],
     this.preferredBudget = 0.0,
     this.preferredCities = const [],
     this.pastRequests = const [],
@@ -23,8 +23,6 @@ class UserPreferences {
     this.recommendationHistory = const [],
     this.feedbackHistory = const [],
     this.learningData = const {},
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из Map
@@ -202,7 +200,7 @@ class UserPreferences {
   UserPreferences addLikedStyle(String style) {
     if (likedStyles.contains(style)) return this;
     return copyWith(
-        likedStyles: [...likedStyles, style], updatedAt: DateTime.now());
+        likedStyles: [...likedStyles, style], updatedAt: DateTime.now(),);
   }
 
   /// Удалить понравившийся стиль
@@ -215,14 +213,14 @@ class UserPreferences {
   UserPreferences addDislikedStyle(String style) {
     if (dislikedStyles.contains(style)) return this;
     return copyWith(
-        dislikedStyles: [...dislikedStyles, style], updatedAt: DateTime.now());
+        dislikedStyles: [...dislikedStyles, style], updatedAt: DateTime.now(),);
   }
 
   /// Добавить город в предпочтения
   UserPreferences addPreferredCity(String city) {
     if (preferredCities.contains(city)) return this;
     return copyWith(
-        preferredCities: [...preferredCities, city], updatedAt: DateTime.now());
+        preferredCities: [...preferredCities, city], updatedAt: DateTime.now(),);
   }
 
   /// Добавить запрос в историю

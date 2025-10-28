@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/core/navigation/back_utils.dart';
+import 'package:event_marketplace_app/test_data/specialist_test_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../core/navigation/back_utils.dart';
-import '../test_data/specialist_test_data.dart';
 
 class TestSearchScreen extends ConsumerStatefulWidget {
   const TestSearchScreen({super.key});

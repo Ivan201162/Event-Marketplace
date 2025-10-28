@@ -58,7 +58,7 @@ class TinkoffPaymentService {
         return TinkoffPaymentResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'Tinkoff API error: ${response.statusCode} - ${response.body}');
+            'Tinkoff API error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('Tinkoff payment creation error: $e');
@@ -85,7 +85,7 @@ class TinkoffPaymentService {
         return TinkoffPaymentStatus.fromJson(responseData);
       } else {
         throw Exception(
-            'Tinkoff API error: ${response.statusCode} - ${response.body}');
+            'Tinkoff API error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('Tinkoff payment status error: $e');
@@ -113,7 +113,7 @@ class TinkoffPaymentService {
 
       if (response.statusCode != 200) {
         throw Exception(
-            'Tinkoff confirm error: ${response.statusCode} - ${response.body}');
+            'Tinkoff confirm error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('Tinkoff payment confirm error: $e');
@@ -137,7 +137,7 @@ class TinkoffPaymentService {
 
       if (response.statusCode != 200) {
         throw Exception(
-            'Tinkoff cancel error: ${response.statusCode} - ${response.body}');
+            'Tinkoff cancel error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('Tinkoff payment cancel error: $e');
@@ -173,7 +173,7 @@ class TinkoffPaymentService {
         return TinkoffRefundResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'Tinkoff refund error: ${response.statusCode} - ${response.body}');
+            'Tinkoff refund error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('Tinkoff refund creation error: $e');
@@ -255,14 +255,13 @@ class TinkoffPaymentService {
 class TinkoffPaymentResponse {
   TinkoffPaymentResponse({
     required this.success,
-    this.errorCode,
+    required this.amount, this.errorCode,
     this.message,
     this.details,
     this.terminalKey,
     this.status,
     this.paymentId,
     this.orderId,
-    required this.amount,
     this.paymentUrl,
   });
 
@@ -308,14 +307,13 @@ class TinkoffPaymentResponse {
 class TinkoffPaymentStatus {
   TinkoffPaymentStatus({
     required this.success,
-    this.errorCode,
+    required this.amount, this.errorCode,
     this.message,
     this.details,
     this.terminalKey,
     this.status,
     this.paymentId,
     this.orderId,
-    required this.amount,
     this.created,
   });
 
@@ -370,13 +368,12 @@ class TinkoffPaymentStatus {
 class TinkoffRefundResponse {
   TinkoffRefundResponse({
     required this.success,
-    this.errorCode,
+    required this.amount, this.errorCode,
     this.message,
     this.details,
     this.terminalKey,
     this.status,
     this.paymentId,
-    required this.amount,
   });
 
   factory TinkoffRefundResponse.fromJson(Map<String, dynamic> json) =>

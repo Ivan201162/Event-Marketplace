@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/providers/profile_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/user_profile.dart';
-import '../../providers/profile_providers.dart';
 
 /// Экран редактирования профиля
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -263,7 +262,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     );
   }
 
-  void _saveProfile() async {
+  Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -317,13 +316,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
 /// Секция аватара
 class _AvatarSection extends StatelessWidget {
-  final String? avatarUrl;
-  final VoidCallback onAvatarTap;
 
   const _AvatarSection({
-    this.avatarUrl,
-    required this.onAvatarTap,
+    required this.onAvatarTap, this.avatarUrl,
   });
+  final String? avatarUrl;
+  final VoidCallback onAvatarTap;
 
   @override
   Widget build(BuildContext context) {
@@ -365,13 +363,12 @@ class _AvatarSection extends StatelessWidget {
 
 /// Секция обложки
 class _CoverSection extends StatelessWidget {
-  final String? coverUrl;
-  final VoidCallback onCoverTap;
 
   const _CoverSection({
-    this.coverUrl,
-    required this.onCoverTap,
+    required this.onCoverTap, this.coverUrl,
   });
+  final String? coverUrl;
+  final VoidCallback onCoverTap;
 
   @override
   Widget build(BuildContext context) {

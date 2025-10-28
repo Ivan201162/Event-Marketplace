@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/models/event.dart';
 import 'package:flutter/material.dart';
-import '../models/event.dart';
 
 /// Виджет карточки события
 class EventCard extends StatelessWidget {
-  const EventCard({super.key, required this.event, this.onTap});
+  const EventCard({required this.event, super.key, this.onTap});
   final Event event;
   final VoidCallback? onTap;
 
@@ -68,12 +68,12 @@ class EventCard extends StatelessWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: event.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: event.statusColor.withValues(alpha: 0.3)),
+                            color: event.statusColor.withValues(alpha: 0.3),),
                       ),
                       child: Text(
                         event.statusText,
@@ -103,17 +103,17 @@ class EventCard extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.calendar_today,
-                        size: 16, color: Colors.grey[600]),
+                        size: 16, color: Colors.grey[600],),
                     const SizedBox(width: 8),
                     Text(event.formattedDate,
                         style:
-                            TextStyle(color: Colors.grey[600], fontSize: 14)),
+                            TextStyle(color: Colors.grey[600], fontSize: 14),),
                     const SizedBox(width: 4),
                     Text('•', style: TextStyle(color: Colors.grey[600])),
                     const SizedBox(width: 4),
                     Text(event.formattedTime,
                         style:
-                            TextStyle(color: Colors.grey[600], fontSize: 14)),
+                            TextStyle(color: Colors.grey[600], fontSize: 14),),
                   ],
                 ),
 
@@ -143,7 +143,7 @@ class EventCard extends StatelessWidget {
                     // Цена
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -152,7 +152,7 @@ class EventCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.attach_money,
-                              size: 16, color: Colors.green[700]),
+                              size: 16, color: Colors.green[700],),
                           const SizedBox(width: 4),
                           Text(
                             event.formattedPrice,
@@ -171,7 +171,7 @@ class EventCard extends StatelessWidget {
                     // Участники
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.blue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -201,7 +201,7 @@ class EventCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(Icons.check_circle,
-                          size: 16, color: Colors.green[600]),
+                          size: 16, color: Colors.green[600],),
                       const SizedBox(width: 4),
                       Text(
                         'Свободных мест: ${event.availableSpots}',

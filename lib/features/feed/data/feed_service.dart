@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/features/feed/data/feed_model.dart';
+import 'package:event_marketplace_app/features/feed/data/feed_notification_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
-import 'feed_model.dart';
-import 'feed_notification_service.dart';
 
 /// Сервис для работы с лентой активности
 class FeedService {
@@ -27,7 +28,7 @@ class FeedService {
       .limit(50)
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
+          snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList(),);
 
   /// Получение постов от подписанных пользователей
   Stream<List<FeedPost>> getPostsBySubscriptions(List<String> followedIds) {
@@ -42,7 +43,7 @@ class FeedService {
         .limit(50)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
+            snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList(),);
   }
 
   /// Комбинированный поток постов (город + подписки)
@@ -85,19 +86,16 @@ class FeedService {
     switch (filter) {
       case FeedFilter.subscriptions:
         baseStream = getPostsBySubscriptions(followedIds);
-        break;
       case FeedFilter.photos:
         baseStream = getPostsByCity(
           city,
         ).map((posts) =>
-            posts.where((post) => post.type == PostType.photo).toList());
-        break;
+            posts.where((post) => post.type == PostType.photo).toList(),);
       case FeedFilter.videos:
         baseStream = getPostsByCity(
           city,
         ).map((posts) =>
-            posts.where((post) => post.type == PostType.video).toList());
-        break;
+            posts.where((post) => post.type == PostType.video).toList(),);
       case FeedFilter.categories:
         if (category != null) {
           baseStream = getPostsByCity(city).map(
@@ -108,11 +106,9 @@ class FeedService {
         } else {
           baseStream = getPostsByCity(city);
         }
-        break;
       case FeedFilter.all:
       default:
         baseStream = getCombinedFeed(city: city, followedIds: followedIds);
-        break;
     }
 
     return baseStream;
@@ -353,5 +349,5 @@ class FeedService {
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
+          snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList(),);
 }

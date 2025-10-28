@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../core/safe_log.dart';
-import '../providers/auth_providers.dart';
 
 /// Экран аутентификации по номеру телефона
 class PhoneAuthScreen extends ConsumerStatefulWidget {
@@ -83,7 +82,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
   Widget _buildHeader(BuildContext context) => Column(
         children: [
           Icon(Icons.phone_android,
-              size: 64, color: Theme.of(context).primaryColor),
+              size: 64, color: Theme.of(context).primaryColor,),
           const SizedBox(height: 16),
           Text(
             _isCodeSent ? 'Введите код из SMS' : 'Вход по номеру телефона',
@@ -136,7 +135,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
         keyboardType: TextInputType.phone,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(15)
+          LengthLimitingTextInputFormatter(15),
         ],
         decoration: const InputDecoration(
           labelText: 'Номер телефона',
@@ -170,7 +169,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(6)
+          LengthLimitingTextInputFormatter(6),
         ],
         decoration: const InputDecoration(
           labelText: 'SMS код',
@@ -205,7 +204,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
             Text(
               'Повторная отправка через $_countdown сек',
               style: TextStyle(
-                  color: Colors.blue.shade700, fontWeight: FontWeight.w500),
+                  color: Colors.blue.shade700, fontWeight: FontWeight.w500,),
             ),
           ],
         ),
@@ -274,7 +273,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                     )
                   : const Text('Войти',
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
             ),
 
             const SizedBox(height: 12),
@@ -303,7 +302,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
               child: Text(
                 _errorMessage!,
                 style: TextStyle(
-                    color: Colors.red.shade700, fontWeight: FontWeight.w500),
+                    color: Colors.red.shade700, fontWeight: FontWeight.w500,),
               ),
             ),
           ],
@@ -325,7 +324,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
               child: Text(
                 _successMessage!,
                 style: TextStyle(
-                    color: Colors.green.shade700, fontWeight: FontWeight.w500),
+                    color: Colors.green.shade700, fontWeight: FontWeight.w500,),
               ),
             ),
           ],

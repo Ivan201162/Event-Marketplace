@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/feedback_ticket.dart';
+import 'package:event_marketplace_app/services/feedback_service.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
+import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
 import 'package:flutter/material.dart';
-import '../../models/feedback_ticket.dart';
-import '../../services/feedback_service.dart';
-import '../../widgets/common/custom_app_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
 
 /// Экран обратной связи
 class FeedbackScreen extends StatefulWidget {
@@ -346,7 +346,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                   setState(() => _selectedCategory = value);
                                 }
                               },
-                            )),
+                            ),),
                   ],
                 ),
               ),
@@ -445,7 +445,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       child: OutlinedButton.icon(
                         onPressed: () {
                           _showInfoSnackBar(
-                              'Добавление вложений будет реализовано');
+                              'Добавление вложений будет реализовано',);
                         },
                         icon: const Icon(Icons.attach_file),
                         label: const Text('Добавить файлы'),
@@ -502,8 +502,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 /// Экран деталей тикета
 class TicketDetailsScreen extends StatelessWidget {
   const TicketDetailsScreen({
-    super.key,
-    required this.ticket,
+    required this.ticket, super.key,
   });
 
   final FeedbackTicket ticket;
@@ -558,18 +557,18 @@ class TicketDetailsScreen extends StatelessWidget {
           const SizedBox(height: 16),
 
           // История сообщений
-          Card(
+          const Card(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'История сообщений',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
+                  SizedBox(height: 16),
+                  Text(
                     'Здесь будет отображаться переписка с поддержкой',
                     style: TextStyle(color: Colors.grey),
                   ),

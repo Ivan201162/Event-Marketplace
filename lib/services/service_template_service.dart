@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/service_template.dart';
+import 'package:event_marketplace_app/models/service_template.dart';
 
 /// Сервис для работы с шаблонами услуг
 class ServiceTemplateService {
@@ -23,7 +23,7 @@ class ServiceTemplateService {
 
   /// Получить шаблоны услуг по категории
   Future<List<ServiceTemplate>> getServiceTemplatesByCategory(
-      String categoryId) async {
+      String categoryId,) async {
     try {
       final snapshot = await _firestore
           .collection('serviceTemplates')
@@ -65,7 +65,7 @@ class ServiceTemplateService {
 
   /// Обновить шаблон услуги
   Future<void> updateServiceTemplate(
-      String templateId, ServiceTemplate template) async {
+      String templateId, ServiceTemplate template,) async {
     try {
       await _firestore
           .collection('serviceTemplates')
@@ -95,7 +95,7 @@ class SpecialistServiceService {
 
   /// Получить услуги специалиста
   Future<List<SpecialistService>> getSpecialistServices(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('specialists')
@@ -113,7 +113,7 @@ class SpecialistServiceService {
 
   /// Получить услугу специалиста по ID
   Future<SpecialistService?> getSpecialistService(
-      String specialistId, String serviceId) async {
+      String specialistId, String serviceId,) async {
     try {
       final doc = await _firestore
           .collection('specialists')
@@ -133,7 +133,7 @@ class SpecialistServiceService {
 
   /// Создать услугу специалиста
   Future<String> createSpecialistService(
-      String specialistId, SpecialistService service) async {
+      String specialistId, SpecialistService service,) async {
     try {
       final docRef = await _firestore
           .collection('specialists')
@@ -179,7 +179,7 @@ class SpecialistServiceService {
 
   /// Удалить услугу специалиста
   Future<void> deleteSpecialistService(
-      String specialistId, String serviceId) async {
+      String specialistId, String serviceId,) async {
     try {
       await _firestore
           .collection('specialists')
@@ -188,7 +188,7 @@ class SpecialistServiceService {
           .doc(serviceId)
           .update({
         'isActive': false,
-        'updatedAt': Timestamp.fromDate(DateTime.now())
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
       // Обновляем время последнего обновления цен
@@ -203,7 +203,7 @@ class SpecialistServiceService {
 
   /// Получить услуги специалистов по категории
   Future<List<SpecialistService>> getServicesByCategory(
-      String categoryId) async {
+      String categoryId,) async {
     try {
       final snapshot = await _firestore
           .collectionGroup('services')

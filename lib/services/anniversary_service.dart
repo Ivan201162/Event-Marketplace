@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/reminder.dart';
-import 'reminder_service.dart';
+import 'package:event_marketplace_app/models/reminder.dart';
+import 'package:event_marketplace_app/services/reminder_service.dart';
 
 /// Модель годовщины
 class Anniversary {
@@ -10,10 +10,9 @@ class Anniversary {
     required this.title,
     required this.date,
     required this.type,
-    this.description,
+    required this.createdAt, this.description,
     this.isRecurring = true,
     this.reminderDays = const [7, 1], // За неделю и за день
-    required this.createdAt,
     this.updatedAt,
   });
 
@@ -201,7 +200,7 @@ class AnniversaryService {
 
   /// Получить предстоящие годовщины
   Future<List<Anniversary>> getUpcomingAnniversaries(String userId,
-      {int daysAhead = 30}) async {
+      {int daysAhead = 30,}) async {
     try {
       final now = DateTime.now();
       final endDate = now.add(Duration(days: daysAhead));
@@ -243,10 +242,10 @@ class AnniversaryService {
 
   /// Обновить годовщину
   Future<void> updateAnniversary(
-      String anniversaryId, Anniversary updatedAnniversary) async {
+      String anniversaryId, Anniversary updatedAnniversary,) async {
     try {
       await _firestore.collection('anniversaries').doc(anniversaryId).update(
-          updatedAnniversary.copyWith(updatedAt: DateTime.now()).toMap());
+          updatedAnniversary.copyWith(updatedAt: DateTime.now()).toMap(),);
 
       // Обновляем напоминания
       await _updateAnniversaryReminders(updatedAnniversary);
@@ -294,7 +293,7 @@ class AnniversaryService {
           final nextYearDate =
               anniversary.getAnniversaryDateForYear(today.year + 1);
           await _createAnniversaryReminders(anniversary,
-              targetDate: nextYearDate);
+              targetDate: nextYearDate,);
         }
       }
     } on Exception catch (e) {
@@ -304,7 +303,7 @@ class AnniversaryService {
 
   /// Создать напоминания для годовщины
   Future<void> _createAnniversaryReminders(Anniversary anniversary,
-      {DateTime? targetDate}) async {
+      {DateTime? targetDate,}) async {
     try {
       final anniversaryDate = targetDate ??
           anniversary.getAnniversaryDateForYear(DateTime.now().year);
@@ -350,7 +349,7 @@ class AnniversaryService {
           .where('userId', isEqualTo: anniversary.userId)
           .where('type', isEqualTo: ReminderType.anniversary.name)
           .where('anniversaryDate',
-              isEqualTo: Timestamp.fromDate(anniversary.date))
+              isEqualTo: Timestamp.fromDate(anniversary.date),)
           .get();
 
       for (final doc in querySnapshot.docs) {

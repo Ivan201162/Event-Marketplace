@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/specialist_filters.dart';
+import 'package:event_marketplace_app/providers/search_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/specialist_filters.dart';
-import '../../providers/search_providers.dart';
 
 class SearchFiltersWidget extends ConsumerStatefulWidget {
   const SearchFiltersWidget(
-      {super.key, this.onFiltersChanged, this.showTitle = true});
+      {super.key, this.onFiltersChanged, this.showTitle = true,});
   final VoidCallback? onFiltersChanged;
   final bool showTitle;
 
@@ -115,7 +115,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Категория',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -131,7 +131,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                     _currentFilters = _currentFilters.copyWith(
                       subcategories: [
                         ..._currentFilters.subcategories,
-                        category
+                        category,
                       ],
                     );
                   } else {
@@ -154,7 +154,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Цена за час',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -214,7 +214,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       );
 
   Widget _buildQuickPriceOption(
-      String label, double? minPrice, double? maxPrice) {
+      String label, double? minPrice, double? maxPrice,) {
     final isSelected = _currentFilters.minPrice == minPrice &&
         _currentFilters.maxPrice == maxPrice;
 
@@ -287,7 +287,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Город',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _currentFilters.city,
@@ -299,7 +299,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           items: [
             const DropdownMenuItem<String>(child: Text('Все города')),
             ...citiesAsync.map((city) =>
-                DropdownMenuItem<String>(value: city, child: Text(city))),
+                DropdownMenuItem<String>(value: city, child: Text(city)),),
           ],
           onChanged: (value) {
             setState(() {
@@ -315,7 +315,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Доступная дата',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           InkWell(
             onTap: () async {
@@ -373,7 +373,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Верификация',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -384,7 +384,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                   onSelected: (selected) {
                     setState(() {
                       _currentFilters = _currentFilters.copyWith(
-                          isVerified: selected ? true : null);
+                          isVerified: selected ? true : null,);
                     });
                   },
                 ),
@@ -398,7 +398,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Доступность',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -409,7 +409,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                   onSelected: (selected) {
                     setState(() {
                       _currentFilters = _currentFilters.copyWith(
-                          isAvailable: selected ? true : null);
+                          isAvailable: selected ? true : null,);
                     });
                   },
                 ),
@@ -470,7 +470,7 @@ class QuickFiltersWidget extends ConsumerWidget {
               'Высокий рейтинг',
               Icons.star,
               () => ref.read(searchFiltersProvider.notifier).updateFilters(
-                  ref.read(searchFiltersProvider).copyWith(minRating: 4.5)),
+                  ref.read(searchFiltersProvider).copyWith(minRating: 4.5),),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -479,7 +479,7 @@ class QuickFiltersWidget extends ConsumerWidget {
               'До 10 000₽',
               Icons.attach_money,
               () => ref.read(searchFiltersProvider.notifier).updateFilters(
-                  ref.read(searchFiltersProvider).copyWith(maxPrice: 10000)),
+                  ref.read(searchFiltersProvider).copyWith(maxPrice: 10000),),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -488,7 +488,7 @@ class QuickFiltersWidget extends ConsumerWidget {
               'Верифицированные',
               Icons.verified,
               () => ref.read(searchFiltersProvider.notifier).updateFilters(
-                  ref.read(searchFiltersProvider).copyWith(isVerified: true)),
+                  ref.read(searchFiltersProvider).copyWith(isVerified: true),),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -497,7 +497,7 @@ class QuickFiltersWidget extends ConsumerWidget {
               'Доступные',
               Icons.check_circle,
               () => ref.read(searchFiltersProvider.notifier).updateFilters(
-                  ref.read(searchFiltersProvider).copyWith(isAvailable: true)),
+                  ref.read(searchFiltersProvider).copyWith(isAvailable: true),),
             ),
           ],
         ),
@@ -706,7 +706,7 @@ class ActiveFiltersWidget extends ConsumerWidget {
             Icon(icon, size: 14, color: Colors.blue.shade700),
             const SizedBox(width: 4),
             Text(label,
-                style: TextStyle(fontSize: 12, color: Colors.blue.shade700)),
+                style: TextStyle(fontSize: 12, color: Colors.blue.shade700),),
             const SizedBox(width: 4),
             GestureDetector(
               onTap: onRemove,

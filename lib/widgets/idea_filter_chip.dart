@@ -1,13 +1,10 @@
+import 'package:event_marketplace_app/models/event_idea_category.dart';
 import 'package:flutter/material.dart';
-
-import '../models/event_idea_category.dart';
 
 /// Виджет фильтрации идей по категориям
 class IdeaFilterChip extends StatelessWidget {
   const IdeaFilterChip({
-    super.key,
-    required this.selectedCategory,
-    required this.onCategorySelected,
+    required this.selectedCategory, required this.onCategorySelected, super.key,
   });
 
   final EventIdeaCategory? selectedCategory;
@@ -45,8 +42,8 @@ class IdeaFilterChip extends StatelessWidget {
           ),
 
           // Категории
-          ...EventIdeaCategory.values.map((EventIdeaCategory category) {
-            final bool isSelected = selectedCategory == category;
+          ...EventIdeaCategory.values.map((category) {
+            final isSelected = selectedCategory == category;
 
             return Padding(
               padding: const EdgeInsets.only(right: 8),

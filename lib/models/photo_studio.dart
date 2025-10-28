@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/price_range.dart';
 import 'package:flutter/material.dart';
-import 'price_range.dart';
 
 /// Модель фотостудии
 class PhotoStudio {
@@ -278,7 +278,7 @@ class PhotoStudio {
       'thursday',
       'friday',
       'saturday',
-      'sunday'
+      'sunday',
     ];
     return days[weekday - 1];
   }

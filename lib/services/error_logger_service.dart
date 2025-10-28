@@ -3,9 +3,8 @@ import 'dart:developer' as developer;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:event_marketplace_app/models/app_error.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/app_error.dart';
 
 /// Сервис для логирования ошибок приложения
 class ErrorLoggerService {
@@ -35,7 +34,7 @@ class ErrorLoggerService {
     // Перехватываем ошибки в зонах
     runZonedGuarded(() {
       // Основной код приложения
-    }, _logZonedError);
+    }, _logZonedError,);
   }
 
   /// Логировать Flutter ошибку
@@ -444,7 +443,7 @@ class ErrorLoggerService {
 
       // Заголовки
       csv.writeln(
-          'ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp');
+          'ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp',);
 
       // Данные
       for (final error in errors) {

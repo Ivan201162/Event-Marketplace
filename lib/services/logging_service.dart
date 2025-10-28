@@ -113,7 +113,7 @@ class LoggingService {
 
   /// Логирование отладочной информации
   static void debug(String message,
-      {String? tag, Map<String, dynamic>? extra}) {
+      {String? tag, Map<String, dynamic>? extra,}) {
     log(message, level: LogLevel.debug, tag: tag, extra: extra);
   }
 
@@ -124,7 +124,7 @@ class LoggingService {
 
   /// Логирование предупреждений
   static void warning(String message,
-      {String? tag, Map<String, dynamic>? extra}) {
+      {String? tag, Map<String, dynamic>? extra,}) {
     log(message, level: LogLevel.warning, tag: tag, extra: extra);
   }
 
@@ -166,7 +166,7 @@ class LoggingService {
 
   /// Логирование пользовательских действий
   static void userAction(String action,
-      {String? userId, Map<String, dynamic>? parameters}) {
+      {String? userId, Map<String, dynamic>? parameters,}) {
     final extra = <String, dynamic>{
       'action': action,
       'timestamp': DateTime.now().toIso8601String(),
@@ -185,7 +185,7 @@ class LoggingService {
 
   /// Логирование производительности
   static void performance(String operation,
-      {Duration? duration, Map<String, dynamic>? metrics}) {
+      {Duration? duration, Map<String, dynamic>? metrics,}) {
     final extra = <String, dynamic>{
       'operation': operation,
       'timestamp': DateTime.now().toIso8601String(),
@@ -336,7 +336,7 @@ class LoggingService {
 
   /// Создать HTTP метрику
   static Future<HttpMetric> startHttpMetric(
-      String url, HttpMethod method) async {
+      String url, HttpMethod method,) async {
     if (_enablePerformance) {
       return FirebasePerformance.instance.newHttpMetric(url, method);
     }

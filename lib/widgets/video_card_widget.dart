@@ -1,17 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
 import 'package:flutter/material.dart';
-
-import '../models/specialist_profile_extended.dart';
 
 /// Виджет карточки видео
 class VideoCardWidget extends StatelessWidget {
   const VideoCardWidget({
-    super.key,
-    required this.video,
-    required this.onTap,
-    required this.onEdit,
-    required this.onDelete,
-    required this.onTogglePublish,
+    required this.video, required this.onTap, required this.onEdit, required this.onDelete, required this.onTogglePublish, super.key,
   });
   final PortfolioVideo video;
   final VoidCallback onTap;
@@ -44,7 +38,7 @@ class VideoCardWidget extends StatelessWidget {
                       child: Text(
                         video.title,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -54,13 +48,10 @@ class VideoCardWidget extends StatelessWidget {
                         switch (value) {
                           case 'publish':
                             onTogglePublish();
-                            break;
                           case 'edit':
                             onEdit();
-                            break;
                           case 'delete':
                             onDelete();
-                            break;
                         }
                       },
                       itemBuilder: (context) => [
@@ -84,7 +75,7 @@ class VideoCardWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.edit),
                               SizedBox(width: 8),
-                              Text('Редактировать')
+                              Text('Редактировать'),
                             ],
                           ),
                         ),
@@ -95,7 +86,7 @@ class VideoCardWidget extends StatelessWidget {
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
                               Text('Удалить',
-                                  style: TextStyle(color: Colors.red)),
+                                  style: TextStyle(color: Colors.red),),
                             ],
                           ),
                         ),
@@ -126,19 +117,19 @@ class VideoCardWidget extends StatelessWidget {
                           placeholder: (context, url) => Container(
                             color: Colors.grey[300],
                             child: const Center(
-                                child: CircularProgressIndicator()),
+                                child: CircularProgressIndicator(),),
                           ),
                           errorWidget: (context, url, error) => Container(
                             color: Colors.grey[300],
                             child: const Icon(Icons.video_library,
-                                size: 48, color: Colors.grey),
+                                size: 48, color: Colors.grey,),
                           ),
                         ),
 
                         // Иконка воспроизведения
                         const Center(
                           child: Icon(Icons.play_circle_filled,
-                              size: 48, color: Colors.white),
+                              size: 48, color: Colors.white,),
                         ),
 
                         // Длительность
@@ -147,7 +138,7 @@ class VideoCardWidget extends StatelessWidget {
                           right: 8,
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 2),
+                                horizontal: 6, vertical: 2,),
                             decoration: BoxDecoration(
                               color: Colors.black54,
                               borderRadius: BorderRadius.circular(4),

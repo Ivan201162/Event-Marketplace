@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/features/feed/data/feed_model.dart';
+import 'package:event_marketplace_app/features/feed/providers/feed_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../data/feed_model.dart';
-import '../providers/feed_providers.dart';
 
 /// Панель фильтров для ленты
 class FeedFiltersBar extends ConsumerWidget {
@@ -123,7 +123,7 @@ class FeedFiltersBar extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
         ],
       ),
     );

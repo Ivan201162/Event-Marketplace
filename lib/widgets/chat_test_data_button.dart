@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/test_data/chat_test_data.dart';
 import 'package:flutter/material.dart';
-import '../test_data/chat_test_data.dart';
 
 /// Кнопка для создания тестовых данных чатов
 class ChatTestDataButton extends StatefulWidget {
@@ -86,14 +86,14 @@ class _ChatTestDataButtonState extends State<ChatTestDataButton> {
       builder: (context) => AlertDialog(
         title: const Text('Подтверждение'),
         content: const Text(
-            'Вы уверены, что хотите удалить все тестовые данные чатов?'),
+            'Вы уверены, что хотите удалить все тестовые данные чатов?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Удалить')),
+              child: const Text('Удалить'),),
         ],
       ),
     );

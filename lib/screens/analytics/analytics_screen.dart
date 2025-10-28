@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/transaction.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/widgets/analytics/analytics_card.dart';
+import 'package:event_marketplace_app/widgets/analytics/revenue_chart.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../models/transaction.dart';
-import '../../services/payment_service.dart';
-import '../../widgets/analytics/analytics_card.dart';
-import '../../widgets/analytics/revenue_chart.dart';
-
 class AnalyticsScreen extends ConsumerStatefulWidget {
-  const AnalyticsScreen({super.key, required this.userId});
+  const AnalyticsScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -66,7 +65,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       child: Row(
                         children: [
                           const Icon(Icons.calendar_today,
-                              color: Colors.indigo),
+                              color: Colors.indigo,),
                           const SizedBox(width: 12),
                           Text(
                             'Период: ${_getPeriodText(_selectedPeriod)}',
@@ -147,7 +146,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     const SizedBox(height: 16),
 
                     RevenueChart(
-                        transactions: _transactions, period: _selectedPeriod),
+                        transactions: _transactions, period: _selectedPeriod,),
 
                     const SizedBox(height: 24),
 
@@ -267,7 +266,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   Text(
                     transaction.description,
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold),
+                        fontSize: 14, fontWeight: FontWeight.bold,),
                   ),
                   Text(
                     _formatDate(transaction.timestamp),
@@ -277,7 +276,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               ),
             ),
             Text(
-              '${transaction.amount.toInt()} ₽',
+              '${transaction.amount} ₽',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -316,13 +315,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   int _getDonationsCount() => _transactions
       .where((t) =>
           t.type == TransactionType.donation &&
-          t.status == TransactionStatus.success)
+          t.status == TransactionStatus.success,)
       .length;
 
   int _getSubscriptionsCount() => _transactions
       .where((t) =>
           t.type == TransactionType.subscription &&
-          t.status == TransactionStatus.success)
+          t.status == TransactionStatus.success,)
       .length;
 
   Map<TransactionType, double> _getTransactionTypeStats() {

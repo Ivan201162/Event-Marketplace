@@ -1,6 +1,5 @@
+import 'package:event_marketplace_app/services/calendar_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/calendar_service.dart';
 
 /// Провайдер для сервиса календаря
 final calendarServiceProvider =
@@ -66,7 +65,7 @@ final availableTimeSlotsProvider =
   final slotDuration = params['slotDuration'] as Duration;
 
   return calendarService.getAvailableTimeSlots(
-      specialistId, date, slotDuration);
+      specialistId, date, slotDuration,);
 });
 
 /// Провайдер для управления занятыми датами (мигрирован с StateNotifierProvider)
@@ -94,7 +93,7 @@ class BusyDatesManager extends Notifier<AsyncValue<void>> {
         state = const AsyncValue.data(null);
       } else {
         state = const AsyncValue.error(
-            'Не удалось пометить дату как занятую', StackTrace.current);
+            'Не удалось пометить дату как занятую', StackTrace.current,);
       }
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

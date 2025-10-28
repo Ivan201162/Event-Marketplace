@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../config/payment_config.dart';
-import '../models/promotion_boost.dart';
-import '../models/subscription_plan.dart';
+import 'package:event_marketplace_app/config/payment_config.dart';
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/models/subscription_plan.dart';
 
 class FirestoreTestDataService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -11,7 +11,7 @@ class FirestoreTestDataService {
   static Future<void> initializeTestData() async {
     try {
       debugPrint(
-          'INFO: [firestore_test_data] Начинаем инициализацию тестовых данных');
+          'INFO: [firestore_test_data] Начинаем инициализацию тестовых данных',);
 
       await Future.wait([
         _createSubscriptionPlans(),
@@ -24,7 +24,7 @@ class FirestoreTestDataService {
       debugPrint('INFO: [firestore_test_data] Тестовые данные успешно созданы');
     } catch (e) {
       debugPrint(
-          'ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e');
+          'ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e',);
       rethrow;
     }
   }
@@ -151,7 +151,7 @@ class FirestoreTestDataService {
       final docRef = _firestore.collection('users').doc(user['id']);
       batch.set(docRef, {
         ...user,
-        'createdAt': Timestamp.fromDate(user['createdAt'] as DateTime)
+        'createdAt': Timestamp.fromDate(user['createdAt']! as DateTime),
       });
     }
 
@@ -162,7 +162,7 @@ class FirestoreTestDataService {
   /// Создание тестовых рекламных объявлений
   static Future<void> _createTestAdvertisements() async {
     debugPrint(
-        'INFO: [firestore_test_data] Создание тестовых рекламных объявлений');
+        'INFO: [firestore_test_data] Создание тестовых рекламных объявлений',);
 
     final testAds = [
       {
@@ -219,8 +219,8 @@ class FirestoreTestDataService {
       final docRef = _firestore.collection('advertisements').doc(ad['id']);
       batch.set(docRef, {
         ...ad,
-        'startDate': Timestamp.fromDate(ad['startDate'] as DateTime),
-        'endDate': Timestamp.fromDate(ad['endDate'] as DateTime),
+        'startDate': Timestamp.fromDate(ad['startDate']! as DateTime),
+        'endDate': Timestamp.fromDate(ad['endDate']! as DateTime),
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -228,7 +228,7 @@ class FirestoreTestDataService {
 
     await batch.commit();
     debugPrint(
-        'INFO: [firestore_test_data] Тестовые рекламные объявления созданы');
+        'INFO: [firestore_test_data] Тестовые рекламные объявления созданы',);
   }
 
   /// Создание тестовых транзакций
@@ -272,7 +272,7 @@ class FirestoreTestDataService {
       final docRef = _firestore.collection('transactions').doc(txn['id']);
       batch.set(docRef, {
         ...txn,
-        'timestamp': Timestamp.fromDate(txn['timestamp'] as DateTime)
+        'timestamp': Timestamp.fromDate(txn['timestamp']! as DateTime),
       });
     }
 
@@ -305,10 +305,10 @@ class FirestoreTestDataService {
       final docRef = _firestore.collection('user_subscriptions').doc(sub['id']);
       batch.set(docRef, {
         ...sub,
-        'startDate': Timestamp.fromDate(sub['startDate'] as DateTime),
-        'endDate': Timestamp.fromDate(sub['endDate'] as DateTime),
-        'createdAt': Timestamp.fromDate(sub['createdAt'] as DateTime),
-        'updatedAt': Timestamp.fromDate(sub['updatedAt'] as DateTime),
+        'startDate': Timestamp.fromDate(sub['startDate']! as DateTime),
+        'endDate': Timestamp.fromDate(sub['endDate']! as DateTime),
+        'createdAt': Timestamp.fromDate(sub['createdAt']! as DateTime),
+        'updatedAt': Timestamp.fromDate(sub['updatedAt']! as DateTime),
       });
     }
 
@@ -347,10 +347,10 @@ class FirestoreTestDataService {
       final docRef = _firestore.collection('promotions').doc(promo['id']);
       batch.set(docRef, {
         ...promo,
-        'startDate': Timestamp.fromDate(promo['startDate'] as DateTime),
-        'endDate': Timestamp.fromDate(promo['endDate'] as DateTime),
-        'createdAt': Timestamp.fromDate(promo['createdAt'] as DateTime),
-        'updatedAt': Timestamp.fromDate(promo['updatedAt'] as DateTime),
+        'startDate': Timestamp.fromDate(promo['startDate']! as DateTime),
+        'endDate': Timestamp.fromDate(promo['endDate']! as DateTime),
+        'createdAt': Timestamp.fromDate(promo['createdAt']! as DateTime),
+        'updatedAt': Timestamp.fromDate(promo['updatedAt']! as DateTime),
       });
     }
 
@@ -387,7 +387,7 @@ class FirestoreTestDataService {
       debugPrint('INFO: [firestore_test_data] Тестовые данные очищены');
     } catch (e) {
       debugPrint(
-          'ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e');
+          'ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e',);
       rethrow;
     }
   }

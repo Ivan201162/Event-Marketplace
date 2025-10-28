@@ -8,10 +8,9 @@ class PromotedPost {
     required this.endDate,
     required this.priority,
     required this.budget,
-    this.isActive = true,
+    required this.createdAt, this.isActive = true,
     this.impressions = 0,
     this.clicks = 0,
-    required this.createdAt,
   });
 
   factory PromotedPost.fromMap(Map<String, dynamic> map) => PromotedPost(

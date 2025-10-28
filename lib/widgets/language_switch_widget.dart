@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/providers/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/locale_provider.dart';
 
 /// Получить флаг для локали
 String _getLocaleFlag(Locale locale) {
@@ -22,13 +22,10 @@ void _toggleLocale(LocaleNotifier localeNotifier, Locale currentLocale) {
   switch (currentCode) {
     case 'ru':
       localeNotifier.setEnglish();
-      break;
     case 'en':
       localeNotifier.setKazakh();
-      break;
     case 'kk':
       localeNotifier.setRussian();
-      break;
     default:
       localeNotifier.setRussian();
   }
@@ -37,7 +34,7 @@ void _toggleLocale(LocaleNotifier localeNotifier, Locale currentLocale) {
 /// Виджет для переключения языка
 class LanguageSwitchWidget extends ConsumerWidget {
   const LanguageSwitchWidget(
-      {super.key, this.showLabel = true, this.compact = false});
+      {super.key, this.showLabel = true, this.compact = false,});
 
   final bool showLabel;
   final bool compact;
@@ -64,7 +61,7 @@ class LanguageSwitchWidget extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(_getLocaleFlag(currentLocale),
-                style: const TextStyle(fontSize: 20)),
+                style: const TextStyle(fontSize: 20),),
             const SizedBox(width: 4),
             Text(
               localeNotifier.getLanguageName(currentLocale.languageCode),
@@ -76,29 +73,26 @@ class LanguageSwitchWidget extends ConsumerWidget {
           switch (locale.languageCode) {
             case 'ru':
               localeNotifier.setRussian();
-              break;
             case 'en':
               localeNotifier.setEnglish();
-              break;
             case 'kk':
               localeNotifier.setKazakh();
-              break;
           }
         },
-        itemBuilder: (BuildContext context) => localeNotifier.availableLocales
+        itemBuilder: (context) => localeNotifier.availableLocales
             .map(
-              (Locale locale) => PopupMenuItem<Locale>(
+              (locale) => PopupMenuItem<Locale>(
                 value: locale,
                 child: Row(
                   children: [
                     Text(_getLocaleFlag(locale),
-                        style: const TextStyle(fontSize: 20)),
+                        style: const TextStyle(fontSize: 20),),
                     const SizedBox(width: 12),
                     Text(localeNotifier.getLanguageName(locale.languageCode)),
                     if (locale == currentLocale) ...[
                       const Spacer(),
                       Icon(Icons.check,
-                          color: Theme.of(context).colorScheme.primary),
+                          color: Theme.of(context).colorScheme.primary,),
                     ],
                   ],
                 ),
@@ -122,7 +116,7 @@ class LanguageSwitchWidget extends ConsumerWidget {
               Row(
                 children: [
                   Icon(Icons.language,
-                      color: Theme.of(context).colorScheme.primary),
+                      color: Theme.of(context).colorScheme.primary,),
                   const SizedBox(width: 12),
                   Text('Язык', style: Theme.of(context).textTheme.titleMedium),
                 ],
@@ -137,29 +131,26 @@ class LanguageSwitchWidget extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
               ],
-              ...localeNotifier.availableLocales.map((Locale locale) {
-                final bool isSelected = locale == currentLocale;
+              ...localeNotifier.availableLocales.map((locale) {
+                final isSelected = locale == currentLocale;
                 return ListTile(
                   leading: Text(_getLocaleFlag(locale),
-                      style: const TextStyle(fontSize: 24)),
+                      style: const TextStyle(fontSize: 24),),
                   title:
                       Text(localeNotifier.getLanguageName(locale.languageCode)),
                   trailing: isSelected
                       ? Icon(Icons.check,
-                          color: Theme.of(context).colorScheme.primary)
+                          color: Theme.of(context).colorScheme.primary,)
                       : null,
                   selected: isSelected,
                   onTap: () {
                     switch (locale.languageCode) {
                       case 'ru':
                         localeNotifier.setRussian();
-                        break;
                       case 'en':
                         localeNotifier.setEnglish();
-                        break;
                       case 'kk':
                         localeNotifier.setKazakh();
-                        break;
                     }
                   },
                 );
@@ -182,7 +173,7 @@ class LanguageToggleButton extends ConsumerWidget {
     return IconButton(
       onPressed: () => _toggleLocale(localeNotifier, currentLocale),
       icon: Text(_getLocaleFlag(currentLocale),
-          style: const TextStyle(fontSize: 20)),
+          style: const TextStyle(fontSize: 20),),
       tooltip: 'Переключить язык',
     );
   }
@@ -207,7 +198,7 @@ class LanguageIndicator extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(_getLocaleFlag(currentLocale),
-              style: const TextStyle(fontSize: 16)),
+              style: const TextStyle(fontSize: 16),),
           const SizedBox(width: 4),
           Text(
             localeNotifier.getLanguageName(currentLocale.languageCode),

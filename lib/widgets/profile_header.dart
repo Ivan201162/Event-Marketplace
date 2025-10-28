@@ -1,23 +1,20 @@
+import 'package:event_marketplace_app/models/user_profile.dart';
 import 'package:flutter/material.dart';
-
-import '../models/user_profile.dart';
 
 /// Заголовок профиля с аватаром и основной информацией
 class ProfileHeader extends StatelessWidget {
+
+  const ProfileHeader({
+    required this.profile, required this.isOwnProfile, super.key,
+    this.onEditProfile,
+    this.onFollow,
+    this.onMessage,
+  });
   final UserProfile profile;
   final bool isOwnProfile;
   final VoidCallback? onEditProfile;
   final VoidCallback? onFollow;
   final VoidCallback? onMessage;
-
-  const ProfileHeader({
-    super.key,
-    required this.profile,
-    required this.isOwnProfile,
-    this.onEditProfile,
-    this.onFollow,
-    this.onMessage,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +80,7 @@ class ProfileHeader extends StatelessWidget {
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
+                                horizontal: 8, vertical: 2,),
                             decoration: BoxDecoration(
                               color: Colors.amber,
                               borderRadius: BorderRadius.circular(12),
@@ -122,7 +119,7 @@ class ProfileHeader extends StatelessWidget {
                       Row(
                         children: [
                           Icon(Icons.location_on,
-                              size: 16, color: Colors.grey[600]),
+                              size: 16, color: Colors.grey[600],),
                           const SizedBox(width: 4),
                           Text(
                             profile.city,

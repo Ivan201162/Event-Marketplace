@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/app_notification.dart' as app_notification;
+import 'package:event_marketplace_app/providers/notification_provider.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/app_notification.dart' as app_notification;
-import '../providers/notification_provider.dart';
-import '../services/notification_service.dart';
 
 /// Экран уведомлений
 class NotificationsScreen extends ConsumerStatefulWidget {
@@ -31,7 +30,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
     _animationController.forward();
   }
 
@@ -72,10 +71,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.error_outline,
-                    size: 64, color: Theme.of(context).colorScheme.error),
+                    size: 64, color: Theme.of(context).colorScheme.error,),
                 const SizedBox(height: 16),
                 Text('Ошибка загрузки уведомлений',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const SizedBox(height: 8),
                 Text(
                   error.toString(),
@@ -121,7 +120,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.notifications_none,
-                size: 80, color: Theme.of(context).colorScheme.outline),
+                size: 80, color: Theme.of(context).colorScheme.outline,),
             const SizedBox(height: 16),
             Text(
               'Нет уведомлений',
@@ -148,13 +147,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       );
 
   Widget _buildNotificationCard(
-          app_notification.AppNotification notification) =>
+          app_notification.AppNotification notification,) =>
       Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-              color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.1),),
         ),
         child: InkWell(
           onTap: () => _handleNotificationTap(notification),
@@ -244,19 +243,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       case 'message':
         icon = Icons.chat_bubble_outline;
         color = Colors.blue;
-        break;
       case 'booking':
         icon = Icons.assignment_outlined;
         color = Colors.green;
-        break;
       case 'review':
         icon = Icons.star_outline;
         color = Colors.orange;
-        break;
       case 'system':
         icon = Icons.settings_outlined;
         color = Colors.purple;
-        break;
       default:
         icon = Icons.notifications_outlined;
         color = Colors.grey;
@@ -289,7 +284,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   }
 
   Future<void> _handleNotificationTap(
-      app_notification.AppNotification notification) async {
+      app_notification.AppNotification notification,) async {
     // Отмечаем уведомление как прочитанное
     if (!notification.isRead) {
       await NotificationService.markNotificationAsRead(notification.id);
@@ -300,15 +295,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       case 'message':
         // TODO: Открыть чат с пользователем
         _showComingSoonDialog('Открытие чата');
-        break;
       case 'booking':
         // TODO: Открыть заявку
         _showComingSoonDialog('Открытие заявки');
-        break;
       case 'review':
         // TODO: Открыть профиль специалиста
         _showComingSoonDialog('Открытие профиля специалиста');
-        break;
       case 'system':
         // Остаемся на экране уведомлений
         break;
@@ -326,7 +318,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
             Text('Функция "$feature" будет реализована в следующих версиях.'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+              onPressed: () => Navigator.pop(context), child: const Text('OK'),),
         ],
       ),
     );
@@ -341,7 +333,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);

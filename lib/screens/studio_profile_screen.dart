@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/photo_studio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/photo_studio.dart';
-import '../providers/auth_providers.dart';
-import '../services/photo_studio_service.dart';
-
 /// Экран профиля фотостудии
 class StudioProfileScreen extends ConsumerStatefulWidget {
-  const StudioProfileScreen({super.key, required this.studioId});
+  const StudioProfileScreen({required this.studioId, super.key});
 
   final String studioId;
 
@@ -102,7 +101,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                  onPressed: _loadPhotoStudio, child: const Text('Повторить')),
+                  onPressed: _loadPhotoStudio, child: const Text('Повторить'),),
             ],
           ),
         ),
@@ -115,7 +114,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           _buildSliverAppBar(),
           SliverToBoxAdapter(
             child: Column(
-                children: [_buildHeader(), _buildTabBar(), _buildTabContent()]),
+                children: [_buildHeader(), _buildTabBar(), _buildTabContent()],),
           ),
         ],
       ),
@@ -132,7 +131,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           title: Text(
             _photoStudio!.name,
             style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+                color: Colors.white, fontWeight: FontWeight.bold,),
           ),
           background: Stack(
             fit: StackFit.expand,
@@ -153,7 +152,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withValues(alpha: 0.7)
+                      Colors.black.withValues(alpha: 0.7),
                     ],
                   ),
                 ),
@@ -165,7 +164,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           IconButton(
               icon: const Icon(Icons.share),
               onPressed: _shareStudio,
-              tooltip: 'Поделиться'),
+              tooltip: 'Поделиться',),
           IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: _toggleFavorite,
@@ -174,10 +173,10 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         ],
       );
 
-  Widget _buildPlaceholderImage() => Container(
+  Widget _buildPlaceholderImage() => ColoredBox(
         color: Theme.of(context).colorScheme.primary,
         child: const Center(
-            child: Icon(Icons.photo_camera, size: 64, color: Colors.white)),
+            child: Icon(Icons.photo_camera, size: 64, color: Colors.white),),
       );
 
   Widget _buildHeader() {
@@ -264,7 +263,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
               const SizedBox(width: 8),
               Expanded(
                   child: Text(_photoStudio!.address,
-                      style: theme.textTheme.bodyLarge)),
+                      style: theme.textTheme.bodyLarge,),),
             ],
           ),
           const SizedBox(height: 8),
@@ -281,7 +280,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
     );
   }
 
-  Widget _buildTabBar() => Container(
+  Widget _buildTabBar() => ColoredBox(
         color: Theme.of(context).colorScheme.surface,
         child: TabBar(
           controller: _tabController,
@@ -305,7 +304,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
             _buildGalleryTab(),
             _buildPricingTab(),
             _buildScheduleTab(),
-            _buildReviewsTab()
+            _buildReviewsTab(),
           ],
         ),
       );
@@ -319,7 +318,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
             Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Галерея пуста',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
           ],
         ),
       );
@@ -340,7 +339,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
               color: Colors.grey[300],
-              child: const Icon(Icons.image, size: 48)),
+              child: const Icon(Icons.image, size: 48),),
         ),
       ),
     );
@@ -356,7 +355,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         children: [
           Text('Цены',
               style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+                  ?.copyWith(fontWeight: FontWeight.bold),),
           const SizedBox(height: 16),
 
           if (_photoStudio!.hourlyRate != null) ...[
@@ -403,7 +402,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
   }
 
   Widget _buildPricingCard(
-      String title, String price, IconData icon, Color color) {
+      String title, String price, IconData icon, Color color,) {
     final theme = Theme.of(context);
 
     return Container(
@@ -456,13 +455,13 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                   color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2),),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(_getDayDisplayName(day),
-                        style: theme.textTheme.bodyLarge),
+                        style: theme.textTheme.bodyLarge,),
                     Text(
                       isOpen ? '$open - $close' : 'Закрыто',
                       style: theme.textTheme.bodyMedium?.copyWith(
@@ -511,7 +510,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           Icon(Icons.reviews_outlined, size: 64, color: Colors.grey),
           SizedBox(height: 16),
           Text('Отзывы будут добавлены позже',
-              style: TextStyle(fontSize: 18, color: Colors.grey)),
+              style: TextStyle(fontSize: 18, color: Colors.grey),),
         ],
       ),
     );
@@ -570,7 +569,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),),
               ),
               child: const Text('Забронировать'),
             ),
@@ -585,7 +584,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция поделиться будет реализована позже')));
+        content: Text('Функция поделиться будет реализована позже'),),);
   }
 
   void _toggleFavorite() {
@@ -593,7 +592,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция избранного будет реализована позже')));
+        content: Text('Функция избранного будет реализована позже'),),);
   }
 
   void _showBookingDialog() {
@@ -605,7 +604,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK')),
+              child: const Text('OK'),),
         ],
       ),
     );

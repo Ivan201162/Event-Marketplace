@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/contract.dart';
 import 'package:flutter/material.dart';
 
-import '../models/contract.dart';
-
 class ContractContentWidget extends StatelessWidget {
-  const ContractContentWidget({super.key, required this.contract});
+  const ContractContentWidget({required this.contract, super.key});
   final Contract contract;
 
   @override

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/price_range.dart';
-import '../models/specialist.dart';
-import '../services/specialist_service.dart';
+import 'package:event_marketplace_app/models/price_range.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
 
 class SpecialistTestData {
   static final SpecialistService _specialistService = SpecialistService();
@@ -102,12 +102,12 @@ class SpecialistTestData {
         services: const [
           'Репортажная фотосъемка',
           'Событийная фотосъемка',
-          'Уличная фотография'
+          'Уличная фотография',
         ],
         equipment: const [
           'Sony A7R IV',
           'Sony FE 24-70mm f/2.8 GM',
-          'Sony FE 70-200mm f/2.8 GM'
+          'Sony FE 70-200mm f/2.8 GM',
         ],
         isVerified: true,
         isOnline: false,
@@ -154,7 +154,7 @@ class SpecialistTestData {
           'Sony FX6',
           'Canon C70',
           'DJI Ronin 4D',
-          'Профессиональное освещение'
+          'Профессиональное освещение',
         ],
         languages: const ['Русский', 'Английский', 'Французский'],
         isVerified: true,
@@ -238,7 +238,7 @@ class SpecialistTestData {
         equipment: const [
           'Микрофонная система',
           'Музыкальное оборудование',
-          'Декорации'
+          'Декорации',
         ],
         languages: const ['Русский', 'Английский'],
         isVerified: true,
@@ -307,7 +307,7 @@ class SpecialistTestData {
         equipment: const [
           'Цифровое пианино',
           'Микрофонная система',
-          'Звуковое оборудование'
+          'Звуковое оборудование',
         ],
         languages: const ['Русский', 'Английский'],
         isVerified: true,
@@ -342,7 +342,7 @@ class SpecialistTestData {
         equipment: const [
           'Кухонное оборудование',
           'Посуда',
-          'Сервировочные принадлежности'
+          'Сервировочные принадлежности',
         ],
         languages: const ['Русский', 'Английский'],
         isVerified: true,
@@ -377,7 +377,7 @@ class SpecialistTestData {
         equipment: const [
           'Костюмы персонажей',
           'Реквизит для игр',
-          'Музыкальное оборудование'
+          'Музыкальное оборудование',
         ],
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 10)),
@@ -410,7 +410,7 @@ class SpecialistTestData {
         equipment: const [
           'Свежие цветы',
           'Флористические инструменты',
-          'Декоративные материалы'
+          'Декоративные материалы',
         ],
         languages: const ['Русский', 'Французский'],
         isVerified: true,
@@ -439,12 +439,12 @@ class SpecialistTestData {
         services: const [
           'Портретная фотосъемка',
           'Студийная съемка',
-          'Уличная фотография'
+          'Уличная фотография',
         ],
         equipment: const [
           'Canon EOS 6D',
           'Canon EF 50mm f/1.4',
-          'Студийное освещение'
+          'Студийное освещение',
         ],
         languages: const ['Русский', 'Татарский'],
         isOnline: true,
@@ -471,12 +471,12 @@ class SpecialistTestData {
         services: const [
           'Клубные выступления',
           'Частные вечеринки',
-          'Корпоративные мероприятия'
+          'Корпоративные мероприятия',
         ],
         equipment: const [
           'Pioneer DDJ-1000',
           'JBL EON615',
-          'Профессиональные наушники'
+          'Профессиональные наушники',
         ],
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 8)),
@@ -503,12 +503,12 @@ class SpecialistTestData {
           'Свадебные церемонии',
           'Дни рождения',
           'Юбилеи',
-          'Корпоративы'
+          'Корпоративы',
         ],
         equipment: const [
           'Микрофонная система',
           'Музыкальное оборудование',
-          'Игровой реквизит'
+          'Игровой реквизит',
         ],
         isVerified: true,
         isOnline: true,

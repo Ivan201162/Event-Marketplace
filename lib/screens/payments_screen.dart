@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/providers/payment_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/payment.dart';
-import '../providers/payment_providers.dart';
 
 /// Экран для отображения платежей пользователя
 class PaymentsScreen extends ConsumerStatefulWidget {
@@ -37,7 +36,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
         appBar: AppBar(
           title: Text(widget.specialistId != null
               ? 'Платежи специалиста'
-              : 'Мои платежи'),
+              : 'Мои платежи',),
           bottom: TabBar(
             controller: _tabController,
             tabs: const [
@@ -50,7 +49,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
           actions: [
             IconButton(
                 icon: const Icon(Icons.filter_list),
-                onPressed: _showFilterDialog)
+                onPressed: _showFilterDialog,),
           ],
         ),
         body: TabBarView(
@@ -103,7 +102,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
       data: (payments) {
         if (payments.isEmpty) {
           return _buildEmptyState(
-              'Нет ожидающих платежей', 'Все платежи обработаны');
+              'Нет ожидающих платежей', 'Все платежи обработаны',);
         }
 
         return RefreshIndicator(
@@ -133,7 +132,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
       data: (payments) {
         if (payments.isEmpty) {
           return _buildEmptyState(
-              'Нет завершенных платежей', 'Завершенные платежи появятся здесь');
+              'Нет завершенных платежей', 'Завершенные платежи появятся здесь',);
         }
 
         return RefreshIndicator(
@@ -203,14 +202,14 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
                         Text(
                           payment.type.displayName,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold, fontSize: 16,),
                         ),
                         if (payment.bookingTitle != null) ...[
                           const SizedBox(height: 2),
                           Text(
                             payment.bookingTitle!,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 14),
+                                color: Colors.grey[600], fontSize: 14,),
                           ),
                         ],
                       ],
@@ -232,14 +231,14 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
                         Text(
                           'Сумма: ${payment.amount.toStringAsFixed(0)} ₽',
                           style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 16),
+                              fontWeight: FontWeight.w600, fontSize: 16,),
                         ),
                         if (payment.fee != null && payment.fee! > 0) ...[
                           const SizedBox(height: 2),
                           Text(
                             'Комиссия: ${payment.fee!.toStringAsFixed(0)} ₽',
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 12),
+                                color: Colors.grey[600], fontSize: 12,),
                           ),
                         ],
                       ],
@@ -252,7 +251,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                            horizontal: 16, vertical: 8,),
                       ),
                       child: const Text('Оплатить'),
                     ),
@@ -273,7 +272,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
                   if (payment.paidAt != null) ...[
                     const SizedBox(width: 16),
                     Icon(Icons.check_circle,
-                        size: 16, color: Colors.green[500]),
+                        size: 16, color: Colors.green[500],),
                     const SizedBox(width: 4),
                     Text(
                       'Оплачен: ${_formatDate(payment.paidAt!)}',
@@ -287,7 +286,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
               ...[
                 const SizedBox(height: 8),
                 Text(payment.description,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),),
               ],
             ],
           ),
@@ -304,42 +303,34 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
         backgroundColor = Colors.orange.withValues(alpha: 0.1);
         textColor = Colors.orange[700]!;
         icon = Icons.schedule;
-        break;
       case PaymentStatus.partial:
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         textColor = Colors.blue[700]!;
         icon = Icons.payment;
-        break;
       case PaymentStatus.processing:
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         textColor = Colors.blue[700]!;
         icon = Icons.hourglass_empty;
-        break;
       case PaymentStatus.completed:
         backgroundColor = Colors.green.withValues(alpha: 0.1);
         textColor = Colors.green[700]!;
         icon = Icons.check_circle;
-        break;
       case PaymentStatus.paid:
         backgroundColor = Colors.green.withValues(alpha: 0.1);
         textColor = Colors.green[700]!;
         icon = Icons.check_circle;
-        break;
       case PaymentStatus.failed:
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red[700]!;
         icon = Icons.error;
-        break;
       case PaymentStatus.cancelled:
         backgroundColor = Colors.grey.withValues(alpha: 0.1);
         textColor = Colors.grey[700]!;
         icon = Icons.cancel;
-        break;
       case PaymentStatus.refunded:
         backgroundColor = Colors.purple.withValues(alpha: 0.1);
         textColor = Colors.purple[700]!;
         icon = Icons.undo;
-        break;
     }
 
     return Container(
@@ -357,7 +348,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
           Text(
             status.displayName,
             style: TextStyle(
-                fontSize: 12, color: textColor, fontWeight: FontWeight.w500),
+                fontSize: 12, color: textColor, fontWeight: FontWeight.w500,),
           ),
         ],
       ),
@@ -439,7 +430,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -458,14 +449,14 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
             Text('Сумма: ${payment.amount.toStringAsFixed(0)} ₽'),
             ...[
               const SizedBox(height: 8),
-              Text('Описание: ${payment.description}')
+              Text('Описание: ${payment.description}'),
             ],
           ],
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -490,7 +481,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content: Text('Платеж успешно обработан'),
-          backgroundColor: Colors.green),
+          backgroundColor: Colors.green,),
     );
   }
 

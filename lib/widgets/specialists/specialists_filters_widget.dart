@@ -3,14 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет фильтров специалистов
 class SpecialistsFiltersWidget extends StatelessWidget {
   const SpecialistsFiltersWidget({
-    super.key,
-    required this.selectedCategory,
-    required this.selectedCity,
-    required this.minPrice,
-    required this.maxPrice,
-    required this.onCategoryChanged,
-    required this.onCityChanged,
-    required this.onPriceRangeChanged,
+    required this.selectedCategory, required this.selectedCity, required this.minPrice, required this.maxPrice, required this.onCategoryChanged, required this.onCityChanged, required this.onPriceRangeChanged, super.key,
   });
 
   final String selectedCategory;
@@ -98,7 +91,7 @@ class SpecialistsFiltersWidget extends StatelessWidget {
           // Города
           Text('Город',
               style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+                  ?.copyWith(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: selectedCity,
@@ -136,7 +129,7 @@ class SpecialistsFiltersWidget extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'От',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),),
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
@@ -154,7 +147,7 @@ class SpecialistsFiltersWidget extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'До',
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),),
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),

@@ -1,21 +1,19 @@
+import 'package:event_marketplace_app/models/push_notification.dart';
 import 'package:flutter/material.dart';
-
-import '../models/push_notification.dart';
 
 /// Widget for displaying a notification card
 class NotificationCard extends StatelessWidget {
-  final PushNotification notification;
-  final VoidCallback? onTap;
-  final VoidCallback? onMarkAsRead;
-  final VoidCallback? onDelete;
 
   const NotificationCard({
-    super.key,
-    required this.notification,
+    required this.notification, super.key,
     this.onTap,
     this.onMarkAsRead,
     this.onDelete,
   });
+  final PushNotification notification;
+  final VoidCallback? onTap;
+  final VoidCallback? onMarkAsRead;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +36,7 @@ class NotificationCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(notification.typeIcon,
-                    style: const TextStyle(fontSize: 20)),
+                    style: const TextStyle(fontSize: 20),),
               ),
               const SizedBox(width: 12),
               // Content
@@ -88,7 +86,7 @@ class NotificationCard extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                              horizontal: 8, vertical: 2,),
                           decoration: BoxDecoration(
                             color: _getTypeColor(notification.type)
                                 .withValues(alpha: 0.1),
@@ -106,7 +104,7 @@ class NotificationCard extends StatelessWidget {
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                              horizontal: 8, vertical: 2,),
                           decoration: BoxDecoration(
                             color: _getPriorityColor(notification.priority)
                                 .withValues(alpha: 0.1),
@@ -127,7 +125,7 @@ class NotificationCard extends StatelessWidget {
                     Row(
                       children: [
                         Icon(Icons.access_time,
-                            size: 14, color: Colors.grey[600]),
+                            size: 14, color: Colors.grey[600],),
                         const SizedBox(width: 4),
                         Text(
                           notification.formattedDate,

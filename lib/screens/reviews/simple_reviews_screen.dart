@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/screens/reviews/add_review_screen.dart';
+import 'package:event_marketplace_app/services/reviews_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/review.dart';
-import '../../services/reviews_service.dart';
-import 'add_review_screen.dart';
-
 class SimpleReviewsScreen extends ConsumerStatefulWidget {
   const SimpleReviewsScreen(
-      {super.key, required this.specialistId, required this.specialistName});
+      {required this.specialistId, required this.specialistName, super.key,});
   final String specialistId;
   final String specialistName;
 
@@ -75,7 +74,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
             IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: _addReview,
-                tooltip: 'Добавить отзыв'),
+                tooltip: 'Добавить отзыв',),
           ],
         ),
         body: _buildBody(),
@@ -105,7 +104,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadReviews, child: const Text('Повторить')),
+                onPressed: _loadReviews, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -117,10 +116,10 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.rate_review_outlined,
-                size: 64, color: Colors.grey.shade400),
+                size: 64, color: Colors.grey.shade400,),
             const SizedBox(height: 16),
             Text('Пока нет отзывов',
-                style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
+                style: TextStyle(fontSize: 18, color: Colors.grey.shade600),),
             const SizedBox(height: 8),
             Text(
               'Станьте первым, кто оставит отзыв об этом специалисте',
@@ -169,7 +168,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                           ? review.customerName[0].toUpperCase()
                           : 'П',
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -180,12 +179,12 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                         Text(
                           review.customerName,
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                         Text(
                           DateFormat('dd.MM.yyyy').format(review.date),
                           style: TextStyle(
-                              color: Colors.grey.shade600, fontSize: 12),
+                              color: Colors.grey.shade600, fontSize: 12,),
                         ),
                       ],
                     ),
@@ -257,7 +256,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                   // Лайки
                   IconButton(
                     icon: Icon(Icons.favorite_border,
-                        color: Colors.grey.shade600),
+                        color: Colors.grey.shade600,),
                     onPressed: () {
                       // TODO: Реализовать лайки
                     },
@@ -313,7 +312,7 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                               Row(
                                 children: [
                                   Icon(Icons.business,
-                                      size: 16, color: Colors.blue.shade600),
+                                      size: 16, color: Colors.blue.shade600,),
                                   const SizedBox(width: 8),
                                   Text(
                                     response.authorName,
@@ -329,13 +328,13 @@ class _SimpleReviewsScreenState extends ConsumerState<SimpleReviewsScreen> {
                                         .format(response.date),
                                     style: TextStyle(
                                         color: Colors.grey.shade600,
-                                        fontSize: 10),
+                                        fontSize: 10,),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 4),
                               Text(response.text,
-                                  style: const TextStyle(fontSize: 12)),
+                                  style: const TextStyle(fontSize: 12),),
                               if (response != review.responses.last)
                                 const SizedBox(height: 8),
                             ],

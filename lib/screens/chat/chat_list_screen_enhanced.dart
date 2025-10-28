@@ -1,14 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/providers/chat_providers.dart';
+import 'package:event_marketplace_app/screens/chat/chat_screen_enhanced.dart';
+import 'package:event_marketplace_app/widgets/animated_skeleton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../models/chat.dart';
-import '../../providers/chat_providers.dart';
-import '../../widgets/animated_skeleton.dart';
-import 'chat_screen_enhanced.dart';
 
 /// Улучшенный экран списка чатов
 class ChatListScreenEnhanced extends ConsumerStatefulWidget {
@@ -42,12 +41,12 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -182,9 +181,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
           ),
           const Spacer(),
           IconButton(
-            onPressed: () {
-              _showNewChatOptions();
-            },
+            onPressed: _showNewChatOptions,
             icon: const Icon(
               Icons.add_circle_outline,
               color: Colors.white,
@@ -260,9 +257,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
           ),
           const SizedBox(width: 12),
           IconButton(
-            onPressed: () {
-              _showFilterOptions();
-            },
+            onPressed: _showFilterOptions,
             icon: const Icon(
               Icons.filter_list,
               color: Color(0xFF1E3A8A),
@@ -296,7 +291,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+            final data = doc.data()! as Map<String, dynamic>;
 
             return _buildChatCard(doc.id, data);
           },
@@ -430,7 +425,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                  horizontal: 8, vertical: 4,),
                               decoration: const BoxDecoration(
                                 color: Color(0xFF1E3A8A),
                                 shape: BoxShape.circle,
@@ -564,9 +559,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () {
-              _showNewChatOptions();
-            },
+            onPressed: _showNewChatOptions,
             icon: const Icon(Icons.add),
             label: const Text('Начать чат'),
             style: ElevatedButton.styleFrom(

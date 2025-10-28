@@ -50,7 +50,7 @@ class FormValidators {
 
   /// Валидатор для подтверждения пароля
   static String? confirmPassword(String? value, String? password,
-      {String? errorText}) {
+      {String? errorText,}) {
     if (value == null || value.isEmpty) {
       return 'Подтвердите пароль';
     }
@@ -122,7 +122,7 @@ class FormValidators {
 
   /// Валидатор для диапазона чисел
   static String? numberRange(String? value, double min, double max,
-      {String? errorText}) {
+      {String? errorText,}) {
     final numberError = number(value, errorText: errorText);
     if (numberError != null) return numberError;
 
@@ -193,7 +193,7 @@ class FormValidators {
 
   /// Комбинированный валидатор
   static String? combine(
-      List<String? Function(String?)> validators, String? value) {
+      List<String? Function(String?)> validators, String? value,) {
     for (final validator in validators) {
       final error = validator(value);
       if (error != null) return error;
@@ -205,7 +205,7 @@ class FormValidators {
 /// Виджет для отображения ошибок валидации
 class ValidationErrorWidget extends StatelessWidget {
   const ValidationErrorWidget(
-      {super.key, required this.error, this.icon, this.style});
+      {required this.error, super.key, this.icon, this.style,});
 
   final String error;
   final IconData? icon;
@@ -221,7 +221,7 @@ class ValidationErrorWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon ?? Icons.error_outline,
-              size: 16, color: theme.colorScheme.error),
+              size: 16, color: theme.colorScheme.error,),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
@@ -240,7 +240,7 @@ class ValidationErrorWidget extends StatelessWidget {
 /// Виджет для отображения успешной валидации
 class ValidationSuccessWidget extends StatelessWidget {
   const ValidationSuccessWidget(
-      {super.key, required this.message, this.icon, this.style});
+      {required this.message, super.key, this.icon, this.style,});
 
   final String message;
   final IconData? icon;
@@ -256,7 +256,7 @@ class ValidationSuccessWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon ?? Icons.check_circle_outline,
-              size: 16, color: theme.colorScheme.primary),
+              size: 16, color: theme.colorScheme.primary,),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
@@ -275,7 +275,7 @@ class ValidationSuccessWidget extends StatelessWidget {
 /// Виджет для отображения подсказки
 class ValidationHintWidget extends StatelessWidget {
   const ValidationHintWidget(
-      {super.key, required this.hint, this.icon, this.style});
+      {required this.hint, super.key, this.icon, this.style,});
 
   final String hint;
   final IconData? icon;
@@ -291,7 +291,7 @@ class ValidationHintWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon ?? Icons.info_outline,
-              size: 16, color: theme.colorScheme.onSurfaceVariant),
+              size: 16, color: theme.colorScheme.onSurfaceVariant,),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
@@ -310,7 +310,7 @@ class ValidationHintWidget extends StatelessWidget {
 /// Виджет для отображения силы пароля
 class PasswordStrengthWidget extends StatelessWidget {
   const PasswordStrengthWidget(
-      {super.key, required this.password, this.showStrength = true});
+      {required this.password, super.key, this.showStrength = true,});
 
   final String password;
   final bool showStrength;
@@ -414,27 +414,23 @@ class PasswordStrengthWidget extends StatelessWidget {
       case 1:
         label = 'Слабый';
         color = Colors.red;
-        break;
       case 2:
         label = 'Средний';
         color = Colors.orange;
-        break;
       case 3:
         label = 'Хороший';
         color = Colors.blue;
-        break;
       case 4:
       case 5:
         label = 'Отличный';
         color = Colors.green;
-        break;
       default:
         label = 'Слабый';
         color = Colors.red;
     }
 
     return PasswordStrength(
-        score: score, label: label, color: color, suggestions: suggestions);
+        score: score, label: label, color: color, suggestions: suggestions,);
   }
 }
 

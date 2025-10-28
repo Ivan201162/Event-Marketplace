@@ -1,16 +1,15 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/avatar_widget.dart';
+import 'package:event_marketplace_app/widgets/profile_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../providers/auth_providers.dart';
-import '../../widgets/avatar_widget.dart';
-import '../../widgets/profile_edit_dialog.dart';
-
 /// User profile screen with editing capabilities
 class UserProfileScreen extends ConsumerStatefulWidget {
-  final String? userId;
 
   const UserProfileScreen({super.key, this.userId});
+  final String? userId;
 
   @override
   ConsumerState<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -46,7 +45,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(const SnackBar(
-                    content: Text('Настройки пока не реализованы')));
+                    content: Text('Настройки пока не реализованы'),),);
               },
             ),
           ],
@@ -122,7 +121,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7)
+            Theme.of(context).primaryColor.withOpacity(0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -135,7 +134,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           Stack(
             children: [
               AvatarWidget(
-                  imageUrl: user.avatarUrl, name: user.name, size: 100),
+                  imageUrl: user.avatarUrl, name: user.name, size: 100,),
               if (_isEditing)
                 Positioned(
                   bottom: 0,
@@ -167,13 +166,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           Text(
             user.name,
             style: const TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white,),
           ),
 
           const SizedBox(height: 8),
 
           Text(user.city,
-              style: const TextStyle(fontSize: 16, color: Colors.white70)),
+              style: const TextStyle(fontSize: 16, color: Colors.white70),),
 
           const SizedBox(height: 8),
 
@@ -187,7 +186,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             child: Text(
               user.type.displayName,
               style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w500),
+                  color: Colors.white, fontWeight: FontWeight.w500,),
             ),
           ),
         ],
@@ -203,7 +202,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Информация',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             _buildInfoRow(
               icon: Icons.person,
@@ -267,11 +266,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   children: [
                     Text(label,
                         style:
-                            TextStyle(fontSize: 12, color: Colors.grey[600])),
+                            TextStyle(fontSize: 12, color: Colors.grey[600]),),
                     const SizedBox(height: 2),
                     Text(value,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500)),
+                            fontSize: 16, fontWeight: FontWeight.w500,),),
                   ],
                 ),
               ),
@@ -292,7 +291,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Статистика',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -305,11 +304,11 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ),
                 Expanded(
                   child: _buildStatItem(
-                      icon: Icons.star, label: 'Рейтинг', value: '4.8'),
+                      icon: Icons.star, label: 'Рейтинг', value: '4.8',),
                 ),
                 Expanded(
                   child: _buildStatItem(
-                      icon: Icons.work, label: 'Заказы', value: '12'),
+                      icon: Icons.work, label: 'Заказы', value: '12',),
                 ),
               ],
             ),
@@ -320,13 +319,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
   }
 
   Widget _buildStatItem(
-      {required IconData icon, required String label, required String value}) {
+      {required IconData icon, required String label, required String value,}) {
     return Column(
       children: [
         Icon(icon, size: 32, color: Theme.of(context).primaryColor),
         const SizedBox(height: 8),
         Text(value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
       ],
     );
@@ -340,7 +339,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Действия',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             _buildActionButton(
               icon: Icons.favorite,
@@ -350,7 +349,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(const SnackBar(
-                    content: Text('Избранные пока не реализованы')));
+                    content: Text('Избранные пока не реализованы'),),);
               },
             ),
             _buildActionButton(
@@ -360,7 +359,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 // TODO: Navigate to order history
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      content: Text('История заказов пока не реализована')),
+                      content: Text('История заказов пока не реализована'),),
                 );
               },
             ),
@@ -372,7 +371,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(const SnackBar(
-                    content: Text('Способы оплаты пока не реализованы')));
+                    content: Text('Способы оплаты пока не реализованы'),),);
               },
             ),
             _buildActionButton(
@@ -383,7 +382,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(const SnackBar(
-                    content: Text('Помощь пока не реализована')));
+                    content: Text('Помощь пока не реализована'),),);
               },
             ),
           ],
@@ -409,7 +408,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             Expanded(
               child: Text(label,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500)),
+                      fontSize: 16, fontWeight: FontWeight.w500,),),
             ),
             Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
           ],
@@ -437,7 +436,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Смена аватара пока не реализована')));
+        const SnackBar(content: Text('Смена аватара пока не реализована')),);
   }
 
   void _editField(String field, String currentValue) {

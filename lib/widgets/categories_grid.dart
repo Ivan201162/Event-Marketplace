@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/specialist_categories.dart';
 import 'package:flutter/material.dart';
-import '../models/specialist_categories.dart';
 
 /// Сетка категорий специалистов
 class CategoriesGrid extends StatelessWidget {
   const CategoriesGrid(
-      {super.key, required this.categories, required this.onCategoryTap});
+      {required this.categories, required this.onCategoryTap, super.key,});
   final List<SpecialistCategoryInfo> categories;
   final Function(SpecialistCategoryInfo) onCategoryTap;
 
@@ -32,7 +32,7 @@ class CategoriesGrid extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(
-      BuildContext context, SpecialistCategoryInfo category, bool isMobile) {
+      BuildContext context, SpecialistCategoryInfo category, bool isMobile,) {
     final theme = Theme.of(context);
 
     return Card(
@@ -66,7 +66,7 @@ class CategoriesGrid extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Text(category.emoji,
-                      style: TextStyle(fontSize: isMobile ? 24 : 32)),
+                      style: TextStyle(fontSize: isMobile ? 24 : 32),),
                 ),
 
                 SizedBox(height: isMobile ? 8 : 12),
@@ -116,7 +116,7 @@ class CategoriesGrid extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.star,
-                            size: isMobile ? 12 : 14, color: Colors.amber[700]),
+                            size: isMobile ? 12 : 14, color: Colors.amber[700],),
                         const SizedBox(width: 2),
                         Text(
                           'Популярно',

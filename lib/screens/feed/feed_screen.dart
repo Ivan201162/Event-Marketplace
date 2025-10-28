@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/providers/feed_providers.dart';
+import 'package:event_marketplace_app/widgets/feed_post_card.dart';
+import 'package:event_marketplace_app/widgets/stories_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../providers/feed_providers.dart';
-import '../../widgets/stories_bar.dart';
-import '../../widgets/feed_post_card.dart';
 
 /// Экран ленты с Stories и постами
 class FeedScreen extends ConsumerStatefulWidget {
@@ -17,7 +16,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   final _scrollController = ScrollController();
   String _searchQuery = '';
   String _selectedFilter = 'all';
-  String _selectedSort = 'newest';
+  final String _selectedSort = 'newest';
 
   @override
   void initState() {
@@ -50,11 +49,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () => _showSearchDialog(),
+            onPressed: _showSearchDialog,
           ),
           IconButton(
             icon: const Icon(Icons.filter_list),
-            onPressed: () => _showFilterDialog(),
+            onPressed: _showFilterDialog,
           ),
         ],
       ),
@@ -90,7 +89,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               loading: () => const SliverToBoxAdapter(
                 child: Center(
                   child: Padding(
-                    padding: EdgeInsets.all(32.0),
+                    padding: EdgeInsets.all(32),
                     child: CircularProgressIndicator(),
                   ),
                 ),
@@ -98,11 +97,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               error: (error, stack) => SliverToBoxAdapter(
                 child: Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(32.0),
+                    padding: const EdgeInsets.all(32),
                     child: Column(
                       children: [
                         const Icon(Icons.error_outline,
-                            size: 64, color: Colors.red),
+                            size: 64, color: Colors.red,),
                         const SizedBox(height: 16),
                         Text('Ошибка загрузки ленты: $error'),
                         const SizedBox(height: 16),

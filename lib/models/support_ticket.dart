@@ -13,13 +13,11 @@ class SupportTicket {
     required this.category,
     required this.priority,
     required this.status,
-    this.messages = const [],
+    required this.createdAt, required this.updatedAt, this.messages = const [],
     this.attachments = const [],
     this.assignedTo,
     this.assignedToName,
     this.metadata = const {},
-    required this.createdAt,
-    required this.updatedAt,
     this.resolvedAt,
   });
 
@@ -374,9 +372,7 @@ class SupportMessage {
     required this.authorEmail,
     required this.isFromSupport,
     required this.content,
-    this.attachments = const [],
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.attachments = const [],
   });
 
   factory SupportMessage.fromMap(Map<String, dynamic> map) => SupportMessage(
@@ -448,11 +444,9 @@ class FAQItem {
     required this.question,
     required this.answer,
     required this.category,
-    this.tags = const [],
+    required this.createdAt, required this.updatedAt, this.tags = const [],
     this.viewsCount = 0,
     this.isPublished = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory FAQItem.fromDocument(DocumentSnapshot doc) {

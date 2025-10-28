@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/models/integration.dart';
+import 'package:event_marketplace_app/screens/integration_detail_screen.dart';
+import 'package:event_marketplace_app/services/integration_service.dart';
+import 'package:event_marketplace_app/widgets/integration_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/integration.dart';
-import '../services/integration_service.dart';
-import '../widgets/integration_widget.dart';
-import 'integration_detail_screen.dart';
 
 /// Экран интеграций
 class IntegrationsScreen extends ConsumerStatefulWidget {
@@ -25,10 +25,10 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
           title: const Text('Интеграции'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+                icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
             IconButton(
                 icon: const Icon(Icons.filter_list),
-                onPressed: _showFilterDialog),
+                onPressed: _showFilterDialog,),
           ],
         ),
         body: Column(
@@ -98,7 +98,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12, fontWeight: FontWeight.w500,),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -168,7 +168,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -202,7 +202,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
             Icon(Icons.extension, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Нет интеграций',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             SizedBox(height: 8),
             Text(
               'Попробуйте изменить фильтры или поисковый запрос',
@@ -288,10 +288,10 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Поиск')),
+              child: const Text('Поиск'),),
         ],
       ),
     );
@@ -306,7 +306,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -329,7 +329,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -360,7 +360,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -404,7 +404,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -432,7 +432,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 }

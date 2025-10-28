@@ -1,16 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
-
 class SocialChatScreen extends ConsumerStatefulWidget {
-  final String chatId;
 
-  const SocialChatScreen({super.key, required this.chatId});
+  const SocialChatScreen({required this.chatId, super.key});
+  final String chatId;
 
   @override
   ConsumerState<SocialChatScreen> createState() => _SocialChatScreenState();
@@ -114,7 +113,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка отправки сообщения')));
+            const SnackBar(content: Text('Ошибка отправки сообщения')),);
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -144,11 +143,11 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(_otherUser!.name,
-                            style: const TextStyle(fontSize: 16)),
+                            style: const TextStyle(fontSize: 16),),
                         Text(
                           '@${_otherUser!.username}',
                           style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.normal),
+                              fontSize: 12, fontWeight: FontWeight.normal,),
                         ),
                       ],
                     ),
@@ -158,10 +157,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
             : const Text('Чат'),
         actions: [
           IconButton(
-            onPressed: () {
-              // Дополнительные действия
-              _showChatOptions();
-            },
+            onPressed: _showChatOptions,
             icon: const Icon(Icons.more_vert),
           ),
         ],
@@ -191,7 +187,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
             Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
             const SizedBox(height: 16),
             Text('Ошибка загрузки сообщений',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -200,7 +196,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadChatData, child: const Text('Повторить')),
+                onPressed: _loadChatData, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -218,14 +214,14 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
             ),
             const SizedBox(height: 16),
             Text('Начните общение',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               'Отправьте первое сообщение',
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color),
+                  color: Theme.of(context).textTheme.bodySmall?.color,),
             ),
           ],
         ),
@@ -318,7 +314,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color),
+                  color: Theme.of(context).textTheme.bodySmall?.color,),
             ),
           ],
         ),
@@ -352,7 +348,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
           ),
           const SizedBox(width: 8),
           FloatingActionButton.small(
-              onPressed: _sendMessage, child: const Icon(Icons.send)),
+              onPressed: _sendMessage, child: const Icon(Icons.send),),
         ],
       ),
     );
@@ -422,7 +418,7 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция блокировки будет добавлена позже')));
+        content: Text('Функция блокировки будет добавлена позже'),),);
   }
 
   void _reportUser() {
@@ -430,6 +426,6 @@ class _SocialChatScreenState extends ConsumerState<SocialChatScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция жалоб будет добавлена позже')));
+        const SnackBar(content: Text('Функция жалоб будет добавлена позже')),);
   }
 }

@@ -1,10 +1,9 @@
 import 'dart:developer' as developer;
 import 'dart:io';
 
+import 'package:event_marketplace_app/services/error_logging_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'error_logging_service.dart';
 
 /// Сервис для оптимизации веса приложения
 class AppOptimizationService {
@@ -196,7 +195,7 @@ class AppOptimizationService {
 
   /// Применить рекомендацию по оптимизации
   Future<Map<String, dynamic>> applyOptimizationRecommendation(
-      String action) async {
+      String action,) async {
     try {
       switch (action) {
         case 'clear_cache':
@@ -211,7 +210,7 @@ class AppOptimizationService {
         default:
           return {
             'success': false,
-            'error': 'Unknown optimization action: $action'
+            'error': 'Unknown optimization action: $action',
           };
       }
     } catch (e, stackTrace) {
@@ -272,13 +271,13 @@ class AppOptimizationService {
 
   /// Оптимизировать настройки изображений
   Future<Map<String, dynamic>> _optimizeImageSettings(
-      SharedPreferences prefs) async {
+      SharedPreferences prefs,) async {
     try {
       // Устанавливаем оптимальное качество изображений
       await prefs.setInt('image_quality', 80);
       await prefs.setBool('compress_images', true);
       await prefs.setInt(
-          'max_image_size', 1024); // Максимальный размер в пикселях
+          'max_image_size', 1024,); // Максимальный размер в пикселях
 
       return {'imageQuality': 80, 'compressImages': true, 'maxImageSize': 1024};
     } catch (e) {
@@ -288,7 +287,7 @@ class AppOptimizationService {
 
   /// Оптимизировать настройки кэширования
   Future<Map<String, dynamic>> _optimizeCacheSettings(
-      SharedPreferences prefs) async {
+      SharedPreferences prefs,) async {
     try {
       // Устанавливаем оптимальные настройки кэширования
       await prefs.setInt('cache_duration_hours', 24);
@@ -298,7 +297,7 @@ class AppOptimizationService {
       return {
         'cacheDurationHours': 24,
         'maxCacheSizeMB': 50,
-        'autoClearCache': true
+        'autoClearCache': true,
       };
     } catch (e) {
       return {'error': e.toString()};
@@ -307,7 +306,7 @@ class AppOptimizationService {
 
   /// Оптимизировать настройки уведомлений
   Future<Map<String, dynamic>> _optimizeNotificationSettings(
-      SharedPreferences prefs) async {
+      SharedPreferences prefs,) async {
     try {
       // Устанавливаем оптимальные настройки уведомлений
       await prefs.setString('notification_frequency', 'important');
@@ -326,7 +325,7 @@ class AppOptimizationService {
 
   /// Оптимизировать настройки синхронизации
   Future<Map<String, dynamic>> _optimizeSyncSettings(
-      [SharedPreferences? prefs]) async {
+      [SharedPreferences? prefs,]) async {
     try {
       final prefsInstance = prefs ?? await SharedPreferences.getInstance();
 
@@ -338,7 +337,7 @@ class AppOptimizationService {
       return {
         'autoSync': false,
         'syncIntervalHours': 6,
-        'syncOnWifiOnly': true
+        'syncOnWifiOnly': true,
       };
     } catch (e) {
       return {'error': e.toString()};

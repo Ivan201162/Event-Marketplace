@@ -41,13 +41,13 @@ class ErrorHandler {
       }
     } on Exception catch (e) {
       // Если обработка ошибки сама вызвала ошибку
-      return 'Критическая ошибка в обработчике ошибок: ${e.toString()}';
+      return 'Критическая ошибка в обработчике ошибок: $e';
     }
   }
 
   /// Обработка ошибок Firebase Auth
   static String _handleFirebaseAuthError(
-      FirebaseAuthException error, String? context) {
+      FirebaseAuthException error, String? context,) {
     String message;
     final code = error.code;
     const type = 'FIREBASE_AUTH';
@@ -55,55 +55,38 @@ class ErrorHandler {
     switch (code) {
       case 'user-not-found':
         message = 'Пользователь не найден';
-        break;
       case 'wrong-password':
         message = 'Неверный пароль';
-        break;
       case 'email-already-in-use':
         message = 'Email уже используется';
-        break;
       case 'weak-password':
         message = 'Пароль слишком слабый';
-        break;
       case 'invalid-email':
         message = 'Неверный формат email';
-        break;
       case 'user-disabled':
         message = 'Пользователь заблокирован';
-        break;
       case 'too-many-requests':
         message = 'Слишком много попыток. Попробуйте позже';
-        break;
       case 'operation-not-allowed':
         message = 'Операция не разрешена';
-        break;
       case 'invalid-credential':
         message = 'Неверные учетные данные';
-        break;
       case 'account-exists-with-different-credential':
         message = 'Аккаунт уже существует с другими учетными данными';
-        break;
       case 'credential-already-in-use':
         message = 'Учетные данные уже используются';
-        break;
       case 'invalid-verification-code':
         message = 'Неверный код подтверждения';
-        break;
       case 'invalid-verification-id':
         message = 'Неверный ID подтверждения';
-        break;
       case 'missing-verification-code':
         message = 'Отсутствует код подтверждения';
-        break;
       case 'missing-verification-id':
         message = 'Отсутствует ID подтверждения';
-        break;
       case 'network-request-failed':
         message = 'Ошибка сети. Проверьте подключение к интернету';
-        break;
       case 'requires-recent-login':
         message = 'Требуется повторный вход';
-        break;
       default:
         message =
             'Ошибка аутентификации: ${error.message ?? 'Неизвестная ошибка'}';
@@ -122,37 +105,26 @@ class ErrorHandler {
     switch (code) {
       case 'permission-denied':
         message = 'Доступ запрещен';
-        break;
       case 'unavailable':
         message = 'Сервис временно недоступен';
-        break;
       case 'deadline-exceeded':
         message = 'Превышено время ожидания';
-        break;
       case 'resource-exhausted':
         message = 'Исчерпаны ресурсы';
-        break;
       case 'failed-precondition':
         message = 'Не выполнено предварительное условие';
-        break;
       case 'aborted':
         message = 'Операция прервана';
-        break;
       case 'out-of-range':
         message = 'Значение вне допустимого диапазона';
-        break;
       case 'unimplemented':
         message = 'Функция не реализована';
-        break;
       case 'internal':
         message = 'Внутренняя ошибка сервера';
-        break;
       case 'data-loss':
         message = 'Потеря данных';
-        break;
       case 'unauthenticated':
         message = 'Пользователь не аутентифицирован';
-        break;
       default:
         message = 'Ошибка Firebase: ${error.message ?? 'Неизвестная ошибка'}';
     }
@@ -177,7 +149,7 @@ class ErrorHandler {
     }
 
     _logError(
-        error, context, type, error.osError?.errorCode.toString() ?? 'UNKNOWN');
+        error, context, type, error.osError?.errorCode.toString() ?? 'UNKNOWN',);
     return message;
   }
 
@@ -228,7 +200,7 @@ class ErrorHandler {
 
   /// Обработка ошибок типа
   static String _handleTypeError(TypeError error, String? context) {
-    final message = 'Ошибка типа: ${error.toString()}';
+    final message = 'Ошибка типа: $error';
     const type = 'TYPE';
 
     _logError(error, context, type, 'TYPE_ERROR');
@@ -237,7 +209,7 @@ class ErrorHandler {
 
   /// Обработка ошибок нереализованных функций
   static String _handleUnimplementedError(
-      UnimplementedError error, String? context) {
+      UnimplementedError error, String? context,) {
     final message = 'Функция не реализована: ${error.message}';
     const type = 'UNIMPLEMENTED';
 
@@ -247,7 +219,7 @@ class ErrorHandler {
 
   /// Обработка ошибок неподдерживаемых операций
   static String _handleUnsupportedError(
-      UnsupportedError error, String? context) {
+      UnsupportedError error, String? context,) {
     final message = 'Неподдерживаемая операция: ${error.message}';
     const type = 'UNSUPPORTED';
 
@@ -257,7 +229,7 @@ class ErrorHandler {
 
   /// Обработка общих исключений
   static String _handleGenericException(Exception error, String? context) {
-    final message = 'Ошибка: ${error.toString()}';
+    final message = 'Ошибка: $error';
     const type = 'EXCEPTION';
 
     _logError(error, context, type, 'GENERIC_EXCEPTION');
@@ -266,7 +238,7 @@ class ErrorHandler {
 
   /// Обработка неизвестных ошибок
   static String _handleUnknownError(dynamic error, String? context) {
-    final message = 'Неизвестная ошибка: ${error.toString()}';
+    final message = 'Неизвестная ошибка: $error';
     const type = 'UNKNOWN';
 
     _logError(error, context, type, 'UNKNOWN_ERROR');
@@ -275,7 +247,7 @@ class ErrorHandler {
 
   /// Логирование ошибки
   static void _logError(
-      dynamic error, String? context, String type, String code) {
+      dynamic error, String? context, String type, String code,) {
     final timestamp = DateTime.now().toIso8601String();
     final errorInfo = {
       'timestamp': timestamp,
@@ -337,7 +309,7 @@ class ErrorHandler {
 
   /// Создание отчета об ошибке
   static Map<String, dynamic> createErrorReport(dynamic error,
-      {String? context}) {
+      {String? context,}) {
     final timestamp = DateTime.now().toIso8601String();
     final message = handleError(error, context: context);
 

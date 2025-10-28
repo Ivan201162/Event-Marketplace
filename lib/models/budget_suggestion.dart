@@ -10,8 +10,7 @@ class BudgetSuggestion {
     required this.specialistId,
     required this.suggestions,
     required this.status,
-    this.message,
-    required this.createdAt,
+    required this.createdAt, this.message,
     this.viewedAt,
     this.respondedAt,
     this.metadata,
@@ -27,7 +26,7 @@ class BudgetSuggestion {
       specialistId: data['specialistId'] as String? ?? '',
       suggestions: (data['suggestions'] as List<dynamic>?)
               ?.map((item) =>
-                  BudgetSuggestionItem.fromMap(item as Map<String, dynamic>))
+                  BudgetSuggestionItem.fromMap(item as Map<String, dynamic>),)
               .toList() ??
           [],
       status: BudgetSuggestionStatus.values.firstWhere(
@@ -57,7 +56,7 @@ class BudgetSuggestion {
         specialistId: data['specialistId'] as String? ?? '',
         suggestions: (data['suggestions'] as List<dynamic>?)
                 ?.map((item) =>
-                    BudgetSuggestionItem.fromMap(item as Map<String, dynamic>))
+                    BudgetSuggestionItem.fromMap(item as Map<String, dynamic>),)
                 .toList() ??
             [],
         status: BudgetSuggestionStatus.values.firstWhere(
@@ -74,7 +73,7 @@ class BudgetSuggestion {
             : null,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,)
             : null,
       );
   final String id;
@@ -205,9 +204,8 @@ class BudgetSuggestionItem {
     required this.id,
     required this.categoryId,
     required this.categoryName,
-    this.specialistId,
+    required this.description, this.specialistId,
     this.specialistName,
-    required this.description,
     this.estimatedPrice,
     this.reason,
     this.metadata,
@@ -226,7 +224,7 @@ class BudgetSuggestionItem {
         reason: data['reason'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,)
             : null,
       );
   final String id;

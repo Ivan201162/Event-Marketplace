@@ -46,30 +46,6 @@ enum MessageStatus {
 
 /// Расширенная модель чата
 class ChatEnhanced extends Equatable {
-  final String id;
-  final String name;
-  final String description;
-  final String avatar;
-  final ChatType type;
-  final List<String> participants;
-  final List<String> admins;
-  final String? lastMessageId;
-  final String? lastMessageText;
-  final String? lastMessageAuthorId;
-  final DateTime? lastMessageTime;
-  final int unreadCount;
-  final bool isMuted;
-  final bool isPinned;
-  final bool isArchived;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> tags;
-  final String? requestId;
-  final String? groupId;
-  final Map<String, dynamic> settings;
-  final List<String> sharedFiles;
-  final Map<String, dynamic> analytics;
 
   const ChatEnhanced({
     required this.id,
@@ -79,28 +55,17 @@ class ChatEnhanced extends Equatable {
     required this.type,
     required this.participants,
     required this.admins,
-    this.lastMessageId,
+    required this.unreadCount, required this.isMuted, required this.isPinned, required this.isArchived, required this.metadata, required this.createdAt, required this.updatedAt, required this.tags, required this.settings, required this.sharedFiles, required this.analytics, this.lastMessageId,
     this.lastMessageText,
     this.lastMessageAuthorId,
     this.lastMessageTime,
-    required this.unreadCount,
-    required this.isMuted,
-    required this.isPinned,
-    required this.isArchived,
-    required this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.tags,
     this.requestId,
     this.groupId,
-    required this.settings,
-    required this.sharedFiles,
-    required this.analytics,
   });
 
   /// Создание из Firestore документа
   factory ChatEnhanced.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ChatEnhanced(
       id: doc.id,
       name: data['name'] ?? '',
@@ -131,6 +96,30 @@ class ChatEnhanced extends Equatable {
       analytics: Map<String, dynamic>.from(data['analytics'] ?? {}),
     );
   }
+  final String id;
+  final String name;
+  final String description;
+  final String avatar;
+  final ChatType type;
+  final List<String> participants;
+  final List<String> admins;
+  final String? lastMessageId;
+  final String? lastMessageText;
+  final String? lastMessageAuthorId;
+  final DateTime? lastMessageTime;
+  final int unreadCount;
+  final bool isMuted;
+  final bool isPinned;
+  final bool isArchived;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<String> tags;
+  final String? requestId;
+  final String? groupId;
+  final Map<String, dynamic> settings;
+  final List<String> sharedFiles;
+  final Map<String, dynamic> analytics;
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() {
@@ -193,29 +182,6 @@ class ChatEnhanced extends Equatable {
 
 /// Расширенная модель сообщения
 class ChatMessageEnhanced extends Equatable {
-  final String id;
-  final String chatId;
-  final String authorId;
-  final String authorName;
-  final String authorAvatar;
-  final String content;
-  final MessageType type;
-  final MessageStatus status;
-  final DateTime createdAt;
-  final DateTime? editedAt;
-  final DateTime? readAt;
-  final String? replyToMessageId;
-  final String? replyToMessageContent;
-  final List<String> attachments;
-  final Map<String, dynamic> metadata;
-  final List<MessageReaction> reactions;
-  final List<String> readBy;
-  final List<String> forwardedTo;
-  final bool isEdited;
-  final bool isDeleted;
-  final String? deletedBy;
-  final DateTime? deletedAt;
-  final Map<String, dynamic> analytics;
 
   const ChatMessageEnhanced({
     required this.id,
@@ -227,25 +193,17 @@ class ChatMessageEnhanced extends Equatable {
     required this.type,
     required this.status,
     required this.createdAt,
-    this.editedAt,
+    required this.attachments, required this.metadata, required this.reactions, required this.readBy, required this.forwardedTo, required this.isEdited, required this.isDeleted, required this.analytics, this.editedAt,
     this.readAt,
     this.replyToMessageId,
     this.replyToMessageContent,
-    required this.attachments,
-    required this.metadata,
-    required this.reactions,
-    required this.readBy,
-    required this.forwardedTo,
-    required this.isEdited,
-    required this.isDeleted,
     this.deletedBy,
     this.deletedAt,
-    required this.analytics,
   });
 
   /// Создание из Firestore документа
   factory ChatMessageEnhanced.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ChatMessageEnhanced(
       id: doc.id,
       chatId: data['chatId'] ?? '',
@@ -281,6 +239,29 @@ class ChatMessageEnhanced extends Equatable {
       analytics: Map<String, dynamic>.from(data['analytics'] ?? {}),
     );
   }
+  final String id;
+  final String chatId;
+  final String authorId;
+  final String authorName;
+  final String authorAvatar;
+  final String content;
+  final MessageType type;
+  final MessageStatus status;
+  final DateTime createdAt;
+  final DateTime? editedAt;
+  final DateTime? readAt;
+  final String? replyToMessageId;
+  final String? replyToMessageContent;
+  final List<String> attachments;
+  final Map<String, dynamic> metadata;
+  final List<MessageReaction> reactions;
+  final List<String> readBy;
+  final List<String> forwardedTo;
+  final bool isEdited;
+  final bool isDeleted;
+  final String? deletedBy;
+  final DateTime? deletedAt;
+  final Map<String, dynamic> analytics;
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() {
@@ -340,11 +321,6 @@ class ChatMessageEnhanced extends Equatable {
 
 /// Реакция на сообщение
 class MessageReaction extends Equatable {
-  final String id;
-  final String userId;
-  final String userName;
-  final String emoji;
-  final DateTime createdAt;
 
   const MessageReaction({
     required this.id,
@@ -363,6 +339,11 @@ class MessageReaction extends Equatable {
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
+  final String id;
+  final String userId;
+  final String userName;
+  final String emoji;
+  final DateTime createdAt;
 
   Map<String, dynamic> toMap() {
     return {
@@ -380,16 +361,6 @@ class MessageReaction extends Equatable {
 
 /// Фильтры для чатов
 class ChatFilters extends Equatable {
-  final ChatType? type;
-  final bool? isMuted;
-  final bool? isPinned;
-  final bool? isArchived;
-  final String? searchQuery;
-  final List<String>? tags;
-  final String? requestId;
-  final String? groupId;
-  final DateTime? startDate;
-  final DateTime? endDate;
 
   const ChatFilters({
     this.type,
@@ -403,6 +374,16 @@ class ChatFilters extends Equatable {
     this.startDate,
     this.endDate,
   });
+  final ChatType? type;
+  final bool? isMuted;
+  final bool? isPinned;
+  final bool? isArchived;
+  final String? searchQuery;
+  final List<String>? tags;
+  final String? requestId;
+  final String? groupId;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   @override
   List<Object?> get props => [
@@ -421,15 +402,6 @@ class ChatFilters extends Equatable {
 
 /// Фильтры для сообщений
 class MessageFilters extends Equatable {
-  final MessageType? type;
-  final String? authorId;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final String? searchQuery;
-  final bool? hasAttachments;
-  final bool? hasReactions;
-  final bool? isEdited;
-  final bool? isDeleted;
 
   const MessageFilters({
     this.type,
@@ -442,6 +414,15 @@ class MessageFilters extends Equatable {
     this.isEdited,
     this.isDeleted,
   });
+  final MessageType? type;
+  final String? authorId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String? searchQuery;
+  final bool? hasAttachments;
+  final bool? hasReactions;
+  final bool? isEdited;
+  final bool? isDeleted;
 
   @override
   List<Object?> get props => [

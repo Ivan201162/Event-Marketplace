@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 /// Оптимизированный виджет для кэшированных изображений с улучшенной производительностью
 class OptimizedCachedImage extends StatefulWidget {
   const OptimizedCachedImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -188,8 +187,7 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
 /// Специализированный виджет для аватаров с оптимизацией
 class OptimizedAvatar extends StatelessWidget {
   const OptimizedAvatar({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.radius = 20,
     this.backgroundColor,
     this.foregroundColor,
@@ -238,8 +236,7 @@ class OptimizedAvatar extends StatelessWidget {
 /// Специализированный виджет для карточек с изображениями
 class OptimizedCardImage extends StatelessWidget {
   const OptimizedCardImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -272,7 +269,7 @@ class OptimizedCardImage extends StatelessWidget {
 
     if (elevation > 0) {
       image = Material(
-          elevation: elevation, borderRadius: borderRadius, child: image);
+          elevation: elevation, borderRadius: borderRadius, child: image,);
     }
 
     if (onTap != null) {

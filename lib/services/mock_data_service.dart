@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import '../models/price_range.dart';
-import '../models/specialist.dart';
-import '../models/specialist_categories.dart';
-import '../models/specialist_filters_simple.dart';
-import '../models/specialist_sorting.dart';
+import 'package:event_marketplace_app/models/price_range.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_categories.dart';
+import 'package:event_marketplace_app/models/specialist_filters_simple.dart';
+import 'package:event_marketplace_app/models/specialist_sorting.dart';
 
 /// Сервис для работы с тестовыми данными специалистов
 class MockDataService {
@@ -69,7 +69,7 @@ class MockDataService {
 
   /// Поиск специалистов по запросу
   static List<Specialist> searchSpecialists(String query,
-      {String? categoryId}) {
+      {String? categoryId,}) {
     final specialists = categoryId != null
         ? getSpecialistsByCategory(categoryId)
         : getAllSpecialists();
@@ -93,7 +93,7 @@ class MockDataService {
 
   /// Получить отфильтрованных специалистов
   static List<Specialist> getFilteredSpecialists(
-      {String? categoryId, SpecialistFilters? filters}) {
+      {String? categoryId, SpecialistFilters? filters,}) {
     final specialists = categoryId != null
         ? getSpecialistsByCategory(categoryId)
         : getAllSpecialists();
@@ -142,7 +142,7 @@ class MockDataService {
 
   /// Проверка соответствия специалиста фильтрам
   static bool _matchesFilters(
-      Specialist specialist, SpecialistFilters filters) {
+      Specialist specialist, SpecialistFilters filters,) {
     // Фильтр по цене
     if (filters.minPrice != null || filters.maxPrice != null) {
       final priceRange = specialist.priceRange;
@@ -818,7 +818,7 @@ class MockDataService {
       'Санкт-Петербург',
       'Новосибирск',
       'Екатеринбург',
-      'Казань'
+      'Казань',
     ];
     final city = cities[_random.nextInt(cities.length)];
 

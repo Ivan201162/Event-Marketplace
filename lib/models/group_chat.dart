@@ -13,9 +13,7 @@ class GroupChatParticipant {
   const GroupChatParticipant({
     required this.userId,
     required this.userName,
-    this.userPhoto,
-    required this.type,
-    required this.joinedAt,
+    required this.type, required this.joinedAt, this.userPhoto,
     this.isActive = true,
     this.canSendMessages = true,
     this.canUploadFiles = true,
@@ -99,10 +97,7 @@ class GroupChatMessage {
     required this.chatId,
     required this.senderId,
     required this.senderName,
-    this.senderPhoto,
-    required this.content,
-    required this.type,
-    required this.createdAt,
+    required this.content, required this.type, required this.createdAt, this.senderPhoto,
     this.editedAt,
     this.isEdited = false,
     this.replyToMessageId,
@@ -211,14 +206,11 @@ class GroupChat {
     required this.organizerId,
     required this.organizerName,
     required this.participants,
-    this.lastMessage,
-    required this.lastActivityAt,
+    required this.lastActivityAt, required this.createdAt, required this.updatedAt, this.lastMessage,
     this.unreadCount = 0,
     this.isActive = true,
     this.allowGuestUploads = true,
     this.allowGuestMessages = true,
-    required this.createdAt,
-    required this.updatedAt,
     this.settings,
   });
 
@@ -231,12 +223,12 @@ class GroupChat {
         organizerName: data['organizerName'] as String? ?? '',
         participants: (data['participants'] as List<dynamic>?)
                 ?.map((p) =>
-                    GroupChatParticipant.fromMap(p as Map<String, dynamic>))
+                    GroupChatParticipant.fromMap(p as Map<String, dynamic>),)
                 .toList() ??
             [],
         lastMessage: data['lastMessage'] != null
             ? GroupChatMessage.fromMap(
-                data['lastMessage'] as Map<String, dynamic>)
+                data['lastMessage'] as Map<String, dynamic>,)
             : null,
         lastActivityAt: (data['lastActivityAt'] as Timestamp).toDate(),
         unreadCount: data['unreadCount'] as int? ?? 0,

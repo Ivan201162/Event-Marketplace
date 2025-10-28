@@ -28,43 +28,6 @@ enum RequestPriority {
 
 /// Расширенная модель заявки с полным функционалом
 class RequestEnhanced extends Equatable {
-  final String id;
-  final String title;
-  final String description;
-  final String category;
-  final String subcategory;
-  final String location;
-  final String city;
-  final double latitude;
-  final double longitude;
-  final double budget;
-  final DateTime deadline;
-  final RequestStatus status;
-  final RequestPriority priority;
-  final String authorId;
-  final String authorName;
-  final String authorAvatar;
-  final List<String> attachments;
-  final List<String> tags;
-  final List<String> requiredSkills;
-  final String language;
-  final bool isRemote;
-  final int maxApplicants;
-  final List<String> applicants;
-  final String? selectedApplicantId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic> metadata;
-  final List<RequestTimeline> timeline;
-  final Map<String, dynamic> aiRecommendations;
-  final bool isVerified;
-  final double rating;
-  final int views;
-  final int likes;
-  final bool isPinned;
-  final DateTime? pinnedUntil;
-  final List<String> sharedWith;
-  final Map<String, dynamic> analytics;
 
   const RequestEnhanced({
     required this.id,
@@ -90,25 +53,13 @@ class RequestEnhanced extends Equatable {
     required this.isRemote,
     required this.maxApplicants,
     required this.applicants,
-    this.selectedApplicantId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.metadata,
-    required this.timeline,
-    required this.aiRecommendations,
-    required this.isVerified,
-    required this.rating,
-    required this.views,
-    required this.likes,
-    required this.isPinned,
+    required this.createdAt, required this.updatedAt, required this.metadata, required this.timeline, required this.aiRecommendations, required this.isVerified, required this.rating, required this.views, required this.likes, required this.isPinned, required this.sharedWith, required this.analytics, this.selectedApplicantId,
     this.pinnedUntil,
-    required this.sharedWith,
-    required this.analytics,
   });
 
   /// Создание из Firestore документа
   factory RequestEnhanced.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return RequestEnhanced(
       id: doc.id,
       title: data['title'] ?? '',
@@ -159,6 +110,43 @@ class RequestEnhanced extends Equatable {
       analytics: Map<String, dynamic>.from(data['analytics'] ?? {}),
     );
   }
+  final String id;
+  final String title;
+  final String description;
+  final String category;
+  final String subcategory;
+  final String location;
+  final String city;
+  final double latitude;
+  final double longitude;
+  final double budget;
+  final DateTime deadline;
+  final RequestStatus status;
+  final RequestPriority priority;
+  final String authorId;
+  final String authorName;
+  final String authorAvatar;
+  final List<String> attachments;
+  final List<String> tags;
+  final List<String> requiredSkills;
+  final String language;
+  final bool isRemote;
+  final int maxApplicants;
+  final List<String> applicants;
+  final String? selectedApplicantId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic> metadata;
+  final List<RequestTimeline> timeline;
+  final Map<String, dynamic> aiRecommendations;
+  final bool isVerified;
+  final double rating;
+  final int views;
+  final int likes;
+  final bool isPinned;
+  final DateTime? pinnedUntil;
+  final List<String> sharedWith;
+  final Map<String, dynamic> analytics;
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() {
@@ -328,13 +316,6 @@ class RequestEnhanced extends Equatable {
 
 /// Таймлайн заявки
 class RequestTimeline extends Equatable {
-  final String id;
-  final String action;
-  final String description;
-  final String userId;
-  final String userName;
-  final DateTime timestamp;
-  final Map<String, dynamic> metadata;
 
   const RequestTimeline({
     required this.id,
@@ -357,6 +338,13 @@ class RequestTimeline extends Equatable {
       metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String action;
+  final String description;
+  final String userId;
+  final String userName;
+  final DateTime timestamp;
+  final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() {
     return {
@@ -384,23 +372,6 @@ class RequestTimeline extends Equatable {
 
 /// Фильтры для заявок
 class RequestFilters extends Equatable {
-  final String? category;
-  final String? subcategory;
-  final String? city;
-  final double? minBudget;
-  final double? maxBudget;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final RequestStatus? status;
-  final RequestPriority? priority;
-  final bool? isRemote;
-  final String? language;
-  final List<String>? tags;
-  final List<String>? requiredSkills;
-  final String? searchQuery;
-  final double? latitude;
-  final double? longitude;
-  final double? radius;
 
   const RequestFilters({
     this.category,
@@ -421,6 +392,23 @@ class RequestFilters extends Equatable {
     this.longitude,
     this.radius,
   });
+  final String? category;
+  final String? subcategory;
+  final String? city;
+  final double? minBudget;
+  final double? maxBudget;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final RequestStatus? status;
+  final RequestPriority? priority;
+  final bool? isRemote;
+  final String? language;
+  final List<String>? tags;
+  final List<String>? requiredSkills;
+  final String? searchQuery;
+  final double? latitude;
+  final double? longitude;
+  final double? radius;
 
   @override
   List<Object?> get props => [

@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/story.dart';
-import '../services/story_service.dart';
 
 /// Провайдер сервиса сторис
 final storyServiceProvider = Provider<StoryService>((ref) => StoryService());
@@ -22,7 +22,7 @@ final allStoriesProvider = FutureProvider<List<Story>>((ref) async {
 final storyByIdProvider =
     FutureProvider.family<Story?, String>((ref, storyId) async {
   final storyService = ref.read(storyServiceProvider);
-  final stories = await storyService.getStoriesBySpecialist(storyId);
+  final stories = storyService.getStoriesBySpecialist(storyId);
   return stories.isNotEmpty ? stories.first : null;
 });
 
@@ -30,7 +30,7 @@ final storyByIdProvider =
 final createStoryProvider =
     FutureProvider.family<String, Story>((ref, story) async {
   final storyService = ref.read(storyServiceProvider);
-  return await storyService.createStory(story);
+  return storyService.createStory(story);
 });
 
 // Провайдеры для загрузки медиа удалены, так как соответствующие методы отсутствуют в StoryService

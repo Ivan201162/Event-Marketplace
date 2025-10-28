@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Экран детального просмотра тикета поддержки
 class SupportTicketDetailScreen extends ConsumerStatefulWidget {
-  const SupportTicketDetailScreen({super.key, required this.ticketId});
+  const SupportTicketDetailScreen({required this.ticketId, super.key});
 
   final String ticketId;
 
@@ -29,7 +29,7 @@ class _SupportTicketDetailScreenState
           title: const Text('Детали тикета'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.more_vert), onPressed: _showOptions)
+                icon: const Icon(Icons.more_vert), onPressed: _showOptions,),
           ],
         ),
         body: Column(
@@ -43,7 +43,7 @@ class _SupportTicketDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Тикет #${widget.ticketId}',
-                      style: Theme.of(context).textTheme.titleLarge),
+                      style: Theme.of(context).textTheme.titleLarge,),
                   const SizedBox(height: 8),
                   Text(
                     'Статус: Открыт',
@@ -86,7 +86,7 @@ class _SupportTicketDetailScreenState
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 border: Border(
-                    top: BorderSide(color: Theme.of(context).dividerColor)),
+                    top: BorderSide(color: Theme.of(context).dividerColor),),
               ),
               child: Row(
                 children: [
@@ -250,7 +250,7 @@ class _SupportTicketDetailScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка отправки сообщения: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -267,14 +267,14 @@ class _SupportTicketDetailScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Тикет закрыт'), backgroundColor: Colors.green));
+        content: Text('Тикет закрыт'), backgroundColor: Colors.green,),);
   }
 
   void _archiveTicket() {
     // TODO(developer): Архивировать тикет через SupportService
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Тикет архивирован'), backgroundColor: Colors.blue),
+          content: Text('Тикет архивирован'), backgroundColor: Colors.blue,),
     );
   }
 }

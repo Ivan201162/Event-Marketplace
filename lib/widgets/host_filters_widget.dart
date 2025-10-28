@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/providers/hosts_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/hosts_providers.dart';
 
 /// Виджет фильтров для поиска ведущих
 class HostFiltersWidget extends ConsumerStatefulWidget {
-  const HostFiltersWidget({super.key, required this.onFiltersChanged});
+  const HostFiltersWidget({required this.onFiltersChanged, super.key});
   final Function(HostFilters) onFiltersChanged;
 
   @override
@@ -159,7 +159,7 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
       );
 
   Widget _buildPriceFilter(
-          ThemeData theme, AsyncValue<Map<String, double>> priceRangeAsync) =>
+          ThemeData theme, AsyncValue<Map<String, double>> priceRangeAsync,) =>
       priceRangeAsync.when(
         data: (priceRange) {
           final minPrice = priceRange['min'] ?? 0;
@@ -218,14 +218,14 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
       );
 
   Widget _buildCityFilter(
-          ThemeData theme, AsyncValue<List<String>> citiesAsync) =>
+          ThemeData theme, AsyncValue<List<String>> citiesAsync,) =>
       citiesAsync.when(
         data: (cities) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Город',
                 style: theme.textTheme.bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w500)),
+                    ?.copyWith(fontWeight: FontWeight.w500),),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               initialValue: _selectedCity,
@@ -239,7 +239,7 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
               items: [
                 const DropdownMenuItem<String>(child: Text('Все города')),
                 ...cities.map((city) =>
-                    DropdownMenuItem<String>(value: city, child: Text(city))),
+                    DropdownMenuItem<String>(value: city, child: Text(city)),),
               ],
               onChanged: (value) {
                 setState(() {
@@ -269,7 +269,7 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.5)),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.5),),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

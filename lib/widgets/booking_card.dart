@@ -1,23 +1,21 @@
+import 'package:event_marketplace_app/models/booking.dart';
 import 'package:flutter/material.dart';
-
-import '../models/booking.dart';
 
 /// Widget for displaying booking information in a card
 class BookingCard extends StatelessWidget {
-  final Booking booking;
-  final VoidCallback? onTap;
-  final Function(BookingStatus)? onStatusChange;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
 
   const BookingCard({
-    super.key,
-    required this.booking,
+    required this.booking, super.key,
     this.onTap,
     this.onStatusChange,
     this.onEdit,
     this.onDelete,
   });
+  final Booking booking;
+  final VoidCallback? onTap;
+  final Function(BookingStatus)? onStatusChange;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +39,7 @@ class BookingCard extends StatelessWidget {
                         Text(
                           booking.service,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -79,12 +77,12 @@ class BookingCard extends StatelessWidget {
                   Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
                   Text(booking.formattedDate,
-                      style: const TextStyle(fontSize: 14)),
+                      style: const TextStyle(fontSize: 14),),
                   const SizedBox(width: 16),
                   Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
                   Text(booking.formattedTime,
-                      style: const TextStyle(fontSize: 14)),
+                      style: const TextStyle(fontSize: 14),),
                 ],
               ),
 
@@ -96,7 +94,7 @@ class BookingCard extends StatelessWidget {
                   Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
                   Text(booking.formattedDuration,
-                      style: const TextStyle(fontSize: 14)),
+                      style: const TextStyle(fontSize: 14),),
                   const Spacer(),
                   Text(
                     booking.formattedPrice,

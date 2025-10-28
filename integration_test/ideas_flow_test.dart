@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-
-import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Ideas Flow Tests', () {
     testWidgets('Ideas screen loads with ideas list',
-        (WidgetTester tester) async {
+        (tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -32,7 +31,7 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('Create idea flow works', (WidgetTester tester) async {
+    testWidgets('Create idea flow works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -49,7 +48,7 @@ void main() {
 
       // Заполнение текста идеи
       await tester.enterText(
-          find.byKey(const Key('idea_text_field')), 'Тестовая идея');
+          find.byKey(const Key('idea_text_field')), 'Тестовая идея',);
       await tester.pumpAndSettle();
 
       // Добавление тегов
@@ -65,7 +64,7 @@ void main() {
     });
 
     testWidgets('Ideas search functionality works',
-        (WidgetTester tester) async {
+        (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -90,7 +89,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Ideas filters work', (WidgetTester tester) async {
+    testWidgets('Ideas filters work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -118,7 +117,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Idea interactions work', (WidgetTester tester) async {
+    testWidgets('Idea interactions work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -142,7 +141,7 @@ void main() {
       }
     });
 
-    testWidgets('Poll creation works', (WidgetTester tester) async {
+    testWidgets('Poll creation works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -160,7 +159,7 @@ void main() {
 
       // Заполнение вопроса опроса
       await tester.enterText(find.byKey(const Key('poll_question_field')),
-          'Какой ваш любимый цвет?');
+          'Какой ваш любимый цвет?',);
       await tester.pumpAndSettle();
 
       // Заполнение вариантов ответов
@@ -175,7 +174,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Pull to refresh works', (WidgetTester tester) async {
+    testWidgets('Pull to refresh works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -191,7 +190,7 @@ void main() {
       expect(find.byType(Card), findsWidgets);
     });
 
-    testWidgets('Idea card interactions work', (WidgetTester tester) async {
+    testWidgets('Idea card interactions work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../core/utils/type_utils.dart';
+import 'package:event_marketplace_app/core/utils/type_utils.dart';
 
 /// Модель для аудита действий пользователей
 class AuditLog {
@@ -10,18 +10,14 @@ class AuditLog {
     required this.action,
     required this.resource,
     required this.resourceId,
-    this.oldData,
+    required this.level, required this.category, required this.timestamp, required this.isSuccess, this.oldData,
     this.newData,
     this.ipAddress,
     this.userAgent,
     this.sessionId,
-    required this.level,
-    required this.category,
     this.description,
     this.metadata,
-    required this.timestamp,
     this.errorMessage,
-    required this.isSuccess,
   });
 
   factory AuditLog.fromMap(Map<String, dynamic> map) => AuditLog(
@@ -38,7 +34,7 @@ class AuditLog {
         sessionId: safeStringFromDynamic(map['sessionId']),
         level: AuditLogLevel.fromString((map['level'] as String?) ?? 'info'),
         category: AuditLogCategory.fromString(
-            (map['category'] as String?) ?? 'general'),
+            (map['category'] as String?) ?? 'general',),
         description: safeStringFromDynamic(map['description']),
         metadata: safeMapFromDynamic(map['metadata'] as Map<dynamic, dynamic>?),
         timestamp: safeDateTimeFromTimestamp(map['timestamp']),
@@ -257,9 +253,8 @@ class SystemLog {
     required this.message,
     required this.level,
     required this.category,
-    this.context,
+    required this.timestamp, this.context,
     this.stackTrace,
-    required this.timestamp,
     this.sessionId,
     this.requestId,
     this.metadata,
@@ -271,7 +266,7 @@ class SystemLog {
         message: (map['message'] as String?) ?? '',
         level: SystemLogLevel.fromString((map['level'] as String?) ?? 'info'),
         category: SystemLogCategory.fromString(
-            (map['category'] as String?) ?? 'general'),
+            (map['category'] as String?) ?? 'general',),
         context: map['context'] as Map<String, dynamic>?,
         stackTrace: map['stackTrace'] as String?,
         timestamp: (map['timestamp'] as Timestamp).toDate(),
@@ -469,10 +464,8 @@ class LoggingConfig {
     required this.maxLogRetentionDays,
     required this.enableLogCompression,
     required this.enableLogEncryption,
-    this.encryptionKey,
+    required this.createdAt, required this.updatedAt, this.encryptionKey,
     this.filters,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory LoggingConfig.fromMap(Map<String, dynamic> map) => LoggingConfig(

@@ -194,13 +194,13 @@ class SmartAdvertisement {
     required Map<String, dynamic> userProfile,
     required Map<String, dynamic> userBehavior,
   }) {
-    double relevance = 0.0;
-    double totalWeight = 0.0;
+    var relevance = 0;
+    var totalWeight = 0;
 
     for (final target in targeting) {
       if (!target.isActive) continue;
 
-      final double matchScore = _calculateMatchScore(
+      final matchScore = _calculateMatchScore(
         target: target,
         userProfile: userProfile,
         userBehavior: userBehavior,
@@ -234,46 +234,46 @@ class SmartAdvertisement {
         return _calculateTimeMatch(target.criteria);
       case AdTargetingType.custom:
         return _calculateCustomMatch(
-            target.criteria, userProfile, userBehavior);
+            target.criteria, userProfile, userBehavior,);
     }
   }
 
   double _calculateInterestMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
-    final List<String> adInterests =
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile,) {
+    final adInterests =
         List<String>.from(criteria['interests'] ?? []);
-    final List<String> userInterests =
+    final userInterests =
         List<String>.from(userProfile['interests'] ?? []);
 
-    if (adInterests.isEmpty || userInterests.isEmpty) return 0.0;
+    if (adInterests.isEmpty || userInterests.isEmpty) return 0;
 
-    final int matches = adInterests
-        .where((interest) => userInterests.contains(interest))
+    final matches = adInterests
+        .where(userInterests.contains)
         .length;
     return matches / adInterests.length;
   }
 
   double _calculateBehaviorMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userBehavior) {
-    final List<String> adBehaviors =
+      Map<String, dynamic> criteria, Map<String, dynamic> userBehavior,) {
+    final adBehaviors =
         List<String>.from(criteria['behaviors'] ?? []);
-    final List<String> userBehaviors =
+    final userBehaviors =
         List<String>.from(userBehavior['recent_actions'] ?? []);
 
-    if (adBehaviors.isEmpty || userBehaviors.isEmpty) return 0.0;
+    if (adBehaviors.isEmpty || userBehaviors.isEmpty) return 0;
 
-    final int matches = adBehaviors
-        .where((behavior) => userBehaviors.contains(behavior))
+    final matches = adBehaviors
+        .where(userBehaviors.contains)
         .length;
     return matches / adBehaviors.length;
   }
 
   double _calculateLocationMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile,) {
     final String adRegion = criteria['region'] ?? '';
     final String userRegion = userProfile['region'] ?? '';
 
-    if (adRegion.isEmpty || userRegion.isEmpty) return 0.0;
+    if (adRegion.isEmpty || userRegion.isEmpty) return 0;
 
     return adRegion.toLowerCase() == userRegion.toLowerCase() ? 1.0 : 0.0;
   }
@@ -282,8 +282,8 @@ class SmartAdvertisement {
     Map<String, dynamic> criteria,
     Map<String, dynamic> userProfile,
   ) {
-    double score = 0.0;
-    int factors = 0;
+    var score = 0;
+    var factors = 0;
 
     if (criteria['age_min'] != null && criteria['age_max'] != null) {
       final int userAge = userProfile['age'] ?? 0;
@@ -310,25 +310,25 @@ class SmartAdvertisement {
   }
 
   double _calculateDeviceMatch(
-      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile,) {
     final String adDevice = criteria['device'] ?? '';
     final String userDevice = userProfile['device_type'] ?? '';
 
-    if (adDevice.isEmpty || userDevice.isEmpty) return 0.0;
+    if (adDevice.isEmpty || userDevice.isEmpty) return 0;
 
     return adDevice.toLowerCase() == userDevice.toLowerCase() ? 1.0 : 0.0;
   }
 
   double _calculateTimeMatch(Map<String, dynamic> criteria) {
-    final DateTime now = DateTime.now();
-    final int currentHour = now.hour;
-    final int currentDay = now.weekday;
+    final now = DateTime.now();
+    final currentHour = now.hour;
+    final currentDay = now.weekday;
 
-    final List<int> targetHours = List<int>.from(criteria['hours'] ?? []);
-    final List<int> targetDays = List<int>.from(criteria['days'] ?? []);
+    final targetHours = List<int>.from(criteria['hours'] ?? []);
+    final targetDays = List<int>.from(criteria['days'] ?? []);
 
-    double score = 0.0;
-    int factors = 0;
+    var score = 0;
+    var factors = 0;
 
     if (targetHours.isNotEmpty) {
       if (targetHours.contains(currentHour)) {

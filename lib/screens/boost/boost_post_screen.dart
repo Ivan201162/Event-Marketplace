@@ -1,14 +1,12 @@
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/widgets/boost/boost_plan_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/payment_service.dart';
-import '../../widgets/boost/boost_plan_card.dart';
 
 class BoostPostScreen extends ConsumerStatefulWidget {
   const BoostPostScreen(
-      {super.key,
-      required this.postId,
-      required this.postTitle,
-      this.postImage});
+      {required this.postId, required this.postTitle, super.key,
+      this.postImage,});
   final String postId;
   final String postTitle;
   final String? postImage;
@@ -28,7 +26,7 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
     1: 199.0,
     3: 499.0,
     7: 999.0,
-    14: 1799.0
+    14: 1799.0,
   };
 
   @override
@@ -68,10 +66,10 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(widget.postImage!,
-                                  fit: BoxFit.cover),
+                                  fit: BoxFit.cover,),
                             )
                           : const Icon(Icons.image,
-                              color: Colors.white, size: 30),
+                              color: Colors.white, size: 30,),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -90,7 +88,7 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
                           Text(
                             widget.postTitle,
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 14),
+                                color: Colors.white70, fontSize: 14,),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -98,7 +96,7 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
                       ),
                     ),
                     const Icon(Icons.trending_up,
-                        color: Colors.white, size: 24),
+                        color: Colors.white, size: 24,),
                   ],
                 ),
               ),
@@ -174,14 +172,14 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),),
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(
                           'Продвинуть за ${_selectedPrice?.toInt() ?? 0} ₽',
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                 ),
               ),
@@ -245,9 +243,9 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
                 children: [
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold)),
+                          fontSize: 16, fontWeight: FontWeight.bold,),),
                   Text(description,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),),
                 ],
               ),
             ),
@@ -333,7 +331,7 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Понятно')),
+              child: const Text('Понятно'),),
         ],
       ),
     );

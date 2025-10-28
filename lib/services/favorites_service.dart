@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис для работы с избранными специалистами
 class FavoritesService {
@@ -9,7 +9,7 @@ class FavoritesService {
 
   /// Добавить специалиста в избранное
   Future<void> addToFavorites(
-      {required String userId, required String specialistId}) async {
+      {required String userId, required String specialistId,}) async {
     try {
       await _firestore
           .collection(_collectionName)
@@ -27,7 +27,7 @@ class FavoritesService {
 
   /// Удалить специалиста из избранного
   Future<void> removeFromFavorites(
-      {required String userId, required String specialistId}) async {
+      {required String userId, required String specialistId,}) async {
     try {
       await _firestore
           .collection(_collectionName)
@@ -41,7 +41,7 @@ class FavoritesService {
 
   /// Проверить, находится ли специалист в избранном
   Future<bool> isFavorite(
-      {required String userId, required String specialistId}) async {
+      {required String userId, required String specialistId,}) async {
     try {
       final doc = await _firestore
           .collection(_collectionName)
@@ -121,7 +121,7 @@ class FavoritesService {
 
   /// Переключить статус избранного
   Future<bool> toggleFavorite(
-      {required String userId, required String specialistId}) async {
+      {required String userId, required String specialistId,}) async {
     try {
       final isCurrentlyFavorite =
           await isFavorite(userId: userId, specialistId: specialistId);

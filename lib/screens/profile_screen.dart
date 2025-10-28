@@ -1,16 +1,15 @@
+// import '../models/app_user.dart'; // Conflict with user.dart
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/chat/start_chat_button.dart';
+import 'package:event_marketplace_app/widgets/error/error_state_widget.dart';
+import 'package:event_marketplace_app/widgets/loading/loading_state_widget.dart';
+import 'package:event_marketplace_app/widgets/profile/profile_actions_widget.dart';
+import 'package:event_marketplace_app/widgets/profile/profile_header_widget.dart';
+import 'package:event_marketplace_app/widgets/profile/profile_stats_widget.dart';
+import 'package:event_marketplace_app/widgets/profile/profile_tabs_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-// import '../models/app_user.dart'; // Conflict with user.dart
-import '../providers/auth_providers.dart';
-import '../widgets/error/error_state_widget.dart';
-import '../widgets/loading/loading_state_widget.dart';
-import '../widgets/profile/profile_actions_widget.dart';
-import '../widgets/profile/profile_header_widget.dart';
-import '../widgets/profile/profile_stats_widget.dart';
-import '../widgets/profile/profile_tabs_widget.dart';
-import '../widgets/chat/start_chat_button.dart';
 
 /// Экран профиля пользователя
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -65,19 +64,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 children: [
                   // Заголовок профиля
                   ProfileHeaderWidget(
-                      user: user as dynamic, isCurrentUser: isCurrentUser),
+                      user: user as dynamic, isCurrentUser: isCurrentUser,),
 
                   const SizedBox(height: 16),
 
                   // Статистика профиля
                   ProfileStatsWidget(
-                      user: user as dynamic, isCurrentUser: isCurrentUser),
+                      user: user as dynamic, isCurrentUser: isCurrentUser,),
 
                   const SizedBox(height: 16),
 
                   // Действия профиля
                   ProfileActionsWidget(
-                      user: user as dynamic, isCurrentUser: isCurrentUser),
+                      user: user as dynamic, isCurrentUser: isCurrentUser,),
 
                   // Кнопка "Написать сообщение" для других пользователей
                   if (!isCurrentUser) ...[
@@ -96,7 +95,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Вкладки профиля
                   ProfileTabsWidget(
-                      user: user as dynamic, isCurrentUser: isCurrentUser),
+                      user: user as dynamic, isCurrentUser: isCurrentUser,),
                 ],
               ),
             ),
@@ -125,6 +124,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
+        const SnackBar(content: Text('Функция шаринга будет добавлена позже')),);
   }
 }

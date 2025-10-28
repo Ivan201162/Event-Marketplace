@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/analytics_event.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/analytics_event.dart';
-import '../services/analytics_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран дашборда аналитики
 class AnalyticsDashboardScreen extends ConsumerStatefulWidget {
@@ -85,7 +85,7 @@ class _AnalyticsDashboardScreenState
               ),
             ),
             ElevatedButton(
-                onPressed: _loadStatistics, child: const Text('Обновить')),
+                onPressed: _loadStatistics, child: const Text('Обновить'),),
           ],
         ),
       );
@@ -98,7 +98,7 @@ class _AnalyticsDashboardScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Основная статистика',
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context).textTheme.titleMedium,),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -155,7 +155,7 @@ class _AnalyticsDashboardScreenState
   }
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -170,7 +170,7 @@ class _AnalyticsDashboardScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -198,7 +198,7 @@ class _AnalyticsDashboardScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('События по категориям',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             ..._statistics!.eventsByCategory.entries.map((entry) {
               final percentage = _statistics!.totalEvents > 0
@@ -215,7 +215,7 @@ class _AnalyticsDashboardScreenState
                       children: [
                         Text(entry.key),
                         Text(
-                            '${entry.value} (${percentage.toStringAsFixed(1)}%)'),
+                            '${entry.value} (${percentage.toStringAsFixed(1)}%)',),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -223,7 +223,7 @@ class _AnalyticsDashboardScreenState
                       value: percentage / 100,
                       backgroundColor: Colors.grey.withValues(alpha: 0.3),
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          _getCategoryColor(entry.key)),
+                          _getCategoryColor(entry.key),),
                     ),
                   ],
                 ),
@@ -238,7 +238,7 @@ class _AnalyticsDashboardScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('События по платформам',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             ..._statistics!.eventsByPlatform.entries.map((entry) {
               final percentage = _statistics!.totalEvents > 0
@@ -255,7 +255,7 @@ class _AnalyticsDashboardScreenState
                       children: [
                         Text(entry.key),
                         Text(
-                            '${entry.value} (${percentage.toStringAsFixed(1)}%)'),
+                            '${entry.value} (${percentage.toStringAsFixed(1)}%)',),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -263,7 +263,7 @@ class _AnalyticsDashboardScreenState
                       value: percentage / 100,
                       backgroundColor: Colors.grey.withValues(alpha: 0.3),
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          _getPlatformColor(entry.key)),
+                          _getPlatformColor(entry.key),),
                     ),
                   ],
                 ),
@@ -292,7 +292,7 @@ class _AnalyticsDashboardScreenState
                       child: Text(
                         '${_statistics!.eventsByScreen.entries.toList().indexOf(entry) + 1}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue),
+                            fontWeight: FontWeight.bold, color: Colors.blue,),
                       ),
                     ),
                     title: Text(entry.key),
@@ -327,7 +327,7 @@ class _AnalyticsDashboardScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Топ событий',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const SizedBox(height: 16),
                 ...topEvents.map(
                   (entry) => ListTile(
@@ -336,7 +336,7 @@ class _AnalyticsDashboardScreenState
                       child: Text(
                         '${topEvents.indexOf(entry) + 1}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.green),
+                            fontWeight: FontWeight.bold, color: Colors.green,),
                       ),
                     ),
                     title: Text(entry.key),
@@ -443,7 +443,7 @@ class _AnalyticsDashboardScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки статистики: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }

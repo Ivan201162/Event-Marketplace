@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/request.dart';
+import 'package:event_marketplace_app/models/request.dart';
 
 /// Сервис для работы с заявками
 class RequestsService {
@@ -49,7 +49,7 @@ class RequestsService {
       final snapshot = await _firestore
           .collection('requests')
           .where('title', isGreaterThanOrEqualTo: query)
-          .where('title', isLessThan: query + '\uf8ff')
+          .where('title', isLessThan: '$query\uf8ff')
           .orderBy('title')
           .orderBy('createdAt', descending: true)
           .limit(20)
@@ -72,13 +72,10 @@ class RequestsService {
       switch (filter) {
         case 'open':
           query = query.where('status', isEqualTo: 'OPEN');
-          break;
         case 'in_progress':
           query = query.where('status', isEqualTo: 'IN_PROGRESS');
-          break;
         case 'done':
           query = query.where('status', isEqualTo: 'DONE');
-          break;
         default:
           // Все заявки
           break;
@@ -88,7 +85,7 @@ class RequestsService {
       final snapshot = await query.limit(20).get();
 
       return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         return Request.fromMap(data, doc.id);
       }).toList();
     } catch (e) {

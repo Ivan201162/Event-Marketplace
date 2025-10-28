@@ -113,7 +113,7 @@ class MemoryManager {
 
   /// Создание безопасного таймера с автоматическим отслеживанием
   Timer createTrackedTimer(Duration duration, void Function() callback,
-      {bool periodic = false}) {
+      {bool periodic = false,}) {
     final timer = periodic
         ? Timer.periodic(duration, (_) => callback())
         : Timer(duration, callback);
@@ -148,7 +148,7 @@ mixin MemoryManagerMixin<T extends StatefulWidget> on State<T> {
 
   /// Создание отслеживаемого таймера
   Timer createTimer(Duration duration, void Function() callback,
-      {bool periodic = false}) {
+      {bool periodic = false,}) {
     final timer = periodic
         ? Timer.periodic(duration, (_) => callback())
         : Timer(duration, callback);

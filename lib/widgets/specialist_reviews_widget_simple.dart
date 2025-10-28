@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/services/reviews_service.dart';
 import 'package:flutter/material.dart';
-import '../models/review.dart';
-import '../services/reviews_service.dart';
 
 /// Упрощенный виджет отзывов специалиста
 class SpecialistReviewsWidgetSimple extends StatefulWidget {
-  const SpecialistReviewsWidgetSimple({super.key, required this.specialistId});
+  const SpecialistReviewsWidgetSimple({required this.specialistId, super.key});
 
   final String specialistId;
 
@@ -104,7 +104,7 @@ class _SpecialistReviewsWidgetSimpleState
             Text(
               'Ошибка загрузки отзывов',
               style: TextStyle(
-                  color: Colors.red.shade600, fontWeight: FontWeight.bold),
+                  color: Colors.red.shade600, fontWeight: FontWeight.bold,),
             ),
             const SizedBox(height: 4),
             Text(
@@ -114,7 +114,7 @@ class _SpecialistReviewsWidgetSimpleState
             ),
             const SizedBox(height: 8),
             ElevatedButton(
-                onPressed: _loadReviews, child: const Text('Повторить')),
+                onPressed: _loadReviews, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -129,12 +129,12 @@ class _SpecialistReviewsWidgetSimpleState
         child: Column(
           children: [
             Icon(Icons.rate_review_outlined,
-                color: Colors.grey.shade400, size: 32),
+                color: Colors.grey.shade400, size: 32,),
             const SizedBox(height: 8),
             Text(
               'Пока нет отзывов',
               style: TextStyle(
-                  color: Colors.grey.shade600, fontWeight: FontWeight.bold),
+                  color: Colors.grey.shade600, fontWeight: FontWeight.bold,),
             ),
             const SizedBox(height: 4),
             Text(
@@ -184,7 +184,7 @@ class _SpecialistReviewsWidgetSimpleState
                           ? review.clientName[0].toUpperCase()
                           : 'П',
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
+                          fontSize: 12, fontWeight: FontWeight.bold,),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -195,12 +195,12 @@ class _SpecialistReviewsWidgetSimpleState
                         Text(
                           review.clientName,
                           style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                              fontSize: 14, fontWeight: FontWeight.bold,),
                         ),
                         Text(
                           _formatDate(review.createdAt),
                           style: TextStyle(
-                              color: Colors.grey.shade600, fontSize: 10),
+                              color: Colors.grey.shade600, fontSize: 10,),
                         ),
                       ],
                     ),
@@ -222,7 +222,7 @@ class _SpecialistReviewsWidgetSimpleState
                       Text(
                         review.rating.toStringAsFixed(1),
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12),
+                            fontWeight: FontWeight.bold, fontSize: 12,),
                       ),
                     ],
                   ),
@@ -289,7 +289,7 @@ class _SpecialistReviewsWidgetSimpleState
                               Row(
                                 children: [
                                   Icon(Icons.business,
-                                      size: 12, color: Colors.blue.shade600),
+                                      size: 12, color: Colors.blue.shade600,),
                                   const SizedBox(width: 4),
                                   Text(
                                     response['authorName'] ?? 'Специалист',

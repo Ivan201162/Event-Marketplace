@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+// import '../services/specialist_profile_service.dart'; // Unused import
+import 'package:event_marketplace_app/services/specialist_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-// import '../services/specialist_profile_service.dart'; // Unused import
-import '../services/specialist_service.dart';
 
 class SpecialistProfileEditScreen extends ConsumerStatefulWidget {
-  const SpecialistProfileEditScreen({super.key, required this.specialistId});
+  const SpecialistProfileEditScreen({required this.specialistId, super.key});
   final String specialistId;
 
   @override
@@ -76,7 +76,7 @@ class _SpecialistProfileEditScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки профиля: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -97,7 +97,7 @@ class _SpecialistProfileEditScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Контакты сохранены'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -105,7 +105,7 @@ class _SpecialistProfileEditScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка сохранения контактов: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -131,7 +131,7 @@ class _SpecialistProfileEditScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Услуги сохранены'), backgroundColor: Colors.green),
+              content: Text('Услуги сохранены'), backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -139,7 +139,7 @@ class _SpecialistProfileEditScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка сохранения услуг: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -152,7 +152,7 @@ class _SpecialistProfileEditScreenState
       'Instagram',
       'VK',
       'Telegram',
-      'Другое'
+      'Другое',
     ];
 
     showDialog<void>(
@@ -166,7 +166,7 @@ class _SpecialistProfileEditScreenState
               decoration: const InputDecoration(labelText: 'Тип контакта'),
               items: contactTypes
                   .map((type) =>
-                      DropdownMenuItem(value: type, child: Text(type)))
+                      DropdownMenuItem(value: type, child: Text(type)),)
                   .toList(),
               onChanged: (value) {
                 if (value != null && !_contactControllers.containsKey(value)) {
@@ -186,7 +186,7 @@ class _SpecialistProfileEditScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -277,16 +277,16 @@ class _SpecialistProfileEditScreenState
                 children: [
                   const Text('Контакты',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   IconButton(
-                      onPressed: _addContact, icon: const Icon(Icons.add)),
+                      onPressed: _addContact, icon: const Icon(Icons.add),),
                 ],
               ),
               const SizedBox(height: 16),
               if (_contactControllers.isEmpty)
                 const Center(
                   child: Text('Контакты не добавлены',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: Colors.grey),),
                 )
               else
                 ..._contactControllers.entries.map(
@@ -298,7 +298,7 @@ class _SpecialistProfileEditScreenState
                           flex: 2,
                           child: Text(entry.key,
                               style:
-                                  const TextStyle(fontWeight: FontWeight.w500)),
+                                  const TextStyle(fontWeight: FontWeight.w500),),
                         ),
                         Expanded(
                           flex: 3,
@@ -337,14 +337,14 @@ class _SpecialistProfileEditScreenState
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                      onPressed: _addService, icon: const Icon(Icons.add)),
+                      onPressed: _addService, icon: const Icon(Icons.add),),
                 ],
               ),
               const SizedBox(height: 16),
               if (_serviceControllers.isEmpty)
                 const Center(
                   child: Text('Услуги не добавлены',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: Colors.grey),),
                 )
               else
                 ..._serviceControllers.keys.map(

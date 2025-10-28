@@ -1,16 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/customer_profile_extended.dart';
 import 'package:flutter/material.dart';
-
-import '../models/customer_profile_extended.dart';
 
 /// Виджет сетки фотографий
 class PhotoGridWidget extends StatelessWidget {
   const PhotoGridWidget({
-    super.key,
-    required this.photos,
-    required this.onPhotoTap,
-    required this.onPhotoEdit,
-    required this.onPhotoDelete,
+    required this.photos, required this.onPhotoTap, required this.onPhotoEdit, required this.onPhotoDelete, super.key,
   });
   final List<InspirationPhoto> photos;
   final void Function(InspirationPhoto) onPhotoTap;
@@ -109,16 +104,14 @@ class PhotoGridWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(Icons.more_vert,
-                      color: Colors.white, size: 16),
+                      color: Colors.white, size: 16,),
                 ),
                 onSelected: (value) {
                   switch (value) {
                     case 'edit':
                       onPhotoEdit(photo);
-                      break;
                     case 'delete':
                       onPhotoDelete(photo);
-                      break;
                   }
                 },
                 itemBuilder: (context) => [
@@ -127,8 +120,8 @@ class PhotoGridWidget extends StatelessWidget {
                     child: Row(children: [
                       Icon(Icons.edit),
                       SizedBox(width: 8),
-                      Text('Редактировать')
-                    ]),
+                      Text('Редактировать'),
+                    ],),
                   ),
                   const PopupMenuItem(
                     value: 'delete',

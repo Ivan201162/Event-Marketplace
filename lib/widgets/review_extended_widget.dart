@@ -1,15 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/review_extended.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/review_extended.dart';
-
 /// Виджет расширенного отзыва
 class ReviewExtendedWidget extends StatefulWidget {
   const ReviewExtendedWidget({
-    super.key,
-    required this.review,
+    required this.review, super.key,
     this.currentUserId,
     this.onLike,
     this.onShare,
@@ -49,20 +47,20 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
               // Комментарий
               if (widget.review.comment.isNotEmpty) ...[
                 Text(widget.review.comment,
-                    style: const TextStyle(fontSize: 16)),
+                    style: const TextStyle(fontSize: 16),),
                 const SizedBox(height: 12),
               ],
 
               // Медиа
               if (widget.review.media.isNotEmpty) ...[
                 _buildMediaGrid(),
-                const SizedBox(height: 12)
+                const SizedBox(height: 12),
               ],
 
               // Теги
               if (widget.review.tags.isNotEmpty) ...[
                 _buildTags(),
-                const SizedBox(height: 12)
+                const SizedBox(height: 12),
               ],
 
               // Детальная статистика
@@ -108,7 +106,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                     Text(
                       widget.review.customerName,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
                     if (widget.review.isVerified) ...[
                       const SizedBox(width: 4),
@@ -131,8 +129,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                 child: Row(children: [
                   Icon(Icons.share),
                   SizedBox(width: 8),
-                  Text('Поделиться')
-                ]),
+                  Text('Поделиться'),
+                ],),
               ),
               if (widget.currentUserId != null) ...[
                 const PopupMenuItem(
@@ -214,17 +212,17 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                           placeholder: (context, url) => Container(
                             color: Colors.grey[200],
                             child: const Center(
-                                child: CircularProgressIndicator()),
+                                child: CircularProgressIndicator(),),
                           ),
                           errorWidget: (context, url, error) => Container(
                               color: Colors.grey[200],
-                              child: const Icon(Icons.error)),
+                              child: const Icon(Icons.error),),
                         ),
                         if (media.type == MediaType.video)
                           const Positioned.fill(
                             child: Center(
                               child: Icon(Icons.play_circle_filled,
-                                  color: Colors.white, size: 32),
+                                  color: Colors.white, size: 32,),
                             ),
                           ),
                       ],
@@ -252,7 +250,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                   border: Border.all(
                       color: Theme.of(context)
                           .primaryColor
-                          .withValues(alpha: 0.3)),
+                          .withValues(alpha: 0.3),),
                 ),
                 child: Text(
                   tag,
@@ -270,17 +268,17 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
   Widget _buildDetailedStats() => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey[50], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[50], borderRadius: BorderRadius.circular(8),),
         child: Column(
           children: [
             Row(
               children: [
                 Expanded(
                     child: _buildStatItem(
-                        'Качество', widget.review.stats.quality, Icons.star)),
+                        'Качество', widget.review.stats.quality, Icons.star,),),
                 Expanded(
                   child: _buildStatItem(
-                      'Общение', widget.review.stats.communication, Icons.chat),
+                      'Общение', widget.review.stats.communication, Icons.chat,),
                 ),
               ],
             ),
@@ -296,7 +294,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                 ),
                 Expanded(
                   child: _buildStatItem('Цена/Качество',
-                      widget.review.stats.value, Icons.attach_money),
+                      widget.review.stats.value, Icons.attach_money,),
                 ),
               ],
             ),
@@ -310,7 +308,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
           const SizedBox(width: 4),
           Expanded(
             child: Text(label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
           ),
           Text(
             value > 0 ? value.toStringAsFixed(1) : '-',
@@ -406,10 +404,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
     switch (action) {
       case 'share':
         widget.onShare?.call(widget.review.id);
-        break;
       case 'report':
         _showReportDialog();
-        break;
     }
   }
 
@@ -422,7 +418,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -454,7 +450,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
 /// Экран просмотра медиа
 class MediaViewerScreen extends StatefulWidget {
   const MediaViewerScreen(
-      {super.key, required this.media, required this.allMedia});
+      {required this.media, required this.allMedia, super.key,});
   final ReviewMedia media;
   final List<ReviewMedia> allMedia;
 

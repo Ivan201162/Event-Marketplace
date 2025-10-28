@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/services/media_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../services/media_upload_service.dart';
 
 /// Виджет для прикрепления медиафайлов к сообщению
 class MediaAttachmentWidget extends StatefulWidget {
   const MediaAttachmentWidget(
-      {super.key, required this.onMediaSelected, required this.onError});
+      {required this.onMediaSelected, required this.onError, super.key,});
   final Function(MediaUploadResult) onMediaSelected;
   final Function(String) onError;
 
@@ -177,7 +177,7 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),),
         ),
         child: Column(
           children: [

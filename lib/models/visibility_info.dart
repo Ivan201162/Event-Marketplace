@@ -2,11 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Visibility information model
 class VisibilityInfo extends Equatable {
-  final bool isVisible;
-  final double visibilityPercentage;
-  final DateTime lastSeen;
-  final int viewCount;
-  final Duration viewDuration;
 
   const VisibilityInfo({
     required this.isVisible,
@@ -26,6 +21,11 @@ class VisibilityInfo extends Equatable {
       viewDuration: Duration(milliseconds: data['viewDuration'] ?? 0),
     );
   }
+  final bool isVisible;
+  final double visibilityPercentage;
+  final DateTime lastSeen;
+  final int viewCount;
+  final Duration viewDuration;
 
   /// Convert VisibilityInfo to Map
   Map<String, dynamic> toMap() {

@@ -9,10 +9,8 @@ class SpecialistTip {
     required this.title,
     required this.message,
     required this.action,
-    this.actionRoute,
-    required this.priority,
+    required this.priority, required this.createdAt, this.actionRoute,
     this.isCompleted = false,
-    required this.createdAt,
     this.completedAt,
   });
 

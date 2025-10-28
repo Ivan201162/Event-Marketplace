@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/specialist_profile.dart';
+import 'package:event_marketplace_app/features/profile/data/models/specialist_profile.dart';
 
 /// Репозиторий для работы с профилями специалистов
 class SpecialistProfileRepository {
@@ -72,7 +72,7 @@ class SpecialistProfileRepository {
           .get();
 
       return query.docs
-          .map((doc) => SpecialistProfile.fromDocument(doc))
+          .map(SpecialistProfile.fromDocument)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения профилей: $e');
@@ -89,7 +89,7 @@ class SpecialistProfileRepository {
           .get();
 
       return query.docs
-          .map((doc) => SpecialistProfile.fromDocument(doc))
+          .map(SpecialistProfile.fromDocument)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения профилей по категории: $e');
@@ -106,7 +106,7 @@ class SpecialistProfileRepository {
           .get();
 
       return query.docs
-          .map((doc) => SpecialistProfile.fromDocument(doc))
+          .map(SpecialistProfile.fromDocument)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения профилей по городу: $e');

@@ -25,20 +25,20 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeIn,
-    ));
+    ),);
 
     _scaleAnimation = Tween<double>(
       begin: 0.5,
-      end: 1.0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.elasticOut,
-    ));
+    ),);
 
     _controller.forward();
 

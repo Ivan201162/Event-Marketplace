@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/services/work_act_service.dart';
+import 'package:event_marketplace_app/widgets/work_act_signature_widget.dart';
+import 'package:event_marketplace_app/widgets/work_act_widget.dart';
 import 'package:flutter/material.dart';
-import '../services/work_act_service.dart';
-import '../widgets/work_act_signature_widget.dart';
-import '../widgets/work_act_widget.dart';
 
 /// Тестовый экран для проверки функциональности актов выполненных работ
 class WorkActTestScreen extends StatefulWidget {
@@ -38,7 +38,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
           foregroundColor: Colors.white,
           bottom: TabBar(
             controller: TabController(
-                length: 3, vsync: this, initialIndex: _selectedTabIndex),
+                length: 3, vsync: this, initialIndex: _selectedTabIndex,),
             onTap: (index) => setState(() => _selectedTabIndex = index),
             tabs: const [
               Tab(icon: Icon(Icons.add), text: 'Создать'),
@@ -49,7 +49,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
         ),
         body: TabBarView(
           controller: TabController(
-              length: 3, vsync: this, initialIndex: _selectedTabIndex),
+              length: 3, vsync: this, initialIndex: _selectedTabIndex,),
           children: [_buildCreateTab(), _buildListTab(), _buildSignTab()],
         ),
       );
@@ -68,7 +68,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Акт создан!'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               },
             ),
@@ -90,10 +90,10 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
             const SizedBox(height: 16),
             Text(_error!,
                 style: const TextStyle(fontSize: 16),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadWorkActs, child: const Text('Повторить')),
+                onPressed: _loadWorkActs, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -107,7 +107,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
             Icon(Icons.description, size: 64, color: Colors.grey.shade300),
             const SizedBox(height: 16),
             const Text('Акты выполненных работ не найдены',
-                style: TextStyle(fontSize: 16)),
+                style: TextStyle(fontSize: 16),),
             const SizedBox(height: 8),
             const Text(
               'Создайте первый акт на вкладке "Создать"',
@@ -144,7 +144,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
             Icon(Icons.edit, size: 64, color: Colors.grey.shade300),
             const SizedBox(height: 16),
             const Text('Нет актов для подписания',
-                style: TextStyle(fontSize: 16)),
+                style: TextStyle(fontSize: 16),),
             const SizedBox(height: 8),
             const Text(
               'Все акты уже подписаны или отклонены',
@@ -175,7 +175,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
                       child: Text(
                         workAct.eventName,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     _buildStatusChip(workAct.status),
@@ -194,7 +194,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Акт подписан!'),
-                          backgroundColor: Colors.green),
+                          backgroundColor: Colors.green,),
                     );
                   },
                   onActRejected: () {
@@ -268,7 +268,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
                     child: Text(
                       workAct.eventName,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
                   ),
                   _buildStatusChip(workAct.status),
@@ -278,14 +278,14 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
               _buildInfoRow('Дата:', workAct.eventDate),
               _buildInfoRow('Место:', workAct.eventLocation),
               _buildInfoRow(
-                  'Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽'),
+                  'Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽',),
               _buildInfoRow('Создан:', _formatDate(workAct.createdAt)),
               if (workAct.signedAt != null)
                 _buildInfoRow('Подписан:', _formatDate(workAct.signedAt!)),
               if (workAct.notes != null) ...[
                 const SizedBox(height: 8),
                 const Text('Примечания:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 Text(workAct.notes!),
               ],
               const SizedBox(height: 16),
@@ -321,7 +321,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
             SizedBox(
               width: 80,
               child: Text(label,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontWeight: FontWeight.bold),),
             ),
             Expanded(child: Text(value)),
           ],
@@ -336,15 +336,12 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
       case WorkActStatus.draft:
         color = Colors.orange;
         text = 'Черновик';
-        break;
       case WorkActStatus.signed:
         color = Colors.green;
         text = 'Подписан';
-        break;
       case WorkActStatus.rejected:
         color = Colors.red;
         text = 'Отклонен';
-        break;
     }
 
     return Chip(
@@ -389,7 +386,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
               _buildInfoRow('Дата:', workAct.eventDate),
               _buildInfoRow('Место:', workAct.eventLocation),
               _buildInfoRow(
-                  'Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽'),
+                  'Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽',),
               _buildInfoRow('Статус:', _getStatusText(workAct.status)),
               _buildInfoRow('Создан:', _formatDate(workAct.createdAt)),
               if (workAct.signedAt != null)
@@ -397,12 +394,12 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
               if (workAct.notes != null) ...[
                 const SizedBox(height: 8),
                 const Text('Примечания:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 Text(workAct.notes!),
               ],
               const SizedBox(height: 16),
               const Text('Выполненные работы:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold),),
               const SizedBox(height: 8),
               ...workAct.services.map(
                 (service) => Padding(
@@ -418,7 +415,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -432,7 +429,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('PDF создан успешно'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -440,7 +437,7 @@ class _WorkActTestScreenState extends State<WorkActTestScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания PDF: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }

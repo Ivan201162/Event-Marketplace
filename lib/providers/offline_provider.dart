@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/offline_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/offline_service.dart';
 
 /// Провайдер для статуса подключения к интернету
 final connectivityProvider =
@@ -339,7 +339,7 @@ class SyncNotifier extends Notifier<SyncState> {
       final isOnline = await OfflineService.isOnline();
       if (!isOnline) {
         state = state.copyWith(
-            isSyncing: false, error: 'Нет подключения к интернету');
+            isSyncing: false, error: 'Нет подключения к интернету',);
         return;
       }
 
@@ -353,29 +353,29 @@ class SyncNotifier extends Notifier<SyncState> {
       await Future.delayed(const Duration(seconds: 1));
 
       state = state.copyWith(
-          syncProgress: 50, currentOperation: 'Синхронизация бронирований...');
+          syncProgress: 50, currentOperation: 'Синхронизация бронирований...',);
 
       // TODO(developer): Реализовать синхронизацию бронирований
       await Future.delayed(const Duration(seconds: 1));
 
       state = state.copyWith(
-          syncProgress: 75, currentOperation: 'Синхронизация сообщений...');
+          syncProgress: 75, currentOperation: 'Синхронизация сообщений...',);
 
       // TODO(developer): Реализовать синхронизацию сообщений
       await Future.delayed(const Duration(seconds: 1));
 
       state = state.copyWith(
-          syncProgress: 100, currentOperation: 'Завершение синхронизации...');
+          syncProgress: 100, currentOperation: 'Завершение синхронизации...',);
 
       // Обновляем время последней синхронизации
       await OfflineService.updateLastSyncTime();
       await OfflineService.updateCacheVersion();
 
       state = state.copyWith(
-          isSyncing: false, lastSyncTime: DateTime.now(), syncProgress: 0);
+          isSyncing: false, lastSyncTime: DateTime.now(), syncProgress: 0,);
     } catch (e) {
       state = state.copyWith(
-          isSyncing: false, error: e.toString(), syncProgress: 0);
+          isSyncing: false, error: e.toString(), syncProgress: 0,);
     }
   }
 

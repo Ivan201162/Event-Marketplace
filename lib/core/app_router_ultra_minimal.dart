@@ -1,15 +1,14 @@
-import 'package:go_router/go_router.dart';
+import 'package:event_marketplace_app/screens/auth/login_screen.dart';
+import 'package:event_marketplace_app/screens/auth/onboarding_screen.dart';
+import 'package:event_marketplace_app/screens/auth/register_screen.dart';
+import 'package:event_marketplace_app/screens/feed/feed_screen.dart';
+import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
+import 'package:event_marketplace_app/screens/ideas/ideas_screen.dart';
+import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
+import 'package:event_marketplace_app/screens/posts/create_post_screen.dart';
+import 'package:event_marketplace_app/screens/search/search_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../screens/main_navigation_screen.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/register_screen.dart';
-import '../screens/auth/onboarding_screen.dart';
-import '../screens/feed/feed_screen.dart';
-import '../screens/ideas/ideas_screen.dart';
-import '../screens/ideas/create_idea_screen.dart';
-import '../screens/posts/create_post_screen.dart';
-import '../screens/search/search_screen.dart';
+import 'package:go_router/go_router.dart';
 
 /// Ультра-минимальный роутер для сборки без ошибок
 final appRouterProvider = Provider<GoRouter>((ref) {

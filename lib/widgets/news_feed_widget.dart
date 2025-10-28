@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/news_feed_service.dart';
 import 'package:flutter/material.dart';
-
-import '../services/news_feed_service.dart';
 
 /// Виджет для отображения ленты новостей
 class NewsFeedWidget extends StatefulWidget {
@@ -71,12 +70,12 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             const Icon(Icons.newspaper, color: Colors.blue),
             const SizedBox(width: 8),
             const Text('Лента новостей',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const Spacer(),
             IconButton(
                 onPressed: _refreshNews,
                 icon: const Icon(Icons.refresh),
-                tooltip: 'Обновить'),
+                tooltip: 'Обновить',),
           ],
         ),
       );
@@ -105,7 +104,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             return const Center(
               child: Padding(
                   padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator()),
+                  child: CircularProgressIndicator(),),
             );
           }
 
@@ -134,7 +133,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadNews, child: const Text('Повторить')),
+                onPressed: _loadNews, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -144,10 +143,10 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.newspaper_outlined,
-                size: 64, color: Colors.grey.shade300),
+                size: 64, color: Colors.grey.shade300,),
             const SizedBox(height: 16),
             const Text('Новостей пока нет',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             const SizedBox(height: 8),
             const Text(
               'Следите за обновлениями от специалистов',
@@ -193,7 +192,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                   ? newsItem.authorName[0].toUpperCase()
                   : '?',
               style: TextStyle(
-                  color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+                  color: Colors.blue.shade700, fontWeight: FontWeight.bold,),
             ),
           ),
           const SizedBox(width: 12),
@@ -206,7 +205,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                   child: Text(
                     newsItem.authorName,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                        fontWeight: FontWeight.bold, fontSize: 16,),
                   ),
                 ),
                 Row(
@@ -233,23 +232,18 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
       case NewsType.idea:
         color = Colors.green;
         icon = Icons.lightbulb;
-        break;
       case NewsType.story:
         color = Colors.blue;
         icon = Icons.book;
-        break;
       case NewsType.promotion:
         color = Colors.orange;
         icon = Icons.local_offer;
-        break;
       case NewsType.announcement:
         color = Colors.purple;
         icon = Icons.announcement;
-        break;
       case NewsType.tip:
         color = Colors.teal;
         icon = Icons.tips_and_updates;
-        break;
     }
 
     return Container(
@@ -267,7 +261,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           Text(
             type.name.toUpperCase(),
             style: TextStyle(
-                color: color, fontSize: 10, fontWeight: FontWeight.bold),
+                color: color, fontSize: 10, fontWeight: FontWeight.bold,),
           ),
         ],
       ),
@@ -279,7 +273,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
         children: [
           Text(newsItem.title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Text(
             newsItem.content,
@@ -301,7 +295,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             height: 200,
             color: Colors.grey.shade200,
             child: const Center(
-                child: Icon(Icons.broken_image, size: 48, color: Colors.grey)),
+                child: Icon(Icons.broken_image, size: 48, color: Colors.grey),),
           ),
         ),
       );
@@ -321,7 +315,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           ),
           const SizedBox(width: 16),
           _buildActionButton(
-              icon: Icons.visibility, label: newsItem.views.toString()),
+              icon: Icons.visibility, label: newsItem.views.toString(),),
           const Spacer(),
           if (newsItem.linkUrl != null)
             TextButton.icon(
@@ -335,7 +329,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   Widget _buildActionButton(
           {required IconData icon,
           required String label,
-          VoidCallback? onTap}) =>
+          VoidCallback? onTap,}) =>
       InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
@@ -347,7 +341,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
               Icon(icon, size: 16, color: Colors.grey.shade600),
               const SizedBox(width: 4),
               Text(label,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),),
             ],
           ),
         ),
@@ -364,7 +358,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     try {
       final newsItems = widget.specialistId != null
           ? await _newsService.getSpecialistNews(
-              specialistId: widget.specialistId!)
+              specialistId: widget.specialistId!,)
           : await _newsService.getNewsFeed(userId: widget.userId);
 
       setState(() {
@@ -405,7 +399,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
               lastDocument: _lastDocument,
             )
           : await _newsService.getNewsFeed(
-              userId: widget.userId, lastDocument: _lastDocument);
+              userId: widget.userId, lastDocument: _lastDocument,);
 
       setState(() {
         _newsItems.addAll(newsItems);
@@ -433,7 +427,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Лайк добавлен'), duration: Duration(seconds: 1)));
+        content: Text('Лайк добавлен'), duration: Duration(seconds: 1),),);
   }
 
   void _onShareTap(NewsItem newsItem) {
@@ -441,7 +435,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Поделиться'), duration: Duration(seconds: 1)));
+        content: Text('Поделиться'), duration: Duration(seconds: 1),),);
   }
 
   void _onLinkTap(String linkUrl) {
@@ -449,7 +443,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text('Открыть ссылку: $linkUrl'),
-          duration: const Duration(seconds: 1)),
+          duration: const Duration(seconds: 1),),
     );
   }
 }

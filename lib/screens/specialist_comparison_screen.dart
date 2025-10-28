@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_comparison.dart';
+import 'package:event_marketplace_app/widgets/specialist_comparison_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../models/specialist_comparison.dart';
-import '../widgets/specialist_comparison_card.dart';
 
 class SpecialistComparisonScreen extends ConsumerStatefulWidget {
   const SpecialistComparisonScreen({super.key});
@@ -54,10 +53,10 @@ class _SpecialistComparisonScreenState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.compare_arrows,
-                size: 64, color: Theme.of(context).colorScheme.outline),
+                size: 64, color: Theme.of(context).colorScheme.outline,),
             const SizedBox(height: 16),
             Text('Нет специалистов для сравнения',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text(
               'Добавьте специалистов из списка для сравнения',
@@ -114,7 +113,7 @@ class _SpecialistComparisonScreenState
                     items: ComparisonCriteria.values
                         .map(
                           (criteria) => DropdownMenuItem(
-                              value: criteria, child: Text(criteria.label)),
+                              value: criteria, child: Text(criteria.label),),
                         )
                         .toList(),
                     onChanged: (value) {
@@ -129,7 +128,7 @@ class _SpecialistComparisonScreenState
                   IconButton(
                     icon: Icon(_sortAscending
                         ? Icons.arrow_upward
-                        : Icons.arrow_downward),
+                        : Icons.arrow_downward,),
                     onPressed: () {
                       setState(() {
                         _sortAscending = !_sortAscending;
@@ -207,7 +206,7 @@ class _SpecialistComparisonScreenState
   }
 
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -225,7 +224,7 @@ class _SpecialistComparisonScreenState
             ),
             Text(label,
                 style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
           ],
         ),
       );
@@ -263,23 +262,17 @@ class _SpecialistComparisonScreenState
       switch (_sortCriteria) {
         case ComparisonCriteria.rating:
           comparison = a.rating.compareTo(b.rating);
-          break;
         case ComparisonCriteria.price:
           comparison = a.hourlyRate.compareTo(b.hourlyRate);
-          break;
         case ComparisonCriteria.experience:
           comparison = a.yearsOfExperience.compareTo(b.yearsOfExperience);
-          break;
         case ComparisonCriteria.reviews:
           comparison = a.reviewCount.compareTo(b.reviewCount);
-          break;
         case ComparisonCriteria.availability:
           comparison =
               a.isAvailable.toString().compareTo(b.isAvailable.toString());
-          break;
         case ComparisonCriteria.location:
           comparison = (a.location ?? '').compareTo(b.location ?? '');
-          break;
       }
 
       return _sortAscending ? comparison : -comparison;
@@ -334,12 +327,12 @@ class _SpecialistComparisonScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Специалист удален из сравнения')));
+        const SnackBar(content: Text('Специалист удален из сравнения')),);
   }
 
   void _viewSpecialistProfile(Specialist specialist) {
     Navigator.pushNamed(context, '/specialist-profile',
-        arguments: specialist.id);
+        arguments: specialist.id,);
   }
 
   void _bookSpecialist(Specialist specialist) {
@@ -351,7 +344,7 @@ class _SpecialistComparisonScreenState
     if (!_comparison.canAddSpecialist(specialist)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Нельзя добавить этого специалиста для сравнения')),
+            content: Text('Нельзя добавить этого специалиста для сравнения'),),
       );
       return;
     }
@@ -363,6 +356,6 @@ class _SpecialistComparisonScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('${specialist.name} добавлен для сравнения')));
+        SnackBar(content: Text('${specialist.name} добавлен для сравнения')),);
   }
 }

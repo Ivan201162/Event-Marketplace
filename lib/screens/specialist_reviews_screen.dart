@@ -1,16 +1,15 @@
 // import 'package:cloud_firestore/cloud_firestore.dart'; // Unused import
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
+import 'package:event_marketplace_app/widgets/rating_summary_widget.dart';
+import 'package:event_marketplace_app/widgets/review_card.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/review.dart';
-import '../models/specialist.dart';
-import '../services/review_service.dart';
-import '../widgets/rating_summary_widget.dart';
-import '../widgets/review_card.dart';
-
 /// Экран отзывов специалиста
 class SpecialistReviewsScreen extends StatefulWidget {
-  const SpecialistReviewsScreen({super.key, required this.specialist});
+  const SpecialistReviewsScreen({required this.specialist, super.key});
   final Specialist specialist;
 
   @override
@@ -86,7 +85,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   @override
@@ -170,7 +169,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
               ? const CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: _loadMoreReviews,
-                  child: const Text('Загрузить еще')),
+                  child: const Text('Загрузить еще'),),
         ),
       );
 

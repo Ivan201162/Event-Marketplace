@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/push_notification.dart';
+import 'package:event_marketplace_app/services/push_notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/push_notification.dart';
-import '../services/push_notification_service.dart';
 
 /// Push notification service provider
 final pushNotificationServiceProvider =
@@ -171,7 +170,7 @@ final bookingNotificationsProvider =
   final notifications = await service.getUserNotifications(userId);
   return notifications
       .where(
-          (notification) => notification.type == PushNotificationType.booking)
+          (notification) => notification.type == PushNotificationType.booking,)
       .toList();
 });
 
@@ -185,7 +184,7 @@ final paymentNotificationsProvider =
   final notifications = await service.getUserNotifications(userId);
   return notifications
       .where(
-          (notification) => notification.type == PushNotificationType.payment)
+          (notification) => notification.type == PushNotificationType.payment,)
       .toList();
 });
 
@@ -199,7 +198,7 @@ final messageNotificationsProvider =
   final notifications = await service.getUserNotifications(userId);
   return notifications
       .where(
-          (notification) => notification.type == PushNotificationType.message)
+          (notification) => notification.type == PushNotificationType.message,)
       .toList();
 });
 
@@ -239,7 +238,7 @@ final promotionNotificationsProvider =
   final notifications = await service.getUserNotifications(userId);
   return notifications
       .where(
-          (notification) => notification.type == PushNotificationType.promotion)
+          (notification) => notification.type == PushNotificationType.promotion,)
       .toList();
 });
 
@@ -253,7 +252,7 @@ final reminderNotificationsProvider =
   final notifications = await service.getUserNotifications(userId);
   return notifications
       .where(
-          (notification) => notification.type == PushNotificationType.reminder)
+          (notification) => notification.type == PushNotificationType.reminder,)
       .toList();
 });
 
@@ -267,7 +266,7 @@ final requestNotificationsProvider =
   final notifications = await service.getUserNotifications(userId);
   return notifications
       .where(
-          (notification) => notification.type == PushNotificationType.request)
+          (notification) => notification.type == PushNotificationType.request,)
       .toList();
 });
 

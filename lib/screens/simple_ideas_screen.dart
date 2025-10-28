@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/screens/enhanced_ideas_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'enhanced_ideas_screen.dart';
 
 /// Простой экран идей для демонстрации
 class SimpleIdeasScreen extends ConsumerWidget {

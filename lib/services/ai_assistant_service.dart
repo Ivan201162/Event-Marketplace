@@ -1,7 +1,7 @@
 import 'dart:async';
-import '../models/smart_specialist.dart';
-import '../models/specialist.dart';
-import 'smart_search_service.dart';
+import 'package:event_marketplace_app/models/smart_specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/smart_search_service.dart';
 
 /// Сервис AI-помощника для подбора специалистов
 class AIAssistantService {
@@ -158,7 +158,7 @@ class AIAssistantService {
       'здравствуйте',
       'добрый день',
       'добрый вечер',
-      'доброе утро'
+      'доброе утро',
     ];
     return greetings.any((greeting) => message.contains(greeting));
   }
@@ -207,7 +207,7 @@ class AIAssistantService {
       'подбери',
       'рекомендуй',
       'покажи',
-      'дай'
+      'дай',
     ];
     return recommendationWords.any((word) => message.contains(word));
   }
@@ -264,7 +264,7 @@ class AIAssistantService {
       'юмор',
       'интерактив',
       'романтичный',
-      'официальный'
+      'официальный',
     ];
     return styles.any((style) => message.contains(style));
   }
@@ -348,7 +348,7 @@ class AIAssistantService {
       'юмор',
       'интерактив',
       'романтичный',
-      'официальный'
+      'официальный',
     ];
     for (final style in styles) {
       if (message.contains(style)) {
@@ -508,16 +508,12 @@ class AIAssistantService {
         switch (eventType) {
           case 'свадьба':
             category = SpecialistCategory.host;
-            break;
           case 'день рождения':
             category = SpecialistCategory.host;
-            break;
           case 'корпоратив':
             category = SpecialistCategory.host;
-            break;
           case 'фотосессия':
             category = SpecialistCategory.photographer;
-            break;
           default:
             category = SpecialistCategory.host;
         }
@@ -631,10 +627,7 @@ class AIAssistantService {
 class AIConversation {
   const AIConversation({
     required this.id,
-    this.userId,
-    required this.messages,
-    required this.context,
-    required this.createdAt,
+    required this.messages, required this.context, required this.createdAt, this.userId,
   });
 
   final String id;

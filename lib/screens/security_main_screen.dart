@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/screens/security_audit_screen.dart';
+import 'package:event_marketplace_app/screens/security_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'security_audit_screen.dart';
-import 'security_settings_screen.dart';
 
 /// Главный экран безопасности
 class SecurityMainScreen extends ConsumerWidget {
@@ -23,7 +22,7 @@ class SecurityMainScreen extends ConsumerWidget {
                   title: 'Настройки безопасности',
                   subtitle: 'Управление аутентификацией и шифрованием',
                   onTap: () => _navigateToScreen(
-                      context, const SecuritySettingsScreen()),
+                      context, const SecuritySettingsScreen(),),
                 ),
                 _buildSettingsTile(
                   icon: Icons.security,
@@ -77,7 +76,7 @@ class SecurityMainScreen extends ConsumerWidget {
             // Статистика безопасности
             _buildSection(
                 title: 'Статистика безопасности',
-                children: [_buildSecurityStatsCard()]),
+                children: [_buildSecurityStatsCard()],),
 
             const SizedBox(height: 24),
 
@@ -96,13 +95,13 @@ class SecurityMainScreen extends ConsumerWidget {
       );
 
   Widget _buildSection(
-          {required String title, required List<Widget> children}) =>
+          {required String title, required List<Widget> children,}) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -128,9 +127,9 @@ class SecurityMainScreen extends ConsumerWidget {
           ),
           title: Text(title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           subtitle: Text(subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
           trailing: const Icon(Icons.chevron_right),
           onTap: onTap,
         ),
@@ -157,9 +156,9 @@ class SecurityMainScreen extends ConsumerWidget {
           ),
           title: Text(title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           subtitle: Text(subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
           trailing: const Icon(Icons.chevron_right),
           onTap: onTap,
         ),
@@ -227,7 +226,7 @@ class SecurityMainScreen extends ConsumerWidget {
                           Text(
                             'Высокий уровень безопасности',
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                                fontSize: 14, fontWeight: FontWeight.bold,),
                           ),
                           Text(
                             'Все основные меры защиты активны',
@@ -238,7 +237,7 @@ class SecurityMainScreen extends ConsumerWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),
@@ -281,7 +280,7 @@ class SecurityMainScreen extends ConsumerWidget {
           Text(
             value,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         ],
@@ -294,7 +293,7 @@ class SecurityMainScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Рекомендации',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
 
               // Рекомендации
@@ -360,10 +359,10 @@ class SecurityMainScreen extends ConsumerWidget {
                 children: [
                   Text(title,
                       style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w500)),
+                          fontSize: 14, fontWeight: FontWeight.w500,),),
                   const SizedBox(height: 4),
                   Text(description,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
                 ],
               ),
             ),
@@ -380,7 +379,7 @@ class SecurityMainScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('О безопасности',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               const Text(
                 'Приложение использует современные методы защиты для обеспечения безопасности ваших данных:',
@@ -438,7 +437,7 @@ class SecurityMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -460,7 +459,7 @@ class SecurityMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -484,7 +483,7 @@ class SecurityMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -501,7 +500,7 @@ class SecurityMainScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

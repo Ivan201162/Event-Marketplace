@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет годовщины или праздника
 class AnniversaryWidget extends StatelessWidget {
   const AnniversaryWidget({
-    super.key,
-    required this.title,
-    required this.date,
+    required this.title, required this.date, super.key,
     this.description,
     this.partnerName,
     this.yearsMarried,
@@ -34,7 +32,7 @@ class AnniversaryWidget extends StatelessWidget {
         color: isToday ? Colors.blue.shade50 : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-            color: isToday ? Colors.blue.shade200 : Colors.grey.shade300),
+            color: isToday ? Colors.blue.shade200 : Colors.grey.shade300,),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withValues(alpha: 0.1),

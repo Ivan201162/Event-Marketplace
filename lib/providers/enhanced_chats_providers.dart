@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/models/enhanced_chat.dart';
+import 'package:event_marketplace_app/models/enhanced_message.dart';
+import 'package:event_marketplace_app/services/enhanced_chats_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/enhanced_chat.dart';
-import '../models/enhanced_message.dart';
-import '../services/enhanced_chats_service.dart';
 
 /// Провайдер сервиса чатов
 final enhancedChatsServiceProvider = Provider<EnhancedChatsService>(
@@ -23,7 +23,7 @@ final chatMessagesProvider =
 ) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.getChatMessages(params.chatId,
-      limit: params.limit, startAfter: params.startAfter);
+      limit: params.limit, startAfter: params.startAfter,);
 });
 
 /// Провайдер для отправки сообщения
@@ -113,7 +113,7 @@ final addReactionProvider =
     FutureProvider.family<void, AddReactionParams>((ref, params) async {
   final service = ref.read(enhancedChatsServiceProvider);
   await service.addReaction(
-      params.chatId, params.messageId, params.userId, params.emoji);
+      params.chatId, params.messageId, params.userId, params.emoji,);
 });
 
 /// Провайдер для удаления реакции
@@ -124,7 +124,7 @@ final removeReactionProvider =
 ) async {
   final service = ref.read(enhancedChatsServiceProvider);
   await service.removeReaction(
-      params.chatId, params.messageId, params.userId, params.emoji);
+      params.chatId, params.messageId, params.userId, params.emoji,);
 });
 
 /// Провайдер для отметки сообщений как прочитанных
@@ -135,7 +135,7 @@ final markMessagesAsReadProvider =
 ) async {
   final service = ref.read(enhancedChatsServiceProvider);
   await service.markMessagesAsRead(
-      params.chatId, params.userId, params.messageIds);
+      params.chatId, params.userId, params.messageIds,);
 });
 
 /// Провайдер для создания чата
@@ -236,7 +236,7 @@ final searchMessagesProvider =
 /// Параметры для получения сообщений чата
 class ChatMessagesParams {
   const ChatMessagesParams(
-      {required this.chatId, this.limit = 50, this.startAfter});
+      {required this.chatId, this.limit = 50, this.startAfter,});
   final String chatId;
   final int limit;
   final DocumentSnapshot? startAfter;
@@ -309,7 +309,7 @@ class ForwardMessageParams {
 /// Параметры для редактирования сообщения
 class EditMessageParams {
   const EditMessageParams(
-      {required this.chatId, required this.messageId, required this.newText});
+      {required this.chatId, required this.messageId, required this.newText,});
   final String chatId;
   final String messageId;
   final String newText;

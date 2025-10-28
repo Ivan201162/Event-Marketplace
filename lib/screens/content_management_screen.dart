@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/content_management.dart';
+import 'package:event_marketplace_app/services/content_management_service.dart';
+import 'package:event_marketplace_app/ui/ui.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/content_management.dart';
-import '../services/content_management_service.dart';
-import '../ui/ui.dart';
 
 /// Экран управления контентом и медиа
 class ContentManagementScreen extends ConsumerStatefulWidget {
@@ -54,13 +53,13 @@ class _ContentManagementScreenState
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('media', 'Медиа', Icons.photo_library)),
+                child: _buildTabButton('media', 'Медиа', Icons.photo_library),),
             Expanded(
                 child:
-                    _buildTabButton('galleries', 'Галереи', Icons.collections)),
+                    _buildTabButton('galleries', 'Галереи', Icons.collections),),
             Expanded(
                 child:
-                    _buildTabButton('upload', 'Загрузка', Icons.cloud_upload)),
+                    _buildTabButton('upload', 'Загрузка', Icons.cloud_upload),),
           ],
         ),
       );
@@ -83,7 +82,7 @@ class _ContentManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -121,7 +120,7 @@ class _ContentManagementScreenState
                           children: [
                             Text(type.icon),
                             const SizedBox(width: 8),
-                            Text(type.displayName)
+                            Text(type.displayName),
                           ],
                         ),
                       ),
@@ -189,10 +188,10 @@ class _ContentManagementScreenState
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(media.type.icon,
-                                  style: const TextStyle(fontSize: 32)),
+                                  style: const TextStyle(fontSize: 32),),
                               const SizedBox(height: 8),
                               Text(media.type.displayName,
-                                  style: const TextStyle(fontSize: 12)),
+                                  style: const TextStyle(fontSize: 12),),
                             ],
                           ),
                         ),
@@ -203,10 +202,10 @@ class _ContentManagementScreenState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(media.type.icon,
-                              style: const TextStyle(fontSize: 32)),
+                              style: const TextStyle(fontSize: 32),),
                           const SizedBox(height: 8),
                           Text(media.type.displayName,
-                              style: const TextStyle(fontSize: 12)),
+                              style: const TextStyle(fontSize: 12),),
                         ],
                       ),
                     ),
@@ -240,7 +239,7 @@ class _ContentManagementScreenState
                   style: TextStyle(
                       fontSize: 10,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const Spacer(),
@@ -338,11 +337,11 @@ class _ContentManagementScreenState
                       Text(
                         gallery.name,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
                       if (gallery.description != null)
                         Text(gallery.description!,
-                            style: const TextStyle(fontSize: 14)),
+                            style: const TextStyle(fontSize: 14),),
                     ],
                   ),
                 ),
@@ -353,7 +352,7 @@ class _ContentManagementScreenState
                       value: 'edit',
                       child: ListTile(
                           leading: Icon(Icons.edit),
-                          title: Text('Редактировать')),
+                          title: Text('Редактировать'),),
                     ),
                     const PopupMenuItem(
                       value: 'manage',
@@ -365,7 +364,7 @@ class _ContentManagementScreenState
                     const PopupMenuItem(
                       value: 'delete',
                       child: ListTile(
-                          leading: Icon(Icons.delete), title: Text('Удалить')),
+                          leading: Icon(Icons.delete), title: Text('Удалить'),),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),
@@ -477,7 +476,7 @@ class _ContentManagementScreenState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.cloud_upload,
-                              size: 48, color: Colors.grey),
+                              size: 48, color: Colors.grey,),
                           SizedBox(height: 8),
                           Text('Нажмите для выбора файла'),
                         ],
@@ -488,7 +487,7 @@ class _ContentManagementScreenState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(selectedType.icon,
-                              style: const TextStyle(fontSize: 32)),
+                              style: const TextStyle(fontSize: 32),),
                           const SizedBox(height: 8),
                           Text(
                             selectedFile!.split('/').last,
@@ -507,7 +506,7 @@ class _ContentManagementScreenState
           TextField(
             controller: titleController,
             decoration: const InputDecoration(
-                labelText: 'Название', border: OutlineInputBorder()),
+                labelText: 'Название', border: OutlineInputBorder(),),
           ),
 
           const SizedBox(height: 16),
@@ -516,7 +515,7 @@ class _ContentManagementScreenState
           TextField(
             controller: descriptionController,
             decoration: const InputDecoration(
-                labelText: 'Описание', border: OutlineInputBorder()),
+                labelText: 'Описание', border: OutlineInputBorder(),),
             maxLines: 3,
           ),
 
@@ -538,7 +537,7 @@ class _ContentManagementScreenState
           DropdownButtonFormField<MediaType>(
             initialValue: selectedType,
             decoration: const InputDecoration(
-                labelText: 'Тип медиа', border: OutlineInputBorder()),
+                labelText: 'Тип медиа', border: OutlineInputBorder(),),
             items: MediaType.values
                 .map(
                   (type) => DropdownMenuItem(
@@ -547,7 +546,7 @@ class _ContentManagementScreenState
                       children: [
                         Text(type.icon),
                         const SizedBox(width: 8),
-                        Text(type.displayName)
+                        Text(type.displayName),
                       ],
                     ),
                   ),
@@ -594,7 +593,7 @@ class _ContentManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -634,7 +633,7 @@ class _ContentManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -669,7 +668,7 @@ class _ContentManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -680,7 +679,7 @@ class _ContentManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Добавление "${media.title}" в галерею будет реализовано')),
+              Text('Добавление "${media.title}" в галерею будет реализовано'),),
     );
   }
 
@@ -693,7 +692,7 @@ class _ContentManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -703,13 +702,13 @@ class _ContentManagementScreenState
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Медиа удалено'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка удаления медиа: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -796,7 +795,7 @@ class _ContentManagementScreenState
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             ElevatedButton(
               onPressed: nameController.text.isEmpty
                   ? null
@@ -837,13 +836,10 @@ class _ContentManagementScreenState
     switch (action) {
       case 'edit':
         _editGallery(gallery);
-        break;
       case 'manage':
         _manageGalleryMedia(gallery);
-        break;
       case 'delete':
         _deleteGallery(gallery);
-        break;
     }
   }
 
@@ -852,7 +848,7 @@ class _ContentManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование галереи "${gallery.name}" будет реализовано')),
+              'Редактирование галереи "${gallery.name}" будет реализовано',),),
     );
   }
 
@@ -861,7 +857,7 @@ class _ContentManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Управление медиа в галерее "${gallery.name}" будет реализовано')),
+              'Управление медиа в галерее "${gallery.name}" будет реализовано',),),
     );
   }
 
@@ -875,7 +871,7 @@ class _ContentManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -885,7 +881,7 @@ class _ContentManagementScreenState
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Галерея удалена'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -937,13 +933,13 @@ class _ContentManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Медиа "$title" загружено'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки медиа: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }

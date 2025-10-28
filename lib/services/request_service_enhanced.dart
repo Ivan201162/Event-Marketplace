@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geolocator/geolocator.dart';
 import 'dart:math';
 
-import '../models/request_enhanced.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/request_enhanced.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 
 /// Расширенный сервис для работы с заявками
 class RequestServiceEnhanced {
@@ -65,7 +65,7 @@ class RequestServiceEnhanced {
         language: language,
         isRemote: isRemote,
         maxApplicants: maxApplicants,
-        applicants: [],
+        applicants: const [],
         createdAt: now,
         updatedAt: now,
         metadata: metadata ?? {},
@@ -77,7 +77,7 @@ class RequestServiceEnhanced {
             userId: user.uid,
             userName: userData['name'] ?? user.displayName ?? 'Пользователь',
             timestamp: now,
-            metadata: {},
+            metadata: const {},
           ),
         ],
         aiRecommendations: await _generateAIRecommendations(
@@ -88,11 +88,11 @@ class RequestServiceEnhanced {
           deadline: deadline,
         ),
         isVerified: userData['isVerified'] ?? false,
-        rating: 0.0,
+        rating: 0,
         views: 0,
         likes: 0,
         isPinned: false,
-        sharedWith: [],
+        sharedWith: const [],
         analytics: {
           'createdAt': now.toIso8601String(),
           'authorId': user.uid,
@@ -162,11 +162,11 @@ class RequestServiceEnhanced {
         }
         if (filters.startDate != null) {
           query = query.where('deadline',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(filters.startDate!));
+              isGreaterThanOrEqualTo: Timestamp.fromDate(filters.startDate!),);
         }
         if (filters.endDate != null) {
           query = query.where('deadline',
-              isLessThanOrEqualTo: Timestamp.fromDate(filters.endDate!));
+              isLessThanOrEqualTo: Timestamp.fromDate(filters.endDate!),);
         }
       }
 
@@ -182,7 +182,7 @@ class RequestServiceEnhanced {
 
       final snapshot = await query.get();
       return snapshot.docs
-          .map((doc) => RequestEnhanced.fromFirestore(doc))
+          .map(RequestEnhanced.fromFirestore)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения заявок: $e');
@@ -204,7 +204,7 @@ class RequestServiceEnhanced {
 
   /// Обновление заявки
   static Future<void> updateRequest(
-      String requestId, Map<String, dynamic> updates) async {
+      String requestId, Map<String, dynamic> updates,) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('Пользователь не авторизован');
@@ -212,8 +212,9 @@ class RequestServiceEnhanced {
       // Проверяем права на редактирование
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId != user.uid)
+      if (request.authorId != user.uid) {
         throw Exception('Нет прав на редактирование');
+      }
 
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
 
@@ -221,7 +222,7 @@ class RequestServiceEnhanced {
 
       // Добавляем в таймлайн
       await _addTimelineEntry(
-          requestId, 'updated', 'Заявка обновлена', user.uid);
+          requestId, 'updated', 'Заявка обновлена', user.uid,);
     } catch (e) {
       throw Exception('Ошибка обновления заявки: $e');
     }
@@ -259,12 +260,15 @@ class RequestServiceEnhanced {
 
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId == user.uid)
+      if (request.authorId == user.uid) {
         throw Exception('Нельзя откликнуться на свою заявку');
-      if (request.applicants.contains(user.uid))
+      }
+      if (request.applicants.contains(user.uid)) {
         throw Exception('Вы уже откликнулись на эту заявку');
-      if (request.applicants.length >= request.maxApplicants)
+      }
+      if (request.applicants.length >= request.maxApplicants) {
         throw Exception('Достигнуто максимальное количество откликов');
+      }
 
       // Добавляем отклик
       await _firestore.collection('requests').doc(requestId).update({
@@ -282,7 +286,7 @@ class RequestServiceEnhanced {
 
       // Добавляем в таймлайн
       await _addTimelineEntry(
-          requestId, 'application', 'Новый отклик', user.uid);
+          requestId, 'application', 'Новый отклик', user.uid,);
 
       // Добавляем в аналитику
       await _updateAnalytics('request_application', {
@@ -297,17 +301,19 @@ class RequestServiceEnhanced {
 
   /// Выбор исполнителя
   static Future<void> selectApplicant(
-      String requestId, String applicantId) async {
+      String requestId, String applicantId,) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('Пользователь не авторизован');
 
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId != user.uid)
+      if (request.authorId != user.uid) {
         throw Exception('Нет прав на выбор исполнителя');
-      if (!request.applicants.contains(applicantId))
+      }
+      if (!request.applicants.contains(applicantId)) {
         throw Exception('Пользователь не откликнулся на заявку');
+      }
 
       // Обновляем заявку
       await _firestore.collection('requests').doc(requestId).update({
@@ -326,7 +332,7 @@ class RequestServiceEnhanced {
 
       // Добавляем в таймлайн
       await _addTimelineEntry(
-          requestId, 'selected', 'Исполнитель выбран', user.uid);
+          requestId, 'selected', 'Исполнитель выбран', user.uid,);
 
       // Добавляем в аналитику
       await _updateAnalytics('request_selected', {
@@ -341,15 +347,16 @@ class RequestServiceEnhanced {
 
   /// Завершение заявки
   static Future<void> completeRequest(
-      String requestId, String? review, double? rating) async {
+      String requestId, String? review, double? rating,) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('Пользователь не авторизован');
 
       final request = await getRequestById(requestId);
       if (request == null) throw Exception('Заявка не найдена');
-      if (request.authorId != user.uid)
+      if (request.authorId != user.uid) {
         throw Exception('Нет прав на завершение заявки');
+      }
 
       // Обновляем заявку
       await _firestore.collection('requests').doc(requestId).update({
@@ -362,12 +369,12 @@ class RequestServiceEnhanced {
           rating != null &&
           request.selectedApplicantId != null) {
         await _addReview(
-            request.selectedApplicantId!, user.uid, review, rating);
+            request.selectedApplicantId!, user.uid, review, rating,);
       }
 
       // Добавляем в таймлайн
       await _addTimelineEntry(
-          requestId, 'completed', 'Заявка завершена', user.uid);
+          requestId, 'completed', 'Заявка завершена', user.uid,);
 
       // Добавляем в аналитику
       await _updateAnalytics('request_completed', {
@@ -390,7 +397,7 @@ class RequestServiceEnhanced {
           .get();
 
       return snapshot.docs
-          .map((doc) => RequestEnhanced.fromFirestore(doc))
+          .map(RequestEnhanced.fromFirestore)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения заявок пользователя: $e');
@@ -527,7 +534,7 @@ class RequestServiceEnhanced {
         userId: userId,
         userName: userData['name'] ?? 'Пользователь',
         timestamp: DateTime.now(),
-        metadata: {},
+        metadata: const {},
       );
 
       await _firestore.collection('requests').doc(requestId).update({
@@ -605,7 +612,7 @@ class RequestServiceEnhanced {
 
   /// Обновление аналитики
   static Future<void> _updateAnalytics(
-      String event, Map<String, dynamic> data) async {
+      String event, Map<String, dynamic> data,) async {
     try {
       await _firestore.collection('analytics').add({
         'event': event,

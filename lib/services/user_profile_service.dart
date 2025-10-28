@@ -1,12 +1,12 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_compress/video_compress.dart';
-
-import '../models/user_profile_enhanced.dart';
 
 /// Сервис для работы с расширенным профилем пользователя
 class UserProfileService {
@@ -153,7 +153,7 @@ class UserProfileService {
 
   /// Загрузить видео-презентацию
   Future<String?> uploadVideoPresentation(
-      String userId, XFile videoFile) async {
+      String userId, XFile videoFile,) async {
     try {
       final file = File(videoFile.path);
 
@@ -342,7 +342,7 @@ class UserProfileService {
 
   /// Получить предпросмотр профиля для других пользователей
   Future<Map<String, dynamic>?> getProfilePreview(
-      String userId, String viewerId) async {
+      String userId, String viewerId,) async {
     try {
       final profile = await getUserProfile(userId);
       if (profile == null) return null;
@@ -380,7 +380,7 @@ class UserProfileService {
       if (visibilitySettings.showPhone && profile.phone != null) {
         preview['phone'] = profile.phone;
       }
-      if (visibilitySettings.showEmail && profile.email != null) {
+      if (visibilitySettings.showEmail) {
         preview['email'] = profile.email;
       }
 

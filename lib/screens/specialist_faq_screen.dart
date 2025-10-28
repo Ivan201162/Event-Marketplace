@@ -1,16 +1,15 @@
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
+import 'package:event_marketplace_app/providers/specialist_profile_extended_providers.dart';
+import 'package:event_marketplace_app/services/specialist_profile_extended_service.dart';
+import 'package:event_marketplace_app/widgets/faq_editor_widget.dart';
+import 'package:event_marketplace_app/widgets/faq_filter_widget.dart';
+import 'package:event_marketplace_app/widgets/faq_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist_profile_extended.dart';
-import '../providers/specialist_profile_extended_providers.dart';
-import '../services/specialist_profile_extended_service.dart';
-import '../widgets/faq_editor_widget.dart';
-import '../widgets/faq_filter_widget.dart';
-import '../widgets/faq_item_widget.dart';
-
 /// Экран управления FAQ специалиста
 class SpecialistFAQScreen extends ConsumerStatefulWidget {
-  const SpecialistFAQScreen({super.key, required this.specialistId});
+  const SpecialistFAQScreen({required this.specialistId, super.key});
   final String specialistId;
 
   @override
@@ -56,10 +55,10 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         ),
         actions: [
           IconButton(
-              icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+              icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
           IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: _showFilterDialog),
+              onPressed: _showFilterDialog,),
         ],
       ),
       body: Column(
@@ -78,7 +77,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
               children: [
                 _buildAllFAQTab(faqAsync),
                 _buildPublishedFAQTab(),
-                _buildCategoriesTab()
+                _buildCategoriesTab(),
               ],
             ),
           ),
@@ -99,11 +98,11 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem(
-                  'Всего вопросов', stats.totalFAQItems, Icons.help_outline),
+                  'Всего вопросов', stats.totalFAQItems, Icons.help_outline,),
               _buildStatItem(
-                  'Опубликованных', stats.publishedFAQItems, Icons.public),
+                  'Опубликованных', stats.publishedFAQItems, Icons.public,),
               _buildStatItem(
-                  'Категорий', _getCategoriesCount(), Icons.category),
+                  'Категорий', _getCategoriesCount(), Icons.category,),
             ],
           ),
         ),
@@ -116,7 +115,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
           const SizedBox(height: 4),
           Text(value.toString(),
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       );
@@ -255,7 +254,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
             const SizedBox(height: 16),
             Text(title,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Text(
               subtitle,
@@ -311,7 +310,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               final query = _searchController.text.trim();
@@ -373,7 +372,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(faqItem.answer,
-                          style: const TextStyle(fontSize: 16)),
+                          style: const TextStyle(fontSize: 16),),
                       const SizedBox(height: 16),
                       Row(
                         children: [
@@ -386,7 +385,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                           Text(
                             'Порядок: ${faqItem.order}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                                color: Colors.grey, fontSize: 12,),
                           ),
                         ],
                       ),
@@ -396,14 +395,14 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                           Text(
                             'Создано: ${_formatDate(faqItem.createdAt)}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                                color: Colors.grey, fontSize: 12,),
                           ),
                           if (faqItem.updatedAt != faqItem.createdAt) ...[
                             const SizedBox(width: 16),
                             Text(
                               'Обновлено: ${_formatDate(faqItem.updatedAt)}',
                               style: const TextStyle(
-                                  color: Colors.grey, fontSize: 12),
+                                  color: Colors.grey, fontSize: 12,),
                             ),
                           ],
                         ],
@@ -442,7 +441,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -473,7 +472,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
       context,
       MaterialPageRoute<void>(
         builder: (context) => FAQByCategoryScreen(
-            specialistId: widget.specialistId, category: category),
+            specialistId: widget.specialistId, category: category,),
       ),
     );
   }
@@ -483,7 +482,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
       context,
       MaterialPageRoute<void>(
         builder: (context) => FAQSearchResultsScreen(
-            specialistId: widget.specialistId, query: query),
+            specialistId: widget.specialistId, query: query,),
       ),
     );
   }
@@ -522,7 +521,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
 /// Экран FAQ по категории
 class FAQByCategoryScreen extends ConsumerWidget {
   const FAQByCategoryScreen(
-      {super.key, required this.specialistId, required this.category});
+      {required this.specialistId, required this.category, super.key,});
   final String specialistId;
   final String category;
 
@@ -584,7 +583,7 @@ class FAQByCategoryScreen extends ConsumerWidget {
   }
 
   void _showEditFAQDialog(
-      BuildContext context, WidgetRef ref, FAQItem faqItem) {
+      BuildContext context, WidgetRef ref, FAQItem faqItem,) {
     // TODO(developer): Редактировать FAQ
   }
 
@@ -600,7 +599,7 @@ class FAQByCategoryScreen extends ConsumerWidget {
 /// Экран результатов поиска FAQ
 class FAQSearchResultsScreen extends ConsumerWidget {
   const FAQSearchResultsScreen(
-      {super.key, required this.specialistId, required this.query});
+      {required this.specialistId, required this.query, super.key,});
   final String specialistId;
   final String query;
 
@@ -643,7 +642,7 @@ class FAQSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showEditFAQDialog(
-      BuildContext context, WidgetRef ref, FAQItem faqItem) {
+      BuildContext context, WidgetRef ref, FAQItem faqItem,) {
     // TODO(developer): Редактировать FAQ
   }
 

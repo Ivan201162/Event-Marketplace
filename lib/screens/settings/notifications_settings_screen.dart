@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
+import 'package:event_marketplace_app/services/user_profile_service.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
+import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
-import '../../services/user_profile_service.dart';
-import '../../widgets/common/custom_app_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
 
 /// Экран настроек уведомлений
 class NotificationsSettingsScreen extends StatefulWidget {

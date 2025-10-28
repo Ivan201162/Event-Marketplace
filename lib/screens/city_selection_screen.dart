@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/city_region.dart';
+import 'package:event_marketplace_app/providers/city_region_providers.dart';
+import 'package:event_marketplace_app/widgets/city_list_widget.dart';
+import 'package:event_marketplace_app/widgets/city_map_widget.dart';
+import 'package:event_marketplace_app/widgets/city_search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/city_region.dart';
-import '../providers/city_region_providers.dart';
-import '../widgets/city_list_widget.dart';
-import '../widgets/city_map_widget.dart';
-import '../widgets/city_search_widget.dart';
 
 /// Экран выбора города с поиском, картой и списком
 class CitySelectionScreen extends ConsumerStatefulWidget {
@@ -69,7 +68,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
             ),
           if (_selectedCity != null)
             TextButton(
-                onPressed: _confirmSelection, child: const Text('Выбрать')),
+                onPressed: _confirmSelection, child: const Text('Выбрать'),),
         ],
       ),
       body: Column(
@@ -94,12 +93,12 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                 color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: theme.primaryColor.withValues(alpha: 0.3)),
+                    color: theme.primaryColor.withValues(alpha: 0.3),),
               ),
               child: Row(
                 children: [
                   Icon(Icons.location_city,
-                      color: theme.primaryColor, size: 20),
+                      color: theme.primaryColor, size: 20,),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -145,7 +144,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                 Expanded(
                   child: searchState.when(
                     data: (cities) => CityListWidget(
-                        cities: cities, onCitySelected: _onCitySelected),
+                        cities: cities, onCitySelected: _onCitySelected,),
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
                     error: (error, stack) =>
@@ -168,7 +167,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
                         ),
                         Expanded(
                           child: CityListWidget(
-                              cities: cities, onCitySelected: _onCitySelected),
+                              cities: cities, onCitySelected: _onCitySelected,),
                         ),
                       ],
                     ),
@@ -211,7 +210,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
               Expanded(
                 child: filteredCitiesState.when(
                   data: (cities) => CityListWidget(
-                      cities: cities, onCitySelected: _onCitySelected),
+                      cities: cities, onCitySelected: _onCitySelected,),
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (error, stack) =>
@@ -234,12 +233,12 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
 
                 return DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                      labelText: 'Регион', border: OutlineInputBorder()),
+                      labelText: 'Регион', border: OutlineInputBorder(),),
                   items: [
                     const DropdownMenuItem<String>(child: Text('Все регионы')),
                     ...regionsState.valueOrNull?.map(
                           (region) => DropdownMenuItem<String>(
-                              value: region, child: Text(region)),
+                              value: region, child: Text(region),),
                         ) ??
                         [],
                   ],
@@ -300,7 +299,7 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
       if (location != null) {
         // Получаем ближайшие города
         await ref.read(nearbyCitiesProvider.notifier).getNearbyCities(
-            latitude: location.latitude, longitude: location.longitude);
+            latitude: location.latitude, longitude: location.longitude,);
 
         // Переключаемся на карту
         _tabController.animateTo(1);

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/providers/profile_providers.dart';
+import 'package:event_marketplace_app/screens/profile/edit_profile_screen.dart';
+import 'package:event_marketplace_app/widgets/profile_content.dart';
+import 'package:event_marketplace_app/widgets/profile_header.dart';
+import 'package:event_marketplace_app/widgets/profile_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../providers/profile_providers.dart';
-import '../../widgets/profile_header.dart';
-import '../../widgets/profile_stats.dart';
-import '../../widgets/profile_content.dart';
-import 'edit_profile_screen.dart';
 
 /// Экран профиля пользователя
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -18,7 +17,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  bool _isOwnProfile = true; // TODO: Определить из контекста
+  final bool _isOwnProfile = true; // TODO: Определить из контекста
 
   @override
   void initState() {
@@ -44,16 +43,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           if (_isOwnProfile) ...[
             IconButton(
               icon: const Icon(Icons.edit),
-              onPressed: () => _editProfile(),
+              onPressed: _editProfile,
             ),
             IconButton(
               icon: const Icon(Icons.settings),
-              onPressed: () => _openSettings(),
+              onPressed: _openSettings,
             ),
           ] else ...[
             IconButton(
               icon: const Icon(Icons.more_vert),
-              onPressed: () => _showProfileMenu(),
+              onPressed: _showProfileMenu,
             ),
           ],
         ],

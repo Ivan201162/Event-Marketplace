@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/review_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/review.dart';
-import '../providers/review_providers.dart';
-
 /// Виджет отзывов специалиста
 class SpecialistReviewsWidget extends ConsumerWidget {
-  const SpecialistReviewsWidget({super.key, required this.specialistId});
+  const SpecialistReviewsWidget({required this.specialistId, super.key});
 
   final String specialistId;
 
@@ -58,7 +57,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   Widget _buildReviewStatistics(SpecialistReviewStats statistics) => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-            color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
+            color: Colors.grey[50], borderRadius: BorderRadius.circular(12),),
         child: Column(
           children: [
             // Общий рейтинг
@@ -70,7 +69,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     Text(
                       statistics.averageRating.toStringAsFixed(1),
                       style: const TextStyle(
-                          fontSize: 32, fontWeight: FontWeight.bold),
+                          fontSize: 32, fontWeight: FontWeight.bold,),
                     ),
                     Row(
                       children: List.generate(
@@ -110,22 +109,22 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                         child: Row(
                           children: [
                             Text('$rating',
-                                style: const TextStyle(fontSize: 12)),
+                                style: const TextStyle(fontSize: 12),),
                             const SizedBox(width: 8),
                             const Icon(Icons.star,
-                                color: Colors.amber, size: 12),
+                                color: Colors.amber, size: 12,),
                             const SizedBox(width: 8),
                             Expanded(
                               child: LinearProgressIndicator(
                                 value: percentage / 100,
                                 backgroundColor: Colors.grey[300],
                                 valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.amber),
+                                    Colors.amber,),
                               ),
                             ),
                             const SizedBox(width: 8),
                             const Text('$count',
-                                style: TextStyle(fontSize: 12)),
+                                style: TextStyle(fontSize: 12),),
                           ],
                         ),
                       );
@@ -198,7 +197,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     child: const Text(
                       'К', // Заглушка для имени клиента
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
+                          fontWeight: FontWeight.bold, color: Colors.white,),
                     ),
                   ),
 
@@ -212,7 +211,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                         Text(
                           'Клиент ${review.clientId.substring(0, 8)}...', // Заглушка
                           style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                              fontSize: 14, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 2),
                         Row(
@@ -234,7 +233,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                             Text(
                               '${review.rating}.0',
                               style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
+                                  fontSize: 12, fontWeight: FontWeight.bold,),
                             ),
                           ],
                         ),
@@ -253,10 +252,10 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Заголовок отзыва
-              if ((review.title?.isNotEmpty ?? false)) ...[
+              if (review.title?.isNotEmpty ?? false) ...[
                 Text(review.title!,
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold)),
+                        fontSize: 14, fontWeight: FontWeight.bold,),),
                 const SizedBox(height: 8),
               ],
 
@@ -265,7 +264,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                 Text(
                   review.comment ?? '',
                   style: TextStyle(
-                      fontSize: 14, color: Colors.grey[700], height: 1.4),
+                      fontSize: 14, color: Colors.grey[700], height: 1.4,),
                 ),
                 const SizedBox(height: 12),
               ],
@@ -280,7 +279,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                       .map(
                         (tag) => Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
                             color: Colors.blue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -307,7 +306,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   Widget _buildEmptyReviews() => Container(
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-            color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
+            color: Colors.grey[50], borderRadius: BorderRadius.circular(12),),
         child: Column(
           children: [
             Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
@@ -317,7 +316,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[600]),
+                  color: Colors.grey[600],),
             ),
             const SizedBox(height: 8),
             Text(

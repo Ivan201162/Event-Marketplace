@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/idea.dart';
+import 'package:event_marketplace_app/models/idea.dart';
 
 /// Сервис для работы с идеями
 class IdeasService {
@@ -49,7 +49,7 @@ class IdeasService {
       final snapshot = await _firestore
           .collection('ideas')
           .where('text', isGreaterThanOrEqualTo: query)
-          .where('text', isLessThan: query + '\uf8ff')
+          .where('text', isLessThan: '$query\uf8ff')
           .orderBy('text')
           .orderBy('createdAt', descending: true)
           .limit(20)
@@ -72,14 +72,11 @@ class IdeasService {
       switch (filter) {
         case 'popular':
           query = query.orderBy('likesCount', descending: true);
-          break;
         case 'new':
           query = query.orderBy('createdAt', descending: true);
-          break;
         case 'trending':
           // Тренды - комбинация лайков и времени
           query = query.orderBy('trendingScore', descending: true);
-          break;
         default:
           query = query.orderBy('createdAt', descending: true);
       }
@@ -87,7 +84,7 @@ class IdeasService {
       final snapshot = await query.limit(20).get();
 
       return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         return Idea.fromMap(data, doc.id);
       }).toList();
     } catch (e) {

@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-
-import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Chats Flow Tests', () {
     testWidgets('Chat list screen loads with chats',
-        (WidgetTester tester) async {
+        (tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -29,7 +28,7 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('Chat search functionality works', (WidgetTester tester) async {
+    testWidgets('Chat search functionality works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -54,7 +53,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Chat filters work', (WidgetTester tester) async {
+    testWidgets('Chat filters work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -81,7 +80,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Chat screen opens and works', (WidgetTester tester) async {
+    testWidgets('Chat screen opens and works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -109,7 +108,7 @@ void main() {
       }
     });
 
-    testWidgets('Message sending works', (WidgetTester tester) async {
+    testWidgets('Message sending works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -137,7 +136,7 @@ void main() {
       }
     });
 
-    testWidgets('Pull to refresh works', (WidgetTester tester) async {
+    testWidgets('Pull to refresh works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -153,7 +152,7 @@ void main() {
       expect(find.byType(Card), findsWidgets);
     });
 
-    testWidgets('Chat info dialog works', (WidgetTester tester) async {
+    testWidgets('Chat info dialog works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 

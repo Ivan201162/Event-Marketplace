@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/specialist_profile.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/specialist_profile.dart';
-import '../models/user.dart';
-import '../providers/auth_providers.dart';
-import '../services/profile_service.dart';
 
 /// Экран регистрации специалиста с выбором категории
 class SpecialistRegistrationScreen extends ConsumerStatefulWidget {
@@ -107,7 +106,7 @@ class _SpecialistRegistrationScreenState
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(_errorMessage!,
-                              style: const TextStyle(color: Colors.red)),
+                              style: const TextStyle(color: Colors.red),),
                         ),
                       ],
                     ),
@@ -121,7 +120,7 @@ class _SpecialistRegistrationScreenState
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _handleRegistration,
                     style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16)),
+                        padding: const EdgeInsets.symmetric(vertical: 16),),
                     child: _isLoading
                         ? const SizedBox(
                             width: 20,

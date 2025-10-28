@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/providers/customer_profile_extended_providers.dart';
 import 'package:flutter/material.dart';
-import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет фильтрации фото
 class PhotoFilterWidget extends StatefulWidget {
   const PhotoFilterWidget({
-    super.key,
-    required this.currentFilters,
-    required this.onFiltersChanged,
+    required this.currentFilters, required this.onFiltersChanged, super.key,
   });
   final PhotoFilters currentFilters;
   final void Function(PhotoFilters) onFiltersChanged;
@@ -51,9 +49,9 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
                 title: const Text('Фильтры фото'),
                 actions: [
                   TextButton(
-                      onPressed: _clearFilters, child: const Text('Сбросить')),
+                      onPressed: _clearFilters, child: const Text('Сбросить'),),
                   TextButton(
-                      onPressed: _applyFilters, child: const Text('Применить')),
+                      onPressed: _applyFilters, child: const Text('Применить'),),
                 ],
               ),
               Expanded(
@@ -78,7 +76,7 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
                       SwitchListTile(
                         title: const Text('Только публичные фото'),
                         subtitle: const Text(
-                            'Показать только фото, доступные другим пользователям'),
+                            'Показать только фото, доступные другим пользователям',),
                         value: _showPublicOnly,
                         onChanged: (value) {
                           setState(() {
@@ -139,7 +137,7 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
                       // Теги
                       const Text('Теги',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                              fontSize: 16, fontWeight: FontWeight.bold,),),
                       const SizedBox(height: 8),
                       _buildTagFilters(),
                     ],

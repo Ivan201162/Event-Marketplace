@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/city_region.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../models/city_region.dart';
 
 /// Сервис для работы с городами и регионами России
 class CityRegionService {
@@ -27,11 +26,11 @@ class CityRegionService {
       // Фильтр по населению
       if (filters.minPopulation > 0) {
         query = query.where('population',
-            isGreaterThanOrEqualTo: filters.minPopulation);
+            isGreaterThanOrEqualTo: filters.minPopulation,);
       }
       if (filters.maxPopulation < 10000000) {
         query = query.where('population',
-            isLessThanOrEqualTo: filters.maxPopulation);
+            isLessThanOrEqualTo: filters.maxPopulation,);
       }
 
       // Фильтр по столицам
@@ -54,30 +53,23 @@ class CityRegionService {
         case CitySortBy.population:
           query =
               query.orderBy('population', descending: !filters.sortAscending);
-          break;
         case CitySortBy.name:
           query = query.orderBy('cityName', descending: !filters.sortAscending);
-          break;
         case CitySortBy.region:
           query =
               query.orderBy('regionName', descending: !filters.sortAscending);
-          break;
         case CitySortBy.specialistCount:
           query = query.orderBy('totalSpecialists',
-              descending: !filters.sortAscending);
-          break;
+              descending: !filters.sortAscending,);
         case CitySortBy.rating:
           query = query.orderBy('avgSpecialistRating',
-              descending: !filters.sortAscending);
-          break;
+              descending: !filters.sortAscending,);
         case CitySortBy.priority:
           // Приоритет вычисляется на клиенте
           query = query.orderBy('population', descending: true);
-          break;
         case CitySortBy.distance:
           // Расстояние вычисляется на клиенте
           query = query.orderBy('population', descending: true);
-          break;
       }
 
       query = query.limit(limit);
@@ -111,7 +103,7 @@ class CityRegionService {
 
     if (filters.minPopulation > 0) {
       query = query.where('population',
-          isGreaterThanOrEqualTo: filters.minPopulation);
+          isGreaterThanOrEqualTo: filters.minPopulation,);
     }
     if (filters.maxPopulation < 10000000) {
       query =
@@ -134,21 +126,16 @@ class CityRegionService {
     switch (filters.sortBy) {
       case CitySortBy.population:
         query = query.orderBy('population', descending: !filters.sortAscending);
-        break;
       case CitySortBy.name:
         query = query.orderBy('cityName', descending: !filters.sortAscending);
-        break;
       case CitySortBy.region:
         query = query.orderBy('regionName', descending: !filters.sortAscending);
-        break;
       case CitySortBy.specialistCount:
         query = query.orderBy('totalSpecialists',
-            descending: !filters.sortAscending);
-        break;
+            descending: !filters.sortAscending,);
       case CitySortBy.rating:
         query = query.orderBy('avgSpecialistRating',
-            descending: !filters.sortAscending);
-        break;
+            descending: !filters.sortAscending,);
       default:
         query = query.orderBy('population', descending: true);
     }
@@ -167,7 +154,7 @@ class CityRegionService {
 
   /// Поиск городов по названию
   Future<List<CityRegion>> searchCitiesByName(
-      {required String query, int limit = 20}) async {
+      {required String query, int limit = 20,}) async {
     try {
       final cities = await _firestore
           .collection(_collectionName)
@@ -202,7 +189,7 @@ class CityRegionService {
 
   /// Получить города по региону
   Future<List<CityRegion>> getCitiesByRegion(
-      {required String regionName, int limit = 50}) async {
+      {required String regionName, int limit = 50,}) async {
     try {
       final cities = await _firestore
           .collection(_collectionName)
@@ -396,7 +383,7 @@ class CityRegionService {
 
   /// Дополнительная фильтрация на клиенте
   List<CityRegion> _applyClientSideFilters(
-      List<CityRegion> cities, CitySearchFilters filters) {
+      List<CityRegion> cities, CitySearchFilters filters,) {
     var filteredCities = cities;
 
     // Фильтр по текстовому поиску
@@ -423,7 +410,7 @@ class CityRegionService {
     if (filters.minSpecialistRating > 0.0) {
       filteredCities = filteredCities
           .where(
-              (city) => city.avgSpecialistRating >= filters.minSpecialistRating)
+              (city) => city.avgSpecialistRating >= filters.minSpecialistRating,)
           .toList();
     }
 
@@ -432,7 +419,7 @@ class CityRegionService {
         filters.specialistCategory!.isNotEmpty) {
       filteredCities = filteredCities
           .where((city) =>
-              city.specialistCategories.contains(filters.specialistCategory))
+              city.specialistCategories.contains(filters.specialistCategory),)
           .toList();
     }
 
@@ -481,27 +468,27 @@ class CityRegionService {
             'Красная площадь',
             'Кремль',
             'Большой театр',
-            'Третьяковская галерея'
+            'Третьяковская галерея',
           ],
           'transportHubs': [
             'Шереметьево',
             'Домодедово',
             'Внуково',
-            'Жуковский'
+            'Жуковский',
           ],
           'economicSectors': [
             'финансы',
             'IT',
             'туризм',
             'развлечения',
-            'образование'
+            'образование',
           ],
           'specialistCategories': [
             'фотограф',
             'видеограф',
             'dj',
             'ведущий',
-            'декоратор'
+            'декоратор',
           ],
         },
         {
@@ -528,7 +515,7 @@ class CityRegionService {
             'фотограф',
             'видеограф',
             'музыкант',
-            'декоратор'
+            'декоратор',
           ],
         },
         {
@@ -546,7 +533,7 @@ class CityRegionService {
           'attractions': [
             'Новосибирский зоопарк',
             'Оперный театр',
-            'Академгородок'
+            'Академгородок',
           ],
           'transportHubs': ['Толмачево'],
           'economicSectors': ['наука', 'образование', 'IT', 'промышленность'],
@@ -567,7 +554,7 @@ class CityRegionService {
           'attractions': [
             'Храм на Крови',
             'Плотина городского пруда',
-            'Ельцин Центр'
+            'Ельцин Центр',
           ],
           'transportHubs': ['Кольцово'],
           'economicSectors': ['промышленность', 'IT', 'туризм'],
@@ -588,7 +575,7 @@ class CityRegionService {
           'attractions': [
             'Казанский Кремль',
             'Мечеть Кул-Шариф',
-            'Университет'
+            'Университет',
           ],
           'transportHubs': ['Казань'],
           'economicSectors': ['образование', 'туризм', 'IT', 'спорт'],
@@ -596,7 +583,7 @@ class CityRegionService {
             'фотограф',
             'ведущий',
             'декоратор',
-            'музыкант'
+            'музыкант',
           ],
         },
         // Добавляем еще несколько крупных городов

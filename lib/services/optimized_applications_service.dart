@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/booking.dart';
 
 /// Оптимизированный сервис для работы с заявками
 class OptimizedApplicationsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Кэш для заявок
-  Map<String, List<Booking>> _cachedBookings = {};
-  Map<String, DateTime> _bookingsCacheTime = {};
+  final Map<String, List<Booking>> _cachedBookings = {};
+  final Map<String, DateTime> _bookingsCacheTime = {};
   static const Duration _cacheExpiry = Duration(minutes: 15);
 
   /// Получить заявки пользователя с реальным временем
   Stream<List<Booking>> getUserBookingsStream(String userId,
-      {bool isSpecialist = false}) {
+      {bool isSpecialist = false,}) {
     final field = isSpecialist ? 'specialistId' : 'clientId';
 
     return _firestore
@@ -128,7 +127,7 @@ class OptimizedApplicationsService {
 
   /// Обновить статус заявки
   Future<bool> updateBookingStatus(
-      String bookingId, BookingStatus status) async {
+      String bookingId, BookingStatus status,) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
         'status': status.name,
@@ -162,7 +161,7 @@ class OptimizedApplicationsService {
 
   /// Получить статистику заявок
   Future<Map<String, int>> getBookingStats(String userId,
-      {bool isSpecialist = false}) async {
+      {bool isSpecialist = false,}) async {
     try {
       final field = isSpecialist ? 'specialistId' : 'clientId';
 

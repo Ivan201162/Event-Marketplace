@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/recommendation.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/foundation.dart';
-
-import 'recommendation.dart';
-import 'specialist.dart';
 
 /// Модель рекомендации специалиста
 @immutable

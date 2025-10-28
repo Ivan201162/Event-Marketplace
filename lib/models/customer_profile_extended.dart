@@ -5,7 +5,7 @@ class CustomerProfileExtended {
   const CustomerProfileExtended({
     required this.id,
     required this.userId,
-    this.name,
+    required this.createdAt, required this.updatedAt, required this.extendedPreferences, required this.lastUpdated, this.name,
     this.photoURL,
     this.avatarUrl,
     this.bio,
@@ -14,14 +14,10 @@ class CustomerProfileExtended {
     this.interests = const [],
     this.eventTypes = const [],
     this.preferences,
-    required this.createdAt,
-    required this.updatedAt,
     this.inspirationPhotos = const [],
     this.notes = const [],
     this.favoriteSpecialists = const [],
     this.savedEvents = const [],
-    required this.extendedPreferences,
-    required this.lastUpdated,
   });
 
   /// Создаёт расширенный профиль из документа Firestore
@@ -42,12 +38,12 @@ class CustomerProfileExtended {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       inspirationPhotos: (data['inspirationPhotos'] as List?)
               ?.map((photo) =>
-                  InspirationPhoto.fromMap(photo as Map<String, dynamic>))
+                  InspirationPhoto.fromMap(photo as Map<String, dynamic>),)
               .toList() ??
           [],
       notes: (data['notes'] as List?)
               ?.map(
-                  (note) => CustomerNote.fromMap(note as Map<String, dynamic>))
+                  (note) => CustomerNote.fromMap(note as Map<String, dynamic>),)
               .toList() ??
           [],
       favoriteSpecialists:
@@ -55,7 +51,7 @@ class CustomerProfileExtended {
       savedEvents: List<String>.from(data['savedEvents'] as List? ?? []),
       extendedPreferences: data['extendedPreferences'] != null
           ? CustomerPreferences.fromMap(
-              data['extendedPreferences'] as Map<String, dynamic>)
+              data['extendedPreferences'] as Map<String, dynamic>,)
           : const CustomerPreferences(),
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
@@ -147,9 +143,8 @@ class InspirationPhoto {
   const InspirationPhoto({
     required this.id,
     required this.url,
-    this.caption,
+    required this.uploadedAt, this.caption,
     this.tags = const [],
-    required this.uploadedAt,
     this.isPublic = false,
   });
 
@@ -205,9 +200,7 @@ class CustomerNote {
     required this.id,
     required this.title,
     required this.content,
-    this.tags = const [],
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.tags = const [],
     this.isPinned = false,
     this.eventId,
     this.specialistId,
@@ -296,7 +289,7 @@ class CustomerPreferences {
             List<String>.from(map['preferredLocations'] as List? ?? []),
         preferredTimeStart: map['preferredTimeStart'] != null
             ? TimeOfDay.fromMap(
-                map['preferredTimeStart'] as Map<String, dynamic>)
+                map['preferredTimeStart'] as Map<String, dynamic>,)
             : null,
         preferredTimeEnd: map['preferredTimeEnd'] != null
             ? TimeOfDay.fromMap(map['preferredTimeEnd'] as Map<String, dynamic>)

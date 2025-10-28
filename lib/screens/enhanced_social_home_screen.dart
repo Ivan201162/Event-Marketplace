@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
+import 'package:event_marketplace_app/widgets/animated_profile_banner.dart';
+import 'package:event_marketplace_app/widgets/filters_dialog.dart';
+import 'package:event_marketplace_app/widgets/weekly_leaders_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
-import '../widgets/animated_profile_banner.dart';
-import '../widgets/filters_dialog.dart';
-import '../widgets/weekly_leaders_widget.dart';
 
 /// Улучшенный главный экран с профилем, фильтрами и топом специалистов
 class EnhancedSocialHomeScreen extends ConsumerStatefulWidget {
@@ -42,10 +41,10 @@ class _EnhancedSocialHomeScreenState
       vsync: this,
     );
     _profileAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
-        parent: _profileAnimationController, curve: Curves.easeInOut));
+        parent: _profileAnimationController, curve: Curves.easeInOut,),);
 
     _scrollController.addListener(_onScroll);
     _loadCurrentProfile();
@@ -115,7 +114,7 @@ class _EnhancedSocialHomeScreenState
     final result = await showDialog<Map<String, String?>>(
       context: context,
       builder: (context) => FiltersDialog(
-          selectedCity: _selectedCity, selectedCategory: _selectedCategory),
+          selectedCity: _selectedCity, selectedCategory: _selectedCategory,),
     );
 
     if (result != null) {
@@ -153,7 +152,7 @@ class _EnhancedSocialHomeScreenState
                     end: Alignment.bottomRight,
                     colors: [
                       theme.primaryColor,
-                      theme.primaryColor.withValues(alpha: 0.8)
+                      theme.primaryColor.withValues(alpha: 0.8),
                     ],
                   ),
                 ),
@@ -166,7 +165,7 @@ class _EnhancedSocialHomeScreenState
               ),
               IconButton(
                 icon: const Icon(Icons.notifications_outlined,
-                    color: Colors.white),
+                    color: Colors.white,),
                 onPressed: () => context.push('/notifications'),
               ),
             ],
@@ -181,7 +180,7 @@ class _EnhancedSocialHomeScreenState
                   offset: Offset(0, -50 * (1 - _profileAnimation.value)),
                   child: Opacity(
                       opacity: _profileAnimation.value,
-                      child: _buildProfileBanner()),
+                      child: _buildProfileBanner(),),
                 );
               },
             ),
@@ -212,7 +211,7 @@ class _EnhancedSocialHomeScreenState
         height: 120,
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-            color: Colors.grey[200], borderRadius: BorderRadius.circular(16)),
+            color: Colors.grey[200], borderRadius: BorderRadius.circular(16),),
         child: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -237,7 +236,7 @@ class _EnhancedSocialHomeScreenState
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.grey),
+                    color: Colors.grey,),
               ),
               const SizedBox(height: 4),
               TextButton(
@@ -273,7 +272,7 @@ class _EnhancedSocialHomeScreenState
               hintText: 'Поиск по имени, навыкам, городу...',
               prefixIcon: const Icon(Icons.search),
               suffixIcon: IconButton(
-                  icon: const Icon(Icons.tune), onPressed: _showFiltersDialog),
+                  icon: const Icon(Icons.tune), onPressed: _showFiltersDialog,),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
@@ -378,12 +377,12 @@ class _EnhancedSocialHomeScreenState
             Text(
               title,
               style: TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.w600, color: color),
+                  fontSize: 14, fontWeight: FontWeight.w600, color: color,),
             ),
             const SizedBox(height: 2),
             Text(subtitle,
                 style: TextStyle(
-                    fontSize: 12, color: color.withValues(alpha: 0.7))),
+                    fontSize: 12, color: color.withValues(alpha: 0.7),),),
           ],
         ),
       ),
@@ -405,7 +404,7 @@ class _EnhancedSocialHomeScreenState
               ),
               TextButton(
                   onPressed: () => context.push('/specialists'),
-                  child: const Text('Все')),
+                  child: const Text('Все'),),
             ],
           ),
           const SizedBox(height: 12),
@@ -426,7 +425,7 @@ class _EnhancedSocialHomeScreenState
                     Icon(Icons.people_outline, size: 32, color: Colors.grey),
                     SizedBox(height: 8),
                     Text('Пока нет данных',
-                        style: TextStyle(color: Colors.grey)),
+                        style: TextStyle(color: Colors.grey),),
                   ],
                 ),
               ),
@@ -457,7 +456,7 @@ class _EnhancedSocialHomeScreenState
               ),
               TextButton(
                   onPressed: () => context.push('/ideas'),
-                  child: const Text('Все')),
+                  child: const Text('Все'),),
             ],
           ),
           const SizedBox(height: 12),
@@ -475,7 +474,7 @@ class _EnhancedSocialHomeScreenState
                   Icon(Icons.lightbulb_outline, size: 32, color: Colors.grey),
                   SizedBox(height: 8),
                   Text('Идеи появятся здесь',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: Colors.grey),),
                 ],
               ),
             ),

@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/version_management.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/version_management.dart';
 
 /// Сервис управления версиями и обновлениями
 class VersionManagementService {
@@ -189,7 +188,7 @@ class VersionManagementService {
 
   /// Обновить версию
   Future<void> updateVersion(
-      String versionId, AppVersion updatedVersion) async {
+      String versionId, AppVersion updatedVersion,) async {
     try {
       await _firestore
           .collection('appVersions')
@@ -221,7 +220,7 @@ class VersionManagementService {
           .where((v) =>
               v.platform == version.platform &&
               v.type == version.type &&
-              v.isAvailable)
+              v.isAvailable,)
           .toList();
 
       for (final v in sameTypeVersions) {
@@ -299,7 +298,7 @@ class VersionManagementService {
 
   /// Обновить прогресс обновления
   Future<void> updateProgress(String updateId, double progress,
-      {UpdateStatus? status}) async {
+      {UpdateStatus? status,}) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
@@ -328,7 +327,7 @@ class VersionManagementService {
 
   /// Завершить обновление
   Future<void> completeUpdate(String updateId,
-      {bool success = true, String? errorMessage}) async {
+      {bool success = true, String? errorMessage,}) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
@@ -352,7 +351,7 @@ class VersionManagementService {
 
       if (kDebugMode) {
         debugPrint(
-            'Update completed: $updateId - ${success ? 'success' : 'failed'}');
+            'Update completed: $updateId - ${success ? 'success' : 'failed'}',);
       }
     } catch (e) {
       if (kDebugMode) {

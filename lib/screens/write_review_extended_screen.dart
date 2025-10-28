@@ -1,18 +1,16 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/booking.dart';
-import '../models/review.dart';
-import '../models/specialist.dart';
-import '../services/review_service.dart';
 
 /// Расширенный экран написания/редактирования отзыва
 class WriteReviewExtendedScreen extends StatefulWidget {
   // Для редактирования
 
   const WriteReviewExtendedScreen({
-    super.key,
-    required this.specialist,
+    required this.specialist, super.key,
     this.booking,
     this.existingReview,
   });
@@ -103,7 +101,7 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -114,10 +112,10 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
         appBar: AppBar(
           title: Text(widget.existingReview != null
               ? 'Редактировать отзыв'
-              : 'Оставить отзыв'),
+              : 'Оставить отзыв',),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
           actions: [
             if (_isLoading)
               const Center(
@@ -132,7 +130,7 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
               )
             else
               TextButton(
-                  onPressed: _submitReview, child: const Text('Отправить')),
+                  onPressed: _submitReview, child: const Text('Отправить'),),
           ],
         ),
         body: Form(
@@ -201,7 +199,7 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
                   Text(
                     widget.specialist.name,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18, fontWeight: FontWeight.bold,),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -249,7 +247,7 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(
-                  color: _getRatingColor(), fontWeight: FontWeight.w500),
+                  color: _getRatingColor(), fontWeight: FontWeight.w500,),
             ),
           ),
         ],
@@ -378,7 +376,7 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(widget.booking!.location!,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ),
                 ],
               ),

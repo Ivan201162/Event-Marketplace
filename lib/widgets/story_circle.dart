@@ -1,17 +1,15 @@
+import 'package:event_marketplace_app/models/story.dart';
 import 'package:flutter/material.dart';
-
-import '../models/story.dart';
 
 /// Кружок Story с аватаром и индикатором просмотра
 class StoryCircle extends StatelessWidget {
-  final Story story;
-  final VoidCallback? onTap;
 
   const StoryCircle({
-    super.key,
-    required this.story,
+    required this.story, super.key,
     this.onTap,
   });
+  final Story story;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +33,7 @@ class StoryCircle extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(2),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
           ),

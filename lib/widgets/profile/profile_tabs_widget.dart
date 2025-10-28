@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/user.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/user.dart';
 
 /// Виджет вкладок профиля
 class ProfileTabsWidget extends StatefulWidget {
   const ProfileTabsWidget(
-      {super.key, required this.user, required this.isCurrentUser});
+      {required this.user, required this.isCurrentUser, super.key,});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -69,7 +68,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
                 : const [
                     Tab(text: 'Заказы'),
                     Tab(text: 'Избранное'),
-                    Tab(text: 'О себе')
+                    Tab(text: 'О себе'),
                   ],
           ),
 
@@ -154,7 +153,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
             Text('Избранное пусто'),
             SizedBox(height: 8),
             Text('Добавьте специалистов в избранное',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );

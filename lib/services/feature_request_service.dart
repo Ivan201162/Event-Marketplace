@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/feature_request.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/feature_request.dart';
 
 /// Сервис для работы с предложениями по функционалу
 class FeatureRequestService {
@@ -11,11 +11,7 @@ class FeatureRequestService {
   Future<String> createFeatureRequest({
     required String userId,
     required String userName,
-    String? userEmail,
-    required UserType userType,
-    required String title,
-    required String description,
-    required FeatureCategory category,
+    required UserType userType, required String title, required String description, required FeatureCategory category, String? userEmail,
     FeaturePriority priority = FeaturePriority.medium,
     List<String>? tags,
     List<String>? attachments,
@@ -93,13 +89,10 @@ class FeatureRequestService {
     switch (sortBy) {
       case 'votes':
         query = query.orderBy('votes', descending: !ascending);
-        break;
       case 'createdAt':
         query = query.orderBy('createdAt', descending: !ascending);
-        break;
       case 'priority':
         query = query.orderBy('priority', descending: !ascending);
-        break;
       default:
         query = query.orderBy('createdAt', descending: true);
     }
@@ -110,7 +103,7 @@ class FeatureRequestService {
     return query.snapshots().map(
           (snapshot) => snapshot.docs
               .map((doc) =>
-                  FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
+                  FeatureRequest.fromMap({'id': doc.id, ...doc.data()}),)
               .toList(),
         );
   }
@@ -129,7 +122,7 @@ class FeatureRequestService {
         .map(
           (snapshot) => snapshot.docs
               .map((doc) =>
-                  FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
+                  FeatureRequest.fromMap({'id': doc.id, ...doc.data()}),)
               .toList(),
         );
   }
@@ -157,7 +150,7 @@ class FeatureRequestService {
 
   /// Обновить предложение
   Future<void> updateFeatureRequest(
-      String requestId, Map<String, dynamic> updates) async {
+      String requestId, Map<String, dynamic> updates,) async {
     if (!FeatureFlags.featureRequestsEnabled) {
       throw Exception('Предложения по функционалу отключены');
     }
@@ -355,7 +348,7 @@ class FeatureRequestService {
       return uniqueDocs.values
           .map(
             (doc) => FeatureRequest.fromMap(
-                {'id': doc.id, ...doc.data()! as Map<String, dynamic>}),
+                {'id': doc.id, ...doc.data()! as Map<String, dynamic>},),
           )
           .toList();
     } on Exception catch (e) {
@@ -385,22 +378,16 @@ class FeatureRequestService {
       switch (request.status) {
         case FeatureStatus.submitted:
           submittedRequests++;
-          break;
         case FeatureStatus.underReview:
           underReviewRequests++;
-          break;
         case FeatureStatus.approved:
           approvedRequests++;
-          break;
         case FeatureStatus.inDevelopment:
           inDevelopmentRequests++;
-          break;
         case FeatureStatus.completed:
           completedRequests++;
-          break;
         case FeatureStatus.rejected:
           rejectedRequests++;
-          break;
         case FeatureStatus.duplicate:
           break;
       }
@@ -465,7 +452,7 @@ class FeatureRequestService {
         userTypeStats: {
           UserType.customer: 18,
           UserType.specialist: 6,
-          UserType.admin: 1
+          UserType.admin: 1,
         },
         totalVotes: 156,
         averageVotesPerRequest: 6.24,

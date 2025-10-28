@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'dart:io';
 
-import '../models/chat_enhanced.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/chat_enhanced.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// Расширенный сервис для работы с чатами
 class ChatServiceEnhanced {
@@ -53,14 +50,14 @@ class ChatServiceEnhanced {
         },
         createdAt: now,
         updatedAt: now,
-        tags: [],
-        settings: {
+        tags: const [],
+        settings: const {
           'allowFileSharing': true,
           'allowVoiceMessages': true,
           'allowStickers': true,
           'allowGifs': true,
         },
-        sharedFiles: [],
+        sharedFiles: const [],
         analytics: {
           'messageCount': 0,
           'lastActivity': now.toIso8601String(),
@@ -116,15 +113,15 @@ class ChatServiceEnhanced {
         },
         createdAt: now,
         updatedAt: now,
-        tags: [],
-        settings: {
+        tags: const [],
+        settings: const {
           'allowFileSharing': true,
           'allowVoiceMessages': true,
           'allowStickers': true,
           'allowGifs': true,
           'allowInvites': true,
         },
-        sharedFiles: [],
+        sharedFiles: const [],
         analytics: {
           'messageCount': 0,
           'lastActivity': now.toIso8601String(),
@@ -190,13 +187,13 @@ class ChatServiceEnhanced {
         updatedAt: now,
         tags: ['заявка', requestData['category']],
         requestId: requestId,
-        settings: {
+        settings: const {
           'allowFileSharing': true,
           'allowVoiceMessages': true,
           'allowStickers': false,
           'allowGifs': false,
         },
-        sharedFiles: [],
+        sharedFiles: const [],
         analytics: {
           'messageCount': 0,
           'lastActivity': now.toIso8601String(),
@@ -260,7 +257,7 @@ class ChatServiceEnhanced {
 
       final snapshot = await query.get();
       return snapshot.docs
-          .map((doc) => ChatEnhanced.fromFirestore(doc))
+          .map(ChatEnhanced.fromFirestore)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения чатов: $e');
@@ -316,15 +313,15 @@ class ChatServiceEnhanced {
         type: MessageType.text,
         status: MessageStatus.sending,
         createdAt: now,
-        attachments: [],
+        attachments: const [],
         metadata: {
           'isText': true,
           'wordCount': content.split(' ').length,
           'charCount': content.length,
         },
-        reactions: [],
+        reactions: const [],
         readBy: [user.uid],
-        forwardedTo: [],
+        forwardedTo: const [],
         isEdited: false,
         isDeleted: false,
         analytics: {
@@ -407,9 +404,9 @@ class ChatServiceEnhanced {
           'imageUrl': imageUrl,
           'caption': caption,
         },
-        reactions: [],
+        reactions: const [],
         readBy: [user.uid],
-        forwardedTo: [],
+        forwardedTo: const [],
         isEdited: false,
         isDeleted: false,
         analytics: {
@@ -479,9 +476,9 @@ class ChatServiceEnhanced {
           'fileSize': await _getFileSize(filePath),
           'caption': caption,
         },
-        reactions: [],
+        reactions: const [],
         readBy: [user.uid],
-        forwardedTo: [],
+        forwardedTo: const [],
         isEdited: false,
         isDeleted: false,
         analytics: {
@@ -538,16 +535,16 @@ class ChatServiceEnhanced {
         type: MessageType.location,
         status: MessageStatus.sent,
         createdAt: now,
-        attachments: [],
+        attachments: const [],
         metadata: {
           'isLocation': true,
           'latitude': latitude,
           'longitude': longitude,
           'address': address,
         },
-        reactions: [],
+        reactions: const [],
         readBy: [user.uid],
-        forwardedTo: [],
+        forwardedTo: const [],
         isEdited: false,
         isDeleted: false,
         analytics: {
@@ -624,7 +621,7 @@ class ChatServiceEnhanced {
 
       final snapshot = await query.get();
       return snapshot.docs
-          .map((doc) => ChatMessageEnhanced.fromFirestore(doc))
+          .map(ChatMessageEnhanced.fromFirestore)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения сообщений: $e');
@@ -737,24 +734,31 @@ class ChatServiceEnhanced {
 
       return allMessages.where((message) {
         if (filters != null) {
-          if (filters.type != null && message.type != filters.type)
+          if (filters.type != null && message.type != filters.type) {
             return false;
-          if (filters.authorId != null && message.authorId != filters.authorId)
+          }
+          if (filters.authorId != null && message.authorId != filters.authorId) {
             return false;
+          }
           if (filters.hasAttachments != null) {
-            if (filters.hasAttachments! && message.attachments.isEmpty)
+            if (filters.hasAttachments! && message.attachments.isEmpty) {
               return false;
-            if (!filters.hasAttachments! && message.attachments.isNotEmpty)
+            }
+            if (!filters.hasAttachments! && message.attachments.isNotEmpty) {
               return false;
+            }
           }
           if (filters.hasReactions != null) {
-            if (filters.hasReactions! && message.reactions.isEmpty)
+            if (filters.hasReactions! && message.reactions.isEmpty) {
               return false;
-            if (!filters.hasReactions! && message.reactions.isNotEmpty)
+            }
+            if (!filters.hasReactions! && message.reactions.isNotEmpty) {
               return false;
+            }
           }
-          if (filters.isEdited != null && message.isEdited != filters.isEdited)
+          if (filters.isEdited != null && message.isEdited != filters.isEdited) {
             return false;
+          }
         }
 
         return message.content.toLowerCase().contains(query.toLowerCase());
@@ -766,7 +770,7 @@ class ChatServiceEnhanced {
 
   /// Вспомогательные методы
   static Future<ChatEnhanced?> _findExistingPersonalChat(
-      String userId1, String userId2) async {
+      String userId1, String userId2,) async {
     try {
       final snapshot = await _firestore
           .collection('chats')
@@ -787,7 +791,7 @@ class ChatServiceEnhanced {
   }
 
   static Future<ChatEnhanced?> _findExistingRequestChat(
-      String requestId) async {
+      String requestId,) async {
     try {
       final snapshot = await _firestore
           .collection('chats')
@@ -825,7 +829,7 @@ class ChatServiceEnhanced {
 
   static Future<int> _getFileSize(String filePath) async {
     final file = File(filePath);
-    return await file.length();
+    return file.length();
   }
 
   static Future<void> _createNotification({

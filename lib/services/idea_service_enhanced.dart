@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geolocator/geolocator.dart';
 import 'dart:math';
 
-import '../models/idea_enhanced.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/idea_enhanced.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// Расширенный сервис для работы с идеями
 class IdeaServiceEnhanced {
@@ -63,13 +62,13 @@ class IdeaServiceEnhanced {
         comments: 0,
         shares: 0,
         bookmarks: 0,
-        rating: 0.0,
+        rating: 0,
         isVerified: userData['isVerified'] ?? false,
         isPinned: false,
         isFeatured: false,
         isTrending: false,
-        collaborators: [],
-        followers: [],
+        collaborators: const [],
+        followers: const [],
         analytics: {
           'createdAt': now.toIso8601String(),
           'authorId': user.uid,
@@ -83,14 +82,14 @@ class IdeaServiceEnhanced {
           categories: categories,
           tags: tags,
         ),
-        commentsList: [],
-        reactions: [],
+        commentsList: const [],
+        reactions: const [],
         pollData: pollData ?? {},
-        childIdeas: [],
+        childIdeas: const [],
         location: location ?? {},
         language: language ?? 'ru',
-        sharedWith: [],
-        monetization: {},
+        sharedWith: const [],
+        monetization: const {},
       );
 
       await _firestore.collection('ideas').doc(ideaId).set(idea.toFirestore());
@@ -165,11 +164,11 @@ class IdeaServiceEnhanced {
         }
         if (filters.startDate != null) {
           query = query.where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(filters.startDate!));
+              isGreaterThanOrEqualTo: Timestamp.fromDate(filters.startDate!),);
         }
         if (filters.endDate != null) {
           query = query.where('createdAt',
-              isLessThanOrEqualTo: Timestamp.fromDate(filters.endDate!));
+              isLessThanOrEqualTo: Timestamp.fromDate(filters.endDate!),);
         }
       }
 
@@ -185,7 +184,7 @@ class IdeaServiceEnhanced {
 
       final snapshot = await query.get();
       return snapshot.docs
-          .map((doc) => IdeaEnhanced.fromFirestore(doc))
+          .map(IdeaEnhanced.fromFirestore)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения идей: $e');
@@ -207,7 +206,7 @@ class IdeaServiceEnhanced {
 
   /// Обновление идеи
   static Future<void> updateIdea(
-      String ideaId, Map<String, dynamic> updates) async {
+      String ideaId, Map<String, dynamic> updates,) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('Пользователь не авторизован');
@@ -215,8 +214,9 @@ class IdeaServiceEnhanced {
       // Проверяем права на редактирование
       final idea = await getIdeaById(ideaId);
       if (idea == null) throw Exception('Идея не найдена');
-      if (idea.authorId != user.uid)
+      if (idea.authorId != user.uid) {
         throw Exception('Нет прав на редактирование');
+      }
 
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
 
@@ -334,10 +334,10 @@ class IdeaServiceEnhanced {
         authorAvatar: userData['avatar'] ?? user.photoURL ?? '',
         content: content,
         createdAt: now,
-        likes: [],
-        replies: [],
+        likes: const [],
+        replies: const [],
         parentCommentId: parentCommentId,
-        metadata: {},
+        metadata: const {},
       );
 
       // Сохраняем комментарий
@@ -362,7 +362,7 @@ class IdeaServiceEnhanced {
           data: {
             'ideaId': ideaId,
             'commentId': commentId,
-            'type': 'idea_comment'
+            'type': 'idea_comment',
           },
         );
       }
@@ -488,7 +488,7 @@ class IdeaServiceEnhanced {
           .get();
 
       return snapshot.docs
-          .map((doc) => IdeaEnhanced.fromFirestore(doc))
+          .map(IdeaEnhanced.fromFirestore)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения идей пользователя: $e');
@@ -515,7 +515,7 @@ class IdeaServiceEnhanced {
 
       final snapshot = await query.get();
       return snapshot.docs
-          .map((doc) => IdeaEnhanced.fromFirestore(doc))
+          .map(IdeaEnhanced.fromFirestore)
           .toList();
     } catch (e) {
       throw Exception('Ошибка получения трендовых идей: $e');
@@ -548,7 +548,7 @@ class IdeaServiceEnhanced {
             .get();
 
         recommendedIdeas.addAll(
-          snapshot.docs.map((doc) => IdeaEnhanced.fromFirestore(doc)),
+          snapshot.docs.map(IdeaEnhanced.fromFirestore),
         );
       }
 
@@ -576,9 +576,9 @@ class IdeaServiceEnhanced {
             idea.description.toLowerCase().contains(query.toLowerCase()) ||
             idea.content.toLowerCase().contains(query.toLowerCase()) ||
             idea.tags.any(
-                (tag) => tag.toLowerCase().contains(query.toLowerCase())) ||
+                (tag) => tag.toLowerCase().contains(query.toLowerCase()),) ||
             idea.hashtags.any((hashtag) =>
-                hashtag.toLowerCase().contains(query.toLowerCase()));
+                hashtag.toLowerCase().contains(query.toLowerCase()),);
       }).toList();
     } catch (e) {
       throw Exception('Ошибка поиска идей: $e');
@@ -606,11 +606,11 @@ class IdeaServiceEnhanced {
 
   /// Получение рекомендуемых тегов
   static List<String> _getSuggestedTags(
-      String title, String content, List<String> categories) {
+      String title, String content, List<String> categories,) {
     final allTags = <String>[];
 
     // Извлекаем теги из заголовка и контента
-    final words = '${title} ${content}'.toLowerCase().split(' ');
+    final words = '$title $content'.toLowerCase().split(' ');
     for (final word in words) {
       if (word.length > 3 && !allTags.contains(word)) {
         allTags.add(word);
@@ -627,11 +627,11 @@ class IdeaServiceEnhanced {
 
   /// Получение рекомендуемых категорий
   static List<String> _getSuggestedCategories(
-      String title, String content, List<String> tags) {
+      String title, String content, List<String> tags,) {
     final categories = <String>[];
 
     // Анализируем теги и контент для определения категорий
-    final text = '${title} ${content} ${tags.join(' ')}'.toLowerCase();
+    final text = '$title $content ${tags.join(' ')}'.toLowerCase();
 
     if (text.contains('фото') || text.contains('фотография')) {
       categories.add('Фотография');
@@ -660,25 +660,20 @@ class IdeaServiceEnhanced {
       switch (category.toLowerCase()) {
         case 'фотография':
           keywords.addAll(['портрет', 'пейзаж', 'студия', 'свет']);
-          break;
         case 'музыка':
           keywords.addAll(['концерт', 'инструмент', 'вокал', 'звук']);
-          break;
         case 'кулинария':
           keywords.addAll(['рецепт', 'ингредиенты', 'вкус', 'повар']);
-          break;
         case 'путешествия':
           keywords.addAll(
-              ['отель', 'достопримечательности', 'культура', 'традиции']);
-          break;
+              ['отель', 'достопримечательности', 'культура', 'традиции'],);
         case 'технологии':
           keywords.addAll([
             'инновации',
             'разработка',
             'программирование',
-            'искусственный интеллект'
+            'искусственный интеллект',
           ]);
-          break;
       }
     }
 
@@ -687,7 +682,7 @@ class IdeaServiceEnhanced {
 
   /// Получение похожих идей
   static List<String> _getSimilarIdeas(
-      List<String> categories, List<String> tags) {
+      List<String> categories, List<String> tags,) {
     // Здесь можно реализовать поиск похожих идей
     // Пока возвращаем пустой список
     return [];
@@ -695,9 +690,9 @@ class IdeaServiceEnhanced {
 
   /// Предсказание вовлеченности
   static double _getEngagementPrediction(
-      String title, String content, List<String> categories) {
+      String title, String content, List<String> categories,) {
     final random = Random();
-    double score = 0.5; // Базовый балл
+    var score = 0.5; // Базовый балл
 
     // Анализируем заголовок
     if (title.length > 10 && title.length < 100) score += 0.1;
@@ -708,7 +703,7 @@ class IdeaServiceEnhanced {
     if (content.contains('!')) score += 0.05; // Восклицания привлекают внимание
 
     // Анализируем категории
-    if (categories.length > 0) score += 0.1;
+    if (categories.isNotEmpty) score += 0.1;
 
     // Добавляем случайность
     score += random.nextDouble() * 0.2;
@@ -739,7 +734,7 @@ class IdeaServiceEnhanced {
 
   /// Обновление аналитики
   static Future<void> _updateAnalytics(
-      String event, Map<String, dynamic> data) async {
+      String event, Map<String, dynamic> data,) async {
     try {
       await _firestore.collection('analytics').add({
         'event': event,

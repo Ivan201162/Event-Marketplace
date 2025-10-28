@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/review.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/review.dart';
 
 /// Сервис для работы с отзывами и рейтингами
 class ReviewsService {
@@ -99,19 +99,14 @@ class ReviewsService {
       switch (sortType) {
         case ReviewSortType.newest:
           query = query.orderBy('date', descending: true);
-          break;
         case ReviewSortType.oldest:
           query = query.orderBy('date', descending: false);
-          break;
         case ReviewSortType.highest:
           query = query.orderBy('rating', descending: true);
-          break;
         case ReviewSortType.lowest:
           query = query.orderBy('rating', descending: false);
-          break;
         case ReviewSortType.mostLiked:
           query = query.orderBy('likes', descending: true);
-          break;
       }
 
       // Пагинация
@@ -205,7 +200,7 @@ class ReviewsService {
 
       // Помечаем как удаленный
       await reviewRef.update(
-          {'isDeleted': true, 'deletedAt': FieldValue.serverTimestamp()});
+          {'isDeleted': true, 'deletedAt': FieldValue.serverTimestamp()},);
 
       // Обновляем рейтинг специалиста
       await _updateSpecialistRating(review.specialistId);
@@ -226,7 +221,7 @@ class ReviewsService {
 
   /// Поставить лайк отзыву
   Future<void> likeReview(
-      String reviewId, String userId, String userName) async {
+      String reviewId, String userId, String userName,) async {
     try {
       final likeRef = _firestore
           .collection('reviews')
@@ -334,7 +329,7 @@ class ReviewsService {
         parameters: {
           'review_id': reviewId,
           'reporter_id': reporterId,
-          'reason': reason.value
+          'reason': reason.value,
         },
       );
     } catch (e) {
@@ -344,7 +339,7 @@ class ReviewsService {
 
   /// Получить репутацию специалиста
   Future<SpecialistReputation> getSpecialistReputation(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final doc =
           await _firestore.collection('userStats').doc(specialistId).get();
@@ -481,7 +476,7 @@ enum ReviewSortType {
 /// Фильтр отзывов
 class ReviewFilter {
   const ReviewFilter(
-      {this.minRating, this.hasPhotos = false, this.fromDate, this.toDate});
+      {this.minRating, this.hasPhotos = false, this.fromDate, this.toDate,});
 
   factory ReviewFilter.fromJson(String json) {
     // Простая реализация парсинга JSON

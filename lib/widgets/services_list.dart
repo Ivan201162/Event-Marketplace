@@ -1,12 +1,12 @@
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/providers/user_profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
-import '../models/user_profile.dart';
-import '../providers/user_profile_provider.dart';
 
 /// Виджет для отображения прайс-листа специалиста
 class ServicesList extends ConsumerWidget {
-  const ServicesList({super.key, required this.userId});
+  const ServicesList({required this.userId, super.key});
   final String userId;
 
   @override
@@ -107,7 +107,7 @@ class ServicesList extends ConsumerWidget {
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(
-                    color: service.isActive ? null : Colors.grey[600]),
+                    color: service.isActive ? null : Colors.grey[600],),
               ),
             const SizedBox(height: 12),
             // Цена и длительность
@@ -144,13 +144,13 @@ class ServicesList extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.access_time,
-                            size: 16, color: Colors.blue[700]),
+                            size: 16, color: Colors.blue[700],),
                         const SizedBox(width: 4),
                         Text(
                           _formatDuration(service.duration!),
                           style: TextStyle(
                               color: Colors.blue[700],
-                              fontWeight: FontWeight.w500),
+                              fontWeight: FontWeight.w500,),
                         ),
                       ],
                     ),
@@ -191,7 +191,7 @@ class ServicesList extends ConsumerWidget {
                       child: Container(
                           width: double.infinity,
                           height: 20,
-                          color: Colors.white),
+                          color: Colors.white,),
                     ),
                     const SizedBox(width: 12),
                     Container(width: 60, height: 20, color: Colors.white),
@@ -199,7 +199,7 @@ class ServicesList extends ConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Container(
-                    width: double.infinity, height: 16, color: Colors.white),
+                    width: double.infinity, height: 16, color: Colors.white,),
                 const SizedBox(height: 4),
                 Container(width: 200, height: 16, color: Colors.white),
                 const SizedBox(height: 12),

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/widgets/search_filters_widget.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../models/search_filters.dart';
-import '../../providers/specialist_providers.dart';
-import '../../widgets/search_filters_widget.dart';
-import '../../widgets/specialist_card.dart';
 
 /// Search screen for finding specialists
 class SearchScreen extends ConsumerStatefulWidget {
@@ -70,7 +69,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         title: const Text('Поиск специалистов'),
         actions: [
           IconButton(
-              icon: const Icon(Icons.filter_list), onPressed: _showFilters)
+              icon: const Icon(Icons.filter_list), onPressed: _showFilters,),
         ],
       ),
       body: Column(
@@ -93,7 +92,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
-                    onPressed: _performSearch, child: const Text('Найти')),
+                    onPressed: _performSearch, child: const Text('Найти'),),
               ],
             ),
           ),
@@ -114,7 +113,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       const Spacer(),
                       TextButton(
                           onPressed: _clearSearch,
-                          child: const Text('Очистить')),
+                          child: const Text('Очистить'),),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -204,10 +203,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                        size: 64, color: Colors.red,),
                     const SizedBox(height: 16),
                     Text('Ошибка поиска',
-                        style: Theme.of(context).textTheme.titleLarge),
+                        style: Theme.of(context).textTheme.titleLarge,),
                     const SizedBox(height: 8),
                     Text(
                       error.toString(),
@@ -245,7 +244,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           const Icon(Icons.search_off, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
           Text('Специалисты не найдены',
-              style: Theme.of(context).textTheme.titleLarge),
+              style: Theme.of(context).textTheme.titleLarge,),
           const SizedBox(height: 8),
           Text(
             'Попробуйте изменить параметры поиска',
@@ -253,7 +252,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-              onPressed: _clearSearch, child: const Text('Очистить фильтры')),
+              onPressed: _clearSearch, child: const Text('Очистить фильтры'),),
         ],
       ),
     );

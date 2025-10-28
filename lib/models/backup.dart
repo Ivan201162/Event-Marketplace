@@ -7,11 +7,10 @@ class Backup {
     required this.name,
     required this.description,
     required this.type,
-    this.status = BackupStatus.pending,
+    required this.createdAt, this.status = BackupStatus.pending,
     this.collections = const [],
     this.filters = const {},
     this.createdBy,
-    required this.createdAt,
     this.completedAt,
     this.fileUrl,
     this.fileSize,
@@ -37,7 +36,7 @@ class Backup {
       collections:
           List<String>.from(data['collections'] as List<dynamic>? ?? []),
       filters: Map<String, dynamic>.from(
-          data['filters'] as Map<dynamic, dynamic>? ?? {}),
+          data['filters'] as Map<dynamic, dynamic>? ?? {},),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
@@ -68,7 +67,7 @@ class Backup {
         collections:
             List<String>.from(data['collections'] as List<dynamic>? ?? []),
         filters: Map<String, dynamic>.from(
-            data['filters'] as Map<dynamic, dynamic>? ?? {}),
+            data['filters'] as Map<dynamic, dynamic>? ?? {},),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
@@ -79,7 +78,7 @@ class Backup {
         errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,)
             : null,
       );
   final String id;
@@ -236,11 +235,10 @@ class Restore {
     required this.name,
     required this.description,
     required this.type,
-    this.status = RestoreStatus.pending,
+    required this.createdAt, this.status = RestoreStatus.pending,
     this.collections = const [],
     this.options = const {},
     this.createdBy,
-    required this.createdAt,
     this.completedAt,
     this.errorMessage,
     this.metadata,
@@ -265,7 +263,7 @@ class Restore {
       collections:
           List<String>.from(data['collections'] as List<dynamic>? ?? []),
       options: Map<String, dynamic>.from(
-          data['options'] as Map<dynamic, dynamic>? ?? {}),
+          data['options'] as Map<dynamic, dynamic>? ?? {},),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
@@ -295,7 +293,7 @@ class Restore {
         collections:
             List<String>.from(data['collections'] as List<dynamic>? ?? []),
         options: Map<String, dynamic>.from(
-            data['options'] as Map<dynamic, dynamic>? ?? {}),
+            data['options'] as Map<dynamic, dynamic>? ?? {},),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
@@ -304,7 +302,7 @@ class Restore {
         errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,)
             : null,
       );
   final String id;

@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/support_ticket.dart';
+import 'package:event_marketplace_app/screens/create_support_ticket_screen.dart';
+import 'package:event_marketplace_app/screens/support_ticket_detail_screen.dart';
+import 'package:event_marketplace_app/services/support_service.dart';
+import 'package:event_marketplace_app/widgets/support_ticket_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/support_ticket.dart';
-import '../services/support_service.dart';
-import '../widgets/support_ticket_widget.dart';
-import 'create_support_ticket_screen.dart';
-import 'support_ticket_detail_screen.dart';
 
 /// Экран тикетов поддержки
 class SupportTicketsScreen extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
         appBar: AppBar(
           title: const Text('Поддержка'),
           actions: [
-            IconButton(icon: const Icon(Icons.add), onPressed: _createTicket)
+            IconButton(icon: const Icon(Icons.add), onPressed: _createTicket),
           ],
         ),
         body: Column(
@@ -94,7 +94,7 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12, fontWeight: FontWeight.w500,),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -123,7 +123,7 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -140,7 +140,7 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
             itemBuilder: (context, index) {
               final ticket = tickets[index];
               return SupportTicketWidget(
-                  ticket: ticket, onTap: () => _showTicketDetail(ticket));
+                  ticket: ticket, onTap: () => _showTicketDetail(ticket),);
             },
           );
         },
@@ -175,9 +175,9 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
   void _createTicket() {
     Navigator.of(context)
         .push(MaterialPageRoute<bool>(
-            builder: (context) => const CreateSupportTicketScreen()))
+            builder: (context) => const CreateSupportTicketScreen(),),)
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -187,10 +187,10 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
     Navigator.of(context)
         .push(
       MaterialPageRoute<bool>(
-          builder: (context) => SupportTicketDetailScreen(ticket: ticket)),
+          builder: (context) => SupportTicketDetailScreen(ticket: ticket),),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -208,13 +208,13 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Контакты поддержки пока не реализованы')));
+        content: Text('Контакты поддержки пока не реализованы'),),);
   }
 }
 
 /// Экран детального просмотра тикета
 class SupportTicketDetailScreen extends ConsumerStatefulWidget {
-  const SupportTicketDetailScreen({super.key, required this.ticket});
+  const SupportTicketDetailScreen({required this.ticket, super.key});
   final SupportTicket ticket;
 
   @override
@@ -244,7 +244,7 @@ class _SupportTicketDetailScreenState
                 const PopupMenuItem(
                   value: 'close',
                   child: ListTile(
-                      leading: Icon(Icons.close), title: Text('Закрыть тикет')),
+                      leading: Icon(Icons.close), title: Text('Закрыть тикет'),),
                 ),
               ],
             ),
@@ -280,7 +280,7 @@ class _SupportTicketDetailScreenState
                   child: Text(
                     widget.ticket.subject,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18, fontWeight: FontWeight.bold,),
                   ),
                 ),
                 Container(
@@ -291,7 +291,7 @@ class _SupportTicketDetailScreenState
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                         color:
-                            widget.ticket.statusColor.withValues(alpha: 0.3)),
+                            widget.ticket.statusColor.withValues(alpha: 0.3),),
                   ),
                   child: Text(
                     widget.ticket.statusText,
@@ -311,7 +311,7 @@ class _SupportTicketDetailScreenState
             Row(
               children: [
                 Icon(widget.ticket.categoryIcon,
-                    size: 16, color: Colors.grey[600]),
+                    size: 16, color: Colors.grey[600],),
                 const SizedBox(width: 4),
                 Text(
                   widget.ticket.categoryText,
@@ -323,7 +323,7 @@ class _SupportTicketDetailScreenState
                   height: 8,
                   decoration: BoxDecoration(
                       color: widget.ticket.priorityColor,
-                      shape: BoxShape.circle),
+                      shape: BoxShape.circle,),
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -353,7 +353,7 @@ class _SupportTicketDetailScreenState
 
           if (snapshot.hasError) {
             return Center(
-                child: Text('Ошибка загрузки сообщений: ${snapshot.error}'));
+                child: Text('Ошибка загрузки сообщений: ${snapshot.error}'),);
           }
 
           final messages = snapshot.data ?? [];
@@ -403,7 +403,7 @@ class _SupportTicketDetailScreenState
                     Text(
                       message.authorName,
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
+                          fontSize: 12, fontWeight: FontWeight.bold,),
                     ),
                     const SizedBox(height: 4),
                   ],
@@ -455,7 +455,7 @@ class _SupportTicketDetailScreenState
               onPressed: _sendMessage,
               icon: const Icon(Icons.send),
               style: IconButton.styleFrom(
-                  backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                  backgroundColor: Colors.blue, foregroundColor: Colors.white,),
             ),
           ],
         ),
@@ -487,7 +487,6 @@ class _SupportTicketDetailScreenState
     switch (action) {
       case 'close':
         _closeTicket();
-        break;
     }
   }
 
@@ -500,12 +499,12 @@ class _SupportTicketDetailScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               _supportService.updateTicketStatus(
-                  widget.ticket.id, SupportStatus.closed);
+                  widget.ticket.id, SupportStatus.closed,);
               Navigator.pop(context, true);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

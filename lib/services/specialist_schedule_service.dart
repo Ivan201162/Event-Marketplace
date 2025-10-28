@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/specialist_schedule.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist_schedule.dart';
 
 /// Сервис для управления календарем занятости специалистов
 class SpecialistScheduleService {
@@ -170,7 +170,7 @@ class SpecialistScheduleService {
           .where('eventDate', isGreaterThanOrEqualTo: startDate)
           .where('eventDate', isLessThanOrEqualTo: endDate)
           .where('status',
-              whereIn: ['confirmed', 'paid', 'advance_paid']).get();
+              whereIn: ['confirmed', 'paid', 'advance_paid'],).get();
 
       return snapshot.docs.map(Booking.fromDocument).toList();
     } catch (e) {
@@ -179,7 +179,7 @@ class SpecialistScheduleService {
   }
 
   Future<Map<int, WorkingHours>> _getSpecialistWorkingHours(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final doc = await _firestore
           .collection('specialist_working_hours')
@@ -191,7 +191,7 @@ class SpecialistScheduleService {
 
         return workingHoursData.map(
           (key, value) => MapEntry(int.parse(key),
-              WorkingHours.fromMap(Map<String, dynamic>.from(value))),
+              WorkingHours.fromMap(Map<String, dynamic>.from(value)),),
         );
       }
 
@@ -223,19 +223,19 @@ class SpecialistScheduleService {
 
   Map<int, WorkingHours> _getDefaultWorkingHours() => {
         1: const WorkingHours(
-            isWorking: true, startHour: 9, endHour: 18), // Понедельник
+            isWorking: true, startHour: 9, endHour: 18,), // Понедельник
         2: const WorkingHours(
-            isWorking: true, startHour: 9, endHour: 18), // Вторник
+            isWorking: true, startHour: 9, endHour: 18,), // Вторник
         3: const WorkingHours(
-            isWorking: true, startHour: 9, endHour: 18), // Среда
+            isWorking: true, startHour: 9, endHour: 18,), // Среда
         4: const WorkingHours(
-            isWorking: true, startHour: 9, endHour: 18), // Четверг
+            isWorking: true, startHour: 9, endHour: 18,), // Четверг
         5: const WorkingHours(
-            isWorking: true, startHour: 9, endHour: 18), // Пятница
+            isWorking: true, startHour: 9, endHour: 18,), // Пятница
         6: const WorkingHours(
-            isWorking: false, startHour: 0, endHour: 0), // Суббота
+            isWorking: false, startHour: 0, endHour: 0,), // Суббота
         7: const WorkingHours(
-            isWorking: false, startHour: 0, endHour: 0), // Воскресенье
+            isWorking: false, startHour: 0, endHour: 0,), // Воскресенье
       };
 
   bool _isTimeOverlapping({
@@ -267,7 +267,7 @@ class SpecialistScheduleService {
         var hasException = false;
         for (final exception in exceptions) {
           if (currentDate.isAfter(
-                  exception.startDate.subtract(const Duration(days: 1))) &&
+                  exception.startDate.subtract(const Duration(days: 1)),) &&
               currentDate
                   .isBefore(exception.endDate.add(const Duration(days: 1)))) {
             availability[currentDate] = AvailabilityStatus.blocked;

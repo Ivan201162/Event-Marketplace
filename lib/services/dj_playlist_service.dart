@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/dj_playlist.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-
-import '../core/feature_flags.dart';
-import '../models/dj_playlist.dart';
 
 /// Сервис для работы с плейлистами и медиафайлами диджеев
 class DJPlaylistService {
@@ -181,7 +180,7 @@ class DJPlaylistService {
 
   /// Обновить плейлист
   Future<void> updatePlaylist(
-      String playlistId, Map<String, dynamic> updates) async {
+      String playlistId, Map<String, dynamic> updates,) async {
     if (!FeatureFlags.djPlaylistsEnabled) {
       throw Exception('Плейлисты диджеев отключены');
     }

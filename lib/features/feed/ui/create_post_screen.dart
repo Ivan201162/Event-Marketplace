@@ -1,9 +1,10 @@
 import 'dart:io';
+
+import 'package:event_marketplace_app/features/feed/data/feed_model.dart';
+import 'package:event_marketplace_app/features/feed/providers/feed_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../data/feed_model.dart';
-import '../providers/feed_providers.dart';
 
 /// Экран создания нового поста
 class CreatePostScreen extends ConsumerStatefulWidget {
@@ -88,10 +89,10 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           children: [
             TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             const Spacer(),
             const Text('Новый пост',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
             const Spacer(),
             TextButton(
               onPressed: _isUploading ? null : _publishPost,
@@ -104,7 +105,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   : const Text(
                       'Опубликовать',
                       style: TextStyle(
-                          fontWeight: FontWeight.w600, color: Colors.blue),
+                          fontWeight: FontWeight.w600, color: Colors.blue,),
                     ),
             ),
           ],
@@ -115,17 +116,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Тип поста',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           Row(
             children: [
               Expanded(
                   child: _buildTypeOption(
-                      PostType.photo, Icons.photo_camera, 'Фото')),
+                      PostType.photo, Icons.photo_camera, 'Фото',),),
               const SizedBox(width: 12),
               Expanded(
                   child: _buildTypeOption(
-                      PostType.video, Icons.videocam, 'Видео')),
+                      PostType.video, Icons.videocam, 'Видео',),),
             ],
           ),
         ],
@@ -145,14 +146,14 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
-              color: isSelected ? Colors.blue : Colors.grey[300]!, width: 2),
+              color: isSelected ? Colors.blue : Colors.grey[300]!, width: 2,),
           borderRadius: BorderRadius.circular(12),
           color: isSelected ? Colors.blue[50] : Colors.white,
         ),
         child: Column(
           children: [
             Icon(icon,
-                size: 32, color: isSelected ? Colors.blue : Colors.grey[600]),
+                size: 32, color: isSelected ? Colors.blue : Colors.grey[600],),
             const SizedBox(height: 8),
             Text(
               label,
@@ -176,7 +177,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Медиа файл',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -186,9 +187,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 icon: const Icon(Icons.add_photo_alternate),
                 label: Text(_selectedType == PostType.photo
                     ? 'Выбрать фото'
-                    : 'Выбрать видео'),
+                    : 'Выбрать видео',),
                 style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12)),
+                    padding: const EdgeInsets.symmetric(vertical: 12),),
               ),
             ),
             if (_selectedFile != null) ...[
@@ -237,7 +238,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     ),
                     padding: const EdgeInsets.all(16),
                     child: const Icon(Icons.play_arrow,
-                        size: 48, color: Colors.white),
+                        size: 48, color: Colors.white,),
                   ),
                 ],
               )
@@ -255,7 +256,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Описание',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           TextField(
             controller: _descriptionController,
@@ -291,7 +292,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Категории',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -420,7 +421,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Пост успешно опубликован!')));
+            const SnackBar(content: Text('Пост успешно опубликован!')),);
       }
     } catch (e) {
       if (mounted) {

@@ -3,13 +3,6 @@ import 'package:shimmer/shimmer.dart';
 
 /// Анимированный skeleton для загрузки контента
 class AnimatedSkeleton extends StatefulWidget {
-  final double? width;
-  final double? height;
-  final double borderRadius;
-  final Color? baseColor;
-  final Color? highlightColor;
-  final Widget? child;
-  final bool isLoading;
 
   const AnimatedSkeleton({
     super.key,
@@ -21,6 +14,13 @@ class AnimatedSkeleton extends StatefulWidget {
     this.child,
     this.isLoading = true,
   });
+  final double? width;
+  final double? height;
+  final double borderRadius;
+  final Color? baseColor;
+  final Color? highlightColor;
+  final Widget? child;
+  final bool isLoading;
 
   @override
   State<AnimatedSkeleton> createState() => _AnimatedSkeletonState();
@@ -39,12 +39,12 @@ class _AnimatedSkeletonState extends State<AnimatedSkeleton>
       vsync: this,
     );
     _animation = Tween<double>(
-      begin: -1.0,
-      end: 2.0,
+      begin: -1,
+      end: 2,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     if (widget.isLoading) {
       _controller.repeat();
@@ -78,7 +78,6 @@ class _AnimatedSkeletonState extends State<AnimatedSkeleton>
     return Shimmer.fromColors(
       baseColor: widget.baseColor ?? Colors.grey[300]!,
       highlightColor: widget.highlightColor ?? Colors.grey[100]!,
-      period: const Duration(milliseconds: 1500),
       child: Container(
         width: widget.width,
         height: widget.height,
@@ -93,9 +92,6 @@ class _AnimatedSkeletonState extends State<AnimatedSkeleton>
 
 /// Skeleton для карточки
 class SkeletonCard extends StatelessWidget {
-  final double? width;
-  final double? height;
-  final EdgeInsets? padding;
 
   const SkeletonCard({
     super.key,
@@ -103,6 +99,9 @@ class SkeletonCard extends StatelessWidget {
     this.height,
     this.padding,
   });
+  final double? width;
+  final double? height;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +120,7 @@ class SkeletonCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Заголовок
@@ -130,34 +129,32 @@ class SkeletonCard extends StatelessWidget {
             height: 20,
             borderRadius: 4,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           // Описание
           AnimatedSkeleton(
             width: double.infinity,
             height: 16,
             borderRadius: 4,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           AnimatedSkeleton(
             width: 200,
             height: 16,
             borderRadius: 4,
           ),
-          const Spacer(),
+          Spacer(),
           // Кнопки
           Row(
             children: [
               Expanded(
                 child: AnimatedSkeleton(
                   height: 40,
-                  borderRadius: 8,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: AnimatedSkeleton(
                   height: 40,
-                  borderRadius: 8,
                 ),
               ),
             ],
@@ -170,9 +167,6 @@ class SkeletonCard extends StatelessWidget {
 
 /// Skeleton для списка
 class SkeletonList extends StatelessWidget {
-  final int itemCount;
-  final double? itemHeight;
-  final EdgeInsets? padding;
 
   const SkeletonList({
     super.key,
@@ -180,6 +174,9 @@ class SkeletonList extends StatelessWidget {
     this.itemHeight,
     this.padding,
   });
+  final int itemCount;
+  final double? itemHeight;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -209,21 +206,21 @@ class SkeletonProfile extends StatelessWidget {
       child: Column(
         children: [
           // Аватар
-          AnimatedSkeleton(
+          const AnimatedSkeleton(
             width: 80,
             height: 80,
             borderRadius: 40,
           ),
           const SizedBox(height: 16),
           // Имя
-          AnimatedSkeleton(
+          const AnimatedSkeleton(
             width: 150,
             height: 24,
             borderRadius: 4,
           ),
           const SizedBox(height: 8),
           // Email
-          AnimatedSkeleton(
+          const AnimatedSkeleton(
             width: 200,
             height: 16,
             borderRadius: 4,
@@ -260,14 +257,14 @@ class _SkeletonStatItem extends StatelessWidget {
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
+      child: const Column(
         children: [
           AnimatedSkeleton(
             width: 30,
             height: 20,
             borderRadius: 4,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           AnimatedSkeleton(
             width: 60,
             height: 12,
@@ -287,7 +284,7 @@ class SkeletonChatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: Row(
+      child: const Row(
         children: [
           // Аватар
           AnimatedSkeleton(
@@ -295,7 +292,7 @@ class SkeletonChatItem extends StatelessWidget {
             height: 50,
             borderRadius: 25,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           // Контент
           Expanded(
             child: Column(
@@ -318,7 +315,7 @@ class SkeletonChatItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 // Последнее сообщение
                 AnimatedSkeleton(
                   width: double.infinity,
@@ -354,7 +351,7 @@ class SkeletonNotificationItem extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
+      child: const Row(
         children: [
           // Иконка
           AnimatedSkeleton(
@@ -362,7 +359,7 @@ class SkeletonNotificationItem extends StatelessWidget {
             height: 48,
             borderRadius: 24,
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           // Контент
           Expanded(
             child: Column(
@@ -373,13 +370,13 @@ class SkeletonNotificationItem extends StatelessWidget {
                   height: 16,
                   borderRadius: 4,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 AnimatedSkeleton(
                   width: 200,
                   height: 14,
                   borderRadius: 4,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 AnimatedSkeleton(
                   width: 80,
                   height: 12,

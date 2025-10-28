@@ -1,16 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/enhanced_idea.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/enhanced_idea.dart';
-
 /// Виджет карточки идеи
 class IdeaCardWidget extends ConsumerStatefulWidget {
   const IdeaCardWidget({
-    super.key,
-    required this.idea,
+    required this.idea, super.key,
     this.onUserTap,
     this.onLike,
     this.onComment,
@@ -114,12 +112,12 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                   Text(
                     'Пользователь ${widget.idea.authorId}',
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                        fontWeight: FontWeight.bold, fontSize: 16,),
                   ),
                   Row(
                     children: [
                       Text(widget.idea.type.icon,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                       const SizedBox(width: 4),
                       Text(
                         widget.idea.type.displayName,
@@ -138,7 +136,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
             if (widget.idea.isFeatured)
               const Icon(Icons.star, color: Colors.amber, size: 16),
             IconButton(
-                onPressed: widget.onMore, icon: const Icon(Icons.more_vert)),
+                onPressed: widget.onMore, icon: const Icon(Icons.more_vert),),
           ],
         ),
       );
@@ -150,7 +148,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
           children: [
             Text(widget.idea.title,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Text(
               widget.idea.description,
@@ -195,7 +193,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                     ),
                     child: Text('#$tag',
                         style:
-                            TextStyle(color: Colors.blue[800], fontSize: 12)),
+                            TextStyle(color: Colors.blue[800], fontSize: 12),),
                   ),
                 ),
               )
@@ -208,7 +206,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-              color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+              color: Colors.grey[100], borderRadius: BorderRadius.circular(8),),
           child: Column(
             children: [
               if (widget.idea.budget != null)
@@ -221,7 +219,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 _buildDetailRow(Icons.schedule, 'Сроки', widget.idea.timeline!),
               if (widget.idea.location != null)
                 _buildDetailRow(
-                    Icons.location_on, 'Место', widget.idea.location!),
+                    Icons.location_on, 'Место', widget.idea.location!,),
             ],
           ),
         ),
@@ -236,7 +234,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
             Text(
               '$label: ',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.grey[700]),
+                  fontWeight: FontWeight.bold, color: Colors.grey[700],),
             ),
             Expanded(
               child: Text(value, style: TextStyle(color: Colors.grey[600])),
@@ -280,7 +278,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
               errorWidget: (context, url, error) => Container(
                   height: 200,
                   color: Colors.grey[300],
-                  child: const Icon(Icons.error)),
+                  child: const Icon(Icons.error),),
             ),
           ),
         );
@@ -333,7 +331,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
             ),
             if (!_videoController!.value.isPlaying)
               const Icon(Icons.play_circle_fill,
-                  size: 64, color: Colors.white70),
+                  size: 64, color: Colors.white70,),
           ],
         ),
       ),
@@ -395,10 +393,10 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
             ),
             const SizedBox(width: 16),
             _buildActionButton(
-                icon: Icons.chat_bubble_outline, onTap: widget.onComment),
+                icon: Icons.chat_bubble_outline, onTap: widget.onComment,),
             const SizedBox(width: 16),
             _buildActionButton(
-                icon: Icons.share_outlined, onTap: widget.onShare),
+                icon: Icons.share_outlined, onTap: widget.onShare,),
             const Spacer(),
             _buildActionButton(
               icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
@@ -415,7 +413,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
       );
 
   Widget _buildActionButton(
-          {required IconData icon, Color? color, VoidCallback? onTap}) =>
+          {required IconData icon, Color? color, VoidCallback? onTap,}) =>
       GestureDetector(
         onTap: onTap,
         child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
@@ -457,7 +455,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                         TextSpan(
                           text: 'Пользователь ${comment.authorId} ',
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
+                              fontWeight: FontWeight.bold, color: Colors.black,),
                         ),
                         TextSpan(
                           text: comment.text,

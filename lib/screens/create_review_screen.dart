@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/booking.dart';
-import '../services/review_service.dart';
-
 /// Экран создания отзыва
 class CreateReviewScreen extends ConsumerStatefulWidget {
-  const CreateReviewScreen({super.key, required this.booking});
+  const CreateReviewScreen({required this.booking, super.key});
 
   final Booking booking;
 
@@ -55,7 +54,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Отзыв успешно добавлен'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         Navigator.of(context).pop(true);
       }
@@ -107,7 +106,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(_error!,
-                              style: TextStyle(color: Colors.red[600])),
+                              style: TextStyle(color: Colors.red[600]),),
                         ),
                       ],
                     ),
@@ -121,7 +120,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                   child: ElevatedButton(
                     onPressed: _isSubmitting ? null : _submitReview,
                     style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16)),
+                        padding: const EdgeInsets.symmetric(vertical: 16),),
                     child: _isSubmitting
                         ? const SizedBox(
                             height: 20,
@@ -133,7 +132,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                             ),
                           )
                         : const Text('Отправить отзыв',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16),),
                   ),
                 ),
               ],
@@ -288,7 +287,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary, width: 2),
+                    color: Theme.of(context).colorScheme.primary, width: 2,),
               ),
             ),
             validator: (value) {

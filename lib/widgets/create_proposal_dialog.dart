@@ -1,16 +1,15 @@
+import 'package:event_marketplace_app/models/specialist_profile.dart';
+import 'package:event_marketplace_app/models/specialist_proposal.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/specialist_proposal_service.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_profile.dart';
-import '../models/specialist_proposal.dart';
-import '../providers/auth_providers.dart';
-import '../services/specialist_proposal_service.dart';
-import '../services/specialist_service.dart';
 
 /// Диалог создания предложения специалистов
 class CreateProposalDialog extends ConsumerStatefulWidget {
   const CreateProposalDialog(
-      {super.key, required this.customerId, this.customerName});
+      {required this.customerId, super.key, this.customerName,});
 
   final String customerId;
   final String? customerName;
@@ -226,10 +225,10 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                                       Row(
                                         children: [
                                           const Icon(Icons.star,
-                                              size: 14, color: Colors.amber),
+                                              size: 14, color: Colors.amber,),
                                           const SizedBox(width: 4),
                                           Text(specialist.rating
-                                              .toStringAsFixed(1)),
+                                              .toStringAsFixed(1),),
                                         ],
                                       ),
                                   ],
@@ -338,7 +337,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
 
     try {
       final results = await _specialistService.searchSpecialists(
-          query: query.trim(), limit: 10);
+          query: query.trim(), limit: 10,);
 
       // Исключить уже выбранных специалистов
       final filteredResults = results
@@ -356,7 +355,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка поиска: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка поиска: $e'), backgroundColor: Colors.red,),);
       }
     } finally {
       setState(() {
@@ -430,7 +429,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {

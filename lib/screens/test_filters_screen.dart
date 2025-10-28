@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_filters.dart' as filters;
+import 'package:event_marketplace_app/services/test_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../models/specialist_filters.dart' as filters;
-import '../services/test_data_service.dart';
 
 class TestFiltersScreen extends ConsumerStatefulWidget {
   const TestFiltersScreen({super.key});
@@ -114,22 +113,16 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
         switch (filterFilters.sortBy!.value) {
           case 'rating':
             comparison = a.rating.compareTo(b.rating);
-            break;
           case 'price':
             comparison = a.hourlyRate.compareTo(b.hourlyRate);
-            break;
           case 'experience':
             comparison = a.yearsOfExperience.compareTo(b.yearsOfExperience);
-            break;
           case 'reviews':
             comparison = a.reviewCount.compareTo(b.reviewCount);
-            break;
           case 'name':
             comparison = a.name.compareTo(b.name);
-            break;
           case 'dateAdded':
             comparison = a.createdAt.compareTo(b.createdAt);
-            break;
         }
         return filterFilters.sortAscending ? comparison : -comparison;
       });
@@ -199,7 +192,7 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
             isSelected: _currentFilters.minPrice == 5000 &&
                 _currentFilters.maxPrice == 10000,
             onTap: () => _applyFilters(const filters.SpecialistFilters(
-                minPrice: 5000, maxPrice: 10000)),
+                minPrice: 5000, maxPrice: 10000,),),
           ),
           _buildFilterChip(
             label: 'Рейтинг: 4.5+',
@@ -217,13 +210,13 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
             label: 'Верифицированные',
             isSelected: _currentFilters.isVerified ?? false,
             onTap: () => _applyFilters(
-                const filters.SpecialistFilters(isVerified: true)),
+                const filters.SpecialistFilters(isVerified: true),),
           ),
           _buildFilterChip(
             label: 'Доступные',
             isSelected: _currentFilters.isAvailable ?? false,
             onTap: () => _applyFilters(
-                const filters.SpecialistFilters(isAvailable: true)),
+                const filters.SpecialistFilters(isAvailable: true),),
           ),
           _buildFilterChip(
             label: 'По цене ↑',
@@ -244,7 +237,7 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
                     !_currentFilters.sortAscending,
             onTap: () => _applyFilters(
               const filters.SpecialistFilters(
-                  sortBy: filters.SpecialistSortOption.rating),
+                  sortBy: filters.SpecialistSortOption.rating,),
             ),
           ),
           _buildFilterChip(
@@ -328,12 +321,12 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
                             Text(
                               specialist.name,
                               style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold,),
                             ),
                             Text(
                               specialist.category.displayName,
                               style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary),
+                                  color: Theme.of(context).colorScheme.primary,),
                             ),
                           ],
                         ),
@@ -344,14 +337,14 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
                           Text(
                             '${specialist.hourlyRate} ₽/час',
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,),
                           ),
                           Row(
                             children: [
                               const Icon(Icons.star,
-                                  color: Colors.amber, size: 16),
+                                  color: Colors.amber, size: 16,),
                               Text(
-                                  '${specialist.rating} (${specialist.reviewCount})'),
+                                  '${specialist.rating} (${specialist.reviewCount})',),
                             ],
                           ),
                         ],
@@ -360,18 +353,18 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(specialist.bio,
-                      maxLines: 2, overflow: TextOverflow.ellipsis),
+                      maxLines: 2, overflow: TextOverflow.ellipsis,),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Icon(Icons.location_on,
-                          size: 16, color: Colors.grey[600]),
+                          size: 16, color: Colors.grey[600],),
                       Text(specialist.location),
                       const Spacer(),
                       if (specialist.isVerified)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                              horizontal: 8, vertical: 2,),
                           decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(12),
@@ -384,7 +377,7 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
                       const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
+                            horizontal: 8, vertical: 2,),
                         decoration: BoxDecoration(
                           color: specialist.isAvailable
                               ? Colors.green
@@ -394,7 +387,7 @@ class _TestFiltersScreenState extends ConsumerState<TestFiltersScreen> {
                         child: Text(
                           specialist.isAvailable ? 'Доступен' : 'Занят',
                           style: const TextStyle(
-                              color: Colors.white, fontSize: 12),
+                              color: Colors.white, fontSize: 12,),
                         ),
                       ),
                     ],

@@ -6,11 +6,9 @@ class UserActivity {
     required this.id,
     required this.userId,
     required this.category,
-    this.specialistId,
+    required this.activityType, required this.timestamp, this.specialistId,
     this.city,
     this.price,
-    required this.activityType,
-    required this.timestamp,
     this.metadata,
   });
 
@@ -114,10 +112,7 @@ class Recommendation {
     required this.city,
     required this.price,
     required this.rating,
-    this.photoUrl,
-    required this.reason,
-    required this.confidence,
-    required this.createdAt,
+    required this.reason, required this.confidence, required this.createdAt, this.photoUrl,
   });
 
   /// Создание из Firestore документа

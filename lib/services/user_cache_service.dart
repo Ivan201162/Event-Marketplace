@@ -1,8 +1,8 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:convert';
 
 /// Сервис для кеширования данных пользователя
 class UserCacheService {
@@ -99,7 +99,7 @@ class UserCacheService {
 
   /// Проверить, нужно ли обновить кеш
   static Future<bool> shouldUpdateCache(
-      {Duration maxAge = const Duration(hours: 1)}) async {
+      {Duration maxAge = const Duration(hours: 1),}) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final lastUpdate = prefs.getInt(_lastUpdateKey);
@@ -282,7 +282,7 @@ class UserCacheService {
   static Future<int> getCacheSize() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      int size = 0;
+      var size = 0;
 
       final userData = prefs.getString(_userDataKey);
       if (userData != null) size += userData.length;

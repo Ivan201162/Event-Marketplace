@@ -1,19 +1,15 @@
+import 'package:event_marketplace_app/models/app_user.dart';
 import 'package:flutter/material.dart';
-
-import '../models/app_user.dart';
 
 /// Dialog for editing profile fields
 class ProfileEditDialog extends StatefulWidget {
+
+  const ProfileEditDialog({
+    required this.field, required this.currentValue, required this.onSave, super.key,
+  });
   final String field;
   final String currentValue;
   final void Function(String) onSave;
-
-  const ProfileEditDialog({
-    super.key,
-    required this.field,
-    required this.currentValue,
-    required this.onSave,
-  });
 
   @override
   State<ProfileEditDialog> createState() => _ProfileEditDialogState();
@@ -51,7 +47,7 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
       actions: [
         TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена')),
+            child: const Text('Отмена'),),
         ElevatedButton(onPressed: _save, child: const Text('Сохранить')),
       ],
     );
@@ -80,7 +76,7 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
     return TextField(
       controller: _controller,
       decoration: InputDecoration(
-          hintText: _getFieldHint(), border: const OutlineInputBorder()),
+          hintText: _getFieldHint(), border: const OutlineInputBorder(),),
       maxLines: widget.field == 'status' ? 3 : 1,
     );
   }
@@ -95,7 +91,7 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
         );
       }).toList(),
       selected: _selectedUserType != null ? {_selectedUserType!} : <UserType>{},
-      onSelectionChanged: (Set<UserType> selection) {
+      onSelectionChanged: (selection) {
         setState(() {
           _selectedUserType = selection.isNotEmpty ? selection.first : null;
         });

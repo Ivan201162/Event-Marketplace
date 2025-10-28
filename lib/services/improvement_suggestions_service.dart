@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../core/feature_flags.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
 /// Сервис для системы предложений по улучшению
 class ImprovementSuggestionsService {
@@ -140,7 +140,7 @@ class ImprovementSuggestionsService {
     try {
       final updateData = {
         'status': status.name,
-        'updatedAt': Timestamp.fromDate(DateTime.now())
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       };
 
       if (status == SuggestionStatus.reviewed) {
@@ -179,7 +179,7 @@ class ImprovementSuggestionsService {
 
   /// Получить популярные предложения
   Future<List<ImprovementSuggestion>> getPopularSuggestions(
-      {int limit = 10}) async {
+      {int limit = 10,}) async {
     try {
       final snapshot = await _firestore
           .collection('improvement_suggestions')
@@ -260,13 +260,9 @@ class ImprovementSuggestion {
     required this.priority,
     required this.status,
     required this.tags,
-    this.contactEmail,
-    required this.votes,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.votes, required this.createdAt, required this.updatedAt, required this.metadata, this.contactEmail,
     this.reviewedAt,
     this.implementedAt,
-    required this.metadata,
   });
 
   /// Создать из документа Firestore

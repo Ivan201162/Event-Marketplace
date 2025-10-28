@@ -1,4 +1,4 @@
-import '../core/feature_flags.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
 /// Сервис интеграции с российскими банками
 class BankIntegrationService {
@@ -190,19 +190,14 @@ class BankIntegrationService {
       switch (bankId) {
         case 'sberbank':
           feePercentage = 2.5;
-          break;
         case 'tinkoff':
           feePercentage = 2.9;
-          break;
         case 'vtb':
           feePercentage = 2.7;
-          break;
         case 'alfa':
           feePercentage = 3.0;
-          break;
         case 'gazprombank':
           feePercentage = 2.8;
-          break;
       }
 
       final totalFee = (amount * feePercentage / 100) + fixedFee;

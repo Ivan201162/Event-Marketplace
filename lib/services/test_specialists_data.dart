@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/specialist_enhanced.dart';
+import 'package:event_marketplace_app/models/specialist_enhanced.dart';
 
 /// Сервис для создания тестовых данных специалистов
 class TestSpecialistsDataService {
@@ -76,7 +76,7 @@ class TestSpecialistsDataService {
             userName: 'Анна Смирнова',
             userAvatar:
                 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
-            rating: 5.0,
+            rating: 5,
             comment: 'Отличный ведущий! Все прошло идеально.',
             createdAt: DateTime.now().subtract(const Duration(days: 5)),
             images: [],

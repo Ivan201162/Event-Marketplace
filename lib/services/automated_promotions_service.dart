@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/automated_promotions.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/automated_promotions.dart';
 
 class AutomatedPromotionsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -20,7 +19,7 @@ class AutomatedPromotionsService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final AutomatedPromotion promotion = AutomatedPromotion(
+      final promotion = AutomatedPromotion(
         id: _uuid.v4(),
         name: name,
         description: description,
@@ -42,11 +41,11 @@ class AutomatedPromotionsService {
           .set(promotion.toMap());
 
       debugPrint(
-          'INFO: [AutomatedPromotionsService] Automated promotion created: ${promotion.id}');
+          'INFO: [AutomatedPromotionsService] Automated promotion created: ${promotion.id}',);
       return promotion.id;
     } catch (e) {
       debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to create automated promotion: $e');
+          'ERROR: [AutomatedPromotionsService] Failed to create automated promotion: $e',);
       rethrow;
     }
   }
@@ -64,10 +63,10 @@ class AutomatedPromotionsService {
       });
 
       debugPrint(
-          'INFO: [AutomatedPromotionsService] Automated promotion activated: $promotionId');
+          'INFO: [AutomatedPromotionsService] Automated promotion activated: $promotionId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to activate promotion: $e');
+          'ERROR: [AutomatedPromotionsService] Failed to activate promotion: $e',);
     }
   }
 
@@ -88,7 +87,7 @@ class AutomatedPromotionsService {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to deactivate promotion: $e');
+          'ERROR: [AutomatedPromotionsService] Failed to deactivate promotion: $e',);
     }
   }
 
@@ -105,12 +104,12 @@ class AutomatedPromotionsService {
           .where('isActive', isEqualTo: true)
           .where('startDate', isLessThanOrEqualTo: FieldValue.serverTimestamp())
           .where('endDate',
-              isGreaterThanOrEqualTo: FieldValue.serverTimestamp())
+              isGreaterThanOrEqualTo: FieldValue.serverTimestamp(),)
           .get();
 
       for (final doc in promotionsSnapshot.docs) {
-        final AutomatedPromotion promotion = AutomatedPromotion.fromMap(
-          doc.data() as Map<String, dynamic>,
+        final promotion = AutomatedPromotion.fromMap(
+          doc.data()! as Map<String, dynamic>,
         );
 
         // Проверяем, соответствует ли событие триггеру
@@ -126,13 +125,13 @@ class AutomatedPromotionsService {
       }
     } catch (e) {
       debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to check and execute promotions: $e');
+          'ERROR: [AutomatedPromotionsService] Failed to check and execute promotions: $e',);
     }
   }
 
   /// Проверка соответствия события триггеру
   bool _matchesTrigger(PromotionTrigger trigger, String eventType,
-      Map<String, dynamic> eventData) {
+      Map<String, dynamic> eventData,) {
     switch (trigger) {
       case PromotionTrigger.userRegistration:
         return eventType == 'user_registration';
@@ -157,95 +156,82 @@ class AutomatedPromotionsService {
 
   /// Проверка условий промо-кампании
   Future<bool> _checkConditions(
-      String userId, Map<String, dynamic> conditions) async {
+      String userId, Map<String, dynamic> conditions,) async {
     try {
       for (final condition in conditions.entries) {
-        final String conditionType = condition.key;
+        final conditionType = condition.key;
         final dynamic conditionValue = condition.value;
 
         switch (conditionType) {
           case 'user_level':
-            final int userLevel = await _getUserLevel(userId);
+            final userLevel = await _getUserLevel(userId);
             if (userLevel < (conditionValue as int)) return false;
-            break;
 
           case 'subscription_type':
-            final String subscriptionType =
+            final subscriptionType =
                 await _getUserSubscriptionType(userId);
             if (subscriptionType != conditionValue) return false;
-            break;
 
           case 'region':
-            final String userRegion = await _getUserRegion(userId);
+            final userRegion = await _getUserRegion(userId);
             if (userRegion != conditionValue) return false;
-            break;
 
           case 'registration_date':
-            final DateTime registrationDate =
+            final registrationDate =
                 await _getUserRegistrationDate(userId);
-            final DateTime cutoffDate =
+            final cutoffDate =
                 DateTime.parse(conditionValue as String);
             if (registrationDate.isAfter(cutoffDate)) return false;
-            break;
 
           case 'total_spent':
-            final double totalSpent = await _getUserTotalSpent(userId);
+            final totalSpent = await _getUserTotalSpent(userId);
             if (totalSpent < (conditionValue as double)) return false;
-            break;
 
           case 'referral_count':
-            final int referralCount = await _getUserReferralCount(userId);
+            final referralCount = await _getUserReferralCount(userId);
             if (referralCount < (conditionValue as int)) return false;
-            break;
 
           case 'inactivity_days':
-            final int inactivityDays = await _getUserInactivityDays(userId);
+            final inactivityDays = await _getUserInactivityDays(userId);
             if (inactivityDays < (conditionValue as int)) return false;
-            break;
         }
       }
 
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to check conditions: $e');
+          'ERROR: [AutomatedPromotionsService] Failed to check conditions: $e',);
       return false;
     }
   }
 
   /// Выполнение промо-кампании
   Future<void> _executePromotion(
-      String userId, AutomatedPromotion promotion) async {
+      String userId, AutomatedPromotion promotion,) async {
     try {
       // Выполняем действия промо-кампании
       for (final action in promotion.actions.entries) {
-        final String actionType = action.key;
+        final actionType = action.key;
         final dynamic actionValue = action.value;
 
         switch (actionType) {
           case 'send_notification':
             await _sendPromotionNotification(userId, promotion, actionValue);
-            break;
 
           case 'apply_discount':
             await _applyDiscount(userId, actionValue);
-            break;
 
           case 'add_premium_days':
             await _addPremiumDays(userId, actionValue as int);
-            break;
 
           case 'give_bonus':
             await _giveBonus(userId, actionValue);
-            break;
 
           case 'unlock_feature':
             await _unlockFeature(userId, actionValue as String);
-            break;
 
           case 'send_email':
             await _sendPromotionEmail(userId, promotion, actionValue);
-            break;
         }
       }
 
@@ -257,7 +243,7 @@ class AutomatedPromotionsService {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to execute promotion: $e');
+          'ERROR: [AutomatedPromotionsService] Failed to execute promotion: $e',);
     }
   }
 
@@ -296,7 +282,7 @@ class AutomatedPromotionsService {
           'apply_discount': {
             'type': 'percentage',
             'value': 50.0,
-            'duration_days': 7
+            'duration_days': 7,
           },
         },
         startDate: DateTime.now(),
@@ -318,7 +304,7 @@ class AutomatedPromotionsService {
           'apply_discount': {
             'type': 'percentage',
             'value': 30.0,
-            'duration_days': 3
+            'duration_days': 3,
           },
         },
         startDate: DateTime.now(),
@@ -340,7 +326,7 @@ class AutomatedPromotionsService {
           'apply_discount': {
             'type': 'percentage',
             'value': 25.0,
-            'duration_days': 7
+            'duration_days': 7,
           },
         },
         startDate: DateTime.now(),
@@ -368,10 +354,10 @@ class AutomatedPromotionsService {
       );
 
       debugPrint(
-          'INFO: [AutomatedPromotionsService] Default automated promotions created');
+          'INFO: [AutomatedPromotionsService] Default automated promotions created',);
     } catch (e) {
       debugPrint(
-          'ERROR: [AutomatedPromotionsService] Failed to create default promotions: $e');
+          'ERROR: [AutomatedPromotionsService] Failed to create default promotions: $e',);
     }
   }
 
@@ -381,7 +367,7 @@ class AutomatedPromotionsService {
         await _firestore.collection('user_levels').doc(userId).get();
 
     if (doc.exists) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data()! as Map<String, dynamic>;
       return data['level'] ?? 1;
     }
     return 1;
@@ -396,7 +382,7 @@ class AutomatedPromotionsService {
         .get();
 
     if (snapshot.docs.isNotEmpty) {
-      final data = snapshot.docs.first.data() as Map<String, dynamic>;
+      final data = snapshot.docs.first.data()! as Map<String, dynamic>;
       return data['planType'] ?? 'free';
     }
     return 'free';
@@ -407,7 +393,7 @@ class AutomatedPromotionsService {
         await _firestore.collection('users').doc(userId).get();
 
     if (doc.exists) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data()! as Map<String, dynamic>;
       return data['region'] ?? 'unknown';
     }
     return 'unknown';
@@ -418,7 +404,7 @@ class AutomatedPromotionsService {
         await _firestore.collection('users').doc(userId).get();
 
     if (doc.exists) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data()! as Map<String, dynamic>;
       final timestamp = data['createdAt'] as Timestamp?;
       return timestamp?.toDate() ?? DateTime.now();
     }
@@ -432,9 +418,9 @@ class AutomatedPromotionsService {
         .where('status', isEqualTo: 'completed')
         .get();
 
-    double total = 0.0;
+    var total = 0;
     for (final doc in snapshot.docs) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data()! as Map<String, dynamic>;
       total += (data['amount'] ?? 0.0).toDouble();
     }
     return total;
@@ -454,7 +440,7 @@ class AutomatedPromotionsService {
         await _firestore.collection('users').doc(userId).get();
 
     if (doc.exists) {
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data()! as Map<String, dynamic>;
       final lastActivity = data['lastActivityAt'] as Timestamp?;
       if (lastActivity != null) {
         return DateTime.now().difference(lastActivity.toDate()).inDays;
@@ -471,32 +457,32 @@ class AutomatedPromotionsService {
   ) async {
     // Логика отправки уведомления
     debugPrint(
-        'INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId');
+        'INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId',);
   }
 
   Future<void> _applyDiscount(
-      String userId, Map<String, dynamic> discountData) async {
+      String userId, Map<String, dynamic> discountData,) async {
     // Логика применения скидки
     debugPrint(
-        'INFO: [AutomatedPromotionsService] Applying discount to user $userId');
+        'INFO: [AutomatedPromotionsService] Applying discount to user $userId',);
   }
 
   Future<void> _addPremiumDays(String userId, int days) async {
     // Логика добавления премиум дней
     debugPrint(
-        'INFO: [AutomatedPromotionsService] Adding $days premium days to user $userId');
+        'INFO: [AutomatedPromotionsService] Adding $days premium days to user $userId',);
   }
 
   Future<void> _giveBonus(String userId, Map<String, dynamic> bonusData) async {
     // Логика выдачи бонуса
     debugPrint(
-        'INFO: [AutomatedPromotionsService] Giving bonus to user $userId');
+        'INFO: [AutomatedPromotionsService] Giving bonus to user $userId',);
   }
 
   Future<void> _unlockFeature(String userId, String feature) async {
     // Логика разблокировки функции
     debugPrint(
-        'INFO: [AutomatedPromotionsService] Unlocking feature $feature for user $userId');
+        'INFO: [AutomatedPromotionsService] Unlocking feature $feature for user $userId',);
   }
 
   Future<void> _sendPromotionEmail(
@@ -506,7 +492,7 @@ class AutomatedPromotionsService {
   ) async {
     // Логика отправки email
     debugPrint(
-        'INFO: [AutomatedPromotionsService] Sending promotion email to user $userId');
+        'INFO: [AutomatedPromotionsService] Sending promotion email to user $userId',);
   }
 
   /// Вспомогательные методы для проверки дат и событий
@@ -529,7 +515,7 @@ class AutomatedPromotionsService {
   }
 
   Future<bool> _isPromotionAppliedToUser(
-      String userId, String promotionId) async {
+      String userId, String promotionId,) async {
     final QuerySnapshot snapshot = await _firestore
         .collection('promotion_applications')
         .where('userId', isEqualTo: userId)
@@ -540,7 +526,7 @@ class AutomatedPromotionsService {
   }
 
   Future<void> _recordPromotionApplication(
-      String userId, String promotionId) async {
+      String userId, String promotionId,) async {
     await _firestore.collection('promotion_applications').add({
       'userId': userId,
       'promotionId': promotionId,

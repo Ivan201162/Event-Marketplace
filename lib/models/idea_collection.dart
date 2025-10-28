@@ -2,32 +2,15 @@ import 'package:equatable/equatable.dart';
 
 /// Model for idea collections
 class IdeaCollection extends Equatable {
-  final String id;
-  final String name;
-  final String? description;
-  final String? imageUrl;
-  final List<String> ideaIds;
-  final String authorId;
-  final String authorName;
-  final bool isPublic;
-  final int likesCount;
-  final int viewsCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const IdeaCollection({
     required this.id,
     required this.name,
-    this.description,
+    required this.ideaIds, required this.authorId, required this.authorName, required this.createdAt, required this.updatedAt, this.description,
     this.imageUrl,
-    required this.ideaIds,
-    required this.authorId,
-    required this.authorName,
     this.isPublic = true,
     this.likesCount = 0,
     this.viewsCount = 0,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory IdeaCollection.fromMap(Map<String, dynamic> map) {
@@ -48,6 +31,18 @@ class IdeaCollection extends Equatable {
           DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
+  final String id;
+  final String name;
+  final String? description;
+  final String? imageUrl;
+  final List<String> ideaIds;
+  final String authorId;
+  final String authorName;
+  final bool isPublic;
+  final int likesCount;
+  final int viewsCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toMap() {
     return {

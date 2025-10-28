@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/data/models/up_user.dart';
+import 'package:event_marketplace_app/data/repositories/user_repository.dart';
+import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
+import 'package:event_marketplace_app/screens/modern_auth_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../data/models/up_user.dart';
-import '../data/repositories/user_repository.dart';
-import '../screens/main_navigation_screen.dart';
-import '../screens/modern_auth_screen.dart';
 
 final firebaseUserProvider = StreamProvider<User?>(
   (ref) => FirebaseAuth.instance.authStateChanges(),

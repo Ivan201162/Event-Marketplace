@@ -6,26 +6,11 @@ class Documentation {
     required this.id,
     required this.title,
     required this.content,
-    this.summary,
-    required this.type,
-    required this.category,
-    required this.status,
+    required this.type, required this.category, required this.status, required this.tags, required this.attachments, required this.metadata, required this.isPublic, required this.isArchived, required this.viewCount, required this.likeCount, required this.contributors, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.summary,
     this.version,
     this.parentId,
-    required this.tags,
-    required this.attachments,
-    required this.metadata,
-    required this.isPublic,
-    required this.isArchived,
-    required this.viewCount,
-    required this.likeCount,
-    required this.contributors,
     this.authorId,
     this.authorName,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory Documentation.fromMap(Map<String, dynamic> map) => Documentation(
@@ -35,7 +20,7 @@ class Documentation {
         summary: map['summary'] as String?,
         type: DocumentType.fromString(map['type'] as String? ?? 'article'),
         category: DocumentCategory.fromString(
-            map['category'] as String? ?? 'general'),
+            map['category'] as String? ?? 'general',),
         status: DocumentStatus.fromString(map['status'] as String? ?? 'draft'),
         version: map['version'] as String?,
         parentId: map['parentId'] as String?,
@@ -43,7 +28,7 @@ class Documentation {
         attachments:
             List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
-            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         isPublic: map['isPublic'] as bool? ?? false,
         isArchived: map['isArchived'] as bool? ?? false,
         viewCount: map['viewCount'] as int? ?? 0,
@@ -404,10 +389,10 @@ class DocumentTemplate {
         content: map['content'] as String? ?? '',
         type: DocumentType.fromString(map['type'] as String? ?? 'article'),
         category: DocumentCategory.fromString(
-            map['category'] as String? ?? 'general'),
+            map['category'] as String? ?? 'general',),
         tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
-            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         isPublic: map['isPublic'] as bool? ?? false,
         usageCount: map['usageCount'] as int? ?? 0,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
@@ -500,14 +485,8 @@ class DocumentComment {
     required this.id,
     required this.documentId,
     required this.content,
-    this.parentId,
-    required this.authorId,
-    required this.authorName,
+    required this.authorId, required this.authorName, required this.isResolved, required this.likes, required this.createdAt, required this.updatedAt, this.parentId,
     this.authorEmail,
-    required this.isResolved,
-    required this.likes,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory DocumentComment.fromMap(Map<String, dynamic> map) => DocumentComment(

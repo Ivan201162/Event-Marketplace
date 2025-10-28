@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
+import 'package:event_marketplace_app/services/media_upload_service.dart';
+import 'package:event_marketplace_app/widgets/media_attachment_widget.dart';
+import 'package:event_marketplace_app/widgets/media_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat.dart';
-import '../services/chat_service.dart';
-import '../services/media_upload_service.dart';
-import '../widgets/media_attachment_widget.dart';
-import '../widgets/media_message_widget.dart';
 
 class TestMediaChatScreen extends ConsumerStatefulWidget {
   const TestMediaChatScreen({super.key});
@@ -187,7 +186,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.chat_bubble_outline,
-                            size: 64, color: Colors.grey[400]),
+                            size: 64, color: Colors.grey[400],),
                         const SizedBox(height: 16),
                         Text(
                           'Нет сообщений',
@@ -238,7 +237,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         color: theme.colorScheme.surface,
         border: Border(
             top: BorderSide(
-                color: theme.colorScheme.outline.withValues(alpha: 0.2))),
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),),),
       ),
       child: Row(
         children: [
@@ -275,7 +274,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
 
           // Кнопка отправки
           FloatingActionButton.small(
-              onPressed: _sendTextMessage, child: const Icon(Icons.send)),
+              onPressed: _sendTextMessage, child: const Icon(Icons.send),),
         ],
       ),
     );
@@ -312,7 +311,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => MediaAttachmentWidget(
-          onMediaSelected: _handleMediaSelected, onError: _showErrorSnackBar),
+          onMediaSelected: _handleMediaSelected, onError: _showErrorSnackBar,),
     );
   }
 
@@ -336,7 +335,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         thumbnailUrl: mediaResult.thumbnailUrl,
         metadata: {
           'storagePath': mediaResult.storagePath,
-          'mediaType': mediaResult.mediaType.name
+          'mediaType': mediaResult.mediaType.name,
         },
         status: MessageStatus.sent,
         timestamp: DateTime.now(),
@@ -376,17 +375,13 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
     switch (message.type) {
       case MessageType.image:
         _showImagePreview(message.fileUrl!);
-        break;
       case MessageType.video:
         _showVideoPreview(message.fileUrl!);
-        break;
       case MessageType.audio:
         _showAudioPreview(message.fileUrl!);
-        break;
       case MessageType.file:
       case MessageType.attachment:
         _showFilePreview(message);
-        break;
       default:
         break;
     }
@@ -449,7 +444,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -473,7 +468,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -494,13 +489,13 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
             Text('URL: ${message.fileUrl}'),
             const SizedBox(height: 16),
             const Text(
-                'В реальном приложении здесь будет возможность скачать файл'),
+                'В реальном приложении здесь будет возможность скачать файл',),
           ],
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -526,13 +521,13 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 }

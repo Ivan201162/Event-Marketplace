@@ -1,21 +1,19 @@
+import 'package:event_marketplace_app/models/recommendation.dart';
+import 'package:event_marketplace_app/models/recommendation_interaction.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_recommendation.dart';
+import 'package:event_marketplace_app/providers/recommendation_interaction_provider.dart';
+import 'package:event_marketplace_app/providers/recommendation_providers.dart';
+import 'package:event_marketplace_app/providers/subscription_providers.dart';
+import 'package:event_marketplace_app/widgets/animated_button.dart';
+import 'package:event_marketplace_app/widgets/animated_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/recommendation.dart';
-import '../models/recommendation_interaction.dart';
-import '../models/specialist.dart';
-import '../models/specialist_recommendation.dart';
-import '../providers/recommendation_interaction_provider.dart';
-import '../providers/recommendation_providers.dart';
-import '../providers/subscription_providers.dart';
-import 'animated_button.dart';
-import 'animated_card.dart';
 
 /// Виджет для отображения рекомендации специалиста
 class SpecialistRecommendationWidget extends ConsumerWidget {
   const SpecialistRecommendationWidget({
-    super.key,
-    required this.recommendation,
+    required this.recommendation, super.key,
     this.onTap,
     this.onDismiss,
     this.onSave,
@@ -65,7 +63,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         // Записываем взаимодействие
         ref
             .read<RecommendationInteractionNotifier>(
-                recommendationInteractionProvider.notifier)
+                recommendationInteractionProvider.notifier,)
             .recordInteraction(
               RecommendationInteraction(
                 id: '${recommendation.id}_${DateTime.now().millisecondsSinceEpoch}',
@@ -106,7 +104,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
 
   /// Заголовок рекомендации
   Widget _buildRecommendationHeader(
-      BuildContext context, Recommendation recommendation) {
+      BuildContext context, Recommendation recommendation,) {
     final typeName = recommendation.type.displayName;
     final typeColor = _getRecommendationTypeColor(recommendation.type);
     final typeIcon = _getRecommendationTypeIcon(recommendation.type);
@@ -236,7 +234,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                     style: Theme.of(
                       context,
                     ).textTheme.bodySmall?.copyWith(
-                        color: Colors.green, fontWeight: FontWeight.w500),
+                        color: Colors.green, fontWeight: FontWeight.w500,),
                   ),
                 ),
             ],
@@ -246,7 +244,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
 
   /// Причина рекомендации
   Widget _buildRecommendationReason(
-          BuildContext context, Recommendation recommendation) =>
+          BuildContext context, Recommendation recommendation,) =>
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -259,7 +257,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         child: Row(
           children: [
             Icon(Icons.lightbulb_outline,
-                size: 16, color: Theme.of(context).colorScheme.primary),
+                size: 16, color: Theme.of(context).colorScheme.primary,),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -284,7 +282,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
               onPressed: () {
                 ref
                     .read<RecommendationInteractionNotifier>(
-                        recommendationInteractionProvider.notifier)
+                        recommendationInteractionProvider.notifier,)
                     .recordInteraction(
                       RecommendationInteraction(
                         id: '${recommendation.id}_clicked_${DateTime.now().millisecondsSinceEpoch}',
@@ -320,7 +318,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             onPressed: () {
               ref
                   .read<RecommendationInteractionNotifier>(
-                      recommendationInteractionProvider.notifier)
+                      recommendationInteractionProvider.notifier,)
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_saved_${DateTime.now().millisecondsSinceEpoch}',
@@ -341,7 +339,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             onPressed: () {
               ref
                   .read<RecommendationInteractionNotifier>(
-                      recommendationInteractionProvider.notifier)
+                      recommendationInteractionProvider.notifier,)
                   .recordInteraction(
                     RecommendationInteraction(
                       id: '${recommendation.id}_dismissed_${DateTime.now().millisecondsSinceEpoch}',
@@ -373,8 +371,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
 /// Виджет для отображения коллекции рекомендаций
 class RecommendationCollectionWidget extends ConsumerWidget {
   const RecommendationCollectionWidget({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.type,
     this.limit,
     this.showTitle = true,
@@ -426,14 +423,14 @@ class RecommendationCollectionWidget extends ConsumerWidget {
                 child: SpecialistRecommendationWidget(
                   recommendation: recommendation as SpecialistRecommendation,
                   onTap: () => _showSpecialistProfile(
-                      context, recommendation.specialist),
+                      context, recommendation.specialist,),
                   onDismiss: () => _dismissRecommendation(
                     context,
                     ref,
                     recommendation as SpecialistRecommendation,
                   ),
                   onSave: () => _saveRecommendation(
-                      context, ref, recommendation as SpecialistRecommendation),
+                      context, ref, recommendation as SpecialistRecommendation,),
                 ),
               ),
             ),
@@ -488,7 +485,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
         child: Column(
           children: [
             Icon(Icons.error_outline,
-                size: 64, color: Theme.of(context).colorScheme.error),
+                size: 64, color: Theme.of(context).colorScheme.error,),
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки рекомендаций',
@@ -539,7 +536,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('Открыть профиль ${specialist.name}')));
+        SnackBar(content: Text('Открыть профиль ${specialist.name}')),);
   }
 
   void _dismissRecommendation(
@@ -566,7 +563,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
 /// Виджет для отображения блока "Похожие специалисты"
 class SimilarSpecialistsWidget extends ConsumerWidget {
   const SimilarSpecialistsWidget(
-      {super.key, required this.specialistId, this.limit = 5});
+      {required this.specialistId, super.key, this.limit = 5,});
   final String specialistId;
   final int limit;
 
@@ -603,11 +600,11 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
                     width: 280,
                     child: Padding(
                       padding: EdgeInsets.only(
-                          right: index < similar.length - 1 ? 16 : 0),
+                          right: index < similar.length - 1 ? 16 : 0,),
                       child: SpecialistRecommendationWidget(
                         recommendation: recommendation,
                         onTap: () => _showSpecialistProfile(
-                            context, recommendation.specialist!),
+                            context, recommendation.specialist!,),
                       ),
                     ),
                   );
@@ -626,6 +623,6 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('Открыть профиль ${specialist.name}')));
+        SnackBar(content: Text('Открыть профиль ${specialist.name}')),);
   }
 }

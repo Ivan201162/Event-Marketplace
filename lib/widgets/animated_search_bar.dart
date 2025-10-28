@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Анимированная строка поиска с эффектами
 class AnimatedSearchBar extends StatefulWidget {
-  const AnimatedSearchBar({super.key, required this.onSearch});
+  const AnimatedSearchBar({required this.onSearch, super.key});
 
   final ValueChanged<String> onSearch;
 
@@ -27,16 +27,16 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 1.02,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _animationController.forward();
   }
@@ -56,7 +56,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
         return FadeTransition(
           opacity: _fadeAnimation,
           child: ScaleTransition(
-              scale: _scaleAnimation, child: _buildSearchField()),
+              scale: _scaleAnimation, child: _buildSearchField(),),
         );
       },
     );
@@ -128,7 +128,7 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar>
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor, width: 2),
+                        color: Theme.of(context).primaryColor, width: 2,),
                   ),
                   filled: true,
                   fillColor: _isFocused

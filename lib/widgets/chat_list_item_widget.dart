@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/enhanced_chat.dart';
+import 'package:event_marketplace_app/models/enhanced_message.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/enhanced_chat.dart';
-import '../models/enhanced_message.dart';
-
 /// Виджет элемента списка чатов
 class ChatListItemWidget extends StatelessWidget {
-  const ChatListItemWidget({super.key, required this.chat, this.onTap, this.onPin, this.onDelete});
+  const ChatListItemWidget({required this.chat, super.key, this.onTap, this.onPin, this.onDelete});
   final EnhancedChat chat;
   final VoidCallback? onTap;
   final VoidCallback? onPin;
@@ -205,10 +204,8 @@ class ChatListItemWidget extends StatelessWidget {
                     switch (value) {
                       case 'pin':
                         onPin?.call();
-                        break;
                       case 'delete':
                         onDelete?.call();
-                        break;
                     }
                   },
                   itemBuilder: (context) => [
@@ -293,35 +290,27 @@ class ChatListItemWidget extends StatelessWidget {
       case MessageType.image:
         icon = Icons.image;
         color = Colors.blue;
-        break;
       case MessageType.video:
         icon = Icons.videocam;
         color = Colors.purple;
-        break;
       case MessageType.audio:
         icon = Icons.mic;
         color = Colors.orange;
-        break;
       case MessageType.document:
         icon = Icons.description;
         color = Colors.grey;
-        break;
       case MessageType.location:
         icon = Icons.location_on;
         color = Colors.red;
-        break;
       case MessageType.contact:
         icon = Icons.person;
         color = Colors.green;
-        break;
       case MessageType.sticker:
         icon = Icons.emoji_emotions;
         color = Colors.pink;
-        break;
       case MessageType.system:
         icon = Icons.settings;
         color = Colors.grey;
-        break;
       default:
         icon = Icons.message;
         color = Colors.grey;
@@ -339,8 +328,8 @@ class ChatListItemWidget extends StatelessWidget {
 
   Widget _getReadStatusIcon() {
     // Симуляция статуса прочтения
-    final isRead = true; // В реальном приложении это будет из данных
-    final isDelivered = true;
+    const isRead = true; // В реальном приложении это будет из данных
+    const isDelivered = true;
 
     if (isRead) {
       return Container(
@@ -349,7 +338,7 @@ class ChatListItemWidget extends StatelessWidget {
           color: Colors.blue.withOpacity(0.1),
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Icon(
+        child: const Icon(
           Icons.done_all,
           size: 12,
           color: Colors.blue,

@@ -1,17 +1,13 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/services/reviews_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/reviews_service.dart';
-
 class AddReviewBottomSheet extends StatefulWidget {
   const AddReviewBottomSheet({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
-    required this.onReviewAdded,
+    required this.specialistId, required this.specialistName, required this.onReviewAdded, super.key,
   });
   final String specialistId;
   final String specialistName;
@@ -56,11 +52,11 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
                 children: [
                   Expanded(
                     child: Text('Оставить отзыв',
-                        style: Theme.of(context).textTheme.titleLarge),
+                        style: Theme.of(context).textTheme.titleLarge,),
                   ),
                   IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close)),
+                      icon: const Icon(Icons.close),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -146,7 +142,7 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
                     Text(
                       _rating.toStringAsFixed(1),
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.amber),
+                          fontWeight: FontWeight.bold, color: Colors.amber,),
                     ),
                   ],
                 ),
@@ -158,7 +154,7 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
             children: List.generate(
               5,
               (index) => Icon(index < _rating ? Icons.star : Icons.star_border,
-                  color: Colors.amber, size: 24),
+                  color: Colors.amber, size: 24,),
             ),
           ),
         ],
@@ -248,9 +244,9 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
                           child: Container(
                             padding: const EdgeInsets.all(2),
                             decoration: const BoxDecoration(
-                                color: Colors.red, shape: BoxShape.circle),
+                                color: Colors.red, shape: BoxShape.circle,),
                             child: const Icon(Icons.close,
-                                color: Colors.white, size: 16),
+                                color: Colors.white, size: 16,),
                           ),
                         ),
                       ),
@@ -280,7 +276,7 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
               ? const SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2))
+                  child: CircularProgressIndicator(strokeWidth: 2),)
               : const Text('Отправить отзыв'),
         ),
       );
@@ -333,7 +329,7 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
         // Здесь должна быть загрузка в Firebase Storage
         // Для демонстрации используем заглушку
         photoUrls.add(
-            'https://picsum.photos/400?random=${DateTime.now().millisecondsSinceEpoch}');
+            'https://picsum.photos/400?random=${DateTime.now().millisecondsSinceEpoch}',);
       }
 
       await _reviewsService.addReview(
@@ -353,14 +349,14 @@ class _AddReviewBottomSheetState extends State<AddReviewBottomSheet> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Отзыв успешно добавлен!')));
+            const SnackBar(content: Text('Отзыв успешно добавлен!')),);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка при добавлении отзыва: $e')));
+            SnackBar(content: Text('Ошибка при добавлении отзыва: $e')),);
       }
     } finally {
       if (mounted) {

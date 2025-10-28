@@ -2,27 +2,11 @@ import 'package:equatable/equatable.dart';
 
 /// Specialist review statistics model
 class SpecialistReviewStats extends Equatable {
-  final String specialistId;
-  final String specialistName;
-  final String? specialistAvatar;
-  final int totalReviews;
-  final double averageRating;
-  final Map<int, int> ratingDistribution;
-  final List<String> topTags;
-  final int verifiedReviews;
-  final int recentReviews;
-  final double responseRate;
-  final double satisfactionRate;
-  final List<String> specializations;
-  final int completedBookings;
-  final double responseTime;
 
   const SpecialistReviewStats({
     required this.specialistId,
     required this.specialistName,
-    this.specialistAvatar,
-    required this.totalReviews,
-    required this.averageRating,
+    required this.totalReviews, required this.averageRating, this.specialistAvatar,
     this.ratingDistribution = const {},
     this.topTags = const [],
     this.verifiedReviews = 0,
@@ -53,6 +37,20 @@ class SpecialistReviewStats extends Equatable {
       responseTime: (data['responseTime'] ?? 0.0).toDouble(),
     );
   }
+  final String specialistId;
+  final String specialistName;
+  final String? specialistAvatar;
+  final int totalReviews;
+  final double averageRating;
+  final Map<int, int> ratingDistribution;
+  final List<String> topTags;
+  final int verifiedReviews;
+  final int recentReviews;
+  final double responseRate;
+  final double satisfactionRate;
+  final List<String> specializations;
+  final int completedBookings;
+  final double responseTime;
 
   /// Convert SpecialistReviewStats to Map
   Map<String, dynamic> toMap() {

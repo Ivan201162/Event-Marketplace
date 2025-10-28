@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/payment_models.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/services/sbp_payment_service.dart';
+import 'package:event_marketplace_app/services/tinkoff_payment_service.dart';
+import 'package:event_marketplace_app/services/yookassa_payment_service.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/payment_models.dart';
-import 'payment_service.dart';
-import 'sbp_payment_service.dart';
-import 'tinkoff_payment_service.dart';
-import 'yookassa_payment_service.dart';
 
 class RefundService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -60,7 +59,7 @@ class RefundService {
 
       // Update payment status
       await _paymentService.updatePaymentStatus(
-          paymentId, PaymentStatus.refunded);
+          paymentId, PaymentStatus.refunded,);
 
       debugPrint('Refund created: $refundId');
       return refund;
@@ -96,26 +95,20 @@ class RefundService {
         case PaymentMethod.sbp:
           // SBP refunds are typically handled by the bank
           success = await _processSBPRefund(refund, payment);
-          break;
         case PaymentMethod.yookassa:
           gatewayRefundId = await _processYooKassaRefund(refund, payment);
           success = gatewayRefundId != null;
-          break;
         case PaymentMethod.tinkoff:
           success = await _processTinkoffRefund(refund, payment);
-          break;
         case PaymentMethod.card:
           // Card refunds are handled by the payment gateway
           success = await _processCardRefund(refund, payment);
-          break;
         case PaymentMethod.cash:
           // Cash refunds are handled manually
           success = await _processCashRefund(refund, payment);
-          break;
         case PaymentMethod.bankTransfer:
           // Bank transfer refunds are handled manually
           success = await _processBankTransferRefund(refund, payment);
-          break;
       }
 
       if (success) {
@@ -136,7 +129,7 @@ class RefundService {
     } catch (e) {
       debugPrint('Error processing refund: $e');
       await _updateRefundStatus(refundId, RefundStatus.failed,
-          failureReason: e.toString());
+          failureReason: e.toString(),);
       throw Exception('Ошибка обработки возврата: $e');
     }
   }
@@ -145,7 +138,7 @@ class RefundService {
   Future<void> cancelRefund(String refundId, String reason) async {
     try {
       await _updateRefundStatus(refundId, RefundStatus.cancelled,
-          failureReason: reason);
+          failureReason: reason,);
       debugPrint('Refund cancelled: $refundId');
     } catch (e) {
       debugPrint('Error cancelling refund: $e');
@@ -323,7 +316,7 @@ class RefundService {
 
   /// Processes bank transfer refund
   Future<bool> _processBankTransferRefund(
-      Refund refund, Payment payment) async {
+      Refund refund, Payment payment,) async {
     try {
       // Bank transfer refunds are handled manually
       // This would typically involve notifying the specialist
@@ -346,11 +339,9 @@ class Refund {
     required this.type,
     required this.status,
     required this.requestedBy,
-    this.description,
+    required this.createdAt, required this.updatedAt, this.description,
     this.gatewayRefundId,
     this.failureReason,
-    required this.createdAt,
-    required this.updatedAt,
     this.completedAt,
   });
 

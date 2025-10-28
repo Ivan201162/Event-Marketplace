@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/models/event_archive.dart';
+import 'package:event_marketplace_app/providers/archive_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../core/app_theme.dart';
-import '../models/event_archive.dart';
-import '../providers/archive_providers.dart';
-
 /// Виджет секции архивов фото/видео
 class ArchiveSection extends ConsumerStatefulWidget {
   const ArchiveSection(
-      {super.key, required this.bookingId, required this.currentUserId});
+      {required this.bookingId, required this.currentUserId, super.key,});
   final String bookingId;
   final String currentUserId;
 
@@ -54,7 +53,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         await ref
             .read(archiveUploadStateProvider.notifier)
             .uploadArchiveFromCamera(
-                bookingId: widget.bookingId, uploadedBy: widget.currentUserId);
+                bookingId: widget.bookingId, uploadedBy: widget.currentUserId,);
       }
 
       // Обновляем список архивов
@@ -64,7 +63,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Архив успешно загружен'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -72,7 +71,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red,),);
       }
     }
   }
@@ -114,7 +113,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Архив удален'), backgroundColor: Colors.orange),
+              content: Text('Архив удален'), backgroundColor: Colors.orange,),
         );
       }
     } catch (e) {
@@ -122,7 +121,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red,),);
       }
     }
   }
@@ -133,7 +132,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         builder: (context) => AlertDialog(
           title: const Text('Удалить архив?'),
           content: Text(
-              'Вы уверены, что хотите удалить "${archive.fileName ?? 'файл'}"?'),
+              'Вы уверены, что хотите удалить "${archive.fileName ?? 'файл'}"?',),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -180,7 +179,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                           )
                         : const Icon(Icons.upload),
                     label: Text(
-                        uploadState.isUploading ? 'Загрузка...' : 'Загрузить'),
+                        uploadState.isUploading ? 'Загрузка...' : 'Загрузить',),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BrandColors.primary,
                       foregroundColor: Colors.white,
@@ -215,7 +214,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
             Icon(Icons.folder_open, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
             Text('Архив пуст',
-                style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
+                style: TextStyle(fontSize: 18, color: Colors.grey.shade600),),
             const SizedBox(height: 8),
             Text(
               'Загрузите фото и видео после завершения мероприятия',
@@ -233,7 +232,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
             Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
             const SizedBox(height: 16),
             Text('Ошибка загрузки',
-                style: TextStyle(fontSize: 18, color: Colors.red.shade600)),
+                style: TextStyle(fontSize: 18, color: Colors.red.shade600),),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -262,7 +261,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         child: ListTile(
           leading: _buildArchiveIcon(archive),
           title: Text(archive.fileName ?? 'Файл',
-              style: const TextStyle(fontWeight: FontWeight.w500)),
+              style: const TextStyle(fontWeight: FontWeight.w500),),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -271,7 +270,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                   archive.description!.isNotEmpty)
                 Text(archive.description!,
                     style:
-                        TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                        TextStyle(color: Colors.grey.shade600, fontSize: 12),),
               Text(
                 'Загружено: ${_formatDate(archive.uploadedAt)}',
                 style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
@@ -283,10 +282,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
               switch (value) {
                 case 'download':
                   _downloadArchive(archive);
-                  break;
                 case 'delete':
                   _deleteArchive(archive);
-                  break;
               }
             },
             itemBuilder: (context) => [
@@ -295,8 +292,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                 child: Row(children: [
                   Icon(Icons.download),
                   SizedBox(width: 8),
-                  Text('Скачать')
-                ]),
+                  Text('Скачать'),
+                ],),
               ),
               if (_canUpload)
                 const PopupMenuItem(
@@ -324,7 +321,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
           borderRadius: BorderRadius.circular(8),
           image: archive.isImage
               ? DecorationImage(
-                  image: NetworkImage(archive.fileUrl), fit: BoxFit.cover)
+                  image: NetworkImage(archive.fileUrl), fit: BoxFit.cover,)
               : null,
           color: !archive.isImage ? Colors.grey.shade200 : null,
         ),
@@ -390,7 +387,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                       child: Text(
                         archive.fileName ?? 'Файл',
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     IconButton(

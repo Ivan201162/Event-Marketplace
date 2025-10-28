@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Виджет авторизации по телефону
 class PhoneAuthWidget extends ConsumerStatefulWidget {
@@ -49,7 +48,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('SMS код отправлен на ваш номер')));
+            const SnackBar(content: Text('SMS код отправлен на ваш номер')),);
       }
     } on Exception catch (e) {
       authError.setError(e.toString().replaceFirst('Exception: ', ''));
@@ -137,7 +136,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   hintText: '+7 (999) 123-45-67',
                   prefixIcon: const Icon(Icons.phone_outlined),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
                 textInputAction: TextInputAction.done,
                 validator: (value) {
@@ -162,7 +161,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
                 child: const Text(
                   'Отправить код',
@@ -180,7 +179,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   hintText: '123456',
                   prefixIcon: const Icon(Icons.sms_outlined),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                   counterText: '',
                 ),
                 textInputAction: TextInputAction.done,
@@ -205,7 +204,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
                 child: const Text(
                   'Подтвердить код',
@@ -220,7 +219,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                 child: Text(
                   'Отправить код повторно',
                   style: TextStyle(
-                      color: theme.primaryColor, fontWeight: FontWeight.w500),
+                      color: theme.primaryColor, fontWeight: FontWeight.w500,),
                 ),
               ),
             ],
@@ -234,7 +233,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                 color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: theme.primaryColor.withValues(alpha: 0.3)),
+                    color: theme.primaryColor.withValues(alpha: 0.3),),
               ),
               child: Row(
                 children: [

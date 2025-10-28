@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/event.dart';
-import '../models/event_filter.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/event_filter.dart';
 
 /// Сервис для работы с событиями
 class EventService {
@@ -123,7 +123,7 @@ class EventService {
 
   /// Получить события в диапазоне дат
   Stream<List<Event>> getEventsByDateRange(
-          DateTime startDate, DateTime endDate) =>
+          DateTime startDate, DateTime endDate,) =>
       _firestore
           .collection('events')
           .where('isPublic', isEqualTo: true)
@@ -203,13 +203,10 @@ class EventService {
         switch (event.status) {
           case EventStatus.active:
             active++;
-            break;
           case EventStatus.completed:
             completed++;
-            break;
           case EventStatus.cancelled:
             cancelled++;
-            break;
           default:
             break;
         }
@@ -219,7 +216,7 @@ class EventService {
         'total': total,
         'active': active,
         'completed': completed,
-        'cancelled': cancelled
+        'cancelled': cancelled,
       };
     } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
@@ -236,17 +233,17 @@ class EventService {
     // Фильтр по дате
     if (filter.startDate != null) {
       query = query.where('date',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),);
     }
     if (filter.endDate != null) {
       query = query.where('date',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),);
     }
 
     // Фильтр по категории
     if (filter.categories != null && filter.categories!.isNotEmpty) {
       query = query.where('category',
-          whereIn: filter.categories!.map((c) => c.name).toList());
+          whereIn: filter.categories!.map((c) => c.name).toList(),);
     }
 
     // Фильтр по цене

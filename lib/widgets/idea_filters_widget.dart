@@ -1,13 +1,9 @@
+import 'package:event_marketplace_app/models/idea_category.dart';
 import 'package:flutter/material.dart';
-
-import '../models/idea_category.dart';
 
 class IdeaFiltersWidget extends StatefulWidget {
   const IdeaFiltersWidget({
-    super.key,
-    required this.selectedCategory,
-    required this.selectedTags,
-    required this.onFiltersChanged,
+    required this.selectedCategory, required this.selectedTags, required this.onFiltersChanged, super.key,
   });
   final IdeaCategory? selectedCategory;
   final List<String> selectedTags;
@@ -63,9 +59,9 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
           TextButton(onPressed: _clearFilters, child: const Text('Очистить')),
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
-              onPressed: _applyFilters, child: const Text('Применить')),
+              onPressed: _applyFilters, child: const Text('Применить'),),
         ],
       );
 
@@ -73,20 +69,20 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Категория',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: <IdeaCategory>[].map((IdeaCategory category) {
-              final bool isSelected = _selectedCategory == category;
+            children: <IdeaCategory>[].map((category) {
+              final isSelected = _selectedCategory == category;
               return FilterChip(
                 label: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(category.icon),
                     const SizedBox(width: 4),
-                    Text(category.name)
+                    Text(category.name),
                   ],
                 ),
                 selected: isSelected,
@@ -116,13 +112,13 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Популярные теги',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: _popularTags.map((String tag) {
-              final bool isSelected = _selectedTags.contains(tag);
+            children: _popularTags.map((tag) {
+              final isSelected = _selectedTags.contains(tag);
               return FilterChip(
                 label: Text(tag),
                 selected: isSelected,
@@ -158,7 +154,7 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
               hintText: 'Добавить тег',
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
-                  icon: const Icon(Icons.add), onPressed: _addCustomTag),
+                  icon: const Icon(Icons.add), onPressed: _addCustomTag,),
             ),
             onSubmitted: _addCustomTag,
           ),
@@ -184,7 +180,7 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             ElevatedButton(
               onPressed: () {
                 final newTag = controller.text.trim();
@@ -227,10 +223,7 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
 /// Виджет для отображения активных фильтров
 class ActiveFiltersWidget extends StatelessWidget {
   const ActiveFiltersWidget({
-    super.key,
-    required this.selectedCategory,
-    required this.selectedTags,
-    required this.onFiltersChanged,
+    required this.selectedCategory, required this.selectedTags, required this.onFiltersChanged, super.key,
   });
   final IdeaCategory? selectedCategory;
   final List<String> selectedTags;
@@ -256,7 +249,7 @@ class ActiveFiltersWidget extends StatelessWidget {
               onRemove: () => onFiltersChanged(null, selectedTags),
             ),
           ...selectedTags.map(
-            (String tag) => _buildFilterChip(
+            (tag) => _buildFilterChip(
               context,
               label: tag,
               onRemove: () {

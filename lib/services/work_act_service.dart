@@ -131,7 +131,7 @@ class WorkActService {
 
   /// Отклонить акт выполненных работ
   Future<void> rejectWorkAct(
-      {required String workActId, required String reason}) async {
+      {required String workActId, required String reason,}) async {
     try {
       await _firestore.collection('work_acts').doc(workActId).update({
         'status': WorkActStatus.rejected.name,
@@ -156,7 +156,7 @@ class WorkActService {
   }) async {
     try {
       final updateData = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (eventName != null) updateData['eventName'] = eventName;
@@ -186,7 +186,7 @@ class WorkActService {
       pdf.addPage(
         pw.Page(
             pageFormat: PdfPageFormat.a4,
-            build: (context) => _buildWorkActContent(workAct)),
+            build: (context) => _buildWorkActContent(workAct),),
       );
 
       return await pdf.save();
@@ -258,9 +258,9 @@ class WorkActService {
           children: [
             pw.SizedBox(
                 width: 120,
-                child: pw.Text(label, style: const pw.TextStyle(fontSize: 12))),
+                child: pw.Text(label, style: const pw.TextStyle(fontSize: 12)),),
             pw.Expanded(
-                child: pw.Text(value, style: const pw.TextStyle(fontSize: 12))),
+                child: pw.Text(value, style: const pw.TextStyle(fontSize: 12)),),
           ],
         ),
       );
@@ -338,7 +338,7 @@ class WorkActService {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text('Примечания:',
-            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),),
         pw.SizedBox(height: 8),
         pw.Text(workAct.notes!, style: const pw.TextStyle(fontSize: 12)),
       ],
@@ -354,7 +354,7 @@ class WorkActService {
               pw.Text('Исполнитель:', style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 40),
               pw.Text('_________________',
-                  style: const pw.TextStyle(fontSize: 12)),
+                  style: const pw.TextStyle(fontSize: 12),),
               pw.Text('Подпись', style: const pw.TextStyle(fontSize: 10)),
             ],
           ),
@@ -364,7 +364,7 @@ class WorkActService {
               pw.Text('Заказчик:', style: const pw.TextStyle(fontSize: 12)),
               pw.SizedBox(height: 40),
               pw.Text('_________________',
-                  style: const pw.TextStyle(fontSize: 12)),
+                  style: const pw.TextStyle(fontSize: 12),),
               pw.Text('Подпись', style: const pw.TextStyle(fontSize: 10)),
             ],
           ),
@@ -425,10 +425,7 @@ class WorkAct {
     required this.eventLocation,
     required this.services,
     required this.totalAmount,
-    this.notes,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.status, required this.createdAt, required this.updatedAt, this.notes,
     this.signedAt,
     this.signedBy,
     this.signature,

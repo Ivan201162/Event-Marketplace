@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Упрощенный экран чата
 class ChatScreenImproved extends ConsumerWidget {
-  final String chatId;
 
   const ChatScreenImproved({
-    super.key,
-    required this.chatId,
+    required this.chatId, super.key,
   });
+  final String chatId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

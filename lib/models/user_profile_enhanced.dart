@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'user.dart';
+import 'package:event_marketplace_app/models/user.dart';
 
 /// Расширенная модель профиля пользователя с дополнительными полями
 class UserProfileEnhanced {
@@ -33,34 +33,6 @@ class UserProfileEnhanced {
     this.role,
   });
 
-  final String id;
-  final String email;
-  final String? displayName;
-  final String? firstName;
-  final String? lastName;
-  final String? username; // @username
-  final String? bio;
-  final String? avatarUrl;
-  final String? coverUrl;
-  final String? phone;
-  final String? city;
-  final String? region;
-  final String? website;
-  final List<SocialLink>? socialLinks;
-  final String? videoPresentation; // URL видео-презентации
-  final bool isProAccount;
-  final bool isVerified;
-  final ProfileVisibilitySettings? visibilitySettings;
-  final PrivacySettings? privacySettings;
-  final NotificationSettings? notificationSettings;
-  final AppearanceSettings? appearanceSettings;
-  final SecuritySettings? securitySettings;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final DateTime? lastLoginAt;
-  final bool isActive;
-  final UserRole? role;
-
   /// Создать из документа Firestore
   factory UserProfileEnhanced.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
@@ -93,23 +65,23 @@ class UserProfileEnhanced {
       isVerified: data['isVerified'] as bool? ?? false,
       visibilitySettings: data['visibilitySettings'] != null
           ? ProfileVisibilitySettings.fromMap(
-              data['visibilitySettings'] as Map<String, dynamic>)
+              data['visibilitySettings'] as Map<String, dynamic>,)
           : null,
       privacySettings: data['privacySettings'] != null
           ? PrivacySettings.fromMap(
-              data['privacySettings'] as Map<String, dynamic>)
+              data['privacySettings'] as Map<String, dynamic>,)
           : null,
       notificationSettings: data['notificationSettings'] != null
           ? NotificationSettings.fromMap(
-              data['notificationSettings'] as Map<String, dynamic>)
+              data['notificationSettings'] as Map<String, dynamic>,)
           : null,
       appearanceSettings: data['appearanceSettings'] != null
           ? AppearanceSettings.fromMap(
-              data['appearanceSettings'] as Map<String, dynamic>)
+              data['appearanceSettings'] as Map<String, dynamic>,)
           : null,
       securitySettings: data['securitySettings'] != null
           ? SecuritySettings.fromMap(
-              data['securitySettings'] as Map<String, dynamic>)
+              data['securitySettings'] as Map<String, dynamic>,)
           : null,
       createdAt: _parseTimestamp(data['createdAt']),
       updatedAt: _parseTimestamp(data['updatedAt']),
@@ -123,6 +95,34 @@ class UserProfileEnhanced {
           : null,
     );
   }
+
+  final String id;
+  final String email;
+  final String? displayName;
+  final String? firstName;
+  final String? lastName;
+  final String? username; // @username
+  final String? bio;
+  final String? avatarUrl;
+  final String? coverUrl;
+  final String? phone;
+  final String? city;
+  final String? region;
+  final String? website;
+  final List<SocialLink>? socialLinks;
+  final String? videoPresentation; // URL видео-презентации
+  final bool isProAccount;
+  final bool isVerified;
+  final ProfileVisibilitySettings? visibilitySettings;
+  final PrivacySettings? privacySettings;
+  final NotificationSettings? notificationSettings;
+  final AppearanceSettings? appearanceSettings;
+  final SecuritySettings? securitySettings;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final DateTime? lastLoginAt;
+  final bool isActive;
+  final UserRole? role;
 
   /// Конвертировать в Map для Firestore
   Map<String, dynamic> toMap() {
@@ -252,10 +252,6 @@ class SocialLink {
     this.isVisible = true,
   });
 
-  final String platform; // 'instagram', 'telegram', 'vk', 'youtube', etc.
-  final String url;
-  final bool isVisible;
-
   factory SocialLink.fromMap(Map<String, dynamic> data) {
     return SocialLink(
       platform: data['platform'] ?? '',
@@ -263,6 +259,10 @@ class SocialLink {
       isVisible: data['isVisible'] as bool? ?? true,
     );
   }
+
+  final String platform; // 'instagram', 'telegram', 'vk', 'youtube', etc.
+  final String url;
+  final bool isVisible;
 
   Map<String, dynamic> toMap() {
     return {
@@ -285,14 +285,6 @@ class ProfileVisibilitySettings {
     this.showFollowing = true,
   });
 
-  final ProfileVisibility profileVisibility;
-  final bool showPhone;
-  final bool showEmail;
-  final bool showCity;
-  final bool showActivity;
-  final bool showFollowers;
-  final bool showFollowing;
-
   factory ProfileVisibilitySettings.fromMap(Map<String, dynamic> data) {
     return ProfileVisibilitySettings(
       profileVisibility: ProfileVisibility.values.firstWhere(
@@ -307,6 +299,14 @@ class ProfileVisibilitySettings {
       showFollowing: data['showFollowing'] as bool? ?? true,
     );
   }
+
+  final ProfileVisibility profileVisibility;
+  final bool showPhone;
+  final bool showEmail;
+  final bool showCity;
+  final bool showActivity;
+  final bool showFollowers;
+  final bool showFollowing;
 
   Map<String, dynamic> toMap() {
     return {
@@ -341,14 +341,6 @@ class PrivacySettings {
     this.archiveStories = false,
   });
 
-  final MessagePermission whoCanMessage;
-  final CommentPermission whoCanComment;
-  final MentionPermission whoCanMention;
-  final bool hideFromSearch;
-  final List<String> hideStoriesFrom; // ID пользователей
-  final bool closeFriendsOnly;
-  final bool archiveStories;
-
   factory PrivacySettings.fromMap(Map<String, dynamic> data) {
     return PrivacySettings(
       whoCanMessage: MessagePermission.values.firstWhere(
@@ -369,6 +361,14 @@ class PrivacySettings {
       archiveStories: data['archiveStories'] as bool? ?? false,
     );
   }
+
+  final MessagePermission whoCanMessage;
+  final CommentPermission whoCanComment;
+  final MentionPermission whoCanMention;
+  final bool hideFromSearch;
+  final List<String> hideStoriesFrom; // ID пользователей
+  final bool closeFriendsOnly;
+  final bool archiveStories;
 
   Map<String, dynamic> toMap() {
     return {
@@ -425,20 +425,6 @@ class NotificationSettings {
     this.soundEnabled = true,
   });
 
-  final bool likes;
-  final bool comments;
-  final bool follows;
-  final bool messages;
-  final bool requests;
-  final bool recommendations;
-  final bool system;
-  final bool pushEnabled;
-  final bool emailEnabled;
-  final bool quietHoursEnabled;
-  final String? quietHoursStart; // "22:00"
-  final String? quietHoursEnd; // "08:00"
-  final bool soundEnabled;
-
   factory NotificationSettings.fromMap(Map<String, dynamic> data) {
     return NotificationSettings(
       likes: data['likes'] as bool? ?? true,
@@ -456,6 +442,20 @@ class NotificationSettings {
       soundEnabled: data['soundEnabled'] as bool? ?? true,
     );
   }
+
+  final bool likes;
+  final bool comments;
+  final bool follows;
+  final bool messages;
+  final bool requests;
+  final bool recommendations;
+  final bool system;
+  final bool pushEnabled;
+  final bool emailEnabled;
+  final bool quietHoursEnabled;
+  final String? quietHoursStart; // "22:00"
+  final String? quietHoursEnd; // "08:00"
+  final bool soundEnabled;
 
   Map<String, dynamic> toMap() {
     return {
@@ -484,13 +484,7 @@ class AppearanceSettings {
     this.tabPosition = TabPosition.bottom,
     this.animationsEnabled = true,
     this.customBackground,
-  });
-
-  final AppTheme theme;
-  final FontSize fontSize;
-  final TabPosition tabPosition;
-  final bool animationsEnabled;
-  final String? customBackground; // URL кастомного фона
+  }); // URL кастомного фона
 
   factory AppearanceSettings.fromMap(Map<String, dynamic> data) {
     return AppearanceSettings(
@@ -510,6 +504,12 @@ class AppearanceSettings {
       customBackground: data['customBackground'],
     );
   }
+
+  final AppTheme theme;
+  final FontSize fontSize;
+  final TabPosition tabPosition;
+  final bool animationsEnabled;
+  final String? customBackground;
 
   Map<String, dynamic> toMap() {
     return {
@@ -554,13 +554,6 @@ class SecuritySettings {
     this.suspiciousLoginAlerts = true,
   });
 
-  final bool twoFactorEnabled;
-  final TwoFactorMethod twoFactorMethod;
-  final List<UserSession> sessions;
-  final List<LoginHistory> loginHistory;
-  final List<String> blockedRegions;
-  final bool suspiciousLoginAlerts;
-
   factory SecuritySettings.fromMap(Map<String, dynamic> data) {
     return SecuritySettings(
       twoFactorEnabled: data['twoFactorEnabled'] as bool? ?? false,
@@ -582,6 +575,13 @@ class SecuritySettings {
       suspiciousLoginAlerts: data['suspiciousLoginAlerts'] as bool? ?? true,
     );
   }
+
+  final bool twoFactorEnabled;
+  final TwoFactorMethod twoFactorMethod;
+  final List<UserSession> sessions;
+  final List<LoginHistory> loginHistory;
+  final List<String> blockedRegions;
+  final bool suspiciousLoginAlerts;
 
   Map<String, dynamic> toMap() {
     return {
@@ -614,14 +614,6 @@ class UserSession {
     required this.isActive,
   });
 
-  final String id;
-  final String deviceName;
-  final String deviceType;
-  final String ipAddress;
-  final String location;
-  final DateTime lastActive;
-  final bool isActive;
-
   factory UserSession.fromMap(Map<String, dynamic> data) {
     return UserSession(
       id: data['id'] ?? '',
@@ -633,6 +625,14 @@ class UserSession {
       isActive: data['isActive'] as bool? ?? false,
     );
   }
+
+  final String id;
+  final String deviceName;
+  final String deviceType;
+  final String ipAddress;
+  final String location;
+  final DateTime lastActive;
+  final bool isActive;
 
   Map<String, dynamic> toMap() {
     return {
@@ -658,13 +658,6 @@ class LoginHistory {
     this.failureReason,
   });
 
-  final DateTime timestamp;
-  final String ipAddress;
-  final String location;
-  final String deviceName;
-  final bool success;
-  final String? failureReason;
-
   factory LoginHistory.fromMap(Map<String, dynamic> data) {
     return LoginHistory(
       timestamp: DateTime.tryParse(data['timestamp'] ?? '') ?? DateTime.now(),
@@ -675,6 +668,13 @@ class LoginHistory {
       failureReason: data['failureReason'],
     );
   }
+
+  final DateTime timestamp;
+  final String ipAddress;
+  final String location;
+  final String deviceName;
+  final bool success;
+  final String? failureReason;
 
   Map<String, dynamic> toMap() {
     return {

@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
+import 'package:event_marketplace_app/services/user_profile_service.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
+import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
-import '../../services/user_profile_service.dart';
-import '../../widgets/common/custom_app_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
 
 /// Экран настроек конфиденциальности
 class PrivacySettingsScreen extends StatefulWidget {
@@ -194,7 +194,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
                           setState(() => _whoCanMessage = value);
                         }
                       },
-                    )),
+                    ),),
           ],
         ),
       ),
@@ -225,7 +225,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
                           setState(() => _whoCanComment = value);
                         }
                       },
-                    )),
+                    ),),
           ],
         ),
       ),
@@ -256,7 +256,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
                           setState(() => _whoCanMention = value);
                         }
                       },
-                    )),
+                    ),),
           ],
         ),
       ),
@@ -278,7 +278,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
             SwitchListTile(
               title: const Text('Скрыть от поиска'),
               subtitle: const Text(
-                  'Ваш профиль не будет отображаться в результатах поиска'),
+                  'Ваш профиль не будет отображаться в результатах поиска',),
               value: _hideFromSearch,
               onChanged: (value) {
                 setState(() => _hideFromSearch = value);

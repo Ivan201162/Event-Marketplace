@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/smart_search_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/smart_search_service.dart';
 
 /// Провайдер сервиса умного поиска
 final smartSearchServiceProvider =
@@ -113,5 +113,5 @@ class SearchParams {
 
   @override
   int get hashCode => Object.hash(query, category, city, minPrice, maxPrice,
-      minRating, availableDate, sortBy);
+      minRating, availableDate, sortBy,);
 }

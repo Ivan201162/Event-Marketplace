@@ -4,7 +4,7 @@ import 'package:shimmer/shimmer.dart';
 /// Виджет загрузки с shimmer эффектом
 class ShimmerLoading extends StatelessWidget {
   const ShimmerLoading(
-      {super.key, required this.child, this.baseColor, this.highlightColor});
+      {required this.child, super.key, this.baseColor, this.highlightColor,});
 
   final Widget child;
   final Color? baseColor;
@@ -40,7 +40,7 @@ class SpecialistCardSkeleton extends StatelessWidget {
                       width: 64,
                       height: 64,
                       decoration: const BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle),
+                          color: Colors.white, shape: BoxShape.circle,),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -167,7 +167,7 @@ class SpecialistsListSkeleton extends StatelessWidget {
         itemCount: itemCount,
         itemBuilder: (context, index) => const Padding(
             padding: EdgeInsets.only(bottom: 12),
-            child: SpecialistCardSkeleton()),
+            child: SpecialistCardSkeleton(),),
       );
 }
 
@@ -192,7 +192,7 @@ class ReviewCardSkeleton extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: const BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle),
+                          color: Colors.white, shape: BoxShape.circle,),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -278,7 +278,7 @@ class ReviewsListSkeleton extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         itemCount: itemCount,
         itemBuilder: (context, index) => const Padding(
-            padding: EdgeInsets.only(bottom: 12), child: ReviewCardSkeleton()),
+            padding: EdgeInsets.only(bottom: 12), child: ReviewCardSkeleton(),),
       );
 }
 
@@ -395,7 +395,7 @@ class BookingsListSkeleton extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         itemCount: itemCount,
         itemBuilder: (context, index) => const Padding(
-            padding: EdgeInsets.only(bottom: 12), child: BookingCardSkeleton()),
+            padding: EdgeInsets.only(bottom: 12), child: BookingCardSkeleton(),),
       );
 }
 
@@ -474,7 +474,7 @@ class StatsSkeleton extends StatelessWidget {
                 width: 24,
                 height: 24,
                 decoration: const BoxDecoration(
-                    color: Colors.white, shape: BoxShape.circle),
+                    color: Colors.white, shape: BoxShape.circle,),
               ),
             ),
             const SizedBox(height: 8),
@@ -484,7 +484,7 @@ class StatsSkeleton extends StatelessWidget {
                 width: 40,
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(4)),
+                    borderRadius: BorderRadius.circular(4),),
               ),
             ),
             const SizedBox(height: 4),
@@ -494,7 +494,7 @@ class StatsSkeleton extends StatelessWidget {
                 width: 60,
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(4)),
+                    borderRadius: BorderRadius.circular(4),),
               ),
             ),
           ],
@@ -505,7 +505,7 @@ class StatsSkeleton extends StatelessWidget {
 /// Виджет для отображения состояния загрузки
 class LoadingState extends StatelessWidget {
   const LoadingState(
-      {super.key, this.message = 'Загрузка...', this.showProgress = true});
+      {super.key, this.message = 'Загрузка...', this.showProgress = true,});
 
   final String message;
   final bool showProgress;
@@ -517,7 +517,7 @@ class LoadingState extends StatelessWidget {
           children: [
             if (showProgress) ...[
               const CircularProgressIndicator(),
-              const SizedBox(height: 16)
+              const SizedBox(height: 16),
             ],
             Text(
               message,
@@ -534,10 +534,9 @@ class LoadingState extends StatelessWidget {
 /// Виджет для отображения состояния ошибки
 class ErrorState extends StatelessWidget {
   const ErrorState(
-      {super.key,
-      required this.error,
+      {required this.error, super.key,
       this.onRetry,
-      this.retryText = 'Повторить'});
+      this.retryText = 'Повторить',});
 
   final String error;
   final VoidCallback? onRetry;
@@ -585,7 +584,7 @@ class ErrorState extends StatelessWidget {
 /// Виджет для отображения пустого состояния
 class EmptyState extends StatelessWidget {
   const EmptyState(
-      {super.key, required this.title, this.subtitle, this.icon, this.action});
+      {required this.title, super.key, this.subtitle, this.icon, this.action,});
 
   final String title;
   final String? subtitle;

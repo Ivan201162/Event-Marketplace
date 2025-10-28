@@ -1,57 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'common_types.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
 
 /// Specialist model for event professionals
 class Specialist extends Equatable {
-  final String id;
-  final String userId;
-  final String name;
-  final String specialization;
-  final String city;
-  final double rating;
-  final int pricePerHour;
-  final String? avatarUrl;
-  final String? imageUrl;
-  final List<String> portfolio;
-  final String? description;
-  final String? bio;
-  final List<String> services;
-  final bool isAvailable;
-  final bool isVerified;
-  final int completedEvents;
-  final int reviewCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic>? contactInfo;
-  final Map<String, dynamic>? contacts;
-  final List<String> languages;
-  final String? experience;
-  final SpecialistCategory? category;
-  final ExperienceLevel? experienceLevel;
-  final int? yearsOfExperience;
-  final double? hourlyRate;
-  final double? price;
-  final String? location;
-  final List<String>? subcategories;
-  final int? minBookingHours;
-  final int? maxBookingHours;
-  final List<String>? serviceAreas;
-  final List<String>? equipment;
-  final Map<String, double>? servicesWithPrices;
-  final List<DateTime>? availableDates;
-  final List<DateTime>? busyDates;
-  final String? displayName;
-  final String? imageUrlValue;
-  final String? categoryDisplayName;
-  final String? priceRangeString;
-  final int? totalReviews;
-  final int? totalBookings;
-  final double? avgRating;
-
-  /// Get price range (alias for priceRangeString)
-  String? get priceRange => priceRangeString;
-  final List<String>? categories;
 
   const Specialist({
     required this.id,
@@ -61,7 +13,7 @@ class Specialist extends Equatable {
     required this.city,
     required this.rating,
     required this.pricePerHour,
-    this.avatarUrl,
+    required this.createdAt, required this.updatedAt, this.avatarUrl,
     this.imageUrl,
     this.portfolio = const [],
     this.description,
@@ -71,8 +23,6 @@ class Specialist extends Equatable {
     this.isVerified = false,
     this.completedEvents = 0,
     this.reviewCount = 0,
-    required this.createdAt,
-    required this.updatedAt,
     this.contactInfo,
     this.contacts,
     this.languages = const ['Русский'],
@@ -103,7 +53,7 @@ class Specialist extends Equatable {
 
   /// Create Specialist from Firestore document
   factory Specialist.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Specialist(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -185,108 +135,6 @@ class Specialist extends Equatable {
     );
   }
 
-  /// Convert Specialist to Firestore document
-  Map<String, dynamic> toFirestore() {
-    return {
-      'userId': userId,
-      'name': name,
-      'specialization': specialization,
-      'city': city,
-      'rating': rating,
-      'pricePerHour': pricePerHour,
-      'avatarUrl': avatarUrl,
-      'imageUrl': imageUrl,
-      'portfolio': portfolio,
-      'description': description,
-      'bio': bio,
-      'services': services,
-      'isAvailable': isAvailable,
-      'isVerified': isVerified,
-      'completedEvents': completedEvents,
-      'reviewCount': reviewCount,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'contactInfo': contactInfo,
-      'contacts': contacts,
-      'languages': languages,
-      'experience': experience,
-      'category': category?.name,
-      'experienceLevel': experienceLevel?.name,
-      'yearsOfExperience': yearsOfExperience,
-      'hourlyRate': hourlyRate,
-      'price': price,
-      'location': location,
-      'subcategories': subcategories,
-      'minBookingHours': minBookingHours,
-      'maxBookingHours': maxBookingHours,
-      'serviceAreas': serviceAreas,
-      'equipment': equipment,
-      'servicesWithPrices': servicesWithPrices,
-      'availableDates':
-          availableDates?.map((e) => Timestamp.fromDate(e)).toList(),
-      'busyDates': busyDates?.map((e) => Timestamp.fromDate(e)).toList(),
-      'displayName': displayName,
-      'imageUrlValue': imageUrlValue,
-      'categoryDisplayName': categoryDisplayName,
-      'priceRangeString': priceRangeString,
-      'totalReviews': totalReviews,
-      'totalBookings': totalBookings,
-      'avgRating': avgRating,
-      'categories': categories,
-    };
-  }
-
-  /// Convert Specialist to Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'userId': userId,
-      'name': name,
-      'specialization': specialization,
-      'city': city,
-      'rating': rating,
-      'pricePerHour': pricePerHour,
-      'avatarUrl': avatarUrl,
-      'imageUrl': imageUrl,
-      'portfolio': portfolio,
-      'description': description,
-      'bio': bio,
-      'services': services,
-      'isAvailable': isAvailable,
-      'isVerified': isVerified,
-      'completedEvents': completedEvents,
-      'reviewCount': reviewCount,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'contactInfo': contactInfo,
-      'contacts': contacts,
-      'languages': languages,
-      'experience': experience,
-      'category': category?.name,
-      'experienceLevel': experienceLevel?.name,
-      'yearsOfExperience': yearsOfExperience,
-      'hourlyRate': hourlyRate,
-      'price': price,
-      'location': location,
-      'subcategories': subcategories,
-      'minBookingHours': minBookingHours,
-      'maxBookingHours': maxBookingHours,
-      'serviceAreas': serviceAreas,
-      'equipment': equipment,
-      'servicesWithPrices': servicesWithPrices,
-      'availableDates': availableDates,
-      'busyDates': busyDates,
-      'displayName': displayName,
-      'imageUrlValue': imageUrlValue,
-      'categoryDisplayName': categoryDisplayName,
-      'priceRangeString': priceRangeString,
-      'totalReviews': totalReviews,
-      'totalBookings': totalBookings,
-      'avgRating': avgRating,
-      'categories': categories,
-    };
-  }
-
   factory Specialist.fromMap(Map<String, dynamic> data) {
     return Specialist(
       id: data['id'] ?? '',
@@ -365,6 +213,165 @@ class Specialist extends Equatable {
           ? List<String>.from(data['categories'])
           : [data['specialization'] ?? ''],
     );
+  }
+
+  /// Get display name for category
+
+  /// Create Specialist from Firestore document
+  factory Specialist.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    data['id'] = doc.id; // Add the document ID to the data
+    return Specialist.fromMap(data);
+  }
+  final String id;
+  final String userId;
+  final String name;
+  final String specialization;
+  final String city;
+  final double rating;
+  final int pricePerHour;
+  final String? avatarUrl;
+  final String? imageUrl;
+  final List<String> portfolio;
+  final String? description;
+  final String? bio;
+  final List<String> services;
+  final bool isAvailable;
+  final bool isVerified;
+  final int completedEvents;
+  final int reviewCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic>? contactInfo;
+  final Map<String, dynamic>? contacts;
+  final List<String> languages;
+  final String? experience;
+  final SpecialistCategory? category;
+  final ExperienceLevel? experienceLevel;
+  final int? yearsOfExperience;
+  final double? hourlyRate;
+  final double? price;
+  final String? location;
+  final List<String>? subcategories;
+  final int? minBookingHours;
+  final int? maxBookingHours;
+  final List<String>? serviceAreas;
+  final List<String>? equipment;
+  final Map<String, double>? servicesWithPrices;
+  final List<DateTime>? availableDates;
+  final List<DateTime>? busyDates;
+  final String? displayName;
+  final String? imageUrlValue;
+  final String? categoryDisplayName;
+  final String? priceRangeString;
+  final int? totalReviews;
+  final int? totalBookings;
+  final double? avgRating;
+
+  /// Get price range (alias for priceRangeString)
+  String? get priceRange => priceRangeString;
+  final List<String>? categories;
+
+  /// Convert Specialist to Firestore document
+  Map<String, dynamic> toFirestore() {
+    return {
+      'userId': userId,
+      'name': name,
+      'specialization': specialization,
+      'city': city,
+      'rating': rating,
+      'pricePerHour': pricePerHour,
+      'avatarUrl': avatarUrl,
+      'imageUrl': imageUrl,
+      'portfolio': portfolio,
+      'description': description,
+      'bio': bio,
+      'services': services,
+      'isAvailable': isAvailable,
+      'isVerified': isVerified,
+      'completedEvents': completedEvents,
+      'reviewCount': reviewCount,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'contactInfo': contactInfo,
+      'contacts': contacts,
+      'languages': languages,
+      'experience': experience,
+      'category': category?.name,
+      'experienceLevel': experienceLevel?.name,
+      'yearsOfExperience': yearsOfExperience,
+      'hourlyRate': hourlyRate,
+      'price': price,
+      'location': location,
+      'subcategories': subcategories,
+      'minBookingHours': minBookingHours,
+      'maxBookingHours': maxBookingHours,
+      'serviceAreas': serviceAreas,
+      'equipment': equipment,
+      'servicesWithPrices': servicesWithPrices,
+      'availableDates':
+          availableDates?.map(Timestamp.fromDate).toList(),
+      'busyDates': busyDates?.map(Timestamp.fromDate).toList(),
+      'displayName': displayName,
+      'imageUrlValue': imageUrlValue,
+      'categoryDisplayName': categoryDisplayName,
+      'priceRangeString': priceRangeString,
+      'totalReviews': totalReviews,
+      'totalBookings': totalBookings,
+      'avgRating': avgRating,
+      'categories': categories,
+    };
+  }
+
+  /// Convert Specialist to Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'name': name,
+      'specialization': specialization,
+      'city': city,
+      'rating': rating,
+      'pricePerHour': pricePerHour,
+      'avatarUrl': avatarUrl,
+      'imageUrl': imageUrl,
+      'portfolio': portfolio,
+      'description': description,
+      'bio': bio,
+      'services': services,
+      'isAvailable': isAvailable,
+      'isVerified': isVerified,
+      'completedEvents': completedEvents,
+      'reviewCount': reviewCount,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'contactInfo': contactInfo,
+      'contacts': contacts,
+      'languages': languages,
+      'experience': experience,
+      'category': category?.name,
+      'experienceLevel': experienceLevel?.name,
+      'yearsOfExperience': yearsOfExperience,
+      'hourlyRate': hourlyRate,
+      'price': price,
+      'location': location,
+      'subcategories': subcategories,
+      'minBookingHours': minBookingHours,
+      'maxBookingHours': maxBookingHours,
+      'serviceAreas': serviceAreas,
+      'equipment': equipment,
+      'servicesWithPrices': servicesWithPrices,
+      'availableDates': availableDates,
+      'busyDates': busyDates,
+      'displayName': displayName,
+      'imageUrlValue': imageUrlValue,
+      'categoryDisplayName': categoryDisplayName,
+      'priceRangeString': priceRangeString,
+      'totalReviews': totalReviews,
+      'totalBookings': totalBookings,
+      'avgRating': avgRating,
+      'categories': categories,
+    };
   }
 
   /// Create a copy with updated fields
@@ -553,15 +560,6 @@ class Specialist extends Equatable {
 
   /// Get formatted price per hour
   String get formattedPricePerHour => '$pricePerHour ₽/час';
-
-  /// Get display name for category
-
-  /// Create Specialist from Firestore document
-  factory Specialist.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    data['id'] = doc.id; // Add the document ID to the data
-    return Specialist.fromMap(data);
-  }
 
   @override
   String toString() {

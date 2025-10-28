@@ -6,14 +6,9 @@ import 'package:flutter/material.dart';
 class AppError {
   const AppError({
     required this.id,
-    this.userId,
-    required this.device,
-    required this.screen,
-    required this.errorMessage,
+    required this.device, required this.screen, required this.errorMessage, required this.errorType, required this.timestamp, this.userId,
     this.stackTrace,
-    required this.errorType,
     this.resolved = false,
-    required this.timestamp,
     this.metadata,
   });
 

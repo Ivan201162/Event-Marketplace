@@ -4,15 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class AnalyticsEvent {
   const AnalyticsEvent({
     required this.id,
-    this.userId,
-    required this.eventName,
-    required this.screen,
-    required this.parameters,
-    required this.timestamp,
-    required this.sessionId,
-    required this.deviceId,
-    required this.appVersion,
-    required this.platform,
+    required this.eventName, required this.screen, required this.parameters, required this.timestamp, required this.sessionId, required this.deviceId, required this.appVersion, required this.platform, this.userId,
   });
 
   /// Создать из документа Firestore
@@ -268,14 +260,8 @@ class AnalyticsStatistics {
 class UserSession {
   const UserSession({
     required this.sessionId,
-    this.userId,
-    required this.deviceId,
-    required this.startTime,
+    required this.deviceId, required this.startTime, required this.platform, required this.appVersion, required this.screens, required this.eventCount, this.userId,
     this.endTime,
-    required this.platform,
-    required this.appVersion,
-    required this.screens,
-    required this.eventCount,
     this.duration,
   });
 

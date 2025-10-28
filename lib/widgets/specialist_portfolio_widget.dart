@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
-
-import '../models/common_types.dart';
-import '../models/specialist.dart';
 
 /// Виджет портфолио специалиста
 class SpecialistPortfolioWidget extends StatelessWidget {
-  const SpecialistPortfolioWidget({super.key, required this.specialist});
+  const SpecialistPortfolioWidget({required this.specialist, super.key});
   final Specialist specialist;
 
   @override
@@ -49,18 +48,18 @@ class SpecialistPortfolioWidget extends StatelessWidget {
   Widget _buildEmptyPortfolio() => Container(
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-            color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
+            color: Colors.grey[50], borderRadius: BorderRadius.circular(12),),
         child: Column(
           children: [
             Icon(Icons.photo_library_outlined,
-                size: 64, color: Colors.grey[400]),
+                size: 64, color: Colors.grey[400],),
             const SizedBox(height: 16),
             Text(
               'Портфолио пока пусто',
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[600]),
+                  color: Colors.grey[600],),
             ),
             const SizedBox(height: 8),
             Text(
@@ -136,7 +135,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withValues(alpha: 0.7)
+                        Colors.black.withValues(alpha: 0.7),
                       ],
                     ),
                   ),
@@ -162,7 +161,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                         specialist.category?.displayName ?? 'Категория',
                         style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 10),
+                            fontSize: 10,),
                       ),
                     ],
                   ),
@@ -179,7 +178,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Icon(Icons.zoom_in,
-                        color: Colors.white, size: 16),
+                        color: Colors.white, size: 16,),
                   ),
                 ),
               ],
@@ -217,7 +216,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                     Text(
                       'Портфолио ${specialist.name}',
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18, fontWeight: FontWeight.bold,),
                     ),
                     const Spacer(),
                     IconButton(
@@ -256,9 +255,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
 /// Виджет для отображения отдельного элемента портфолио
 class PortfolioItemWidget extends StatelessWidget {
   const PortfolioItemWidget({
-    super.key,
-    required this.imageUrl,
-    required this.title,
+    required this.imageUrl, required this.title, super.key,
     this.description,
     this.onTap,
   });
@@ -294,7 +291,7 @@ class PortfolioItemWidget extends StatelessWidget {
                           width: double.infinity,
                           color: Colors.grey[200],
                           child: Icon(Icons.image,
-                              size: 48, color: Colors.grey[400]),
+                              size: 48, color: Colors.grey[400],),
                         )
                       : CachedNetworkImage(
                           imageUrl: imageUrl,
@@ -302,11 +299,11 @@ class PortfolioItemWidget extends StatelessWidget {
                           placeholder: (context, url) => Container(
                             color: Colors.grey[200],
                             child: const Center(
-                                child: CircularProgressIndicator()),
+                                child: CircularProgressIndicator(),),
                           ),
                           errorWidget: (context, url, error) => Container(
                               color: Colors.grey[200],
-                              child: const Icon(Icons.error)),
+                              child: const Icon(Icons.error),),
                         ),
                 ),
 
@@ -319,7 +316,7 @@ class PortfolioItemWidget extends StatelessWidget {
                       Text(
                         title,
                         style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
+                            fontSize: 14, fontWeight: FontWeight.bold,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'booking.dart';
+import 'package:event_marketplace_app/models/booking.dart';
 
 /// Модель истории заказа для портфолио заказчика
 class OrderHistory {
@@ -11,13 +11,11 @@ class OrderHistory {
     required this.date,
     required this.price,
     required this.status,
-    this.eventType,
+    required this.createdAt, required this.updatedAt, this.eventType,
     this.location,
     this.notes,
     this.reviewId,
     this.rating,
-    required this.createdAt,
-    required this.updatedAt,
     this.additionalData,
   });
 

@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/portfolio_item.dart';
+import 'package:event_marketplace_app/models/profile_statistics.dart';
+import 'package:event_marketplace_app/models/social_link.dart';
+import 'package:event_marketplace_app/services/specialist_profile_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/portfolio_item.dart';
-import '../models/profile_statistics.dart';
-import '../models/social_link.dart';
-import '../services/specialist_profile_service.dart';
 
 /// Провайдер сервиса профиля специалиста
 final specialistProfileServiceProvider = Provider<SpecialistProfileService>(
@@ -54,7 +53,7 @@ final availabilityCalendarProvider =
         (ref, params) async {
   final service = ref.read(specialistProfileServiceProvider);
   return service.getAvailabilityCalendar(
-      params.specialistId, params.startDate, params.endDate);
+      params.specialistId, params.startDate, params.endDate,);
 });
 
 /// Параметры для получения календаря занятости

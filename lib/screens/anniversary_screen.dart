@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/wedding_anniversary.dart';
+import 'package:event_marketplace_app/services/anniversary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../models/wedding_anniversary.dart';
-import '../services/anniversary_service.dart';
 
 /// Экран управления годовщинами свадьбы
 class AnniversaryScreen extends ConsumerStatefulWidget {
@@ -98,7 +97,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -113,7 +112,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                   Icon(Icons.favorite_outline, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('У вас пока нет годовщин',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text(
                     'Добавьте дату свадьбы, чтобы отслеживать годовщины',
@@ -153,7 +152,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                         Text(
                           anniversary.anniversaryName,
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20, fontWeight: FontWeight.bold,),
                         ),
                         Text(
                           '${anniversary.yearsMarried} лет вместе',
@@ -173,7 +172,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                           children: [
                             Icon(Icons.edit),
                             SizedBox(width: 8),
-                            Text('Редактировать')
+                            Text('Редактировать'),
                           ],
                         ),
                       ),
@@ -184,7 +183,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                             Icon(Icons.delete, color: Colors.red),
                             SizedBox(width: 8),
                             Text('Удалить',
-                                style: TextStyle(color: Colors.red)),
+                                style: TextStyle(color: Colors.red),),
                           ],
                         ),
                       ),
@@ -228,7 +227,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
             Icon(icon, size: 20, color: Colors.grey[600]),
             const SizedBox(width: 12),
             Text('$label: ',
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
             Expanded(child: Text(value)),
           ],
         ),
@@ -269,7 +268,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
           if (snapshot.hasError) {
             return Center(
                 child: Text(
-                    'Ошибка загрузки предстоящих годовщин: ${snapshot.error}'));
+                    'Ошибка загрузки предстоящих годовщин: ${snapshot.error}',),);
           }
 
           final anniversaries = snapshot.data ?? [];
@@ -281,7 +280,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                   Icon(Icons.calendar_today, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Нет предстоящих годовщин',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text(
                     'В ближайшие 30 дней годовщин не ожидается',
@@ -321,7 +320,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                   child: Text(
                     '${anniversary.yearsMarried + 1}',
                     style: TextStyle(
-                        color: Colors.pink[600], fontWeight: FontWeight.bold),
+                        color: Colors.pink[600], fontWeight: FontWeight.bold,),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -332,10 +331,10 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                       Text(
                         anniversary.anniversaryName,
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       Text(anniversary.customerName,
-                          style: TextStyle(color: Colors.grey[600])),
+                          style: TextStyle(color: Colors.grey[600]),),
                     ],
                   ),
                 ),
@@ -361,7 +360,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
             ),
             const SizedBox(height: 12),
             Text(anniversary.anniversaryDescription,
-                style: const TextStyle(fontSize: 14)),
+                style: const TextStyle(fontSize: 14),),
           ],
         ),
       ),
@@ -420,7 +419,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Дата свадьбы',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               TextField(
                 controller: _dateController,
@@ -475,7 +474,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                   child: Text(
                     '${yearsMarried + 1}',
                     style: TextStyle(
-                        color: Colors.pink[600], fontWeight: FontWeight.bold),
+                        color: Colors.pink[600], fontWeight: FontWeight.bold,),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -486,7 +485,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                       Text(
                         _getAnniversaryName(yearsMarried + 1),
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       Text(
                         'Следующая годовщина через $daysUntil дней',
@@ -567,7 +566,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка добавления: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка добавления: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -575,10 +574,8 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     switch (action) {
       case 'edit':
         _editAnniversary(anniversary);
-        break;
       case 'delete':
         _deleteAnniversary(anniversary);
-        break;
     }
   }
 
@@ -587,7 +584,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция редактирования будет добавлена')));
+        content: Text('Функция редактирования будет добавлена'),),);
   }
 
   void _deleteAnniversary(WeddingAnniversary anniversary) {
@@ -599,7 +596,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -608,13 +605,13 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Годовщина удалена'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка удаления: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -675,7 +672,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция поиска специалистов будет добавлена')));
+        content: Text('Функция поиска специалистов будет добавлена'),),);
   }
 
   String _getAnniversaryName(int years) {

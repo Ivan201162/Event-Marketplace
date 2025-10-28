@@ -10,8 +10,7 @@ class MonitoringMetric {
     required this.category,
     required this.value,
     required this.unit,
-    this.tags = const {},
-    required this.timestamp,
+    required this.timestamp, this.tags = const {},
     this.source,
     this.metadata = const {},
   });
@@ -31,11 +30,11 @@ class MonitoringMetric {
       value: (data['value'] as num?)?.toDouble() ?? 0.0,
       unit: data['unit'] as String? ?? '',
       tags: Map<String, dynamic>.from(
-          data['tags'] as Map<dynamic, dynamic>? ?? {}),
+          data['tags'] as Map<dynamic, dynamic>? ?? {},),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       source: data['source'] as String?,
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},),
     );
   }
 
@@ -171,12 +170,7 @@ class MonitoringAlert {
     required this.name,
     required this.description,
     required this.severity,
-    this.status = AlertStatus.active,
-    required this.metricName,
-    required this.condition,
-    required this.threshold,
-    required this.operator,
-    required this.createdAt,
+    required this.metricName, required this.condition, required this.threshold, required this.operator, required this.createdAt, this.status = AlertStatus.active,
     this.createdBy,
     this.triggeredAt,
     this.resolvedAt,
@@ -398,12 +392,10 @@ class MonitoringDashboard {
     required this.id,
     required this.name,
     required this.description,
-    this.metricIds = const [],
+    required this.createdAt, required this.updatedAt, this.metricIds = const [],
     this.alertIds = const [],
     this.layout = DashboardLayout.grid,
     this.isPublic = false,
-    required this.createdAt,
-    required this.updatedAt,
     this.createdBy,
     this.settings = const {},
   });

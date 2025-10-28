@@ -4,9 +4,8 @@ import 'package:go_router/go_router.dart';
 
 class UserHeaderCard extends ConsumerWidget {
   const UserHeaderCard({
-    super.key,
+    required this.name, super.key,
     this.avatarUrl,
-    required this.name,
     this.city,
     this.isCurrentUser = false,
   });
@@ -70,7 +69,7 @@ class UserHeaderCard extends ConsumerWidget {
                       avatarUrl != null ? NetworkImage(avatarUrl!) : null,
                   child: avatarUrl == null
                       ? Icon(Icons.person,
-                          size: 30, color: Theme.of(context).primaryColor)
+                          size: 30, color: Theme.of(context).primaryColor,)
                       : null,
                 ),
               ),
@@ -94,11 +93,11 @@ class UserHeaderCard extends ConsumerWidget {
                     Row(
                       children: [
                         const Icon(Icons.location_on,
-                            color: Colors.white70, size: 16),
+                            color: Colors.white70, size: 16,),
                         const SizedBox(width: 4),
                         Text(city!,
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 14)),
+                                color: Colors.white70, fontSize: 14,),),
                       ],
                     ),
                   ],

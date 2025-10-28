@@ -1,4 +1,4 @@
-import 'message_status.dart';
+import 'package:event_marketplace_app/models/message_status.dart';
 
 /// Тип сообщения
 enum MessageType {
@@ -12,30 +12,13 @@ enum MessageType {
 
 /// Модель сообщения чата
 class ChatMessage {
-  final String id;
-  final String chatId;
-  final String senderId;
-  final String? senderAvatar;
-  final String text;
-  final MessageType type;
-  final List<String> attachments;
-  final Map<String, String> reactions;
-  final DateTime createdAt;
-  final DateTime? editedAt;
-  final bool isRead;
 
   const ChatMessage({
     required this.id,
     required this.chatId,
     required this.senderId,
-    this.senderAvatar,
-    required this.text,
-    required this.type,
-    required this.attachments,
-    required this.reactions,
-    required this.createdAt,
+    required this.text, required this.type, required this.attachments, required this.reactions, required this.createdAt, required this.isRead, this.senderAvatar,
     this.editedAt,
-    required this.isRead,
   });
 
   factory ChatMessage.fromMap(Map<String, dynamic> map, String id) {
@@ -58,6 +41,17 @@ class ChatMessage {
       isRead: map['isRead'] ?? false,
     );
   }
+  final String id;
+  final String chatId;
+  final String senderId;
+  final String? senderAvatar;
+  final String text;
+  final MessageType type;
+  final List<String> attachments;
+  final Map<String, String> reactions;
+  final DateTime createdAt;
+  final DateTime? editedAt;
+  final bool isRead;
 
   Map<String, dynamic> toMap() {
     return {

@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/specialist_pricing_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-import '../services/specialist_pricing_service.dart';
 
 /// Провайдер сервиса цен специалистов
 final specialistPricingServiceProvider = Provider<SpecialistPricingService>(
@@ -63,7 +63,7 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
       final stats = await _service.getSpecialistPricingStats(specialistId);
 
       state = state.copyWith(
-          stats: stats, isLoading: false, lastUpdated: DateTime.now());
+          stats: stats, isLoading: false, lastUpdated: DateTime.now(),);
     } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -77,7 +77,7 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
       final history = await _service.getSpecialistPriceHistory(specialistId);
 
       state = state.copyWith(
-          history: history, isLoading: false, lastUpdated: DateTime.now());
+          history: history, isLoading: false, lastUpdated: DateTime.now(),);
     } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

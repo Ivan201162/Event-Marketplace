@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/services/advertisement_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/advertisement.dart';
-import '../../services/advertisement_service.dart';
 
 class MyAdvertisementsScreen extends StatefulWidget {
   const MyAdvertisementsScreen({super.key});
@@ -175,7 +174,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
             // Детали рекламы
             _buildDetailRow('Тип:', _getTypeText(advertisement.type)),
             _buildDetailRow(
-                'Размещение:', _getPlacementText(advertisement.placement)),
+                'Размещение:', _getPlacementText(advertisement.placement),),
             _buildDetailRow('Цена:', '${advertisement.price.toInt()} ₽'),
             _buildDetailRow('Начало:', _formatDate(advertisement.startDate)),
             _buildDetailRow('Окончание:', _formatDate(advertisement.endDate)),
@@ -183,16 +182,16 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
             _buildDetailRow('Клики:', advertisement.clicks.toString()),
             _buildDetailRow('CTR:', '${advertisement.ctr.toStringAsFixed(2)}%'),
             _buildDetailRow(
-                'CPC:', '${advertisement.cpc.toStringAsFixed(2)} ₽'),
+                'CPC:', '${advertisement.cpc.toStringAsFixed(2)} ₽',),
             _buildDetailRow(
-                'CPM:', '${advertisement.cpm.toStringAsFixed(2)} ₽'),
+                'CPM:', '${advertisement.cpm.toStringAsFixed(2)} ₽',),
 
             if (advertisement.budget != null) ...[
               _buildDetailRow('Бюджет:', '${advertisement.budget!.toInt()} ₽'),
               _buildDetailRow(
-                  'Потрачено:', '${advertisement.spentAmount.toInt()} ₽'),
+                  'Потрачено:', '${advertisement.spentAmount.toInt()} ₽',),
               _buildDetailRow(
-                  'Остаток:', '${advertisement.remainingBudget.toInt()} ₽'),
+                  'Остаток:', '${advertisement.remainingBudget.toInt()} ₽',),
             ],
 
             if (advertisement.isActive) ...[
@@ -335,7 +334,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
         style: TextStyle(
             color: _getStatusColor(status),
             fontWeight: FontWeight.w500,
-            fontSize: 12),
+            fontSize: 12,),
       ),
     );
   }
@@ -472,7 +471,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -508,7 +507,7 @@ class _MyAdvertisementsScreenState extends State<MyAdvertisementsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Реклама возобновлена'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       } else {
         throw Exception('Не удалось возобновить рекламу');

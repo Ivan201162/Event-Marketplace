@@ -79,7 +79,7 @@ class AnimatedPageTransitions {
             begin: 0.8,
             end: 1,
           ).animate(
-              CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
+              CurvedAnimation(parent: animation, curve: Curves.easeInOut),),
           child: child,
         ),
       );
@@ -112,7 +112,7 @@ class AnimatedPageRoute<T> extends PageRouteBuilder<T> {
           reverseTransitionDuration: reverseDuration,
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               _buildTransition(context, animation, secondaryAnimation, child,
-                  transitionType),
+                  transitionType,),
         );
 
   static Widget _buildTransition(
@@ -183,8 +183,7 @@ enum PageTransitionType {
 /// Виджет для анимированного переключения контента
 class AnimatedContentSwitcher extends StatelessWidget {
   const AnimatedContentSwitcher({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.transitionType = AnimatedSwitcherTransitionType.fade,
   });
@@ -223,8 +222,7 @@ enum AnimatedSwitcherTransitionType { fade, scale, slide, size }
 /// Виджет для анимированного появления элементов списка
 class AnimatedListItem extends StatefulWidget {
   const AnimatedListItem({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 300),
     this.animationType = ListItemAnimationType.fadeInUp,
@@ -301,8 +299,7 @@ enum ListItemAnimationType { fadeInUp, fadeInLeft, fadeInRight, scaleIn }
 /// Виджет для анимированного списка
 class AnimatedListWidget extends StatelessWidget {
   const AnimatedListWidget({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.delayBetweenItems = const Duration(milliseconds: 100),
     this.animationType = ListItemAnimationType.fadeInUp,
     this.duration = const Duration(milliseconds: 300),
@@ -321,7 +318,7 @@ class AnimatedListWidget extends StatelessWidget {
 
           return AnimatedListItem(
             delay: Duration(
-                milliseconds: delayBetweenItems.inMilliseconds * index),
+                milliseconds: delayBetweenItems.inMilliseconds * index,),
             duration: duration,
             animationType: animationType,
             child: child,

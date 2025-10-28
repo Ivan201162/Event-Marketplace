@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Виджет авторизации по email
 class EmailAuthWidget extends ConsumerStatefulWidget {
@@ -55,7 +54,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
       } else {
         // Вход
         await authService.signInWithEmail(
-            _emailController.text.trim(), _passwordController.text);
+            _emailController.text.trim(), _passwordController.text,);
       }
 
       // Переход на главный экран
@@ -74,7 +73,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Введите email для восстановления пароля')));
+          content: Text('Введите email для восстановления пароля'),),);
       return;
     }
 
@@ -87,7 +86,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text(
-                  'Письмо для восстановления пароля отправлено на ваш email')),
+                  'Письмо для восстановления пароля отправлено на ваш email',),),
         );
       }
     } on Exception catch (e) {
@@ -174,7 +173,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                   hintText: 'Введите ваше имя',
                   prefixIcon: const Icon(Icons.person_outline),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
                 textInputAction: TextInputAction.next,
               ),
@@ -217,7 +216,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                 suffixIcon: IconButton(
                   icon: Icon(_obscurePassword
                       ? Icons.visibility
-                      : Icons.visibility_off),
+                      : Icons.visibility_off,),
                   onPressed: () =>
                       setState(() => _obscurePassword = !_obscurePassword),
                 ),
@@ -250,12 +249,12 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                   suffixIcon: IconButton(
                     icon: Icon(_obscureConfirmPassword
                         ? Icons.visibility
-                        : Icons.visibility_off),
+                        : Icons.visibility_off,),
                     onPressed: () => setState(() =>
-                        _obscureConfirmPassword = !_obscureConfirmPassword),
+                        _obscureConfirmPassword = !_obscureConfirmPassword,),
                   ),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
                 textInputAction: TextInputAction.done,
                 validator: (value) {
@@ -280,7 +279,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),),
               ),
               child: Text(
                 _isSignUp ? 'Зарегистрироваться' : 'Войти',
@@ -298,7 +297,7 @@ class _EmailAuthWidgetState extends ConsumerState<EmailAuthWidget> {
                 child: Text(
                   'Забыли пароль?',
                   style: TextStyle(
-                      color: theme.primaryColor, fontWeight: FontWeight.w500),
+                      color: theme.primaryColor, fontWeight: FontWeight.w500,),
                 ),
               ),
 

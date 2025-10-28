@@ -2,15 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Specialist category model
 class SpecialistCategory extends Equatable {
-  final String id;
-  final String name;
-  final String displayName;
-  final String? description;
-  final String? icon;
-  final String? color;
-  final List<String> subcategories;
-  final bool isActive;
-  final int sortOrder;
 
   const SpecialistCategory({
     required this.id,
@@ -38,9 +29,18 @@ class SpecialistCategory extends Equatable {
       sortOrder: data['sortOrder'] ?? 0,
     );
   }
+  final String id;
+  final String name;
+  final String displayName;
+  final String? description;
+  final String? icon;
+  final String? color;
+  final List<String> subcategories;
+  final bool isActive;
+  final int sortOrder;
 
   /// Get icon with fallback
-  String get iconName => this.icon ?? 'category';
+  String get iconName => icon ?? 'category';
 
   /// Convert SpecialistCategory to Map
   Map<String, dynamic> toMap() {

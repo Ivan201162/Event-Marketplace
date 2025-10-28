@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_filters_simple.dart';
+import 'package:event_marketplace_app/models/specialist_sorting.dart';
+import 'package:event_marketplace_app/services/mock_data_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../models/specialist_filters_simple.dart';
-import '../models/specialist_sorting.dart';
-import '../services/mock_data_service.dart';
 
 /// Провайдер для состояния сортировки специалистов (мигрирован с StateNotifierProvider)
 final specialistSortingProvider =
     NotifierProvider<SpecialistSortingNotifier, SpecialistSorting>(
-  () => SpecialistSortingNotifier(),
+  SpecialistSortingNotifier.new,
 );
 
 /// Провайдер для отсортированных специалистов
@@ -23,7 +22,7 @@ final sortedSpecialistsProvider =
 
 /// Параметры для сортировки
 class SortParams {
-  const SortParams({this.categoryId, this.filters, required this.sorting});
+  const SortParams({required this.sorting, this.categoryId, this.filters});
   final String? categoryId;
   final SpecialistFilters? filters;
   final SpecialistSorting sorting;
@@ -112,9 +111,9 @@ final sortStatsProvider = Provider.family<SortStats, SortParams>((ref, params) {
     data: (specialists) =>
         SpecialistSortingUtils.getSortStats(specialists, params.sorting),
     loading: () => const SortStats(
-        totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
+        totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0,),
     error: (_, __) => const SortStats(
-        totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
+        totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0,),
   );
 });
 
@@ -140,15 +139,13 @@ final combinedParamsProvider =
   final sorting = ref.watch(params.sortingProvider);
 
   return SortParams(
-      categoryId: params.categoryId, filters: filters, sorting: sorting);
+      categoryId: params.categoryId, filters: filters, sorting: sorting,);
 });
 
 /// Параметры для комбинированного провайдера
 class CombinedParams {
   const CombinedParams({
-    this.categoryId,
-    required this.filtersProvider,
-    required this.sortingProvider,
+    required this.filtersProvider, required this.sortingProvider, this.categoryId,
   });
   final String? categoryId;
   final StateNotifierProvider filtersProvider;

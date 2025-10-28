@@ -1,14 +1,11 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/budget_recommendation_service.dart';
 import 'package:flutter/material.dart';
-import '../models/specialist.dart';
-import '../services/budget_recommendation_service.dart';
 
 /// Виджет для отображения рекомендаций по увеличению бюджета
 class BudgetRecommendationsWidget extends StatefulWidget {
   const BudgetRecommendationsWidget({
-    super.key,
-    required this.currentBudget,
-    required this.selectedSpecialistIds,
-    required this.userId,
+    required this.currentBudget, required this.selectedSpecialistIds, required this.userId, super.key,
     this.onBudgetIncrease,
   });
 
@@ -124,7 +121,7 @@ class _BudgetLoadingWidget extends StatelessWidget {
             SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2)),
+                child: CircularProgressIndicator(strokeWidth: 2),),
             SizedBox(width: 12),
             Text('Анализируем бюджет...'),
           ],
@@ -182,7 +179,7 @@ class _BudgetRecommendationsList extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(Icons.account_balance_wallet,
-                      color: Colors.green, size: 20),
+                      color: Colors.green, size: 20,),
                   SizedBox(width: 8),
                   Text(
                     'Предложения по бюджету',
@@ -197,7 +194,7 @@ class _BudgetRecommendationsList extends StatelessWidget {
                 onTap: () {
                   onRecommendationShown?.call(recommendation.id);
                   onBudgetIncrease?.call(
-                      recommendation.additionalBudget, recommendation.category);
+                      recommendation.additionalBudget, recommendation.category,);
                 },
               ),
             ),
@@ -209,7 +206,7 @@ class _BudgetRecommendationsList extends StatelessWidget {
 /// Карточка рекомендации по бюджету
 class _BudgetRecommendationCard extends StatelessWidget {
   const _BudgetRecommendationCard(
-      {required this.recommendation, required this.onTap});
+      {required this.recommendation, required this.onTap,});
 
   final BudgetRecommendation recommendation;
   final VoidCallback onTap;
@@ -230,7 +227,7 @@ class _BudgetRecommendationCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(_getCategoryIcon(recommendation.category),
-                          color: Colors.green, size: 24),
+                          color: Colors.green, size: 24,),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -239,13 +236,13 @@ class _BudgetRecommendationCard extends StatelessWidget {
                             Text(
                               recommendation.reason,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 14),
+                                  fontWeight: FontWeight.bold, fontSize: 14,),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Категория: ${recommendation.category.displayName}',
                               style: const TextStyle(
-                                  fontSize: 12, color: Colors.grey),
+                                  fontSize: 12, color: Colors.grey,),
                             ),
                           ],
                         ),
@@ -314,7 +311,7 @@ class _BudgetRecommendationCard extends StatelessWidget {
 /// Виджет информации о бюджете
 class _BudgetInfo extends StatelessWidget {
   const _BudgetInfo(
-      {required this.label, required this.amount, required this.color});
+      {required this.label, required this.amount, required this.color,});
 
   final String label;
   final double amount;
@@ -333,13 +330,13 @@ class _BudgetInfo extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                  fontSize: 10, color: color, fontWeight: FontWeight.bold),
+                  fontSize: 10, color: color, fontWeight: FontWeight.bold,),
             ),
             const SizedBox(height: 2),
             Text(
               '${amount.toStringAsFixed(0)} ₽',
               style: TextStyle(
-                  fontSize: 12, color: color, fontWeight: FontWeight.bold),
+                  fontSize: 12, color: color, fontWeight: FontWeight.bold,),
             ),
           ],
         ),

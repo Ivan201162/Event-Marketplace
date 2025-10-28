@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/story.dart';
 import 'package:flutter/material.dart';
-
-import '../models/story.dart';
 
 /// Виджет для отображения круга сторис
 class StoryCircleWidget extends StatelessWidget {
   const StoryCircleWidget(
-      {super.key, required this.story, required this.onTap});
+      {required this.story, required this.onTap, super.key,});
 
   final Story story;
   final VoidCallback onTap;
@@ -20,12 +19,12 @@ class StoryCircleWidget extends StatelessWidget {
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
-                colors: [Colors.purple, Colors.orange, Colors.red]),
+                colors: [Colors.purple, Colors.orange, Colors.red],),
           ),
           padding: const EdgeInsets.all(2),
           child: Container(
             decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: Colors.white),
+                shape: BoxShape.circle, color: Colors.white,),
             padding: const EdgeInsets.all(2),
             child: ClipOval(
               child: story.thumbnailUrl.isNotEmpty
@@ -38,10 +37,10 @@ class StoryCircleWidget extends StatelessWidget {
                       ),
                       errorWidget: (context, url, error) => Container(
                           color: Colors.grey[300],
-                          child: const Icon(Icons.person)),
+                          child: const Icon(Icons.person),),
                     )
                   : Container(
-                      color: Colors.grey[300], child: const Icon(Icons.person)),
+                      color: Colors.grey[300], child: const Icon(Icons.person),),
             ),
           ),
         ),

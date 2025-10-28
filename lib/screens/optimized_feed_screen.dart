@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
+import 'package:event_marketplace_app/providers/optimized_data_providers.dart';
+import 'package:event_marketplace_app/services/optimized_feed_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/enhanced_feed_post.dart';
-import '../providers/optimized_data_providers.dart';
-import '../services/optimized_feed_service.dart';
 
 /// Оптимизированная лента с реальными данными и обработкой состояний
 class OptimizedFeedScreen extends ConsumerStatefulWidget {
@@ -49,7 +48,6 @@ class _OptimizedFeedScreenState extends ConsumerState<OptimizedFeedScreen> {
     try {
       final feedService = ref.read(optimizedFeedServiceProvider);
       final result = await feedService.getPosts(
-        limit: 20,
         lastDocument: _lastDocument,
       );
 
@@ -77,13 +75,13 @@ class _OptimizedFeedScreenState extends ConsumerState<OptimizedFeedScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => _refreshFeed(),
+            onPressed: _refreshFeed,
           ),
         ],
       ),
       body: feedAsync.when(
-        data: (feedState) => _buildFeedContent(feedState),
-        loading: () => _buildLoadingState(),
+        data: _buildFeedContent,
+        loading: _buildLoadingState,
         error: (error, stack) => _buildErrorState(error.toString()),
       ),
     );
@@ -277,11 +275,11 @@ class _FeedPostCard extends ConsumerWidget {
                   onSelected: (value) => _handlePostAction(context, value),
                   itemBuilder: (context) => [
                     const PopupMenuItem(
-                        value: 'save', child: Text('Сохранить')),
+                        value: 'save', child: Text('Сохранить'),),
                     const PopupMenuItem(
-                        value: 'share', child: Text('Поделиться')),
+                        value: 'share', child: Text('Поделиться'),),
                     const PopupMenuItem(
-                        value: 'report', child: Text('Пожаловаться')),
+                        value: 'report', child: Text('Пожаловаться'),),
                   ],
                 ),
               ],
@@ -414,7 +412,7 @@ class _FeedPostCard extends ConsumerWidget {
               ),
               const Center(
                 child: Icon(Icons.play_circle_filled,
-                    size: 64, color: Colors.white),
+                    size: 64, color: Colors.white,),
               ),
             ],
           ),

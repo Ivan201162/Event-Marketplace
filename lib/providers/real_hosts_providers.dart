@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/host_profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/host_profile.dart';
-import '../core/feature_flags.dart';
 
 /// Реальные провайдеры для хостов из Firestore
 class RealHostsProviders {
@@ -96,7 +96,7 @@ class RealHostsProviders {
         .collection('hosts')
         .where('isActive', isEqualTo: true)
         .where('name', isGreaterThanOrEqualTo: query)
-        .where('name', isLessThan: query + 'z')
+        .where('name', isLessThan: '${query}z')
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {

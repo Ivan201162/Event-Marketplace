@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/request.dart';
+import 'package:event_marketplace_app/providers/optimized_data_providers.dart';
+import 'package:event_marketplace_app/services/optimized_applications_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/request.dart';
-import '../providers/optimized_data_providers.dart';
-import '../services/optimized_applications_service.dart';
 
 /// Оптимизированная лента заявок с реальными данными и обработкой состояний
 class OptimizedApplicationsScreen extends ConsumerStatefulWidget {
@@ -180,11 +179,11 @@ class _OptimizedApplicationsScreenState
       'type': type,
       'status': _selectedStatus,
       'sortBy': _sortBy,
-    }));
+    }),);
 
     return applicationsAsync.when(
-      data: (applicationsState) => _buildApplicationsContent(applicationsState),
-      loading: () => _buildLoadingState(),
+      data: _buildApplicationsContent,
+      loading: _buildLoadingState,
       error: (error, stack) => _buildErrorState(error.toString()),
     );
   }
@@ -305,7 +304,7 @@ class _OptimizedApplicationsScreenState
             mainAxisSize: MainAxisSize.min,
             children: [
               DropdownButtonFormField<String>(
-                value: _selectedStatus,
+                initialValue: _selectedStatus,
                 decoration: const InputDecoration(labelText: 'Статус'),
                 items: const [
                   DropdownMenuItem(value: 'all', child: Text('Все')),
@@ -321,7 +320,7 @@ class _OptimizedApplicationsScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _sortBy,
+                initialValue: _sortBy,
                 decoration: const InputDecoration(labelText: 'Сортировка'),
                 items: const [
                   DropdownMenuItem(value: 'newest', child: Text('Новые')),
@@ -399,7 +398,7 @@ class _ApplicationCard extends ConsumerWidget {
                   radius: 24,
                   backgroundImage: application.specialistAvatar != null
                       ? CachedNetworkImageProvider(
-                          application.specialistAvatar!)
+                          application.specialistAvatar!,)
                       : null,
                   child: application.specialistAvatar == null
                       ? const Icon(Icons.person)
@@ -453,7 +452,7 @@ class _ApplicationCard extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(Icons.calendar_today,
-                        size: 16, color: Colors.grey[600]),
+                        size: 16, color: Colors.grey[600],),
                     const SizedBox(width: 8),
                     Text(
                       _formatDate(application.eventDate),
@@ -514,7 +513,7 @@ class _ApplicationCard extends ConsumerWidget {
                       onPressed: () => _rejectApplication(applicationsService),
                       icon: const Icon(Icons.close, color: Colors.red),
                       label: const Text('Отклонить',
-                          style: TextStyle(color: Colors.red)),
+                          style: TextStyle(color: Colors.red),),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -535,7 +534,7 @@ class _ApplicationCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => _viewSpecialistProfile(),
+                      onPressed: _viewSpecialistProfile,
                       icon: const Icon(Icons.person),
                       label: const Text('Профиль специалиста'),
                     ),
@@ -543,7 +542,7 @@ class _ApplicationCard extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => _contactSpecialist(),
+                      onPressed: _contactSpecialist,
                       icon: const Icon(Icons.chat),
                       label: const Text('Написать'),
                     ),
@@ -566,17 +565,14 @@ class _ApplicationCard extends ConsumerWidget {
         color = Colors.orange;
         label = 'В ожидании';
         icon = Icons.schedule;
-        break;
       case 'accepted':
         color = Colors.green;
         label = 'Принято';
         icon = Icons.check_circle;
-        break;
       case 'rejected':
         color = Colors.red;
         label = 'Отклонено';
         icon = Icons.cancel;
-        break;
       default:
         color = Colors.grey;
         label = 'Неизвестно';

@@ -1,17 +1,13 @@
+import 'package:event_marketplace_app/models/specialist_categories.dart';
+import 'package:event_marketplace_app/models/specialist_filters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../models/specialist_categories.dart';
-import '../models/specialist_filters.dart';
-
 /// Bottom Sheet с фильтрами для специалистов
 class FilterBottomSheet extends ConsumerStatefulWidget {
   const FilterBottomSheet({
-    super.key,
-    required this.initialFilters,
-    required this.onFiltersChanged,
-    required this.categoryId,
+    required this.initialFilters, required this.onFiltersChanged, required this.categoryId, super.key,
   });
   final SpecialistFilters initialFilters;
   final Function(SpecialistFilters) onFiltersChanged;
@@ -163,7 +159,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         children: [
           Text('Поиск',
               style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+                  ?.copyWith(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _searchController,
@@ -179,7 +175,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             onChanged: (value) {
               setState(() {
                 _currentFilters = _currentFilters.copyWith(
-                    searchQuery: value.isEmpty ? null : value);
+                    searchQuery: value.isEmpty ? null : value,);
               });
             },
           ),
@@ -239,7 +235,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                         maxPrice: option.maxPrice,
                       );
                       _priceRangeValues = RangeValues(
-                          option.minPrice ?? 0, option.maxPrice ?? 100000);
+                          option.minPrice ?? 0, option.maxPrice ?? 100000,);
                     } else {
                       _currentFilters = _currentFilters.copyWith();
                       _priceRangeValues = const RangeValues(0, 100000);
@@ -257,7 +253,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         children: [
           Text('Рейтинг',
               style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+                  ?.copyWith(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Text(
             'от ${_ratingRangeValues.start.toStringAsFixed(1)} до ${_ratingRangeValues.end.toStringAsFixed(1)} звезд',
@@ -385,7 +381,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
       'Санкт-Петербург',
       'Новосибирск',
       'Екатеринбург',
-      'Казань'
+      'Казань',
     ];
 
     return Column(
@@ -393,7 +389,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
       children: [
         Text('Город',
             style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+                ?.copyWith(fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _currentFilters.city,
@@ -407,7 +403,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
           items: [
             const DropdownMenuItem(child: Text('Все города')),
             ...cities.map(
-                (city) => DropdownMenuItem(value: city, child: Text(city))),
+                (city) => DropdownMenuItem(value: city, child: Text(city)),),
           ],
           onChanged: (value) {
             setState(() {
@@ -461,7 +457,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               icon: const Icon(Icons.refresh),
               label: const Text('Сбросить'),
               style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),),
             ),
           ),
           const SizedBox(width: 16),
@@ -474,7 +470,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               icon: const Icon(Icons.check),
               label: const Text('Применить'),
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),),
             ),
           ),
         ],

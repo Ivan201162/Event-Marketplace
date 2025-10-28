@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/screens/admin/admin_advertisement_management_screen.dart';
+import 'package:event_marketplace_app/screens/admin/admin_analytics_screen.dart';
+import 'package:event_marketplace_app/screens/admin/admin_logs_screen.dart';
+import 'package:event_marketplace_app/screens/admin/admin_newsletter_management_screen.dart';
+import 'package:event_marketplace_app/screens/admin/admin_promotions_management_screen.dart';
+import 'package:event_marketplace_app/screens/admin/admin_referral_management_screen.dart';
+import 'package:event_marketplace_app/screens/admin/admin_subscription_management_screen.dart';
+import 'package:event_marketplace_app/services/admin_service.dart';
+import 'package:event_marketplace_app/services/marketing_admin_service.dart';
 import 'package:flutter/material.dart';
-
-import '../../services/admin_service.dart';
-import '../../services/marketing_admin_service.dart';
-import 'admin_advertisement_management_screen.dart';
-import 'admin_analytics_screen.dart';
-import 'admin_logs_screen.dart';
-import 'admin_newsletter_management_screen.dart';
-import 'admin_promotions_management_screen.dart';
-import 'admin_referral_management_screen.dart';
-import 'admin_subscription_management_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -65,12 +64,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-              icon: const Icon(Icons.refresh), onPressed: _loadDashboardData),
+              icon: const Icon(Icons.refresh), onPressed: _loadDashboardData,),
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const AdminLogsScreen()));
+                  MaterialPageRoute(builder: (_) => const AdminLogsScreen()),);
             },
           ),
         ],
@@ -78,7 +77,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -100,7 +99,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _buildSystemStatsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -178,7 +177,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildStatItem(
-      String label, String value, IconData icon, Color color) {
+      String label, String value, IconData icon, Color color,) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -193,7 +192,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Text(
             value,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(
             label,
@@ -208,7 +207,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _buildQuickActionsGrid() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -233,7 +232,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (_) =>
-                            const AdminSubscriptionManagementScreen()),
+                            const AdminSubscriptionManagementScreen(),),
                   ),
                 ),
                 _buildActionCard(
@@ -244,7 +243,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (_) =>
-                            const AdminAdvertisementManagementScreen()),
+                            const AdminAdvertisementManagementScreen(),),
                   ),
                 ),
                 _buildActionCard(
@@ -255,7 +254,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (_) =>
-                            const AdminPromotionsManagementScreen()),
+                            const AdminPromotionsManagementScreen(),),
                   ),
                 ),
                 _buildActionCard(
@@ -265,7 +264,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => const AdminReferralManagementScreen()),
+                        builder: (_) => const AdminReferralManagementScreen(),),
                   ),
                 ),
                 _buildActionCard(
@@ -275,7 +274,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => const AdminAnalyticsScreen()),
+                        builder: (_) => const AdminAnalyticsScreen(),),
                   ),
                 ),
                 _buildActionCard(
@@ -286,7 +285,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (_) =>
-                            const AdminNewsletterManagementScreen()),
+                            const AdminNewsletterManagementScreen(),),
                   ),
                 ),
               ],
@@ -298,7 +297,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildActionCard(
-      String title, IconData icon, Color color, VoidCallback onTap) {
+      String title, IconData icon, Color color, VoidCallback onTap,) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -316,7 +315,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             Text(
               title,
               style: TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 14, fontWeight: FontWeight.bold, color: color,),
               textAlign: TextAlign.center,
             ),
           ],
@@ -328,7 +327,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _buildReferralStatsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -371,7 +370,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 Expanded(
                   child: _buildStatItem(
                     'Топ реферер',
-                    '${(_referralStats['topReferrers'] as List?)?.isNotEmpty == true ? (_referralStats['topReferrers'] as List).first['invitedCount'] ?? 0 : 0}',
+                    '${(_referralStats['topReferrers'] as List?)?.isNotEmpty ?? false ? (_referralStats['topReferrers'] as List).first['invitedCount'] ?? 0 : 0}',
                     Icons.star,
                     Colors.purple,
                   ),
@@ -387,7 +386,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _buildPartnerStatsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -430,7 +429,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 Expanded(
                   child: _buildStatItem(
                     'Топ партнёр',
-                    '${(_partnerStats['topPartners'] as List?)?.isNotEmpty == true ? (_partnerStats['topPartners'] as List).first['totalEarnings']?.toStringAsFixed(0) ?? '0' : '0'}₽',
+                    '${(_partnerStats['topPartners'] as List?)?.isNotEmpty ?? false ? (_partnerStats['topPartners'] as List).first['totalEarnings']?.toStringAsFixed(0) ?? '0' : '0'}₽',
                     Icons.star,
                     Colors.purple,
                   ),
@@ -446,7 +445,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _buildRecentActivityCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

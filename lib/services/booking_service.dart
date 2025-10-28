@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/booking.dart';
 
 /// Service for managing bookings
 class BookingService {
@@ -17,7 +16,7 @@ class BookingService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Booking.fromFirestore(doc))
+          .map(Booking.fromFirestore)
           .toList();
     } catch (e) {
       debugPrint('Error getting specialist bookings: $e');
@@ -35,7 +34,7 @@ class BookingService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Booking.fromFirestore(doc))
+          .map(Booking.fromFirestore)
           .toList();
     } catch (e) {
       debugPrint('Error getting client bookings: $e');
@@ -53,7 +52,7 @@ class BookingService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Booking.fromFirestore(doc))
+          .map(Booking.fromFirestore)
           .toList();
     } catch (e) {
       debugPrint('Error getting bookings by status: $e');
@@ -92,7 +91,7 @@ class BookingService {
 
   /// Update booking status
   Future<bool> updateBookingStatus(
-      String bookingId, BookingStatus status) async {
+      String bookingId, BookingStatus status,) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
         'status': status.name,
@@ -144,7 +143,7 @@ class BookingService {
         .orderBy('date', descending: false)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList());
+            snapshot.docs.map(Booking.fromFirestore).toList(),);
   }
 
   /// Get bookings stream for client
@@ -155,7 +154,7 @@ class BookingService {
         .orderBy('date', descending: false)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList());
+            snapshot.docs.map(Booking.fromFirestore).toList(),);
   }
 
   /// Get bookings stream by status
@@ -166,7 +165,7 @@ class BookingService {
         .orderBy('date', descending: false)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Booking.fromFirestore(doc)).toList());
+            snapshot.docs.map(Booking.fromFirestore).toList(),);
   }
 
   /// Get booking statistics
@@ -263,7 +262,7 @@ class BookingService {
 
   /// Get available time slots for a date
   Future<List<String>> getAvailableTimeSlots(
-      String specialistId, DateTime date) async {
+      String specialistId, DateTime date,) async {
     try {
       final availableSlots = <String>[];
       final workingHours = <int>[9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];

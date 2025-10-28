@@ -1,13 +1,10 @@
+import 'package:event_marketplace_app/models/enhanced_message.dart';
 import 'package:flutter/material.dart';
-import '../models/enhanced_message.dart';
 
 /// Виджет пузырька сообщения
 class MessageBubbleWidget extends StatelessWidget {
   const MessageBubbleWidget({
-    super.key,
-    required this.message,
-    required this.isCurrentUser,
-    required this.showAvatar,
+    required this.message, required this.isCurrentUser, required this.showAvatar, super.key,
     this.onTap,
     this.onLongPress,
     this.onReply,
@@ -56,7 +53,7 @@ class MessageBubbleWidget extends StatelessWidget {
                     // Ответ на сообщение
                     if (message.replyTo != null) ...[
                       _buildReplyPreview(),
-                      const SizedBox(height: 4)
+                      const SizedBox(height: 4),
                     ],
 
                     // Пересланное сообщение
@@ -76,7 +73,7 @@ class MessageBubbleWidget extends StatelessWidget {
                     // Реакции
                     if (message.reactions.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      _buildReactions()
+                      _buildReactions(),
                     ],
                   ],
                 ),
@@ -109,7 +106,7 @@ class MessageBubbleWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[600]),
+                  color: Colors.grey[600],),
             ),
             const SizedBox(height: 2),
             Text(
@@ -125,7 +122,7 @@ class MessageBubbleWidget extends StatelessWidget {
   Widget _buildForwardHeader() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-            color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
+            color: Colors.blue[50], borderRadius: BorderRadius.circular(8),),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -136,7 +133,7 @@ class MessageBubbleWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.blue[700],
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
           ],
         ),
@@ -166,7 +163,7 @@ class MessageBubbleWidget extends StatelessWidget {
                 message.text,
                 style: TextStyle(
                     color: isCurrentUser ? Colors.white : Colors.black87,
-                    fontSize: 14),
+                    fontSize: 14,),
               ),
               if (message.attachments.isNotEmpty) const SizedBox(height: 8),
             ],
@@ -224,7 +221,7 @@ class MessageBubbleWidget extends StatelessWidget {
         width: 200,
         height: 150,
         decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(8)),
+            color: Colors.black, borderRadius: BorderRadius.circular(8),),
         child: Stack(
           children: [
             if (attachment.thumbnailUrl != null)
@@ -239,7 +236,7 @@ class MessageBubbleWidget extends StatelessWidget {
               ),
             const Center(
                 child: Icon(Icons.play_circle_outline,
-                    color: Colors.white, size: 48)),
+                    color: Colors.white, size: 48,),),
             if (attachment.duration != null)
               Positioned(
                 bottom: 8,
@@ -265,7 +262,7 @@ class MessageBubbleWidget extends StatelessWidget {
         width: 200,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8),),
         child: Row(
           children: [
             Icon(
@@ -282,7 +279,7 @@ class MessageBubbleWidget extends StatelessWidget {
                   Text(
                     attachment.name,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                        fontSize: 12, fontWeight: FontWeight.w500,),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -303,7 +300,7 @@ class MessageBubbleWidget extends StatelessWidget {
         width: 200,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8),),
         child: Row(
           children: [
             const Icon(Icons.description, color: Colors.grey),
@@ -315,7 +312,7 @@ class MessageBubbleWidget extends StatelessWidget {
                   Text(
                     attachment.name,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                        fontSize: 12, fontWeight: FontWeight.w500,),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -340,7 +337,7 @@ class MessageBubbleWidget extends StatelessWidget {
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) => Container(
               color: Colors.grey[300],
-              child: const Icon(Icons.emoji_emotions, size: 48)),
+              child: const Icon(Icons.emoji_emotions, size: 48),),
         ),
       );
 
@@ -349,13 +346,13 @@ class MessageBubbleWidget extends StatelessWidget {
         children: [
           // Время отправки
           Text(_formatTime(message.createdAt),
-              style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 10, color: Colors.grey[600]),),
 
           // Статус сообщения (только для текущего пользователя)
           if (isCurrentUser) ...[
             const SizedBox(width: 4),
             Icon(_getStatusIcon(message.status),
-                size: 12, color: _getStatusColor(message.status)),
+                size: 12, color: _getStatusColor(message.status),),
           ],
 
           // Индикатор редактирования
@@ -366,7 +363,7 @@ class MessageBubbleWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 10,
                   color: Colors.grey[600],
-                  fontStyle: FontStyle.italic),
+                  fontStyle: FontStyle.italic,),
             ),
           ],
         ],

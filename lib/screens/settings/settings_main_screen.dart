@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/screens/settings/appearance_settings_screen.dart';
+import 'package:event_marketplace_app/screens/settings/blocked_users_screen.dart';
+import 'package:event_marketplace_app/screens/settings/feedback_screen.dart';
+import 'package:event_marketplace_app/screens/settings/notifications_settings_screen.dart';
+import 'package:event_marketplace_app/screens/settings/privacy_settings_screen.dart';
+import 'package:event_marketplace_app/screens/settings/security_settings_screen.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'security_settings_screen.dart';
-import 'appearance_settings_screen.dart';
-import 'notifications_settings_screen.dart';
-import 'privacy_settings_screen.dart';
-import 'blocked_users_screen.dart';
-import 'feedback_screen.dart';
-import '../../widgets/common/custom_app_bar.dart';
 
 /// Главный экран настроек
 class SettingsMainScreen extends StatelessWidget {
@@ -85,7 +85,7 @@ class SettingsMainScreen extends StatelessWidget {
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 _showInfoSnackBar(
-                    context, 'Предпросмотр профиля будет реализован');
+                    context, 'Предпросмотр профиля будет реализован',);
               },
             ),
           ],
@@ -227,11 +227,11 @@ class SettingsMainScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(Icons.star, color: Colors.amber, size: 24),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(Icons.star, color: Colors.amber, size: 24),
+                SizedBox(width: 8),
+                Text(
                   'PRO-аккаунт',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -351,7 +351,7 @@ class SettingsMainScreen extends StatelessWidget {
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 _showInfoSnackBar(
-                    context, 'Условия использования будут реализованы');
+                    context, 'Условия использования будут реализованы',);
               },
             ),
             ListTile(
@@ -361,7 +361,7 @@ class SettingsMainScreen extends StatelessWidget {
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 _showInfoSnackBar(
-                    context, 'Политика конфиденциальности будет реализована');
+                    context, 'Политика конфиденциальности будет реализована',);
               },
             ),
           ],

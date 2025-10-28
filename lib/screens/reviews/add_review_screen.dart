@@ -1,18 +1,15 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
+import 'package:event_marketplace_app/services/reviews_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../models/review.dart';
-import '../../services/analytics_service.dart';
-import '../../services/reviews_service.dart';
 
 class AddReviewScreen extends ConsumerStatefulWidget {
   // Для редактирования
 
   const AddReviewScreen({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.existingReview,
   });
   final String specialistId;
@@ -54,7 +51,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Можно добавить максимум 3 фотографии')));
+          content: Text('Можно добавить максимум 3 фотографии'),),);
       return;
     }
 
@@ -135,11 +132,11 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
         appBar: AppBar(
           title: Text(widget.existingReview != null
               ? 'Редактировать отзыв'
-              : 'Добавить отзыв'),
+              : 'Добавить отзыв',),
           actions: [
             if (widget.existingReview != null)
               IconButton(
-                  icon: const Icon(Icons.delete), onPressed: _showDeleteDialog),
+                  icon: const Icon(Icons.delete), onPressed: _showDeleteDialog,),
           ],
         ),
         body: Form(
@@ -166,7 +163,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                               ? widget.specialistName[0].toUpperCase()
                               : 'С',
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20, fontWeight: FontWeight.bold,),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -177,12 +174,12 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                             Text(
                               widget.specialistName,
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontWeight: FontWeight.bold,),
                             ),
                             Text(
                               'Оставьте отзыв о работе специалиста',
                               style: TextStyle(
-                                  color: Colors.grey.shade600, fontSize: 14),
+                                  color: Colors.grey.shade600, fontSize: 14,),
                             ),
                           ],
                         ),
@@ -196,7 +193,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                 // Рейтинг
                 const Text('Оценка',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 12),
                 Row(
                   children: List.generate(
@@ -226,7 +223,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                 // Текст отзыва
                 const Text('Отзыв',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _textController,
@@ -291,7 +288,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Icon(Icons.close,
-                                      color: Colors.white, size: 16),
+                                      color: Colors.white, size: 16,),
                                 ),
                               ),
                             ),
@@ -326,7 +323,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
                         ? const CircularProgressIndicator(color: Colors.white)
                         : Text(widget.existingReview != null
                             ? 'Обновить отзыв'
-                            : 'Отправить отзыв'),
+                            : 'Отправить отзыв',),
                   ),
                 ),
               ],
@@ -361,7 +358,7 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);

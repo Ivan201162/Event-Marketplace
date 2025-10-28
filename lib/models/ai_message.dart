@@ -44,7 +44,7 @@ class AIMessage {
         specialistPrice: (data['specialistPrice'] as num?)?.toDouble(),
         specialistImageUrl: data['specialistImageUrl'] as String?,
         metadata: Map<String, dynamic>.from(
-            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+            data['metadata'] as Map<dynamic, dynamic>? ?? {},),
       );
 
   /// Создать из документа Firestore
@@ -67,7 +67,7 @@ class AIMessage {
       specialistPrice: (data['specialistPrice'] as num?)?.toDouble(),
       specialistImageUrl: data['specialistImageUrl'] as String?,
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},),
     );
   }
 

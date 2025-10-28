@@ -1,15 +1,14 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/enhanced_feed_post.dart';
-
 /// Виджет для создания поста
 class CreatePostWidget extends ConsumerStatefulWidget {
   const CreatePostWidget(
-      {super.key, required this.authorId, this.onPostCreated});
+      {required this.authorId, super.key, this.onPostCreated,});
 
   final String authorId;
   final VoidCallback? onPostCreated;
@@ -80,7 +79,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Тип поста',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -125,7 +124,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Содержимое',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _contentController,
@@ -145,7 +144,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Медиафайлы',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               Row(
                 children: [
                   IconButton(
@@ -188,9 +187,9 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                     child: file.path.toLowerCase().endsWith('.mp4') ||
                             file.path.toLowerCase().endsWith('.mov')
                         ? const Center(
-                            child: Icon(Icons.play_circle_fill, size: 40))
+                            child: Icon(Icons.play_circle_fill, size: 40),)
                         : Image.file(File(file.path),
-                            fit: BoxFit.cover, width: 100, height: 100),
+                            fit: BoxFit.cover, width: 100, height: 100,),
                   ),
                   Positioned(
                     top: 4,
@@ -204,9 +203,9 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                       child: Container(
                         padding: const EdgeInsets.all(2),
                         decoration: const BoxDecoration(
-                            color: Colors.red, shape: BoxShape.circle),
+                            color: Colors.red, shape: BoxShape.circle,),
                         child: const Icon(Icons.close,
-                            color: Colors.white, size: 16),
+                            color: Colors.white, size: 16,),
                       ),
                     ),
                   ),
@@ -221,7 +220,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Теги',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _tagsController,
@@ -238,7 +237,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Местоположение',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _locationController,
@@ -302,7 +301,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                     const Spacer(),
                     Text('Сейчас',
                         style:
-                            TextStyle(color: Colors.grey[600], fontSize: 12)),
+                            TextStyle(color: Colors.grey[600], fontSize: 12),),
                   ],
                 ),
                 if (_contentController.text.isNotEmpty) ...[
@@ -318,7 +317,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Center(
-                        child: Text('Медиафайлы будут отображены здесь')),
+                        child: Text('Медиафайлы будут отображены здесь'),),
                   ),
                 ],
                 if (_tagsController.text.isNotEmpty) ...[
@@ -331,7 +330,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                         .map(
                           (tag) => Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
                               borderRadius: BorderRadius.circular(12),
@@ -339,7 +338,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                             child: Text(
                               tag.startsWith('#') ? tag : '#$tag',
                               style: TextStyle(
-                                  color: Colors.blue[800], fontSize: 12),
+                                  color: Colors.blue[800], fontSize: 12,),
                             ),
                           ),
                         )
@@ -351,7 +350,7 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
                   Row(
                     children: [
                       Icon(Icons.location_on,
-                          size: 16, color: Colors.grey[600]),
+                          size: 16, color: Colors.grey[600],),
                       const SizedBox(width: 4),
                       Text(
                         _locationController.text,
@@ -451,13 +450,13 @@ class _CreatePostWidgetState extends ConsumerState<CreatePostWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 }

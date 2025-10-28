@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_categories.dart';
+import 'package:event_marketplace_app/screens/specialist_profile_screen.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist.dart';
-import '../models/specialist_categories.dart';
-import '../widgets/specialist_card.dart';
-import 'specialist_profile_screen.dart';
-
 class SpecialistsListScreen extends ConsumerStatefulWidget {
-  const SpecialistsListScreen({super.key, required this.category});
+  const SpecialistsListScreen({required this.category, super.key});
 
   final SpecialistCategoryInfo category;
 
@@ -81,7 +80,7 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
                 return RefreshIndicator(
                   onRefresh: () async {
                     ref.invalidate(
-                        specialistsByCategoryProvider(widget.category.name));
+                        specialistsByCategoryProvider(widget.category.name),);
                   },
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
@@ -114,14 +113,14 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                        size: 64, color: Colors.red,),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки: $error'),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
                         ref.invalidate(specialistsByCategoryProvider(
-                            widget.category.name));
+                            widget.category.name,),);
                       },
                       child: const Text('Повторить'),
                     ),
@@ -243,14 +242,14 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Минимальный рейтинг',
-              style: Theme.of(context).textTheme.titleSmall),
+              style: Theme.of(context).textTheme.titleSmall,),
           const SizedBox(height: 8),
           Row(
             children: List.generate(
               5,
               (index) => IconButton(
                 icon: Icon(Icons.star,
-                    color: index < 4 ? Colors.amber : Colors.grey[300]),
+                    color: index < 4 ? Colors.amber : Colors.grey[300],),
                 onPressed: () {
                   // TODO(developer): Реализовать фильтр по рейтингу
                 },
@@ -300,7 +299,7 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
             ),
             const SizedBox(height: 8),
             Text('Попробуйте изменить поисковый запрос',
-                style: TextStyle(color: Colors.grey[500])),
+                style: TextStyle(color: Colors.grey[500]),),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
@@ -324,7 +323,7 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
             widget.category.emoji,
             style: TextStyle(
                 fontSize: 64,
-                color: widget.category.color.withValues(alpha: 0.5)),
+                color: widget.category.color.withValues(alpha: 0.5),),
           ),
           const SizedBox(height: 16),
           Text(
@@ -445,7 +444,6 @@ List<Specialist> _getTestSpecialistsForCategory(String categoryName) {
           updatedAt: DateTime.now(),
         ),
       ]);
-      break;
 
     case 'hosts':
       specialists.addAll([
@@ -466,7 +464,6 @@ List<Specialist> _getTestSpecialistsForCategory(String categoryName) {
           updatedAt: DateTime.now(),
         ),
       ]);
-      break;
 
     case 'djs':
       specialists.addAll([
@@ -487,7 +484,6 @@ List<Specialist> _getTestSpecialistsForCategory(String categoryName) {
           updatedAt: DateTime.now(),
         ),
       ]);
-      break;
 
     default:
       // Для остальных категорий возвращаем пустой список

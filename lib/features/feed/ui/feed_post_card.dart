@@ -1,22 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/features/feed/data/feed_model.dart';
+import 'package:event_marketplace_app/features/feed/ui/feed_video_player.dart';
+import 'package:event_marketplace_app/features/feed/ui/follow_button.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../providers/auth_providers.dart';
-import '../data/feed_model.dart';
-import 'feed_video_player.dart';
-import 'follow_button.dart';
-
 /// Карточка поста в ленте
 class FeedPostCard extends ConsumerWidget {
   const FeedPostCard({
-    super.key,
-    required this.post,
-    required this.onLike,
-    required this.onComment,
-    required this.onShare,
-    required this.onProfileTap,
+    required this.post, required this.onLike, required this.onComment, required this.onShare, required this.onProfileTap, super.key,
   });
 
   final FeedPost post;
@@ -89,16 +83,16 @@ class FeedPostCard extends ConsumerWidget {
                     Text(
                       post.authorName,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 16),
+                          fontWeight: FontWeight.w600, fontSize: 16,),
                     ),
                     Row(
                       children: [
                         Icon(Icons.location_on,
-                            size: 14, color: Colors.grey[600]),
+                            size: 14, color: Colors.grey[600],),
                         const SizedBox(width: 4),
                         Text(post.authorCity,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 14)),
+                                color: Colors.grey[600], fontSize: 14,),),
                         const SizedBox(width: 8),
                         Text(
                           _formatDate(post.createdAt),
@@ -122,10 +116,8 @@ class FeedPostCard extends ConsumerWidget {
                     switch (value) {
                       case 'report':
                         _showReportDialog(context);
-                        break;
                       case 'hide':
                         _hidePost(context);
-                        break;
                     }
                   },
                   itemBuilder: (context) => [
@@ -187,7 +179,7 @@ class FeedPostCard extends ConsumerWidget {
                       errorWidget: (context, url, error) => Container(
                         color: Colors.grey[200],
                         child: const Center(
-                            child: Icon(Icons.error, color: Colors.red)),
+                            child: Icon(Icons.error, color: Colors.red),),
                       ),
                     ),
                   ),
@@ -210,7 +202,7 @@ class FeedPostCard extends ConsumerWidget {
 
             // Комментарии
             _buildActionButton(
-                icon: Icons.chat_bubble_outline, onTap: onComment),
+                icon: Icons.chat_bubble_outline, onTap: onComment,),
 
             const SizedBox(width: 16),
 
@@ -228,7 +220,7 @@ class FeedPostCard extends ConsumerWidget {
                     .map(
                       (category) => Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.blue[50],
                           borderRadius: BorderRadius.circular(12),
@@ -259,7 +251,7 @@ class FeedPostCard extends ConsumerWidget {
               Text(
                 '${post.likes} ${_getLikesText(post.likes)}',
                 style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.grey[700]),
+                    fontWeight: FontWeight.w600, color: Colors.grey[700],),
               ),
             if (post.commentsCount > 0)
               Padding(
@@ -275,8 +267,7 @@ class FeedPostCard extends ConsumerWidget {
 
   Widget _buildActionButton(
           {required IconData icon,
-          Color? color,
-          required VoidCallback onTap}) =>
+          required VoidCallback onTap, Color? color,}) =>
       GestureDetector(
         onTap: onTap,
         child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
@@ -325,9 +316,9 @@ class FeedPostCard extends ConsumerWidget {
                 imageUrl: post.mediaUrl,
                 fit: BoxFit.contain,
                 placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(color: Colors.white)),
+                    child: CircularProgressIndicator(color: Colors.white),),
                 errorWidget: (context, url, error) => const Center(
-                    child: Icon(Icons.error, color: Colors.red, size: 50)),
+                    child: Icon(Icons.error, color: Colors.red, size: 50),),
               ),
             ),
           ),
@@ -345,14 +336,14 @@ class FeedPostCard extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(
-                  const SnackBar(content: Text('Жалоба отправлена')));
+                  const SnackBar(content: Text('Жалоба отправлена')),);
             },
             child: const Text('Отправить'),
           ),

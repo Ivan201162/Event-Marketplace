@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/core/responsive_utils.dart';
 import 'package:flutter/material.dart';
-import '../core/responsive_utils.dart';
 
 /// Адаптивный layout для разных размеров экранов
 class ResponsiveLayout extends StatelessWidget {
   const ResponsiveLayout({
-    super.key,
-    required this.mobile,
+    required this.mobile, super.key,
     this.tablet,
     this.desktop,
     this.largeDesktop,
@@ -35,8 +34,7 @@ class ResponsiveLayout extends StatelessWidget {
 /// Адаптивный Scaffold с поддержкой разных размеров экранов
 class ResponsiveScaffold extends StatelessWidget {
   const ResponsiveScaffold({
-    super.key,
-    required this.body,
+    required this.body, super.key,
     this.appBar,
     this.bottomNavigationBar,
     this.drawer,
@@ -104,9 +102,7 @@ class ResponsiveScaffold extends StatelessWidget {
 /// Адаптивная навигационная панель
 class ResponsiveNavigationBar extends StatelessWidget {
   const ResponsiveNavigationBar({
-    super.key,
-    required this.currentIndex,
-    required this.items,
+    required this.currentIndex, required this.items, super.key,
     this.onTap,
     this.backgroundColor,
     this.selectedItemColor,
@@ -140,7 +136,7 @@ class ResponsiveNavigationBar extends StatelessWidget {
         unselectedItemColor: unselectedItemColor,
         items: items
             .map((item) =>
-                BottomNavigationBarItem(icon: item.icon, label: item.label))
+                BottomNavigationBarItem(icon: item.icon, label: item.label),)
             .toList(),
       );
 
@@ -154,7 +150,7 @@ class ResponsiveNavigationBar extends StatelessWidget {
         unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
         destinations: items
             .map((item) => NavigationRailDestination(
-                icon: item.icon, label: Text(item.label)))
+                icon: item.icon, label: Text(item.label),),)
             .toList(),
       );
 }
@@ -169,8 +165,7 @@ class NavigationBarItem {
 /// Адаптивная карточка
 class ResponsiveCard extends StatelessWidget {
   const ResponsiveCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.margin,
     this.color,
@@ -202,25 +197,21 @@ class ResponsiveCard extends StatelessWidget {
         effectiveMargin = margin ?? const EdgeInsets.all(8);
         effectiveElevation = elevation ?? 2;
         effectiveBorderRadius = borderRadius ?? BorderRadius.circular(12);
-        break;
       case ScreenType.tablet:
         effectivePadding = padding ?? const EdgeInsets.all(20);
         effectiveMargin = margin ?? const EdgeInsets.all(12);
         effectiveElevation = elevation ?? 3;
         effectiveBorderRadius = borderRadius ?? BorderRadius.circular(16);
-        break;
       case ScreenType.desktop:
         effectivePadding = padding ?? const EdgeInsets.all(24);
         effectiveMargin = margin ?? const EdgeInsets.all(16);
         effectiveElevation = elevation ?? 4;
         effectiveBorderRadius = borderRadius ?? BorderRadius.circular(20);
-        break;
       case ScreenType.largeDesktop:
         effectivePadding = padding ?? const EdgeInsets.all(28);
         effectiveMargin = margin ?? const EdgeInsets.all(20);
         effectiveElevation = elevation ?? 5;
         effectiveBorderRadius = borderRadius ?? BorderRadius.circular(24);
-        break;
     }
 
     return Container(
@@ -246,7 +237,7 @@ class ResponsiveCard extends StatelessWidget {
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
   const ResponsiveList(
-      {super.key, required this.children, this.padding, this.spacing});
+      {required this.children, super.key, this.padding, this.spacing,});
   final List<Widget> children;
   final EdgeInsets? padding;
   final double? spacing;
@@ -266,7 +257,7 @@ class ResponsiveList extends StatelessWidget {
             .expand(
               (child) => [
                 child,
-                if (child != children.last) SizedBox(height: effectiveSpacing)
+                if (child != children.last) SizedBox(height: effectiveSpacing),
               ],
             )
             .toList(),
@@ -278,8 +269,7 @@ class ResponsiveList extends StatelessWidget {
 /// Адаптивная кнопка
 class ResponsiveButton extends StatelessWidget {
   const ResponsiveButton({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onPressed,
     this.style,
     this.padding,
@@ -301,22 +291,18 @@ class ResponsiveButton extends StatelessWidget {
         effectivePadding =
             padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
         fontSize = 14;
-        break;
       case ScreenType.tablet:
         effectivePadding =
             padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 14);
         fontSize = 16;
-        break;
       case ScreenType.desktop:
         effectivePadding =
             padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16);
         fontSize = 16;
-        break;
       case ScreenType.largeDesktop:
         effectivePadding =
             padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18);
         fontSize = 18;
-        break;
     }
 
     return ElevatedButton(
@@ -337,8 +323,7 @@ class ResponsiveButton extends StatelessWidget {
 /// Адаптивный диалог
 class ResponsiveDialog extends StatelessWidget {
   const ResponsiveDialog({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.title,
     this.actions,
     this.contentPadding,
@@ -359,19 +344,15 @@ class ResponsiveDialog extends StatelessWidget {
       case ScreenType.mobile:
         maxWidth = context.screenWidth * 0.9;
         effectiveContentPadding = contentPadding ?? const EdgeInsets.all(16);
-        break;
       case ScreenType.tablet:
         maxWidth = 500;
         effectiveContentPadding = contentPadding ?? const EdgeInsets.all(20);
-        break;
       case ScreenType.desktop:
         maxWidth = 600;
         effectiveContentPadding = contentPadding ?? const EdgeInsets.all(24);
-        break;
       case ScreenType.largeDesktop:
         maxWidth = 700;
         effectiveContentPadding = contentPadding ?? const EdgeInsets.all(28);
-        break;
     }
 
     return Dialog(
@@ -384,7 +365,7 @@ class ResponsiveDialog extends StatelessWidget {
               Padding(
                 padding: effectiveContentPadding,
                 child: Text(title!,
-                    style: Theme.of(context).textTheme.headlineSmall),
+                    style: Theme.of(context).textTheme.headlineSmall,),
               ),
             Flexible(
               child: Padding(padding: effectiveContentPadding, child: child),
@@ -394,7 +375,7 @@ class ResponsiveDialog extends StatelessWidget {
                 padding: effectiveContentPadding,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: actions!),
+                    children: actions!,),
               ),
           ],
         ),

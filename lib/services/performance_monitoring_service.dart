@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:event_marketplace_app/models/performance_metric.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/performance_metric.dart';
 
 /// Сервис мониторинга производительности
 class PerformanceMonitoringService {
@@ -261,7 +260,7 @@ class PerformanceMonitoringService {
 
       if (kDebugMode) {
         debugPrint(
-            'Performance metric recorded: $name = ${metric.formattedValue}');
+            'Performance metric recorded: $name = ${metric.formattedValue}',);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -292,7 +291,7 @@ class PerformanceMonitoringService {
 
   /// Создать алерт
   Future<void> _createAlert(
-      String metricName, double value, double threshold) async {
+      String metricName, double value, double threshold,) async {
     try {
       // Проверяем, не создан ли уже алерт для этой метрики
       final existingAlert = _activeAlerts.firstWhere(
@@ -326,7 +325,7 @@ class PerformanceMonitoringService {
         metadata: {
           'sessionId': _currentSessionId,
           'userId': _currentUserId,
-          'deviceId': _deviceId
+          'deviceId': _deviceId,
         },
       );
 
@@ -366,7 +365,7 @@ class PerformanceMonitoringService {
 
   /// Получить серьезность алерта
   AlertSeverity _getAlertSeverity(
-      String metricName, double value, double threshold) {
+      String metricName, double value, double threshold,) {
     final ratio = value / threshold;
 
     if (ratio > 2) return AlertSeverity.critical;
@@ -377,7 +376,7 @@ class PerformanceMonitoringService {
 
   /// Сгенерировать сообщение алерта
   String _generateAlertMessage(
-      String metricName, double value, double threshold) {
+      String metricName, double value, double threshold,) {
     final metric = PerformanceMetric(
       id: '',
       name: metricName,
@@ -471,11 +470,11 @@ class PerformanceMonitoringService {
       }
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final snapshot =
@@ -505,7 +504,7 @@ class PerformanceMonitoringService {
       );
 
       return PerformanceStatistics.fromMetrics(
-          metricName, _getMetricCategory(metricName), metrics);
+          metricName, _getMetricCategory(metricName), metrics,);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка получения статистики метрики: $e');

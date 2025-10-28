@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/services/guest_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/guest_service.dart';
 
 /// Экран создания события для гостей
 class CreateGuestEventScreen extends ConsumerStatefulWidget {
-  const CreateGuestEventScreen({super.key, required this.organizerId});
+  const CreateGuestEventScreen({required this.organizerId, super.key});
   final String organizerId;
 
   @override
@@ -253,7 +253,7 @@ class _CreateGuestEventScreenState
                         Text(
                           'Возможности события',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.blue),
+                              fontWeight: FontWeight.bold, color: Colors.blue,),
                         ),
                       ],
                     ),
@@ -347,13 +347,13 @@ class _CreateGuestEventScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Событие успешно создано'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } on Exception catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() {
         _isLoading = false;

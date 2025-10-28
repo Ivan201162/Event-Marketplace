@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/app_notification.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/app_notification.dart';
-import '../services/notification_service.dart';
 
 /// Виджет для отображения списка уведомлений
 class NotificationsListWidget extends StatefulWidget {
   const NotificationsListWidget(
-      {super.key, required this.userId, this.onNotificationTap});
+      {required this.userId, super.key, this.onNotificationTap,});
 
   final String userId;
   final void Function(Map<String, dynamic>)? onNotificationTap;
@@ -28,7 +27,7 @@ class _NotificationsListWidgetState extends State<NotificationsListWidget> {
           if (snapshot.hasError) {
             return _ErrorWidget(
                 error: snapshot.error.toString(),
-                onRetry: () => setState(() {}));
+                onRetry: () => setState(() {}),);
           }
 
           final notifications = snapshot.data ?? [];
@@ -67,14 +66,14 @@ class _NotificationsListWidgetState extends State<NotificationsListWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 }
 
@@ -138,7 +137,7 @@ class _EmptyWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
             SizedBox(height: 8),
             Text(
@@ -155,9 +154,7 @@ class _EmptyWidget extends StatelessWidget {
 class _NotificationsList extends StatelessWidget {
   const _NotificationsList({
     required this.notifications,
-    this.onNotificationTap,
-    required this.onMarkAsRead,
-    required this.onMarkAllAsRead,
+    required this.onMarkAsRead, required this.onMarkAllAsRead, this.onNotificationTap,
   });
 
   final List<Map<String, dynamic>> notifications;
@@ -194,11 +191,11 @@ class _NotificationsList extends StatelessWidget {
         child: Row(
           children: [
             const Text('Уведомления',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             const Spacer(),
             TextButton(
                 onPressed: onMarkAllAsRead,
-                child: const Text('Отметить все как прочитанные')),
+                child: const Text('Отметить все как прочитанные'),),
           ],
         ),
       );
@@ -261,7 +258,7 @@ class _NotificationCard extends StatelessWidget {
                       width: 8,
                       height: 8,
                       decoration: const BoxDecoration(
-                          color: Colors.blue, shape: BoxShape.circle),
+                          color: Colors.blue, shape: BoxShape.circle,),
                     ),
                 ],
               ),
@@ -278,15 +275,12 @@ class _NotificationCard extends StatelessWidget {
       case 'new_booking':
         iconData = Icons.event;
         iconColor = Colors.green;
-        break;
       case 'discount_offer':
         iconData = Icons.local_offer;
         iconColor = Colors.orange;
-        break;
       case 'booking_confirmed':
         iconData = Icons.check_circle;
         iconColor = Colors.blue;
-        break;
       default:
         iconData = Icons.notifications;
         iconColor = Colors.grey;

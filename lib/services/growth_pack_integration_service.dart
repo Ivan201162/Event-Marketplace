@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'ab_testing_service.dart';
-import 'automated_promotions_service.dart';
-import 'dynamic_pricing_service.dart';
-import 'growth_mechanics_service.dart';
-import 'growth_notifications_service.dart';
-import 'partnership_service.dart';
-import 'receipt_service.dart';
-import 'referral_service.dart';
-import 'revenue_analytics_service.dart';
-import 'smart_advertising_service.dart';
+import 'package:event_marketplace_app/services/ab_testing_service.dart';
+import 'package:event_marketplace_app/services/automated_promotions_service.dart';
+import 'package:event_marketplace_app/services/dynamic_pricing_service.dart';
+import 'package:event_marketplace_app/services/growth_mechanics_service.dart';
+import 'package:event_marketplace_app/services/growth_notifications_service.dart';
+import 'package:event_marketplace_app/services/partnership_service.dart';
+import 'package:event_marketplace_app/services/receipt_service.dart';
+import 'package:event_marketplace_app/services/referral_service.dart';
+import 'package:event_marketplace_app/services/revenue_analytics_service.dart';
+import 'package:event_marketplace_app/services/smart_advertising_service.dart';
 
 class GrowthPackIntegrationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -35,7 +35,7 @@ class GrowthPackIntegrationService {
   Future<void> initializeGrowthPack() async {
     try {
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] Initializing Growth Pack...');
+          'INFO: [GrowthPackIntegrationService] Initializing Growth Pack...',);
 
       // Создаем предустановленные данные
       await _createDefaultData();
@@ -47,10 +47,10 @@ class GrowthPackIntegrationService {
       await _automatedPromotionsService.createDefaultPromotions();
 
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] Growth Pack initialized successfully');
+          'INFO: [GrowthPackIntegrationService] Growth Pack initialized successfully',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to initialize Growth Pack: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to initialize Growth Pack: $e',);
     }
   }
 
@@ -75,14 +75,14 @@ class GrowthPackIntegrationService {
       debugPrint('INFO: [GrowthPackIntegrationService] Default data created');
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default data: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to create default data: $e',);
     }
   }
 
   /// Создание предустановленных достижений
   Future<void> _createDefaultAchievements() async {
     try {
-      final List<Map<String, dynamic>> achievements = [
+      final achievements = <Map<String, dynamic>>[
         {
           'id': 'first_referral',
           'name': 'Первый реферал',
@@ -148,17 +148,17 @@ class GrowthPackIntegrationService {
       }
 
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] Default achievements created');
+          'INFO: [GrowthPackIntegrationService] Default achievements created',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default achievements: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to create default achievements: $e',);
     }
   }
 
   /// Создание предустановленных значков
   Future<void> _createDefaultBadges() async {
     try {
-      final List<Map<String, dynamic>> badges = [
+      final badges = <Map<String, dynamic>>[
         {
           'id': 'first_buyer',
           'name': 'Первый покупатель',
@@ -212,7 +212,7 @@ class GrowthPackIntegrationService {
       debugPrint('INFO: [GrowthPackIntegrationService] Default badges created');
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default badges: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to create default badges: $e',);
     }
   }
 
@@ -230,7 +230,7 @@ class GrowthPackIntegrationService {
         rewards: {
           'experience': 500,
           'premium_days': 30,
-          'badge': 'referral_champion'
+          'badge': 'referral_champion',
         },
         icon: 'people',
         category: 'social',
@@ -263,10 +263,10 @@ class GrowthPackIntegrationService {
       );
 
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] Default challenges created');
+          'INFO: [GrowthPackIntegrationService] Default challenges created',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default challenges: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to create default challenges: $e',);
     }
   }
 
@@ -311,7 +311,7 @@ class GrowthPackIntegrationService {
       });
 
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] Default pricing rules created');
+          'INFO: [GrowthPackIntegrationService] Default pricing rules created',);
     } catch (e) {
       debugPrint(
         'ERROR: [GrowthPackIntegrationService] Failed to create default pricing rules: $e',
@@ -353,7 +353,7 @@ class GrowthPackIntegrationService {
         'updatedAt': DateTime.now(),
         'metadata': {
           'category': 'specialists',
-          'targetAudience': 'active_browsers'
+          'targetAudience': 'active_browsers',
         },
       });
 
@@ -374,7 +374,7 @@ class GrowthPackIntegrationService {
       });
 
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] Default smart ad rules created');
+          'INFO: [GrowthPackIntegrationService] Default smart ad rules created',);
     } catch (e) {
       debugPrint(
         'ERROR: [GrowthPackIntegrationService] Failed to create default smart ad rules: $e',
@@ -395,24 +395,24 @@ class GrowthPackIntegrationService {
 
       // Обработка в сервисе геймификации
       await _growthMechanicsService.checkAndAwardAchievements(
-          userId, eventType, eventData);
+          userId, eventType, eventData,);
 
       // Обработка в сервисе автоматических промо-кампаний
       await _automatedPromotionsService.checkAndExecutePromotions(
-          userId, eventType, eventData);
+          userId, eventType, eventData,);
 
       // Обработка в сервисе A/B тестирования
       await _abTestingService.logEvent(
-          userId, 'general_test', eventType, eventData);
+          userId, 'general_test', eventType, eventData,);
 
       // Добавление опыта за активность
       await _addExperienceForEvent(userId, eventType, eventData);
 
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] User event handled successfully');
+          'INFO: [GrowthPackIntegrationService] User event handled successfully',);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to handle user event: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to handle user event: $e',);
     }
   }
 
@@ -423,50 +423,40 @@ class GrowthPackIntegrationService {
     Map<String, dynamic> eventData,
   ) async {
     try {
-      int experience = 0;
-      String reason = '';
+      var experience = 0;
+      var reason = '';
 
       switch (eventType) {
         case 'user_registration':
           experience = 100;
           reason = 'Регистрация';
-          break;
         case 'first_purchase':
           experience = 200;
           reason = 'Первая покупка';
-          break;
         case 'referral_completed':
           experience = 150;
           reason = 'Реферал зарегистрирован';
-          break;
         case 'challenge_completed':
           experience = 300;
           reason = 'Челлендж завершен';
-          break;
         case 'achievement_earned':
           experience = 100;
           reason = 'Достижение получено';
-          break;
         case 'daily_login':
           experience = 10;
           reason = 'Ежедневный вход';
-          break;
         case 'profile_view':
           experience = 5;
           reason = 'Просмотр профиля';
-          break;
         case 'message_sent':
           experience = 3;
           reason = 'Отправлено сообщение';
-          break;
         case 'idea_created':
           experience = 20;
           reason = 'Создана идея';
-          break;
         case 'request_created':
           experience = 15;
           reason = 'Создан запрос';
-          break;
       }
 
       if (experience > 0) {
@@ -474,7 +464,7 @@ class GrowthPackIntegrationService {
       }
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to add experience for event: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to add experience for event: $e',);
     }
   }
 
@@ -511,13 +501,13 @@ class GrowthPackIntegrationService {
 
       return {
         'level': levelDoc.exists
-            ? (levelDoc.data() as Map<String, dynamic>)['level']
+            ? (levelDoc.data()! as Map<String, dynamic>)['level']
             : 1,
         'experience': levelDoc.exists
-            ? (levelDoc.data() as Map<String, dynamic>)['experience']
+            ? (levelDoc.data()! as Map<String, dynamic>)['experience']
             : 0,
         'totalExperience': levelDoc.exists
-            ? (levelDoc.data() as Map<String, dynamic>)['totalExperience']
+            ? (levelDoc.data()! as Map<String, dynamic>)['totalExperience']
             : 0,
         'achievementsCount': achievementsSnapshot.docs.length,
         'badgesCount': badgesSnapshot.docs.length,
@@ -527,7 +517,7 @@ class GrowthPackIntegrationService {
       };
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to get user growth stats: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to get user growth stats: $e',);
       return {
         'level': 1,
         'experience': 0,
@@ -582,7 +572,7 @@ class GrowthPackIntegrationService {
       };
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to get admin growth stats: $e');
+          'ERROR: [GrowthPackIntegrationService] Failed to get admin growth stats: $e',);
       return {
         'totalUsers': 0,
         'totalReferrals': 0,

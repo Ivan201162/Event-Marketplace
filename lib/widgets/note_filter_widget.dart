@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/providers/customer_profile_extended_providers.dart';
 import 'package:flutter/material.dart';
-import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет фильтрации заметок
 class NoteFilterWidget extends StatefulWidget {
   const NoteFilterWidget(
-      {super.key,
-      required this.currentFilters,
-      required this.onFiltersChanged});
+      {required this.currentFilters, required this.onFiltersChanged, super.key,});
   final NoteFilters currentFilters;
   final Function(NoteFilters) onFiltersChanged;
 
@@ -54,9 +52,9 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                 title: const Text('Фильтры заметок'),
                 actions: [
                   TextButton(
-                      onPressed: _clearFilters, child: const Text('Сбросить')),
+                      onPressed: _clearFilters, child: const Text('Сбросить'),),
                   TextButton(
-                      onPressed: _applyFilters, child: const Text('Применить')),
+                      onPressed: _applyFilters, child: const Text('Применить'),),
                 ],
               ),
               Expanded(
@@ -95,7 +93,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                       SwitchListTile(
                         title: const Text('Фильтр по дате'),
                         subtitle: const Text(
-                            'Показать заметки за определённый период'),
+                            'Показать заметки за определённый период',),
                         value: _showByDate,
                         onChanged: (value) {
                           setState(() {
@@ -142,7 +140,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                       const Text(
                         'Связь с объектами',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 8),
 
@@ -150,7 +148,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                         leading: const Icon(Icons.event),
                         title: const Text('Связанные с событием'),
                         subtitle: Text(
-                            _eventId != null ? 'ID: $_eventId' : 'Все заметки'),
+                            _eventId != null ? 'ID: $_eventId' : 'Все заметки',),
                         trailing: _eventId != null
                             ? IconButton(
                                 icon: const Icon(Icons.clear),
@@ -169,7 +167,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                         title: const Text('Связанные со специалистом'),
                         subtitle: Text(_specialistId != null
                             ? 'ID: $_specialistId'
-                            : 'Все заметки'),
+                            : 'Все заметки',),
                         trailing: _specialistId != null
                             ? IconButton(
                                 icon: const Icon(Icons.clear),
@@ -188,7 +186,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                       // Теги
                       const Text('Теги',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                              fontSize: 16, fontWeight: FontWeight.bold,),),
                       const SizedBox(height: 8),
                       _buildTagFilters(),
                     ],
@@ -321,7 +319,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
     // TODO(developer): Реализовать выбор события из списка
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Выбор события будет добавлен в следующей версии')),
+          content: Text('Выбор события будет добавлен в следующей версии'),),
     );
   }
 
@@ -329,7 +327,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
     // TODO(developer): Реализовать выбор специалиста из списка
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Выбор специалиста будет добавлен в следующей версии')),
+          content: Text('Выбор специалиста будет добавлен в следующей версии'),),
     );
   }
 

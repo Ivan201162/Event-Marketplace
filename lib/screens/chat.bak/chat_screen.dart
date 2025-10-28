@@ -1,21 +1,19 @@
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/message.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/chat_providers.dart';
+import 'package:event_marketplace_app/widgets/animations/animated_content.dart';
+import 'package:event_marketplace_app/widgets/chat/message_bubble.dart';
+import 'package:event_marketplace_app/widgets/error/error_state_widget.dart';
+import 'package:event_marketplace_app/widgets/loading/loading_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../models/app_user.dart';
-import '../../models/message.dart';
-import '../../providers/auth_providers.dart';
-import '../../providers/chat_providers.dart';
-import '../../widgets/animations/animated_content.dart';
-import '../../widgets/chat/message_bubble.dart';
-import '../../widgets/error/error_state_widget.dart';
-import '../../widgets/loading/loading_state_widget.dart';
-
 /// Экран чата
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({
-    super.key,
-    required this.chatId,
+    required this.chatId, super.key,
     this.otherUserId,
     this.otherUserName,
     this.otherUserAvatar,
@@ -41,7 +39,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  bool _isTyping = false;
+  final bool _isTyping = false;
   String? _currentUserId;
 
   @override
@@ -62,12 +60,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -75,7 +73,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
     ).animate(CurvedAnimation(
       parent: _slideController,
       curve: Curves.easeOutCubic,
-    ));
+    ),);
 
     _fadeController.forward();
     _slideController.forward();
@@ -202,7 +200,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                 Text(
                   widget.otherUserName ?? 'Пользователь',
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                 ),
                 Text(
                   'В сети',
@@ -314,7 +312,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
         border: Border(
           top: BorderSide(
             color: theme.colorScheme.outline.withValues(alpha: 0.2),
-            width: 1,
           ),
         ),
       ),

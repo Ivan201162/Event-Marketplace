@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/idea.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/idea.dart';
 
 /// Провайдер для идей с тестовыми данными
 final ideasProvider = StreamProvider<List<Idea>>((ref) async* {
@@ -165,9 +164,7 @@ class IdeasNotifier extends Notifier<AsyncValue<List<Idea>>> {
   Future<void> createIdea({
     required String title,
     required String description,
-    String? imageUrl,
-    required String authorId,
-    required String authorName,
+    required String authorId, required String authorName, String? imageUrl,
     String? authorAvatar,
   }) async {
     try {

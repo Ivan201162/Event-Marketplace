@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/services/specialist_report_service.dart';
+import 'package:event_marketplace_app/widgets/report_chart_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/specialist_report_service.dart';
-import '../widgets/report_chart_widget.dart';
 
 /// Экран отчетов по специалистам
 class SpecialistReportsScreen extends ConsumerStatefulWidget {
@@ -81,7 +81,7 @@ class _SpecialistReportsScreenState
                   Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
                   const SizedBox(height: 16),
                   Text('Ошибка загрузки отчета',
-                      style: Theme.of(context).textTheme.titleLarge),
+                      style: Theme.of(context).textTheme.titleLarge,),
                   const SizedBox(height: 8),
                   Text(
                     snapshot.error.toString(),
@@ -139,7 +139,7 @@ class _SpecialistReportsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildReportHeader(
-                    'Статистика по категориям', report.generatedAt),
+                    'Статистика по категориям', report.generatedAt,),
                 const SizedBox(height: 24),
 
                 // Список категорий
@@ -171,7 +171,7 @@ class _SpecialistReportsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildReportHeader(
-                    'Статистика по рейтингам', report.generatedAt),
+                    'Статистика по рейтингам', report.generatedAt,),
                 const SizedBox(height: 24),
 
                 // Средний рейтинг
@@ -240,7 +240,7 @@ class _SpecialistReportsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildReportHeader(
-                    'Статистика по активности', report.generatedAt),
+                    'Статистика по активности', report.generatedAt,),
                 const SizedBox(height: 24),
 
                 // Активность
@@ -316,12 +316,12 @@ class _SpecialistReportsScreenState
             Colors.purple,
           ),
           _buildMetricCard('Категорий', report.totalCategories.toString(),
-              Icons.category, Colors.teal),
+              Icons.category, Colors.teal,),
         ],
       );
 
   Widget _buildMetricCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -376,7 +376,7 @@ class _SpecialistReportsScreenState
                       Text(entry.key),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -384,7 +384,7 @@ class _SpecialistReportsScreenState
                         child: Text(
                           entry.value.toString(),
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.blue),
+                              fontWeight: FontWeight.bold, color: Colors.blue,),
                         ),
                       ),
                     ],
@@ -464,7 +464,7 @@ class _SpecialistReportsScreenState
                   ),
                   Expanded(
                     child: _buildStatItem('Отзывов',
-                        stats.totalReviews.toString(), Icons.reviews),
+                        stats.totalReviews.toString(), Icons.reviews,),
                   ),
                 ],
               ),
@@ -479,7 +479,7 @@ class _SpecialistReportsScreenState
           const SizedBox(height: 4),
           Text(value,
               style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
           Text(
             label,
             style: TextStyle(fontSize: 12, color: Colors.grey[600]),
@@ -604,7 +604,7 @@ class _SpecialistReportsScreenState
                                 ? Text(specialist.name
                                         ?.substring(0, 1)
                                         .toUpperCase() ??
-                                    '?')
+                                    '?',)
                                 : null,
                           ),
                           const SizedBox(width: 12),
@@ -615,12 +615,12 @@ class _SpecialistReportsScreenState
                                 Text(
                                   specialist.name ?? 'Без имени',
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w600,),
                                 ),
                                 Text(
                                   specialist.categoryDisplayNames.join(', '),
                                   style: TextStyle(
-                                      fontSize: 12, color: Colors.grey[600]),
+                                      fontSize: 12, color: Colors.grey[600],),
                                 ),
                               ],
                             ),
@@ -628,7 +628,7 @@ class _SpecialistReportsScreenState
                           Row(
                             children: [
                               const Icon(Icons.star,
-                                  color: Colors.amber, size: 16),
+                                  color: Colors.amber, size: 16,),
                               const SizedBox(width: 4),
                               Text(specialist.rating.toStringAsFixed(1)),
                             ],
@@ -671,7 +671,7 @@ class _SpecialistReportsScreenState
       );
 
   Widget _buildTopEarnersCard(
-          List<MapEntry<SpecialistProfile, double>> topEarners) =>
+          List<MapEntry<SpecialistProfile, double>> topEarners,) =>
       Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -703,7 +703,7 @@ class _SpecialistReportsScreenState
                             ? Text(specialist.name
                                     ?.substring(0, 1)
                                     .toUpperCase() ??
-                                '?')
+                                '?',)
                             : null,
                       ),
                       const SizedBox(width: 12),
@@ -719,7 +719,7 @@ class _SpecialistReportsScreenState
                             Text(
                               specialist.categoryDisplayNames.join(', '),
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[600]),
+                                  fontSize: 12, color: Colors.grey[600],),
                             ),
                           ],
                         ),
@@ -727,7 +727,7 @@ class _SpecialistReportsScreenState
                       Text(
                         '${earnings.toStringAsFixed(0)} ₽',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.green),
+                            fontWeight: FontWeight.bold, color: Colors.green,),
                       ),
                     ],
                   ),
@@ -788,7 +788,7 @@ class _SpecialistReportsScreenState
             Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки отчета',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 8),
             Text(
               error,

@@ -1,12 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/logger.dart';
+import 'package:event_marketplace_app/models/chat_attachment.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as path;
-
-import '../core/logger.dart';
-import '../models/chat_attachment.dart';
 
 /// Сервис для работы с вложениями в чатах
 class AttachmentService {
@@ -39,12 +38,12 @@ class AttachmentService {
   }) async {
     try {
       AppLogger.logI(
-          'Начало загрузки файла: $originalFileName', 'attachment_service');
+          'Начало загрузки файла: $originalFileName', 'attachment_service',);
 
       // Проверяем размер файла
       if (fileData.length > maxFileSize) {
         AppLogger.logE('Файл слишком большой: ${fileData.length} байт',
-            'attachment_service');
+            'attachment_service',);
         throw Exception(
           'Файл слишком большой. Максимальный размер: ${maxFileSize ~/ (1024 * 1024)} MB',
         );
@@ -109,7 +108,7 @@ class AttachmentService {
       return attachment;
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка загрузки файла', 'attachment_service', e, stackTrace);
+          'Ошибка загрузки файла', 'attachment_service', e, stackTrace,);
       return null;
     }
   }
@@ -153,7 +152,7 @@ class AttachmentService {
           .toList();
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка получения вложений', 'attachment_service', e, stackTrace);
+          'Ошибка получения вложений', 'attachment_service', e, stackTrace,);
       return [];
     }
   }
@@ -193,7 +192,7 @@ class AttachmentService {
       return true;
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка удаления вложения', 'attachment_service', e, stackTrace);
+          'Ошибка удаления вложения', 'attachment_service', e, stackTrace,);
       return false;
     }
   }

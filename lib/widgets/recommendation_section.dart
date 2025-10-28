@@ -1,14 +1,11 @@
+import 'package:event_marketplace_app/models/recommendation.dart';
+import 'package:event_marketplace_app/widgets/recommendation_card.dart';
 import 'package:flutter/material.dart';
-
-import '../models/recommendation.dart';
-import 'recommendation_card.dart';
 
 /// Секция с рекомендациями
 class RecommendationSection extends StatelessWidget {
   const RecommendationSection({
-    super.key,
-    required this.title,
-    required this.recommendations,
+    required this.title, required this.recommendations, super.key,
     this.subtitle,
     this.icon,
     this.onViewAll,
@@ -94,7 +91,7 @@ class RecommendationSection extends StatelessWidget {
       );
 
   Widget _buildFullList(
-          BuildContext context, List<Recommendation> recommendations) =>
+          BuildContext context, List<Recommendation> recommendations,) =>
       ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -110,7 +107,7 @@ class RecommendationSection extends StatelessWidget {
       );
 
   Widget _buildCompactList(
-          BuildContext context, List<Recommendation> recommendations) =>
+          BuildContext context, List<Recommendation> recommendations,) =>
       SizedBox(
         height: 120,
         child: ListView.builder(
@@ -147,8 +144,7 @@ class RecommendationSection extends StatelessWidget {
 /// Виджет для отображения горизонтального списка рекомендаций
 class HorizontalRecommendationList extends StatelessWidget {
   const HorizontalRecommendationList({
-    super.key,
-    required this.recommendations,
+    required this.recommendations, super.key,
     this.onRecommendationTap,
     this.onRecommendationBook,
     this.height = 140,
@@ -179,7 +175,7 @@ class HorizontalRecommendationList extends StatelessWidget {
               margin: const EdgeInsets.only(right: 12),
               elevation: 2,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),),
               child: InkWell(
                 onTap: () => onRecommendationTap?.call(recommendation),
                 borderRadius: BorderRadius.circular(12),
@@ -247,7 +243,7 @@ class HorizontalRecommendationList extends StatelessWidget {
         style: TextStyle(
             fontSize: 12,
             color: Colors.green[700],
-            fontWeight: FontWeight.w500),
+            fontWeight: FontWeight.w500,),
       );
 
   Widget _buildTypeBadge(BuildContext context, Recommendation recommendation) =>
@@ -259,7 +255,7 @@ class HorizontalRecommendationList extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(recommendation.type.icon,
-            style: const TextStyle(fontSize: 10)),
+            style: const TextStyle(fontSize: 10),),
       );
 
   Color _getTypeColor(BuildContext context, RecommendationType type) {

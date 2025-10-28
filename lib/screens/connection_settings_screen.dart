@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/providers/integration_providers.dart';
+import 'package:event_marketplace_app/services/integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/integration_providers.dart';
-import '../services/integration_service.dart';
 
 /// Экран настроек подключения
 class ConnectionSettingsScreen extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class _ConnectionSettingsScreenState
           actions: [
             IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: _refreshConnectionStatus)
+                onPressed: _refreshConnectionStatus,),
           ],
         ),
         body: SingleChildScrollView(
@@ -99,7 +99,7 @@ class _ConnectionSettingsScreenState
                                     ? 'Все функции доступны'
                                     : 'Некоторые функции недоступны',
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.grey[600]),
+                                    fontSize: 14, color: Colors.grey[600],),
                               ),
                             ],
                           ),
@@ -128,7 +128,7 @@ class _ConnectionSettingsScreenState
                               Text(
                                 'Ошибка: $error',
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.grey[600]),
+                                    fontSize: 14, color: Colors.grey[600],),
                               ),
                             ],
                           ),
@@ -163,7 +163,7 @@ class _ConnectionSettingsScreenState
                     loading: () =>
                         const Center(child: CircularProgressIndicator()),
                     error: (error, stack) => Text('Ошибка: $error',
-                        style: const TextStyle(color: Colors.red)),
+                        style: const TextStyle(color: Colors.red),),
                   );
                 },
               ),
@@ -184,43 +184,36 @@ class _ConnectionSettingsScreenState
         title = 'Wi-Fi';
         description = 'Быстрое подключение через Wi-Fi';
         color = Colors.green;
-        break;
       case ConnectivityResult.mobile:
         icon = Icons.signal_cellular_4_bar;
         title = 'Мобильный интернет';
         description = 'Подключение через мобильную сеть';
         color = Colors.blue;
-        break;
       case ConnectivityResult.ethernet:
         icon = Icons.cable;
         title = 'Ethernet';
         description = 'Проводное подключение';
         color = Colors.orange;
-        break;
       case ConnectivityResult.bluetooth:
         icon = Icons.bluetooth;
         title = 'Bluetooth';
         description = 'Подключение через Bluetooth';
         color = Colors.purple;
-        break;
       case ConnectivityResult.vpn:
         icon = Icons.vpn_lock;
         title = 'VPN';
         description = 'Подключение через VPN';
         color = Colors.indigo;
-        break;
       case ConnectivityResult.other:
         icon = Icons.network_check;
         title = 'Другое';
         description = 'Неизвестный тип подключения';
         color = Colors.grey;
-        break;
       case ConnectivityResult.none:
         icon = Icons.wifi_off;
         title = 'Нет подключения';
         description = 'Устройство не подключено к интернету';
         color = Colors.red;
-        break;
     }
 
     return Row(
@@ -234,11 +227,11 @@ class _ConnectionSettingsScreenState
               Text(
                 title,
                 style: TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w500, color: color),
+                    fontSize: 16, fontWeight: FontWeight.w500, color: color,),
               ),
               const SizedBox(height: 4),
               Text(description,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
             ],
           ),
         ),
@@ -262,14 +255,14 @@ class _ConnectionSettingsScreenState
               SwitchListTile(
                 title: const Text('Автоматическая синхронизация'),
                 subtitle: const Text(
-                    'Автоматически синхронизировать данные при подключении к Wi-Fi'),
+                    'Автоматически синхронизировать данные при подключении к Wi-Fi',),
                 value: true, // TODO(developer): Получить из настроек
                 onChanged: (value) {
                   // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Настройка сохранена')));
+                      const SnackBar(content: Text('Настройка сохранена')),);
                 },
               ),
 
@@ -279,14 +272,14 @@ class _ConnectionSettingsScreenState
               SwitchListTile(
                 title: const Text('Синхронизация только по Wi-Fi'),
                 subtitle: const Text(
-                    'Синхронизировать данные только при подключении к Wi-Fi'),
+                    'Синхронизировать данные только при подключении к Wi-Fi',),
                 value: false, // TODO(developer): Получить из настроек
                 onChanged: (value) {
                   // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Настройка сохранена')));
+                      const SnackBar(content: Text('Настройка сохранена')),);
                 },
               ),
 
@@ -296,14 +289,14 @@ class _ConnectionSettingsScreenState
               SwitchListTile(
                 title: const Text('Синхронизация в фоне'),
                 subtitle: const Text(
-                    'Разрешить синхронизацию данных в фоновом режиме'),
+                    'Разрешить синхронизацию данных в фоновом режиме',),
                 value: true, // TODO(developer): Получить из настроек
                 onChanged: (value) {
                   // TODO(developer): Сохранить настройку
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Настройка сохранена')));
+                      const SnackBar(content: Text('Настройка сохранена')),);
                 },
               ),
             ],
@@ -378,7 +371,7 @@ class _ConnectionSettingsScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Статус подключения обновлен')));
+        const SnackBar(content: Text('Статус подключения обновлен')),);
   }
 
   void _checkConnection() {
@@ -397,7 +390,7 @@ class _ConnectionSettingsScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'))
+              child: const Text('Отмена'),),
         ],
       ),
     );
@@ -430,7 +423,7 @@ class _ConnectionSettingsScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'))
+              child: const Text('Отмена'),),
         ],
       ),
     );
@@ -455,7 +448,7 @@ class _ConnectionSettingsScreenState
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Закрыть')),
+                child: const Text('Закрыть'),),
           ],
         ),
       );
@@ -473,7 +466,7 @@ class _ConnectionSettingsScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -513,7 +506,7 @@ class _ConnectionSettingsScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

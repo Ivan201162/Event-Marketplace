@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/services/event_idea_service.dart';
+import 'package:event_marketplace_app/widgets/create_idea_dialog.dart';
+import 'package:event_marketplace_app/widgets/event_idea_card.dart';
+import 'package:event_marketplace_app/widgets/idea_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/event_idea.dart';
-import '../services/event_idea_service.dart';
-import 'create_idea_dialog.dart';
-import 'event_idea_card.dart';
-import 'idea_detail_screen.dart';
 
 /// Лента идей мероприятий в стиле Pinterest
 class EventIdeasFeed extends ConsumerStatefulWidget {
@@ -252,7 +251,7 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
             return const Center(
               child: Padding(
                   padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator()),
+                  child: CircularProgressIndicator(),),
             );
           }
 
@@ -276,7 +275,7 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки идей',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -288,7 +287,7 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadIdeas, child: const Text('Повторить')),
+                onPressed: _loadIdeas, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -333,7 +332,7 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => IdeaDetailScreen(idea: idea)));
+        builder: (context) => IdeaDetailScreen(idea: idea),),);
   }
 
   Future<void> _toggleLike(EventIdea idea) async {
@@ -344,7 +343,7 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 

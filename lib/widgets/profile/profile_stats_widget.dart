@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/user.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/user.dart';
 
 /// Виджет статистики профиля
 class ProfileStatsWidget extends StatelessWidget {
   const ProfileStatsWidget(
-      {super.key, required this.user, required this.isCurrentUser});
+      {required this.user, required this.isCurrentUser, super.key,});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -93,7 +92,7 @@ class ProfileStatsWidget extends StatelessWidget {
   }
 
   Widget _buildStatItem(
-          ThemeData theme, String label, String value, IconData icon) =>
+          ThemeData theme, String label, String value, IconData icon,) =>
       Column(
         children: [
           Icon(icon, color: theme.primaryColor, size: 24),

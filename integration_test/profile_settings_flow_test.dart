@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-
-import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Profile and Settings Flow Tests', () {
     testWidgets('Profile screen loads with user data',
-        (WidgetTester tester) async {
+        (tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -34,7 +33,7 @@ void main() {
       expect(find.byIcon(Icons.settings), findsOneWidget);
     });
 
-    testWidgets('Edit profile flow works', (WidgetTester tester) async {
+    testWidgets('Edit profile flow works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -51,15 +50,15 @@ void main() {
 
       // Заполнение полей
       await tester.enterText(
-          find.byKey(const Key('display_name_field')), 'Новое имя');
+          find.byKey(const Key('display_name_field')), 'Новое имя',);
       await tester.pumpAndSettle();
 
       await tester.enterText(
-          find.byKey(const Key('username_field')), '@newusername');
+          find.byKey(const Key('username_field')), '@newusername',);
       await tester.pumpAndSettle();
 
       await tester.enterText(
-          find.byKey(const Key('bio_field')), 'Новое описание');
+          find.byKey(const Key('bio_field')), 'Новое описание',);
       await tester.pumpAndSettle();
 
       // Нажатие кнопки "Сохранить"
@@ -70,7 +69,7 @@ void main() {
       expect(find.text('Профиль'), findsOneWidget);
     });
 
-    testWidgets('Profile tabs navigation works', (WidgetTester tester) async {
+    testWidgets('Profile tabs navigation works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -91,7 +90,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Profile statistics work', (WidgetTester tester) async {
+    testWidgets('Profile statistics work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -114,7 +113,7 @@ void main() {
       expect(find.text('Список подписчиков'), findsOneWidget);
     });
 
-    testWidgets('Settings screen opens', (WidgetTester tester) async {
+    testWidgets('Settings screen opens', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -130,7 +129,7 @@ void main() {
       expect(find.text('Настройки'), findsOneWidget);
     });
 
-    testWidgets('Avatar selection works', (WidgetTester tester) async {
+    testWidgets('Avatar selection works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -150,7 +149,7 @@ void main() {
       expect(find.text('Выбор аватара'), findsOneWidget);
     });
 
-    testWidgets('Cover selection works', (WidgetTester tester) async {
+    testWidgets('Cover selection works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -170,7 +169,7 @@ void main() {
       expect(find.text('Выбор обложки'), findsOneWidget);
     });
 
-    testWidgets('Profile validation works', (WidgetTester tester) async {
+    testWidgets('Profile validation works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -194,7 +193,7 @@ void main() {
       expect(find.text('Введите имя и фамилию'), findsOneWidget);
     });
 
-    testWidgets('Profile tabs content loads', (WidgetTester tester) async {
+    testWidgets('Profile tabs content loads', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/transaction.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../models/transaction.dart';
-
 class RevenueChart extends StatelessWidget {
   const RevenueChart(
-      {super.key, required this.transactions, required this.period});
+      {required this.transactions, required this.period, super.key,});
   final List<Transaction> transactions;
   final String period;
 
@@ -33,9 +32,9 @@ class RevenueChart extends StatelessWidget {
             horizontalInterval: 1,
             verticalInterval: 1,
             getDrawingHorizontalLine: (value) => FlLine(
-                color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1),
+                color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1,),
             getDrawingVerticalLine: (value) => FlLine(
-                color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1),
+                color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1,),
           ),
           titlesData: FlTitlesData(
             rightTitles: const AxisTitles(),
@@ -97,7 +96,7 @@ class RevenueChart extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     Colors.blue.withValues(alpha: 0.3),
-                    Colors.blue.withValues(alpha: 0.1)
+                    Colors.blue.withValues(alpha: 0.1),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

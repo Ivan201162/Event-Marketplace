@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'chat_screen.dart';
-
 /// Экран деталей заявки
 class BookingDetailsScreen extends ConsumerWidget {
-  const BookingDetailsScreen({super.key, required this.booking});
+  const BookingDetailsScreen({required this.booking, super.key});
   final Map<String, dynamic> booking;
 
   @override
@@ -83,7 +82,7 @@ class BookingDetailsScreen extends ConsumerWidget {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(
-                    const SnackBar(content: Text('Заявка отклонена')));
+                    const SnackBar(content: Text('Заявка отклонена')),);
               },
               icon: const Icon(Icons.close),
               label: const Text('Отклонить'),
@@ -159,7 +158,7 @@ class _CustomerInfoCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   const Text('Заказчик',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -202,7 +201,7 @@ class _SpecialistInfoCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   const Text('Специалист',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -240,7 +239,7 @@ class _PaymentInfoCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   const Text('Платеж',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -276,22 +275,18 @@ class _StatusCard extends StatelessWidget {
         backgroundColor = Colors.orange[100]!;
         textColor = Colors.orange[800]!;
         text = 'В обработке';
-        break;
       case 'Подтверждено':
         backgroundColor = Colors.green[100]!;
         textColor = Colors.green[800]!;
         text = 'Подтверждено';
-        break;
       case 'Отклонено':
         backgroundColor = Colors.red[100]!;
         textColor = Colors.red[800]!;
         text = 'Отклонено';
-        break;
       case 'Завершено':
         backgroundColor = Colors.blue[100]!;
         textColor = Colors.blue[800]!;
         text = 'Завершено';
-        break;
       default:
         backgroundColor = Colors.grey[100]!;
         textColor = Colors.grey[800]!;
@@ -336,7 +331,7 @@ class _StatusCard extends StatelessWidget {
 /// Строка с информацией
 class _InfoRow extends StatelessWidget {
   const _InfoRow(
-      {required this.icon, required this.label, required this.value});
+      {required this.icon, required this.label, required this.value,});
   final IconData icon;
   final String label;
   final String value;
@@ -354,10 +349,10 @@ class _InfoRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
                   Text(value,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500)),
+                          fontSize: 16, fontWeight: FontWeight.w500,),),
                 ],
               ),
             ),

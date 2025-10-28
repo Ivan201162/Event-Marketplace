@@ -1,10 +1,10 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/storage_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/story.dart';
-import 'storage_service.dart';
 
 /// Сервис для работы со сторис
 class StoryService {
@@ -21,7 +21,7 @@ class StoryService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Story.fromFirestore).toList();
     });
   }
 
@@ -33,7 +33,7 @@ class StoryService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Story.fromFirestore).toList();
     });
   }
 
@@ -46,7 +46,7 @@ class StoryService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Story.fromFirestore).toList();
     });
   }
 
@@ -60,7 +60,7 @@ class StoryService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Story.fromFirestore).toList();
     });
   }
 
@@ -134,7 +134,7 @@ class StoryService {
       final expiresAt = now.add(const Duration(hours: 24));
 
       String? content;
-      StoryType type = StoryType.text;
+      var type = StoryType.text;
 
       // Загружаем изображение, если есть
       if (imageFile != null) {
@@ -212,7 +212,7 @@ class StoryService {
 
   /// Удалить реакцию с сторис
   Future<void> removeReaction(
-      String storyId, String userId, String emoji) async {
+      String storyId, String userId, String emoji,) async {
     try {
       final reaction = {
         'userId': userId,
@@ -284,7 +284,7 @@ class StoryService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Story.fromFirestore).toList();
     });
   }
 
@@ -311,7 +311,7 @@ class StoryService {
           .get();
 
       return storiesSnapshot.docs
-          .map((doc) => Story.fromFirestore(doc))
+          .map(Story.fromFirestore)
           .toList();
     });
   }
@@ -324,9 +324,9 @@ class StoryService {
           .where('userId', isEqualTo: userId)
           .get();
 
-      int totalViews = 0;
-      int totalReactions = 0;
-      int activeStories = 0;
+      var totalViews = 0;
+      var totalReactions = 0;
+      var activeStories = 0;
 
       for (final doc in storiesSnapshot.docs) {
         final story = Story.fromFirestore(doc);

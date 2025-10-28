@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/payment_models.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-import '../models/payment_models.dart';
 
 /// Сервис для расчета налогов
 class TaxCalculationService {

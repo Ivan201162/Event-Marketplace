@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/calendar/ics_export.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../calendar/ics_export.dart';
-import '../core/feature_flags.dart';
 
 /// Провайдер для проверки доступности экспорта календаря
 final calendarExportAvailableProvider =

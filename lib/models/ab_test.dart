@@ -8,15 +8,10 @@ class ABTest {
     required this.id,
     required this.name,
     required this.description,
-    this.status = ABTestStatus.draft,
+    required this.targeting, required this.metrics, required this.startDate, required this.createdAt, required this.updatedAt, this.status = ABTestStatus.draft,
     this.variants = const [],
-    required this.targeting,
-    required this.metrics,
-    required this.startDate,
     this.endDate,
     this.createdBy,
-    required this.createdAt,
-    required this.updatedAt,
     this.metadata = const {},
   });
 
@@ -36,9 +31,9 @@ class ABTest {
               .toList() ??
           [],
       targeting: ABTestTargeting.fromMap(
-          (data['targeting'] as Map<String, dynamic>?) ?? {}),
+          (data['targeting'] as Map<String, dynamic>?) ?? {},),
       metrics: ABTestMetrics.fromMap(
-          (data['metrics'] as Map<String, dynamic>?) ?? {}),
+          (data['metrics'] as Map<String, dynamic>?) ?? {},),
       startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endDate: data['endDate'] != null
           ? (data['endDate'] as Timestamp?)?.toDate()
@@ -47,7 +42,7 @@ class ABTest {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       metadata: Map<String, dynamic>.from(
-          (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
     );
   }
 
@@ -65,9 +60,9 @@ class ABTest {
                 .toList() ??
             [],
         targeting: ABTestTargeting.fromMap(
-            (data['targeting'] as Map<String, dynamic>?) ?? {}),
+            (data['targeting'] as Map<String, dynamic>?) ?? {},),
         metrics: ABTestMetrics.fromMap(
-            (data['metrics'] as Map<String, dynamic>?) ?? {}),
+            (data['metrics'] as Map<String, dynamic>?) ?? {},),
         startDate:
             (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
         endDate: data['endDate'] != null
@@ -79,7 +74,7 @@ class ABTest {
         updatedAt:
             (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         metadata: Map<String, dynamic>.from(
-            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
       );
   final String id;
   final String name;
@@ -214,9 +209,8 @@ class ABTestVariant {
     required this.name,
     required this.description,
     required this.trafficPercentage,
-    this.configuration = const {},
+    required this.createdAt, this.configuration = const {},
     this.isControl = false,
-    required this.createdAt,
   });
 
   /// Создать из Map
@@ -286,7 +280,7 @@ class ABTestVariant {
 
   @override
   int get hashCode => Object.hash(id, name, description, trafficPercentage,
-      configuration, isControl, createdAt);
+      configuration, isControl, createdAt,);
 
   @override
   String toString() =>
@@ -609,7 +603,7 @@ class ABTestParticipation {
 
   @override
   int get hashCode => Object.hash(
-      id, testId, userId, variantId, assignedAt, convertedAt, events, metadata);
+      id, testId, userId, variantId, assignedAt, convertedAt, events, metadata,);
 
   @override
   String toString() =>

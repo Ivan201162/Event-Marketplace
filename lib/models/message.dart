@@ -14,6 +14,41 @@ enum MessageType {
 }
 
 class Message {
+
+  Message({
+    required this.id,
+    required this.senderId,
+    required this.content,
+    required this.timestamp, required this.createdAt, this.type = MessageType.text,
+    this.isRead = false,
+    this.readBy = const [],
+    this.repliedToMessageId,
+    this.reactions = const [],
+    this.fileUrl,
+    this.location,
+    this.senderName,
+    this.mediaUrl,
+    this.fileName,
+    this.fileSize,
+    this.formattedFileSize,
+  });
+
+  factory Message.fromMap(Map<String, dynamic> map) {
+    return Message(
+      id: map['id'] as String,
+      senderId: map['senderId'] as String,
+      content: map['content'] as String,
+      type: MessageType.values.firstWhere(
+          (e) => e.toString().split('.').last == map['type'] as String,),
+      timestamp: (map['timestamp'] as Timestamp).toDate(),
+      isRead: map['isRead'] as bool,
+      readBy: List<String>.from(map['readBy'] as List<dynamic>),
+      repliedToMessageId: map['repliedToMessageId'] as String?,
+      reactions: List<String>.from(map['reactions'] as List<dynamic>),
+      fileUrl: map['fileUrl'] as String?,
+      location: map['location'] as GeoPoint?,
+    );
+  }
   final String id;
   final String senderId;
   final String content;
@@ -32,26 +67,6 @@ class Message {
   final String? formattedFileSize;
   final DateTime createdAt;
 
-  Message({
-    required this.id,
-    required this.senderId,
-    required this.content,
-    this.type = MessageType.text,
-    required this.timestamp,
-    this.isRead = false,
-    this.readBy = const [],
-    this.repliedToMessageId,
-    this.reactions = const [],
-    this.fileUrl,
-    this.location,
-    this.senderName,
-    this.mediaUrl,
-    this.fileName,
-    this.fileSize,
-    this.formattedFileSize,
-    required this.createdAt,
-  });
-
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -66,23 +81,6 @@ class Message {
       'fileUrl': fileUrl,
       'location': location,
     };
-  }
-
-  factory Message.fromMap(Map<String, dynamic> map) {
-    return Message(
-      id: map['id'] as String,
-      senderId: map['senderId'] as String,
-      content: map['content'] as String,
-      type: MessageType.values.firstWhere(
-          (e) => e.toString().split('.').last == map['type'] as String),
-      timestamp: (map['timestamp'] as Timestamp).toDate(),
-      isRead: map['isRead'] as bool,
-      readBy: List<String>.from(map['readBy'] as List<dynamic>),
-      repliedToMessageId: map['repliedToMessageId'] as String?,
-      reactions: List<String>.from(map['reactions'] as List<dynamic>),
-      fileUrl: map['fileUrl'] as String?,
-      location: map['location'] as GeoPoint?,
-    );
   }
 
   Message copyWith({

@@ -117,11 +117,11 @@ class AppTheme {
           titleLarge: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.lightText),
+              color: AppColors.lightText,),
           titleMedium: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.lightText),
+              color: AppColors.lightText,),
           titleSmall: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -130,7 +130,7 @@ class AppTheme {
           bodyLarge: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.normal,
-              color: AppColors.lightText),
+              color: AppColors.lightText,),
           bodyMedium: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.normal,
@@ -144,7 +144,7 @@ class AppTheme {
           labelLarge: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.lightText),
+              color: AppColors.lightText,),
           labelMedium: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -233,9 +233,9 @@ class AppTheme {
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           hintStyle: const TextStyle(
-              color: AppColors.lightSecondaryText, fontSize: 14),
+              color: AppColors.lightSecondaryText, fontSize: 14,),
           labelStyle: const TextStyle(
-              color: AppColors.lightSecondaryText, fontSize: 14),
+              color: AppColors.lightSecondaryText, fontSize: 14,),
         ),
 
         // Bottom Navigation Bar
@@ -279,7 +279,7 @@ class AppTheme {
 
         // Divider
         dividerTheme: const DividerThemeData(
-            color: AppColors.lightBorder, thickness: 1, space: 1),
+            color: AppColors.lightBorder, thickness: 1, space: 1,),
 
         // Chip
         chipTheme: ChipThemeData(
@@ -331,7 +331,7 @@ class AppTheme {
           displayLarge: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: AppColors.darkText),
+              color: AppColors.darkText,),
           displayMedium: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -340,7 +340,7 @@ class AppTheme {
           displaySmall: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: AppColors.darkText),
+              color: AppColors.darkText,),
           headlineLarge: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w600,
@@ -359,11 +359,11 @@ class AppTheme {
           titleLarge: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.darkText),
+              color: AppColors.darkText,),
           titleMedium: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.darkText),
+              color: AppColors.darkText,),
           titleSmall: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -372,11 +372,11 @@ class AppTheme {
           bodyLarge: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.normal,
-              color: AppColors.darkText),
+              color: AppColors.darkText,),
           bodyMedium: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.normal,
-              color: AppColors.darkText),
+              color: AppColors.darkText,),
           bodySmall: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.normal,
@@ -385,7 +385,7 @@ class AppTheme {
           labelLarge: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.darkText),
+              color: AppColors.darkText,),
           labelMedium: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
@@ -520,7 +520,7 @@ class AppTheme {
 
         // Divider
         dividerTheme: const DividerThemeData(
-            color: AppColors.darkBorder, thickness: 1, space: 1),
+            color: AppColors.darkBorder, thickness: 1, space: 1,),
 
         // Chip
         chipTheme: ChipThemeData(

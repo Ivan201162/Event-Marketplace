@@ -1,17 +1,15 @@
+import 'package:event_marketplace_app/models/chat.dart';
 import 'package:flutter/material.dart';
-
-import '../models/chat.dart';
 
 /// Элемент списка чатов
 class ChatListItem extends StatelessWidget {
-  final Chat chat;
-  final VoidCallback? onTap;
 
   const ChatListItem({
-    super.key,
-    required this.chat,
+    required this.chat, super.key,
     this.onTap,
   });
+  final Chat chat;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

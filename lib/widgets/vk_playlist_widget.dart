@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/services/vk_integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../services/vk_integration_service.dart';
-
 /// Виджет для работы с VK плейлистами
 class VkPlaylistWidget extends ConsumerStatefulWidget {
   const VkPlaylistWidget(
-      {super.key, this.playlistUrl, this.onUrlChanged, this.readOnly = false});
+      {super.key, this.playlistUrl, this.onUrlChanged, this.readOnly = false,});
   final String? playlistUrl;
   final void Function(String?)? onUrlChanged;
   final bool readOnly;
@@ -125,7 +124,7 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
 
             // Примеры ссылок
             Text('Примеры ссылок:',
-                style: Theme.of(context).textTheme.bodySmall),
+                style: Theme.of(context).textTheme.bodySmall,),
             const SizedBox(height: 4),
             ..._vkService.getExampleUrls().map(
                   (url) => Padding(
@@ -135,7 +134,7 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                       style: Theme.of(
                         context,
                       ).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600], fontFamily: 'monospace'),
+                          color: Colors.grey[600], fontFamily: 'monospace',),
                     ),
                   ),
                 ),
@@ -163,7 +162,7 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                           (_playlistInfo!['title'] as String?) ?? 'Плейлист VK',
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: Colors.blue[800]),
+                              color: Colors.blue[800],),
                         ),
                       ),
                       if (!widget.readOnly)
@@ -211,7 +210,7 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                     child: Text(
                       widget.playlistUrl!,
                       style: TextStyle(
-                          color: Colors.grey[700], fontFamily: 'monospace'),
+                          color: Colors.grey[700], fontFamily: 'monospace',),
                     ),
                   ),
                   IconButton(
@@ -220,7 +219,7 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                       final url = Uri.parse(widget.playlistUrl!);
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url,
-                            mode: LaunchMode.externalApplication);
+                            mode: LaunchMode.externalApplication,);
                       }
                     },
                     tooltip: 'Открыть плейлист',
@@ -236,7 +235,7 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
 /// Виджет для отображения VK плейлиста в чате
 class VkPlaylistChatWidget extends StatelessWidget {
   const VkPlaylistChatWidget(
-      {super.key, required this.playlistUrl, required this.vkService});
+      {required this.playlistUrl, required this.vkService, super.key,});
   final String playlistUrl;
   final VkIntegrationService vkService;
 
@@ -267,7 +266,7 @@ class VkPlaylistChatWidget extends StatelessWidget {
                   Text(
                     'Плейлист VK',
                     style: TextStyle(
-                        fontWeight: FontWeight.w600, color: Colors.blue[800]),
+                        fontWeight: FontWeight.w600, color: Colors.blue[800],),
                   ),
                   const SizedBox(height: 2),
                   Text(

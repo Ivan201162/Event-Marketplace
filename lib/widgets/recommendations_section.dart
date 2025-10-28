@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/core/constants/app_routes.dart';
+import 'package:event_marketplace_app/providers/recommendation_providers.dart';
+import 'package:event_marketplace_app/widgets/recommendation_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../core/constants/app_routes.dart';
-import '../providers/recommendation_providers.dart';
-import 'recommendation_section.dart';
 
 /// Секция рекомендаций на главном экране
 class RecommendationsSection extends ConsumerWidget {
@@ -48,7 +48,7 @@ class RecommendationsSection extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Переход к профилю: ${recommendation.specialist.name}')));
+        content: Text('Переход к профилю: ${recommendation.specialist.name}'),),);
   }
 
   void _onRecommendationBook(BuildContext context, dynamic recommendation) {
@@ -56,7 +56,7 @@ class RecommendationsSection extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Бронирование: ${recommendation.specialist.name}')));
+        content: Text('Бронирование: ${recommendation.specialist.name}'),),);
   }
 
   Widget _buildLoadingState() => const Padding(
@@ -92,7 +92,7 @@ class RecommendationsSection extends ConsumerWidget {
           child: Column(
             children: [
               const Icon(Icons.recommend_outlined,
-                  size: 48, color: Colors.grey),
+                  size: 48, color: Colors.grey,),
               const SizedBox(height: 16),
               const Text(
                 'Пока нет рекомендаций',

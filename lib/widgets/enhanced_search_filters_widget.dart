@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/models/common_types.dart';
 import 'package:flutter/material.dart';
-
-import '../models/common_types.dart';
 
 /// Улучшенный виджет фильтров поиска
 class EnhancedSearchFiltersWidget extends StatefulWidget {
   const EnhancedSearchFiltersWidget({
-    super.key,
-    required this.onFiltersChanged,
+    required this.onFiltersChanged, super.key,
     this.initialFilters,
   });
 
@@ -52,7 +50,7 @@ class _EnhancedSearchFiltersWidgetState
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 TextButton(
-                    onPressed: _clearFilters, child: const Text('Сбросить')),
+                    onPressed: _clearFilters, child: const Text('Сбросить'),),
               ],
             ),
             const SizedBox(height: 16),
@@ -101,11 +99,11 @@ class _EnhancedSearchFiltersWidgetState
           DropdownButtonFormField<SpecialistCategory?>(
             initialValue: _filters.category,
             decoration: const InputDecoration(
-                border: OutlineInputBorder(), isDense: true),
+                border: OutlineInputBorder(), isDense: true,),
             hint: const Text('Все категории'),
             items: [
               const DropdownMenuItem<SpecialistCategory?>(
-                  child: Text('Все категории')),
+                  child: Text('Все категории'),),
               ...SpecialistCategory.values.map(
                 (category) => DropdownMenuItem<SpecialistCategory?>(
                   value: category,
@@ -186,7 +184,7 @@ class _EnhancedSearchFiltersWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Минимальный рейтинг',
-              style: Theme.of(context).textTheme.titleSmall),
+              style: Theme.of(context).textTheme.titleSmall,),
           const SizedBox(height: 8),
           Row(
             children: List.generate(
@@ -225,7 +223,7 @@ class _EnhancedSearchFiltersWidgetState
                     onSelected: (selected) {
                       setState(() {
                         _filters = _filters.copyWith(
-                            experienceLevel: selected ? level : null);
+                            experienceLevel: selected ? level : null,);
                       });
                       widget.onFiltersChanged(_filters);
                     },
@@ -308,7 +306,7 @@ class _EnhancedSearchFiltersWidgetState
           DropdownButtonFormField<SpecialistSorting>(
             initialValue: _filters.sorting,
             decoration: const InputDecoration(
-                border: OutlineInputBorder(), isDense: true),
+                border: OutlineInputBorder(), isDense: true,),
             items: SpecialistSorting.values
                 .map(
                   (sorting) => DropdownMenuItem<SpecialistSorting>(

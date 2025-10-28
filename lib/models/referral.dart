@@ -213,7 +213,7 @@ enum PartnerStatus {
   platinum('platinum', 'Платиновый партнёр', 20, 999);
 
   const PartnerStatus(
-      this.value, this.displayName, this.minReferrals, this.maxReferrals);
+      this.value, this.displayName, this.minReferrals, this.maxReferrals,);
 
   final String value;
   final String displayName;

@@ -14,15 +14,10 @@ class MediaFile {
     required this.fileName,
     required this.originalName,
     required this.filePath,
-    this.thumbnailPath,
-    required this.type,
-    required this.status,
-    required this.fileSize,
+    required this.type, required this.status, required this.fileSize, required this.uploadedAt, required this.updatedAt, this.thumbnailPath,
     this.duration,
     this.mimeType,
     this.metadata = const {},
-    required this.uploadedAt,
-    required this.updatedAt,
   });
 
   /// Создать из Map
@@ -34,7 +29,7 @@ class MediaFile {
         filePath: data['filePath'] as String? ?? '',
         thumbnailPath: data['thumbnailPath'] as String?,
         type: MediaType.values.firstWhere((e) => e.name == data['type'],
-            orElse: () => MediaType.audio),
+            orElse: () => MediaType.audio,),
         status: MediaStatus.values.firstWhere(
           (e) => e.name == data['status'],
           orElse: () => MediaStatus.pending,
@@ -45,7 +40,7 @@ class MediaFile {
             : null,
         mimeType: data['mimeType'] as String?,
         metadata: Map<String, dynamic>.from(
-            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       );
@@ -157,18 +152,10 @@ class DJPlaylist {
     required this.id,
     required this.djId,
     required this.name,
-    this.description,
+    required this.mediaFileIds, required this.mediaFiles, required this.isPublic, required this.isDefault, required this.playCount, required this.ratingCount, required this.createdAt, required this.updatedAt, this.description,
     this.coverImagePath,
-    required this.mediaFileIds,
-    required this.mediaFiles,
     this.settings = const {},
-    required this.isPublic,
-    required this.isDefault,
-    required this.playCount,
     this.averageRating,
-    required this.ratingCount,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из Map
@@ -182,7 +169,7 @@ class DJPlaylist {
             List<String>.from((data['mediaFileIds'] as List<dynamic>?) ?? []),
         mediaFiles: [], // Будет заполнено отдельно
         settings: Map<String, dynamic>.from(
-            (data['settings'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['settings'] as Map<dynamic, dynamic>?) ?? {},),
         isPublic: data['isPublic'] as bool? ?? false,
         isDefault: data['isDefault'] as bool? ?? false,
         playCount: data['playCount'] as int? ?? 0,
@@ -263,7 +250,7 @@ class DJPlaylist {
 
   /// Получить общую длительность плейлиста
   Duration get totalDuration => mediaFiles.fold(
-      Duration.zero, (total, file) => total + (file.duration ?? Duration.zero));
+      Duration.zero, (total, file) => total + (file.duration ?? Duration.zero),);
 
   /// Получить общий размер плейлиста
   int get totalSize =>
@@ -311,13 +298,11 @@ class VKPlaylist {
   const VKPlaylist({
     required this.id,
     required this.title,
-    this.description,
+    required this.trackCount, required this.tracks, this.description,
     this.coverImageUrl,
-    required this.trackCount,
     this.ownerId,
     this.ownerName,
     this.createdAt,
-    required this.tracks,
   });
 
   /// Создать из Map
@@ -331,7 +316,7 @@ class VKPlaylist {
         ownerName: data['owner_name'] as String?,
         createdAt: data['create_time'] != null
             ? DateTime.fromMillisecondsSinceEpoch(
-                (data['create_time'] as int) * 1000)
+                (data['create_time'] as int) * 1000,)
             : null,
         tracks: (data['tracks'] as List<dynamic>?)
                 ?.map((track) => VKTrack.fromMap(track as Map<String, dynamic>))

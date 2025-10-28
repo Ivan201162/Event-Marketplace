@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
 
 /// Экран заявок с вкладками "Мои заявки" и "Заявки мне"
 class RequestsScreen extends ConsumerStatefulWidget {
@@ -167,7 +166,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки заявок',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               error,
@@ -244,7 +243,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                     child: Text(
                       request.title,
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18, fontWeight: FontWeight.bold,),
                     ),
                   ),
                   _buildStatusChip(request.status),
@@ -311,18 +310,18 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                             : null,
                         child: request.assignee!.avatarUrl == null
                             ? Icon(Icons.person,
-                                size: 12, color: theme.primaryColor)
+                                size: 12, color: theme.primaryColor,)
                             : null,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Исполнитель: ${request.assignee!.name}',
                         style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500),
+                            fontSize: 14, fontWeight: FontWeight.w500,),
                       ),
                     ] else ...[
                       Icon(Icons.person_outline,
-                          size: 16, color: Colors.grey[600]),
+                          size: 16, color: Colors.grey[600],),
                       const SizedBox(width: 4),
                       Text(
                         'Исполнитель не назначен',
@@ -340,14 +339,14 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
                           : null,
                       child: request.creator?.avatarUrl == null
                           ? Icon(Icons.person,
-                              size: 12, color: theme.primaryColor)
+                              size: 12, color: theme.primaryColor,)
                           : null,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Заказчик: ${request.creator?.name ?? 'Неизвестный'}',
                       style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w500),
+                          fontSize: 14, fontWeight: FontWeight.w500,),
                     ),
                   ],
                   const Spacer(),
@@ -372,19 +371,15 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen>
       case 'open':
         color = Colors.blue;
         label = 'Открыта';
-        break;
       case 'in_progress':
         color = Colors.orange;
         label = 'В работе';
-        break;
       case 'completed':
         color = Colors.green;
         label = 'Завершена';
-        break;
       case 'cancelled':
         color = Colors.red;
         label = 'Отменена';
-        break;
       default:
         color = Colors.grey;
         label = status;

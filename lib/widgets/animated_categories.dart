@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Анимированные категории специалистов
 class AnimatedCategories extends StatefulWidget {
-  const AnimatedCategories({super.key, required this.onCategorySelected});
+  const AnimatedCategories({required this.onCategorySelected, super.key});
 
   final ValueChanged<String> onCategorySelected;
 
@@ -52,8 +52,8 @@ class _AnimatedCategoriesState extends State<AnimatedCategories>
 
     _itemAnimations = _itemControllers.map((controller) {
       return Tween<double>(
-        begin: 0.0,
-        end: 1.0,
+        begin: 0,
+        end: 1,
       ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
     }).toList();
 
@@ -63,7 +63,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories>
   }
 
   void _startItemAnimations() {
-    for (int i = 0; i < _itemControllers.length; i++) {
+    for (var i = 0; i < _itemControllers.length; i++) {
       Future.delayed(Duration(milliseconds: i * 100), () {
         if (mounted) {
           _itemControllers[i].forward();

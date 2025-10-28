@@ -1,21 +1,19 @@
+import 'package:event_marketplace_app/models/chat_message.dart';
 import 'package:flutter/material.dart';
-
-import '../models/chat_message.dart';
 
 /// Пузырёк сообщения в чате
 class MessageBubble extends StatelessWidget {
-  final ChatMessage message;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
-  final VoidCallback? onReact;
 
   const MessageBubble({
-    super.key,
-    required this.message,
+    required this.message, super.key,
     this.onEdit,
     this.onDelete,
     this.onReact,
   });
+  final ChatMessage message;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onReact;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +71,7 @@ class MessageBubble extends StatelessWidget {
                   if (message.attachments.isNotEmpty) ...[
                     const SizedBox(height: 8),
                     ...message.attachments.map((attachment) =>
-                        _AttachmentWidget(attachment: attachment)),
+                        _AttachmentWidget(attachment: attachment),),
                   ],
 
                   // Время и статус
@@ -110,7 +108,7 @@ class MessageBubble extends StatelessWidget {
                       children: message.reactions.entries.map((entry) {
                         return Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                              horizontal: 6, vertical: 2,),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12),
@@ -162,9 +160,9 @@ class MessageBubble extends StatelessWidget {
 
 /// Виджет вложения
 class _AttachmentWidget extends StatelessWidget {
-  final String attachment;
 
   const _AttachmentWidget({required this.attachment});
+  final String attachment;
 
   @override
   Widget build(BuildContext context) {

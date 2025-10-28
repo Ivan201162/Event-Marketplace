@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Сервис для управления сессией пользователя
 class SessionService {
@@ -170,7 +170,7 @@ class SessionService {
       }
       if (settings.containsKey('notificationsEnabled')) {
         await prefs.setBool(
-            'notifications_enabled', settings['notificationsEnabled'] as bool);
+            'notifications_enabled', settings['notificationsEnabled'] as bool,);
       }
       if (settings.containsKey('autoLogin')) {
         await prefs.setBool('auto_login', settings['autoLogin'] as bool);
@@ -191,8 +191,8 @@ class SessionService {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth =
+          googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -251,7 +251,7 @@ class SessionService {
 
   /// Регистрация через email
   static Future<User?> registerWithEmail(
-      String email, String password, String displayName) async {
+      String email, String password, String displayName,) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,

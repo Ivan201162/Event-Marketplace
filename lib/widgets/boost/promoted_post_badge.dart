@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PromotedPostBadge extends StatelessWidget {
-  const PromotedPostBadge({super.key, required this.isPromoted});
+  const PromotedPostBadge({required this.isPromoted, super.key});
   final bool isPromoted;
 
   @override
@@ -35,7 +35,7 @@ class PromotedPostBadge extends StatelessWidget {
           Text(
             'РЕКЛАМА',
             style: TextStyle(
-                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold,),
           ),
         ],
       ),

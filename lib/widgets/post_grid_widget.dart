@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/post.dart';
 import 'package:flutter/material.dart';
-
-import '../models/post.dart';
 
 /// Виджет для отображения сетки постов
 class PostGridWidget extends StatelessWidget {
   const PostGridWidget(
-      {super.key, required this.posts, required this.onPostTap});
+      {required this.posts, required this.onPostTap, super.key,});
 
   final List<Post> posts;
   final void Function(Post) onPostTap;
@@ -36,10 +35,10 @@ class PostGridWidget extends StatelessWidget {
                       ),
                       errorWidget: (context, url, error) => Container(
                           color: Colors.grey[300],
-                          child: const Icon(Icons.error)),
+                          child: const Icon(Icons.error),),
                     )
                   : Container(
-                      color: Colors.grey[300], child: const Icon(Icons.image)),
+                      color: Colors.grey[300], child: const Icon(Icons.image),),
             ),
           );
         },

@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/recommendation_interaction.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/recommendation_interaction.dart';
 
 /// Провайдер для управления взаимодействиями с рекомендациями (мигрирован с StateNotifierProvider)
 final recommendationInteractionProvider = NotifierProvider<
     RecommendationInteractionNotifier, List<RecommendationInteraction>>(
-  () => RecommendationInteractionNotifier(),
+  RecommendationInteractionNotifier.new,
 );
 
 /// Нотификатор для взаимодействий с рекомендациями (мигрирован с StateNotifier)
@@ -22,15 +22,15 @@ class RecommendationInteractionNotifier
 
   /// Получить взаимодействия для рекомендации
   List<RecommendationInteraction> getInteractionsForRecommendation(
-          String recommendationId) =>
+          String recommendationId,) =>
       state
           .where(
-              (interaction) => interaction.recommendationId == recommendationId)
+              (interaction) => interaction.recommendationId == recommendationId,)
           .toList();
 
   /// Получить взаимодействия для специалиста
   List<RecommendationInteraction> getInteractionsForSpecialist(
-          String specialistId) =>
+          String specialistId,) =>
       state
           .where((interaction) => interaction.specialistId == specialistId)
           .toList();

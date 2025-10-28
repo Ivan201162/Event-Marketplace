@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/integration.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/integration.dart';
-import '../providers/auth_providers.dart';
-import '../services/integration_service.dart';
-
 /// Экран детального просмотра интеграции
 class IntegrationDetailScreen extends ConsumerStatefulWidget {
-  const IntegrationDetailScreen({super.key, required this.integration});
+  const IntegrationDetailScreen({required this.integration, super.key});
   final Integration integration;
 
   @override
@@ -25,7 +24,7 @@ class _IntegrationDetailScreenState
           title: Text(widget.integration.name),
           actions: [
             IconButton(
-                icon: const Icon(Icons.share), onPressed: _shareIntegration)
+                icon: const Icon(Icons.share), onPressed: _shareIntegration,),
           ],
         ),
         body: SingleChildScrollView(
@@ -94,12 +93,12 @@ class _IntegrationDetailScreenState
                         Text(
                           widget.integration.name,
                           style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                              fontSize: 24, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                              horizontal: 12, vertical: 6,),
                           decoration: BoxDecoration(
                             color: widget.integration.statusColor
                                 .withValues(alpha: 0.1),
@@ -130,7 +129,7 @@ class _IntegrationDetailScreenState
               Row(
                 children: [
                   Icon(widget.integration.typeIcon,
-                      size: 20, color: widget.integration.typeColor),
+                      size: 20, color: widget.integration.typeColor,),
                   const SizedBox(width: 8),
                   Text(
                     _getTypeText(widget.integration.type),
@@ -167,10 +166,10 @@ class _IntegrationDetailScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Описание',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 8),
               Text(widget.integration.description,
-                  style: const TextStyle(fontSize: 16, height: 1.5)),
+                  style: const TextStyle(fontSize: 16, height: 1.5),),
             ],
           ),
         ),
@@ -188,7 +187,7 @@ class _IntegrationDetailScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Разрешения',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             ...widget.integration.permissions.map(
               (permission) => Padding(
@@ -196,11 +195,11 @@ class _IntegrationDetailScreenState
                 child: Row(
                   children: [
                     const Icon(Icons.check_circle,
-                        size: 16, color: Colors.green),
+                        size: 16, color: Colors.green,),
                     const SizedBox(width: 8),
                     Expanded(
                         child: Text(permission,
-                            style: const TextStyle(fontSize: 14))),
+                            style: const TextStyle(fontSize: 14),),),
                   ],
                 ),
               ),
@@ -218,7 +217,7 @@ class _IntegrationDetailScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Настройки',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
 
               // Включить/выключить
@@ -231,7 +230,7 @@ class _IntegrationDetailScreenState
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Настройка сохранена')));
+                      const SnackBar(content: Text('Настройка сохранена')),);
                 },
               ),
 
@@ -253,7 +252,7 @@ class _IntegrationDetailScreenState
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(
-                          content: Text('Редактирование ${entry.key}')));
+                          content: Text('Редактирование ${entry.key}'),),);
                     },
                   ),
                 ),
@@ -270,7 +269,7 @@ class _IntegrationDetailScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Действия',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
 
               // Подключить/отключить
@@ -390,7 +389,7 @@ class _IntegrationDetailScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -403,13 +402,13 @@ class _IntegrationDetailScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Синхронизация завершена'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } on Exception catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -421,7 +420,7 @@ class _IntegrationDetailScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Не удалось открыть сайт: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -447,6 +446,6 @@ class _IntegrationDetailScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Интеграция скопирована в буфер обмена')));
+        const SnackBar(content: Text('Интеграция скопирована в буфер обмена')),);
   }
 }

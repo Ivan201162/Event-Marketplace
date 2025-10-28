@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/event.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/booking.dart';
-import '../models/event.dart';
 
 /// Сервис для экспорта событий в формат iCalendar (.ics)
 class IcsExportService {
@@ -31,12 +30,12 @@ class IcsExportService {
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
-          'IcsExportService: Event exported successfully to: ${file.path}');
+          'IcsExportService: Event exported successfully to: ${file.path}',);
 
       return file.path;
     } on Exception catch (e, stackTrace) {
       SafeLog.error(
-          'IcsExportService: Error exporting event to ICS', e, stackTrace);
+          'IcsExportService: Error exporting event to ICS', e, stackTrace,);
       return null;
     }
   }
@@ -50,7 +49,7 @@ class IcsExportService {
 
     try {
       SafeLog.info(
-          'IcsExportService: Exporting booking to ICS: ${booking.eventTitle}');
+          'IcsExportService: Exporting booking to ICS: ${booking.eventTitle}',);
 
       // Создаем содержимое .ics файла
       final icsContent = _generateBookingIcsContent(booking);
@@ -61,12 +60,12 @@ class IcsExportService {
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
-          'IcsExportService: Booking exported successfully to: ${file.path}');
+          'IcsExportService: Booking exported successfully to: ${file.path}',);
 
       return file.path;
     } on Exception catch (e, stackTrace) {
       SafeLog.error(
-          'IcsExportService: Error exporting booking to ICS', e, stackTrace);
+          'IcsExportService: Error exporting booking to ICS', e, stackTrace,);
       return null;
     }
   }
@@ -85,7 +84,7 @@ class IcsExportService {
 
     try {
       SafeLog.info(
-          'IcsExportService: Exporting ${events.length} events to ICS');
+          'IcsExportService: Exporting ${events.length} events to ICS',);
 
       // Создаем содержимое .ics файла
       final icsContent = _generateMultipleEventsIcsContent(events);
@@ -96,12 +95,12 @@ class IcsExportService {
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
-          'IcsExportService: Events exported successfully to: ${file.path}');
+          'IcsExportService: Events exported successfully to: ${file.path}',);
 
       return file.path;
     } on Exception catch (e, stackTrace) {
       SafeLog.error(
-          'IcsExportService: Error exporting events to ICS', e, stackTrace);
+          'IcsExportService: Error exporting events to ICS', e, stackTrace,);
       return null;
     }
   }
@@ -120,7 +119,7 @@ class IcsExportService {
 
     try {
       SafeLog.info(
-          'IcsExportService: Exporting ${bookings.length} bookings to ICS');
+          'IcsExportService: Exporting ${bookings.length} bookings to ICS',);
 
       // Создаем содержимое .ics файла
       final icsContent = _generateMultipleBookingsIcsContent(bookings);
@@ -131,12 +130,12 @@ class IcsExportService {
       final file = await _saveIcsFile(fileName, icsContent);
 
       SafeLog.info(
-          'IcsExportService: Bookings exported successfully to: ${file.path}');
+          'IcsExportService: Bookings exported successfully to: ${file.path}',);
 
       return file.path;
     } on Exception catch (e, stackTrace) {
       SafeLog.error(
-          'IcsExportService: Error exporting bookings to ICS', e, stackTrace);
+          'IcsExportService: Error exporting bookings to ICS', e, stackTrace,);
       return null;
     }
   }
@@ -185,7 +184,7 @@ class IcsExportService {
     final filePath = await exportBookingToIcs(booking);
     if (filePath != null) {
       return shareIcsFile(filePath,
-          subject: 'Бронирование: ${booking.eventTitle}');
+          subject: 'Бронирование: ${booking.eventTitle}',);
     }
     return false;
   }
@@ -195,7 +194,7 @@ class IcsExportService {
     final filePath = await exportEventsToIcs(events);
     if (filePath != null) {
       return shareIcsFile(filePath,
-          subject: 'Экспорт событий (${events.length})');
+          subject: 'Экспорт событий (${events.length})',);
     }
     return false;
   }
@@ -205,7 +204,7 @@ class IcsExportService {
     final filePath = await exportBookingsToIcs(bookings);
     if (filePath != null) {
       return shareIcsFile(filePath,
-          subject: 'Экспорт бронирований (${bookings.length})');
+          subject: 'Экспорт бронирований (${bookings.length})',);
     }
     return false;
   }
@@ -297,7 +296,7 @@ class IcsExportService {
       ..writeln('UID:${event.id}@eventmarketplace.com')
       ..writeln('DTSTART:${_formatDateTime(event.date)}')
       ..writeln(
-          'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}')
+          'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}',)
       ..writeln('SUMMARY:${event.title}');
     buffer.writeln('DESCRIPTION:${event.description}');
     if (event.location.isNotEmpty) {
@@ -323,7 +322,7 @@ class IcsExportService {
     buffer.writeln('BEGIN:VEVENT');
     buffer.writeln('UID:${booking.id}@eventmarketplace.com');
     buffer.writeln(
-        'DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
+        'DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}',);
     buffer.writeln(
       'DTEND:${_formatDateTime(booking.endDate ?? (booking.eventDate ?? booking.date).add(const Duration(hours: 2)))}',
     );
@@ -354,7 +353,7 @@ class IcsExportService {
       buffer.writeln('UID:${event.id}@eventmarketplace.com');
       buffer.writeln('DTSTART:${_formatDateTime(event.date)}');
       buffer.writeln(
-          'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}');
+          'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}',);
       buffer.writeln('SUMMARY:${event.title}');
       buffer.writeln('DESCRIPTION:${event.description}');
       if (event.location.isNotEmpty) {
@@ -383,7 +382,7 @@ class IcsExportService {
       buffer.writeln('BEGIN:VEVENT');
       buffer.writeln('UID:${booking.id}@eventmarketplace.com');
       buffer.writeln(
-          'DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
+          'DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}',);
       buffer.writeln(
         'DTEND:${_formatDateTime(booking.endDate ?? (booking.eventDate ?? booking.date).add(const Duration(hours: 2)))}',
       );
@@ -395,7 +394,7 @@ class IcsExportService {
       buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
       buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
       buffer.writeln(
-          'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
+          'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}',);
       buffer.writeln('END:VEVENT');
     }
 

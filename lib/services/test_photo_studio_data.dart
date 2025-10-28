@@ -1,5 +1,5 @@
-import '../models/photo_studio.dart';
-import '../services/photo_studio_service.dart';
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/services/photo_studio_service.dart';
 
 class TestPhotoStudioData {
   static final PhotoStudioService _photoStudioService = PhotoStudioService();
@@ -29,7 +29,7 @@ class TestPhotoStudioData {
             'Профессиональное освещение',
             'Гримерная',
             'Wi-Fi',
-            'Парковка'
+            'Парковка',
           ],
           pricing: {
             'hourlyRate': 2500.0,
@@ -52,7 +52,7 @@ class TestPhotoStudioData {
           location: {
             'latitude': 55.7558,
             'longitude': 37.6176,
-            'city': 'Москва'
+            'city': 'Москва',
           },
         ),
         const CreatePhotoStudio(
@@ -75,7 +75,7 @@ class TestPhotoStudioData {
             'Художественное освещение',
             'Декорации',
             'Гримерная',
-            'Wi-Fi'
+            'Wi-Fi',
           ],
           pricing: {
             'hourlyRate': 3000.0,
@@ -98,7 +98,7 @@ class TestPhotoStudioData {
           location: {
             'latitude': 55.7804,
             'longitude': 37.6392,
-            'city': 'Москва'
+            'city': 'Москва',
           },
         ),
         const CreatePhotoStudio(
@@ -124,7 +124,7 @@ class TestPhotoStudioData {
             'Детская зона',
             'Гримерная',
             'Wi-Fi',
-            'Парковка'
+            'Парковка',
           ],
           pricing: {
             'hourlyRate': 1800.0,
@@ -147,7 +147,7 @@ class TestPhotoStudioData {
           location: {
             'latitude': 55.7522,
             'longitude': 37.5911,
-            'city': 'Москва'
+            'city': 'Москва',
           },
         ),
         const CreatePhotoStudio(
@@ -195,7 +195,7 @@ class TestPhotoStudioData {
           location: {
             'latitude': 55.7539,
             'longitude': 37.6208,
-            'city': 'Москва'
+            'city': 'Москва',
           },
         ),
         const CreatePhotoStudio(
@@ -237,7 +237,7 @@ class TestPhotoStudioData {
           location: {
             'latitude': 55.7522,
             'longitude': 37.5911,
-            'city': 'Москва'
+            'city': 'Москва',
           },
         ),
         const CreatePhotoStudio(
@@ -253,7 +253,7 @@ class TestPhotoStudioData {
           coverImageUrl:
               'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           images: [
-            'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800'
+            'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           ],
           amenities: ['Классическое освещение', 'Гримерная', 'Wi-Fi'],
           pricing: {
@@ -262,7 +262,7 @@ class TestPhotoStudioData {
             'packages': {
               'Черно-белая съемка': 2800,
               'Портретная съемка': 2500,
-              'Арт съемка': 3000
+              'Арт съемка': 3000,
             },
           },
           workingHours: {
@@ -277,7 +277,7 @@ class TestPhotoStudioData {
           location: {
             'latitude': 55.7558,
             'longitude': 37.6176,
-            'city': 'Москва'
+            'city': 'Москва',
           },
         ),
       ];

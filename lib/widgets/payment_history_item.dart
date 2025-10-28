@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/payment.dart';
-
 class PaymentHistoryItem extends StatelessWidget {
-  const PaymentHistoryItem({super.key, required this.payment, this.onTap});
+  const PaymentHistoryItem({required this.payment, super.key, this.onTap});
   final Payment payment;
   final VoidCallback? onTap;
 
@@ -137,7 +136,7 @@ class PaymentHistoryItem extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(Icons.error_outline,
-                          size: 16, color: theme.colorScheme.error),
+                          size: 16, color: theme.colorScheme.error,),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(

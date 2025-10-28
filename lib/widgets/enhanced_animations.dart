@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для анимированного появления
 class FadeInWidget extends StatefulWidget {
   const FadeInWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 500),
     this.delay = Duration.zero,
     this.curve = Curves.easeInOut,
@@ -55,8 +54,7 @@ class _FadeInWidgetState extends State<FadeInWidget>
 /// Виджет для анимированного появления снизу
 class SlideInUpWidget extends StatefulWidget {
   const SlideInUpWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 500),
     this.delay = Duration.zero,
     this.curve = Curves.easeInOut,
@@ -108,8 +106,7 @@ class _SlideInUpWidgetState extends State<SlideInUpWidget>
 /// Виджет для анимированного масштабирования
 class ScaleInWidget extends StatefulWidget {
   const ScaleInWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.delay = Duration.zero,
     this.curve = Curves.elasticOut,
@@ -161,8 +158,7 @@ class _ScaleInWidgetState extends State<ScaleInWidget>
 /// Виджет для анимированного поворота
 class RotateInWidget extends StatefulWidget {
   const RotateInWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 500),
     this.delay = Duration.zero,
     this.curve = Curves.easeInOut,
@@ -214,8 +210,7 @@ class _RotateInWidgetState extends State<RotateInWidget>
 /// Виджет для анимированного списка
 class AnimatedListView extends StatefulWidget {
   const AnimatedListView({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.delay = const Duration(milliseconds: 100),
     this.curve = Curves.easeInOut,
@@ -256,9 +251,7 @@ class _AnimatedListViewState extends State<AnimatedListView> {
 /// Виджет для анимированной кнопки
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
-    required this.onPressed,
-    required this.child,
+    required this.onPressed, required this.child, super.key,
     this.duration = const Duration(milliseconds: 150),
     this.scale = 0.95,
     this.curve = Curves.easeInOut,
@@ -320,8 +313,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 /// Виджет для анимированного перехода между страницами
 class AnimatedPageTransition extends StatefulWidget {
   const AnimatedPageTransition({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
   });

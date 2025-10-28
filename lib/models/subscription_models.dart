@@ -14,31 +14,15 @@ class UserSubscription {
     required this.specialistId,
     required this.type,
     required this.status,
-    this.startDate,
+    required this.createdAt, this.startDate,
     this.endDate,
     this.autoRenew = false,
     this.price,
     this.currency = 'RUB',
     this.features = const [],
     this.metadata = const {},
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String userId;
-  final String specialistId;
-  final SubscriptionType type;
-  final SubscriptionStatus status;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final bool autoRenew;
-  final double? price;
-  final String currency;
-  final List<String> features;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory UserSubscription.fromMap(Map<String, dynamic> data) {
@@ -85,6 +69,21 @@ class UserSubscription {
 
     return UserSubscription.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final String specialistId;
+  final SubscriptionType type;
+  final SubscriptionStatus status;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final bool autoRenew;
+  final double? price;
+  final String currency;
+  final List<String> features;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -243,31 +242,15 @@ class Subscription {
     required this.specialistId,
     required this.type,
     required this.status,
-    this.startDate,
+    required this.createdAt, this.startDate,
     this.endDate,
     this.autoRenew = false,
     this.price,
     this.currency = 'RUB',
     this.features = const [],
     this.metadata = const {},
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String userId;
-  final String specialistId;
-  final SubscriptionType type;
-  final SubscriptionStatus status;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final bool autoRenew;
-  final double? price;
-  final String currency;
-  final List<String> features;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory Subscription.fromMap(Map<String, dynamic> data) {
@@ -314,6 +297,21 @@ class Subscription {
 
     return Subscription.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final String specialistId;
+  final SubscriptionType type;
+  final SubscriptionStatus status;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final bool autoRenew;
+  final double? price;
+  final String currency;
+  final List<String> features;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

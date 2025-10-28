@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/badge.dart' as badge_model;
+import 'package:event_marketplace_app/services/badge_service.dart' as badge_service;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/badge.dart' as badge_model;
-import '../services/badge_service.dart' as badge_service;
 
 /// Провайдер для сервиса бейджей
 final badgeServiceProvider = Provider<badge_service.BadgeService>(
@@ -80,13 +79,13 @@ class BadgeManager {
 
   /// Проверить бейджи после бронирования
   Future<void> checkBookingBadges(
-      String customerId, String specialistId) async {
+      String customerId, String specialistId,) async {
     await _service.checkBookingBadges(customerId, specialistId);
   }
 
   /// Проверить бейджи после отзыва
   Future<void> checkReviewBadges(
-      String customerId, String specialistId, int rating) async {
+      String customerId, String specialistId, int rating,) async {
     await _service.checkReviewBadges(customerId, specialistId, rating);
   }
 
@@ -101,7 +100,7 @@ class BadgeManager {
 
   /// Получить таблицу лидеров
   Future<List<badge_model.BadgeLeaderboardEntry>> getLeaderboard(
-          {int limit = 10}) async =>
+          {int limit = 10,}) async =>
       _service.getBadgeLeaderboard(limit: limit);
 }
 
@@ -118,7 +117,7 @@ class NewBadgeState {
   final bool hasNewBadges;
 
   NewBadgeState copyWith(
-          {List<badge_model.Badge>? newBadges, bool? hasNewBadges}) =>
+          {List<badge_model.Badge>? newBadges, bool? hasNewBadges,}) =>
       NewBadgeState(
         newBadges: newBadges ?? this.newBadges,
         hasNewBadges: hasNewBadges ?? this.hasNewBadges,
@@ -146,7 +145,7 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
         // Проверяем новые бейджи
         final newBadges = currentBadges
             .where((badge) =>
-                !_lastBadges.any((lastBadge) => lastBadge.id == badge.id))
+                !_lastBadges.any((lastBadge) => lastBadge.id == badge.id),)
             .toList();
 
         if (newBadges.isNotEmpty) {
@@ -197,7 +196,7 @@ final userAchievementsProvider =
 /// Достижения пользователя
 class UserAchievements {
   const UserAchievements(
-      {required this.badges, required this.stats, required this.isLoading});
+      {required this.badges, required this.stats, required this.isLoading,});
   final List<badge_model.Badge> badges;
   final badge_model.BadgeStats stats;
   final bool isLoading;

@@ -7,12 +7,11 @@ class SecurityAudit {
     required this.eventType,
     required this.description,
     required this.level,
-    this.userId,
+    required this.timestamp, this.userId,
     this.sessionId,
     this.ipAddress,
     this.userAgent,
     this.metadata = const {},
-    required this.timestamp,
     this.resolvedBy,
     this.resolvedAt,
     this.isResolved = false,
@@ -34,7 +33,7 @@ class SecurityAudit {
       ipAddress: data['ipAddress'] as String?,
       userAgent: data['userAgent'] as String?,
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       resolvedBy: data['resolvedBy'] as String?,
       resolvedAt: data['resolvedAt'] != null
@@ -190,11 +189,9 @@ class SecurityPolicy {
     required this.description,
     required this.type,
     required this.rules,
-    this.isEnabled = true,
+    required this.createdAt, required this.updatedAt, this.isEnabled = true,
     this.severity = SecurityLevel.medium,
     this.affectedRoles = const [],
-    required this.createdAt,
-    required this.updatedAt,
     this.createdBy,
   });
 
@@ -648,19 +645,14 @@ class SecurityStatistics {
       switch (event.level) {
         case SecurityLevel.critical:
           criticalEvents++;
-          break;
         case SecurityLevel.high:
           highEvents++;
-          break;
         case SecurityLevel.medium:
           mediumEvents++;
-          break;
         case SecurityLevel.low:
           lowEvents++;
-          break;
         case SecurityLevel.info:
           infoEvents++;
-          break;
       }
 
       // Подсчет разрешенных

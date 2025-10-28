@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:event_marketplace_app/models/ab_test.dart';
+import 'package:event_marketplace_app/services/ab_test_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/ab_test.dart';
-import '../services/ab_test_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления A/B тестами
 class ABTestManagementScreen extends ConsumerStatefulWidget {
@@ -57,7 +57,7 @@ class _ABTestManagementScreenState
             Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.analytics)),
+                    'statistics', 'Статистика', Icons.analytics,),),
           ],
         ),
       );
@@ -83,7 +83,7 @@ class _ABTestManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -109,7 +109,7 @@ class _ABTestManagementScreenState
             child: Row(
               children: [
                 Text('A/B тесты',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                    style: Theme.of(context).textTheme.headlineSmall,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadTests,
@@ -159,7 +159,7 @@ class _ABTestManagementScreenState
               const SizedBox(width: 8),
               Expanded(
                   child: Text(test.name,
-                      style: Theme.of(context).textTheme.titleMedium)),
+                      style: Theme.of(context).textTheme.titleMedium,),),
               _buildStatusChip(test.status),
               PopupMenuButton<String>(
                 onSelected: (value) => _handleTestAction(value, test),
@@ -169,32 +169,32 @@ class _ABTestManagementScreenState
                       value: 'start',
                       child: ListTile(
                           leading: Icon(Icons.play_arrow),
-                          title: Text('Запустить')),
+                          title: Text('Запустить'),),
                     ),
                   ],
                   if (test.isActive) ...[
                     const PopupMenuItem(
                       value: 'stop',
                       child: ListTile(
-                          leading: Icon(Icons.stop), title: Text('Остановить')),
+                          leading: Icon(Icons.stop), title: Text('Остановить'),),
                     ),
                     const PopupMenuItem(
                       value: 'statistics',
                       child: ListTile(
                           leading: Icon(Icons.analytics),
-                          title: Text('Статистика')),
+                          title: Text('Статистика'),),
                     ),
                   ],
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   const PopupMenuItem(
                     value: 'delete',
                     child: ListTile(
-                        leading: Icon(Icons.delete), title: Text('Удалить')),
+                        leading: Icon(Icons.delete), title: Text('Удалить'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -249,7 +249,7 @@ class _ABTestManagementScreenState
               ),
               const SizedBox(width: 8),
               _buildInfoChip(
-                  'Метрика', test.metrics.primaryMetric, Colors.green),
+                  'Метрика', test.metrics.primaryMetric, Colors.green,),
             ],
           ),
 
@@ -299,7 +299,7 @@ class _ABTestManagementScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Создать A/B тест',
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context).textTheme.titleMedium,),
 
               const SizedBox(height: 16),
 
@@ -332,7 +332,7 @@ class _ABTestManagementScreenState
         TextField(
           controller: descriptionController,
           decoration: const InputDecoration(
-              labelText: 'Описание', border: OutlineInputBorder()),
+              labelText: 'Описание', border: OutlineInputBorder(),),
           maxLines: 3,
         ),
 
@@ -400,7 +400,7 @@ class _ABTestManagementScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Статистика: ${stats.testName}',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
 
             const SizedBox(height: 16),
 
@@ -440,7 +440,7 @@ class _ABTestManagementScreenState
             Text(
               'Результаты по вариантам:',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                  fontWeight: FontWeight.bold, color: Colors.grey[600],),
             ),
 
             const SizedBox(height: 8),
@@ -467,7 +467,7 @@ class _ABTestManagementScreenState
                           Text(
                             '${variantStats.participants} участников, ${variantStats.conversions} конверсий',
                             style: const TextStyle(
-                                fontSize: 12, color: Colors.grey),
+                                fontSize: 12, color: Colors.grey,),
                           ),
                         ],
                       ),
@@ -533,7 +533,7 @@ class _ABTestManagementScreenState
       );
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -548,7 +548,7 @@ class _ABTestManagementScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -588,7 +588,7 @@ class _ABTestManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -639,7 +639,7 @@ class _ABTestManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки A/B тестов: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -682,19 +682,14 @@ class _ABTestManagementScreenState
     switch (action) {
       case 'start':
         _startTest(test);
-        break;
       case 'stop':
         _stopTest(test);
-        break;
       case 'statistics':
         _showTestStatistics(test);
-        break;
       case 'edit':
         _editTest(test);
-        break;
       case 'delete':
         _deleteTest(test);
-        break;
     }
   }
 
@@ -705,13 +700,13 @@ class _ABTestManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('A/B тест "${test.name}" запущен'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка запуска теста: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -730,7 +725,7 @@ class _ABTestManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка остановки теста: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -740,7 +735,7 @@ class _ABTestManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Статистика для теста "${test.name}" будет показана')));
+        content: Text('Статистика для теста "${test.name}" будет показана'),),);
   }
 
   void _editTest(ABTest test) {
@@ -748,7 +743,7 @@ class _ABTestManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Редактирование теста "${test.name}" будет реализовано')),
+              Text('Редактирование теста "${test.name}" будет реализовано'),),
     );
   }
 
@@ -761,7 +756,7 @@ class _ABTestManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -771,13 +766,13 @@ class _ABTestManagementScreenState
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('A/B тест удален'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка удаления теста: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -848,13 +843,13 @@ class _ABTestManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('A/B тест "$name" создан'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка создания теста: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }

@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/services/navigation_service.dart';
+import 'package:event_marketplace_app/services/session_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../services/session_service.dart';
-import '../../services/navigation_service.dart';
 
 /// Экран загрузки с анимацией и проверкой сессии
 class LoadingScreen extends ConsumerStatefulWidget {
@@ -23,7 +22,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
   late Animation<double> _progressAnimation;
 
   String _loadingText = 'Загрузка...';
-  double _progress = 0.0;
+  double _progress = 0;
 
   @override
   void initState() {
@@ -49,31 +48,31 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
     );
 
     _logoAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _logoController,
       curve: Curves.elasticOut,
-    ));
+    ),);
 
     _textAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _textController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _progressAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _progressController,
       curve: Curves.easeInOut,
-    ));
+    ),);
   }
 
-  void _startLoading() async {
+  Future<void> _startLoading() async {
     try {
       // Запускаем анимации
       _logoController.forward();
@@ -95,7 +94,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
     }
   }
 
-  void _simulateProgress() async {
+  Future<void> _simulateProgress() async {
     const steps = [
       {'text': 'Инициализация...', 'progress': 0.2},
       {'text': 'Загрузка данных...', 'progress': 0.4},
@@ -108,8 +107,8 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
       await Future.delayed(const Duration(milliseconds: 400));
       if (mounted) {
         setState(() {
-          _loadingText = step['text'] as String;
-          _progress = step['progress'] as double;
+          _loadingText = step['text']! as String;
+          _progress = step['progress']! as double;
         });
       }
     }

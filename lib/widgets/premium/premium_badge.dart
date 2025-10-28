@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PremiumBadge extends StatelessWidget {
-  const PremiumBadge({super.key, required this.type, this.isActive = true});
+  const PremiumBadge({required this.type, super.key, this.isActive = true});
   final PremiumType type;
   final bool isActive;
 
@@ -36,7 +36,7 @@ class PremiumBadge extends StatelessWidget {
           Text(
             _getBadgeText(),
             style: const TextStyle(
-                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold,),
           ),
         ],
       ),

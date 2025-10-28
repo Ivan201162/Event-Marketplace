@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/core/i18n/app_localizations.dart';
+import 'package:event_marketplace_app/providers/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/i18n/app_localizations.dart';
-import '../providers/locale_provider.dart';
 
 /// Виджет для выбора языка
 class LanguageSelector extends ConsumerWidget {
@@ -81,11 +80,11 @@ class LanguageSelector extends ConsumerWidget {
                     children: [
                       if (showFlag) ...[
                         _buildFlag(currentLocale),
-                        const SizedBox(width: 8)
+                        const SizedBox(width: 8),
                       ],
                       Text(
                         _getLanguageName(currentLocale, showNativeName,
-                            showEnglishName, showCode),
+                            showEnglishName, showCode,),
                         style:
                             textStyle ?? Theme.of(context).textTheme.bodyMedium,
                       ),
@@ -129,10 +128,8 @@ class LanguageSelector extends ConsumerWidget {
     switch (locale.languageCode) {
       case 'ru':
         flagEmoji = '🇷🇺';
-        break;
       case 'en':
         flagEmoji = '🇺🇸';
-        break;
       default:
         flagEmoji = '🌐';
     }
@@ -141,7 +138,7 @@ class LanguageSelector extends ConsumerWidget {
   }
 
   String _getLanguageName(
-      Locale locale, bool showNative, bool showEnglish, bool showCode) {
+      Locale locale, bool showNative, bool showEnglish, bool showCode,) {
     if (showCode) {
       return locale.languageCode.toUpperCase();
     }
@@ -248,7 +245,7 @@ class CompactLanguageSelector extends ConsumerWidget {
         children: [
           if (showFlag) ...[
             _buildFlag(currentLocale),
-            if (showText) const SizedBox(width: 4)
+            if (showText) const SizedBox(width: 4),
           ],
           if (showText) ...[
             Text(
@@ -267,10 +264,8 @@ class CompactLanguageSelector extends ConsumerWidget {
     switch (locale.languageCode) {
       case 'ru':
         flagEmoji = '🇷🇺';
-        break;
       case 'en':
         flagEmoji = '🇺🇸';
-        break;
       default:
         flagEmoji = '🌐';
     }
@@ -289,10 +284,10 @@ class CompactLanguageSelector extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildLanguageOption(
-                context, ref, const Locale('ru', 'RU'), '🇷🇺', 'Русский'),
+                context, ref, const Locale('ru', 'RU'), '🇷🇺', 'Русский',),
             const SizedBox(height: 8),
             _buildLanguageOption(
-                context, ref, const Locale('en', 'US'), '🇺🇸', 'English'),
+                context, ref, const Locale('en', 'US'), '🇺🇸', 'English',),
           ],
         ),
         actions: [
@@ -368,10 +363,8 @@ class CurrentLanguageDisplay extends ConsumerWidget {
     switch (locale.languageCode) {
       case 'ru':
         flagEmoji = '🇷🇺';
-        break;
       case 'en':
         flagEmoji = '🇺🇸';
-        break;
       default:
         flagEmoji = '🌐';
     }

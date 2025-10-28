@@ -1,15 +1,15 @@
+import 'package:event_marketplace_app/models/customer_profile_extended.dart';
+import 'package:event_marketplace_app/providers/customer_profile_extended_providers.dart';
+import 'package:event_marketplace_app/services/customer_profile_extended_service.dart';
+import 'package:event_marketplace_app/widgets/note_card_widget.dart';
+import 'package:event_marketplace_app/widgets/note_editor_widget.dart';
+import 'package:event_marketplace_app/widgets/note_filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/customer_profile_extended.dart';
-import '../providers/customer_profile_extended_providers.dart';
-import '../services/customer_profile_extended_service.dart';
-import '../widgets/note_card_widget.dart';
-import '../widgets/note_editor_widget.dart';
-import '../widgets/note_filter_widget.dart';
 
 /// Экран управления заметками заказчика
 class CustomerNotesScreen extends ConsumerStatefulWidget {
-  const CustomerNotesScreen({super.key, required this.userId});
+  const CustomerNotesScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -54,10 +54,10 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
         ),
         actions: [
           IconButton(
-              icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+              icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
           IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: _showFilterDialog),
+              onPressed: _showFilterDialog,),
         ],
       ),
       body: Column(
@@ -76,7 +76,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
               children: [
                 _buildAllNotesTab(notesAsync),
                 _buildPinnedNotesTab(),
-                _buildTagsTab()
+                _buildTagsTab(),
               ],
             ),
           ),
@@ -111,7 +111,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
           const SizedBox(height: 4),
           Text(value.toString(),
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       );
@@ -242,7 +242,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
             const SizedBox(height: 16),
             Text(title,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Text(
               subtitle,
@@ -298,7 +298,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               final query = _searchController.text.trim();
@@ -340,7 +340,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
                   IconButton(
                     icon: Icon(note.isPinned
                         ? Icons.push_pin
-                        : Icons.push_pin_outlined),
+                        : Icons.push_pin_outlined,),
                     onPressed: () {
                       Navigator.pop(context);
                       _togglePin(note);
@@ -382,14 +382,14 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
                           Text(
                             'Создано: ${_formatDate(note.createdAt)}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                                color: Colors.grey, fontSize: 12,),
                           ),
                           if (note.updatedAt != note.createdAt) ...[
                             const SizedBox(width: 16),
                             Text(
                               'Обновлено: ${_formatDate(note.updatedAt)}',
                               style: const TextStyle(
-                                  color: Colors.grey, fontSize: 12),
+                                  color: Colors.grey, fontSize: 12,),
                             ),
                           ],
                         ],
@@ -428,7 +428,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -477,7 +477,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
 
 /// Экран заметок по тегу
 class NotesByTagScreen extends ConsumerWidget {
-  const NotesByTagScreen({super.key, required this.userId, required this.tag});
+  const NotesByTagScreen({required this.userId, required this.tag, super.key});
   final String userId;
   final String tag;
 
@@ -519,7 +519,7 @@ class NotesByTagScreen extends ConsumerWidget {
   }
 
   void _showEditNoteDialog(
-      BuildContext context, WidgetRef ref, CustomerNote note) {
+      BuildContext context, WidgetRef ref, CustomerNote note,) {
     // TODO(developer): Редактировать заметку
   }
 
@@ -535,7 +535,7 @@ class NotesByTagScreen extends ConsumerWidget {
 /// Экран результатов поиска заметок
 class NoteSearchResultsScreen extends ConsumerWidget {
   const NoteSearchResultsScreen(
-      {super.key, required this.userId, required this.query});
+      {required this.userId, required this.query, super.key,});
   final String userId;
   final String query;
 
@@ -577,7 +577,7 @@ class NoteSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showEditNoteDialog(
-      BuildContext context, WidgetRef ref, CustomerNote note) {
+      BuildContext context, WidgetRef ref, CustomerNote note,) {
     // TODO(developer): Редактировать заметку
   }
 

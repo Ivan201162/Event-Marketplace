@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../providers/auth_providers.dart';
 
 class CreateChatScreen extends ConsumerStatefulWidget {
   const CreateChatScreen({super.key});
@@ -99,7 +98,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки пользователей: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -201,7 +200,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(
-            content: Text('Чат создан!'), backgroundColor: Colors.green));
+            content: Text('Чат создан!'), backgroundColor: Colors.green,),);
         context.pop();
         context.push(
           '/chat',
@@ -217,7 +216,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания чата: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -229,7 +228,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
           title: const Text('Создать чат'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: Column(
           children: [
@@ -242,7 +241,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
                   hintText: 'Поиск пользователей...',
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear),
@@ -267,7 +266,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Icon(Icons.search_off,
-                                  size: 64, color: Colors.grey),
+                                  size: 64, color: Colors.grey,),
                               const SizedBox(height: 16),
                               Text(
                                 _searchQuery.isEmpty
@@ -319,7 +318,7 @@ class _CreateChatScreenState extends ConsumerState<CreateChatScreen> {
           child: Text(
             user['name'][0].toUpperCase(),
             style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+                color: Colors.white, fontWeight: FontWeight.bold,),
           ),
         ),
         title: Text(user['name']),

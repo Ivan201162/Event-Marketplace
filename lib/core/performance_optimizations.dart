@@ -13,7 +13,7 @@ class PerformanceOptimizations {
   static void initialize() {
     // Отключаем системные анимации для лучшей производительности
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-        overlays: [SystemUiOverlay.top]);
+        overlays: [SystemUiOverlay.top],);
 
     // Устанавливаем оптимальные настройки рендеринга
     // Note: ViewConfiguration doesn't have copyWith, so we skip this optimization
@@ -137,7 +137,7 @@ class PerformanceOptimizations {
 
   /// Оптимизация провайдеров
   static Provider<T> optimizeProvider<T>(
-          {required T Function() create, String? name}) =>
+          {required T Function() create, String? name,}) =>
       Provider<T>((ref) => create(), name: name);
 
   /// Оптимизация состояния
@@ -159,7 +159,7 @@ class PerformanceOptimizations {
 
   /// Оптимизация ленивой загрузки
   static Widget optimizeLazyLoad(
-      {required Widget child, required bool isVisible}) {
+      {required Widget child, required bool isVisible,}) {
     if (!isVisible) {
       return const SizedBox.shrink();
     }
@@ -186,7 +186,7 @@ class PerformanceOptimizations {
 
   /// Оптимизация рендеринга
   static Widget optimizeRendering(
-      {required Widget child, bool shouldRepaint = false}) {
+      {required Widget child, bool shouldRepaint = false,}) {
     if (shouldRepaint) {
       return RepaintBoundary(child: child);
     }
@@ -223,7 +223,7 @@ class PerformanceOptimizations {
 
   /// Оптимизация сети
   static Widget optimizeNetwork(
-      {required Widget child, required bool isConnected}) {
+      {required Widget child, required bool isConnected,}) {
     if (!isConnected) {
       return const Center(
         child: Column(
@@ -243,7 +243,7 @@ class PerformanceOptimizations {
   static void optimizeBattery() {
     // Отключаем анимации при низком заряде батареи
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-        overlays: [SystemUiOverlay.top]);
+        overlays: [SystemUiOverlay.top],);
   }
 
   /// Оптимизация CPU
@@ -326,10 +326,7 @@ class PerformanceOptimizations {
 /// Провайдер кэша
 class CacheProvider extends StatefulWidget {
   const CacheProvider({
-    super.key,
-    required this.child,
-    required this.cacheKey,
-    required this.duration,
+    required this.child, required this.cacheKey, required this.duration, super.key,
   });
   final Widget child;
   final String cacheKey;
@@ -374,7 +371,7 @@ class _MemoryOptimizer extends WidgetsBindingObserver {
 /// Оптимизатор производительности
 class PerformanceOptimizer extends StatefulWidget {
   const PerformanceOptimizer(
-      {super.key, required this.child, this.enableOptimizations = true});
+      {required this.child, super.key, this.enableOptimizations = true,});
   final Widget child;
   final bool enableOptimizations;
 

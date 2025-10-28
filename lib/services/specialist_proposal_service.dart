@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/specialist_proposal.dart';
+import 'package:event_marketplace_app/services/fcm_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/app_user.dart';
-import '../models/specialist_proposal.dart';
-import 'fcm_service.dart';
 
 /// Сервис для работы с предложениями специалистов
 class SpecialistProposalService {
@@ -16,7 +15,7 @@ class SpecialistProposalService {
 
   /// Создать предложение специалистов
   Future<SpecialistProposal> createProposal(
-      CreateSpecialistProposal data) async {
+      CreateSpecialistProposal data,) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -88,7 +87,7 @@ class SpecialistProposalService {
 
   /// Получить предложения для клиента
   Future<List<SpecialistProposal>> getCustomerProposals(
-      String customerId) async {
+      String customerId,) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -100,7 +99,7 @@ class SpecialistProposalService {
 
   /// Получить предложения от организатора
   Future<List<SpecialistProposal>> getOrganizerProposals(
-      String organizerId) async {
+      String organizerId,) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('organizerId', isEqualTo: organizerId)
@@ -210,7 +209,7 @@ class SpecialistProposalService {
 
   /// Получить активные предложения для клиента
   Future<List<SpecialistProposal>> getActiveCustomerProposals(
-      String customerId) async {
+      String customerId,) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -251,7 +250,7 @@ class SpecialistProposalService {
       'total': total,
       'accepted': accepted,
       'rejected': rejected,
-      'pending': pending
+      'pending': pending,
     };
   }
 
@@ -263,16 +262,16 @@ class SpecialistProposalService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(SpecialistProposal.fromDocument).toList());
+              snapshot.docs.map(SpecialistProposal.fromDocument).toList(),);
 
   /// Подписаться на изменения предложений организатора
   Stream<List<SpecialistProposal>> watchOrganizerProposals(
-          String organizerId) =>
+          String organizerId,) =>
       _firestore
           .collection(_collection)
           .where('organizerId', isEqualTo: organizerId)
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(SpecialistProposal.fromDocument).toList());
+              snapshot.docs.map(SpecialistProposal.fromDocument).toList(),);
 }

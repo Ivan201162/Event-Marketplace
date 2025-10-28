@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/models/specialist_schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../models/specialist_schedule.dart';
-
 class CalendarWidget extends ConsumerStatefulWidget {
   const CalendarWidget({
-    super.key,
-    required this.specialistId,
+    required this.specialistId, super.key,
     this.initialDate,
     this.onDateSelected,
     this.showEvents = true,
@@ -143,7 +141,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   if (events.isEmpty) return null;
 
                   return Positioned(
-                      right: 1, bottom: 1, child: _buildEventMarker(events));
+                      right: 1, bottom: 1, child: _buildEventMarker(events),);
                 },
                 dowBuilder: (context, day) {
                   final text = _getDayName(day.weekday);
@@ -166,7 +164,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   // final isBusy = _isDateBusy(day, busyDatesAsync);
                   const isBusy = false;
                   final isPast = day.isBefore(
-                      DateTime.now().subtract(const Duration(days: 1)));
+                      DateTime.now().subtract(const Duration(days: 1)),);
 
                   return Container(
                     margin: const EdgeInsets.all(4),
@@ -210,7 +208,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
         // Временные слоты
         if (widget.showTimeSlots && _selectedDay != null) ...[
-          _buildTimeSlotsForSelectedDay()
+          _buildTimeSlotsForSelectedDay(),
         ],
       ],
     );
@@ -246,7 +244,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
         child: Text(
           events.length.toString(),
           style: const TextStyle(
-              color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold,),
         ),
       ),
     );
@@ -274,7 +272,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   /// Построить события на выбранную дату
   Widget _buildEventsForSelectedDay(
-          AsyncValue<SpecialistSchedule?> scheduleAsync) =>
+          AsyncValue<SpecialistSchedule?> scheduleAsync,) =>
       scheduleAsync.when(
         data: (schedule) {
           if (schedule == null || _selectedDay == null) {
@@ -290,10 +288,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 child: Row(
                   children: [
                     const Icon(Icons.event_available,
-                        color: Colors.green, size: 24),
+                        color: Colors.green, size: 24,),
                     const SizedBox(width: 12),
                     Text('На эту дату нет событий',
-                        style: Theme.of(context).textTheme.bodyLarge),
+                        style: Theme.of(context).textTheme.bodyLarge,),
                   ],
                 ),
               ),
@@ -355,7 +353,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
           color: _getEventColor(event.type).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-              color: _getEventColor(event.type).withValues(alpha: 0.3)),
+              color: _getEventColor(event.type).withValues(alpha: 0.3),),
         ),
         child: Row(
           children: [
@@ -363,7 +361,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                  color: _getEventColor(event.type), shape: BoxShape.circle),
+                  color: _getEventColor(event.type), shape: BoxShape.circle,),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -371,7 +369,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(event.title,
-                      style: const TextStyle(fontWeight: FontWeight.w600)),
+                      style: const TextStyle(fontWeight: FontWeight.w600),),
                   if (event.description != null) ...[
                     const SizedBox(height: 4),
                     Text(
@@ -438,7 +436,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(
-              SnackBar(content: Text('Выбран слот: ${_formatTime(timeSlot)}')));
+              SnackBar(content: Text('Выбран слот: ${_formatTime(timeSlot)}')),);
         },
         backgroundColor:
             Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),

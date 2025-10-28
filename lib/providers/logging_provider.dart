@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/logging_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/logging_service.dart';
 
 /// Провайдер для сервиса логирования
 final loggingServiceProvider =
@@ -148,7 +148,7 @@ final isLoggingEnabledProvider = Provider<bool>((ref) {
 final loggingStatsProvider = FutureProvider<LoggingStats>((ref) async {
   // В реальном приложении здесь можно получить статистику из файлов или базы данных
   return const LoggingStats(
-      totalLogs: 0, errorLogs: 0, warningLogs: 0, infoLogs: 0, debugLogs: 0);
+      totalLogs: 0, errorLogs: 0, warningLogs: 0, infoLogs: 0, debugLogs: 0,);
 });
 
 /// Статистика логирования

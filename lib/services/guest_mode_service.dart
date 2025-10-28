@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../core/feature_flags.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
 /// Сервис для режима гостя мероприятия
 class GuestModeService {
@@ -202,7 +202,7 @@ class GuestModeService {
   }
 
   Future<void> _sendInvitation(
-      String guestAccessId, GuestAccess guestAccess) async {
+      String guestAccessId, GuestAccess guestAccess,) async {
     try {
       // TODO(developer): Отправить email с кодом доступа
       // TODO(developer): Отправить SMS с кодом доступа (если указан телефон)
@@ -232,17 +232,10 @@ class GuestAccess {
     required this.organizerId,
     required this.guestName,
     required this.guestEmail,
-    this.guestPhone,
+    required this.accessCode, required this.status, required this.createdAt, required this.updatedAt, required this.expiresAt, required this.accessCount, required this.metadata, this.guestPhone,
     this.invitationMessage,
-    required this.accessCode,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
     this.activatedAt,
-    required this.expiresAt,
     this.lastAccessedAt,
-    required this.accessCount,
-    required this.metadata,
   });
 
   /// Создать из документа Firestore

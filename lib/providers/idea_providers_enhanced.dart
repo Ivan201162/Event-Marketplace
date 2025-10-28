@@ -1,28 +1,27 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../models/idea_enhanced.dart';
-import '../services/idea_service_enhanced.dart';
+import 'package:event_marketplace_app/models/idea_enhanced.dart';
+import 'package:event_marketplace_app/services/idea_service_enhanced.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для получения идей
 final ideasProvider = FutureProvider.family<List<IdeaEnhanced>, IdeaFilters?>(
   (ref, filters) async {
-    return await IdeaServiceEnhanced.getIdeas(filters: filters);
+    return IdeaServiceEnhanced.getIdeas(filters: filters);
   },
 );
 
 /// Провайдер для получения идеи по ID
 final ideaByIdProvider = FutureProvider.family<IdeaEnhanced?, String>(
   (ref, ideaId) async {
-    return await IdeaServiceEnhanced.getIdeaById(ideaId);
+    return IdeaServiceEnhanced.getIdeaById(ideaId);
   },
 );
 
 /// Провайдер для получения идей пользователя
 final userIdeasProvider = FutureProvider.family<List<IdeaEnhanced>, String>(
   (ref, userId) async {
-    return await IdeaServiceEnhanced.getUserIdeas(userId);
+    return IdeaServiceEnhanced.getUserIdeas(userId);
   },
 );
 
@@ -30,7 +29,7 @@ final userIdeasProvider = FutureProvider.family<List<IdeaEnhanced>, String>(
 final trendingIdeasProvider =
     FutureProvider.family<List<IdeaEnhanced>, String?>(
   (ref, category) async {
-    return await IdeaServiceEnhanced.getTrendingIdeas(category: category);
+    return IdeaServiceEnhanced.getTrendingIdeas(category: category);
   },
 );
 
@@ -40,7 +39,7 @@ final recommendedIdeasProvider = FutureProvider<List<IdeaEnhanced>>(
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
 
-    return await IdeaServiceEnhanced.getRecommendedIdeas(userId: user.uid);
+    return IdeaServiceEnhanced.getRecommendedIdeas(userId: user.uid);
   },
 );
 
@@ -52,7 +51,7 @@ final searchIdeasProvider =
     final filters = params['filters'] as IdeaFilters?;
     final limit = params['limit'] as int? ?? 20;
 
-    return await IdeaServiceEnhanced.searchIdeas(
+    return IdeaServiceEnhanced.searchIdeas(
       query: query,
       filters: filters,
       limit: limit,
@@ -164,7 +163,7 @@ final ideaAnalyticsProvider = FutureProvider<Map<String, dynamic>>(
       'totalShares': userIdeas.fold(0, (sum, i) => sum + i.shares),
       'totalBookmarks': userIdeas.fold(0, (sum, i) => sum + i.bookmarks),
       'averageRating': userIdeas.isNotEmpty
-          ? userIdeas.fold(0.0, (sum, i) => sum + i.rating) / userIdeas.length
+          ? userIdeas.fold(0, (sum, i) => sum + i.rating) / userIdeas.length
           : 0.0,
       'categories':
           userIdeas.map((i) => i.categories).expand((x) => x).toSet().toList(),
@@ -209,16 +208,16 @@ final ideaNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>(
           'idea_mention',
           'idea_like',
           'idea_comment',
-          'idea_repost'
-        ])
+          'idea_repost',
+        ],)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => {
                   'id': doc.id,
                   ...doc.data(),
-                })
-            .toList());
+                },)
+            .toList(),);
   },
 );
 
@@ -235,8 +234,8 @@ final unreadIdeaNotificationsCountProvider = StreamProvider<int>(
           'idea_mention',
           'idea_like',
           'idea_comment',
-          'idea_repost'
-        ])
+          'idea_repost',
+        ],)
         .where('isRead', isEqualTo: false)
         .snapshots()
         .map((snapshot) => snapshot.docs.length);

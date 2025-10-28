@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/notification_template.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/notification_template.dart';
-import '../services/notification_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления уведомлениями
 class NotificationManagementScreen extends ConsumerStatefulWidget {
@@ -52,13 +52,13 @@ class _NotificationManagementScreenState
           children: [
             Expanded(
                 child:
-                    _buildTabButton('templates', 'Шаблоны', Icons.description)),
+                    _buildTabButton('templates', 'Шаблоны', Icons.description),),
             Expanded(
                 child: _buildTabButton(
-                    'notifications', 'Отправленные', Icons.notifications)),
+                    'notifications', 'Отправленные', Icons.notifications,),),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.analytics)),
+                    'statistics', 'Статистика', Icons.analytics,),),
           ],
         ),
       );
@@ -84,7 +84,7 @@ class _NotificationManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -110,7 +110,7 @@ class _NotificationManagementScreenState
             child: Row(
               children: [
                 Text('Шаблоны уведомлений',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _addTemplate,
@@ -151,7 +151,7 @@ class _NotificationManagementScreenState
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(template.name,
-                        style: Theme.of(context).textTheme.titleMedium)),
+                        style: Theme.of(context).textTheme.titleMedium,),),
                 _buildStatusChip(template.isActive),
                 PopupMenuButton<String>(
                   onSelected: (value) => _handleTemplateAction(value, template),
@@ -160,7 +160,7 @@ class _NotificationManagementScreenState
                       value: 'edit',
                       child: ListTile(
                           leading: Icon(Icons.edit),
-                          title: Text('Редактировать')),
+                          title: Text('Редактировать'),),
                     ),
                     const PopupMenuItem(
                       value: 'toggle',
@@ -172,7 +172,7 @@ class _NotificationManagementScreenState
                     const PopupMenuItem(
                       value: 'delete',
                       child: ListTile(
-                          leading: Icon(Icons.delete), title: Text('Удалить')),
+                          leading: Icon(Icons.delete), title: Text('Удалить'),),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),
@@ -206,7 +206,7 @@ class _NotificationManagementScreenState
                   Text(
                     'Заголовок:',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                        fontWeight: FontWeight.bold, color: Colors.grey[600],),
                   ),
                   const SizedBox(height: 4),
                   Text(template.title),
@@ -229,7 +229,7 @@ class _NotificationManagementScreenState
                   Text(
                     'Текст:',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                        fontWeight: FontWeight.bold, color: Colors.grey[600],),
                   ),
                   const SizedBox(height: 4),
                   Text(template.body),
@@ -243,7 +243,7 @@ class _NotificationManagementScreenState
               Text(
                 'Переменные:',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                    fontWeight: FontWeight.bold, color: Colors.grey[600],),
               ),
               const SizedBox(height: 4),
               Wrap(
@@ -271,7 +271,7 @@ class _NotificationManagementScreenState
             child: Row(
               children: [
                 Text('Отправленные уведомления',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadNotifications,
@@ -313,7 +313,7 @@ class _NotificationManagementScreenState
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(notification.title,
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                 ),
                 _buildStatusChip(notification.status.name),
               ],
@@ -332,7 +332,7 @@ class _NotificationManagementScreenState
                 _buildInfoChip('Тип', notification.type.name, Colors.blue),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Канал', notification.channel.name, Colors.green),
+                    'Канал', notification.channel.name, Colors.green,),
                 const SizedBox(width: 8),
                 _buildInfoChip(
                   'Статус',
@@ -393,16 +393,12 @@ class _NotificationManagementScreenState
       switch (status) {
         case 'sent':
           color = Colors.blue;
-          break;
         case 'delivered':
           color = Colors.green;
-          break;
         case 'read':
           color = Colors.purple;
-          break;
         case 'failed':
           color = Colors.red;
-          break;
         default:
           color = Colors.orange;
       }
@@ -437,7 +433,7 @@ class _NotificationManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -534,7 +530,7 @@ class _NotificationManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки шаблонов: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -551,7 +547,7 @@ class _NotificationManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки уведомлений: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -565,7 +561,7 @@ class _NotificationManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция добавления шаблона будет реализована')));
+        content: Text('Функция добавления шаблона будет реализована'),),);
   }
 
   void _handleTemplateAction(String action, NotificationTemplate template) {

@@ -4,9 +4,7 @@ import 'package:shimmer/shimmer.dart';
 /// Виджет для ленивой загрузки с пагинацией
 class LazyLoadingWidget<T> extends StatefulWidget {
   const LazyLoadingWidget({
-    super.key,
-    required this.itemBuilder,
-    required this.loadData,
+    required this.itemBuilder, required this.loadData, super.key,
     this.itemsPerPage = 20,
     this.loadingWidget,
     this.errorWidget,
@@ -141,7 +139,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               height: 100,
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                  color: Colors.white, borderRadius: BorderRadius.circular(12),),
             ),
           ),
         ),
@@ -159,7 +157,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки данных',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             if (_errorMessage != null) ...[
               const SizedBox(height: 8),
               Text(
@@ -170,7 +168,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
             ],
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadInitialData, child: const Text('Повторить')),
+                onPressed: _loadInitialData, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -184,7 +182,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
             Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Нет данных',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Попробуйте обновить страницу',
@@ -241,9 +239,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
 /// Виджет для ленивой загрузки в виде сетки
 class LazyLoadingGrid<T> extends StatefulWidget {
   const LazyLoadingGrid({
-    super.key,
-    required this.itemBuilder,
-    required this.loadData,
+    required this.itemBuilder, required this.loadData, super.key,
     this.crossAxisCount = 2,
     this.crossAxisSpacing = 8,
     this.mainAxisSpacing = 8,
@@ -389,7 +385,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
           itemCount: 6,
           itemBuilder: (context, index) => Container(
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                color: Colors.white, borderRadius: BorderRadius.circular(12),),
           ),
         ),
       );
@@ -406,7 +402,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки данных',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             if (_errorMessage != null) ...[
               const SizedBox(height: 8),
               Text(
@@ -417,7 +413,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
             ],
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadInitialData, child: const Text('Повторить')),
+                onPressed: _loadInitialData, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -431,7 +427,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
             Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Нет данных',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Попробуйте обновить страницу',

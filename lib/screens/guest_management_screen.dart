@@ -1,14 +1,14 @@
+import 'package:event_marketplace_app/models/guest.dart';
+import 'package:event_marketplace_app/screens/create_guest_event_screen.dart';
+import 'package:event_marketplace_app/screens/guest_registration_screen.dart';
+import 'package:event_marketplace_app/services/guest_service.dart';
+import 'package:event_marketplace_app/widgets/guest_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/guest.dart';
-import '../services/guest_service.dart';
-import '../widgets/guest_widget.dart';
-import 'create_guest_event_screen.dart';
-import 'guest_registration_screen.dart';
 
 /// Экран управления гостями
 class GuestManagementScreen extends ConsumerStatefulWidget {
-  const GuestManagementScreen({super.key, required this.organizerId});
+  const GuestManagementScreen({required this.organizerId, super.key});
   final String organizerId;
 
   @override
@@ -29,13 +29,13 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
           title: const Text('Управление гостями'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+                icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
             IconButton(
                 icon: const Icon(Icons.filter_list),
-                onPressed: _showFilterDialog),
+                onPressed: _showFilterDialog,),
             IconButton(
                 icon: const Icon(Icons.qr_code_scanner),
-                onPressed: _showQRScanner),
+                onPressed: _showQRScanner,),
           ],
         ),
         body: Column(
@@ -50,7 +50,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
             Expanded(
                 child: _selectedEventId.isEmpty
                     ? _buildEmptyState()
-                    : _buildGuestsList()),
+                    : _buildGuestsList(),),
           ],
         ),
         floatingActionButton: Column(
@@ -219,7 +219,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
       );
 
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Column(
         children: [
           Icon(icon, color: color, size: 24),
@@ -227,7 +227,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
           Text(
             value,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(
             label,
@@ -244,7 +244,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
             const Icon(Icons.event_busy, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text('Выберите событие',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             const Text(
               'Выберите событие из списка выше, чтобы управлять гостями',
@@ -279,7 +279,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -294,14 +294,14 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.people_outline,
-                      size: 64, color: Colors.grey),
+                      size: 64, color: Colors.grey,),
                   const SizedBox(height: 16),
                   const Text('Нет гостей',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   const SizedBox(height: 8),
                   const Text('Добавьте гостей для этого события',
-                      style: TextStyle(color: Colors.grey)),
+                      style: TextStyle(color: Colors.grey),),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: _addGuest,
@@ -353,7 +353,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -368,7 +368,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -401,7 +401,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           if (guest.status == GuestStatus.registered)
             ElevatedButton(
               onPressed: () {
@@ -425,7 +425,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -433,7 +433,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(
-                  const SnackBar(content: Text('Гость зарегистрирован')));
+                  const SnackBar(content: Text('Гость зарегистрирован')),);
               setState(() {});
             },
             child: const Text('Подтвердить'),
@@ -452,7 +452,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -460,7 +460,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(
-                  const SnackBar(content: Text('Гость покинул мероприятие')));
+                  const SnackBar(content: Text('Гость покинул мероприятие')),);
               setState(() {});
             },
             child: const Text('Подтвердить'),
@@ -479,7 +479,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -501,7 +501,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Информация о госте скопирована')));
+        const SnackBar(content: Text('Информация о госте скопирована')),);
   }
 
   void _showSearchDialog() {
@@ -523,10 +523,10 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Поиск')),
+              child: const Text('Поиск'),),
         ],
       ),
     );
@@ -583,7 +583,7 @@ class _FilterDialogState extends State<_FilterDialog> {
           children: [
             // Статусы
             const Text('Статус:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(fontWeight: FontWeight.bold),),
             ...GuestStatus.values.map(
               (status) => CheckboxListTile(
                 title: Text(_getStatusText(status)),
@@ -597,7 +597,7 @@ class _FilterDialogState extends State<_FilterDialog> {
                     } else {
                       _filter = _filter.copyWith(
                           statuses:
-                              statuses.where((s) => s != status).toList());
+                              statuses.where((s) => s != status).toList(),);
                     }
                   });
                 },
@@ -641,7 +641,7 @@ class _FilterDialogState extends State<_FilterDialog> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               widget.onFilterChanged(_filter);

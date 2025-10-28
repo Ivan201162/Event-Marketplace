@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/subscription_plan.dart';
-import '../../services/subscription_service.dart';
 
 class MySubscriptionsScreen extends StatefulWidget {
   const MySubscriptionsScreen({super.key});
@@ -170,7 +169,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
             _buildDetailRow('Начало:', _formatDate(subscription.startDate)),
             _buildDetailRow('Окончание:', _formatDate(subscription.endDate)),
             _buildDetailRow('Автопродление:',
-                subscription.autoRenew ? 'Включено' : 'Выключено'),
+                subscription.autoRenew ? 'Включено' : 'Выключено',),
 
             if (subscription.isActive) ...[
               const SizedBox(height: 12),
@@ -298,7 +297,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
         style: TextStyle(
             color: _getStatusColor(status),
             fontWeight: FontWeight.w500,
-            fontSize: 12),
+            fontSize: 12,),
       ),
     );
   }
@@ -352,7 +351,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
-                'Функция автопродления будет реализована в следующей версии')),
+                'Функция автопродления будет реализована в следующей версии',),),
       );
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -371,7 +370,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -384,7 +383,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         final success =
             await _subscriptionService.cancelSubscription(subscription.id);
@@ -415,7 +414,7 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Подписка успешно продлена'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       } else {
         throw Exception('Не удалось продлить подписку');

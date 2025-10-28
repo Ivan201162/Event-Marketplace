@@ -1,10 +1,7 @@
 class PriceRange {
-  final double min;
-  final double max;
-  final String currency;
 
   const PriceRange(
-      {required this.min, required this.max, this.currency = 'RUB'});
+      {required this.min, required this.max, this.currency = 'RUB',});
 
   factory PriceRange.fromMap(Map<String, dynamic> map) {
     return PriceRange(
@@ -13,6 +10,9 @@ class PriceRange {
       currency: map['currency']?.toString() ?? 'RUB',
     );
   }
+  final double min;
+  final double max;
+  final String currency;
 
   Map<String, dynamic> toMap() {
     return {'min': min, 'max': max, 'currency': currency};

@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/price_reminder_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/price_reminder_service.dart';
 
 /// Провайдер для сервиса напоминаний о ценах
 final priceReminderServiceProvider = Provider<PriceReminderService>(

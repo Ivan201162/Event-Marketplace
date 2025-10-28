@@ -1,13 +1,10 @@
+import 'package:event_marketplace_app/models/message.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/message.dart';
 
 /// Виджет пузырька сообщения
 class MessageBubble extends StatelessWidget {
   const MessageBubble({
-    super.key,
-    required this.message,
-    required this.isFromCurrentUser,
+    required this.message, required this.isFromCurrentUser, super.key,
     this.showAvatar = false,
     this.showTime = true,
   });
@@ -165,8 +162,7 @@ class MessageBubble extends StatelessWidget {
 /// Виджет для системных сообщений
 class SystemMessageBubble extends StatelessWidget {
   const SystemMessageBubble({
-    super.key,
-    required this.message,
+    required this.message, super.key,
   });
 
   final Message message;
@@ -210,8 +206,7 @@ class SystemMessageBubble extends StatelessWidget {
 /// Виджет для отображения времени сообщения
 class MessageTimeWidget extends StatelessWidget {
   const MessageTimeWidget({
-    super.key,
-    required this.timestamp,
+    required this.timestamp, super.key,
     this.showRelative = false,
   });
 
@@ -254,8 +249,7 @@ class MessageTimeWidget extends StatelessWidget {
 /// Виджет для отображения статуса печати
 class TypingIndicator extends StatelessWidget {
   const TypingIndicator({
-    super.key,
-    required this.isTyping,
+    required this.isTyping, super.key,
     this.userName,
   });
 
@@ -343,7 +337,7 @@ class _TypingDotState extends State<_TypingDot>
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 

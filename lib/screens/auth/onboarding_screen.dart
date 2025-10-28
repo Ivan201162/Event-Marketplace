@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/animations/animated_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../models/app_user.dart';
-import '../../providers/auth_providers.dart';
-import '../../widgets/animations/animated_content.dart';
 
 /// Onboarding screen for new users
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -54,12 +53,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -67,7 +66,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     ).animate(CurvedAnimation(
       parent: _slideController,
       curve: Curves.easeOutCubic,
-    ));
+    ),);
 
     // Start animations
     _fadeController.forward();
@@ -107,7 +106,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         context.go('/main');
       }
     } catch (e) {
-      _showError('Ошибка сохранения: ${e.toString()}');
+      _showError('Ошибка сохранения: $e');
     } finally {
       setState(() => _isLoading = false);
     }
@@ -119,7 +118,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showCityPicker() {
@@ -169,7 +168,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(24),
             child: Column(
               children: [
                 const Spacer(),
@@ -183,7 +182,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                       children: [
                         // App icon with animation
                         TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0.0, end: 1.0),
+                          tween: Tween(begin: 0, end: 1),
                           duration: const Duration(milliseconds: 1000),
                           builder: (context, value, child) {
                             return Transform.scale(
@@ -211,7 +210,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                           style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                              color: Colors.white,),
                         ),
                         const SizedBox(height: 8),
                         const Text(
@@ -294,7 +293,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                         const Text(
                           'Тип аккаунта',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 8),
                         ...UserType.values.map(
@@ -314,7 +313,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
                         // Animated complete button
                         TweenAnimationBuilder<double>(
-                          tween: Tween(begin: 0.0, end: 1.0),
+                          tween: Tween(begin: 0, end: 1),
                           duration: const Duration(milliseconds: 1200),
                           builder: (context, value, child) {
                             return Transform.scale(
@@ -328,7 +327,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                                     backgroundColor: const Color(0xFF6C5CE7),
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
+                                        vertical: 16,),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),

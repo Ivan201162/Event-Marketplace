@@ -18,17 +18,11 @@ class PushNotificationService {
     try {
       // Запрашиваем разрешения
       final settings = await _messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
+        
       );
 
       debugPrint(
-          '✅ Push notification permission status: ${settings.authorizationStatus}');
+          '✅ Push notification permission status: ${settings.authorizationStatus}',);
 
       // Инициализируем локальные уведомления
       await _initializeLocalNotifications();
@@ -49,9 +43,7 @@ class PushNotificationService {
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      
     );
 
     const initSettings = InitializationSettings(
@@ -70,7 +62,6 @@ class PushNotificationService {
       'Chat Messages',
       description: 'Notifications for new chat messages',
       importance: Importance.high,
-      playSound: true,
     );
 
     await _localNotifications
@@ -124,13 +115,12 @@ class PushNotificationService {
     final notification = message.notification;
     if (notification == null) return;
 
-    final androidDetails = AndroidNotificationDetails(
+    const androidDetails = AndroidNotificationDetails(
       'chat_messages',
       'Chat Messages',
       channelDescription: 'Notifications for new chat messages',
       importance: Importance.high,
       priority: Priority.high,
-      showWhen: true,
       icon: '@mipmap/ic_launcher',
     );
 
@@ -140,7 +130,7 @@ class PushNotificationService {
       presentSound: true,
     );
 
-    final details = NotificationDetails(
+    const details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -207,7 +197,7 @@ class PushNotificationService {
       // В реальном приложении это должно отправляться через Cloud Functions
       // или серверный API, а не из клиентского приложения
       debugPrint(
-          '📱 Would send notification to $receiverToken: $messageContent');
+          '📱 Would send notification to $receiverToken: $messageContent',);
     } catch (e) {
       debugPrint('❌ Error sending chat notification: $e');
     }

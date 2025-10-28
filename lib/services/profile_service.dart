@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/user_profile.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-import '../models/user_profile.dart';
 
 /// Сервис для работы с профилем пользователя
 class ProfileService {
@@ -56,7 +55,7 @@ class ProfileService {
   Future<String> uploadAvatar(String imagePath) async {
     try {
       final ref = _storage.ref().child('avatars').child(
-          'current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg');
+          'current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg',);
 
       final uploadTask = await ref.putFile(File(imagePath));
       final downloadUrl = await uploadTask.ref.getDownloadURL();
@@ -71,7 +70,7 @@ class ProfileService {
   Future<String> uploadCover(String imagePath) async {
     try {
       final ref = _storage.ref().child('covers').child(
-          'current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg');
+          'current_user_id_${DateTime.now().millisecondsSinceEpoch}.jpg',);
 
       final uploadTask = await ref.putFile(File(imagePath));
       final downloadUrl = await uploadTask.ref.getDownloadURL();
@@ -89,13 +88,9 @@ class ProfileService {
       displayName: 'Пользователь',
       username: 'user_${DateTime.now().millisecondsSinceEpoch}',
       email: 'user@example.com',
-      phone: null,
       bio: '',
       city: '',
-      website: null,
       socialLinks: {},
-      avatarUrl: null,
-      coverUrl: null,
       isPro: false,
       isVerified: false,
       followersCount: 0,

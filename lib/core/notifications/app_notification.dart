@@ -10,7 +10,7 @@ class AppNotification {
     required this.userId,
     required this.title,
     required this.body,
-    this.imageUrl,
+    required this.createdAt, this.imageUrl,
     this.data = const {},
     this.priority = NotificationPriority.normal,
     this.isRead = false,
@@ -18,24 +18,8 @@ class AppNotification {
     this.type,
     this.actionUrl,
     this.expiresAt,
-    required this.createdAt,
     this.readAt,
   });
-
-  final String id;
-  final String userId;
-  final String title;
-  final String body;
-  final String? imageUrl;
-  final Map<String, dynamic> data;
-  final NotificationPriority priority;
-  final bool isRead;
-  final bool isPinned;
-  final String? type;
-  final String? actionUrl;
-  final DateTime? expiresAt;
-  final DateTime createdAt;
-  final DateTime? readAt;
 
   /// Создать из Map
   factory AppNotification.fromMap(Map<String, dynamic> data) {
@@ -78,6 +62,21 @@ class AppNotification {
 
     return AppNotification.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final String title;
+  final String body;
+  final String? imageUrl;
+  final Map<String, dynamic> data;
+  final NotificationPriority priority;
+  final bool isRead;
+  final bool isPinned;
+  final String? type;
+  final String? actionUrl;
+  final DateTime? expiresAt;
+  final DateTime createdAt;
+  final DateTime? readAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

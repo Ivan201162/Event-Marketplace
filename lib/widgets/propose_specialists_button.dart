@@ -1,11 +1,9 @@
+import 'package:event_marketplace_app/screens/specialist_selection_screen.dart';
 import 'package:flutter/material.dart';
-import '../screens/specialist_selection_screen.dart';
 
 class ProposeSpecialistsButton extends StatelessWidget {
   const ProposeSpecialistsButton({
-    super.key,
-    required this.customerId,
-    required this.eventId,
+    required this.customerId, required this.eventId, super.key,
     this.message,
   });
   final String customerId;
@@ -34,7 +32,7 @@ class ProposeSpecialistsButton extends StatelessWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => SpecialistSelectionScreen(
-            customerId: customerId, eventId: eventId, message: message),
+            customerId: customerId, eventId: eventId, message: message,),
       ),
     );
   }

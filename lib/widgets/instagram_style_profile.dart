@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/test_data_service.dart';
+import 'package:event_marketplace_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/specialist.dart';
-import '../services/test_data_service.dart';
-import '../theme/app_theme.dart';
-
 /// Профиль специалиста в стиле Instagram
 class InstagramStyleProfile extends ConsumerStatefulWidget {
-  const InstagramStyleProfile({super.key, required this.specialistId});
+  const InstagramStyleProfile({required this.specialistId, super.key});
 
   final String specialistId;
 
@@ -69,7 +68,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
           title: const Text('Профиль специалиста'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: const Center(child: Text('Специалист не найден')),
       );
@@ -178,17 +177,17 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                 Text(
                   _specialist!.displayName,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _specialist!.category.toString(),
                   style: const TextStyle(
-                      fontSize: 14, color: BrandColors.textSecondary),
+                      fontSize: 14, color: BrandColors.textSecondary,),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _specialist!.description?.isNotEmpty == true
+                  _specialist!.description?.isNotEmpty ?? false
                       ? _specialist!.description!
                       : 'Опытный специалист в области ${_specialist!.category.toString().toLowerCase()}',
                   style: const TextStyle(fontSize: 14),
@@ -215,7 +214,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                       foregroundColor:
                           _isFollowing ? Colors.black : Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                          borderRadius: BorderRadius.circular(8),),
                     ),
                     child: Text(_isFollowing ? 'Подписки' : 'Подписаться'),
                   ),
@@ -228,7 +227,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                     },
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
+                          borderRadius: BorderRadius.circular(8),),
                     ),
                     child: const Text('Сообщение'),
                   ),
@@ -240,7 +239,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                   },
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),),
                   ),
                   child: const Icon(Icons.phone),
                 ),
@@ -254,10 +253,10 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
         children: [
           Text(value,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label,
               style: const TextStyle(
-                  fontSize: 14, color: BrandColors.textSecondary)),
+                  fontSize: 14, color: BrandColors.textSecondary,),),
         ],
       );
 
@@ -304,7 +303,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                 Text(
                   index == 0 ? 'Добавить' : 'История $index',
                   style: const TextStyle(
-                      fontSize: 12, color: BrandColors.textSecondary),
+                      fontSize: 12, color: BrandColors.textSecondary,),
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -326,15 +325,15 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Контакты и цены',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
             const SizedBox(height: 12),
             Row(
               children: [
                 const Icon(Icons.location_on,
-                    size: 16, color: BrandColors.textSecondary),
+                    size: 16, color: BrandColors.textSecondary,),
                 const SizedBox(width: 8),
                 Text(_specialist!.city ?? '',
-                    style: const TextStyle(color: BrandColors.textSecondary)),
+                    style: const TextStyle(color: BrandColors.textSecondary),),
                 const Spacer(),
                 Container(
                   padding:
@@ -344,10 +343,10 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    '${(_specialist!.pricePerHour ?? 0).toInt()}₽/ч',
+                    '${_specialist!.pricePerHour ?? 0}₽/ч',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: BrandColors.primary),
+                        color: BrandColors.primary,),
                   ),
                 ),
               ],
@@ -367,7 +366,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
         ),
       );
 
-  Widget _buildTabBar() => Container(
+  Widget _buildTabBar() => ColoredBox(
         color: Colors.white,
         child: TabBar(
           controller: _tabController,
@@ -398,7 +397,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
           mainAxisSpacing: 2,
         ),
         itemCount: 12,
-        itemBuilder: (context, index) => Container(
+        itemBuilder: (context, index) => ColoredBox(
           color: BrandColors.primary.withValues(alpha: 0.1),
           child: Center(
             child: Text(
@@ -421,11 +420,11 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
           mainAxisSpacing: 2,
         ),
         itemCount: 6,
-        itemBuilder: (context, index) => Container(
+        itemBuilder: (context, index) => ColoredBox(
           color: BrandColors.secondary.withValues(alpha: 0.1),
           child: const Center(
             child: Icon(Icons.play_circle_outline,
-                size: 32, color: BrandColors.secondary),
+                size: 32, color: BrandColors.secondary,),
           ),
         ),
       );
@@ -438,7 +437,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
           mainAxisSpacing: 2,
         ),
         itemCount: 4,
-        itemBuilder: (context, index) => Container(
+        itemBuilder: (context, index) => ColoredBox(
           color: BrandColors.accent.withValues(alpha: 0.1),
           child: Center(
             child: Text(
@@ -472,7 +471,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
                   backgroundColor: BrandColors.primary,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
@@ -486,7 +485,7 @@ class _InstagramStyleProfileState extends ConsumerState<InstagramStyleProfile>
               label: const Text('В избранное'),
               style: OutlinedButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),

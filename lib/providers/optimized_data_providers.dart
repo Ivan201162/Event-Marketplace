@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/category.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/optimized_applications_service.dart';
+import 'package:event_marketplace_app/services/optimized_chat_service.dart';
+import 'package:event_marketplace_app/services/optimized_data_service.dart';
+import 'package:event_marketplace_app/services/optimized_feed_service.dart';
+import 'package:event_marketplace_app/services/optimized_ideas_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../models/category.dart';
-import '../services/optimized_data_service.dart';
-import '../services/optimized_feed_service.dart';
-import '../services/optimized_chat_service.dart';
-import '../services/optimized_ideas_service.dart';
-import '../services/optimized_applications_service.dart';
 
 // Сервисы
 final optimizedDataServiceProvider = Provider<OptimizedDataService>((ref) {
@@ -38,7 +37,7 @@ final categoriesProvider = FutureProvider<List<Category>>((ref) async {
 
 final categoryStatsProvider = FutureProvider<Map<String, int>>((ref) async {
   final service = ref.read(optimizedDataServiceProvider);
-  return await service.getCategoryStats();
+  return service.getCategoryStats();
 });
 
 // Провайдеры для специалистов
@@ -46,7 +45,7 @@ final popularSpecialistsProvider =
     FutureProvider.family<List<Specialist>, Map<String, dynamic>>(
         (ref, params) async {
   final service = ref.read(optimizedDataServiceProvider);
-  return await service.getPopularSpecialists(
+  return service.getPopularSpecialists(
     city: params['city'],
     category: params['category'],
     limit: params['limit'] ?? 10,
@@ -57,7 +56,7 @@ final specialistsByCityProvider =
     FutureProvider.family<List<Specialist>, Map<String, dynamic>>(
         (ref, params) async {
   final service = ref.read(optimizedDataServiceProvider);
-  return await service.getSpecialistsByCity(
+  return service.getSpecialistsByCity(
     city: params['city'] as String,
     category: params['category'] as String?,
     sortBy: params['sortBy'] as String? ?? 'popularity',
@@ -69,7 +68,7 @@ final specialistsByCityProvider =
 final feedProvider =
     FutureProvider.family<FeedState, Map<String, dynamic>>((ref, params) async {
   final service = ref.read(optimizedFeedServiceProvider);
-  return await service.getPosts(
+  return service.getPosts(
     limit: params['limit'] as int? ?? 20,
     lastDocument: params['lastDocument'],
     forceRefresh: params['forceRefresh'] as bool? ?? false,
@@ -79,7 +78,7 @@ final feedProvider =
 final userPostsProvider =
     FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
   final service = ref.read(optimizedFeedServiceProvider);
-  return await service.getUserPosts(userId);
+  return service.getUserPosts(userId);
 });
 
 // Провайдеры для чатов
@@ -98,14 +97,14 @@ final chatMessagesProvider =
 final unreadMessagesCountProvider =
     FutureProvider.family<int, String>((ref, userId) async {
   final service = ref.read(optimizedChatServiceProvider);
-  return await service.getUnreadMessagesCount(userId);
+  return service.getUnreadMessagesCount(userId);
 });
 
 // Провайдеры для идей
 final ideasProvider = FutureProvider.family<IdeasState, Map<String, dynamic>>(
     (ref, params) async {
   final service = ref.read(optimizedIdeasServiceProvider);
-  return await service.getIdeas(
+  return service.getIdeas(
     limit: params['limit'] as int? ?? 20,
     lastDocument: params['lastDocument'],
     category: params['category'] as String?,
@@ -116,18 +115,18 @@ final ideasProvider = FutureProvider.family<IdeasState, Map<String, dynamic>>(
 final userIdeasProvider =
     FutureProvider.family<List<Idea>, String>((ref, userId) async {
   final service = ref.read(optimizedIdeasServiceProvider);
-  return await service.getUserIdeas(userId);
+  return service.getUserIdeas(userId);
 });
 
 final savedIdeasProvider =
     FutureProvider.family<List<Idea>, String>((ref, userId) async {
   final service = ref.read(optimizedIdeasServiceProvider);
-  return await service.getSavedIdeas(userId);
+  return service.getSavedIdeas(userId);
 });
 
 final popularIdeasProvider = FutureProvider<List<Idea>>((ref) async {
   final service = ref.read(optimizedIdeasServiceProvider);
-  return await service.getPopularIdeas();
+  return service.getPopularIdeas();
 });
 
 // Провайдеры для заявок
@@ -144,7 +143,7 @@ final bookingStatsProvider =
     FutureProvider.family<Map<String, int>, Map<String, dynamic>>(
         (ref, params) async {
   final service = ref.read(optimizedApplicationsServiceProvider);
-  return await service.getBookingStats(
+  return service.getBookingStats(
     params['userId'] as String,
     isSpecialist: params['isSpecialist'] as bool? ?? false,
   );
@@ -154,7 +153,7 @@ final bookingsByStatusProvider =
     FutureProvider.family<List<Booking>, Map<String, dynamic>>(
         (ref, params) async {
   final service = ref.read(optimizedApplicationsServiceProvider);
-  return await service.getBookingsByStatus(
+  return service.getBookingsByStatus(
     params['userId'] as String,
     params['status'] as BookingStatus,
     isSpecialist: params['isSpecialist'] as bool? ?? false,
@@ -168,23 +167,17 @@ final refreshDataProvider =
     switch (dataType) {
       case 'categories':
         ref.invalidate(categoriesProvider);
-        break;
       case 'specialists':
         ref.invalidate(popularSpecialistsProvider);
         ref.invalidate(specialistsByCityProvider);
-        break;
       case 'feed':
         ref.invalidate(feedProvider);
-        break;
       case 'chats':
         ref.invalidate(userChatsProvider);
-        break;
       case 'ideas':
         ref.invalidate(ideasProvider);
-        break;
       case 'bookings':
         ref.invalidate(userBookingsProvider);
-        break;
     }
   };
 });

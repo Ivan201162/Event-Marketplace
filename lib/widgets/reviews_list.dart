@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Widget for displaying specialist reviews
 class ReviewsList extends ConsumerStatefulWidget {
-  final String specialistId;
-  final VoidCallback onWriteReview;
 
   const ReviewsList(
-      {super.key, required this.specialistId, required this.onWriteReview});
+      {required this.specialistId, required this.onWriteReview, super.key,});
+  final String specialistId;
+  final VoidCallback onWriteReview;
 
   @override
   ConsumerState<ReviewsList> createState() => _ReviewsListState();
@@ -72,11 +72,11 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
           Text(
             'Пока нет отзывов',
             style: TextStyle(
-                fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
+                fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500,),
           ),
           SizedBox(height: 8),
           Text('Будьте первым, кто оставит отзыв!',
-              style: TextStyle(color: Colors.grey)),
+              style: TextStyle(color: Colors.grey),),
         ],
       ),
     );
@@ -110,7 +110,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                       Text(
                         review.userName,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
                       Text(
                         _formatDate(review.date),
@@ -149,7 +149,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(const SnackBar(
-                        content: Text('Лайк пока не реализован')));
+                        content: Text('Лайк пока не реализован'),),);
                   },
                 ),
                 Text(
@@ -163,7 +163,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                     // TODO: Reply to review
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Ответ на отзыв пока не реализован')),
+                          content: Text('Ответ на отзыв пока не реализован'),),
                     );
                   },
                 ),
@@ -283,6 +283,13 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
 
 /// Data class for review information
 class ReviewData {
+
+  ReviewData({
+    required this.id,
+    required this.userId,
+    required this.userName,
+    required this.specialistId, required this.rating, required this.text, required this.date, required this.likesCount, required this.isLiked, required this.images, this.userAvatarUrl,
+  });
   final String id;
   final String userId;
   final String userName;
@@ -294,18 +301,4 @@ class ReviewData {
   final int likesCount;
   final bool isLiked;
   final List<String> images;
-
-  ReviewData({
-    required this.id,
-    required this.userId,
-    required this.userName,
-    this.userAvatarUrl,
-    required this.specialistId,
-    required this.rating,
-    required this.text,
-    required this.date,
-    required this.likesCount,
-    required this.isLiked,
-    required this.images,
-  });
 }

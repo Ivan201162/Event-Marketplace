@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/portfolio_item.dart';
 import 'package:flutter/material.dart';
-import '../models/portfolio_item.dart';
 
 /// Виджет портфолио специалиста
 class PortfolioWidget extends StatelessWidget {
   const PortfolioWidget({
-    super.key,
-    required this.portfolioItems,
+    required this.portfolioItems, super.key,
     this.onItemTap,
     this.onLike,
     this.showActions = true,
@@ -30,7 +29,7 @@ class PortfolioWidget extends StatelessWidget {
             const Icon(Icons.photo_library, color: Colors.blue),
             const SizedBox(width: 8),
             const Text('Портфолио',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const Spacer(),
             Text(
               '${portfolioItems.length} работ',
@@ -63,7 +62,7 @@ class PortfolioWidget extends StatelessWidget {
   Widget _buildEmptyState() => Container(
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
         child: const Column(
           children: [
             Icon(Icons.photo_library_outlined, size: 48, color: Colors.grey),
@@ -73,7 +72,7 @@ class PortfolioWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
             SizedBox(height: 8),
             Text(
@@ -112,14 +111,14 @@ class PortfolioWidget extends StatelessWidget {
                               Container(
                             color: Colors.grey[300],
                             child: const Icon(Icons.image_not_supported,
-                                color: Colors.grey, size: 32),
+                                color: Colors.grey, size: 32,),
                           ),
                         )
-                      : Container(
+                      : const ColoredBox(
                           color: Colors.black,
-                          child: const Center(
+                          child: Center(
                             child: Icon(Icons.play_circle_outline,
-                                color: Colors.white, size: 48),
+                                color: Colors.white, size: 48,),
                           ),
                         ),
                 ),
@@ -137,7 +136,7 @@ class PortfolioWidget extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withValues(alpha: 0.7)
+                          Colors.black.withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -167,7 +166,7 @@ class PortfolioWidget extends StatelessWidget {
                         Text(
                           item.category,
                           style: const TextStyle(
-                              color: Colors.white70, fontSize: 10),
+                              color: Colors.white70, fontSize: 10,),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -197,7 +196,7 @@ class PortfolioWidget extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.favorite_border,
-                                    color: Colors.white, size: 14),
+                                    color: Colors.white, size: 14,),
                                 if (item.likes > 0) ...[
                                   const SizedBox(width: 4),
                                   Text(
@@ -223,7 +222,7 @@ class PortfolioWidget extends StatelessWidget {
                     left: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                          horizontal: 6, vertical: 2,),
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(8),

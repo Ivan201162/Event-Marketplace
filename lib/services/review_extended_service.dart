@@ -1,9 +1,10 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/review_extended.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-import '../models/review_extended.dart';
 
 /// Сервис для работы с расширенными отзывами
 class ReviewExtendedService {
@@ -58,7 +59,7 @@ class ReviewExtendedService {
 
   /// Получить отзывы специалиста
   Stream<List<ReviewExtended>> getSpecialistReviews(
-      String specialistId, ReviewFilter filter) {
+      String specialistId, ReviewFilter filter,) {
     var query = _firestore
         .collection('reviews_extended')
         .where('specialistId', isEqualTo: specialistId)
@@ -90,25 +91,21 @@ class ReviewExtendedService {
 
     if (filter.endDate != null) {
       query = query.where('createdAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),);
     }
 
     // Сортировка
     switch (filter.sortBy) {
       case ReviewSortBy.date:
         query = query.orderBy('createdAt', descending: !filter.sortAscending);
-        break;
       case ReviewSortBy.rating:
         query = query.orderBy('rating', descending: !filter.sortAscending);
-        break;
       case ReviewSortBy.likes:
         query = query.orderBy('stats.likesCount',
-            descending: !filter.sortAscending);
-        break;
+            descending: !filter.sortAscending,);
       case ReviewSortBy.helpfulness:
         query = query.orderBy('stats.helpfulnessScore',
-            descending: !filter.sortAscending);
-        break;
+            descending: !filter.sortAscending,);
     }
 
     // Добавляем лимит для оптимизации
@@ -122,14 +119,14 @@ class ReviewExtendedService {
         reviews = reviews
             .where((review) => filter.hasMedia!
                 ? review.media.isNotEmpty
-                : review.media.isEmpty)
+                : review.media.isEmpty,)
             .toList();
       }
 
       if (filter.tags != null && filter.tags!.isNotEmpty) {
         reviews = reviews
             .where((review) =>
-                review.tags.any((tag) => filter.tags!.contains(tag)))
+                review.tags.any((tag) => filter.tags!.contains(tag)),)
             .toList();
       }
 
@@ -244,7 +241,7 @@ class ReviewExtendedService {
 
   /// Добавить медиа к отзыву
   Future<bool> addMediaToReview(
-      String reviewId, List<ReviewMedia> media) async {
+      String reviewId, List<ReviewMedia> media,) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;
@@ -416,7 +413,7 @@ class ReviewExtendedService {
 
   /// Получить статистику отзывов специалиста
   Future<SpecialistReviewStats> getSpecialistReviewStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('reviews_extended')
@@ -544,7 +541,7 @@ class ReviewExtendedService {
 
   /// Пожаловаться на отзыв
   Future<bool> reportReview(
-      String reviewId, String reason, String reporterId) async {
+      String reviewId, String reason, String reporterId,) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;

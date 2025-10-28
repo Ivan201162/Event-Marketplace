@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/organizer_chat.dart';
+import 'package:event_marketplace_app/services/organizer_chat_service.dart';
+import 'package:event_marketplace_app/widgets/organizer_message_bubble.dart';
+import 'package:event_marketplace_app/widgets/specialist_proposal_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/organizer_chat.dart';
-import '../services/organizer_chat_service.dart';
-import '../widgets/organizer_message_bubble.dart';
-import '../widgets/specialist_proposal_widget.dart';
-
 class OrganizerChatScreen extends ConsumerStatefulWidget {
-  const OrganizerChatScreen({super.key, required this.chatId});
+  const OrganizerChatScreen({required this.chatId, super.key});
   final String chatId;
 
   @override
@@ -82,7 +81,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка загрузки сообщений: $e')));
+            SnackBar(content: Text('Ошибка загрузки сообщений: $e')),);
       }
     }
   }
@@ -119,7 +118,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
           children: [
             Text(_currentUserType == 'customer'
                 ? _chat!.organizerName
-                : _chat!.customerName),
+                : _chat!.customerName,),
             Text(
               _chat!.eventTitle,
               style:
@@ -137,7 +136,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
                   children: [
                     Icon(Icons.info),
                     SizedBox(width: 8),
-                    Text('Информация о чате')
+                    Text('Информация о чате'),
                   ],
                 ),
               ),
@@ -146,8 +145,8 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
                 child: Row(children: [
                   Icon(Icons.close),
                   SizedBox(width: 8),
-                  Text('Закрыть чат')
-                ]),
+                  Text('Закрыть чат'),
+                ],),
               ),
             ],
             onSelected: (value) {
@@ -191,7 +190,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(_chat!.eventTitle,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                      style: const TextStyle(fontWeight: FontWeight.bold),),
                   if (_chat!.eventDescription != null)
                     Text(
                       _chat!.eventDescription!,
@@ -262,7 +261,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         );
       default:
         return OrganizerMessageBubble(
-            message: message, isFromCurrentUser: isFromCurrentUser);
+            message: message, isFromCurrentUser: isFromCurrentUser,);
     }
   }
 
@@ -325,7 +324,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка отправки сообщения: $e')));
+            SnackBar(content: Text('Ошибка отправки сообщения: $e')),);
       }
     }
   }
@@ -351,7 +350,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка принятия специалиста: $e')));
+            SnackBar(content: Text('Ошибка принятия специалиста: $e')),);
       }
     }
   }
@@ -380,7 +379,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка отклонения специалиста: $e')));
+            SnackBar(content: Text('Ошибка отклонения специалиста: $e')),);
       }
     }
   }
@@ -403,7 +402,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Отклонить'),
@@ -435,7 +434,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -449,7 +448,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
             SizedBox(
               width: 100,
               child: Text('$label:',
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontWeight: FontWeight.bold),),
             ),
             Expanded(child: Text(value)),
           ],
@@ -465,7 +464,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -481,7 +480,7 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
     if (confirmed ?? false) {
       try {
         await _chatService.updateChatStatus(
-            widget.chatId, OrganizerChatStatus.closed);
+            widget.chatId, OrganizerChatStatus.closed,);
         if (mounted) {
           Navigator.pop(context);
         }

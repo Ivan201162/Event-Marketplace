@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
+
+import 'package:event_marketplace_app/core/feature_flags.dart';
 import 'package:flutter/foundation.dart';
-import 'feature_flags.dart';
 
 /// Безопасный логгер с контролем через фичефлаги
 class SafeLog {
@@ -64,7 +65,7 @@ class SafeLog {
 
   /// Логирование критических ошибок
   static void critical(String message,
-      [Object? error, StackTrace? stackTrace]) {
+      [Object? error, StackTrace? stackTrace,]) {
     if (kDebugMode) {
       developer.log(
         message,
@@ -91,7 +92,7 @@ class SafeLog {
     if (FeatureFlags.debugMode) {
       if (kDebugMode) {
         developer.log(fullMessage,
-            name: _tag, level: 700, error: error, stackTrace: stackTrace);
+            name: _tag, level: 700, error: error, stackTrace: stackTrace,);
       }
     }
   }
@@ -111,7 +112,7 @@ class SafeLog {
 
   /// Логирование сетевых запросов
   static void network(String method, String url,
-      {int? statusCode, Duration? duration}) {
+      {int? statusCode, Duration? duration,}) {
     if (FeatureFlags.debugMode && FeatureFlags.verboseLogging) {
       final status = statusCode != null ? ' ($statusCode)' : '';
       final time = duration != null ? ' (${duration.inMilliseconds}ms)' : '';

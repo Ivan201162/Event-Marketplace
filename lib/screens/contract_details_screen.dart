@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/contract.dart';
+import 'package:event_marketplace_app/services/contract_service.dart';
+import 'package:event_marketplace_app/widgets/contract_content_widget.dart';
+import 'package:event_marketplace_app/widgets/signature_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:signature/signature.dart';
 
-import '../models/contract.dart';
-import '../services/contract_service.dart';
-import '../widgets/contract_content_widget.dart';
-import '../widgets/signature_widget.dart';
-
 class ContractDetailsScreen extends StatefulWidget {
-  const ContractDetailsScreen({super.key, required this.contract});
+  const ContractDetailsScreen({required this.contract, super.key});
   final Contract contract;
 
   @override
@@ -86,7 +85,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
           child: Row(
             children: [
               Icon(_getStatusIcon(),
-                  color: widget.contract.status.statusColor, size: 32),
+                  color: widget.contract.status.statusColor, size: 32,),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -155,10 +154,10 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _buildSignatureStatus(
-                            'Заказчик', widget.contract.signedByCustomer),
+                            'Заказчик', widget.contract.signedByCustomer,),
                         const SizedBox(width: 8),
                         _buildSignatureStatus(
-                            'Специалист', widget.contract.signedBySpecialist),
+                            'Специалист', widget.contract.signedBySpecialist,),
                       ],
                     ),
                   ],
@@ -185,12 +184,12 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
               _buildInfoRow('Номер договора', widget.contract.contractNumber),
               _buildInfoRow('Тип договора', _getContractTypeName()),
               _buildInfoRow(
-                  'Дата создания', _formatDate(widget.contract.createdAt)),
+                  'Дата создания', _formatDate(widget.contract.createdAt),),
               _buildInfoRow(
-                  'Действует до', _formatDate(widget.contract.expiresAt)),
+                  'Действует до', _formatDate(widget.contract.expiresAt),),
               if (widget.contract.totalAmount != null)
                 _buildInfoRow('Общая сумма',
-                    '${widget.contract.totalAmount!.toStringAsFixed(2)} ₽'),
+                    '${widget.contract.totalAmount!.toStringAsFixed(2)} ₽',),
             ],
           ),
         ),
@@ -243,7 +242,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                       ),
                       if (party.inn != null) ...[
                         const SizedBox(height: 4),
-                        Text('ИНН: ${party.inn}')
+                        Text('ИНН: ${party.inn}'),
                       ],
                       if (party.phone != null) ...[
                         const SizedBox(height: 4),
@@ -302,7 +301,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                             if (service.description.isNotEmpty) ...[
                               const SizedBox(height: 4),
                               Text(service.description,
-                                  style: Theme.of(context).textTheme.bodySmall),
+                                  style: Theme.of(context).textTheme.bodySmall,),
                             ],
                             const SizedBox(height: 4),
                             Text(
@@ -348,7 +347,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(_errorMessage!,
-                  style: TextStyle(color: Colors.red.shade600)),
+                  style: TextStyle(color: Colors.red.shade600),),
             ),
           ],
         ),
@@ -381,7 +380,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                 backgroundColor: Theme.of(context).primaryColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),),
               ),
             ),
           ),
@@ -395,7 +394,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             label: const Text('Скачать договор'),
             style: OutlinedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),),
             ),
           ),
         ),
@@ -420,7 +419,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             ),
             Expanded(
                 child:
-                    Text(value, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(value, style: Theme.of(context).textTheme.bodyMedium),),
           ],
         ),
       );
@@ -464,7 +463,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
           color: isSigned ? Colors.green.shade100 : Colors.orange.shade100,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: isSigned ? Colors.green.shade300 : Colors.orange.shade300),
+              color: isSigned ? Colors.green.shade300 : Colors.orange.shade300,),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -519,7 +518,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
       // Конвертируем подпись в base64
       final signatureData = await _signatureController.toPngBytes();
       final signatureBase64 = signatureData != null
-          ? 'data:image/png;base64,${signatureData.toString()}'
+          ? 'data:image/png;base64,$signatureData'
           : '';
 
       // Подписываем договор
@@ -535,7 +534,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Договор успешно подписан'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
 
         // Обновляем экран
@@ -566,7 +565,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Договор сохранен: $pdfPath'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {

@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/widgets/budget_recommendations_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-import '../widgets/budget_recommendations_widget.dart';
 
 /// Экран для тестирования рекомендаций по бюджету
 class BudgetRecommendationsTestScreen extends ConsumerStatefulWidget {
@@ -55,7 +55,7 @@ class _BudgetRecommendationsTestScreenState
           children: [
             // Бюджет
             const Text('Текущий бюджет:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -85,7 +85,7 @@ class _BudgetRecommendationsTestScreenState
                   child: Text(
                     '${_currentBudget.toStringAsFixed(0)} ₽',
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.green),
+                        fontWeight: FontWeight.bold, color: Colors.green,),
                   ),
                 ),
               ],
@@ -109,7 +109,7 @@ class _BudgetRecommendationsTestScreenState
               Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _buildSelectedSpecialistChips()),
+                  children: _buildSelectedSpecialistChips(),),
             ],
           ],
         ),
@@ -120,15 +120,15 @@ class _BudgetRecommendationsTestScreenState
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
       _TestSpecialist('photographer_1', 'Фотограф Алексей',
-          SpecialistCategory.photographer),
+          SpecialistCategory.photographer,),
       _TestSpecialist(
-          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer,),
       _TestSpecialist(
-          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator,),
       _TestSpecialist(
-          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician,),
       _TestSpecialist(
-          'animator_1', 'Аниматор Анна', SpecialistCategory.animator),
+          'animator_1', 'Аниматор Анна', SpecialistCategory.animator,),
     ];
 
     return testSpecialists.map((specialist) {
@@ -186,15 +186,15 @@ class _BudgetRecommendationsTestScreenState
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
       _TestSpecialist('photographer_1', 'Фотограф Алексей',
-          SpecialistCategory.photographer),
+          SpecialistCategory.photographer,),
       _TestSpecialist(
-          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+          'videographer_1', 'Видеограф Елена', SpecialistCategory.videographer,),
       _TestSpecialist(
-          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+          'decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator,),
       _TestSpecialist(
-          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+          'musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician,),
       _TestSpecialist(
-          'animator_1', 'Аниматор Анна', SpecialistCategory.animator),
+          'animator_1', 'Аниматор Анна', SpecialistCategory.animator,),
     ];
 
     return testSpecialists.firstWhere((s) => s.id == id);

@@ -1,13 +1,13 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/screens/idea_detail_screen.dart';
+import 'package:event_marketplace_app/services/idea_service.dart';
+import 'package:event_marketplace_app/widgets/idea_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/idea.dart';
-import '../services/idea_service.dart';
-import '../widgets/idea_widget.dart';
-import 'idea_detail_screen.dart';
 
 /// Экран сохраненных идей
 class SavedIdeasScreen extends ConsumerStatefulWidget {
-  const SavedIdeasScreen({super.key, required this.userId});
+  const SavedIdeasScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -23,10 +23,10 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
           title: const Text('Сохраненные идеи'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+                icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
             IconButton(
                 icon: const Icon(Icons.filter_list),
-                onPressed: _showFilterDialog),
+                onPressed: _showFilterDialog,),
           ],
         ),
         body: StreamBuilder<List<Idea>>(
@@ -47,7 +47,7 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                         onPressed: () => setState(() {}),
-                        child: const Text('Повторить')),
+                        child: const Text('Повторить'),),
                   ],
                 ),
               );
@@ -99,7 +99,7 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(
-                    const SnackBar(content: Text('Переход к экрану идей')));
+                    const SnackBar(content: Text('Переход к экрану идей')),);
               },
               icon: const Icon(Icons.lightbulb),
               label: const Text('Просмотреть идеи'),
@@ -116,7 +116,7 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -135,7 +135,7 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Идея скопирована в буфер обмена')));
+        const SnackBar(content: Text('Идея скопирована в буфер обмена')),);
   }
 
   void _showSearchDialog() {
@@ -152,10 +152,10 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Поиск')),
+              child: const Text('Поиск'),),
         ],
       ),
     );
@@ -170,7 +170,7 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -179,7 +179,7 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
 
 /// Экран моих идей
 class MyIdeasScreen extends ConsumerStatefulWidget {
-  const MyIdeasScreen({super.key, required this.userId});
+  const MyIdeasScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -194,7 +194,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
         appBar: AppBar(
           title: const Text('Мои идеи'),
           actions: [
-            IconButton(icon: const Icon(Icons.add), onPressed: _createIdea)
+            IconButton(icon: const Icon(Icons.add), onPressed: _createIdea),
           ],
         ),
         body: StreamBuilder<List<Idea>>(
@@ -215,7 +215,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                         onPressed: () => setState(() {}),
-                        child: const Text('Повторить')),
+                        child: const Text('Повторить'),),
                   ],
                 ),
               );
@@ -255,7 +255,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
             const Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text('Нет идей',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             const Text(
               'Создайте свою первую идею',
@@ -287,7 +287,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -306,6 +306,6 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Идея скопирована в буфер обмена')));
+        const SnackBar(content: Text('Идея скопирована в буфер обмена')),);
   }
 }

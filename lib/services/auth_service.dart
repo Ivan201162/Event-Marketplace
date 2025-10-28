@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../models/app_user.dart';
 
 /// Authentication service
 class AuthService {
@@ -16,7 +14,7 @@ class AuthService {
 
   /// Stream of current user
   Stream<AppUser?> get currentUserStream {
-    return _auth.authStateChanges().asyncMap((User? firebaseUser) async {
+    return _auth.authStateChanges().asyncMap((firebaseUser) async {
       if (firebaseUser == null) return null;
 
       try {
@@ -63,7 +61,7 @@ class AuthService {
   }) async {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: email, password: password,);
 
       if (credential.user != null) {
         // Обновляем FCM токен после успешного входа
@@ -117,7 +115,7 @@ class AuthService {
       // Try to sign in with a dummy password to check if email exists
       try {
         await _auth.signInWithEmailAndPassword(
-            email: email, password: 'dummy_password');
+            email: email, password: 'dummy_password',);
         return true;
       } catch (e) {
         if (e is FirebaseAuthException) {
@@ -141,7 +139,7 @@ class AuthService {
       // Проверяем существование email через попытку входа
       try {
         await _auth.signInWithEmailAndPassword(
-            email: email, password: 'dummy_password');
+            email: email, password: 'dummy_password',);
         return ['email']; // Email существует
       } catch (e) {
         if (e is FirebaseAuthException) {
@@ -195,7 +193,7 @@ class AuthService {
       // Дополнительная проверка валидности email
       if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
         throw FirebaseAuthException(
-            code: 'invalid-email', message: 'Неверный формат email');
+            code: 'invalid-email', message: 'Неверный формат email',);
       }
 
       // Проверка силы пароля
@@ -237,17 +235,17 @@ class AuthService {
 
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
+        verificationCompleted: (credential) async {
           debugPrint('✅ Автоматическая верификация завершена');
           // Auto-verification completed
           await _auth.signInWithCredential(credential);
         },
-        verificationFailed: (FirebaseAuthException e) {
+        verificationFailed: (e) {
           debugPrint('❌ Ошибка верификации: ${e.code} - ${e.message}');
 
           // Обработка специфических ошибок Phone Auth
           if (e.code == 'unknown' &&
-              e.message?.contains('BILLING_NOT_ENABLED') == true) {
+              (e.message?.contains('BILLING_NOT_ENABLED') ?? false)) {
             throw FirebaseAuthException(
               code: 'billing-not-enabled',
               message:
@@ -259,7 +257,7 @@ class AuthService {
             completer.completeError(e);
           }
         },
-        codeSent: (String verificationId, int? resendToken) {
+        codeSent: (verificationId, resendToken) {
           debugPrint('📨 SMS код отправлен, verificationId: $verificationId');
           // Сохраняем verificationId для последующей проверки
           _currentVerificationId = verificationId;
@@ -269,7 +267,7 @@ class AuthService {
             completer.complete(verificationId);
           }
         },
-        codeAutoRetrievalTimeout: (String verificationId) {
+        codeAutoRetrievalTimeout: (verificationId) {
           debugPrint('⏰ Таймаут автоматического получения кода');
           _currentVerificationId = verificationId;
 
@@ -332,7 +330,7 @@ class AuthService {
       } else {
         // Update existing profile with phone number
         await docRef.update(
-            {'phone': user.phoneNumber ?? '', 'updatedAt': Timestamp.now()});
+            {'phone': user.phoneNumber ?? '', 'updatedAt': Timestamp.now()},);
         debugPrint('👤 Обновлен профиль пользователя с номером телефона');
       }
 
@@ -410,7 +408,7 @@ class AuthService {
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
         // Use Firebase Auth with Google provider directly
-        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        final googleProvider = GoogleAuthProvider();
         userCredential = await _auth.signInWithProvider(googleProvider);
       }
 
@@ -422,8 +420,8 @@ class AuthService {
       final snapshot = await docRef.get();
 
       // Parse display name into first and last name
-      String firstName = '';
-      String lastName = '';
+      var firstName = '';
+      var lastName = '';
       if (user.displayName != null && user.displayName!.isNotEmpty) {
         final nameParts = user.displayName!.split(' ');
         firstName = nameParts.first;
@@ -457,7 +455,7 @@ class AuthService {
         });
       } else {
         // Update existing profile with Google data (only if fields are empty)
-        final existingData = snapshot.data() as Map<String, dynamic>;
+        final existingData = snapshot.data()!;
         final updateData = <String, dynamic>{
           'updatedAt': Timestamp.now(),
         };
@@ -600,7 +598,7 @@ class AuthService {
       // Проверяем валидность email
       if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
         throw FirebaseAuthException(
-            code: 'invalid-email', message: 'Неверный формат email');
+            code: 'invalid-email', message: 'Неверный формат email',);
       }
 
       // Проверяем, существует ли email
@@ -707,7 +705,7 @@ class AuthService {
       await prefs.setString('user_display_name', user.displayName ?? '');
       await prefs.setString('user_photo_url', user.photoURL ?? '');
       await prefs.setInt(
-          'session_timestamp', DateTime.now().millisecondsSinceEpoch);
+          'session_timestamp', DateTime.now().millisecondsSinceEpoch,);
 
       debugPrint('✅ User session saved locally');
     } catch (e) {

@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/models/common_types.dart';
 import 'package:flutter/material.dart';
-import '../models/common_types.dart';
 
 // Временное определение для совместимости
 enum SpecialistSortOption {
@@ -33,20 +33,7 @@ extension SpecialistSortOptionExtension on SpecialistSortOption {
 /// Виджет фильтров для умного поиска
 class SmartSearchFilters extends StatefulWidget {
   const SmartSearchFilters({
-    super.key,
-    required this.selectedCategory,
-    required this.selectedCity,
-    required this.minPrice,
-    required this.maxPrice,
-    required this.selectedDate,
-    required this.selectedStyles,
-    required this.selectedSort,
-    required this.onCategoryChanged,
-    required this.onCityChanged,
-    required this.onPriceChanged,
-    required this.onDateChanged,
-    required this.onStylesChanged,
-    required this.onSortChanged,
+    required this.selectedCategory, required this.selectedCity, required this.minPrice, required this.maxPrice, required this.selectedDate, required this.selectedStyles, required this.selectedSort, required this.onCategoryChanged, required this.onCityChanged, required this.onPriceChanged, required this.onDateChanged, required this.onStylesChanged, required this.onSortChanged, super.key,
   });
 
   final SpecialistCategory? selectedCategory;
@@ -108,9 +95,9 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
               children: [
                 const Text('Фильтры',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 TextButton(
-                    onPressed: _clearAllFilters, child: const Text('Сбросить')),
+                    onPressed: _clearAllFilters, child: const Text('Сбросить'),),
               ],
             ),
 
@@ -152,7 +139,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Категория',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -168,7 +155,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
                 },
               ),
               ...SpecialistCategory.values.map(
-                (SpecialistCategory category) => _buildFilterChip(
+                (category) => _buildFilterChip(
                   label: category.displayName,
                   selected: widget.selectedCategory == category,
                   onSelected: (selected) {
@@ -190,7 +177,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Город',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: widget.selectedCity,
@@ -216,7 +203,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Бюджет',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -255,7 +242,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Дата мероприятия',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           InkWell(
             onTap: _selectDate,
@@ -276,7 +263,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
                     style: TextStyle(
                         color: widget.selectedDate != null
                             ? Colors.black
-                            : Colors.grey),
+                            : Colors.grey,),
                   ),
                   const Spacer(),
                   if (widget.selectedDate != null)
@@ -296,7 +283,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Стиль мероприятия',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -328,7 +315,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Сортировка',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           DropdownButtonFormField<SpecialistSortOption>(
             initialValue: widget.selectedSort,
@@ -339,10 +326,10 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
             hint: const Text('Выберите сортировку'),
             items: [
               const DropdownMenuItem<SpecialistSortOption>(
-                  child: Text('По умолчанию')),
+                  child: Text('По умолчанию'),),
               ...SpecialistSortOption.values.map(
                 (sort) => DropdownMenuItem<SpecialistSortOption>(
-                    value: sort, child: Text(sort.label)),
+                    value: sort, child: Text(sort.label),),
               ),
             ],
             onChanged: widget.onSortChanged,

@@ -1,5 +1,5 @@
-import '../models/booking.dart';
-import '../services/notification_service.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
 
 /// Сервис для автоматических рекомендаций по скидкам
 class DiscountRecommendationService {
@@ -32,19 +32,16 @@ class DiscountRecommendationService {
           suggestions.add(
             'Для свадьбы рекомендуем полный пакет услуг: фотограф + видеограф + ведущий. Это обеспечит полное покрытие мероприятия.',
           );
-          break;
         case 'корпоратив':
         case 'corporate':
           suggestions.add(
             'Для корпоративного мероприятия рассмотрите возможность добавления ведущего или DJ для создания атмосферы.',
           );
-          break;
         case 'день рождения':
         case 'birthday':
           suggestions.add(
             'Для дня рождения можно добавить аниматора или ведущего для развлечения гостей.',
           );
-          break;
       }
     }
 
@@ -64,7 +61,7 @@ class DiscountRecommendationService {
 
   /// Отправляет уведомление с рекомендациями по увеличению бюджета
   Future<void> sendBudgetRecommendation(
-      Booking booking, List<String> suggestions) async {
+      Booking booking, List<String> suggestions,) async {
     if (suggestions.isNotEmpty) {
       await _notificationService.sendNotification(
         booking.customerId,

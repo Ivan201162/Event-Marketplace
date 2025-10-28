@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/payment_extended.dart';
 import 'package:flutter/material.dart';
-import '../models/payment_extended.dart';
 
 /// Виджет карточки платежа
 class PaymentCardWidget extends StatelessWidget {
   const PaymentCardWidget({
-    super.key,
-    required this.payment,
+    required this.payment, super.key,
     this.onTap,
     this.onPay,
     this.onDownloadReceipt,
@@ -37,7 +36,7 @@ class PaymentCardWidget extends StatelessWidget {
                       child: Text(
                         _getPaymentTypeText(),
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     _buildStatusChip(),
@@ -98,27 +97,21 @@ class PaymentCardWidget extends StatelessWidget {
       case PaymentStatus.completed:
         icon = Icons.check_circle;
         color = Colors.green;
-        break;
       case PaymentStatus.processing:
         icon = Icons.hourglass_empty;
         color = Colors.orange;
-        break;
       case PaymentStatus.pending:
         icon = Icons.pending;
         color = Colors.blue;
-        break;
       case PaymentStatus.failed:
         icon = Icons.error;
         color = Colors.red;
-        break;
       case PaymentStatus.cancelled:
         icon = Icons.cancel;
         color = Colors.grey;
-        break;
       case PaymentStatus.refunded:
         icon = Icons.refresh;
         color = Colors.purple;
-        break;
     }
 
     return Icon(icon, color: color, size: 20);
@@ -132,37 +125,31 @@ class PaymentCardWidget extends StatelessWidget {
       case PaymentStatus.completed:
         backgroundColor = Colors.green[100]!;
         textColor = Colors.green[800]!;
-        break;
       case PaymentStatus.processing:
         backgroundColor = Colors.orange[100]!;
         textColor = Colors.orange[800]!;
-        break;
       case PaymentStatus.pending:
         backgroundColor = Colors.blue[100]!;
         textColor = Colors.blue[800]!;
-        break;
       case PaymentStatus.failed:
         backgroundColor = Colors.red[100]!;
         textColor = Colors.red[800]!;
-        break;
       case PaymentStatus.cancelled:
         backgroundColor = Colors.grey[100]!;
         textColor = Colors.grey[800]!;
-        break;
       case PaymentStatus.refunded:
         backgroundColor = Colors.purple[100]!;
         textColor = Colors.purple[800]!;
-        break;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-          color: backgroundColor, borderRadius: BorderRadius.circular(12)),
+          color: backgroundColor, borderRadius: BorderRadius.circular(12),),
       child: Text(
         _getStatusText(),
         style: TextStyle(
-            fontSize: 12, fontWeight: FontWeight.w500, color: textColor),
+            fontSize: 12, fontWeight: FontWeight.w500, color: textColor,),
       ),
     );
   }
@@ -200,7 +187,7 @@ class PaymentCardWidget extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: color),
+                fontSize: 14, fontWeight: FontWeight.bold, color: color,),
           ),
         ],
       );
@@ -212,7 +199,7 @@ class PaymentCardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Прогресс оплаты',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
               Text(
                 '${payment.paymentProgress.toStringAsFixed(1)}%',
                 style:
@@ -247,7 +234,7 @@ class PaymentCardWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey[600],
-                  fontStyle: FontStyle.italic),
+                  fontStyle: FontStyle.italic,),
             ),
           ],
         ],
@@ -265,7 +252,7 @@ class PaymentCardWidget extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(_formatDate(installment.dueDate),
-                  style: const TextStyle(fontSize: 12)),
+                  style: const TextStyle(fontSize: 12),),
             ),
             Text(
               '${installment.amount.toStringAsFixed(2)} ₽',

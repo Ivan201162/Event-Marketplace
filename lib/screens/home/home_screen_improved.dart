@@ -1,15 +1,8 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/notification_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
-import '../../providers/real_specialists_providers.dart';
-import '../../providers/real_categories_providers.dart';
-import '../../providers/notification_providers.dart';
-import '../../core/feature_flags.dart';
-import '../../widgets/ui_kit/ui_kit.dart';
-import '../../services/user_cache_service.dart';
-import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенный главный экран с shimmer-анимацией
 class HomeScreenImproved extends ConsumerStatefulWidget {
@@ -33,12 +26,12 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
     )..repeat();
 
     _shimmerAnimation = Tween<double>(
-      begin: -1.0,
-      end: 2.0,
+      begin: -1,
+      end: 2,
     ).animate(CurvedAnimation(
       parent: _shimmerController,
       curve: Curves.easeInOut,
-    ));
+    ),);
   }
 
   @override
@@ -269,32 +262,32 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
 
                         const SizedBox(height: 16),
 
-                        Row(
+                        const Row(
                           children: [
                             Expanded(
                               child: _StatCard(
                                 title: 'Заявки',
                                 value: '12',
                                 subtitle: 'Активных',
-                                color: const Color(0xFF3B82F6),
+                                color: Color(0xFF3B82F6),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: _StatCard(
                                 title: 'Идеи',
                                 value: '8',
                                 subtitle: 'Опубликовано',
-                                color: const Color(0xFF10B981),
+                                color: Color(0xFF10B981),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: _StatCard(
                                 title: 'Чаты',
                                 value: '5',
                                 subtitle: 'Новых',
-                                color: const Color(0xFFF59E0B),
+                                color: Color(0xFFF59E0B),
                               ),
                             ),
                           ],
@@ -389,7 +382,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
       return userData.name!;
     }
     if (userData.email != null && userData.email!.isNotEmpty) {
-      final email = userData.email!;
+      final email = userData.email;
       final atIndex = email.indexOf('@');
       if (atIndex > 0) {
         return email.substring(0, atIndex);
@@ -514,16 +507,14 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
 
 /// Shimmer эффект для загрузки
 class ShimmerBox extends StatelessWidget {
+
+  const ShimmerBox({
+    required this.width, required this.height, super.key,
+    this.borderRadius = 8,
+  });
   final double width;
   final double height;
   final double borderRadius;
-
-  const ShimmerBox({
-    super.key,
-    required this.width,
-    required this.height,
-    this.borderRadius = 8,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -540,11 +531,6 @@ class ShimmerBox extends StatelessWidget {
 
 /// Карточка быстрого действия
 class _QuickActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final VoidCallback onTap;
 
   const _QuickActionCard({
     required this.icon,
@@ -553,6 +539,11 @@ class _QuickActionCard extends StatelessWidget {
     required this.color,
     required this.onTap,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -599,10 +590,6 @@ class _QuickActionCard extends StatelessWidget {
 
 /// Карточка статистики
 class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final String subtitle;
-  final Color color;
 
   const _StatCard({
     required this.title,
@@ -610,6 +597,10 @@ class _StatCard extends StatelessWidget {
     required this.subtitle,
     required this.color,
   });
+  final String title;
+  final String value;
+  final String subtitle;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -676,7 +667,7 @@ class _StatCard extends StatelessWidget {
       return userData.name!;
     }
     if (userData.email != null && userData.email!.isNotEmpty) {
-      final email = userData.email!;
+      final email = userData.email;
       final atIndex = email.indexOf('@');
       if (atIndex > 0) {
         return email.substring(0, atIndex);

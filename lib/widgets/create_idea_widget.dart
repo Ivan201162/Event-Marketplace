@@ -1,16 +1,15 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/enhanced_idea.dart';
+import 'package:event_marketplace_app/providers/enhanced_ideas_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/enhanced_idea.dart';
-import '../providers/enhanced_ideas_providers.dart';
-
 /// Виджет для создания идеи
 class CreateIdeaWidget extends ConsumerStatefulWidget {
   const CreateIdeaWidget(
-      {super.key, required this.authorId, this.onIdeaCreated});
+      {required this.authorId, super.key, this.onIdeaCreated,});
 
   final String authorId;
   final VoidCallback? onIdeaCreated;
@@ -97,7 +96,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Тип идеи',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -142,7 +141,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Заголовок',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _titleController,
@@ -158,7 +157,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Описание',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _descriptionController,
@@ -178,7 +177,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Медиафайлы',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               Row(
                 children: [
                   IconButton(
@@ -221,9 +220,9 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                     child: file.path.toLowerCase().endsWith('.mp4') ||
                             file.path.toLowerCase().endsWith('.mov')
                         ? const Center(
-                            child: Icon(Icons.play_circle_fill, size: 40))
+                            child: Icon(Icons.play_circle_fill, size: 40),)
                         : Image.file(File(file.path),
-                            fit: BoxFit.cover, width: 100, height: 100),
+                            fit: BoxFit.cover, width: 100, height: 100,),
                   ),
                   Positioned(
                     top: 4,
@@ -237,9 +236,9 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                       child: Container(
                         padding: const EdgeInsets.all(2),
                         decoration: const BoxDecoration(
-                            color: Colors.red, shape: BoxShape.circle),
+                            color: Colors.red, shape: BoxShape.circle,),
                         child: const Icon(Icons.close,
-                            color: Colors.white, size: 16),
+                            color: Colors.white, size: 16,),
                       ),
                     ),
                   ),
@@ -254,7 +253,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Теги',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _tagsController,
@@ -271,12 +270,12 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Категория',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _categoryController,
             decoration: const InputDecoration(
-                hintText: 'Категория идеи', border: OutlineInputBorder()),
+                hintText: 'Категория идеи', border: OutlineInputBorder(),),
           ),
         ],
       );
@@ -285,7 +284,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Бюджет',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _budgetController,
@@ -303,7 +302,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Временные рамки',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _timelineController,
@@ -319,7 +318,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Местоположение',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           TextField(
             controller: _locationController,
@@ -383,14 +382,14 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                     const Spacer(),
                     Text('Сейчас',
                         style:
-                            TextStyle(color: Colors.grey[600], fontSize: 12)),
+                            TextStyle(color: Colors.grey[600], fontSize: 12),),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     Text(_selectedType.icon,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                     const SizedBox(width: 4),
                     Text(
                       _selectedType.displayName,
@@ -403,7 +402,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                   Text(
                     _titleController.text,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18, fontWeight: FontWeight.bold,),
                   ),
                 ],
                 if (_descriptionController.text.isNotEmpty) ...[
@@ -419,7 +418,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Center(
-                        child: Text('Медиафайлы будут отображены здесь')),
+                        child: Text('Медиафайлы будут отображены здесь'),),
                   ),
                 ],
                 if (_tagsController.text.isNotEmpty) ...[
@@ -432,7 +431,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                         .map(
                           (tag) => Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
                               borderRadius: BorderRadius.circular(12),
@@ -440,7 +439,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                             child: Text(
                               tag.startsWith('#') ? tag : '#$tag',
                               style: TextStyle(
-                                  color: Colors.blue[800], fontSize: 12),
+                                  color: Colors.blue[800], fontSize: 12,),
                             ),
                           ),
                         )
@@ -467,7 +466,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                           ),
                         if (_timelineController.text.isNotEmpty)
                           _buildPreviewDetailRow(Icons.schedule, 'Сроки',
-                              _timelineController.text),
+                              _timelineController.text,),
                         if (_locationController.text.isNotEmpty)
                           _buildPreviewDetailRow(
                             Icons.location_on,
@@ -496,7 +495,7 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
             Text(
               '$label: ',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.grey[700]),
+                  fontWeight: FontWeight.bold, color: Colors.grey[700],),
             ),
             Expanded(
               child: Text(value, style: TextStyle(color: Colors.grey[600])),
@@ -607,13 +606,13 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 }

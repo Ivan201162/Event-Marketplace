@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
 
 /// Экран редактирования профиля
 class ProfileEditScreen extends ConsumerStatefulWidget {
@@ -81,8 +80,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
   Future<void> _pickImage() async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      final picker = ImagePicker();
+      final image = await picker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
         setState(() {
@@ -93,7 +92,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка выбора изображения: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -132,7 +131,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Профиль обновлен успешно!'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         context.pop();
       } else {
@@ -143,7 +142,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка обновления профиля: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -193,7 +192,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     ),
                   )
                 : const Text('Сохранить',
-                    style: TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.white),),
           ),
         ],
       ),
@@ -225,7 +224,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadCurrentProfile, child: const Text('Повторить')),
+                onPressed: _loadCurrentProfile, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -352,7 +351,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Навыки',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         const SizedBox(height: 16),
 
         // Поле для добавления навыков

@@ -1,8 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/services/auth_service_enhanced.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/app_user.dart';
-import '../services/auth_service_enhanced.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер сервиса авторизации
 final authServiceProvider = Provider<AuthServiceEnhanced>((ref) {
@@ -23,7 +22,7 @@ final authStateProvider = StreamProvider<AppUser?>((ref) {
 /// Провайдер текущего пользователя (Future)
 final currentUserProvider = FutureProvider<AppUser?>((ref) async {
   final authService = ref.watch(authServiceProvider);
-  return await authService.currentUser;
+  return authService.currentUser;
 });
 
 /// Провайдер состояния загрузки авторизации

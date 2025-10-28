@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/enhanced_notification.dart';
+import 'package:event_marketplace_app/services/enhanced_notifications_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/enhanced_notification.dart';
-import '../services/enhanced_notifications_service.dart';
 
 /// Провайдер сервиса уведомлений
 final enhancedNotificationsServiceProvider =
@@ -62,20 +61,20 @@ final notificationStatsProvider =
 /// Провайдер состояния создания уведомления (мигрирован с StateNotifierProvider)
 final createNotificationStateProvider =
     NotifierProvider<CreateNotificationStateNotifier, CreateNotificationState>(
-  () => CreateNotificationStateNotifier(),
+  CreateNotificationStateNotifier.new,
 );
 
 /// Состояние создания уведомления
 class CreateNotificationState {
   const CreateNotificationState(
-      {this.isLoading = false, this.error, this.success = false});
+      {this.isLoading = false, this.error, this.success = false,});
 
   final bool isLoading;
   final String? error;
   final bool success;
 
   CreateNotificationState copyWith(
-          {bool? isLoading, String? error, bool? success}) =>
+          {bool? isLoading, String? error, bool? success,}) =>
       CreateNotificationState(
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,
@@ -148,14 +147,14 @@ final notificationStateProvider = NotifierProvider.family<
 /// Состояние уведомления
 class NotificationState {
   const NotificationState(
-      {this.isRead = false, this.isArchived = false, this.isLoading = false});
+      {this.isRead = false, this.isArchived = false, this.isLoading = false,});
 
   final bool isRead;
   final bool isArchived;
   final bool isLoading;
 
   NotificationState copyWith(
-          {bool? isRead, bool? isArchived, bool? isLoading}) =>
+          {bool? isRead, bool? isArchived, bool? isLoading,}) =>
       NotificationState(
         isRead: isRead ?? this.isRead,
         isArchived: isArchived ?? this.isArchived,
@@ -220,7 +219,7 @@ class NotificationStateNotifier extends Notifier<NotificationState> {
 /// Провайдер настроек уведомлений (мигрирован с StateNotifierProvider)
 final notificationSettingsProvider =
     NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
-  () => NotificationSettingsNotifier(),
+  NotificationSettingsNotifier.new,
 );
 
 /// Настройки уведомлений

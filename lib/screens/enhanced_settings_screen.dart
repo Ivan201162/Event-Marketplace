@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/theme_provider.dart';
 
 class EnhancedSettingsScreen extends ConsumerWidget {
   const EnhancedSettingsScreen({super.key});

@@ -15,7 +15,7 @@ class Recommendation {
     required this.status,
     required this.title,
     required this.description,
-    this.imageUrl,
+    required this.createdAt, this.imageUrl,
     this.targetId, // ID специалиста, услуги, события и т.д.
     this.targetType,
     this.score,
@@ -24,27 +24,8 @@ class Recommendation {
     this.expiresAt,
     this.clickedAt,
     this.bookedAt,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String userId;
-  final RecommendationType type;
-  final RecommendationStatus status;
-  final String title;
-  final String description;
-  final String? imageUrl;
-  final String? targetId;
-  final String? targetType;
-  final double? score;
-  final String? reason;
-  final Map<String, dynamic> metadata;
-  final DateTime? expiresAt;
-  final DateTime? clickedAt;
-  final DateTime? bookedAt;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory Recommendation.fromMap(Map<String, dynamic> data) {
@@ -98,6 +79,24 @@ class Recommendation {
 
     return Recommendation.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final RecommendationType type;
+  final RecommendationStatus status;
+  final String title;
+  final String description;
+  final String? imageUrl;
+  final String? targetId;
+  final String? targetType;
+  final double? score;
+  final String? reason;
+  final Map<String, dynamic> metadata;
+  final DateTime? expiresAt;
+  final DateTime? clickedAt;
+  final DateTime? bookedAt;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -273,18 +272,6 @@ class RecommendationStats {
     this.metadata = const {},
   });
 
-  final String userId;
-  final int totalRecommendations;
-  final int activeRecommendations;
-  final int clickedRecommendations;
-  final int bookedRecommendations;
-  final int expiredRecommendations;
-  final double clickThroughRate;
-  final double conversionRate;
-  final double averageScore;
-  final String? period;
-  final Map<String, dynamic> metadata;
-
   /// Создать из Map
   factory RecommendationStats.fromMap(Map<String, dynamic> data) {
     return RecommendationStats(
@@ -301,6 +288,18 @@ class RecommendationStats {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+
+  final String userId;
+  final int totalRecommendations;
+  final int activeRecommendations;
+  final int clickedRecommendations;
+  final int bookedRecommendations;
+  final int expiredRecommendations;
+  final double clickThroughRate;
+  final double conversionRate;
+  final double averageScore;
+  final String? period;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -351,25 +350,25 @@ class RecommendationStats {
 
   /// Получить процент кликов
   double get clickThroughPercentage {
-    if (totalRecommendations == 0) return 0.0;
+    if (totalRecommendations == 0) return 0;
     return (clickedRecommendations / totalRecommendations) * 100;
   }
 
   /// Получить процент конверсии
   double get conversionPercentage {
-    if (totalRecommendations == 0) return 0.0;
+    if (totalRecommendations == 0) return 0;
     return (bookedRecommendations / totalRecommendations) * 100;
   }
 
   /// Получить процент активных рекомендаций
   double get activePercentage {
-    if (totalRecommendations == 0) return 0.0;
+    if (totalRecommendations == 0) return 0;
     return (activeRecommendations / totalRecommendations) * 100;
   }
 
   /// Получить процент истекших рекомендаций
   double get expiredPercentage {
-    if (totalRecommendations == 0) return 0.0;
+    if (totalRecommendations == 0) return 0;
     return (expiredRecommendations / totalRecommendations) * 100;
   }
 

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/booking.dart';
 import 'package:flutter/material.dart';
-import '../models/booking.dart';
 
 /// Виджет карточки заявки
 class BookingCardWidget extends StatelessWidget {
   const BookingCardWidget({
-    super.key,
-    required this.booking,
+    required this.booking, super.key,
     this.onTap,
     this.onCancel,
     this.onReview,
@@ -35,12 +34,12 @@ class BookingCardWidget extends StatelessWidget {
                             ? booking.eventTitle
                             : booking.title ?? 'Заявка',
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: _getStatusColor(booking.status),
                         borderRadius: BorderRadius.circular(12),
@@ -79,7 +78,7 @@ class BookingCardWidget extends StatelessWidget {
                 Row(
                   children: [
                     const Icon(Icons.calendar_today,
-                        size: 16, color: Colors.grey),
+                        size: 16, color: Colors.grey,),
                     const SizedBox(width: 4),
                     Text(
                       _formatDate(booking.eventDate),
@@ -94,7 +93,7 @@ class BookingCardWidget extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.access_time,
-                          size: 16, color: Colors.grey),
+                          size: 16, color: Colors.grey,),
                       const SizedBox(width: 4),
                       Text(
                         booking.startTime!,
@@ -112,7 +111,7 @@ class BookingCardWidget extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.location_on,
-                          size: 16, color: Colors.grey),
+                          size: 16, color: Colors.grey,),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -132,7 +131,7 @@ class BookingCardWidget extends StatelessWidget {
                 Row(
                   children: [
                     const Icon(Icons.attach_money,
-                        size: 16, color: Colors.green),
+                        size: 16, color: Colors.green,),
                     const SizedBox(width: 4),
                     Text(
                       '${booking.effectivePrice.toInt()}₽',

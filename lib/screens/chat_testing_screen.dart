@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/screens/enhanced_chat_screen.dart';
+import 'package:event_marketplace_app/screens/enhanced_chats_list_screen.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
+import 'package:event_marketplace_app/services/media_upload_service.dart';
+import 'package:event_marketplace_app/services/typing_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../screens/enhanced_chat_screen.dart';
-import '../screens/enhanced_chats_list_screen.dart';
-import '../services/chat_service.dart';
-import '../services/media_upload_service.dart';
-import '../services/typing_service.dart';
 
 /// Экран для тестирования функций чатов
 class ChatTestingScreen extends ConsumerStatefulWidget {
@@ -81,11 +80,11 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Text('Тесты функций:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           ElevatedButton(
               onPressed: _testCreateChat,
-              child: const Text('1. Создать тестовый чат')),
+              child: const Text('1. Создать тестовый чат'),),
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: _testSendTextMessage,
@@ -114,11 +113,11 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
           const SizedBox(height: 8),
           ElevatedButton(
               onPressed: _testChatCategories,
-              child: const Text('7. Тест категорий чатов')),
+              child: const Text('7. Тест категорий чатов'),),
           const SizedBox(height: 8),
           ElevatedButton(
               onPressed: _testAutoUpdate,
-              child: const Text('8. Тест автообновления')),
+              child: const Text('8. Тест автообновления'),),
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: _testPushNotifications,
@@ -136,14 +135,14 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Text('Навигация:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           ElevatedButton(
             onPressed: () {
               Navigator.of(
                 context,
               ).push(MaterialPageRoute<void>(
-                  builder: (context) => const EnhancedChatsListScreen()));
+                  builder: (context) => const EnhancedChatsListScreen(),),);
             },
             child: const Text('Открыть список чатов'),
           ),
@@ -280,7 +279,7 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       // Останавливаем через 3 секунды
       await Future.delayed(const Duration(seconds: 3));
       await _typingService.stopTyping(
-          chatId: _testChatId!, userId: _currentUserId!);
+          chatId: _testChatId!, userId: _currentUserId!,);
 
       _addTestResult('✅ Индикатор печатания остановлен');
     } catch (e) {
@@ -304,7 +303,7 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       final stream = _chatService.getUnreadMessagesCountStream(_currentUserId!);
       stream.take(1).listen((count) {
         _addTestResult(
-            '✅ Поток непрочитанных сообщений работает. Количество: $count');
+            '✅ Поток непрочитанных сообщений работает. Количество: $count',);
       });
     } catch (e) {
       _addTestResult('❌ Ошибка теста непрочитанных сообщений: $e');
@@ -352,7 +351,7 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
         participants: [_currentUserId!, 'organizer_id'],
         participantNames: {
           _currentUserId!: _currentUserName!,
-          'organizer_id': 'Организатор'
+          'organizer_id': 'Организатор',
         },
         participantAvatars: {},
         category: 'orders',
@@ -364,7 +363,7 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
         participants: [_currentUserId!, 'specialist_id'],
         participantNames: {
           _currentUserId!: _currentUserName!,
-          'specialist_id': 'Исполнитель'
+          'specialist_id': 'Исполнитель',
         },
         participantAvatars: {},
         category: 'specialists',
@@ -402,7 +401,7 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       final messagesStream = _chatService.getChatMessages(_testChatId!);
       messagesStream.take(1).listen((messages) {
         _addTestResult(
-            '✅ Поток сообщений работает. Сообщений: ${messages.length}');
+            '✅ Поток сообщений работает. Сообщений: ${messages.length}',);
       });
 
       // Тестируем поток чата

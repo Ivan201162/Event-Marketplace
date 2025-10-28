@@ -9,13 +9,11 @@ class ContentCreator {
     required this.categories,
     required this.formats,
     required this.mediaShowcase,
-    this.pricing,
+    required this.createdAt, required this.updatedAt, this.pricing,
     this.location,
     this.rating,
     this.reviewCount,
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из документа Firestore
@@ -63,7 +61,7 @@ class ContentCreator {
             [],
         pricing: data['pricing'] != null
             ? Map<String, dynamic>.from(
-                data['pricing'] as Map<dynamic, dynamic>)
+                data['pricing'] as Map<dynamic, dynamic>,)
             : null,
         location: data['location'] as String?,
         rating: data['rating'] as double?,
@@ -212,7 +210,7 @@ class ContentFormat {
         platforms: List<String>.from(data['platforms'] as List<dynamic>? ?? []),
         specifications: data['specifications'] != null
             ? Map<String, dynamic>.from(
-                data['specifications'] as Map<dynamic, dynamic>)
+                data['specifications'] as Map<dynamic, dynamic>,)
             : null,
       );
   final String name;
@@ -251,25 +249,24 @@ class MediaShowcase {
     required this.id,
     required this.type,
     required this.url,
-    this.coverUrl,
+    required this.createdAt, this.coverUrl,
     this.title,
     this.description,
     this.metadata,
-    required this.createdAt,
   });
 
   /// Создать из Map
   factory MediaShowcase.fromMap(Map<String, dynamic> data) => MediaShowcase(
         id: data['id'] as String? ?? '',
         type: MediaType.values.firstWhere((e) => e.name == data['type'],
-            orElse: () => MediaType.image),
+            orElse: () => MediaType.image,),
         url: data['url'] as String? ?? '',
         coverUrl: data['coverUrl'] as String?,
         title: data['title'] as String?,
         description: data['description'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,)
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
       );
@@ -310,7 +307,7 @@ class MediaShowcase {
 
   @override
   int get hashCode => Object.hash(
-      id, type, url, coverUrl, title, description, metadata, createdAt);
+      id, type, url, coverUrl, title, description, metadata, createdAt,);
 
   @override
   String toString() => 'MediaShowcase(id: $id, type: $type, title: $title)';

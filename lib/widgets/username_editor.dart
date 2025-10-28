@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/utils/transliterate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../utils/transliterate.dart';
 
 /// Виджет для редактирования username с транслитерацией
 class UsernameEditor extends ConsumerStatefulWidget {
   const UsernameEditor({
-    super.key,
-    required this.initialUsername,
-    required this.onChanged,
+    required this.initialUsername, required this.onChanged, super.key,
     this.enabled = true,
   });
 
@@ -110,7 +108,7 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
           ],
         ],
@@ -142,7 +140,7 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               final name = nameController.text.trim();

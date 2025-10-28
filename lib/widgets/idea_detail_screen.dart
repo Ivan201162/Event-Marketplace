@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/services/event_idea_service.dart';
+import 'package:event_marketplace_app/widgets/idea_comments_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event_idea.dart';
-import '../services/event_idea_service.dart';
-import 'idea_comments_widget.dart';
-
 /// Экран детального просмотра идеи
 class IdeaDetailScreen extends ConsumerStatefulWidget {
-  const IdeaDetailScreen({super.key, required this.idea});
+  const IdeaDetailScreen({required this.idea, super.key});
 
   final EventIdea idea;
 
@@ -43,7 +42,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             IconButton(
                 onPressed: _shareIdea,
                 icon: const Icon(Icons.share),
-                tooltip: 'Поделиться'),
+                tooltip: 'Поделиться',),
             IconButton(
               onPressed: _toggleLike,
               icon: const Icon(Icons.favorite_border),
@@ -138,7 +137,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
 
                     // Описание
                     Text(widget.idea.description,
-                        style: Theme.of(context).textTheme.bodyLarge),
+                        style: Theme.of(context).textTheme.bodyLarge,),
 
                     const SizedBox(height: 16),
 
@@ -202,7 +201,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
               color: Colors.grey[200],
               child: const Center(
                   child:
-                      Icon(Icons.broken_image, color: Colors.grey, size: 48)),
+                      Icon(Icons.broken_image, color: Colors.grey, size: 48),),
             ),
           ),
         ),
@@ -304,7 +303,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             ),
             Expanded(
                 child:
-                    Text(value, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(value, style: Theme.of(context).textTheme.bodyMedium),),
           ],
         ),
       );
@@ -351,19 +350,19 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
               _buildStatItem(
                   icon: Icons.favorite,
                   count: widget.idea.likes,
-                  label: 'Лайки'),
+                  label: 'Лайки',),
               _buildStatItem(
                   icon: Icons.comment,
                   count: widget.idea.comments,
-                  label: 'Комментарии'),
+                  label: 'Комментарии',),
               _buildStatItem(
                   icon: Icons.visibility,
                   count: widget.idea.views,
-                  label: 'Просмотры'),
+                  label: 'Просмотры',),
               _buildStatItem(
                   icon: Icons.share,
                   count: widget.idea.shares,
-                  label: 'Поделились'),
+                  label: 'Поделились',),
             ],
           ),
         ),
@@ -372,7 +371,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
   Widget _buildStatItem(
           {required IconData icon,
           required int count,
-          required String label}) =>
+          required String label,}) =>
       Column(
         children: [
           Icon(icon, color: Theme.of(context).colorScheme.primary),
@@ -455,13 +454,13 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Лайк добавлен!'), backgroundColor: Colors.green),
+            content: Text('Лайк добавлен!'), backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 }

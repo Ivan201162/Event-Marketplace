@@ -1,14 +1,11 @@
+import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/services/customer_portfolio_service.dart';
 import 'package:flutter/material.dart';
-
-import '../services/auth_service.dart';
-import '../services/customer_portfolio_service.dart';
 
 /// Виджет кнопки добавления/удаления специалиста из избранного
 class FavoriteSpecialistButton extends StatefulWidget {
   const FavoriteSpecialistButton({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.onFavoriteChanged,
     this.showText = true,
     this.size,
@@ -73,11 +70,11 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
     try {
       if (_isFavorite) {
         await _portfolioService.removeFromFavorites(
-            currentUser.uid, widget.specialistId);
+            currentUser.uid, widget.specialistId,);
         _showSnackBar('${widget.specialistName} удален из избранного');
       } else {
         await _portfolioService.addToFavorites(
-            currentUser.uid, widget.specialistId);
+            currentUser.uid, widget.specialistId,);
         _showSnackBar('${widget.specialistName} добавлен в избранное');
       }
 
@@ -101,7 +98,7 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content: Text('Необходимо войти в систему'),
-          backgroundColor: Colors.red),
+          backgroundColor: Colors.red,),
     );
   }
 
@@ -109,7 +106,7 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), duration: const Duration(seconds: 2)));
+        SnackBar(content: Text(message), duration: const Duration(seconds: 2)),);
   }
 
   @override
@@ -161,9 +158,7 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
 /// Компактная версия кнопки избранного (только иконка)
 class FavoriteSpecialistIconButton extends StatelessWidget {
   const FavoriteSpecialistIconButton({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.onFavoriteChanged,
     this.size,
   });
@@ -185,9 +180,7 @@ class FavoriteSpecialistIconButton extends StatelessWidget {
 /// Плавающая кнопка избранного
 class FloatingFavoriteButton extends StatelessWidget {
   const FloatingFavoriteButton({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.onFavoriteChanged,
   });
   final String specialistId;

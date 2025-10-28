@@ -1,14 +1,10 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
 
 /// Виджет предпросмотра темы
 class ThemePreviewWidget extends StatefulWidget {
   const ThemePreviewWidget({
-    super.key,
-    required this.selectedTheme,
-    required this.selectedFontSize,
-    required this.onThemeSelected,
-    required this.onFontSizeSelected,
+    required this.selectedTheme, required this.selectedFontSize, required this.onThemeSelected, required this.onFontSizeSelected, super.key,
   });
 
   final AppTheme selectedTheme;
@@ -68,7 +64,7 @@ class _ThemePreviewWidgetState extends State<ThemePreviewWidget> {
                             .map((theme) => ButtonSegment<AppTheme>(
                                   value: theme,
                                   label: Text(_getThemeTitle(theme)),
-                                ))
+                                ),)
                             .toList(),
                         selected: {_currentTheme},
                         onSelectionChanged: (selection) {
@@ -92,7 +88,7 @@ class _ThemePreviewWidgetState extends State<ThemePreviewWidget> {
                             .map((fontSize) => ButtonSegment<FontSize>(
                                   value: fontSize,
                                   label: Text(_getFontSizeTitle(fontSize)),
-                                ))
+                                ),)
                             .toList(),
                         selected: {_currentFontSize},
                         onSelectionChanged: (selection) {
@@ -235,7 +231,7 @@ class _ThemePreviewWidgetState extends State<ThemePreviewWidget> {
                           color: _getTextColor(_currentTheme).withOpacity(0.7),
                         ),
                       ),
-                    )),
+                    ),),
           ],
         ),
       ),
@@ -295,13 +291,13 @@ class _ThemePreviewWidgetState extends State<ThemePreviewWidget> {
   double _getFontSize(FontSize fontSize) {
     switch (fontSize) {
       case FontSize.small:
-        return 12.0;
+        return 12;
       case FontSize.medium:
-        return 14.0;
+        return 14;
       case FontSize.large:
-        return 16.0;
+        return 16;
       case FontSize.extraLarge:
-        return 18.0;
+        return 18;
     }
   }
 

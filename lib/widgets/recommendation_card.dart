@@ -1,14 +1,12 @@
+import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/recommendation.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
-
-import '../models/common_types.dart';
-import '../models/recommendation.dart';
-import '../models/specialist.dart';
 
 /// Карточка рекомендации специалиста
 class RecommendationCard extends StatelessWidget {
   const RecommendationCard({
-    super.key,
-    required this.recommendation,
+    required this.recommendation, super.key,
     this.onTap,
     this.onBook,
     this.showReason = true,
@@ -49,7 +47,7 @@ class RecommendationCard extends StatelessWidget {
                 _buildSpecialistInfo(context, specialist),
                 if (showReason) ...[
                   const SizedBox(height: 12),
-                  _buildReason(context)
+                  _buildReason(context),
                 ],
                 const SizedBox(height: 16),
                 _buildActions(context),
@@ -161,7 +159,7 @@ class RecommendationCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(recommendation.type.icon,
-                style: const TextStyle(fontSize: 12)),
+                style: const TextStyle(fontSize: 12),),
             const SizedBox(width: 4),
             Text(
               recommendation.type.displayName,
@@ -182,7 +180,7 @@ class RecommendationCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(recommendation.type.icon,
-            style: const TextStyle(fontSize: 10)),
+            style: const TextStyle(fontSize: 10),),
       );
 
   Widget _buildScoreChip(BuildContext context) => Container(
@@ -196,7 +194,7 @@ class RecommendationCard extends StatelessWidget {
           style: TextStyle(
               fontSize: 12,
               color: _getScoreColor(context),
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.bold,),
         ),
       );
 
@@ -208,19 +206,19 @@ class RecommendationCard extends StatelessWidget {
             children: [
               Icon(Icons.category,
                   size: 16,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               const SizedBox(width: 4),
               Text(
                 specialist.category?.displayName ?? 'Категория',
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,),
               ),
               const SizedBox(width: 16),
               Icon(Icons.location_on,
                   size: 16,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -270,7 +268,7 @@ class RecommendationCard extends StatelessWidget {
         style: TextStyle(
             fontSize: 12,
             color: Colors.green[700],
-            fontWeight: FontWeight.w500),
+            fontWeight: FontWeight.w500,),
       );
 
   Widget _buildRating(BuildContext context, Specialist specialist) => Row(
@@ -289,7 +287,7 @@ class RecommendationCard extends StatelessWidget {
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,),
           ),
         ],
       );
@@ -303,7 +301,7 @@ class RecommendationCard extends StatelessWidget {
             style: Theme.of(
               context,
             ).textTheme.bodyMedium?.copyWith(
-                color: Colors.green[700], fontWeight: FontWeight.w500),
+                color: Colors.green[700], fontWeight: FontWeight.w500,),
           ),
         ],
       );
@@ -331,7 +329,7 @@ class RecommendationCard extends StatelessWidget {
         child: Row(
           children: [
             Icon(Icons.lightbulb_outline,
-                size: 16, color: Theme.of(context).colorScheme.primary),
+                size: 16, color: Theme.of(context).colorScheme.primary,),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -350,12 +348,12 @@ class RecommendationCard extends StatelessWidget {
         children: [
           Expanded(
             child: OutlinedButton(
-                onPressed: onTap, child: const Text('Подробнее')),
+                onPressed: onTap, child: const Text('Подробнее'),),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
-                onPressed: onBook, child: const Text('Забронировать')),
+                onPressed: onBook, child: const Text('Забронировать'),),
           ),
         ],
       );

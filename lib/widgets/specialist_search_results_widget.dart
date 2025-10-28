@@ -1,16 +1,14 @@
+import 'package:event_marketplace_app/models/advanced_search_filters.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/advanced_search_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/advanced_search_filters.dart';
-import '../models/common_types.dart';
-import '../models/specialist.dart';
-import '../providers/advanced_search_providers.dart';
 
 /// Виджет результатов поиска специалистов
 class SpecialistSearchResultsWidget extends ConsumerStatefulWidget {
   const SpecialistSearchResultsWidget({
-    super.key,
-    required this.filters,
+    required this.filters, super.key,
     this.onSpecialistSelected,
     this.onFiltersChanged,
   });
@@ -109,7 +107,7 @@ class _SpecialistSearchResultsWidgetState
             child: Row(
               children: [
                 Icon(Icons.search,
-                    size: 20, color: Theme.of(context).colorScheme.primary),
+                    size: 20, color: Theme.of(context).colorScheme.primary,),
                 const SizedBox(width: 8),
                 Text(
                   'Найдено ${state.totalCount} специалистов',
@@ -269,7 +267,7 @@ class _SpecialistSearchResultsWidgetState
                       if (specialist.isVerified) ...[
                         const SizedBox(height: 4),
                         const Icon(Icons.verified,
-                            size: 16, color: Colors.blue),
+                            size: 16, color: Colors.blue,),
                       ],
                     ],
                   ),
@@ -422,7 +420,7 @@ class _SpecialistSearchResultsWidgetState
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Поиск специалистов...')
+            Text('Поиск специалистов...'),
           ],
         ),
       );
@@ -432,17 +430,17 @@ class _SpecialistSearchResultsWidgetState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline,
-                size: 64, color: Theme.of(context).colorScheme.error),
+                size: 64, color: Theme.of(context).colorScheme.error,),
             const SizedBox(height: 16),
             Text('Ошибка поиска',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 8),
             Text(
               error.toString(),
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -450,7 +448,7 @@ class _SpecialistSearchResultsWidgetState
               onPressed: () {
                 ref
                     .read<AdvancedSearchNotifier>(
-                        advancedSearchProvider.notifier)
+                        advancedSearchProvider.notifier,)
                     .searchSpecialists(widget.filters);
               },
               child: const Text('Повторить'),
@@ -465,17 +463,17 @@ class _SpecialistSearchResultsWidgetState
           children: [
             Icon(Icons.search_off,
                 size: 64,
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,),
             const SizedBox(height: 16),
             Text('Специалисты не найдены',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 8),
             Text(
               'Попробуйте изменить параметры поиска',
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),

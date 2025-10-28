@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/post.dart';
-import '../models/story.dart';
+import 'package:event_marketplace_app/models/post.dart';
+import 'package:event_marketplace_app/models/story.dart';
 
 /// Сервис для работы с лентой
 class FeedService {
@@ -69,7 +69,7 @@ class FeedService {
       final snapshot = await _firestore
           .collection('posts')
           .where('text', isGreaterThanOrEqualTo: query)
-          .where('text', isLessThan: query + '\uf8ff')
+          .where('text', isLessThan: '$query\uf8ff')
           .orderBy('text')
           .orderBy('createdAt', descending: true)
           .limit(20)
@@ -92,10 +92,8 @@ class FeedService {
       switch (filter) {
         case 'popular':
           query = query.orderBy('likesCount', descending: true);
-          break;
         case 'recent':
           query = query.orderBy('createdAt', descending: true);
-          break;
         default:
           query = query.orderBy('createdAt', descending: true);
       }
@@ -103,7 +101,7 @@ class FeedService {
       final snapshot = await query.limit(20).get();
 
       return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         return Post.fromMap(data, doc.id);
       }).toList();
     } catch (e) {

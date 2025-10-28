@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/local_data_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../providers/local_data_providers.dart';
 
 /// Виджет "Популярные специалисты недели"
 class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
@@ -33,13 +32,13 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
           ),
         );
       },
-      loading: () => _buildLoadingState(),
+      loading: _buildLoadingState,
       error: (error, stack) => _buildErrorState(error.toString()),
     );
   }
 
   Widget _buildSpecialistCard(
-      BuildContext context, Map<String, dynamic> specialist, int rank) {
+      BuildContext context, Map<String, dynamic> specialist, int rank,) {
     return Container(
       width: 160,
       margin: const EdgeInsets.only(right: 12),
@@ -61,7 +60,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                          color: _getRankColor(rank), shape: BoxShape.circle),
+                          color: _getRankColor(rank), shape: BoxShape.circle,),
                       child: Center(
                         child: Text(
                           '$rank',
@@ -91,7 +90,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                 Text(
                   specialist['name'] as String? ?? 'Специалист',
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 14),
+                      fontWeight: FontWeight.bold, fontSize: 14,),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -131,7 +130,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                     Text(
                       '${specialist['rating'] ?? 0.0}',
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w500),
+                          fontSize: 12, fontWeight: FontWeight.w500,),
                     ),
                   ],
                 ),
@@ -160,7 +159,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-          color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
       child: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -168,7 +167,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
             Icon(Icons.people_outline, size: 48, color: Colors.grey),
             SizedBox(height: 8),
             Text('Нет данных о специалистах',
-                style: TextStyle(color: Colors.grey, fontSize: 14)),
+                style: TextStyle(color: Colors.grey, fontSize: 14),),
           ],
         ),
       ),
@@ -179,7 +178,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-          color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
       child: const Center(child: CircularProgressIndicator()),
     );
   }
@@ -188,7 +187,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-          color: Colors.red[50], borderRadius: BorderRadius.circular(12)),
+          color: Colors.red[50], borderRadius: BorderRadius.circular(12),),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -196,7 +195,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 8),
             Text('Ошибка загрузки',
-                style: TextStyle(color: Colors.red[700], fontSize: 14)),
+                style: TextStyle(color: Colors.red[700], fontSize: 14),),
           ],
         ),
       ),

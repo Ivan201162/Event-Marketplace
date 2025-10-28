@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/dynamic_pricing.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/dynamic_pricing.dart';
 
 class DynamicPricingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -16,23 +15,23 @@ class DynamicPricingService {
   }) async {
     try {
       // Получаем правила ценообразования
-      final PricingRule? rule = await _getPricingRule(serviceType);
+      final rule = await _getPricingRule(serviceType);
       if (rule == null) {
         debugPrint(
-            'WARNING: [DynamicPricingService] No pricing rule found for $serviceType');
+            'WARNING: [DynamicPricingService] No pricing rule found for $serviceType',);
         return 0.0;
       }
 
       // Получаем метрики спроса
-      final DemandMetrics? demandMetrics =
+      final demandMetrics =
           await _getDemandMetrics(serviceType, region);
 
       // Получаем региональные настройки
-      final RegionalPricing? regionalPricing =
+      final regionalPricing =
           await _getRegionalPricing(region);
 
       // Рассчитываем факторы
-      final Map<String, dynamic> factors = await _calculateFactors(
+      final factors = await _calculateFactors(
         serviceType: serviceType,
         region: region,
         userTier: userTier,
@@ -42,7 +41,7 @@ class DynamicPricingService {
       );
 
       // Создаем обновленное правило с актуальными факторами
-      final PricingRule updatedRule = rule.copyWith(
+      final updatedRule = rule.copyWith(
         demandFactor: factors['demandFactor'] ?? rule.demandFactor,
         timeFactor: factors['timeFactor'] ?? rule.timeFactor,
         regionFactor: factors['regionFactor'] ?? rule.regionFactor,
@@ -53,7 +52,7 @@ class DynamicPricingService {
       );
 
       // Рассчитываем финальную цену
-      final double finalPrice = updatedRule.calculateFinalPrice(
+      final finalPrice = updatedRule.calculateFinalPrice(
         region: region,
         userTier: userTier,
         additionalFactors: factors,
@@ -75,7 +74,7 @@ class DynamicPricingService {
       return finalPrice;
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to get current price: $e');
+          'ERROR: [DynamicPricingService] Failed to get current price: $e',);
       return 0.0;
     }
   }
@@ -86,31 +85,31 @@ class DynamicPricingService {
       final QuerySnapshot snapshot = await _firestore
           .collection('pricing_rules')
           .where('serviceType',
-              isEqualTo: serviceType.toString().split('.').last)
+              isEqualTo: serviceType.toString().split('.').last,)
           .where('isActive', isEqualTo: true)
           .limit(1)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
         return PricingRule.fromMap(
-            snapshot.docs.first.data() as Map<String, dynamic>);
+            snapshot.docs.first.data()! as Map<String, dynamic>,);
       }
       return null;
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to get pricing rule: $e');
+          'ERROR: [DynamicPricingService] Failed to get pricing rule: $e',);
       return null;
     }
   }
 
   /// Получение метрик спроса
   Future<DemandMetrics?> _getDemandMetrics(
-      ServiceType serviceType, String region) async {
+      ServiceType serviceType, String region,) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('demand_metrics')
           .where('serviceType',
-              isEqualTo: serviceType.toString().split('.').last)
+              isEqualTo: serviceType.toString().split('.').last,)
           .where('region', isEqualTo: region)
           .orderBy('timestamp', descending: true)
           .limit(1)
@@ -118,12 +117,12 @@ class DynamicPricingService {
 
       if (snapshot.docs.isNotEmpty) {
         return DemandMetrics.fromMap(
-            snapshot.docs.first.data() as Map<String, dynamic>);
+            snapshot.docs.first.data()! as Map<String, dynamic>,);
       }
       return null;
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to get demand metrics: $e');
+          'ERROR: [DynamicPricingService] Failed to get demand metrics: $e',);
       return null;
     }
   }
@@ -140,12 +139,12 @@ class DynamicPricingService {
 
       if (snapshot.docs.isNotEmpty) {
         return RegionalPricing.fromMap(
-            snapshot.docs.first.data() as Map<String, dynamic>);
+            snapshot.docs.first.data()! as Map<String, dynamic>,);
       }
       return null;
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to get regional pricing: $e');
+          'ERROR: [DynamicPricingService] Failed to get regional pricing: $e',);
       return null;
     }
   }
@@ -159,7 +158,7 @@ class DynamicPricingService {
     RegionalPricing? regionalPricing,
     Map<String, dynamic>? additionalFactors,
   }) async {
-    final Map<String, dynamic> factors = {};
+    final factors = <String, dynamic>{};
 
     // Фактор спроса
     if (demandMetrics != null) {
@@ -198,9 +197,9 @@ class DynamicPricingService {
 
   /// Расчет временного фактора
   double _calculateTimeFactor() {
-    final DateTime now = DateTime.now();
-    final int hour = now.hour;
-    final int dayOfWeek = now.weekday;
+    final now = DateTime.now();
+    final hour = now.hour;
+    final dayOfWeek = now.weekday;
 
     // Пиковые часы (18:00-22:00) - +20%
     if (hour >= 18 && hour <= 22) {
@@ -217,13 +216,13 @@ class DynamicPricingService {
       return 0.9;
     }
 
-    return 1.0; // Стандартное время
+    return 1; // Стандартное время
   }
 
   /// Расчет сезонного фактора
   double _calculateSeasonFactor() {
-    final DateTime now = DateTime.now();
-    final int month = now.month;
+    final now = DateTime.now();
+    final month = now.month;
 
     // Летние месяцы (июнь-август) - +25%
     if (month >= 6 && month <= 8) {
@@ -240,20 +239,20 @@ class DynamicPricingService {
       return 1.1;
     }
 
-    return 1.0; // Осень
+    return 1; // Осень
   }
 
   /// Расчет фактора пользователя
   double _calculateUserTierFactor(String userTier) {
     switch (userTier.toLowerCase()) {
       case 'free':
-        return 1.0; // Базовая цена
+        return 1; // Базовая цена
       case 'premium':
         return 0.9; // Скидка 10% для премиум
       case 'pro':
         return 0.8; // Скидка 20% для PRO
       default:
-        return 1.0;
+        return 1;
     }
   }
 
@@ -262,13 +261,13 @@ class DynamicPricingService {
     // Упрощенная логика - в реальном приложении нужно анализировать конкурентов
     switch (serviceType) {
       case ServiceType.subscription:
-        return 1.0; // Стабильная конкуренция
+        return 1; // Стабильная конкуренция
       case ServiceType.promotion:
         return 1.1; // Высокая конкуренция
       case ServiceType.advertisement:
         return 0.9; // Низкая конкуренция
       case ServiceType.premiumFeature:
-        return 1.0;
+        return 1;
     }
   }
 
@@ -282,7 +281,7 @@ class DynamicPricingService {
     String? userId,
   }) async {
     try {
-      final PricingHistory history = PricingHistory(
+      final history = PricingHistory(
         id: _uuid.v4(),
         serviceType: serviceType,
         region: region,
@@ -299,7 +298,7 @@ class DynamicPricingService {
           .set(history.toMap());
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to save pricing history: $e');
+          'ERROR: [DynamicPricingService] Failed to save pricing history: $e',);
     }
   }
 
@@ -312,7 +311,7 @@ class DynamicPricingService {
     required int availableSlots,
   }) async {
     try {
-      final DemandMetrics metrics = DemandMetrics(
+      final metrics = DemandMetrics(
         id: _uuid.v4(),
         region: region,
         serviceType: serviceType,
@@ -332,7 +331,7 @@ class DynamicPricingService {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to update demand metrics: $e');
+          'ERROR: [DynamicPricingService] Failed to update demand metrics: $e',);
     }
   }
 
@@ -345,10 +344,10 @@ class DynamicPricingService {
           .set(rule.toMap());
 
       debugPrint(
-          'INFO: [DynamicPricingService] Pricing rule created: ${rule.id}');
+          'INFO: [DynamicPricingService] Pricing rule created: ${rule.id}',);
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to create pricing rule: $e');
+          'ERROR: [DynamicPricingService] Failed to create pricing rule: $e',);
       rethrow;
     }
   }
@@ -365,28 +364,28 @@ class DynamicPricingService {
       Query query = _firestore
           .collection('pricing_history')
           .where('serviceType',
-              isEqualTo: serviceType.toString().split('.').last)
+              isEqualTo: serviceType.toString().split('.').last,)
           .where('region', isEqualTo: region)
           .orderBy('timestamp', descending: true)
           .limit(limit);
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
-      final QuerySnapshot snapshot = await query.get();
+      final snapshot = await query.get();
       return snapshot.docs
           .map((doc) =>
-              PricingHistory.fromMap(doc.data() as Map<String, dynamic>))
+              PricingHistory.fromMap(doc.data()! as Map<String, dynamic>),)
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to get pricing history: $e');
+          'ERROR: [DynamicPricingService] Failed to get pricing history: $e',);
       return [];
     }
   }
@@ -399,7 +398,7 @@ class DynamicPricingService {
     DateTime? endDate,
   }) async {
     try {
-      final List<PricingHistory> history = await getPricingHistory(
+      final history = await getPricingHistory(
         serviceType: serviceType,
         region: region,
         startDate: startDate,
@@ -416,18 +415,18 @@ class DynamicPricingService {
         };
       }
 
-      final List<double> prices = history.map((h) => h.finalPrice).toList();
-      final double averagePrice =
+      final prices = history.map((h) => h.finalPrice).toList();
+      final averagePrice =
           prices.reduce((a, b) => a + b) / prices.length;
-      final double minPrice = prices.reduce((a, b) => a < b ? a : b);
-      final double maxPrice = prices.reduce((a, b) => a > b ? a : b);
+      final minPrice = prices.reduce((a, b) => a < b ? a : b);
+      final maxPrice = prices.reduce((a, b) => a > b ? a : b);
 
       // Расчет волатильности (стандартное отклонение)
-      final double variance = prices
+      final variance = prices
               .map((price) => (price - averagePrice) * (price - averagePrice))
               .reduce((a, b) => a + b) /
           prices.length;
-      final double priceVolatility = variance > 0 ? variance : 0.0;
+      final priceVolatility = variance > 0 ? variance : 0.0;
 
       return {
         'averagePrice': averagePrice,
@@ -440,7 +439,7 @@ class DynamicPricingService {
       };
     } catch (e) {
       debugPrint(
-          'ERROR: [DynamicPricingService] Failed to get pricing stats: $e');
+          'ERROR: [DynamicPricingService] Failed to get pricing stats: $e',);
       return {};
     }
   }

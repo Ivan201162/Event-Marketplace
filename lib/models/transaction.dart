@@ -16,43 +16,22 @@ enum TransactionType {
 
 /// Transaction model
 class Transaction extends Equatable {
-  final String id;
-  final String userId;
-  final String? specialistId;
-  final String? paymentId;
-  final String? bookingId;
-  final TransactionType type;
-  final int amount; // in kopecks
-  final String currency;
-  final String description;
-  final String? category;
-  final Map<String, dynamic>? metadata;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? referenceId; // External reference ID
-  final String? notes;
 
   const Transaction({
     required this.id,
     required this.userId,
-    this.specialistId,
+    required this.type, required this.amount, required this.currency, required this.description, required this.createdAt, required this.updatedAt, this.specialistId,
     this.paymentId,
     this.bookingId,
-    required this.type,
-    required this.amount,
-    required this.currency,
-    required this.description,
     this.category,
     this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
     this.referenceId,
     this.notes,
   });
 
   /// Create Transaction from Firestore document
   factory Transaction.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return Transaction(
       id: doc.id,
@@ -75,6 +54,21 @@ class Transaction extends Equatable {
       notes: data['notes'],
     );
   }
+  final String id;
+  final String userId;
+  final String? specialistId;
+  final String? paymentId;
+  final String? bookingId;
+  final TransactionType type;
+  final int amount; // in kopecks
+  final String currency;
+  final String description;
+  final String? category;
+  final Map<String, dynamic>? metadata;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? referenceId; // External reference ID
+  final String? notes;
 
   /// Convert Transaction to Firestore document
   Map<String, dynamic> toFirestore() {

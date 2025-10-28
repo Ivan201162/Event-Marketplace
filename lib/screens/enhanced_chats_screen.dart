@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/enhanced_chat.dart';
+import 'package:event_marketplace_app/models/enhanced_message.dart';
+import 'package:event_marketplace_app/widgets/chat_list_item_widget.dart';
+import 'package:event_marketplace_app/widgets/chat_search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/enhanced_chat.dart';
-import '../models/enhanced_message.dart';
-import '../widgets/chat_list_item_widget.dart';
-import '../widgets/chat_search_widget.dart';
 
 /// Улучшенный экран чатов с полным функционалом
 class EnhancedChatsScreen extends ConsumerStatefulWidget {
@@ -57,7 +56,7 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
               children: [
                 _buildChatsList('all'),
                 _buildChatsList('active'),
-                _buildChatsList('pinned')
+                _buildChatsList('pinned'),
               ],
             ),
           ),
@@ -149,12 +148,10 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
         title = 'Нет активных чатов';
         subtitle = 'Активные чаты будут отображаться здесь';
         icon = Icons.chat_bubble_outline;
-        break;
       case 'pinned':
         title = 'Нет закреплённых чатов';
         subtitle = 'Закреплённые чаты будут показаны здесь';
         icon = Icons.push_pin;
-        break;
       default:
         title = 'Нет чатов';
         subtitle = 'Начните общение со специалистами';
@@ -172,7 +169,7 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[600]),
+                color: Colors.grey[600],),
           ),
           const SizedBox(height: 8),
           Text(
@@ -325,7 +322,7 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text(chat.isPinned ? 'Чат откреплён' : 'Чат закреплён')));
+        content: Text(chat.isPinned ? 'Чат откреплён' : 'Чат закреплён'),),);
   }
 
   void _deleteChat(EnhancedChat chat) {
@@ -337,7 +334,7 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -358,6 +355,6 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Создание нового чата будет реализовано')));
+        content: Text('Создание нового чата будет реализовано'),),);
   }
 }

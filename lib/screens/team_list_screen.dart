@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/specialist_team.dart';
+import 'package:event_marketplace_app/providers/team_providers.dart';
+import 'package:event_marketplace_app/screens/team_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_team.dart';
-import '../providers/team_providers.dart';
-import 'team_screen.dart';
 
 /// Экран списка команд специалистов
 class TeamListScreen extends ConsumerWidget {
   const TeamListScreen(
-      {super.key, required this.organizerId, this.title = 'Мои команды'});
+      {required this.organizerId, super.key, this.title = 'Мои команды',});
 
   final String organizerId;
   final String title;
@@ -40,7 +39,7 @@ class TeamListScreen extends ConsumerWidget {
                   Icon(Icons.group_off, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('У вас пока нет команд',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text(
                     'Создайте команду специалистов для вашего мероприятия',
@@ -136,33 +135,28 @@ class TeamListScreen extends ConsumerWidget {
         backgroundColor = Colors.orange.shade100;
         textColor = Colors.orange.shade800;
         icon = Icons.edit;
-        break;
       case TeamStatus.confirmed:
         backgroundColor = Colors.green.shade100;
         textColor = Colors.green.shade800;
         icon = Icons.check_circle;
-        break;
       case TeamStatus.rejected:
         backgroundColor = Colors.red.shade100;
         textColor = Colors.red.shade800;
         icon = Icons.cancel;
-        break;
       case TeamStatus.active:
         backgroundColor = Colors.blue.shade100;
         textColor = Colors.blue.shade800;
         icon = Icons.play_circle;
-        break;
       case TeamStatus.completed:
         backgroundColor = Colors.grey.shade100;
         textColor = Colors.grey.shade800;
         icon = Icons.done_all;
-        break;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-          color: backgroundColor, borderRadius: BorderRadius.circular(12)),
+          color: backgroundColor, borderRadius: BorderRadius.circular(12),),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -171,7 +165,7 @@ class TeamListScreen extends ConsumerWidget {
           Text(
             status.displayName,
             style: TextStyle(
-                color: textColor, fontSize: 12, fontWeight: FontWeight.w500),
+                color: textColor, fontSize: 12, fontWeight: FontWeight.w500,),
           ),
         ],
       ),
@@ -200,7 +194,7 @@ class TeamListScreen extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(team.eventTitle!,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                      style: const TextStyle(fontWeight: FontWeight.w500),),
                 ),
               ],
             ),
@@ -214,7 +208,7 @@ class TeamListScreen extends ConsumerWidget {
                 const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                 const SizedBox(width: 8),
                 Text(
-                    '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}'),
+                    '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}',),
               ],
             ),
             const SizedBox(height: 4),
@@ -280,7 +274,7 @@ class TeamListScreen extends ConsumerWidget {
       );
 
   void _navigateToTeam(BuildContext context, SpecialistTeam team,
-      {bool isEditable = false}) {
+      {bool isEditable = false,}) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) =>
@@ -292,7 +286,7 @@ class TeamListScreen extends ConsumerWidget {
 
 /// Экран команд специалиста
 class SpecialistTeamListScreen extends ConsumerWidget {
-  const SpecialistTeamListScreen({super.key, required this.specialistId});
+  const SpecialistTeamListScreen({required this.specialistId, super.key});
 
   final String specialistId;
 
@@ -409,7 +403,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
                     if (role != null) ...[
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.blue.shade100,
                           borderRadius: BorderRadius.circular(8),
@@ -428,7 +422,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
                     if (payment > 0) ...[
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.green.shade100,
                           borderRadius: BorderRadius.circular(8),
@@ -479,33 +473,28 @@ class SpecialistTeamListScreen extends ConsumerWidget {
         backgroundColor = Colors.orange.shade100;
         textColor = Colors.orange.shade800;
         icon = Icons.edit;
-        break;
       case TeamStatus.confirmed:
         backgroundColor = Colors.green.shade100;
         textColor = Colors.green.shade800;
         icon = Icons.check_circle;
-        break;
       case TeamStatus.rejected:
         backgroundColor = Colors.red.shade100;
         textColor = Colors.red.shade800;
         icon = Icons.cancel;
-        break;
       case TeamStatus.active:
         backgroundColor = Colors.blue.shade100;
         textColor = Colors.blue.shade800;
         icon = Icons.play_circle;
-        break;
       case TeamStatus.completed:
         backgroundColor = Colors.grey.shade100;
         textColor = Colors.grey.shade800;
         icon = Icons.done_all;
-        break;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-          color: backgroundColor, borderRadius: BorderRadius.circular(12)),
+          color: backgroundColor, borderRadius: BorderRadius.circular(12),),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -514,7 +503,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
           Text(
             status.displayName,
             style: TextStyle(
-                color: textColor, fontSize: 12, fontWeight: FontWeight.w500),
+                color: textColor, fontSize: 12, fontWeight: FontWeight.w500,),
           ),
         ],
       ),
@@ -543,7 +532,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(team.eventTitle!,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                      style: const TextStyle(fontWeight: FontWeight.w500),),
                 ),
               ],
             ),
@@ -557,7 +546,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
                 const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
                 const SizedBox(width: 8),
                 Text(
-                    '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}'),
+                    '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}',),
               ],
             ),
           ],
@@ -567,7 +556,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
   void _navigateToTeam(BuildContext context, SpecialistTeam team) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-          builder: (context) => TeamScreen(teamId: team.id, isEditable: false)),
+          builder: (context) => TeamScreen(teamId: team.id, isEditable: false),),
     );
   }
 }

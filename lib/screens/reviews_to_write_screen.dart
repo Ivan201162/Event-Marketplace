@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
+import 'package:event_marketplace_app/widgets/booking_card.dart';
 import 'package:flutter/material.dart';
-
-import '../models/booking.dart';
-import '../models/specialist.dart';
-import '../services/review_service.dart';
-import '../widgets/booking_card.dart';
 
 /// Экран заказов, для которых можно оставить отзыв
 class ReviewsToWriteScreen extends StatefulWidget {
-  const ReviewsToWriteScreen({super.key, required this.userId});
+  const ReviewsToWriteScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -47,7 +46,7 @@ class _ReviewsToWriteScreenState extends State<ReviewsToWriteScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   @override

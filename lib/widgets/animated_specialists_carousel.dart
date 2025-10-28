@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/search_providers.dart';
+import 'package:event_marketplace_app/repositories/chats_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/specialist.dart';
-import '../providers/search_providers.dart';
-import '../repositories/chats_repository.dart';
 
 /// Анимированная карусель лучших специалистов
 class AnimatedSpecialistsCarousel extends ConsumerStatefulWidget {
@@ -44,14 +43,14 @@ class _AnimatedSpecialistsCarouselState
 
     _cardAnimations = _cardControllers.map((controller) {
       return Tween<double>(
-        begin: 0.0,
-        end: 1.0,
+        begin: 0,
+        end: 1,
       ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
     }).toList();
 
     _cardSlideAnimations = _cardControllers.map((controller) {
       return Tween<Offset>(
-        begin: const Offset(1.0, 0.0),
+        begin: const Offset(1, 0),
         end: Offset.zero,
       ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
@@ -61,7 +60,7 @@ class _AnimatedSpecialistsCarouselState
   }
 
   void _startCardAnimations() {
-    for (int i = 0; i < _cardControllers.length; i++) {
+    for (var i = 0; i < _cardControllers.length; i++) {
       Future.delayed(Duration(milliseconds: i * 150), () {
         if (mounted) {
           _cardControllers[i].forward();
@@ -109,7 +108,7 @@ class _AnimatedSpecialistsCarouselState
                   ),
                   TextButton(
                       onPressed: () => context.push('/search'),
-                      child: const Text('Все')),
+                      child: const Text('Все'),),
                 ],
               ),
             ),
@@ -171,10 +170,10 @@ class _SpecialistCardState extends State<_SpecialistCard>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 1.05,
     ).animate(
-        CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut),);
   }
 
   @override
@@ -204,7 +203,6 @@ class _SpecialistCardState extends State<_SpecialistCard>
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: Colors.grey.withOpacity(0.2),
-                  width: 1,
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -243,11 +241,11 @@ class _SpecialistCardState extends State<_SpecialistCard>
                       height: 120,
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(20)),
+                            top: Radius.circular(20),),
                         image: widget.specialist.avatar != null
                             ? DecorationImage(
                                 image: CachedNetworkImageProvider(
-                                    widget.specialist.avatar!),
+                                    widget.specialist.avatar!,),
                                 fit: BoxFit.cover,
                               )
                             : null,
@@ -289,7 +287,7 @@ class _SpecialistCardState extends State<_SpecialistCard>
                                 Container(
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(20)),
+                                        top: Radius.circular(20),),
                                     gradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
@@ -306,7 +304,7 @@ class _SpecialistCardState extends State<_SpecialistCard>
                                   right: 8,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
+                                        horizontal: 8, vertical: 4,),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.9),
                                       borderRadius: BorderRadius.circular(12),
@@ -315,7 +313,7 @@ class _SpecialistCardState extends State<_SpecialistCard>
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(Icons.star,
-                                            color: Colors.amber[600], size: 12),
+                                            color: Colors.amber[600], size: 12,),
                                         const SizedBox(width: 2),
                                         Text(
                                           widget.specialist.rating.toString(),
@@ -351,7 +349,7 @@ class _SpecialistCardState extends State<_SpecialistCard>
                             const SizedBox(height: 4),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
+                                  horizontal: 8, vertical: 2,),
                               decoration: BoxDecoration(
                                 color: Theme.of(context)
                                     .primaryColor
@@ -375,7 +373,7 @@ class _SpecialistCardState extends State<_SpecialistCard>
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 6),
+                                  horizontal: 8, vertical: 6,),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -453,7 +451,7 @@ class _SpecialistCardState extends State<_SpecialistCard>
                                       gradient: const LinearGradient(
                                         colors: [
                                           Colors.green,
-                                          Color(0xFF4CAF50)
+                                          Color(0xFF4CAF50),
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(16),
@@ -506,13 +504,13 @@ class _SpecialistCardState extends State<_SpecialistCard>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Необходимо войти в аккаунт')));
+            const SnackBar(content: Text('Необходимо войти в аккаунт')),);
         return;
       }
 
       final chatsRepository = ChatsRepository();
       final chatId = await chatsRepository.findOrCreateChat(
-          currentUser.uid, widget.specialist.id);
+          currentUser.uid, widget.specialist.id,);
 
       if (chatId != null) {
         context.push('/chat/$chatId');

@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/models/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/user.dart';
 
 final userRoleProvider =
     NotifierProvider<UserRoleNotifier, UserRole>(UserRoleNotifier.new);

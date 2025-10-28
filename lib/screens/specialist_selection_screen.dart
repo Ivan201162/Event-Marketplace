@@ -1,17 +1,14 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/proposal_service.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
+import 'package:event_marketplace_app/widgets/error_widget.dart';
+import 'package:event_marketplace_app/widgets/loading_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/specialist.dart';
-import '../services/proposal_service.dart';
-import '../services/specialist_service.dart';
-import '../widgets/error_widget.dart';
-import '../widgets/loading_widget.dart';
-
 class SpecialistSelectionScreen extends StatefulWidget {
   const SpecialistSelectionScreen({
-    super.key,
-    required this.customerId,
-    required this.eventId,
+    required this.customerId, required this.eventId, super.key,
     this.message,
   });
   final String customerId;
@@ -81,7 +78,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text('Событие: ${widget.eventId}',
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: Theme.of(context).textTheme.bodyMedium,),
                   if (_selectedSpecialistIds.isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Text(
@@ -146,7 +143,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
           if (snapshot.hasError) {
             return CustomErrorWidget(
                 message: snapshot.error.toString(),
-                onRetry: () => setState(() {}));
+                onRetry: () => setState(() {}),);
           }
 
           final specialists = snapshot.data ?? [];
@@ -191,7 +188,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
                     specialist.name,
                     style: TextStyle(
                         fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal),
+                            isSelected ? FontWeight.bold : FontWeight.normal,),
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,7 +198,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
                         Row(
                           children: [
                             const Icon(Icons.star,
-                                size: 16, color: Colors.amber),
+                                size: 16, color: Colors.amber,),
                             const SizedBox(width: 4),
                             Text(specialist.rating.toStringAsFixed(1)),
                           ],
@@ -215,7 +212,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
                     child: specialist.photoUrl == null
                         ? Text(specialist.name.isNotEmpty
                             ? specialist.name[0]
-                            : '?')
+                            : '?',)
                         : null,
                   ),
                   controlAffinity: ListTileControlAffinity.leading,
@@ -270,7 +267,7 @@ class _SpecialistSelectionScreenState extends State<SpecialistSelectionScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка отправки предложения: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {

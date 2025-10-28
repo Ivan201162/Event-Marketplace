@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/customer_portfolio.dart';
+import 'package:event_marketplace_app/models/order_history.dart';
+import 'package:event_marketplace_app/services/anniversary_notification_service.dart';
+import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/customer_portfolio_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/booking.dart';
-import '../models/customer_portfolio.dart';
-import '../models/order_history.dart';
-import '../services/anniversary_notification_service.dart';
-import '../services/auth_service.dart';
-import '../services/booking_service.dart';
-import '../services/customer_portfolio_service.dart';
 
 /// Тестовый экран для проверки функций портфолио заказчика
 class PortfolioTestScreen extends StatefulWidget {
@@ -111,7 +110,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
       _addTestResult('✅ Портфолио загружено: ${loadedPortfolio.name}');
       _addTestResult(
-          '✅ Избранных специалистов: ${loadedPortfolio.favoriteSpecialists.length}');
+          '✅ Избранных специалистов: ${loadedPortfolio.favoriteSpecialists.length}',);
       _addTestResult('✅ Годовщин: ${loadedPortfolio.anniversaries.length}');
     } on Exception catch (e) {
       _addTestResult('❌ Ошибка создания портфолио: $e');
@@ -153,7 +152,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       final orderHistory =
           await _portfolioService.getOrderHistory(currentUser.uid);
       _addTestResult(
-          '✅ История заказов загружена: ${orderHistory.length} заказов');
+          '✅ История заказов загружена: ${orderHistory.length} заказов',);
 
       if (orderHistory.isNotEmpty) {
         final lastOrder = orderHistory.first;
@@ -161,7 +160,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
           '✅ Последний заказ: ${lastOrder.serviceName} за ${lastOrder.formattedPrice}',
         );
         _addTestResult(
-            '✅ Скидка: ${lastOrder.discountAmount.toStringAsFixed(0)} ₽');
+            '✅ Скидка: ${lastOrder.discountAmount.toStringAsFixed(0)} ₽',);
       }
     } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования истории заказов: $e');
@@ -196,7 +195,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
       // Удаляем из избранного
       await _portfolioService.removeFromFavorites(
-          currentUser.uid, testSpecialistId);
+          currentUser.uid, testSpecialistId,);
       _addTestResult('✅ Специалист удален из избранного');
     } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования избранного: $e');
@@ -295,9 +294,9 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('   - Всего заказов: ${stats['totalOrders']}');
       _addTestResult('   - Завершенных: ${stats['completedOrders']}');
       _addTestResult(
-          '   - Потрачено: ${stats['totalSpent']?.toStringAsFixed(0)} ₽');
+          '   - Потрачено: ${stats['totalSpent']?.toStringAsFixed(0)} ₽',);
       _addTestResult(
-          '   - Средний чек: ${stats['averageOrderValue']?.toStringAsFixed(0)} ₽');
+          '   - Средний чек: ${stats['averageOrderValue']?.toStringAsFixed(0)} ₽',);
 
       // Проверяем рекомендации
       final recommendations =
@@ -362,7 +361,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
+                                      Colors.white,),
                                 ),
                               ),
                               SizedBox(width: 12),
@@ -389,7 +388,7 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
                                   await _notificationService
                                       .sendTestNotification();
                                   _addTestResult(
-                                      '🔔 Тестовое уведомление отправлено');
+                                      '🔔 Тестовое уведомление отправлено',);
                                 },
                           child: const Text('Тест уведомлений'),
                         ),

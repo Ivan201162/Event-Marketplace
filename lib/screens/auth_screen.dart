@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/auth/email_auth_widget.dart';
+import 'package:event_marketplace_app/widgets/auth/guest_auth_widget.dart';
+import 'package:event_marketplace_app/widgets/auth/phone_auth_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../providers/auth_providers.dart';
-import '../widgets/auth/email_auth_widget.dart';
-import '../widgets/auth/guest_auth_widget.dart';
-import '../widgets/auth/phone_auth_widget.dart';
 
 /// Экран авторизации с вкладками для разных способов входа
 class AuthScreen extends ConsumerStatefulWidget {
@@ -60,7 +59,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   // Логотип и заголовок
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 24),
+                        horizontal: 32, vertical: 24,),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -81,7 +80,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                             ],
                           ),
                           child: const Icon(Icons.event,
-                              size: 40, color: Colors.white),
+                              size: 40, color: Colors.white,),
                         ),
                         const SizedBox(height: 20),
 
@@ -194,13 +193,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                               tabs: const [
                                 Tab(
                                     icon: Icon(Icons.email, size: 20),
-                                    text: 'Email'),
+                                    text: 'Email',),
                                 Tab(
                                     icon: Icon(Icons.phone, size: 20),
-                                    text: 'Телефон'),
+                                    text: 'Телефон',),
                                 Tab(
                                     icon: Icon(Icons.person, size: 20),
-                                    text: 'Гость'),
+                                    text: 'Гость',),
                               ],
                             ),
                           ),
@@ -230,7 +229,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          theme.primaryColor),
+                                          theme.primaryColor,),
                                     ),
                                   ),
                                   const SizedBox(width: 12),

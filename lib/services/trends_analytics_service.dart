@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../core/feature_flags.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
 /// Сервис аналитики трендов
 class TrendsAnalyticsService {
@@ -288,19 +288,19 @@ class TrendsAnalyticsService {
   // Приватные методы
 
   double _calculateGrowth(
-      String category, DateTime startDate, DateTime endDate) {
+      String category, DateTime startDate, DateTime endDate,) {
     // TODO(developer): Реализовать расчет роста по сравнению с предыдущим периодом
     return 0;
   }
 
   double _calculateServiceGrowth(
-      String service, DateTime startDate, DateTime endDate) {
+      String service, DateTime startDate, DateTime endDate,) {
     // TODO(developer): Реализовать расчет роста услуги по сравнению с предыдущим периодом
     return 0;
   }
 
   double _calculateAveragePrice(
-      String location, DateTime startDate, DateTime endDate) {
+      String location, DateTime startDate, DateTime endDate,) {
     // TODO(developer): Реализовать расчет средней цены для локации
     return 0;
   }

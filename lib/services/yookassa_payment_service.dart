@@ -54,7 +54,7 @@ class YooKassaPaymentService {
         return YooKassaPaymentResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'YooKassa API error: ${response.statusCode} - ${response.body}');
+            'YooKassa API error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('YooKassa payment creation error: $e');
@@ -64,13 +64,13 @@ class YooKassaPaymentService {
 
   /// Gets payment status from YooKassa
   Future<YooKassaPaymentStatus> getPaymentStatus(
-      String yooKassaPaymentId) async {
+      String yooKassaPaymentId,) async {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/payments/$yooKassaPaymentId'),
         headers: {
           'Authorization':
-              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}'
+              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
         },
       );
 
@@ -79,7 +79,7 @@ class YooKassaPaymentService {
         return YooKassaPaymentStatus.fromJson(responseData);
       } else {
         throw Exception(
-            'YooKassa API error: ${response.statusCode} - ${response.body}');
+            'YooKassa API error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('YooKassa payment status error: $e');
@@ -106,7 +106,7 @@ class YooKassaPaymentService {
 
       if (response.statusCode != 200) {
         throw Exception(
-            'YooKassa capture error: ${response.statusCode} - ${response.body}');
+            'YooKassa capture error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('YooKassa payment capture error: $e');
@@ -121,13 +121,13 @@ class YooKassaPaymentService {
         Uri.parse('$_baseUrl/payments/$yooKassaPaymentId/cancel'),
         headers: {
           'Authorization':
-              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}'
+              'Basic ${base64Encode(utf8.encode('$_shopId:$_secretKey'))}',
         },
       );
 
       if (response.statusCode != 200) {
         throw Exception(
-            'YooKassa cancel error: ${response.statusCode} - ${response.body}');
+            'YooKassa cancel error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('YooKassa payment cancel error: $e');
@@ -163,7 +163,7 @@ class YooKassaPaymentService {
         return YooKassaRefundResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'YooKassa refund error: ${response.statusCode} - ${response.body}');
+            'YooKassa refund error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('YooKassa refund creation error: $e');
@@ -192,9 +192,8 @@ class YooKassaPaymentResponse {
     required this.id,
     required this.status,
     required this.amount,
-    this.confirmationUrl,
+    required this.createdAt, this.confirmationUrl,
     this.description,
-    required this.createdAt,
   });
 
   factory YooKassaPaymentResponse.fromJson(Map<String, dynamic> json) =>

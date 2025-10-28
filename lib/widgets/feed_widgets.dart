@@ -1,19 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/feed_comment.dart';
+import 'package:event_marketplace_app/models/feed_post.dart';
+import 'package:event_marketplace_app/providers/feed_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/feed_comment.dart';
-import '../models/feed_post.dart';
-import '../providers/feed_service_provider.dart';
 
 /// Виджет поста в ленте
 class FeedPostWidget extends ConsumerWidget {
   const FeedPostWidget(
-      {super.key,
-      required this.post,
+      {required this.post, super.key,
       this.onLike,
       this.onComment,
-      this.onShare});
+      this.onShare,});
   final FeedPost post;
   final VoidCallback? onLike;
   final VoidCallback? onComment;
@@ -46,7 +44,7 @@ class FeedPostWidget extends ConsumerWidget {
                         Text(
                           post.specialistName ?? 'Пользователь',
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold, fontSize: 16,),
                         ),
                         Text(
                           _formatTimeAgo(post.createdAt),
@@ -61,10 +59,8 @@ class FeedPostWidget extends ConsumerWidget {
                       switch (value) {
                         case 'report':
                           _showReportDialog(context);
-                          break;
                         case 'hide':
                           _hidePost(context);
-                          break;
                       }
                     },
                     itemBuilder: (context) => [
@@ -95,7 +91,7 @@ class FeedPostWidget extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Содержимое поста
-              if (post.content?.isNotEmpty == true)
+              if (post.content?.isNotEmpty ?? false)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child:
@@ -117,7 +113,7 @@ class FeedPostWidget extends ConsumerWidget {
                             label: Text('#$tag'),
                             backgroundColor: Colors.blue.withValues(alpha: 0.1),
                             labelStyle: const TextStyle(
-                                color: Colors.blue, fontSize: 12),
+                                color: Colors.blue, fontSize: 12,),
                           ),
                         )
                         .toList(),
@@ -187,7 +183,7 @@ class FeedPostWidget extends ConsumerWidget {
           itemCount: post.mediaUrls.length,
           itemBuilder: (context, index) => Padding(
             padding: EdgeInsets.only(
-                right: index < post.mediaUrls.length - 1 ? 8 : 0),
+                right: index < post.mediaUrls.length - 1 ? 8 : 0,),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: CachedNetworkImage(
@@ -206,7 +202,7 @@ class FeedPostWidget extends ConsumerWidget {
                   height: 200,
                   color: Colors.grey[300],
                   child: const Center(
-                      child: Icon(Icons.error, color: Colors.grey)),
+                      child: Icon(Icons.error, color: Colors.grey),),
                 ),
               ),
             ),
@@ -235,7 +231,7 @@ class FeedPostWidget extends ConsumerWidget {
               const SizedBox(width: 4),
               Text(label,
                   style: TextStyle(
-                      color: color ?? Colors.grey[600], fontSize: 14)),
+                      color: color ?? Colors.grey[600], fontSize: 14,),),
             ],
           ),
         ),
@@ -250,14 +246,14 @@ class FeedPostWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(
-                  const SnackBar(content: Text('Жалоба отправлена')));
+                  const SnackBar(content: Text('Жалоба отправлена')),);
             },
             child: const Text('Отправить'),
           ),
@@ -291,7 +287,7 @@ class FeedPostWidget extends ConsumerWidget {
 
 /// Виджет комментариев к посту
 class PostCommentsWidget extends ConsumerStatefulWidget {
-  const PostCommentsWidget({super.key, required this.postId});
+  const PostCommentsWidget({required this.postId, super.key});
   final String postId;
 
   @override
@@ -425,7 +421,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка добавления комментария: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -434,7 +430,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
 
 /// Виджет комментария
 class CommentWidget extends ConsumerWidget {
-  const CommentWidget({super.key, required this.comment});
+  const CommentWidget({required this.comment, super.key});
   final FeedComment comment;
 
   @override
@@ -467,11 +463,11 @@ class CommentWidget extends ConsumerWidget {
                       Text(
                         comment.userName,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12),
+                            fontWeight: FontWeight.bold, fontSize: 12,),
                       ),
                       const SizedBox(height: 4),
                       Text(comment.content,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                     ],
                   ),
                 ),
@@ -502,7 +498,7 @@ class CommentWidget extends ConsumerWidget {
                             Text(
                               comment.likesCount.toString(),
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 12),
+                                  color: Colors.grey[600], fontSize: 12,),
                             ),
                           ],
                         ],

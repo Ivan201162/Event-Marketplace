@@ -6,7 +6,7 @@ class OrganizerProfile {
     required this.id,
     required this.userId,
     required this.name,
-    this.description,
+    required this.createdAt, required this.updatedAt, this.description,
     this.logoUrl,
     this.phone,
     this.email,
@@ -28,8 +28,6 @@ class OrganizerProfile {
     this.responseTime,
     this.minBudget,
     this.maxBudget,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать профиль из документа Firestore
@@ -61,7 +59,7 @@ class OrganizerProfile {
       portfolioVideos:
           List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
       socialLinks: Map<String, String>.from(
-          data['socialLinks'] as Map<dynamic, dynamic>? ?? {}),
+          data['socialLinks'] as Map<dynamic, dynamic>? ?? {},),
       workingHours: data['workingHours'] as Map<String, dynamic>?,
       responseTime: data['responseTime'] as String?,
       minBudget: (data['minBudget'] as num?)?.toDouble(),

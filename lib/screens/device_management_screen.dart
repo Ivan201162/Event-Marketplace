@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/security_settings.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/security_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/security_settings.dart';
-import '../providers/auth_providers.dart';
-import '../services/security_service.dart';
 
 /// Экран управления устройствами
 class DeviceManagementScreen extends ConsumerStatefulWidget {
@@ -25,7 +24,7 @@ class _DeviceManagementScreenState
           actions: [
             IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () => setState(() {}))
+                onPressed: () => setState(() {}),),
           ],
         ),
         body: Consumer(
@@ -118,10 +117,10 @@ class _DeviceManagementScreenState
                         Text(
                           'Текущее устройство',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                         Text('Это устройство',
-                            style: TextStyle(fontSize: 14, color: Colors.grey)),
+                            style: TextStyle(fontSize: 14, color: Colors.grey),),
                       ],
                     ),
                   ),
@@ -137,7 +136,7 @@ class _DeviceManagementScreenState
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ],
@@ -170,7 +169,7 @@ class _DeviceManagementScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Все устройства',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           ...devices.map(_buildDeviceCard),
         ],
@@ -198,7 +197,7 @@ class _DeviceManagementScreenState
                         Text(
                           device.deviceName,
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16, fontWeight: FontWeight.w500,),
                         ),
                         Text(
                           device.deviceType,
@@ -218,7 +217,7 @@ class _DeviceManagementScreenState
                 children: [
                   Expanded(
                     child: _buildDeviceInfoItem(
-                        icon: Icons.info, label: 'ОС', value: device.osVersion),
+                        icon: Icons.info, label: 'ОС', value: device.osVersion,),
                   ),
                   Expanded(
                     child: _buildDeviceInfoItem(
@@ -319,11 +318,11 @@ class _DeviceManagementScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
                 Text(
                   value,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500),
+                      fontSize: 14, fontWeight: FontWeight.w500,),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -338,33 +337,33 @@ class _DeviceManagementScreenState
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-            color: Colors.red, borderRadius: BorderRadius.circular(12)),
+            color: Colors.red, borderRadius: BorderRadius.circular(12),),
         child: const Text(
           'Заблокировано',
           style: TextStyle(
-              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold,),
         ),
       );
     } else if (device.isTrusted) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-            color: Colors.green, borderRadius: BorderRadius.circular(12)),
+            color: Colors.green, borderRadius: BorderRadius.circular(12),),
         child: const Text(
           'Доверенное',
           style: TextStyle(
-              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold,),
         ),
       );
     } else {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-            color: Colors.orange, borderRadius: BorderRadius.circular(12)),
+            color: Colors.orange, borderRadius: BorderRadius.circular(12),),
         child: const Text(
           'Неизвестно',
           style: TextStyle(
-              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+              color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold,),
         ),
       );
     }
@@ -431,7 +430,7 @@ class _DeviceManagementScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -441,11 +440,11 @@ class _DeviceManagementScreenState
       builder: (context) => AlertDialog(
         title: const Text('Заблокировать устройство'),
         content: Text(
-            'Вы уверены, что хотите заблокировать устройство "${device.deviceName}"?'),
+            'Вы уверены, что хотите заблокировать устройство "${device.deviceName}"?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -472,7 +471,7 @@ class _DeviceManagementScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -485,14 +484,14 @@ class _DeviceManagementScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Устройство разблокировано'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 }

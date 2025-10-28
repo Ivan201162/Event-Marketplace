@@ -3,22 +3,6 @@ import 'package:equatable/equatable.dart';
 
 /// Модель профиля специалиста
 class SpecialistProfile extends Equatable {
-  final String id;
-  final String userId;
-  final String name;
-  final String email;
-  final String phone;
-  final String city;
-  final String category;
-  final String description;
-  final String experience;
-  final double hourlyRate;
-  final List<String> services;
-  final List<String> portfolio;
-  final bool isAvailable;
-  final String? avatarUrl;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const SpecialistProfile({
     required this.id,
@@ -34,9 +18,7 @@ class SpecialistProfile extends Equatable {
     required this.services,
     required this.portfolio,
     required this.isAvailable,
-    this.avatarUrl,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.avatarUrl,
   });
 
   /// Создать из документа Firestore
@@ -61,6 +43,22 @@ class SpecialistProfile extends Equatable {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String userId;
+  final String name;
+  final String email;
+  final String phone;
+  final String city;
+  final String category;
+  final String description;
+  final String experience;
+  final double hourlyRate;
+  final List<String> services;
+  final List<String> portfolio;
+  final bool isAvailable;
+  final String? avatarUrl;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() {

@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/version_management.dart';
+import 'package:event_marketplace_app/services/version_management_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/version_management.dart';
-import '../services/version_management_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления версиями и обновлениями
 class VersionManagementScreen extends ConsumerStatefulWidget {
@@ -56,10 +56,10 @@ class _VersionManagementScreenState
             Expanded(child: _buildTabButton('versions', 'Версии', Icons.apps)),
             Expanded(
                 child: _buildTabButton(
-                    'updates', 'Обновления', Icons.system_update)),
+                    'updates', 'Обновления', Icons.system_update,),),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.analytics)),
+                    'statistics', 'Статистика', Icons.analytics,),),
           ],
         ),
       );
@@ -82,7 +82,7 @@ class _VersionManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -108,22 +108,22 @@ class _VersionManagementScreenState
             child: Row(
               children: [
                 Text('Версии приложения',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 DropdownButton<String?>(
                   hint: const Text('Все платформы'),
                   items: const [
                     DropdownMenuItem<String?>(child: Text('Все платформы')),
                     DropdownMenuItem<String?>(
-                        value: 'android', child: Text('Android')),
+                        value: 'android', child: Text('Android'),),
                     DropdownMenuItem<String?>(value: 'ios', child: Text('iOS')),
                     DropdownMenuItem<String?>(value: 'web', child: Text('Web')),
                     DropdownMenuItem<String?>(
-                        value: 'windows', child: Text('Windows')),
+                        value: 'windows', child: Text('Windows'),),
                     DropdownMenuItem<String?>(
-                        value: 'macos', child: Text('macOS')),
+                        value: 'macos', child: Text('macOS'),),
                     DropdownMenuItem<String?>(
-                        value: 'linux', child: Text('Linux')),
+                        value: 'linux', child: Text('Linux'),),
                   ],
                   onChanged: (value) {
                     // TODO(developer): Реализовать фильтрацию
@@ -179,10 +179,10 @@ class _VersionManagementScreenState
                     Text(
                       version.fullVersion,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text('Платформа: ${version.platform}',
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -198,7 +198,7 @@ class _VersionManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               if (version.isForced)
@@ -216,7 +216,7 @@ class _VersionManagementScreenState
                     style: TextStyle(
                         fontSize: 12,
                         color: Colors.red,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,),
                   ),
                 ),
               PopupMenuButton<String>(
@@ -226,26 +226,26 @@ class _VersionManagementScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   if (!version.isAvailable)
                     const PopupMenuItem(
                       value: 'activate',
                       child: ListTile(
                           leading: Icon(Icons.play_arrow),
-                          title: Text('Активировать')),
+                          title: Text('Активировать'),),
                     ),
                   const PopupMenuItem(
                     value: 'statistics',
                     child: ListTile(
                         leading: Icon(Icons.analytics),
-                        title: Text('Статистика')),
+                        title: Text('Статистика'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -268,11 +268,11 @@ class _VersionManagementScreenState
             Text(
               'Изменения:',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                  fontWeight: FontWeight.bold, color: Colors.grey[600],),
             ),
             const SizedBox(height: 4),
             Text(version.shortDescription,
-                style: const TextStyle(fontSize: 12)),
+                style: const TextStyle(fontSize: 12),),
             const SizedBox(height: 8),
           ],
 
@@ -322,7 +322,7 @@ class _VersionManagementScreenState
             child: Row(
               children: [
                 Text('Обновления приложения',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadData,
@@ -367,10 +367,10 @@ class _VersionManagementScreenState
                     Text(
                       '${update.currentVersion} → ${update.targetVersion}',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text('Платформа: ${update.platform}',
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -386,7 +386,7 @@ class _VersionManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
             ],
@@ -470,7 +470,7 @@ class _VersionManagementScreenState
             child: Row(
               children: [
                 Text('Статистика версий',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadData,
@@ -512,10 +512,10 @@ class _VersionManagementScreenState
                       Text(
                         'Версия ${stats.version}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
                       Text('Платформа: ${stats.platform}',
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                     ],
                   ),
                 ),
@@ -545,7 +545,7 @@ class _VersionManagementScreenState
                 ),
                 Expanded(
                   child: _buildStatCard('Крашей', '${stats.crashCount}',
-                      Colors.red, Icons.bug_report),
+                      Colors.red, Icons.bug_report,),
                 ),
               ],
             ),
@@ -619,7 +619,7 @@ class _VersionManagementScreenState
       );
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -634,7 +634,7 @@ class _VersionManagementScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -655,7 +655,7 @@ class _VersionManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -708,7 +708,7 @@ class _VersionManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -721,16 +721,12 @@ class _VersionManagementScreenState
     switch (action) {
       case 'view':
         _viewVersion(version);
-        break;
       case 'edit':
         _editVersion(version);
-        break;
       case 'activate':
         _activateVersion(version);
-        break;
       case 'statistics':
         _viewVersionStatistics(version);
-        break;
     }
   }
 
@@ -750,19 +746,19 @@ class _VersionManagementScreenState
               ],
               if (version.features.isNotEmpty) ...[
                 const Text('Новые функции:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 ...version.features.map((feature) => Text('• $feature')),
                 const SizedBox(height: 8),
               ],
               if (version.bugFixes.isNotEmpty) ...[
                 const Text('Исправления:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 ...version.bugFixes.map((fix) => Text('• $fix')),
                 const SizedBox(height: 8),
               ],
               if (version.breakingChanges.isNotEmpty) ...[
                 const Text('Критические изменения:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 ...version.breakingChanges.map((change) => Text('• $change')),
                 const SizedBox(height: 8),
               ],
@@ -779,7 +775,7 @@ class _VersionManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -790,7 +786,7 @@ class _VersionManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование версии "${version.version}" будет реализовано')),
+              'Редактирование версии "${version.version}" будет реализовано',),),
     );
   }
 
@@ -803,7 +799,7 @@ class _VersionManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -841,7 +837,7 @@ class _VersionManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Статистика версии "${version.version}" будет реализована')),
+              Text('Статистика версии "${version.version}" будет реализована'),),
     );
   }
 
@@ -850,6 +846,6 @@ class _VersionManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание версии будет реализовано')));
+        const SnackBar(content: Text('Создание версии будет реализовано')),);
   }
 }

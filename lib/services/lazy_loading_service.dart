@@ -41,7 +41,7 @@ class LazyLoadingService {
 
   /// Предзагрузить экран
   static Future<void> preloadScreen(
-      String screenName, Widget Function() screenBuilder) async {
+      String screenName, Widget Function() screenBuilder,) async {
     try {
       if (!_cachedScreens.containsKey(screenName)) {
         debugPrint('📱 Preloading screen: $screenName');
@@ -86,7 +86,7 @@ class LazyLoadingService {
 
     if (expiredScreens.isNotEmpty) {
       debugPrint(
-          '🧹 Optimized cache, removed ${expiredScreens.length} expired screens');
+          '🧹 Optimized cache, removed ${expiredScreens.length} expired screens',);
     }
   }
 
@@ -107,18 +107,16 @@ class LazyLoadingService {
 
 /// Виджет для ленивой загрузки экранов
 class LazyScreen extends StatefulWidget {
+
+  const LazyScreen({
+    required this.screenName, required this.screenBuilder, super.key,
+    this.loadingWidget,
+    this.loadingDelay,
+  });
   final String screenName;
   final Widget Function() screenBuilder;
   final Widget? loadingWidget;
   final Duration? loadingDelay;
-
-  const LazyScreen({
-    super.key,
-    required this.screenName,
-    required this.screenBuilder,
-    this.loadingWidget,
-    this.loadingDelay,
-  });
 
   @override
   State<LazyScreen> createState() => _LazyScreenState();
@@ -177,16 +175,13 @@ class _LazyScreenState extends State<LazyScreen> {
 
 /// Виджет для предзагрузки экранов
 class ScreenPreloader extends StatefulWidget {
+
+  const ScreenPreloader({
+    required this.screenNames, required this.screenBuilders, required this.child, super.key,
+  });
   final List<String> screenNames;
   final Map<String, Widget Function()> screenBuilders;
   final Widget child;
-
-  const ScreenPreloader({
-    super.key,
-    required this.screenNames,
-    required this.screenBuilders,
-    required this.child,
-  });
 
   @override
   State<ScreenPreloader> createState() => _ScreenPreloaderState();
@@ -218,18 +213,17 @@ class _ScreenPreloaderState extends State<ScreenPreloader> {
 
 /// Виджет для оптимизации производительности
 class PerformanceOptimizer extends StatefulWidget {
-  final Widget child;
-  final Duration optimizationInterval;
-  final bool enableMemoryOptimization;
-  final bool enableCacheOptimization;
 
   const PerformanceOptimizer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.optimizationInterval = const Duration(minutes: 5),
     this.enableMemoryOptimization = true,
     this.enableCacheOptimization = true,
   });
+  final Widget child;
+  final Duration optimizationInterval;
+  final bool enableMemoryOptimization;
+  final bool enableCacheOptimization;
 
   @override
   State<PerformanceOptimizer> createState() => _PerformanceOptimizerState();
@@ -280,16 +274,14 @@ class _PerformanceOptimizerState extends State<PerformanceOptimizer> {
 
 /// Виджет для измерения производительности
 class PerformanceMonitor extends StatefulWidget {
+
+  const PerformanceMonitor({
+    required this.child, required this.screenName, super.key,
+    this.enableLogging = true,
+  });
   final Widget child;
   final String screenName;
   final bool enableLogging;
-
-  const PerformanceMonitor({
-    super.key,
-    required this.child,
-    required this.screenName,
-    this.enableLogging = true,
-  });
 
   @override
   State<PerformanceMonitor> createState() => _PerformanceMonitorState();
@@ -316,7 +308,7 @@ class _PerformanceMonitorState extends State<PerformanceMonitor> {
     if (widget.enableLogging) {
       final buildTime = _endTime.difference(_startTime);
       debugPrint(
-          '📊 Performance: ${widget.screenName} built in ${buildTime.inMilliseconds}ms');
+          '📊 Performance: ${widget.screenName} built in ${buildTime.inMilliseconds}ms',);
     }
   }
 

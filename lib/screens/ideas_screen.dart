@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/providers/ideas_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/idea.dart';
-import '../providers/ideas_provider.dart';
 
 /// Экран идей (Pinterest-стиль)
 class IdeasScreen extends ConsumerWidget {
@@ -21,7 +20,7 @@ class IdeasScreen extends ConsumerWidget {
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => _showCreateIdeaDialog(context)),
+              onPressed: () => _showCreateIdeaDialog(context),),
         ],
       ),
       body: SafeArea(
@@ -35,7 +34,7 @@ class IdeasScreen extends ConsumerWidget {
                     Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
                     Text('Нет идей',
-                        style: TextStyle(fontSize: 18, color: Colors.grey)),
+                        style: TextStyle(fontSize: 18, color: Colors.grey),),
                     SizedBox(height: 8),
                     Text(
                       'Создайте первую идею или подпишитесь на специалистов',
@@ -80,7 +79,7 @@ class IdeasScreen extends ConsumerWidget {
   }
 
   Widget _buildIdeasGrid(
-          BuildContext context, List<Idea> ideas, WidgetRef ref) =>
+          BuildContext context, List<Idea> ideas, WidgetRef ref,) =>
       Padding(
         padding: const EdgeInsets.all(8),
         child: GridView.builder(
@@ -118,14 +117,14 @@ class IdeasScreen extends ConsumerWidget {
                     image: idea.imageUrl != null
                         ? DecorationImage(
                             image: NetworkImage(idea.imageUrl!),
-                            fit: BoxFit.cover)
+                            fit: BoxFit.cover,)
                         : null,
                     color: idea.imageUrl == null ? Colors.grey[200] : null,
                   ),
                   child: idea.imageUrl == null
                       ? const Center(
                           child:
-                              Icon(Icons.image, size: 48, color: Colors.grey))
+                              Icon(Icons.image, size: 48, color: Colors.grey),)
                       : Stack(
                           children: [
                             // Кнопка сохранения
@@ -166,7 +165,7 @@ class IdeasScreen extends ConsumerWidget {
                       Text(
                         idea.title,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
+                            fontWeight: FontWeight.bold, fontSize: 14,),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -211,7 +210,7 @@ class IdeasScreen extends ConsumerWidget {
                               child: Text(
                                 idea.authorName ?? 'Неизвестный автор',
                                 style: TextStyle(
-                                    fontSize: 12, color: Colors.grey[600]),
+                                    fontSize: 12, color: Colors.grey[600],),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -236,7 +235,7 @@ class IdeasScreen extends ConsumerWidget {
                                   Text(
                                     idea.likeCount.toString(),
                                     style: TextStyle(
-                                        fontSize: 12, color: Colors.grey[600]),
+                                        fontSize: 12, color: Colors.grey[600],),
                                   ),
                                 ],
                               ],
@@ -258,7 +257,7 @@ class IdeasScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text(idea.isLiked ? 'Лайк убран' : 'Лайк поставлен')));
+        content: Text(idea.isLiked ? 'Лайк убран' : 'Лайк поставлен'),),);
   }
 
   void _toggleSave(BuildContext context, Idea idea) {
@@ -266,7 +265,7 @@ class IdeasScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text(idea.isSaved ? 'Убрано из сохранённых' : 'Сохранено')));
+        content: Text(idea.isSaved ? 'Убрано из сохранённых' : 'Сохранено'),),);
   }
 
   void _showIdeaDetails(BuildContext context, Idea idea) {
@@ -289,7 +288,7 @@ class IdeasScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     image: DecorationImage(
-                        image: NetworkImage(idea.imageUrl!), fit: BoxFit.cover),
+                        image: NetworkImage(idea.imageUrl!), fit: BoxFit.cover,),
                   ),
                 ),
               const SizedBox(height: 16),
@@ -331,7 +330,7 @@ class IdeasScreen extends ConsumerWidget {
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: Text(idea.description,
-                      style: Theme.of(context).textTheme.bodyLarge),
+                      style: Theme.of(context).textTheme.bodyLarge,),
                 ),
               ),
 
@@ -389,7 +388,7 @@ class IdeasScreen extends ConsumerWidget {
           child: Column(
             children: [
               Text('Комментарии',
-                  style: Theme.of(context).textTheme.headlineSmall),
+                  style: Theme.of(context).textTheme.headlineSmall,),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView(
@@ -427,7 +426,7 @@ class IdeasScreen extends ConsumerWidget {
         content: const Text('Функция создания идей в разработке'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+              onPressed: () => Navigator.pop(context), child: const Text('OK'),),
         ],
       ),
     );

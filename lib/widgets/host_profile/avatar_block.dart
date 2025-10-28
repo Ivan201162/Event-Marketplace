@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/host_profile.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/host_profile.dart';
 
 /// Компонент блока с аватаром ведущего
 class AvatarBlock extends StatelessWidget {
-  const AvatarBlock({super.key, required this.host, this.onPhotoTap});
+  const AvatarBlock({required this.host, super.key, this.onPhotoTap});
   final HostProfile host;
   final VoidCallback? onPhotoTap;
 
@@ -53,7 +52,7 @@ class AvatarBlock extends StatelessWidget {
                     ? CachedNetworkImage(
                         imageUrl: host.photoUrl!,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
+                        placeholder: (context, url) => ColoredBox(
                           color: theme.primaryColor.withValues(alpha: 0.1),
                           child: Icon(
                             Icons.person,
@@ -61,7 +60,7 @@ class AvatarBlock extends StatelessWidget {
                             color: theme.primaryColor,
                           ),
                         ),
-                        errorWidget: (context, url, error) => Container(
+                        errorWidget: (context, url, error) => ColoredBox(
                           color: theme.primaryColor.withValues(alpha: 0.1),
                           child: Icon(
                             Icons.person,
@@ -70,7 +69,7 @@ class AvatarBlock extends StatelessWidget {
                           ),
                         ),
                       )
-                    : Container(
+                    : ColoredBox(
                         color: theme.primaryColor.withValues(alpha: 0.1),
                         child: Icon(
                           Icons.person,

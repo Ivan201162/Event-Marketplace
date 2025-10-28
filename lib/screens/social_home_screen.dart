@@ -76,13 +76,13 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
             // Лучшие специалисты недели
             SliverToBoxAdapter(
               child: _buildTopSpecialistsSection(
-                  theme, 'Лучшие специалисты недели по России'),
+                  theme, 'Лучшие специалисты недели по России',),
             ),
 
             // Лучшие специалисты по городу
             SliverToBoxAdapter(
               child: _buildTopSpecialistsSection(
-                  theme, 'Лучшие специалисты по вашему городу'),
+                  theme, 'Лучшие специалисты по вашему городу',),
             ),
 
             // Дополнительный контент
@@ -136,7 +136,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 Row(
                   children: [
                     Icon(Icons.location_on,
-                        size: 16, color: theme.textTheme.bodySmall?.color),
+                        size: 16, color: theme.textTheme.bodySmall?.color,),
                     const SizedBox(width: 4),
                     Text('Москва', style: theme.textTheme.bodySmall),
                   ],
@@ -288,31 +288,31 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
         'name': 'Анна Петрова',
         'specialty': 'Фотограф',
         'rating': 4.9,
-        'price': '5000₽'
+        'price': '5000₽',
       },
       {
         'name': 'Михаил Сидоров',
         'specialty': 'Видеограф',
         'rating': 4.8,
-        'price': '8000₽'
+        'price': '8000₽',
       },
       {
         'name': 'Елена Козлова',
         'specialty': 'Организатор',
         'rating': 4.9,
-        'price': '12000₽'
+        'price': '12000₽',
       },
       {
         'name': 'Дмитрий Волков',
         'specialty': 'Диджей',
         'rating': 4.7,
-        'price': '15000₽'
+        'price': '15000₽',
       },
       {
         'name': 'Ольга Морозова',
         'specialty': 'Декоратор',
         'rating': 4.8,
-        'price': '6000₽'
+        'price': '6000₽',
       },
     ];
 
@@ -340,7 +340,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               ),
             ),
             child: Center(
-                child: Icon(Icons.person, size: 40, color: theme.primaryColor)),
+                child: Icon(Icons.person, size: 40, color: theme.primaryColor),),
           ),
 
           // Информация о специалисте
@@ -350,7 +350,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  specialist['name'] as String,
+                  specialist['name']! as String,
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(fontWeight: FontWeight.bold),
                   maxLines: 1,
@@ -358,7 +358,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  specialist['specialty'] as String,
+                  specialist['specialty']! as String,
                   style: theme.textTheme.bodySmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -369,7 +369,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                     const Icon(Icons.star, size: 14, color: Colors.amber),
                     const SizedBox(width: 2),
                     Text(
-                      specialist['rating'] as String,
+                      specialist['rating']! as String,
                       style: theme.textTheme.bodySmall
                           ?.copyWith(fontWeight: FontWeight.w500),
                     ),
@@ -377,7 +377,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  specialist['price'] as String,
+                  specialist['price']! as String,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.primaryColor,
                     fontWeight: FontWeight.bold,
@@ -396,7 +396,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-          color: theme.cardColor, borderRadius: BorderRadius.circular(16)),
+          color: theme.cardColor, borderRadius: BorderRadius.circular(16),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

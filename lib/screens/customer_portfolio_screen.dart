@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/customer_portfolio.dart';
+import 'package:event_marketplace_app/models/order_history.dart';
+import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/services/customer_portfolio_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/customer_portfolio.dart';
-import '../models/order_history.dart';
-import '../services/auth_service.dart';
-import '../services/customer_portfolio_service.dart';
 
 /// Экран портфолио заказчика
 class CustomerPortfolioScreen extends StatefulWidget {
@@ -118,14 +117,14 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text(_error!,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium),
+                style: Theme.of(context).textTheme.bodyMedium,),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadPortfolio, child: const Text('Повторить')),
+                onPressed: _loadPortfolio, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -175,7 +174,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(_portfolio!.name,
-                        style: Theme.of(context).textTheme.headlineSmall),
+                        style: Theme.of(context).textTheme.headlineSmall,),
                     const SizedBox(height: 4),
                     Text(
                       _portfolio!.email,
@@ -223,7 +222,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         childAspectRatio: 1.5,
         children: [
           _buildStatCard('Заказов', '${_stats['totalOrders'] ?? 0}',
-              Icons.shopping_bag, Colors.blue),
+              Icons.shopping_bag, Colors.blue,),
           _buildStatCard(
             'Потрачено',
             '${(_stats['totalSpent'] ?? 0).toStringAsFixed(0)} ₽',
@@ -246,7 +245,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
       );
 
   Widget _buildStatCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -266,7 +265,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
               ),
               Text(title,
                   style: Theme.of(context).textTheme.bodySmall,
-                  textAlign: TextAlign.center),
+                  textAlign: TextAlign.center,),
             ],
           ),
         ),
@@ -286,7 +285,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                 const Icon(Icons.lightbulb, color: Colors.amber),
                 const SizedBox(width: 8),
                 Text('Рекомендации',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
               ],
             ),
             const SizedBox(height: 12),
@@ -297,11 +296,11 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Icon(Icons.arrow_forward_ios,
-                        size: 16, color: Colors.grey),
+                        size: 16, color: Colors.grey,),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(recommendation,
-                          style: Theme.of(context).textTheme.bodyMedium),
+                          style: Theme.of(context).textTheme.bodyMedium,),
                     ),
                   ],
                 ),
@@ -324,10 +323,10 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                   const Icon(Icons.note, color: Colors.purple),
                   const SizedBox(width: 8),
                   Text('Заметки',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   const Spacer(),
                   IconButton(
-                      onPressed: _editNotes, icon: const Icon(Icons.edit)),
+                      onPressed: _editNotes, icon: const Icon(Icons.edit),),
                 ],
               ),
               const SizedBox(height: 12),
@@ -354,10 +353,10 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             Icon(Icons.history, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('История заказов пуста',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             SizedBox(height: 8),
             Text('Ваши заказы будут отображаться здесь',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -384,7 +383,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                 children: [
                   Expanded(
                     child: Text(order.serviceName,
-                        style: Theme.of(context).textTheme.titleMedium),
+                        style: Theme.of(context).textTheme.titleMedium,),
                   ),
                   Container(
                     padding:
@@ -418,17 +417,17 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                   Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(order.formattedDate,
-                      style: Theme.of(context).textTheme.bodySmall),
+                      style: Theme.of(context).textTheme.bodySmall,),
                   const SizedBox(width: 16),
                   Icon(Icons.monetization_on,
-                      size: 16, color: Colors.grey[600]),
+                      size: 16, color: Colors.grey[600],),
                   const SizedBox(width: 4),
                   Text(
                     order.formattedPrice,
                     style: Theme.of(
                       context,
                     ).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500, color: Colors.green),
+                        fontWeight: FontWeight.w500, color: Colors.green,),
                   ),
                 ],
               ),
@@ -439,7 +438,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(
-                      color: Colors.orange, fontWeight: FontWeight.w500),
+                      color: Colors.orange, fontWeight: FontWeight.w500,),
                 ),
               ],
               if (order.notes != null && order.notes!.isNotEmpty) ...[
@@ -468,10 +467,10 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
             Icon(Icons.favorite_border, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Избранных специалистов нет',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             SizedBox(height: 8),
             Text('Добавляйте специалистов в избранное',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -517,7 +516,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         children: [
           if (upcomingAnniversaries.isNotEmpty) ...[
             Text('Ближайшие годовщины',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 12),
             ...upcomingAnniversaries
                 .map((anniversary) => _buildAnniversaryCard(anniversary, true)),
@@ -532,13 +531,13 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                   Icon(Icons.calendar_today, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Годовщин не добавлено',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                 ],
               ),
             )
           else
             ...anniversaries.map(
-                (anniversary) => _buildAnniversaryCard(anniversary, false)),
+                (anniversary) => _buildAnniversaryCard(anniversary, false),),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: _addAnniversary,
@@ -566,7 +565,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         title: Text(
           '${anniversary.day.toString().padLeft(2, '0')}.${anniversary.month.toString().padLeft(2, '0')}',
           style: TextStyle(
-              fontWeight: isUpcoming ? FontWeight.bold : FontWeight.normal),
+              fontWeight: isUpcoming ? FontWeight.bold : FontWeight.normal,),
         ),
         subtitle: isUpcoming
             ? Text('Через $daysUntil дней')
@@ -614,7 +613,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(controller.text),
             child: const Text('Сохранить'),
@@ -646,7 +645,7 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
 
     try {
       await _portfolioService.removeFromFavorites(
-          currentUser.uid, specialistId);
+          currentUser.uid, specialistId,);
       await _loadPortfolio();
       if (mounted) {
         ScaffoldMessenger.of(

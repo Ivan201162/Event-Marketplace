@@ -3,37 +3,6 @@ import 'package:equatable/equatable.dart';
 
 /// Review model
 class Review extends Equatable {
-  final String id;
-  final String specialistId;
-  final String clientId;
-  final String clientName;
-  final String specialistName;
-  final int rating;
-  final String? comment;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> images;
-  final List<String> likedBy;
-  final int likesCount;
-  final String? title;
-  final bool hasComment;
-  final List<String> tags;
-  final bool isVerified;
-  final bool isPublic;
-  final List<String> serviceTags;
-  final List<String> photos;
-  final List<Map<String, dynamic>> responses;
-  final String? text;
-  final String? formattedDate;
-  final String? clientAvatarUrl;
-  final String? date;
-  final String? customerId;
-  final String? customerName;
-  final bool isEdited;
-  final DateTime? editedAt;
-  final String? bookingId;
-  final bool canDelete;
-  final String? ratingColor;
 
   const Review({
     required this.id,
@@ -42,9 +11,7 @@ class Review extends Equatable {
     required this.clientName,
     required this.specialistName,
     required this.rating,
-    this.comment,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.comment,
     this.images = const [],
     this.likedBy = const [],
     this.likesCount = 0,
@@ -71,7 +38,7 @@ class Review extends Equatable {
 
   /// Create Review from Firestore document
   factory Review.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Review(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',
@@ -108,6 +75,37 @@ class Review extends Equatable {
       ratingColor: data['ratingColor'],
     );
   }
+  final String id;
+  final String specialistId;
+  final String clientId;
+  final String clientName;
+  final String specialistName;
+  final int rating;
+  final String? comment;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<String> images;
+  final List<String> likedBy;
+  final int likesCount;
+  final String? title;
+  final bool hasComment;
+  final List<String> tags;
+  final bool isVerified;
+  final bool isPublic;
+  final List<String> serviceTags;
+  final List<String> photos;
+  final List<Map<String, dynamic>> responses;
+  final String? text;
+  final String? formattedDate;
+  final String? clientAvatarUrl;
+  final String? date;
+  final String? customerId;
+  final String? customerName;
+  final bool isEdited;
+  final DateTime? editedAt;
+  final String? bookingId;
+  final bool canDelete;
+  final String? ratingColor;
 
   /// Convert Review to Firestore document
   Map<String, dynamic> toFirestore() {
@@ -291,12 +289,6 @@ class Review extends Equatable {
 
 /// Review stats model
 class ReviewStats extends Equatable {
-  final double averageRating;
-  final int totalReviews;
-  final Map<int, int> ratingDistribution;
-  final int verifiedReviews;
-  final int recentReviews;
-  final List<String> topTags;
 
   const ReviewStats({
     required this.averageRating,
@@ -306,10 +298,16 @@ class ReviewStats extends Equatable {
     required this.recentReviews,
     this.topTags = const [],
   });
+  final double averageRating;
+  final int totalReviews;
+  final Map<int, int> ratingDistribution;
+  final int verifiedReviews;
+  final int recentReviews;
+  final List<String> topTags;
 
   /// Get rating percentage for specific rating
   double getRatingPercentage(int rating) {
-    if (totalReviews == 0) return 0.0;
+    if (totalReviews == 0) return 0;
     return (ratingDistribution[rating] ?? 0) / totalReviews * 100;
   }
 
@@ -334,12 +332,6 @@ class ReviewStats extends Equatable {
 
 /// Specialist review stats model
 class SpecialistReviewStats extends Equatable {
-  final String specialistId;
-  final double averageRating;
-  final int totalReviews;
-  final Map<int, int> ratingDistribution;
-  final List<String> topTags;
-  final Map<String, int> serviceRatings;
 
   const SpecialistReviewStats({
     required this.specialistId,
@@ -349,10 +341,16 @@ class SpecialistReviewStats extends Equatable {
     required this.topTags,
     required this.serviceRatings,
   });
+  final String specialistId;
+  final double averageRating;
+  final int totalReviews;
+  final Map<int, int> ratingDistribution;
+  final List<String> topTags;
+  final Map<String, int> serviceRatings;
 
   /// Get rating percentage for specific rating
   double getRatingPercentage(int rating) {
-    if (totalReviews == 0) return 0.0;
+    if (totalReviews == 0) return 0;
     return (ratingDistribution[rating] ?? 0) / totalReviews * 100;
   }
 

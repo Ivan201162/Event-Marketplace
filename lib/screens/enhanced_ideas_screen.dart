@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/enhanced_idea.dart';
+import 'package:event_marketplace_app/providers/enhanced_ideas_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/enhanced_idea.dart';
-import '../providers/enhanced_ideas_providers.dart';
 
 class EnhancedIdeasScreen extends ConsumerStatefulWidget {
   const EnhancedIdeasScreen({super.key});
@@ -39,7 +38,7 @@ class _EnhancedIdeasScreenState extends ConsumerState<EnhancedIdeasScreen>
       body: Column(
         children: [
           // TabBar для переключения между фото и видео
-          Container(
+          ColoredBox(
             color: Theme.of(context).primaryColor,
             child: TabBar(
               controller: _tabController,
@@ -186,7 +185,7 @@ class _PhotoIdeasTab extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.add_photo_alternate,
-                              color: Colors.white, size: 20),
+                              color: Colors.white, size: 20,),
                           SizedBox(width: 8),
                           Text(
                             'Добавить фото идею',
@@ -416,14 +415,14 @@ class _PhotoIdeaCard extends ConsumerWidget {
                     Text(
                       idea.title,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
+                          fontWeight: FontWeight.bold, fontSize: 14,),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(idea.authorName,
                         style:
-                            TextStyle(color: Colors.grey[600], fontSize: 12)),
+                            TextStyle(color: Colors.grey[600], fontSize: 12),),
                     const Spacer(),
                     Row(
                       children: [
@@ -434,12 +433,12 @@ class _PhotoIdeaCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 4),
                         Text('${idea.likes}',
-                            style: const TextStyle(fontSize: 12)),
+                            style: const TextStyle(fontSize: 12),),
                         const SizedBox(width: 12),
                         const Icon(Icons.comment, color: Colors.grey, size: 16),
                         const SizedBox(width: 4),
                         Text('${idea.comments}',
-                            style: const TextStyle(fontSize: 12)),
+                            style: const TextStyle(fontSize: 12),),
                         const Spacer(),
                         if (idea.budget != null)
                           Text(
@@ -471,7 +470,7 @@ class _VideoIdeaCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ideasNotifier = ref.read(enhancedIdeasProvider);
 
-    return Container(
+    return ColoredBox(
       color: Colors.black,
       child: Stack(
         children: [
@@ -486,12 +485,12 @@ class _VideoIdeaCard extends ConsumerWidget {
                 placeholder: (context, url) => Container(
                   color: Colors.grey[900],
                   child: const Center(
-                      child: CircularProgressIndicator(color: Colors.white)),
+                      child: CircularProgressIndicator(color: Colors.white),),
                 ),
                 errorWidget: (context, url, error) => Container(
                   color: Colors.grey[900],
                   child: const Center(
-                      child: Icon(Icons.error, color: Colors.white)),
+                      child: Icon(Icons.error, color: Colors.white),),
                 ),
               ),
             ),
@@ -499,7 +498,7 @@ class _VideoIdeaCard extends ConsumerWidget {
           // Кнопка воспроизведения
           const Center(
               child: Icon(Icons.play_circle_filled,
-                  size: 80, color: Colors.white)),
+                  size: 80, color: Colors.white,),),
 
           // Информация об идее
           Positioned(
@@ -514,7 +513,7 @@ class _VideoIdeaCard extends ConsumerWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withValues(alpha: 0.8)
+                    Colors.black.withValues(alpha: 0.8),
                   ],
                 ),
               ),
@@ -547,7 +546,7 @@ class _VideoIdeaCard extends ConsumerWidget {
                         ),
                       ),
                       Text('${idea.likes}',
-                          style: const TextStyle(color: Colors.white)),
+                          style: const TextStyle(color: Colors.white),),
                       const SizedBox(width: 16),
                       IconButton(
                         onPressed: () {
@@ -556,7 +555,7 @@ class _VideoIdeaCard extends ConsumerWidget {
                         icon: const Icon(Icons.comment, color: Colors.white),
                       ),
                       Text('${idea.comments}',
-                          style: const TextStyle(color: Colors.white)),
+                          style: const TextStyle(color: Colors.white),),
                       const Spacer(),
                       IconButton(
                         onPressed: () => ideasNotifier.toggleSave(idea.id),

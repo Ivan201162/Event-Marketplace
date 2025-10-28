@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/enhanced_order.dart';
+import 'package:event_marketplace_app/models/enhanced_order.dart';
 
 /// Сервис для работы с улучшенными заявками
 class EnhancedOrdersService {
@@ -7,7 +7,7 @@ class EnhancedOrdersService {
 
   /// Получить заявки пользователя
   Future<List<EnhancedOrder>> getUserOrders(String userId,
-      {OrderStatus? status}) async {
+      {OrderStatus? status,}) async {
     try {
       Query query = _firestore
           .collection('orders')
@@ -22,7 +22,7 @@ class EnhancedOrdersService {
       return snapshot.docs
           .map(
             (doc) => EnhancedOrder.fromMap(
-                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
+                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)},),
           )
           .toList();
     } on Exception catch (e) {
@@ -50,7 +50,7 @@ class EnhancedOrdersService {
       return snapshot.docs
           .map(
             (doc) => EnhancedOrder.fromMap(
-                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
+                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)},),
           )
           .toList();
     } on Exception catch (e) {
@@ -247,7 +247,7 @@ class EnhancedOrdersService {
 
   /// Добавить событие в таймлайн
   Future<void> _addTimelineEvent(
-      String orderId, OrderTimelineEvent event) async {
+      String orderId, OrderTimelineEvent event,) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
         'timeline': FieldValue.arrayUnion([event.toMap()]),
@@ -300,7 +300,7 @@ class EnhancedOrdersService {
             (template['budget'] as double?),
         deadline: customizations['deadline'] != null
             ? DateTime.fromMillisecondsSinceEpoch(
-                customizations['deadline'] as int)
+                customizations['deadline'] as int,)
             : null,
         location: (customizations['location'] as String?) ??
             (template['location'] as String?),

@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/security_settings.dart';
+import 'package:event_marketplace_app/services/security_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/security_settings.dart';
-import '../services/security_service.dart';
 
 /// Провайдер сервиса безопасности
 final securityServiceProvider =
@@ -88,7 +88,7 @@ final secureStoreProvider =
     FutureProvider.family<void, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return Future.wait(
-      data.entries.map((entry) => service.secureStore(entry.key, entry.value)));
+      data.entries.map((entry) => service.secureStore(entry.key, entry.value)),);
 });
 
 /// Провайдер для безопасного чтения

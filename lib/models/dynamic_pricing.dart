@@ -69,7 +69,7 @@ class PricingRule {
     required String userTier,
     Map<String, dynamic>? additionalFactors,
   }) {
-    double finalPrice = basePrice;
+    var finalPrice = basePrice;
 
     // Применяем факторы
     finalPrice *= demandFactor;
@@ -196,12 +196,12 @@ class DemandMetrics {
 
   /// Расчет уровня спроса (0.5 - низкий, 1.0 - средний, 2.0 - высокий)
   double get calculatedDemandLevel {
-    if (availableSlots == 0) return 2.0; // Максимальный спрос
+    if (availableSlots == 0) return 2; // Максимальный спрос
 
-    final double utilizationRate = requestsCount / availableSlots;
-    if (utilizationRate > 0.8) return 2.0;
+    final utilizationRate = requestsCount / availableSlots;
+    if (utilizationRate > 0.8) return 2;
     if (utilizationRate > 0.5) return 1.5;
-    if (utilizationRate > 0.2) return 1.0;
+    if (utilizationRate > 0.2) return 1;
     return 0.5;
   }
 
@@ -258,7 +258,7 @@ class PricingHistory {
 
   /// Процент изменения цены
   double get priceChangePercent {
-    if (basePrice == 0) return 0.0;
+    if (basePrice == 0) return 0;
     return ((finalPrice - basePrice) / basePrice) * 100;
   }
 

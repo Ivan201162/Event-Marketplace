@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/core/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
-import '../../core/extensions/context_extensions.dart';
 
 /// Адаптивный виджет для разных размеров экрана
 class ResponsiveWidget extends StatelessWidget {
   const ResponsiveWidget(
-      {super.key, required this.mobile, this.tablet, this.desktop});
+      {required this.mobile, super.key, this.tablet, this.desktop,});
 
   final Widget mobile;
   final Widget? tablet;
@@ -71,15 +71,14 @@ class ResponsiveText extends StatelessWidget {
     }
 
     return TextStyle(
-        fontSize: baseFontSize, fontWeight: fontWeight, color: color);
+        fontSize: baseFontSize, fontWeight: fontWeight, color: color,);
   }
 }
 
 /// Адаптивная карточка
 class ResponsiveCard extends StatelessWidget {
   const ResponsiveCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.margin,
     this.elevation,
@@ -134,8 +133,7 @@ class ResponsiveCard extends StatelessWidget {
 /// Адаптивный контейнер
 class ResponsiveContainer extends StatelessWidget {
   const ResponsiveContainer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.margin,
     this.width,
@@ -185,8 +183,7 @@ class ResponsiveContainer extends StatelessWidget {
 /// Адаптивная сетка
 class ResponsiveGrid extends StatelessWidget {
   const ResponsiveGrid({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.crossAxisCount,
     this.crossAxisSpacing,
     this.mainAxisSpacing,
@@ -227,7 +224,7 @@ class ResponsiveGrid extends StatelessWidget {
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
   const ResponsiveList(
-      {super.key, required this.children, this.padding, this.spacing});
+      {required this.children, super.key, this.padding, this.spacing,});
 
   final List<Widget> children;
   final EdgeInsetsGeometry? padding;

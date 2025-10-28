@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'user.dart';
+import 'package:event_marketplace_app/models/user.dart';
 
 /// Профиль заказчика
 class CustomerProfile {
   const CustomerProfile({
     required this.userId,
-    this.photoURL,
+    required this.createdAt, required this.updatedAt, this.photoURL,
     this.bio,
     this.maritalStatus,
     this.weddingDate,
@@ -16,8 +16,6 @@ class CustomerProfile {
     this.interests = const [],
     this.eventTypes = const [],
     this.preferences,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать профиль из документа Firestore

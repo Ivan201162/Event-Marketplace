@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/services/fcm_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/app_user.dart';
-import '../models/photo_studio.dart';
-import 'fcm_service.dart';
 
 /// Сервис для работы с фотостудиями
 class PhotoStudioService {
@@ -69,7 +68,7 @@ class PhotoStudioService {
 
   /// Получить все фотостудии
   Future<List<PhotoStudio>> getPhotoStudios(
-      {int limit = 20, DocumentSnapshot? startAfter}) async {
+      {int limit = 20, DocumentSnapshot? startAfter,}) async {
     Query query = _firestore
         .collection(_collection)
         .where('isActive', isEqualTo: true)
@@ -105,12 +104,12 @@ class PhotoStudioService {
     // Фильтр по цене
     if (minPrice != null) {
       firestoreQuery = firestoreQuery.where('pricing.hourlyRate',
-          isGreaterThanOrEqualTo: minPrice);
+          isGreaterThanOrEqualTo: minPrice,);
     }
 
     if (maxPrice != null) {
       firestoreQuery = firestoreQuery.where('pricing.hourlyRate',
-          isLessThanOrEqualTo: maxPrice);
+          isLessThanOrEqualTo: maxPrice,);
     }
 
     firestoreQuery = firestoreQuery.limit(limit);
@@ -135,7 +134,7 @@ class PhotoStudioService {
     if (amenities != null && amenities.isNotEmpty) {
       studios = studios
           .where((studio) =>
-              amenities.every((amenity) => studio.amenities.contains(amenity)))
+              amenities.every((amenity) => studio.amenities.contains(amenity)),)
           .toList();
     }
 
@@ -155,7 +154,7 @@ class PhotoStudioService {
 
   /// Обновить фотостудию
   Future<void> updatePhotoStudio(
-      String studioId, Map<String, dynamic> updates) async {
+      String studioId, Map<String, dynamic> updates,) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) {
       throw Exception('Пользователь не авторизован');
@@ -299,7 +298,7 @@ class PhotoStudioService {
 
   /// Получить бронирования клиента
   Future<List<PhotoStudioBooking>> getCustomerBookings(
-      String customerId) async {
+      String customerId,) async {
     final snapshot = await _firestore
         .collection(_bookingsCollection)
         .where('customerId', isEqualTo: customerId)
@@ -369,7 +368,7 @@ class PhotoStudioService {
 
   /// Проверить доступность временного слота
   Future<bool> _isTimeSlotAvailable(
-      String studioId, DateTime startTime, DateTime endTime) async {
+      String studioId, DateTime startTime, DateTime endTime,) async {
     final snapshot = await _firestore
         .collection(_bookingsCollection)
         .where('studioId', isEqualTo: studioId)
@@ -411,7 +410,7 @@ class PhotoStudioService {
     final closeTime = _parseTimeOfDay(workingHours['close']!);
 
     final openDateTime = DateTime(
-        date.year, date.month, date.day, openTime.hour, openTime.minute);
+        date.year, date.month, date.day, openTime.hour, openTime.minute,);
     final closeDateTime = DateTime(
       date.year,
       date.month,
@@ -474,7 +473,7 @@ class PhotoStudioService {
       'thursday',
       'friday',
       'saturday',
-      'sunday'
+      'sunday',
     ];
     return days[weekday - 1];
   }
@@ -505,5 +504,5 @@ class PhotoStudioService {
           .orderBy('startTime', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(PhotoStudioBooking.fromDocument).toList());
+              snapshot.docs.map(PhotoStudioBooking.fromDocument).toList(),);
 }

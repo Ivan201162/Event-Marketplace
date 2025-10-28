@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/services/event_idea_service.dart';
+import 'package:event_marketplace_app/widgets/event_idea_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/event_idea.dart';
-import '../services/event_idea_service.dart';
-import 'event_idea_card.dart';
 
 /// Виджет поиска идей
 class IdeaSearchWidget extends ConsumerStatefulWidget {
@@ -352,7 +352,7 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка поиска',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -364,7 +364,7 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _performSearch, child: const Text('Повторить')),
+                onPressed: _performSearch, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -440,14 +440,14 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
               const SizedBox(height: 16),
               if (idea.tags.isNotEmpty) ...[
                 const Text('Теги:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 const SizedBox(height: 8),
                 Wrap(
                   children: idea.tags
                       .map(
                         (tag) => Chip(
                             label: Text('#$tag'),
-                            labelStyle: const TextStyle(fontSize: 12)),
+                            labelStyle: const TextStyle(fontSize: 12),),
                       )
                       .toList(),
                 ),
@@ -458,7 +458,7 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -472,7 +472,7 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 

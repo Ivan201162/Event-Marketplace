@@ -61,7 +61,7 @@ class WorkAct {
       customerSignature: data['customerSignature'] as String?,
       specialistSignature: data['specialistSignature'] as String?,
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},),
       currency: data['currency'] as String? ?? 'RUB',
     );
   }

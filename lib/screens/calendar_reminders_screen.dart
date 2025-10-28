@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/calendar_integration_service.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
+import 'package:event_marketplace_app/services/reminder_system_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/calendar_integration_service.dart';
-import '../services/error_logging_service.dart';
-import '../services/reminder_system_service.dart';
 
 /// Экран календаря и напоминаний
 class CalendarRemindersScreen extends ConsumerStatefulWidget {
@@ -56,7 +55,7 @@ class _CalendarRemindersScreenState
       await Future.wait([
         _loadCalendarEvents(userId),
         _loadReminders(userId),
-        _loadStats(userId)
+        _loadStats(userId),
       ]);
     } catch (e) {
       _showErrorSnackBar('Ошибка загрузки данных: $e');
@@ -124,7 +123,7 @@ class _CalendarRemindersScreenState
     final result = await Navigator.of(
       context,
     ).push(
-        MaterialPageRoute(builder: (context) => const CreateReminderScreen()));
+        MaterialPageRoute(builder: (context) => const CreateReminderScreen()),);
 
     if (result == true) {
       _loadData();
@@ -135,7 +134,7 @@ class _CalendarRemindersScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   @override
@@ -156,7 +155,7 @@ class _CalendarRemindersScreenState
             ],
           ),
           actions: [
-            IconButton(onPressed: _loadData, icon: const Icon(Icons.refresh))
+            IconButton(onPressed: _loadData, icon: const Icon(Icons.refresh)),
           ],
         ),
         body: _isLoading
@@ -166,7 +165,7 @@ class _CalendarRemindersScreenState
                 children: [
                   _buildEventsTab(),
                   _buildRemindersTab(),
-                  _buildStatsTab()
+                  _buildStatsTab(),
                 ],
               ),
         floatingActionButton: _buildFloatingActionButton(),
@@ -182,7 +181,7 @@ class _CalendarRemindersScreenState
         },
         backgroundColor: Colors.indigo,
         child: Icon(_tabController.index == 0 ? Icons.add : Icons.alarm_add,
-            color: Colors.white),
+            color: Colors.white,),
       );
 
   Widget _buildEventsTab() => SingleChildScrollView(
@@ -247,11 +246,11 @@ class _CalendarRemindersScreenState
                     const SizedBox(height: 16),
                     if (_calendarStats.isNotEmpty) ...[
                       _buildStatRow(
-                          'Всего событий', '${_calendarStats['totalEvents']}'),
+                          'Всего событий', '${_calendarStats['totalEvents']}',),
                       _buildStatRow('Событий за месяц',
-                          '${_calendarStats['monthlyEvents']}'),
+                          '${_calendarStats['monthlyEvents']}',),
                       _buildStatRow('Синхронизировано',
-                          '${_calendarStats['syncedEvents']}'),
+                          '${_calendarStats['syncedEvents']}',),
                       _buildStatRow(
                         'Процент синхронизации',
                         '${(_calendarStats['syncRate'] * 100).toStringAsFixed(1)}%',
@@ -280,13 +279,13 @@ class _CalendarRemindersScreenState
                     const SizedBox(height: 16),
                     if (_reminderStats.isNotEmpty) ...[
                       _buildStatRow('Всего напоминаний',
-                          '${_reminderStats['totalReminders']}'),
+                          '${_reminderStats['totalReminders']}',),
                       _buildStatRow(
-                          'Активных', '${_reminderStats['activeReminders']}'),
+                          'Активных', '${_reminderStats['activeReminders']}',),
                       _buildStatRow('Сработавших',
-                          '${_reminderStats['triggeredReminders']}'),
+                          '${_reminderStats['triggeredReminders']}',),
                       _buildStatRow('Повторяющихся',
-                          '${_reminderStats['repeatingReminders']}'),
+                          '${_reminderStats['repeatingReminders']}',),
                     ] else
                       const Text('Нет данных'),
                   ],
@@ -312,13 +311,13 @@ class _CalendarRemindersScreenState
             Row(
               children: [
                 Icon(Icons.event,
-                    color: isSynced ? Colors.green : Colors.orange),
+                    color: isSynced ? Colors.green : Colors.orange,),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     event['title'] as String,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                        fontSize: 16, fontWeight: FontWeight.bold,),
                   ),
                 ),
                 if (isSynced)
@@ -328,7 +327,7 @@ class _CalendarRemindersScreenState
             const SizedBox(height: 8),
             if (event['description'] != null)
               Text(event['description'] as String,
-                  style: const TextStyle(fontSize: 14)),
+                  style: const TextStyle(fontSize: 14),),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -347,7 +346,7 @@ class _CalendarRemindersScreenState
                   const Icon(Icons.location_on, size: 16),
                   const SizedBox(width: 4),
                   Text(event['location'] as String,
-                      style: const TextStyle(fontSize: 12)),
+                      style: const TextStyle(fontSize: 12),),
                 ],
               ),
             ],
@@ -372,7 +371,7 @@ class _CalendarRemindersScreenState
             Row(
               children: [
                 Icon(_getReminderIcon(type),
-                    color: isTriggered ? Colors.grey : Colors.blue),
+                    color: isTriggered ? Colors.grey : Colors.blue,),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -392,7 +391,7 @@ class _CalendarRemindersScreenState
             Text(
               reminder['message'] as String,
               style: TextStyle(
-                  fontSize: 14, color: isTriggered ? Colors.grey : null),
+                  fontSize: 14, color: isTriggered ? Colors.grey : null,),
             ),
             const SizedBox(height: 8),
             Row(
@@ -402,7 +401,7 @@ class _CalendarRemindersScreenState
                 Text(
                   _formatDateTime(reminderTime),
                   style: TextStyle(
-                      fontSize: 12, color: isTriggered ? Colors.grey : null),
+                      fontSize: 12, color: isTriggered ? Colors.grey : null,),
                 ),
                 const Spacer(),
                 Text(
@@ -586,14 +585,14 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   @override
@@ -674,7 +673,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           child: const Text('Создать событие',
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(fontSize: 16),),
                         ),
                       ),
                     ],
@@ -778,14 +777,14 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   @override
@@ -849,7 +848,7 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
                       const Text(
                         'Тип напоминания',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<ReminderType>(
@@ -858,7 +857,7 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
                             const InputDecoration(border: OutlineInputBorder()),
                         items: ReminderType.values
                             .map((type) => DropdownMenuItem(
-                                value: type, child: Text(type.displayName)))
+                                value: type, child: Text(type.displayName),),)
                             .toList(),
                         onChanged: (value) {
                           if (value != null) {
@@ -875,7 +874,7 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
                       const Text(
                         'Повторение (дни недели)',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 8),
                       Wrap(
@@ -919,7 +918,7 @@ class _CreateReminderScreenState extends ConsumerState<CreateReminderScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           child: const Text('Создать напоминание',
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(fontSize: 16),),
                         ),
                       ),
                     ],

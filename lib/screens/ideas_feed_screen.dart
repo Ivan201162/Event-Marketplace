@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
 
 /// Экран ленты идей/постов
 class IdeasFeedScreen extends ConsumerStatefulWidget {
@@ -105,7 +104,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => context.push('/ideas/create')),
+              onPressed: () => context.push('/ideas/create'),),
         ],
       ),
       body: RefreshIndicator(onRefresh: _refreshIdeas, child: _buildBody()),
@@ -125,7 +124,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки идей',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -134,7 +133,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadIdeas, child: const Text('Повторить')),
+                onPressed: _loadIdeas, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -148,7 +147,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Нет идей',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Будьте первым, кто поделится идеей!',
@@ -173,7 +172,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
           return const Center(
             child: Padding(
                 padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator()),
+                child: CircularProgressIndicator(),),
           );
         }
 
@@ -213,7 +212,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             trailing: PopupMenuButton(
               itemBuilder: (context) => [
                 const PopupMenuItem(
-                    value: 'report', child: Text('Пожаловаться')),
+                    value: 'report', child: Text('Пожаловаться'),),
               ],
             ),
           ),
@@ -334,7 +333,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
                     return Container(
                       color: Colors.grey[200],
                       child: const Center(
-                          child: Icon(Icons.broken_image, size: 48)),
+                          child: Icon(Icons.broken_image, size: 48),),
                     );
                   },
                 ),
@@ -390,7 +389,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 

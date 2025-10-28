@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:event_marketplace_app/screens/about_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../screens/about_screen.dart';
 
 /// Минимальный роутер для тестирования
 final appRouterProvider = Provider<GoRouter>((ref) {

@@ -2,16 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Media upload result model
 class MediaUploadResult extends Equatable {
-  final String id;
-  final String url;
-  final String fileName;
-  final String fileType;
-  final int fileSize;
-  final String? thumbnailUrl;
-  final Map<String, dynamic>? metadata;
-  final DateTime uploadedAt;
-  final bool isSuccess;
-  final String? error;
 
   const MediaUploadResult({
     required this.id,
@@ -19,9 +9,8 @@ class MediaUploadResult extends Equatable {
     required this.fileName,
     required this.fileType,
     required this.fileSize,
-    this.thumbnailUrl,
+    required this.uploadedAt, this.thumbnailUrl,
     this.metadata,
-    required this.uploadedAt,
     this.isSuccess = true,
     this.error,
   });
@@ -41,6 +30,16 @@ class MediaUploadResult extends Equatable {
       error: data['error'],
     );
   }
+  final String id;
+  final String url;
+  final String fileName;
+  final String fileType;
+  final int fileSize;
+  final String? thumbnailUrl;
+  final Map<String, dynamic>? metadata;
+  final DateTime uploadedAt;
+  final bool isSuccess;
+  final String? error;
 
   /// Convert MediaUploadResult to Map
   Map<String, dynamic> toMap() {

@@ -7,14 +7,10 @@ class GuestAccess {
     required this.id,
     required this.eventId,
     required this.organizerId,
-    this.guestName,
+    required this.accessCode, required this.status, required this.createdAt, required this.usageCount, this.guestName,
     this.guestEmail,
-    required this.accessCode,
-    required this.status,
-    required this.createdAt,
     this.expiresAt,
     this.lastUsedAt,
-    required this.usageCount,
     this.metadata,
   });
 

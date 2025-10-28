@@ -1,16 +1,12 @@
+import 'package:event_marketplace_app/models/chat_message_extended.dart';
+import 'package:event_marketplace_app/services/message_reaction_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat_message_extended.dart';
-import '../services/message_reaction_service.dart';
 
 /// Виджет для отображения и управления реакциями на сообщения
 class MessageReactionsWidget extends ConsumerStatefulWidget {
   const MessageReactionsWidget({
-    super.key,
-    required this.message,
-    required this.currentUserId,
-    required this.currentUserName,
+    required this.message, required this.currentUserId, required this.currentUserName, super.key,
     this.isOwnMessage = false,
   });
   final ChatMessageExtended message;
@@ -44,7 +40,7 @@ class _MessageReactionsWidgetState
           // Эмодзи пикер
           if (_showEmojiPicker) ...[
             const SizedBox(height: 8),
-            _buildEmojiPicker()
+            _buildEmojiPicker(),
           ],
         ],
       );
@@ -159,7 +155,7 @@ class _MessageReactionsWidgetState
         children: [
           // Популярные эмодзи
           _buildEmojiCategory('Популярные',
-              _reactionService.getPopularEmojis().take(12).toList()),
+              _reactionService.getPopularEmojis().take(12).toList(),),
 
           const SizedBox(height: 12),
 
@@ -169,7 +165,7 @@ class _MessageReactionsWidgetState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildEmojiCategory(entry.key, entry.value),
-                const SizedBox(height: 8)
+                const SizedBox(height: 8),
               ],
             ),
           ),
@@ -186,7 +182,7 @@ class _MessageReactionsWidgetState
             style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: Colors.grey[600]),
+                color: Colors.grey[600],),
           ),
           const SizedBox(height: 4),
           Wrap(
@@ -245,14 +241,14 @@ class _MessageReactionsWidgetState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 }
 
 /// Виджет для отображения детальной информации о реакциях
 class ReactionDetailsWidget extends StatelessWidget {
   const ReactionDetailsWidget(
-      {super.key, required this.reactions, required this.emoji});
+      {required this.reactions, required this.emoji, super.key,});
   final List<MessageReaction> reactions;
   final String emoji;
 
@@ -278,7 +274,7 @@ class ReactionDetailsWidget extends StatelessWidget {
               actions: [
                 IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context)),
+                    onPressed: () => Navigator.pop(context),),
               ],
             ),
             Expanded(
@@ -295,7 +291,7 @@ class ReactionDetailsWidget extends StatelessWidget {
                             ? reaction.userName[0].toUpperCase()
                             : '?',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            fontWeight: FontWeight.bold, color: Colors.white,),
                       ),
                     ),
                     title: Text(reaction.userName),

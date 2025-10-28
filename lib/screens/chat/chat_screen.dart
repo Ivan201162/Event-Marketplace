@@ -1,18 +1,16 @@
+import 'package:event_marketplace_app/providers/chat_providers.dart';
+import 'package:event_marketplace_app/widgets/chat_input.dart';
+import 'package:event_marketplace_app/widgets/message_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/chat_providers.dart';
-import '../../widgets/message_bubble.dart';
-import '../../widgets/chat_input.dart';
-
 /// Экран чата
 class ChatScreen extends ConsumerStatefulWidget {
-  final String chatId;
 
   const ChatScreen({
-    super.key,
-    required this.chatId,
+    required this.chatId, super.key,
   });
+  final String chatId;
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -49,7 +47,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => _showChatInfo(),
+            onPressed: _showChatInfo,
           ),
         ],
       ),
@@ -81,7 +79,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                        size: 64, color: Colors.red,),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки сообщений: $error'),
                     const SizedBox(height: 16),

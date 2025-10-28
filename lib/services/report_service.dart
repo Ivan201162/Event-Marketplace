@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/report.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/report.dart';
 
 /// Сервис отчетов
 class ReportService {
@@ -117,28 +116,20 @@ class ReportService {
       switch (report.type) {
         case ReportType.bookings:
           reportData = await _generateBookingsReport(report.parameters);
-          break;
         case ReportType.payments:
           reportData = await _generatePaymentsReport(report.parameters);
-          break;
         case ReportType.users:
           reportData = await _generateUsersReport(report.parameters);
-          break;
         case ReportType.specialists:
           reportData = await _generateSpecialistsReport(report.parameters);
-          break;
         case ReportType.analytics:
           reportData = await _generateAnalyticsReport(report.parameters);
-          break;
         case ReportType.notifications:
           reportData = await _generateNotificationsReport(report.parameters);
-          break;
         case ReportType.errors:
           reportData = await _generateErrorsReport(report.parameters);
-          break;
         case ReportType.performance:
           reportData = await _generatePerformanceReport(report.parameters);
-          break;
         default:
           reportData = await _generateCustomReport(report.parameters);
       }
@@ -154,7 +145,7 @@ class ReportService {
 
       // Обновляем статус на "завершено"
       await _updateReportStatus(reportId, ReportStatus.completed,
-          fileUrl: fileUrl);
+          fileUrl: fileUrl,);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка генерации отчета: $e');
@@ -162,7 +153,7 @@ class ReportService {
 
       // Обновляем статус на "ошибка"
       await _updateReportStatus(reportId, ReportStatus.failed,
-          errorMessage: e.toString());
+          errorMessage: e.toString(),);
     }
   }
 
@@ -197,7 +188,7 @@ class ReportService {
 
   /// Генерировать отчет по бронированиям
   Future<ReportData> _generateBookingsReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -208,11 +199,11 @@ class ReportService {
 
       if (startDate != null) {
         query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       if (specialistId != null) {
         query = query.where('specialistId', isEqualTo: specialistId);
@@ -284,7 +275,7 @@ class ReportService {
 
   /// Генерировать отчет по платежам
   Future<ReportData> _generatePaymentsReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -294,11 +285,11 @@ class ReportService {
 
       if (startDate != null) {
         query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       if (paymentMethod != null) {
         query = query.where('method', isEqualTo: paymentMethod);
@@ -352,7 +343,7 @@ class ReportService {
 
   /// Генерировать отчет по пользователям
   Future<ReportData> _generateUsersReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       final userType = parameters['userType'] as String?;
       final isActive = parameters['isActive'] as bool?;
@@ -401,7 +392,7 @@ class ReportService {
           'type',
           'isActive',
           'createdAt',
-          'lastLoginAt'
+          'lastLoginAt',
         ],
         summary: {
           'totalUsers': rows.length,
@@ -421,7 +412,7 @@ class ReportService {
 
   /// Генерировать отчет по специалистам
   Future<ReportData> _generateSpecialistsReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       final category = parameters['category'] as String?;
       final isVerified = parameters['isVerified'] as bool?;
@@ -492,7 +483,7 @@ class ReportService {
 
   /// Генерировать отчет по аналитике
   Future<ReportData> _generateAnalyticsReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -502,11 +493,11 @@ class ReportService {
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final snapshot = await query.get();
@@ -551,7 +542,7 @@ class ReportService {
 
   /// Генерировать отчет по уведомлениям
   Future<ReportData> _generateNotificationsReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -562,11 +553,11 @@ class ReportService {
 
       if (startDate != null) {
         query = query.where('sentAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('sentAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       if (type != null) {
         query = query.where('type', isEqualTo: type);
@@ -614,7 +605,7 @@ class ReportService {
           'status',
           'sentAt',
           'deliveredAt',
-          'readAt'
+          'readAt',
         ],
         summary: {
           'totalSent': rows.length,
@@ -638,7 +629,7 @@ class ReportService {
 
   /// Генерировать отчет по ошибкам
   Future<ReportData> _generateErrorsReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -648,11 +639,11 @@ class ReportService {
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       if (errorType != null) {
         query = query.where('errorType', isEqualTo: errorType);
@@ -693,7 +684,7 @@ class ReportService {
           'screen',
           'errorMessage',
           'resolved',
-          'timestamp'
+          'timestamp',
         ],
         summary: {
           'totalErrors': rows.length,
@@ -714,7 +705,7 @@ class ReportService {
 
   /// Генерировать отчет по производительности
   Future<ReportData> _generatePerformanceReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       // TODO(developer): Реализовать сбор метрик производительности
       return ReportData(
@@ -735,7 +726,7 @@ class ReportService {
 
   /// Генерировать пользовательский отчет
   Future<ReportData> _generateCustomReport(
-      Map<String, dynamic> parameters) async {
+      Map<String, dynamic> parameters,) async {
     try {
       // TODO(developer): Реализовать генерацию пользовательских отчетов
       return ReportData(
@@ -756,7 +747,7 @@ class ReportService {
 
   /// Генерировать файл отчета
   Future<String> _generateReportFile(
-      String reportId, ReportData reportData) async {
+      String reportId, ReportData reportData,) async {
     try {
       // Генерируем CSV файл
       final csv = StringBuffer();

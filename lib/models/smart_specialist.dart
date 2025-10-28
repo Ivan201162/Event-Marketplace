@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 // Временные определения для совместимости
 enum TaxType { individual, legal }
@@ -16,15 +16,10 @@ class SmartSpecialist {
     required this.id,
     required this.userId,
     required this.name,
-    this.description,
+    required this.category, required this.experienceLevel, required this.yearsOfExperience, required this.hourlyRate, required this.price, required this.createdAt, required this.updatedAt, this.description,
     this.bio,
-    required this.category,
     this.categories = const [],
     this.subcategories = const [],
-    required this.experienceLevel,
-    required this.yearsOfExperience,
-    required this.hourlyRate,
-    required this.price,
     this.priceFrom,
     this.priceTo,
     this.minBookingHours,
@@ -52,8 +47,6 @@ class SmartSpecialist {
     this.photoUrl,
     this.experience,
     this.availableDates = const [],
-    required this.createdAt,
-    required this.updatedAt,
     this.lastActiveAt,
     this.metadata,
     this.avatarUrl,
@@ -174,7 +167,7 @@ class SmartSpecialist {
         equipment: List<String>.from(data['equipment'] as List<dynamic>? ?? []),
         languages: List<String>.from(data['languages'] as List<dynamic>? ?? []),
         workingHours: Map<String, String>.from(
-            data['workingHours'] as Map<dynamic, dynamic>? ?? {}),
+            data['workingHours'] as Map<dynamic, dynamic>? ?? {},),
         createdAt: data['createdAt'] != null
             ? (data['createdAt'] is Timestamp
                 ? (data['createdAt'] as Timestamp).toDate()
@@ -219,7 +212,7 @@ class SmartSpecialist {
         busyDates: (data['busyDates'] as List<dynamic>?)
                 ?.map((e) => e is Timestamp
                     ? e.toDate()
-                    : DateTime.tryParse(e.toString()))
+                    : DateTime.tryParse(e.toString()),)
                 .where((e) => e != null)
                 .cast<DateTime>()
                 .toList() ??
@@ -646,16 +639,12 @@ class SmartSpecialist {
     switch (specialist.category) {
       case SpecialistCategory.host:
         styles.addAll(['классика', 'юмор', 'интерактив']);
-        break;
       case SpecialistCategory.photographer:
         styles.addAll(['классика', 'современный', 'художественный']);
-        break;
       case SpecialistCategory.dj:
         styles.addAll(['электроника', 'поп', 'рок', 'классика']);
-        break;
       case SpecialistCategory.musician:
         styles.addAll(['классика', 'джаз', 'рок', 'поп']);
-        break;
       default:
         styles.add('классика');
     }
@@ -739,15 +728,12 @@ class SmartSpecialist {
     switch (specialist.category) {
       case SpecialistCategory.host:
         eventTypes.addAll(['свадьба', 'корпоратив', 'день рождения', 'юбилей']);
-        break;
       case SpecialistCategory.photographer:
         eventTypes
             .addAll(['свадьба', 'фотосессия', 'корпоратив', 'день рождения']);
-        break;
       case SpecialistCategory.dj:
         eventTypes
             .addAll(['свадьба', 'корпоратив', 'день рождения', 'вечеринка']);
-        break;
       default:
         eventTypes.add('мероприятие');
     }
@@ -800,7 +786,7 @@ class SmartSpecialist {
 
   /// Генерация паттерна доступности
   static Map<String, dynamic> _generateAvailabilityPattern(
-          Specialist specialist) =>
+          Specialist specialist,) =>
       {
         'weekdays': specialist.workingHours.containsKey('weekdays'),
         'weekends': specialist.workingHours.containsKey('weekends'),
@@ -810,7 +796,7 @@ class SmartSpecialist {
 
   /// Генерация предпочтений клиентов
   static Map<String, dynamic> _generateClientPreferences(
-          Specialist specialist) =>
+          Specialist specialist,) =>
       {
         'budgetRange': specialist.price < 20000
             ? 'бюджетный'
@@ -824,7 +810,7 @@ class SmartSpecialist {
 
   /// Генерация метрик производительности
   static Map<String, dynamic> _generatePerformanceMetrics(
-          Specialist specialist) =>
+          Specialist specialist,) =>
       {
         'responseTime': specialist.responseTime ?? 'быстрый',
         'completionRate': specialist.completionRate ?? 0.95,
@@ -834,7 +820,7 @@ class SmartSpecialist {
 
   /// Генерация факторов рекомендаций
   static Map<String, dynamic> _generateRecommendationFactors(
-          Specialist specialist) =>
+          Specialist specialist,) =>
       {
         'popularity': specialist.reviewCount,
         'quality': specialist.rating,

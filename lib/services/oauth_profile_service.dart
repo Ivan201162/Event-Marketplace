@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/utils/transliterate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/user.dart';
-import '../utils/transliterate.dart';
 
 /// Сервис для обработки OAuth пользователей и создания профилей
 class OAuthProfileService {
@@ -203,7 +202,7 @@ class OAuthProfileService {
 
   /// Обновляет профиль пользователя
   Future<void> updateProfile(
-      String userId, Map<String, dynamic> updates) async {
+      String userId, Map<String, dynamic> updates,) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
       await _firestore.collection('users').doc(userId).update(updates);

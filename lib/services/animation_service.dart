@@ -40,7 +40,7 @@ class AnimationService {
     ).animate(CurvedAnimation(
       parent: controller,
       curve: curve,
-    ));
+    ),);
 
     _animations[key] = animation;
     return animation;
@@ -120,8 +120,6 @@ class AnimationService {
     return createAnimation(
       key: key,
       controller: controller,
-      begin: 0.0,
-      end: 1.0,
       curve: Curves.easeIn,
     );
   }
@@ -134,8 +132,8 @@ class AnimationService {
     return createAnimation(
       key: key,
       controller: controller,
-      begin: 1.0,
-      end: 0.0,
+      begin: 1,
+      end: 0,
       curve: Curves.easeOut,
     );
   }
@@ -161,7 +159,7 @@ class AnimationService {
   static Animation<Offset> createSlide({
     required String key,
     required AnimationController controller,
-    Offset begin = const Offset(0.0, 1.0),
+    Offset begin = const Offset(0, 1),
     Offset end = Offset.zero,
     Curve curve = Curves.easeOutCubic,
   }) {
@@ -171,7 +169,7 @@ class AnimationService {
     ).animate(CurvedAnimation(
       parent: controller,
       curve: curve,
-    ));
+    ),);
 
     _animations[key] = animation as Animation<double>;
     return animation;
@@ -304,7 +302,7 @@ class AnimationService {
 
   /// Создать последовательность анимаций
   static Future<void> playSequence(List<String> keys,
-      {Duration delay = const Duration(milliseconds: 100)}) async {
+      {Duration delay = const Duration(milliseconds: 100),}) async {
     for (final key in keys) {
       await forward(key);
       await Future.delayed(delay);

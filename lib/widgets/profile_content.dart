@@ -2,23 +2,19 @@ import 'package:flutter/material.dart';
 
 /// Контент профиля (посты, идеи, заявки)
 class ProfileContent extends StatelessWidget {
-  final String type;
-  final String userId;
 
   const ProfileContent({
-    super.key,
-    required this.type,
-    required this.userId,
+    required this.type, required this.userId, super.key,
   });
+  final String type;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: _getItemCount(),
-      itemBuilder: (context, index) {
-        return _buildContentItem(context, index);
-      },
+      itemBuilder: _buildContentItem,
     );
   }
 
@@ -51,9 +47,9 @@ class ProfileContent extends StatelessWidget {
 
 /// Элемент поста
 class _PostItem extends StatelessWidget {
-  final int index;
 
   const _PostItem({required this.index});
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +74,9 @@ class _PostItem extends StatelessWidget {
 
 /// Элемент идеи
 class _IdeaItem extends StatelessWidget {
-  final int index;
 
   const _IdeaItem({required this.index});
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +101,9 @@ class _IdeaItem extends StatelessWidget {
 
 /// Элемент заявки
 class _RequestItem extends StatelessWidget {
-  final int index;
 
   const _RequestItem({required this.index});
+  final int index;
 
   @override
   Widget build(BuildContext context) {

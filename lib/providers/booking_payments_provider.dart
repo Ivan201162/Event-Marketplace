@@ -1,14 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BookingPayment {
-  final String id;
-  final String bookingId;
-  final String status; // 'pending','paid','failed','refunded'
-  final double amount;
-  final DateTime updatedAt;
-  final String? paymentMethod;
-  final String? transactionId;
 
   BookingPayment({
     required this.id,
@@ -31,6 +24,13 @@ class BookingPayment {
       transactionId: json['transactionId'] as String?,
     );
   }
+  final String id;
+  final String bookingId;
+  final String status; // 'pending','paid','failed','refunded'
+  final double amount;
+  final DateTime updatedAt;
+  final String? paymentMethod;
+  final String? transactionId;
 
   Map<String, dynamic> toJson() {
     return {

@@ -57,18 +57,18 @@ class CalendarService {
 
       if (startDate != null) {
         query = query.where('startDate',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('endDate',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final querySnapshot = await query.orderBy('startDate').get();
 
       return querySnapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         return {
           'id': doc.id,
           ...data,
@@ -98,7 +98,7 @@ class CalendarService {
 
   /// Получение событий на неделю
   Future<List<Map<String, dynamic>>> getEventsForWeek(
-      DateTime weekStart) async {
+      DateTime weekStart,) async {
     try {
       final weekEnd = weekStart.add(const Duration(days: 6));
 
@@ -114,7 +114,7 @@ class CalendarService {
 
   /// Получение событий на месяц
   Future<List<Map<String, dynamic>>> getEventsForMonth(
-      DateTime monthStart) async {
+      DateTime monthStart,) async {
     try {
       final monthEnd = DateTime(monthStart.year, monthStart.month + 1, 0);
 
@@ -154,8 +154,9 @@ class CalendarService {
 
       if (title != null) updateData['title'] = title;
       if (description != null) updateData['description'] = description;
-      if (startDate != null)
+      if (startDate != null) {
         updateData['startDate'] = Timestamp.fromDate(startDate);
+      }
       if (endDate != null) updateData['endDate'] = Timestamp.fromDate(endDate);
       if (location != null) updateData['location'] = location;
       if (participants != null) updateData['participants'] = participants;
@@ -199,12 +200,12 @@ class CalendarService {
           .collection('events')
           .where('specialistId', isEqualTo: specialistId)
           .where('startDate',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),)
           .where('endDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
           .get();
 
       return querySnapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         return {
           'id': doc.id,
           ...data,
@@ -265,8 +266,8 @@ class CalendarService {
       }
 
       final now = DateTime.now();
-      int completedEvents = 0;
-      int upcomingEvents = 0;
+      var completedEvents = 0;
+      var upcomingEvents = 0;
       double totalDuration = 0;
 
       for (final event in events) {
@@ -313,10 +314,10 @@ class CalendarService {
   }) async {
     try {
       final events = <Map<String, dynamic>>[];
-      DateTime currentStart = startDate;
-      DateTime currentEnd = endDate;
+      var currentStart = startDate;
+      var currentEnd = endDate;
 
-      for (int i = 0; i < recurrenceCount; i++) {
+      for (var i = 0; i < recurrenceCount; i++) {
         events.add({
           'title': title,
           'description': description,
@@ -335,17 +336,14 @@ class CalendarService {
           case 'daily':
             currentStart = currentStart.add(const Duration(days: 1));
             currentEnd = currentEnd.add(const Duration(days: 1));
-            break;
           case 'weekly':
             currentStart = currentStart.add(const Duration(days: 7));
             currentEnd = currentEnd.add(const Duration(days: 7));
-            break;
           case 'monthly':
             currentStart = DateTime(
-                currentStart.year, currentStart.month + 1, currentStart.day);
+                currentStart.year, currentStart.month + 1, currentStart.day,);
             currentEnd =
                 DateTime(currentEnd.year, currentEnd.month + 1, currentEnd.day);
-            break;
         }
       }
 

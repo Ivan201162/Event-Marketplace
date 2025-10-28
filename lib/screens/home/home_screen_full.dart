@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Полноценный главный экран с данными из Firebase
 class HomeScreenFull extends ConsumerWidget {
@@ -190,7 +189,7 @@ class HomeScreenFull extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
 
-                Row(
+                const Row(
                   children: [
                     Expanded(
                       child: _StatCard(
@@ -199,7 +198,7 @@ class HomeScreenFull extends ConsumerWidget {
                         icon: Icons.assignment,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: _StatCard(
                         title: 'Идеи',
@@ -214,7 +213,7 @@ class HomeScreenFull extends ConsumerWidget {
 
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: _StatCard(
                         title: 'Чаты',
                         value: '0',
@@ -319,10 +318,6 @@ class HomeScreenFull extends ConsumerWidget {
 }
 
 class _ActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
 
   const _ActionCard({
     required this.icon,
@@ -330,6 +325,10 @@ class _ActionCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -375,15 +374,15 @@ class _ActionCard extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
 
   const _StatCard({
     required this.title,
     required this.value,
     required this.icon,
   });
+  final String title;
+  final String value;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {

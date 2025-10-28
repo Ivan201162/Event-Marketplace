@@ -6,15 +6,13 @@ class CustomerProfile {
     required this.id,
     required this.name,
     required this.email,
-    this.phone,
+    required this.createdAt, required this.updatedAt, this.phone,
     this.bio,
     this.location,
     this.companyName,
     this.website,
     this.avatarUrl,
     this.contacts = const {},
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory CustomerProfile.fromFirestore(DocumentSnapshot doc) {

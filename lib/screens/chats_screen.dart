@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/screens/enhanced_chats_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'enhanced_chats_screen.dart';
 
 /// Экран чатов с специалистами
 class ChatsScreen extends ConsumerWidget {

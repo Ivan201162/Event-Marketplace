@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/providers/monitoring_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../providers/monitoring_providers.dart';
 
 /// Виджет для отображения статуса мониторинга
 class MonitoringStatusWidget extends ConsumerWidget {
@@ -37,7 +36,7 @@ class MonitoringStatusWidget extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 Text('Мониторинг',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 _buildStatusChip(monitoringState.isInitialized),
               ],
@@ -97,7 +96,7 @@ class MonitoringStatusWidget extends ConsumerWidget {
             ? Colors.green.withValues(alpha: 0.2)
             : Colors.orange.withValues(alpha: 0.2),
         labelStyle: TextStyle(
-            color: isInitialized ? Colors.green : Colors.orange, fontSize: 12),
+            color: isInitialized ? Colors.green : Colors.orange, fontSize: 12,),
       );
 }
 
@@ -120,7 +119,7 @@ class AppMetricsWidget extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Метрики приложения',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
 
             // Состояние сети
@@ -208,10 +207,10 @@ class AppMetricsWidget extends ConsumerWidget {
           const SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2)),
+              child: CircularProgressIndicator(strokeWidth: 2),),
           const SizedBox(width: 8),
           Text('$label: Загрузка...',
-              style: Theme.of(context).textTheme.bodyMedium),
+              style: Theme.of(context).textTheme.bodyMedium,),
         ],
       );
 
@@ -250,7 +249,7 @@ class MonitoringControlWidget extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Управление мониторингом',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -324,7 +323,7 @@ class MonitoringLogsWidget extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('Логи мониторинга',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             if (monitoringState.lastError != null) ...[
               Container(
@@ -354,11 +353,11 @@ class MonitoringLogsWidget extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(monitoringState.lastError!,
-                        style: Theme.of(context).textTheme.bodySmall),
+                        style: Theme.of(context).textTheme.bodySmall,),
                     if (monitoringState.lastErrorTime != null) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'Время: ${monitoringState.lastErrorTime!.toLocal().toString()}',
+                        'Время: ${monitoringState.lastErrorTime!.toLocal()}',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
@@ -381,7 +380,7 @@ class MonitoringLogsWidget extends ConsumerWidget {
                 child: Row(
                   children: [
                     const Icon(Icons.check_circle,
-                        color: Colors.green, size: 16),
+                        color: Colors.green, size: 16,),
                     const SizedBox(width: 8),
                     Text(
                       'Ошибок не обнаружено',

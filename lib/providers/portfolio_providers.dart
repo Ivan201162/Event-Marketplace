@@ -1,7 +1,8 @@
 import 'dart:io';
+
+import 'package:event_marketplace_app/models/specialist_profile.dart';
+import 'package:event_marketplace_app/services/portfolio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist_profile.dart';
-import '../services/portfolio_service.dart';
 
 /// Провайдер сервиса портфолио
 final portfolioServiceProvider =
@@ -38,7 +39,7 @@ class PortfolioUploadState {
 /// Провайдер состояния загрузки портфолио (мигрирован с StateNotifierProvider)
 final portfolioUploadStateProvider =
     NotifierProvider<PortfolioUploadNotifier, PortfolioUploadState>(
-  () => PortfolioUploadNotifier(),
+  PortfolioUploadNotifier.new,
 );
 
 /// Нотификатор для загрузки портфолио (мигрирован с StateNotifier)
@@ -183,7 +184,7 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
 
   /// Обновить элемент портфолио
   Future<void> updatePortfolioItem(
-      String userId, PortfolioItem updatedItem) async {
+      String userId, PortfolioItem updatedItem,) async {
     try {
       await _portfolioService.updatePortfolioItem(userId, updatedItem);
 

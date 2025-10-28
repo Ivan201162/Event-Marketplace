@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис для управления ценами специалиста
 class SpecialistPriceManagementService {
@@ -222,12 +222,9 @@ class ServicePrice {
     required this.specialistId,
     required this.serviceName,
     required this.price,
-    this.description,
+    required this.isActive, required this.createdAt, required this.updatedAt, this.description,
     this.duration,
     this.includedServices = const [],
-    required this.isActive,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory ServicePrice.fromDocument(DocumentSnapshot doc) {
@@ -297,7 +294,7 @@ class ServicePriceTemplate {
       description: data['description'] as String? ?? '',
       services: (data['services'] as List<dynamic>?)
               ?.map(
-                  (e) => TemplateService.fromMap(Map<String, dynamic>.from(e)))
+                  (e) => TemplateService.fromMap(Map<String, dynamic>.from(e)),)
               .toList() ??
           [],
       createdAt: data['createdAt'] != null

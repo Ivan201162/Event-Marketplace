@@ -1,13 +1,10 @@
+import 'package:event_marketplace_app/models/payment_extended.dart';
 import 'package:flutter/material.dart';
-import '../models/payment_extended.dart';
 
 /// Виджет для выбора типа оплаты
 class PaymentTypeSelector extends StatefulWidget {
   const PaymentTypeSelector({
-    super.key,
-    required this.totalAmount,
-    required this.settings,
-    required this.onPaymentTypeSelected,
+    required this.totalAmount, required this.settings, required this.onPaymentTypeSelected, super.key,
   });
   final double totalAmount;
   final AdvancePaymentSettings settings;
@@ -62,7 +59,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-                onPressed: _confirmSelection, child: const Text('Подтвердить')),
+                onPressed: _confirmSelection, child: const Text('Подтвердить'),),
           ),
         ],
       );
@@ -143,7 +140,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
               ),
               child: Icon(icon,
                   color: isSelected ? Colors.white : Colors.grey[600],
-                  size: 20),
+                  size: 20,),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -161,7 +158,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                     ),
                   ),
                   Text(subtitle,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
                 ],
               ),
             ),
@@ -332,12 +329,12 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
   Widget _buildPaymentSummary() => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Сводка платежа',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -409,6 +406,6 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
     }
 
     widget.onPaymentTypeSelected(
-        _selectedType, advancePercentage, installments);
+        _selectedType, advancePercentage, installments,);
   }
 }

@@ -4,11 +4,10 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:event_marketplace_app/models/security_audit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pointycastle/export.dart' hide Digest;
 import 'package:uuid/uuid.dart';
-
-import '../models/security_audit.dart';
 
 /// Сервис безопасности и шифрования
 class SecurityService {
@@ -135,23 +134,20 @@ class SecurityService {
 
   /// Применить политику безопасности
   Future<void> _enforcePolicy(
-      SecurityPolicy policy, SecurityAudit audit) async {
+      SecurityPolicy policy, SecurityAudit audit,) async {
     try {
       final action = policy.rules['action'] as String?;
 
       switch (action) {
         case 'block':
           await _blockUser(audit.userId, policy.name);
-          break;
         case 'alert':
           await _sendSecurityAlert(policy, audit);
-          break;
         case 'log':
           // Уже логируется
           break;
         case 'rate_limit':
           await _applyRateLimit(audit.userId, policy.rules);
-          break;
         default:
           break;
       }
@@ -190,7 +186,7 @@ class SecurityService {
 
   /// Отправить алерт безопасности
   Future<void> _sendSecurityAlert(
-      SecurityPolicy policy, SecurityAudit audit) async {
+      SecurityPolicy policy, SecurityAudit audit,) async {
     try {
       // TODO(developer): Интеграция с системой уведомлений
       if (kDebugMode) {
@@ -205,7 +201,7 @@ class SecurityService {
 
   /// Применить ограничение скорости
   Future<void> _applyRateLimit(
-      String? userId, Map<String, dynamic> rules) async {
+      String? userId, Map<String, dynamic> rules,) async {
     if (userId == null) return;
 
     try {
@@ -244,7 +240,7 @@ class SecurityService {
       final encrypted = cipher.process(Uint8List.fromList(dataBytes));
 
       // Объединяем IV и зашифрованные данные
-      final result = Uint8List((iv.length + encrypted.length).toInt());
+      final result = Uint8List(iv.length + encrypted.length);
       result.setRange(0, iv.length, iv);
       result.setRange(iv.length, result.length, encrypted);
 
@@ -296,16 +292,12 @@ class SecurityService {
       switch (algorithm.toLowerCase()) {
         case 'md5':
           digest = md5.convert(bytes);
-          break;
         case 'sha1':
           digest = sha1.convert(bytes);
-          break;
         case 'sha256':
           digest = sha256.convert(bytes);
-          break;
         case 'sha512':
           digest = sha512.convert(bytes);
-          break;
         default:
           digest = sha256.convert(bytes);
       }
@@ -330,7 +322,7 @@ class SecurityService {
 
     return String.fromCharCodes(
       Iterable.generate(
-          length, (_) => charSet.codeUnitAt(random.nextInt(charSet.length))),
+          length, (_) => charSet.codeUnitAt(random.nextInt(charSet.length)),),
     );
   }
 
@@ -422,11 +414,11 @@ class SecurityService {
       }
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final snapshot =
@@ -506,7 +498,7 @@ class SecurityService {
 
   /// Обновить политику безопасности
   Future<void> updateSecurityPolicy(
-      String policyId, SecurityPolicy updatedPolicy) async {
+      String policyId, SecurityPolicy updatedPolicy,) async {
     try {
       await _firestore.collection('securityPolicies').doc(policyId).update({
         ...updatedPolicy.toMap(),
@@ -697,12 +689,12 @@ class SecurityService {
 
       if (fromDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),);
       }
 
       if (toDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(toDate),);
       }
 
       final snapshot = await query.get();
@@ -1084,12 +1076,12 @@ class SecurityService {
 
       if (fromDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),);
       }
 
       if (toDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(toDate),);
       }
 
       final snapshot = await query.get();

@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/data/models/up_user.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../data/models/up_user.dart';
 
 /// Карточка профиля пользователя для главного экрана
 class UserProfileCard extends StatelessWidget {
-  const UserProfileCard({super.key, required this.user});
+  const UserProfileCard({required this.user, super.key});
 
   final UpUser user;
 

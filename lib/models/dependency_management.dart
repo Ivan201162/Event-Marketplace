@@ -6,21 +6,10 @@ class Dependency {
     required this.id,
     required this.name,
     required this.version,
-    this.latestVersion,
-    required this.type,
-    required this.status,
+    required this.type, required this.status, required this.licenses, required this.authors, required this.metadata, required this.dependencies, required this.dependents, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.latestVersion,
     this.description,
     this.repositoryUrl,
     this.documentationUrl,
-    required this.licenses,
-    required this.authors,
-    required this.metadata,
-    required this.dependencies,
-    required this.dependents,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory Dependency.fromMap(Map<String, dynamic> map) => Dependency(
@@ -37,7 +26,7 @@ class Dependency {
         licenses: List<String>.from(map['licenses'] as List<dynamic>? ?? []),
         authors: List<String>.from(map['authors'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
-            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+            map['metadata'] as Map<dynamic, dynamic>? ?? {},),
         dependencies:
             List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
         dependents:
@@ -286,17 +275,7 @@ class DependencyUpdate {
     required this.newVersion,
     required this.type,
     required this.priority,
-    this.changelog,
-    required this.breakingChanges,
-    required this.securityFixes,
-    required this.bugFixes,
-    required this.newFeatures,
-    required this.metadata,
-    required this.releaseDate,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
+    required this.breakingChanges, required this.securityFixes, required this.bugFixes, required this.newFeatures, required this.metadata, required this.releaseDate, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.changelog,
   });
 
   factory DependencyUpdate.fromMap(Map<String, dynamic> map) =>
@@ -317,7 +296,7 @@ class DependencyUpdate {
         newFeatures:
             List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
         metadata: Map<String, dynamic>.from(
-            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+            map['metadata'] as Map<dynamic, dynamic>? ?? {},),
         releaseDate: (map['releaseDate'] as Timestamp).toDate(),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
@@ -429,7 +408,7 @@ enum UpdateType {
 
   static UpdateType fromString(String value) =>
       UpdateType.values.firstWhere((type) => type.value == value,
-          orElse: () => UpdateType.minor);
+          orElse: () => UpdateType.minor,);
 
   String get icon {
     switch (this) {
@@ -545,9 +524,9 @@ class DependencyConfig {
         updateTimeout:
             Duration(seconds: map['updateTimeoutSeconds'] as int? ?? 300),
         excludedDependencies: List<String>.from(
-            (map['excludedDependencies'] as List<dynamic>?) ?? []),
+            (map['excludedDependencies'] as List<dynamic>?) ?? [],),
         requiredApprovals: List<String>.from(
-            (map['requiredApprovals'] as List<dynamic>?) ?? []),
+            (map['requiredApprovals'] as List<dynamic>?) ?? [],),
         updatePolicies: Map<String, dynamic>.from(
           (map['updatePolicies'] as Map<dynamic, dynamic>?) ?? {},
         ),

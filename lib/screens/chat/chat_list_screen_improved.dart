@@ -45,12 +45,6 @@ class ChatListScreenImproved extends ConsumerWidget {
 }
 
 class _ChatItem extends StatelessWidget {
-  final String userName;
-  final String lastMessage;
-  final String timestamp;
-  final int unreadCount;
-  final bool isOnline;
-  final VoidCallback onTap;
 
   const _ChatItem({
     required this.userName,
@@ -60,6 +54,12 @@ class _ChatItem extends StatelessWidget {
     required this.isOnline,
     required this.onTap,
   });
+  final String userName;
+  final String lastMessage;
+  final String timestamp;
+  final int unreadCount;
+  final bool isOnline;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +148,7 @@ class _ChatItem extends StatelessWidget {
                       if (unreadCount > 0)
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(12),

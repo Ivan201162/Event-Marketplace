@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 /// Адаптивный контейнер, который изменяет размер в зависимости от экрана
 class AdaptiveContainer extends StatelessWidget {
   const AdaptiveContainer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.margin,
     this.maxWidth,
@@ -34,7 +33,7 @@ class AdaptiveContainer extends StatelessWidget {
     // Определяем отступы
     final contentPadding = padding ??
         EdgeInsets.symmetric(
-            horizontal: isTablet ? 32 : 16, vertical: isTablet ? 24 : 16);
+            horizontal: isTablet ? 32 : 16, vertical: isTablet ? 24 : 16,);
 
     Widget content = Container(
       padding: contentPadding,
@@ -54,8 +53,7 @@ class AdaptiveContainer extends StatelessWidget {
 /// Адаптивная сетка, которая изменяет количество колонок в зависимости от размера экрана
 class AdaptiveGrid extends StatelessWidget {
   const AdaptiveGrid({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.childAspectRatio = 1.0,
     this.spacing = 16.0,
     this.runSpacing = 16.0,
@@ -103,8 +101,7 @@ class AdaptiveGrid extends StatelessWidget {
 /// Адаптивный список, который изменяет отображение в зависимости от размера экрана
 class AdaptiveList extends StatelessWidget {
   const AdaptiveList({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.useCardLayout = true,
     this.itemHeight,
   });
@@ -135,8 +132,7 @@ class AdaptiveList extends StatelessWidget {
 /// Адаптивная кнопка, которая изменяет размер в зависимости от экрана
 class AdaptiveButton extends StatelessWidget {
   const AdaptiveButton({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onPressed,
     this.style,
     this.isFullWidth = false,
@@ -215,8 +211,7 @@ class AdaptiveText extends StatelessWidget {
 /// Адаптивный AppBar с улучшенным дизайном
 class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AdaptiveAppBar({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.actions,
     this.leading,
     this.centerTitle = true,
@@ -263,8 +258,7 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
 /// Адаптивная карточка с улучшенным дизайном
 class AdaptiveCard extends StatelessWidget {
   const AdaptiveCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.margin,
     this.elevation,
@@ -293,7 +287,7 @@ class AdaptiveCard extends StatelessWidget {
       ),
       margin: margin ?? EdgeInsets.all(isTablet ? 16 : 8),
       child: Padding(
-          padding: padding ?? EdgeInsets.all(isTablet ? 24 : 16), child: child),
+          padding: padding ?? EdgeInsets.all(isTablet ? 24 : 16), child: child,),
     );
 
     if (onTap != null) {
@@ -311,9 +305,7 @@ class AdaptiveCard extends StatelessWidget {
 /// Адаптивный диалог с улучшенным дизайном
 class AdaptiveDialog extends StatelessWidget {
   const AdaptiveDialog({
-    super.key,
-    required this.title,
-    required this.content,
+    required this.title, required this.content, super.key,
     this.actions,
     this.scrollable = false,
   });
@@ -343,7 +335,7 @@ class AdaptiveDialog extends StatelessWidget {
       content: dialogContent,
       actions: actions,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(isTablet ? 16 : 12)),
+          borderRadius: BorderRadius.circular(isTablet ? 16 : 12),),
       contentPadding: EdgeInsets.all(isTablet ? 24 : 16),
       actionsPadding: EdgeInsets.all(isTablet ? 24 : 16),
     );
@@ -353,8 +345,7 @@ class AdaptiveDialog extends StatelessWidget {
 /// Адаптивный BottomSheet с улучшенным дизайном
 class AdaptiveBottomSheet extends StatelessWidget {
   const AdaptiveBottomSheet({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.title,
     this.actions,
     this.isScrollControlled = true,
@@ -394,7 +385,7 @@ class AdaptiveBottomSheet extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(isTablet ? 24 : 16),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end, children: actions!),
+                  mainAxisAlignment: MainAxisAlignment.end, children: actions!,),
             ),
           ],
         ],
@@ -449,7 +440,7 @@ class AdaptiveLoadingIndicator extends StatelessWidget {
 /// Адаптивное сообщение об ошибке
 class AdaptiveErrorMessage extends StatelessWidget {
   const AdaptiveErrorMessage(
-      {super.key, required this.message, this.onRetry, this.icon});
+      {required this.message, super.key, this.onRetry, this.icon,});
   final String message;
   final VoidCallback? onRetry;
   final IconData? icon;
@@ -464,7 +455,7 @@ class AdaptiveErrorMessage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon ?? Icons.error_outline,
-              size: isTablet ? 64 : 48, color: Colors.red[300]),
+              size: isTablet ? 64 : 48, color: Colors.red[300],),
           const SizedBox(height: 16),
           AdaptiveText(
             message,

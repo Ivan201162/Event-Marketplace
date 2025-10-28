@@ -50,7 +50,7 @@ class SupportService {
       .orderBy('createdAt', descending: false)
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map(SupportMessage.fromDocument).toList());
+          snapshot.docs.map(SupportMessage.fromDocument).toList(),);
 
   /// Получить FAQ
   Future<List<FAQItem>> getFAQ() async {
@@ -189,7 +189,7 @@ class SupportService {
 
   /// Генерировать ответ бота
   Future<void> _generateBotResponse(
-      String userId, String userMessage, String messageId) async {
+      String userId, String userMessage, String messageId,) async {
     try {
       // Простая логика ответов бота на основе ключевых слов
       final response = _getBotResponse(userMessage);
@@ -263,11 +263,8 @@ class SupportMessage {
     required this.userId,
     required this.message,
     required this.type,
-    this.attachmentUrl,
+    required this.isFromUser, required this.isRead, required this.createdAt, this.attachmentUrl,
     this.metadata = const {},
-    required this.isFromUser,
-    required this.isRead,
-    required this.createdAt,
     this.readAt,
   });
 
@@ -355,15 +352,14 @@ class SupportStats {
     required this.userId,
     required this.totalMessages,
     required this.unreadMessages,
-    this.lastMessageAt,
-    required this.lastUpdated,
+    required this.lastUpdated, this.lastMessageAt,
   });
 
   factory SupportStats.empty() => SupportStats(
       userId: '',
       totalMessages: 0,
       unreadMessages: 0,
-      lastUpdated: DateTime.now());
+      lastUpdated: DateTime.now(),);
 
   final String userId;
   final int totalMessages;

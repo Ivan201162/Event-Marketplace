@@ -1,16 +1,13 @@
+import 'package:event_marketplace_app/analytics/analytics_service.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/providers/analytics_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../analytics/analytics_service.dart';
-import '../core/feature_flags.dart';
-import '../providers/analytics_providers.dart';
 
 /// Обертка для автоматического отслеживания аналитики
 class AnalyticsWrapper extends ConsumerWidget {
   const AnalyticsWrapper({
-    super.key,
-    required this.child,
-    required this.screenName,
+    required this.child, required this.screenName, super.key,
     this.parameters,
   });
   final Widget child;
@@ -54,7 +51,7 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
 
   /// Отправить событие
   Future<void> trackEvent(AnalyticsEventType type,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, dynamic>? parameters,}) async {
     await analytics.logEventWithParams(type, parameters ?? {});
   }
 
@@ -70,7 +67,7 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
     Map<String, dynamic>? parameters,
   }) async {
     await analytics.logError(
-        error: error, description: description, parameters: parameters);
+        error: error, description: description, parameters: parameters,);
   }
 
   /// Отправить событие производительности
@@ -103,19 +100,16 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
 
   /// Отправить пользовательское событие
   Future<void> trackCustomEvent(String eventName,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, dynamic>? parameters,}) async {
     await analytics.logCustomEvent(
-        eventName: eventName, parameters: parameters);
+        eventName: eventName, parameters: parameters,);
   }
 }
 
 /// Виджет для отслеживания нажатий кнопок
 class AnalyticsButton extends ConsumerWidget {
   const AnalyticsButton({
-    super.key,
-    required this.child,
-    required this.onPressed,
-    required this.buttonName,
+    required this.child, required this.onPressed, required this.buttonName, super.key,
     this.screenName,
     this.parameters,
   });
@@ -150,7 +144,7 @@ class AnalyticsButton extends ConsumerWidget {
 
 /// Виджет для отслеживания навигации
 class AnalyticsNavigator extends ConsumerWidget {
-  const AnalyticsNavigator({super.key, required this.child});
+  const AnalyticsNavigator({required this.child, super.key});
   final Widget child;
 
   @override
@@ -158,7 +152,7 @@ class AnalyticsNavigator extends ConsumerWidget {
         onGenerateRoute: (settings) {
           _trackNavigation(ref, settings.name ?? 'unknown');
           return MaterialPageRoute<void>(
-              builder: (context) => child, settings: settings);
+              builder: (context) => child, settings: settings,);
         },
       );
 
@@ -178,7 +172,7 @@ class AnalyticsNavigator extends ConsumerWidget {
 /// Виджет для отслеживания ошибок
 class AnalyticsErrorBoundary extends ConsumerWidget {
   const AnalyticsErrorBoundary(
-      {super.key, required this.child, this.errorBuilder});
+      {required this.child, super.key, this.errorBuilder,});
   final Widget child;
   final Widget Function(Object error, StackTrace stackTrace)? errorBuilder;
 
@@ -218,9 +212,7 @@ class AnalyticsErrorBoundary extends ConsumerWidget {
 /// Виджет для отслеживания производительности
 class AnalyticsPerformanceTracker extends ConsumerWidget {
   const AnalyticsPerformanceTracker({
-    super.key,
-    required this.child,
-    required this.operationName,
+    required this.child, required this.operationName, super.key,
     this.parameters,
   });
   final Widget child;

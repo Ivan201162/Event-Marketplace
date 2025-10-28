@@ -1,15 +1,11 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/specialist.dart';
-import '../models/story.dart';
-import '../services/story_service.dart';
 
 class InstagramStoryViewer extends StatefulWidget {
   const InstagramStoryViewer({
-    super.key,
-    required this.stories,
-    required this.initialIndex,
-    required this.specialist,
+    required this.stories, required this.initialIndex, required this.specialist, super.key,
   });
   final List<Story> stories;
   final int initialIndex;
@@ -42,7 +38,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _progressController, curve: Curves.linear));
+        CurvedAnimation(parent: _progressController, curve: Curves.linear),);
 
     _startProgress();
   }
@@ -132,7 +128,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
               child: Container(
                 height: 3,
                 margin: EdgeInsets.only(
-                    right: index < widget.stories.length - 1 ? 4 : 0),
+                    right: index < widget.stories.length - 1 ? 4 : 0,),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
@@ -177,7 +173,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
                 story.mediaUrl,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) => const Center(
-                    child: Icon(Icons.image, color: Colors.white, size: 100)),
+                    child: Icon(Icons.image, color: Colors.white, size: 100),),
               ),
             ),
 
@@ -195,7 +191,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
                   ),
                   child: Text(story.text,
                       style:
-                          const TextStyle(color: Colors.white, fontSize: 16)),
+                          const TextStyle(color: Colors.white, fontSize: 16),),
                 ),
               ),
           ],
@@ -256,7 +252,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
                     _buildProgressIndicator(),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                          horizontal: 16, vertical: 8,),
                       child: Row(
                         children: [
                           // Аватар специалиста
@@ -284,9 +280,9 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
                           // Время
                           Text(
                             _formatTime(
-                                widget.stories[_currentIndex].createdAt),
+                                widget.stories[_currentIndex].createdAt,),
                             style: const TextStyle(
-                                color: Colors.white70, fontSize: 12),
+                                color: Colors.white70, fontSize: 12,),
                           ),
                           const SizedBox(width: 8),
                           // Кнопка закрытия
@@ -306,7 +302,7 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer>
             if (_isPaused)
               const Center(
                   child: Icon(Icons.pause_circle_filled,
-                      color: Colors.white, size: 60)),
+                      color: Colors.white, size: 60,),),
           ],
         ),
       ),

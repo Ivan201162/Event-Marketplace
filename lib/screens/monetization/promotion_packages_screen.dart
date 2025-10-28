@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/screens/monetization/payment_screen.dart';
+import 'package:event_marketplace_app/services/promotion_service.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/promotion_boost.dart';
-import '../../services/promotion_service.dart';
-import 'payment_screen.dart';
 
 class PromotionPackagesScreen extends StatefulWidget {
   const PromotionPackagesScreen({super.key});
@@ -78,7 +77,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                   const SizedBox(height: 24),
 
                   // Пакеты продвижения
-                  ..._packages.map((package) => _buildPackageCard(package)),
+                  ..._packages.map(_buildPackageCard),
                 ],
               ),
             ),
@@ -115,7 +114,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                     if (isPopular)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 4),
+                            horizontal: 12, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(12),
@@ -203,7 +202,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(8),
@@ -255,7 +254,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                               Expanded(
                                 child: Text(feature,
                                     style:
-                                        Theme.of(context).textTheme.bodyMedium),
+                                        Theme.of(context).textTheme.bodyMedium,),
                               ),
                             ],
                           ),
@@ -273,12 +272,12 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),),
                         ),
                         child: const Text(
                           'Купить продвижение',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                       ),
                     ),
@@ -324,11 +323,11 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => PaymentScreen(
-            promotionPackage: package, type: PaymentType.promotion),
+            promotionPackage: package, type: PaymentType.promotion,),
       ),
     );
 
-    if (result == true && mounted) {
+    if (result ?? false && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Продвижение успешно активировано!'),

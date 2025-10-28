@@ -1,17 +1,16 @@
+import 'package:event_marketplace_app/models/subscription_plan.dart';
 import 'package:flutter/material.dart';
-import '../models/subscription_plan.dart';
 
 class PremiumBadgeWidget extends StatelessWidget {
-  final SubscriptionTier tier;
-  final double size;
-  final bool showText;
 
   const PremiumBadgeWidget({
-    super.key,
-    required this.tier,
+    required this.tier, super.key,
     this.size = 24.0,
     this.showText = false,
   });
+  final SubscriptionTier tier;
+  final double size;
+  final bool showText;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class PremiumBadgeWidget extends StatelessWidget {
             style: TextStyle(
                 color: _getColor(tier),
                 fontWeight: FontWeight.bold,
-                fontSize: 12),
+                fontSize: 12,),
           ),
         ],
       ],
@@ -106,16 +105,14 @@ class PremiumBadgeWidget extends StatelessWidget {
 }
 
 class PremiumBorderWidget extends StatelessWidget {
+
+  const PremiumBorderWidget({
+    required this.tier, required this.child, super.key,
+    this.borderWidth = 2.0,
+  });
   final SubscriptionTier tier;
   final Widget child;
   final double borderWidth;
-
-  const PremiumBorderWidget({
-    super.key,
-    required this.tier,
-    required this.child,
-    this.borderWidth = 2.0,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -152,12 +149,12 @@ class PremiumBorderWidget extends StatelessWidget {
 }
 
 class PremiumCardWidget extends StatelessWidget {
+
+  const PremiumCardWidget(
+      {required this.tier, required this.child, super.key, this.padding,});
   final SubscriptionTier tier;
   final Widget child;
   final EdgeInsetsGeometry? padding;
-
-  const PremiumCardWidget(
-      {super.key, required this.tier, required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -199,12 +196,12 @@ class PremiumCardWidget extends StatelessWidget {
 }
 
 class PremiumTextWidget extends StatelessWidget {
+
+  const PremiumTextWidget(
+      {required this.tier, required this.text, super.key, this.style,});
   final SubscriptionTier tier;
   final String text;
   final TextStyle? style;
-
-  const PremiumTextWidget(
-      {super.key, required this.tier, required this.text, this.style});
 
   @override
   Widget build(BuildContext context) {

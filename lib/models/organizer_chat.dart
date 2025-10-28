@@ -30,12 +30,7 @@ class OrganizerChat {
     required this.organizerId,
     required this.organizerName,
     required this.eventTitle,
-    this.eventDescription,
-    required this.eventDate,
-    required this.status,
-    required this.messages,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.eventDate, required this.status, required this.messages, required this.createdAt, required this.updatedAt, this.eventDescription,
     this.lastMessageAt,
     this.lastMessageText,
     this.hasUnreadMessages = false,
@@ -177,8 +172,7 @@ class OrganizerMessage {
     required this.senderType,
     required this.type,
     required this.text,
-    this.metadata,
-    required this.createdAt,
+    required this.createdAt, this.metadata,
     this.isRead = false,
     this.readAt,
   });
@@ -300,12 +294,8 @@ class SpecialistProposal {
     required this.specialistName,
     required this.specialistCategory,
     required this.hourlyRate,
-    this.specialistPhoto,
+    required this.services, required this.rating, required this.reviewCount, required this.isAvailable, this.specialistPhoto,
     this.description,
-    required this.services,
-    required this.rating,
-    required this.reviewCount,
-    required this.isAvailable,
   });
 
   /// Создать из Map

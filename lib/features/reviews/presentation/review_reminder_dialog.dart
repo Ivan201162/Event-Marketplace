@@ -1,15 +1,11 @@
+import 'package:event_marketplace_app/features/reviews/data/repositories/review_repository.dart';
+import 'package:event_marketplace_app/features/reviews/presentation/add_review_screen.dart';
 import 'package:flutter/material.dart';
-import '../data/repositories/review_repository.dart';
-import 'add_review_screen.dart';
 
 /// Диалог напоминания об отзыве
 class ReviewReminderDialog extends StatefulWidget {
   const ReviewReminderDialog({
-    super.key,
-    required this.bookingId,
-    required this.specialistId,
-    required this.specialistName,
-    required this.eventDate,
+    required this.bookingId, required this.specialistId, required this.specialistName, required this.eventDate, super.key,
   });
   final String bookingId;
   final String specialistId;
@@ -129,7 +125,7 @@ class _ReviewReminderDialogState extends State<ReviewReminderDialog> {
               backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),),
             ),
             child: _isLoading
                 ? const SizedBox(
@@ -166,11 +162,7 @@ class _ReviewReminderDialogState extends State<ReviewReminderDialog> {
 /// Баннер напоминания об отзыве
 class ReviewReminderBanner extends StatefulWidget {
   const ReviewReminderBanner({
-    super.key,
-    required this.bookingId,
-    required this.specialistId,
-    required this.specialistName,
-    required this.eventDate,
+    required this.bookingId, required this.specialistId, required this.specialistName, required this.eventDate, super.key,
     this.onDismiss,
   });
   final String bookingId;
@@ -295,10 +287,7 @@ class _ReviewReminderBannerState extends State<ReviewReminderBanner> {
 /// Виджет статуса отзыва в истории заказов
 class ReviewStatusWidget extends StatefulWidget {
   const ReviewStatusWidget({
-    super.key,
-    required this.bookingId,
-    required this.specialistId,
-    required this.specialistName,
+    required this.bookingId, required this.specialistId, required this.specialistName, super.key,
   });
   final String bookingId;
   final String specialistId;

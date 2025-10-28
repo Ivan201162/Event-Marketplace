@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/logger.dart';
-import '../models/booking.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/core/logger.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис для работы с ценами и расчетом средних значений
 class PricingService {
@@ -14,10 +14,10 @@ class PricingService {
 
   /// Рассчитать среднюю цену по услугам для специалиста
   Future<Map<String, double>> calculateAveragePricesByService(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       AppLogger.logI('Расчет средних цен для специалиста: $specialistId',
-          'pricing_service');
+          'pricing_service',);
 
       // Получаем все завершенные бронирования специалиста
       final bookingsSnapshot = await _firestore
@@ -28,7 +28,7 @@ class PricingService {
 
       if (bookingsSnapshot.docs.isEmpty) {
         AppLogger.logI(
-            'Нет завершенных бронирований для расчета', 'pricing_service');
+            'Нет завершенных бронирований для расчета', 'pricing_service',);
         return {};
       }
 
@@ -55,11 +55,11 @@ class PricingService {
       });
 
       AppLogger.logI(
-          'Средние цены рассчитаны: $averagePrices', 'pricing_service');
+          'Средние цены рассчитаны: $averagePrices', 'pricing_service',);
       return averagePrices;
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка расчета средних цен', 'pricing_service', e, stackTrace);
+          'Ошибка расчета средних цен', 'pricing_service', e, stackTrace,);
       return {};
     }
   }
@@ -68,7 +68,7 @@ class PricingService {
   Future<void> updateSpecialistAveragePrices(String specialistId) async {
     try {
       AppLogger.logI('Обновление средних цен специалиста: $specialistId',
-          'pricing_service');
+          'pricing_service',);
 
       final averagePrices = await calculateAveragePricesByService(specialistId);
 
@@ -79,10 +79,10 @@ class PricingService {
       });
 
       AppLogger.logI('Средние цены обновлены для специалиста: $specialistId',
-          'pricing_service');
+          'pricing_service',);
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка обновления средних цен', 'pricing_service', e, stackTrace);
+          'Ошибка обновления средних цен', 'pricing_service', e, stackTrace,);
     }
   }
 
@@ -90,7 +90,7 @@ class PricingService {
   Future<double> getAveragePriceByCategory(SpecialistCategory category) async {
     try {
       AppLogger.logI('Получение средней цены по категории: ${category.name}',
-          'pricing_service');
+          'pricing_service',);
 
       final specialistsSnapshot = await _firestore
           .collection('specialists')
@@ -131,10 +131,10 @@ class PricingService {
 
   /// Получить диапазон цен по категории
   Future<Map<String, double>> getPriceRangeByCategory(
-      SpecialistCategory category) async {
+      SpecialistCategory category,) async {
     try {
       AppLogger.logI('Получение диапазона цен по категории: ${category.name}',
-          'pricing_service');
+          'pricing_service',);
 
       final specialistsSnapshot = await _firestore
           .collection('specialists')
@@ -168,7 +168,7 @@ class PricingService {
       return {'min': minPrice, 'max': maxPrice, 'avg': avgPrice};
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка получения диапазона цен', 'pricing_service', e, stackTrace);
+          'Ошибка получения диапазона цен', 'pricing_service', e, stackTrace,);
       return {'min': 0.0, 'max': 0.0, 'avg': 0.0};
     }
   }
@@ -192,25 +192,21 @@ class PricingService {
       switch (experienceLevel) {
         case ExperienceLevel.beginner:
           experienceMultiplier = 0.7;
-          break;
         case ExperienceLevel.intermediate:
           experienceMultiplier = 0.9;
-          break;
         case ExperienceLevel.advanced:
           experienceMultiplier = 1.1;
-          break;
         case ExperienceLevel.expert:
           experienceMultiplier = 1.3;
-          break;
       }
 
       final recommendedPrice = basePrice * experienceMultiplier;
       AppLogger.logI(
-          'Рекомендуемая цена: $recommendedPrice', 'pricing_service');
+          'Рекомендуемая цена: $recommendedPrice', 'pricing_service',);
       return recommendedPrice;
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка получения рекомендуемой цены', 'pricing_service',
-          e, stackTrace);
+          e, stackTrace,);
       return 0.0;
     }
   }
@@ -219,7 +215,7 @@ class PricingService {
   Future<void> updateAllSpecialistsAveragePrices() async {
     try {
       AppLogger.logI(
-          'Обновление средних цен всех специалистов', 'pricing_service');
+          'Обновление средних цен всех специалистов', 'pricing_service',);
 
       final specialistsSnapshot =
           await _firestore.collection('specialists').get();
@@ -244,7 +240,7 @@ class PricingService {
 
       await batch.commit();
       AppLogger.logI('Обновлено средних цен для $updatedCount специалистов',
-          'pricing_service');
+          'pricing_service',);
     } catch (e, stackTrace) {
       AppLogger.logE(
         'Ошибка обновления средних цен всех специалистов',
@@ -259,7 +255,7 @@ class PricingService {
   Future<Map<String, Map<String, double>>> getAllCategoriesPriceStats() async {
     try {
       AppLogger.logI(
-          'Получение статистики цен по всем категориям', 'pricing_service');
+          'Получение статистики цен по всем категориям', 'pricing_service',);
 
       final stats = <String, Map<String, double>>{};
 
@@ -269,11 +265,11 @@ class PricingService {
       }
 
       AppLogger.logI('Статистика цен получена для ${stats.length} категорий',
-          'pricing_service');
+          'pricing_service',);
       return stats;
     } catch (e, stackTrace) {
       AppLogger.logE(
-          'Ошибка получения статистики цен', 'pricing_service', e, stackTrace);
+          'Ошибка получения статистики цен', 'pricing_service', e, stackTrace,);
       return {};
     }
   }

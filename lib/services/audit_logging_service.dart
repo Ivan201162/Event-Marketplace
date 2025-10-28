@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/audit_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../core/feature_flags.dart';
-import '../models/audit_log.dart';
 
 /// Сервис для аудита действий пользователей и системных логов
 class AuditLoggingService {
@@ -292,11 +291,11 @@ class AuditLoggingService {
       }
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       query = query.orderBy('timestamp', descending: true).limit(limit);
@@ -338,11 +337,11 @@ class AuditLoggingService {
       }
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       query = query.orderBy('timestamp', descending: true).limit(limit);
@@ -390,7 +389,7 @@ class AuditLoggingService {
 
       if (includeAuditLogs) {
         final auditLogs = await getAuditLogs(
-            startDate: startDate, endDate: endDate, limit: 10000);
+            startDate: startDate, endDate: endDate, limit: 10000,);
         exportData['auditLogs'] = auditLogs.map((log) => log.toMap()).toList();
       }
 
@@ -497,7 +496,7 @@ class AuditLoggingService {
 
   /// Получение статистики логов
   Future<Map<String, dynamic>> getLogStatistics(
-      {DateTime? startDate, DateTime? endDate}) async {
+      {DateTime? startDate, DateTime? endDate,}) async {
     try {
       final now = DateTime.now();
       final start = startDate ?? now.subtract(const Duration(days: 30));
@@ -542,7 +541,7 @@ class AuditLoggingService {
         },
         'period': {
           'startDate': start.toIso8601String(),
-          'endDate': end.toIso8601String()
+          'endDate': end.toIso8601String(),
         },
       };
     } catch (e) {

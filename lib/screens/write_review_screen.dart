@@ -1,17 +1,16 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/booking.dart';
-import '../models/review.dart';
-import '../models/specialist.dart';
-import '../services/review_service.dart';
 
 /// Экран написания/редактирования отзыва
 class WriteReviewScreen extends StatefulWidget {
   // Для редактирования
 
   const WriteReviewScreen(
-      {super.key, required this.specialist, this.booking, this.existingReview});
+      {required this.specialist, super.key, this.booking, this.existingReview,});
   final Specialist specialist;
   final Booking? booking;
   final Review? existingReview;
@@ -97,7 +96,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -180,7 +179,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                             ? widget.specialist.name[0].toUpperCase()
                             : '?',
                         style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24, fontWeight: FontWeight.bold,),
                       )
                     : null,
               ),
@@ -252,7 +251,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(
-                  color: _getRatingColor(), fontWeight: FontWeight.w500),
+                  color: _getRatingColor(), fontWeight: FontWeight.w500,),
             ),
           ),
         ],

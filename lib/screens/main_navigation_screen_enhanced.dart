@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/screens/chat/chat_list_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/feed/feed_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/home/home_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/ideas/ideas_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/requests/requests_screen_enhanced.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'chat/chat_list_screen_enhanced.dart';
-import 'feed/feed_screen_enhanced.dart';
-import 'home/home_screen_enhanced.dart';
-import 'ideas/ideas_screen_enhanced.dart';
-import 'requests/requests_screen_enhanced.dart';
 
 /// Enhanced main navigation screen with swipe support
 class MainNavigationScreenEnhanced extends ConsumerStatefulWidget {
@@ -69,20 +68,20 @@ class _MainNavigationScreenEnhancedState
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 1.1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
   }
 
   @override
@@ -166,7 +165,7 @@ class _MainNavigationScreenEnhancedState
                       duration: const Duration(milliseconds: 200),
                       curve: Curves.easeInOut,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 12),
+                          vertical: 8, horizontal: 12,),
                       decoration: BoxDecoration(
                         gradient: isActive
                             ? LinearGradient(
@@ -186,7 +185,6 @@ class _MainNavigationScreenEnhancedState
                                 color: Theme.of(context)
                                     .primaryColor
                                     .withOpacity(0.3),
-                                width: 1,
                               )
                             : null,
                       ),
@@ -276,7 +274,7 @@ class _MainNavigationScreenEnhancedState
               selected: isActive,
               onTap: () => _onTabTapped(index),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -293,7 +291,7 @@ class _MainNavigationScreenEnhancedState
         ).animate(CurvedAnimation(
           parent: _animationController,
           curve: Curves.easeInOut,
-        )),
+        ),),
         child: child,
       ),
     );
@@ -302,10 +300,6 @@ class _MainNavigationScreenEnhancedState
 
 /// Navigation item model
 class NavigationItem {
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  final Widget screen;
 
   const NavigationItem({
     required this.icon,
@@ -313,4 +307,8 @@ class NavigationItem {
     required this.label,
     required this.screen,
   });
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final Widget screen;
 }

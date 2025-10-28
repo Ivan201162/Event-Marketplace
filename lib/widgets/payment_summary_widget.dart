@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/payment.dart';
 import 'package:flutter/material.dart';
-
-import '../models/payment.dart';
 
 class PaymentSummaryWidget extends StatelessWidget {
   const PaymentSummaryWidget(
-      {super.key, required this.payment, required this.taxStatus});
+      {required this.payment, required this.taxStatus, super.key,});
   final Payment payment;
   final TaxStatus taxStatus;
 
@@ -24,7 +23,7 @@ class PaymentSummaryWidget extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.receipt_long,
-                    color: theme.colorScheme.primary, size: 24),
+                    color: theme.colorScheme.primary, size: 24,),
                 const SizedBox(width: 12),
                 Text(
                   'Сводка платежа',
@@ -37,11 +36,11 @@ class PaymentSummaryWidget extends StatelessWidget {
 
             // Payment details
             _buildDetailRow(
-                context, 'Тип платежа', payment.typeDisplayName ?? 'Не указан'),
+                context, 'Тип платежа', payment.typeDisplayName ?? 'Не указан',),
             const SizedBox(height: 12),
 
             _buildDetailRow(context, 'Способ оплаты',
-                payment.methodDisplayName ?? 'Не указан'),
+                payment.methodDisplayName ?? 'Не указан',),
             const SizedBox(height: 12),
 
             _buildDetailRow(
@@ -61,7 +60,7 @@ class PaymentSummaryWidget extends StatelessWidget {
               child: Column(
                 children: [
                   _buildAmountRow(context, 'Сумма к оплате', payment.amount,
-                      isTotal: true),
+                      isTotal: true,),
                   if ((payment.taxAmount ?? 0.0) > 0) ...[
                     const SizedBox(height: 8),
                     _buildAmountRow(
@@ -73,7 +72,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                     const SizedBox(height: 8),
                     _buildAmountRow(
                         context, 'К получению', payment.netAmount ?? 0.0,
-                        isNet: true),
+                        isNet: true,),
                   ],
                 ],
               ),
@@ -93,7 +92,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.info_outline,
-                        color: theme.colorScheme.primary, size: 20),
+                        color: theme.colorScheme.primary, size: 20,),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -126,7 +125,7 @@ class PaymentSummaryWidget extends StatelessWidget {
         ),
         Text(value,
             style: theme.textTheme.bodyMedium
-                ?.copyWith(fontWeight: FontWeight.w500)),
+                ?.copyWith(fontWeight: FontWeight.w500),),
       ],
     );
   }

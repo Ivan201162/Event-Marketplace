@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/models/idea_comment.dart';
 import 'package:flutter/material.dart';
-
-import '../models/idea_comment.dart';
 
 /// Виджет комментария к идее
 class IdeaCommentWidget extends StatelessWidget {
   const IdeaCommentWidget({
-    super.key,
-    required this.comment,
+    required this.comment, super.key,
     this.onLike,
     this.onReply,
     this.onDelete,
@@ -82,7 +80,7 @@ class IdeaCommentWidget extends StatelessWidget {
 
               // Содержимое комментария
               Text(comment.content,
-                  style: Theme.of(context).textTheme.bodyMedium),
+                  style: Theme.of(context).textTheme.bodyMedium,),
 
               const SizedBox(height: 8),
 
@@ -176,8 +174,7 @@ class IdeaCommentWidget extends StatelessWidget {
 /// Виджет для добавления комментария
 class AddCommentWidget extends StatefulWidget {
   const AddCommentWidget({
-    super.key,
-    required this.onCommentAdded,
+    required this.onCommentAdded, super.key,
     this.replyTo,
     this.hintText = 'Добавить комментарий...',
   });
@@ -224,9 +221,9 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
                       decoration: InputDecoration(
                         hintText: widget.hintText,
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(20),),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                            horizontal: 16, vertical: 8,),
                       ),
                       maxLines: null,
                       textInputAction: TextInputAction.newline,
@@ -272,8 +269,7 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
 /// Виджет для отображения списка комментариев
 class CommentsListWidget extends StatelessWidget {
   const CommentsListWidget({
-    super.key,
-    required this.comments,
+    required this.comments, super.key,
     this.onCommentLike,
     this.onCommentReply,
     this.onCommentDelete,

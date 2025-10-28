@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/request_enhanced.dart';
+import 'package:event_marketplace_app/providers/request_providers_enhanced.dart';
+import 'package:event_marketplace_app/services/request_service_enhanced.dart';
+import 'package:event_marketplace_app/widgets/common/enhanced_button.dart';
+import 'package:event_marketplace_app/widgets/common/enhanced_card.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:file_picker/file_picker.dart';
-
-import '../../models/request_enhanced.dart';
-import '../../services/request_service_enhanced.dart';
-import '../../providers/request_providers_enhanced.dart';
-import '../../widgets/common/enhanced_button.dart';
-import '../../widgets/common/enhanced_card.dart';
 
 /// Экран создания заявки с полным функционалом
 class CreateRequestScreenEnhanced extends ConsumerStatefulWidget {
@@ -33,7 +32,7 @@ class _CreateRequestScreenEnhancedState
   String _selectedCategory = '';
   String _selectedSubcategory = '';
   String _selectedCity = '';
-  String _selectedLanguage = 'ru';
+  final String _selectedLanguage = 'ru';
   RequestPriority _selectedPriority = RequestPriority.medium;
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 7));
   TimeOfDay _selectedTime = const TimeOfDay(hour: 18, minute: 0);
@@ -63,12 +62,12 @@ class _CreateRequestScreenEnhancedState
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -76,7 +75,7 @@ class _CreateRequestScreenEnhancedState
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeOutCubic,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -216,11 +215,10 @@ class _CreateRequestScreenEnhancedState
             onTap: () async {
               final result = await FilePicker.platform.pickFiles(
                 allowMultiple: true,
-                type: FileType.any,
               );
               if (result != null) {
                 Navigator.pop(
-                    context, result.files.map((e) => e.path!).toList());
+                    context, result.files.map((e) => e.path!).toList(),);
               }
             },
           ),
@@ -420,7 +418,7 @@ class _CreateRequestScreenEnhancedState
         actions: [
           if (_isLoading)
             const Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16),
               child: SizedBox(
                 width: 20,
                 height: 20,
@@ -446,7 +444,7 @@ class _CreateRequestScreenEnhancedState
                       const Text(
                         'Основная информация',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -499,7 +497,7 @@ class _CreateRequestScreenEnhancedState
                       const Text(
                         'Категория',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       Consumer(
@@ -509,7 +507,7 @@ class _CreateRequestScreenEnhancedState
                           return categoriesAsync.when(
                             data: (categories) =>
                                 DropdownButtonFormField<String>(
-                              value: _selectedCategory.isEmpty
+                              initialValue: _selectedCategory.isEmpty
                                   ? null
                                   : _selectedCategory,
                               decoration: const InputDecoration(
@@ -550,7 +548,7 @@ class _CreateRequestScreenEnhancedState
                             return subcategoriesAsync.when(
                               data: (subcategories) =>
                                   DropdownButtonFormField<String>(
-                                value: _selectedSubcategory.isEmpty
+                                initialValue: _selectedSubcategory.isEmpty
                                     ? null
                                     : _selectedSubcategory,
                                 decoration: const InputDecoration(
@@ -589,7 +587,7 @@ class _CreateRequestScreenEnhancedState
                       const Text(
                         'Локация и время',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -697,7 +695,7 @@ class _CreateRequestScreenEnhancedState
                       const Text(
                         'Бюджет и параметры',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -749,7 +747,7 @@ class _CreateRequestScreenEnhancedState
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<RequestPriority>(
-                        value: _selectedPriority,
+                        initialValue: _selectedPriority,
                         decoration: const InputDecoration(
                           labelText: 'Приоритет',
                           border: OutlineInputBorder(),
@@ -780,7 +778,7 @@ class _CreateRequestScreenEnhancedState
                       const Text(
                         'Теги и навыки',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -850,7 +848,7 @@ class _CreateRequestScreenEnhancedState
                       const Text(
                         'Вложения',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 16),
                       OutlinedButton.icon(

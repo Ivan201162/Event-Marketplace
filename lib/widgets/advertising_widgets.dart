@@ -1,17 +1,13 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/providers/advertising_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../models/advertisement.dart';
-import '../providers/advertising_providers.dart';
-
 /// Виджет рекламного объявления
 class AdvertisementWidget extends ConsumerWidget {
   const AdvertisementWidget({
-    super.key,
-    required this.advertisement,
-    required this.userId,
-    required this.context,
+    required this.advertisement, required this.userId, required this.context, super.key,
     this.onTap,
   });
   final Advertisement advertisement;
@@ -48,7 +44,7 @@ class AdvertisementWidget extends ConsumerWidget {
                     Text(
                       advertisement.title,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
 
                     const SizedBox(height: 4),
@@ -66,12 +62,12 @@ class AdvertisementWidget extends ConsumerWidget {
                     // Метка "Реклама"
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                          horizontal: 8, vertical: 2,),
                       decoration: BoxDecoration(
                         color: Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(
-                            color: Colors.orange.withValues(alpha: 0.3)),
+                            color: Colors.orange.withValues(alpha: 0.3),),
                       ),
                       child: const Text(
                         'Реклама',
@@ -94,11 +90,11 @@ class AdvertisementWidget extends ConsumerWidget {
     if (advertisement.videoUrl != null && advertisement.videoUrl!.isNotEmpty) {
       return AspectRatio(
         aspectRatio: 16 / 9,
-        child: Container(
+        child: ColoredBox(
           color: Colors.grey.shade200,
           child: const Center(
               child: Icon(Icons.play_circle_outline,
-                  size: 48, color: Colors.grey)),
+                  size: 48, color: Colors.grey,),),
         ),
       );
     } else {
@@ -107,7 +103,7 @@ class AdvertisementWidget extends ConsumerWidget {
         child: Image.network(
           advertisement.imageUrl,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
+          errorBuilder: (context, error, stackTrace) => ColoredBox(
             color: Colors.grey.shade200,
             child: const Center(
               child:
@@ -123,10 +119,7 @@ class AdvertisementWidget extends ConsumerWidget {
 /// Виджет баннера рекламы
 class AdvertisementBannerWidget extends ConsumerWidget {
   const AdvertisementBannerWidget({
-    super.key,
-    required this.advertisement,
-    required this.userId,
-    required this.context,
+    required this.advertisement, required this.userId, required this.context, super.key,
   });
   final Advertisement advertisement;
   final String userId;
@@ -158,11 +151,11 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
+                    errorBuilder: (context, error, stackTrace) => ColoredBox(
                       color: Colors.grey.shade200,
                       child: const Center(
                         child: Icon(Icons.image_not_supported,
-                            size: 32, color: Colors.grey),
+                            size: 32, color: Colors.grey,),
                       ),
                     ),
                   ),
@@ -177,7 +170,7 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withValues(alpha: 0.7)
+                        Colors.black.withValues(alpha: 0.7),
                       ],
                     ),
                   ),
@@ -205,7 +198,7 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                       Text(
                         advertisement.description,
                         style: const TextStyle(
-                            color: Colors.white70, fontSize: 12),
+                            color: Colors.white70, fontSize: 12,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -229,7 +222,7 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ),
@@ -243,7 +236,7 @@ class AdvertisementBannerWidget extends ConsumerWidget {
 /// Виджет создания рекламы
 class CreateAdvertisementWidget extends ConsumerStatefulWidget {
   const CreateAdvertisementWidget(
-      {super.key, required this.advertiserId, this.onCreated});
+      {required this.advertiserId, super.key, this.onCreated,});
   final String advertiserId;
   final VoidCallback? onCreated;
 
@@ -302,7 +295,7 @@ class _CreateAdvertisementWidgetState
             ),
             items: AdvertisementType.values
                 .map((type) => DropdownMenuItem(
-                    value: type, child: Text(type.displayName)))
+                    value: type, child: Text(type.displayName),),)
                 .toList(),
             onChanged: (value) {
               setState(() {
@@ -317,7 +310,7 @@ class _CreateAdvertisementWidgetState
           TextFormField(
             controller: _titleController,
             decoration: const InputDecoration(
-                labelText: 'Заголовок', border: OutlineInputBorder()),
+                labelText: 'Заголовок', border: OutlineInputBorder(),),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Введите заголовок';
@@ -332,7 +325,7 @@ class _CreateAdvertisementWidgetState
           TextFormField(
             controller: _descriptionController,
             decoration: const InputDecoration(
-                labelText: 'Описание', border: OutlineInputBorder()),
+                labelText: 'Описание', border: OutlineInputBorder(),),
             maxLines: 3,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
@@ -451,7 +444,7 @@ class _CreateAdvertisementWidgetState
             Padding(
               padding: const EdgeInsets.only(top: 16),
               child: Text(advertisingState.error!,
-                  style: const TextStyle(color: Colors.red)),
+                  style: const TextStyle(color: Colors.red),),
             ),
         ],
       ),
@@ -507,7 +500,7 @@ class _CreateAdvertisementWidgetState
 
 /// Виджет статистики рекламы
 class AdvertisementStatsWidget extends ConsumerWidget {
-  const AdvertisementStatsWidget({super.key, required this.adId});
+  const AdvertisementStatsWidget({required this.adId, super.key});
   final String adId;
 
   @override
@@ -529,17 +522,17 @@ class AdvertisementStatsWidget extends ConsumerWidget {
               data: (stats) => Column(
                 children: [
                   _buildStatRow('Показы', stats['impressions'].toString(),
-                      Icons.visibility),
+                      Icons.visibility,),
                   _buildStatRow(
-                      'Клики', stats['clicks'].toString(), Icons.mouse),
+                      'Клики', stats['clicks'].toString(), Icons.mouse,),
                   _buildStatRow('Конверсии', stats['conversions'].toString(),
-                      Icons.trending_up),
+                      Icons.trending_up,),
                   _buildStatRow('CTR', '${stats['ctr'].toStringAsFixed(2)}%',
-                      Icons.percent),
+                      Icons.percent,),
                   _buildStatRow('CPM', '${stats['cpm'].toStringAsFixed(2)}₽',
-                      Icons.attach_money),
+                      Icons.attach_money,),
                   _buildStatRow('CPC', '${stats['cpc'].toStringAsFixed(2)}₽',
-                      Icons.mouse),
+                      Icons.mouse,),
                   _buildStatRow(
                     'Бюджет',
                     NumberFormat.currency(
@@ -586,11 +579,11 @@ class AdvertisementStatsWidget extends ConsumerWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(label,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),),
             ),
             Text(value,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),),
           ],
         ),
       );

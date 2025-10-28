@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/support_service.dart';
 import 'package:flutter/material.dart';
-import '../services/support_service.dart';
 
 /// Виджет FAQ
 class FAQWidget extends StatefulWidget {
@@ -114,7 +114,7 @@ class _FAQWidgetState extends State<FAQWidget> {
       itemBuilder: (context, index) {
         final item = _filteredItems[index];
         return _FAQItemCard(
-            item: item, onTap: () => widget.onItemTap?.call(item));
+            item: item, onTap: () => widget.onItemTap?.call(item),);
       },
     );
   }
@@ -165,14 +165,14 @@ class _EmptyWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(isSearching ? Icons.search_off : Icons.help_outline,
-                size: 64, color: Colors.grey),
+                size: 64, color: Colors.grey,),
             const SizedBox(height: 16),
             Text(
               isSearching ? 'Ничего не найдено' : 'FAQ пуст',
               style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -213,7 +213,7 @@ class _FAQItemCard extends StatelessWidget {
                         child: Text(
                           item.title,
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                       ),
                       const Icon(Icons.chevron_right, color: Colors.grey),
@@ -223,7 +223,7 @@ class _FAQItemCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.blue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -248,7 +248,7 @@ class _FAQItemCard extends StatelessWidget {
 
 /// Виджет детального просмотра FAQ
 class FAQDetailWidget extends StatelessWidget {
-  const FAQDetailWidget({super.key, required this.item});
+  const FAQDetailWidget({required this.item, super.key});
 
   final FAQItem item;
 
@@ -275,29 +275,29 @@ class FAQDetailWidget extends StatelessWidget {
                   child: Text(
                     item.category,
                     style: const TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
+                        color: Colors.blue, fontWeight: FontWeight.bold,),
                   ),
                 ),
                 const SizedBox(height: 16),
               ],
               Text(item.title,
                   style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold)),
+                      fontSize: 24, fontWeight: FontWeight.bold,),),
               const SizedBox(height: 16),
               Text(item.content,
-                  style: const TextStyle(fontSize: 16, height: 1.5)),
+                  style: const TextStyle(fontSize: 16, height: 1.5),),
               if (item.tags.isNotEmpty) ...[
                 const SizedBox(height: 24),
                 const Text('Теги:',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
                   children: item.tags
                       .map((tag) => Chip(
-                          label: Text(tag), backgroundColor: Colors.grey[200]))
+                          label: Text(tag), backgroundColor: Colors.grey[200],),)
                       .toList(),
                 ),
               ],

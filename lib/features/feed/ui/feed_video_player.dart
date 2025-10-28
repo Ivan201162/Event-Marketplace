@@ -5,8 +5,7 @@ import 'package:video_player/video_player.dart';
 /// Видеоплеер для постов в ленте
 class FeedVideoPlayer extends StatefulWidget {
   const FeedVideoPlayer({
-    super.key,
-    required this.videoUrl,
+    required this.videoUrl, super.key,
     this.thumbnailUrl,
     this.autoPlay = false,
   });
@@ -70,7 +69,7 @@ class _FeedVideoPlayerState extends State<FeedVideoPlayer> {
                   color: Colors.grey[300],
                   child: const Center(
                     child: Icon(Icons.play_circle_outline,
-                        size: 64, color: Colors.white),
+                        size: 64, color: Colors.white,),
                   ),
                 ),
           autoInitialize: true,
@@ -125,7 +124,7 @@ class _FeedVideoPlayerState extends State<FeedVideoPlayer> {
               Icon(Icons.error_outline, size: 48, color: Colors.red),
               SizedBox(height: 8),
               Text('Ошибка загрузки видео',
-                  style: TextStyle(color: Colors.red, fontSize: 14)),
+                  style: TextStyle(color: Colors.red, fontSize: 14),),
             ],
           ),
         ),
@@ -135,7 +134,7 @@ class _FeedVideoPlayerState extends State<FeedVideoPlayer> {
 /// Видеоплеер с превью для ленты
 class FeedVideoPreview extends StatefulWidget {
   const FeedVideoPreview(
-      {super.key, required this.videoUrl, this.thumbnailUrl});
+      {required this.videoUrl, super.key, this.thumbnailUrl,});
 
   final String videoUrl;
   final String? thumbnailUrl;
@@ -170,14 +169,14 @@ class _FeedVideoPreviewState extends State<FeedVideoPreview> {
                   image: widget.thumbnailUrl != null
                       ? DecorationImage(
                           image: NetworkImage(widget.thumbnailUrl!),
-                          fit: BoxFit.cover)
+                          fit: BoxFit.cover,)
                       : null,
                   color: widget.thumbnailUrl == null ? Colors.grey[300] : null,
                 ),
                 child: widget.thumbnailUrl == null
                     ? const Center(
                         child:
-                            Icon(Icons.videocam, size: 48, color: Colors.grey))
+                            Icon(Icons.videocam, size: 48, color: Colors.grey),)
                     : null,
               ),
 

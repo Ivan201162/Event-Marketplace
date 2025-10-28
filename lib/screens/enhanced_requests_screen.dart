@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/enhanced_order.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/order_card_widget.dart';
+import 'package:event_marketplace_app/widgets/order_timeline_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/enhanced_order.dart';
-import '../providers/auth_providers.dart';
-import '../widgets/order_card_widget.dart';
-import '../widgets/order_timeline_widget.dart';
 
 /// Улучшенный экран заявок с полным функционалом
 class EnhancedRequestsScreen extends ConsumerStatefulWidget {
@@ -164,12 +163,10 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         title = 'Нет ваших заявок';
         subtitle = 'Создайте первую заявку к специалисту';
         icon = Icons.assignment;
-        break;
       case 'requests_for_me':
         title = 'Нет заявок для вас';
         subtitle = 'Заявки, назначенные на вас, будут отображаться здесь';
         icon = Icons.assignment_ind;
-        break;
       default:
         title = 'Нет заявок';
         subtitle = 'Создайте первую заявку к специалисту';
@@ -187,7 +184,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[600]),
+                color: Colors.grey[600],),
           ),
           const SizedBox(height: 8),
           Text(
@@ -440,7 +437,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
                     child: Text(
                       order.title,
                       style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 20, fontWeight: FontWeight.bold,),
                     ),
                   ),
                   IconButton(
@@ -473,7 +470,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
               // Описание
               const Text('Описание',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
               const SizedBox(height: 8),
               Text(order.description),
 
@@ -507,7 +504,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
               'Срок',
               order.deadline != null
                   ? _formatDate(order.deadline!)
-                  : 'Не указан'),
+                  : 'Не указан',),
           _buildDetailRow('Место', order.location ?? 'Не указано'),
           _buildDetailRow('Категория', order.category ?? 'Не указана'),
           _buildDetailRow('Приоритет', _getPriorityText(order.priority)),
@@ -524,7 +521,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
               child: Text(
                 label,
                 style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.grey),
+                    fontWeight: FontWeight.w500, color: Colors.grey,),
               ),
             ),
             Expanded(child: Text(value)),
@@ -537,7 +534,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Редактирование заявки будет реализовано')));
+        content: Text('Редактирование заявки будет реализовано'),),);
   }
 
   void _cancelOrder(EnhancedOrder order) {
@@ -549,7 +546,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -570,7 +567,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Завершение заявки будет реализовано')));
+        const SnackBar(content: Text('Завершение заявки будет реализовано')),);
   }
 
   void _createNewOrder() {

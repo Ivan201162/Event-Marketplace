@@ -1,15 +1,13 @@
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist_profile_extended.dart';
 // import '../services/specialist_profile_extended_service.dart';
 
 /// Виджет редактора видео
 class VideoEditorWidget extends ConsumerStatefulWidget {
   const VideoEditorWidget({
-    super.key,
-    required this.specialistId,
+    required this.specialistId, required this.onVideoSaved, super.key,
     this.existingVideo,
-    required this.onVideoSaved,
   });
   final String specialistId;
   final PortfolioVideo? existingVideo;
@@ -66,7 +64,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
               AppBar(
                 title: Text(widget.existingVideo == null
                     ? 'Новое видео'
-                    : 'Редактировать видео'),
+                    : 'Редактировать видео',),
                 actions: [
                   TextButton(
                     onPressed: _isSaving ? null : _saveVideo,
@@ -136,12 +134,12 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                               ),
                               items: const [
                                 DropdownMenuItem(
-                                    value: 'youtube', child: Text('YouTube')),
+                                    value: 'youtube', child: Text('YouTube'),),
                                 DropdownMenuItem(
-                                    value: 'vimeo', child: Text('Vimeo')),
+                                    value: 'vimeo', child: Text('Vimeo'),),
                                 DropdownMenuItem(
                                     value: 'direct',
-                                    child: Text('Прямая загрузка')),
+                                    child: Text('Прямая загрузка'),),
                               ],
                               onChanged: (value) {
                                 setState(() {
@@ -202,7 +200,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Теги',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
 
           // Поле ввода тегов
@@ -221,7 +219,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
               const SizedBox(width: 8),
               IconButton(
                   onPressed: () => _addTag(_tagsController.text),
-                  icon: const Icon(Icons.add)),
+                  icon: const Icon(Icons.add),),
             ],
           ),
           const SizedBox(height: 8),
@@ -271,7 +269,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
       children: [
         const SizedBox(height: 8),
         const Text('Предложенные теги:',
-            style: TextStyle(fontSize: 12, color: Colors.grey)),
+            style: TextStyle(fontSize: 12, color: Colors.grey),),
         const SizedBox(height: 4),
         Wrap(
           spacing: 4,
@@ -295,7 +293,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Настройки',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           SwitchListTile(
             title: const Text('Публичное видео'),
@@ -337,7 +335,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Заполните обязательные поля')));
+          const SnackBar(content: Text('Заполните обязательные поля')),);
       return;
     }
 
@@ -386,7 +384,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
         SnackBar(
           content: Text(widget.existingVideo == null
               ? 'Видео добавлено'
-              : 'Видео обновлено'),
+              : 'Видео обновлено',),
         ),
       );
     } catch (e) {

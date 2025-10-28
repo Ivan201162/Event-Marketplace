@@ -90,15 +90,15 @@ class FeedScreenImproved extends ConsumerWidget {
 }
 
 class _StoryItem extends StatelessWidget {
-  final bool isOwn;
-  final String userName;
-  final VoidCallback onTap;
 
   const _StoryItem({
     required this.isOwn,
     required this.userName,
     required this.onTap,
   });
+  final bool isOwn;
+  final String userName;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -174,14 +174,6 @@ class _StoryItem extends StatelessWidget {
 }
 
 class _PostCard extends StatelessWidget {
-  final String userName;
-  final String postTime;
-  final String postContent;
-  final int likesCount;
-  final int commentsCount;
-  final VoidCallback onLike;
-  final VoidCallback onComment;
-  final VoidCallback onShare;
 
   const _PostCard({
     required this.userName,
@@ -193,6 +185,14 @@ class _PostCard extends StatelessWidget {
     required this.onComment,
     required this.onShare,
   });
+  final String userName;
+  final String postTime;
+  final String postContent;
+  final int likesCount;
+  final int commentsCount;
+  final VoidCallback onLike;
+  final VoidCallback onComment;
+  final VoidCallback onShare;
 
   @override
   Widget build(BuildContext context) {

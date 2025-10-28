@@ -1,12 +1,9 @@
+import 'package:event_marketplace_app/models/payment.dart';
 import 'package:flutter/material.dart';
-
-import '../models/payment.dart';
 
 class PaymentMethodSelector extends StatelessWidget {
   const PaymentMethodSelector({
-    super.key,
-    required this.selectedMethod,
-    required this.onMethodSelected,
+    required this.selectedMethod, required this.onMethodSelected, super.key,
   });
   final PaymentMethod? selectedMethod;
   final Function(PaymentMethod) onMethodSelected;
@@ -90,7 +87,7 @@ class PaymentMethodSelector extends StatelessWidget {
                       // Selection indicator
                       if (selectedMethod == method)
                         Icon(Icons.check_circle,
-                            color: theme.colorScheme.primary, size: 24)
+                            color: theme.colorScheme.primary, size: 24,)
                       else
                         Icon(
                           Icons.radio_button_unchecked,

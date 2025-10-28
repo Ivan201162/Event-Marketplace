@@ -1,15 +1,11 @@
+import 'package:event_marketplace_app/models/photographer_studio_link.dart';
+import 'package:event_marketplace_app/services/photographer_studio_link_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/photographer_studio_link.dart';
-import '../services/photographer_studio_link_service.dart';
 
 /// Карточка предложения фотостудии
 class StudioSuggestionCard extends StatefulWidget {
   const StudioSuggestionCard({
-    super.key,
-    required this.suggestion,
-    required this.onAccept,
-    required this.onReject,
+    required this.suggestion, required this.onAccept, required this.onReject, super.key,
     this.showActions = true,
   });
 
@@ -51,7 +47,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.photo_camera,
-                      color: Colors.blue, size: 20),
+                      color: Colors.blue, size: 20,),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -123,7 +119,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.2),),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +150,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                     Row(
                       children: [
                         const Icon(Icons.location_on,
-                            size: 14, color: Colors.grey),
+                            size: 14, color: Colors.grey,),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -172,7 +168,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                         const Icon(Icons.phone, size: 14, color: Colors.grey),
                         const SizedBox(width: 4),
                         Text(widget.suggestion.studioPhone!,
-                            style: theme.textTheme.bodySmall),
+                            style: theme.textTheme.bodySmall,),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -181,7 +177,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                     Row(
                       children: [
                         const Icon(Icons.attach_money,
-                            size: 14, color: Colors.green),
+                            size: 14, color: Colors.green,),
                         const SizedBox(width: 4),
                         Text(
                           widget.suggestion.formattedPrice,
@@ -214,10 +210,10 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                   color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2),),
                 ),
                 child: Text(widget.suggestion.notes!,
-                    style: theme.textTheme.bodyMedium),
+                    style: theme.textTheme.bodyMedium,),
               ),
               const SizedBox(height: 16),
             ],
@@ -262,7 +258,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
                 child: Row(
                   children: [
                     const Icon(Icons.check_circle,
-                        color: Colors.green, size: 20),
+                        color: Colors.green, size: 20,),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -381,7 +377,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {
@@ -398,7 +394,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
       builder: (context) => AlertDialog(
         title: const Text('Отклонить предложение'),
         content: const Text(
-            'Вы уверены, что хотите отклонить это предложение фотостудии?'),
+            'Вы уверены, что хотите отклонить это предложение фотостудии?',),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -426,7 +422,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Предложение отклонено'),
-                backgroundColor: Colors.orange),
+                backgroundColor: Colors.orange,),
           );
         }
       } catch (e) {
@@ -434,7 +430,7 @@ class _StudioSuggestionCardState extends State<StudioSuggestionCard> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(
-              content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+              content: Text('Ошибка: $e'), backgroundColor: Colors.red,),);
         }
       } finally {
         if (mounted) {

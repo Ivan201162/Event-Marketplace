@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/models/user_management.dart';
+import 'package:event_marketplace_app/services/user_management_service.dart';
+import 'package:event_marketplace_app/ui/ui.dart' hide ResponsiveCard;
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/user.dart';
-import '../models/user_management.dart';
-import '../services/user_management_service.dart';
-import '../ui/ui.dart' hide ResponsiveCard;
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления пользователями и ролями
 class UserManagementScreen extends ConsumerStatefulWidget {
@@ -57,16 +56,16 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('users', 'Пользователи', Icons.people)),
+                child: _buildTabButton('users', 'Пользователи', Icons.people),),
             Expanded(
                 child: _buildTabButton(
-                    'roles', 'Роли', Icons.admin_panel_settings)),
+                    'roles', 'Роли', Icons.admin_panel_settings,),),
             Expanded(
                 child: _buildTabButton(
-                    'permissions', 'Разрешения', Icons.security)),
+                    'permissions', 'Разрешения', Icons.security,),),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.analytics)),
+                    'statistics', 'Статистика', Icons.analytics,),),
           ],
         ),
       );
@@ -89,7 +88,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -127,7 +126,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                           children: [
                             Text(role.icon),
                             const SizedBox(width: 8),
-                            Text(role.displayName)
+                            Text(role.displayName),
                           ],
                         ),
                       ),
@@ -191,7 +190,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                     Text(
                       user.displayName ?? user.email,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(user.email, style: const TextStyle(fontSize: 14)),
                   ],
@@ -205,13 +204,13 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   if (user.isBlocked) ...[
                     const PopupMenuItem(
@@ -226,19 +225,19 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                       value: 'block',
                       child: ListTile(
                           leading: Icon(Icons.block),
-                          title: Text('Заблокировать')),
+                          title: Text('Заблокировать'),),
                     ),
                   ],
                   const PopupMenuItem(
                     value: 'permissions',
                     child: ListTile(
                         leading: Icon(Icons.security),
-                        title: Text('Разрешения')),
+                        title: Text('Разрешения'),),
                   ),
                   const PopupMenuItem(
                     value: 'actions',
                     child: ListTile(
-                        leading: Icon(Icons.history), title: Text('Действия')),
+                        leading: Icon(Icons.history), title: Text('Действия'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -254,7 +253,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
               _buildInfoChip('Роль', user.role.roleDisplayName, Colors.blue),
               const SizedBox(width: 8),
               _buildInfoChip(
-                  'Разрешения', '${user.permissions.length}', Colors.green),
+                  'Разрешения', '${user.permissions.length}', Colors.green,),
             ],
           ),
 
@@ -341,10 +340,10 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                       Text(
                         role.name,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
                       Text(role.description,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                     ],
                   ),
                 ),
@@ -362,7 +361,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 PopupMenuButton<String>(
@@ -372,20 +371,20 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                       value: 'view',
                       child: ListTile(
                           leading: Icon(Icons.visibility),
-                          title: Text('Просмотр')),
+                          title: Text('Просмотр'),),
                     ),
                     if (!role.isSystemRole) ...[
                       const PopupMenuItem(
                         value: 'edit',
                         child: ListTile(
                             leading: Icon(Icons.edit),
-                            title: Text('Редактировать')),
+                            title: Text('Редактировать'),),
                       ),
                       const PopupMenuItem(
                         value: 'delete',
                         child: ListTile(
                             leading: Icon(Icons.delete),
-                            title: Text('Удалить')),
+                            title: Text('Удалить'),),
                       ),
                     ],
                   ],
@@ -400,7 +399,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
             Text(
               'Разрешения (${role.permissions.length}):',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                  fontWeight: FontWeight.bold, color: Colors.grey[600],),
             ),
 
             const SizedBox(height: 8),
@@ -427,7 +426,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                 style: const TextStyle(
                     fontSize: 12,
                     color: Colors.grey,
-                    fontStyle: FontStyle.italic),
+                    fontStyle: FontStyle.italic,),
               ),
             ],
 
@@ -497,7 +496,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
           Row(
             children: [
               Icon(_getPermissionTypeIcon(permission.type),
-                  color: typeColor, size: 24),
+                  color: typeColor, size: 24,),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -506,10 +505,10 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                     Text(
                       permission.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(permission.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -525,7 +524,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
             ],
@@ -613,7 +612,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                 Text(
                   'Пользователи по ролям:',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                      fontWeight: FontWeight.bold, color: Colors.grey[600],),
                 ),
 
                 const SizedBox(height: 8),
@@ -661,7 +660,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -676,7 +675,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -715,7 +714,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -783,7 +782,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -796,22 +795,16 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     switch (action) {
       case 'view':
         _viewUser(user);
-        break;
       case 'edit':
         _editUser(user);
-        break;
       case 'block':
         _blockUser(user);
-        break;
       case 'unblock':
         _unblockUser(user);
-        break;
       case 'permissions':
         _manageUserPermissions(user);
-        break;
       case 'actions':
         _viewUserActions(user);
-        break;
     }
   }
 
@@ -820,7 +813,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Просмотр пользователя "${user.email}" будет реализован')),
+              Text('Просмотр пользователя "${user.email}" будет реализован'),),
     );
   }
 
@@ -829,7 +822,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование пользователя "${user.email}" будет реализовано')),
+              'Редактирование пользователя "${user.email}" будет реализовано',),),
     );
   }
 
@@ -859,7 +852,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             ElevatedButton(
               onPressed: () async {
                 Navigator.pop(context);
@@ -906,7 +899,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -947,7 +940,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Управление разрешениями пользователя "${user.email}" будет реализовано'),
+            'Управление разрешениями пользователя "${user.email}" будет реализовано',),
       ),
     );
   }
@@ -957,7 +950,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Просмотр действий пользователя "${user.email}" будет реализован')),
+              'Просмотр действий пользователя "${user.email}" будет реализован',),),
     );
   }
 
@@ -965,13 +958,10 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     switch (action) {
       case 'view':
         _viewRole(role);
-        break;
       case 'edit':
         _editRole(role);
-        break;
       case 'delete':
         _deleteRole(role);
-        break;
     }
   }
 
@@ -980,7 +970,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Просмотр роли "${role.name}" будет реализован')));
+        content: Text('Просмотр роли "${role.name}" будет реализован'),),);
   }
 
   void _editRole(UserRoleDefinition role) {
@@ -988,7 +978,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Редактирование роли "${role.name}" будет реализовано')));
+        content: Text('Редактирование роли "${role.name}" будет реализовано'),),);
   }
 
   void _deleteRole(UserRoleDefinition role) {
@@ -1000,7 +990,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -1013,13 +1003,13 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Роль удалена'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка удаления роли: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -1039,7 +1029,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание роли будет реализовано')));
+        const SnackBar(content: Text('Создание роли будет реализовано')),);
   }
 
   void _showCreatePermissionDialog() {
@@ -1047,6 +1037,6 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание разрешения будет реализовано')));
+        const SnackBar(content: Text('Создание разрешения будет реализовано')),);
   }
 }

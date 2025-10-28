@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/specialist_team.dart';
+import 'package:event_marketplace_app/models/specialist_team.dart';
 
 /// Сервис для работы с командами специалистов
 class TeamService {
@@ -149,7 +149,7 @@ class TeamService {
 
   /// Отклонить команду
   Future<void> rejectTeam(
-      {required String teamId, required String reason}) async {
+      {required String teamId, required String reason,}) async {
     final teamRef = _firestore.collection(_collection).doc(teamId);
     final now = DateTime.now();
 
@@ -193,7 +193,7 @@ class TeamService {
   }) async {
     final teamRef = _firestore.collection(_collection).doc(teamId);
     final updateData = <String, dynamic>{
-      'updatedAt': Timestamp.fromDate(DateTime.now())
+      'updatedAt': Timestamp.fromDate(DateTime.now()),
     };
 
     if (teamName != null) updateData['teamName'] = teamName;
@@ -261,14 +261,14 @@ class TeamService {
 
   /// Слушать команды организатора
   Stream<List<SpecialistTeam>> watchOrganizerTeams(
-          String organizerId) =>
+          String organizerId,) =>
       _firestore
           .collection(_collection)
           .where('organizerId', isEqualTo: organizerId)
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(SpecialistTeam.fromDocument).toList());
+              snapshot.docs.map(SpecialistTeam.fromDocument).toList(),);
 
   /// Слушать команды специалиста
   Stream<List<SpecialistTeam>> watchSpecialistTeams(String specialistId) =>
@@ -278,7 +278,7 @@ class TeamService {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(SpecialistTeam.fromDocument).toList());
+              snapshot.docs.map(SpecialistTeam.fromDocument).toList(),);
 
   /// Удалить команду
   Future<void> deleteTeam(String teamId) async {

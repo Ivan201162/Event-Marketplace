@@ -1,15 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/user_post.dart';
+import 'package:event_marketplace_app/providers/user_profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 
-import '../models/user_post.dart';
-import '../providers/user_profile_provider.dart';
-
 /// Виджет для отображения галереи видео
 class VideoGallery extends ConsumerWidget {
-  const VideoGallery({super.key, required this.userId});
+  const VideoGallery({required this.userId, super.key});
   final String userId;
 
   @override
@@ -58,7 +57,7 @@ class VideoGallery extends ConsumerWidget {
         onTap: () => _openVideoPlayer(context, video),
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+              color: Colors.grey[200], borderRadius: BorderRadius.circular(8),),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Stack(
@@ -71,15 +70,15 @@ class VideoGallery extends ConsumerWidget {
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
                         color: Colors.grey[300],
-                        child: const Icon(Icons.video_library)),
+                        child: const Icon(Icons.video_library),),
                     errorWidget: (context, url, error) => Container(
                         color: Colors.grey[300],
-                        child: const Icon(Icons.video_library)),
+                        child: const Icon(Icons.video_library),),
                   )
                 else
                   Container(
                       color: Colors.grey[300],
-                      child: const Icon(Icons.video_library)),
+                      child: const Icon(Icons.video_library),),
                 // Градиент для лучшей видимости кнопки
                 Container(
                   decoration: BoxDecoration(
@@ -88,7 +87,7 @@ class VideoGallery extends ConsumerWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withValues(alpha: 0.3)
+                        Colors.black.withValues(alpha: 0.3),
                       ],
                     ),
                   ),
@@ -96,7 +95,7 @@ class VideoGallery extends ConsumerWidget {
                 // Кнопка воспроизведения
                 const Center(
                     child: Icon(Icons.play_circle_filled,
-                        color: Colors.white, size: 48)),
+                        color: Colors.white, size: 48,),),
                 // Длительность видео (если доступна)
                 Positioned(
                   bottom: 8,
@@ -113,7 +112,7 @@ class VideoGallery extends ConsumerWidget {
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ),
@@ -138,7 +137,7 @@ class VideoGallery extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8)),
+                borderRadius: BorderRadius.circular(8),),
           ),
         ),
       );
@@ -199,13 +198,13 @@ class VideoGallery extends ConsumerWidget {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => VideoPlayerScreen(video: video)));
+        builder: (context) => VideoPlayerScreen(video: video),),);
   }
 }
 
 /// Экран воспроизведения видео
 class VideoPlayerScreen extends StatefulWidget {
-  const VideoPlayerScreen({super.key, required this.video});
+  const VideoPlayerScreen({required this.video, super.key});
   final UserPost video;
 
   @override

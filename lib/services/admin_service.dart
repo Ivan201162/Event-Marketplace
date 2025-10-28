@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/admin_models.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/admin_models.dart';
 
 class AdminService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -69,7 +68,7 @@ class AdminService {
 
       await _firestore.collection('admin_logs').doc(log.id).set(log.toMap());
       debugPrint(
-          'INFO: [AdminService] Admin action logged: ${action.name} on $target');
+          'INFO: [AdminService] Admin action logged: ${action.name} on $target',);
     } catch (e) {
       debugPrint('ERROR: [AdminService] Failed to log admin action: $e');
     }
@@ -93,11 +92,11 @@ class AdminService {
     }
     if (startDate != null) {
       query = query.where('timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
     }
     if (endDate != null) {
       query = query.where('timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
     }
 
     return query
@@ -107,7 +106,7 @@ class AdminService {
         .map(
           (snapshot) => snapshot.docs
               .map(
-                  (doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>))
+                  (doc) => AdminLog.fromMap(doc.data()! as Map<String, dynamic>),)
               .toList(),
         );
   }
@@ -125,16 +124,16 @@ class AdminService {
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final snapshot = await query.get();
       final logs = snapshot.docs
-          .map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => AdminLog.fromMap(doc.data()! as Map<String, dynamic>))
           .toList();
 
       final stats = <String, dynamic>{
@@ -184,7 +183,7 @@ class AdminService {
 
   /// Назначение прав администратора
   Future<bool> grantAdminRights(
-      String userId, String adminId, String adminEmail) async {
+      String userId, String adminId, String adminEmail,) async {
     try {
       await _firestore.collection('users').doc(userId).update({
         'isAdmin': true,
@@ -222,7 +221,7 @@ class AdminService {
 
   /// Отзыв прав администратора
   Future<bool> revokeAdminRights(
-      String userId, String adminId, String adminEmail) async {
+      String userId, String adminId, String adminEmail,) async {
     try {
       await _firestore.collection('users').doc(userId).update({
         'isAdmin': false,
@@ -272,7 +271,7 @@ class AdminService {
       final activeUsersSnapshot = await _firestore
           .collection('users')
           .where('lastActiveAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(thirtyDaysAgo))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(thirtyDaysAgo),)
           .get();
       stats['activeUsers'] = activeUsersSnapshot.docs.length;
 
@@ -282,7 +281,7 @@ class AdminService {
       stats['totalTransactions'] = transactionsSnapshot.docs.length;
 
       // Общая выручка
-      double totalRevenue = 0.0;
+      var totalRevenue = 0;
       for (final doc in transactionsSnapshot.docs) {
         final data = doc.data();
         if (data['status'] == 'completed') {
@@ -322,11 +321,11 @@ class AdminService {
 
       if (startDate != null) {
         query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       if (filters != null) {
@@ -343,7 +342,7 @@ class AdminService {
       }
 
       // Создание CSV заголовков
-      final headers = (docs.first.data() as Map<String, dynamic>).keys.toList();
+      final headers = (docs.first.data()! as Map<String, dynamic>).keys.toList();
       final csv = StringBuffer();
       csv.writeln(headers.join(','));
 
@@ -352,7 +351,7 @@ class AdminService {
         final data = doc.data();
         final row = headers
             .map((header) =>
-                (data as Map<String, dynamic>)[header]?.toString() ?? '')
+                (data! as Map<String, dynamic>)[header]?.toString() ?? '',)
             .join(',');
         csv.writeln(row);
       }

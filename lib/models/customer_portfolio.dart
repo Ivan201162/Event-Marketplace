@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'customer.dart';
-import 'user.dart';
+import 'package:event_marketplace_app/models/customer.dart';
+import 'package:event_marketplace_app/models/user.dart';
 
 /// Расширенная модель профиля заказчика с портфолио
 class CustomerPortfolio {
@@ -9,7 +9,7 @@ class CustomerPortfolio {
     required this.id,
     required this.name,
     required this.email,
-    this.avatarUrl,
+    required this.createdAt, this.avatarUrl,
     this.phoneNumber,
     this.maritalStatus = MaritalStatus.single,
     this.weddingDate,
@@ -18,7 +18,6 @@ class CustomerPortfolio {
     this.anniversaries = const [],
     this.notes,
     this.anniversaryRemindersEnabled = false,
-    required this.createdAt,
     this.lastLoginAt,
     this.additionalData,
   });
@@ -53,7 +52,7 @@ class CustomerPortfolio {
             List<String>.from(data['favoriteSpecialists'] ?? []),
         anniversaries: (data['anniversaries'] as List<dynamic>?)
                 ?.map((e) =>
-                    e is Timestamp ? e.toDate() : DateTime.parse(e.toString()))
+                    e is Timestamp ? e.toDate() : DateTime.parse(e.toString()),)
                 .toList() ??
             [],
         notes: data['notes'],
@@ -210,7 +209,7 @@ class CustomerPortfolio {
   CustomerPortfolio removeAnniversary(DateTime anniversary) {
     final newAnniversaries = anniversaries
         .where((date) =>
-            !(date.month == anniversary.month && date.day == anniversary.day))
+            !(date.month == anniversary.month && date.day == anniversary.day),)
         .toList();
     return copyWith(anniversaries: newAnniversaries);
   }
@@ -256,7 +255,7 @@ class CustomerPortfolio {
     final now = DateTime.now();
     return anniversaries
         .where((anniversary) =>
-            anniversary.month == now.month && anniversary.day == now.day)
+            anniversary.month == now.month && anniversary.day == now.day,)
         .toList();
   }
 

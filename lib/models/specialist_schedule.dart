@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'booking.dart';
+import 'package:event_marketplace_app/models/booking.dart';
 
 /// Расписание специалиста
 class SpecialistSchedule {
@@ -31,13 +31,13 @@ class SpecialistSchedule {
         workingHours: (data['workingHours'] as Map<String, dynamic>?)
                 ?.map(
                   (key, value) => MapEntry(int.parse(key),
-                      WorkingHours.fromMap(value as Map<String, dynamic>)),
+                      WorkingHours.fromMap(value as Map<String, dynamic>),),
                 )
                 .cast<int, WorkingHours>() ??
             {},
         exceptions: (data['exceptions'] as List<dynamic>?)
                 ?.map(
-                    (e) => ScheduleException.fromMap(e as Map<String, dynamic>))
+                    (e) => ScheduleException.fromMap(e as Map<String, dynamic>),)
                 .toList() ??
             [],
         availability: (data['availability'] as Map<String, dynamic>?)
@@ -95,7 +95,7 @@ class WorkingHours {
   const WorkingHours(
       {required this.isWorking,
       required this.startHour,
-      required this.endHour});
+      required this.endHour,});
 
   factory WorkingHours.fromMap(Map<String, dynamic> map) => WorkingHours(
         isWorking: map['isWorking'] ?? false,
@@ -122,8 +122,7 @@ class ScheduleException {
     required this.startDate,
     required this.endDate,
     required this.reason,
-    this.description,
-    required this.createdAt,
+    required this.createdAt, this.description,
   });
 
   factory ScheduleException.fromDocument(DocumentSnapshot doc) {
@@ -190,7 +189,7 @@ class TimeSlot {
   const TimeSlot(
       {required this.startTime,
       required this.endTime,
-      required this.isAvailable});
+      required this.isAvailable,});
   final DateTime startTime;
   final DateTime endTime;
   final bool isAvailable;

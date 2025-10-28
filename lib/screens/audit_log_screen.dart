@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/audit_log.dart';
+import 'package:event_marketplace_app/services/audit_logging_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/audit_log.dart';
-import '../services/audit_logging_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран аудита логов
 class AuditLogScreen extends ConsumerStatefulWidget {
@@ -67,10 +67,10 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
           children: [
             Expanded(
                 child:
-                    _buildTabButton('audit', 'Аудит действий', Icons.security)),
+                    _buildTabButton('audit', 'Аудит действий', Icons.security),),
             Expanded(
                 child: _buildTabButton(
-                    'system', 'Системные логи', Icons.bug_report)),
+                    'system', 'Системные логи', Icons.bug_report,),),
           ],
         ),
       );
@@ -94,7 +94,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -146,15 +146,15 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   items: const [
                     DropdownMenuItem<String?>(child: Text('Все действия')),
                     DropdownMenuItem<String?>(
-                        value: 'create', child: Text('Создание')),
+                        value: 'create', child: Text('Создание'),),
                     DropdownMenuItem<String?>(
-                        value: 'update', child: Text('Обновление')),
+                        value: 'update', child: Text('Обновление'),),
                     DropdownMenuItem<String?>(
-                        value: 'delete', child: Text('Удаление')),
+                        value: 'delete', child: Text('Удаление'),),
                     DropdownMenuItem<String?>(
-                        value: 'login', child: Text('Вход')),
+                        value: 'login', child: Text('Вход'),),
                     DropdownMenuItem<String?>(
-                        value: 'logout', child: Text('Выход')),
+                        value: 'logout', child: Text('Выход'),),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -171,13 +171,13 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   items: const [
                     DropdownMenuItem<String?>(child: Text('Все ресурсы')),
                     DropdownMenuItem<String?>(
-                        value: 'user', child: Text('Пользователь')),
+                        value: 'user', child: Text('Пользователь'),),
                     DropdownMenuItem<String?>(
-                        value: 'booking', child: Text('Бронирование')),
+                        value: 'booking', child: Text('Бронирование'),),
                     DropdownMenuItem<String?>(
-                        value: 'specialist', child: Text('Специалист')),
+                        value: 'specialist', child: Text('Специалист'),),
                     DropdownMenuItem<String?>(
-                        value: 'payment', child: Text('Платеж')),
+                        value: 'payment', child: Text('Платеж'),),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -193,7 +193,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   hint: const Text('Все уровни'),
                   items: [
                     const DropdownMenuItem<AuditLogLevel?>(
-                        child: Text('Все уровни')),
+                        child: Text('Все уровни'),),
                     ...AuditLogLevel.values.map(
                       (level) => DropdownMenuItem<AuditLogLevel?>(
                         value: level,
@@ -215,7 +215,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   hint: const Text('Все категории'),
                   items: [
                     const DropdownMenuItem<AuditLogCategory?>(
-                        child: Text('Все категории')),
+                        child: Text('Все категории'),),
                     ...AuditLogCategory.values.map(
                       (category) => DropdownMenuItem<AuditLogCategory?>(
                         value: category,
@@ -295,7 +295,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   Widget _buildStatCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -310,12 +310,12 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(title,
                 style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
           ],
         ),
       );
@@ -327,7 +327,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
             child: Row(
               children: [
                 Text('Аудит действий пользователей',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadData,
@@ -373,7 +373,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                     Text(
                       log.action,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(
                       '${log.resource}: ${log.resourceId}',
@@ -394,7 +394,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: levelColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -410,7 +410,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: categoryColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -420,12 +420,12 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'export',
                     child: ListTile(
-                        leading: Icon(Icons.download), title: Text('Экспорт')),
+                        leading: Icon(Icons.download), title: Text('Экспорт'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -452,7 +452,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   Text('Описание: ${log.description}'),
                 if (log.errorMessage != null)
                   Text('Ошибка: ${log.errorMessage}',
-                      style: const TextStyle(color: Colors.red)),
+                      style: const TextStyle(color: Colors.red),),
                 Text('Статус: ${log.isSuccess ? "Успешно" : "Ошибка"}'),
               ],
             ),
@@ -494,7 +494,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
             child: Row(
               children: [
                 Text('Системные логи',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadData,
@@ -540,7 +540,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                     Text(
                       log.component,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(log.message, style: const TextStyle(fontSize: 14)),
                   ],
@@ -558,7 +558,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: levelColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -574,7 +574,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: categoryColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -584,12 +584,12 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'export',
                     child: ListTile(
-                        leading: Icon(Icons.download), title: Text('Экспорт')),
+                        leading: Icon(Icons.download), title: Text('Экспорт'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -614,7 +614,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 if (log.context != null) Text('Контекст: ${log.context}'),
                 if (log.stackTrace != null)
                   Text('Stack Trace: ${log.stackTrace}',
-                      style: const TextStyle(color: Colors.red)),
+                      style: const TextStyle(color: Colors.red),),
                 if (log.sessionId != null) Text('Сессия: ${log.sessionId}'),
                 if (log.requestId != null) Text('Запрос: ${log.requestId}'),
               ],
@@ -649,7 +649,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -775,12 +775,12 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
       }
 
       _statistics = await _auditService.getLogStatistics(
-          startDate: _startDate, endDate: _endDate);
+          startDate: _startDate, endDate: _endDate,);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -839,13 +839,13 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                'Экспорт завершен. Размер: ${exportData.length} символов')),
+                'Экспорт завершен. Размер: ${exportData.length} символов',),),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -853,10 +853,8 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
     switch (action) {
       case 'view':
         _viewAuditLog(log);
-        break;
       case 'export':
         _exportSingleLog(log);
-        break;
     }
   }
 
@@ -864,10 +862,8 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
     switch (action) {
       case 'view':
         _viewSystemLog(log);
-        break;
       case 'export':
         _exportSingleSystemLog(log);
-        break;
     }
   }
 
@@ -897,13 +893,13 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               if (log.oldData != null) ...[
                 const SizedBox(height: 8),
                 const Text('Старые данные:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 Text(log.oldData.toString()),
               ],
               if (log.newData != null) ...[
                 const SizedBox(height: 8),
                 const Text('Новые данные:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 Text(log.newData.toString()),
               ],
             ],
@@ -912,7 +908,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -937,7 +933,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               if (log.stackTrace != null) ...[
                 const SizedBox(height: 8),
                 const Text('Stack Trace:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 Text(log.stackTrace!),
               ],
               if (log.sessionId != null) Text('Сессия: ${log.sessionId}'),
@@ -948,7 +944,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -959,7 +955,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Экспорт лога "${log.action}" будет реализован')));
+        content: Text('Экспорт лога "${log.action}" будет реализован'),),);
   }
 
   void _exportSingleSystemLog(SystemLog log) {
@@ -967,7 +963,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Экспорт системного лога "${log.component}" будет реализован')),
+              'Экспорт системного лога "${log.component}" будет реализован',),),
     );
   }
 }

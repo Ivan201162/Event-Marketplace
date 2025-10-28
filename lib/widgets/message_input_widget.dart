@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/enhanced_message.dart';
 import 'package:flutter/material.dart';
-import '../models/enhanced_message.dart';
 
 /// Виджет ввода сообщений
 class MessageInputWidget extends StatefulWidget {
   const MessageInputWidget({
-    super.key,
-    required this.onSendMessage,
+    required this.onSendMessage, super.key,
     this.onSendMedia,
     this.onSendVoice,
     this.onSendDocument,
@@ -107,7 +106,7 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(_isRecording ? Icons.stop : Icons.mic,
-                          color: Colors.white),
+                          color: Colors.white,),
                     ),
                   ),
               ],
@@ -166,13 +165,13 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildOptionButton(
-                icon: Icons.photo_camera, label: 'Камера', onTap: _openCamera),
+                icon: Icons.photo_camera, label: 'Камера', onTap: _openCamera,),
             _buildOptionButton(
                 icon: Icons.photo_library,
                 label: 'Галерея',
-                onTap: _openGallery),
+                onTap: _openGallery,),
             _buildOptionButton(
-                icon: Icons.videocam, label: 'Видео', onTap: _openVideoCamera),
+                icon: Icons.videocam, label: 'Видео', onTap: _openVideoCamera,),
             _buildOptionButton(
               icon: Icons.insert_drive_file,
               label: 'Документ',
@@ -181,11 +180,11 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
             _buildOptionButton(
                 icon: Icons.location_on,
                 label: 'Местоположение',
-                onTap: _sendLocation),
+                onTap: _sendLocation,),
             _buildOptionButton(
                 icon: Icons.contact_phone,
                 label: 'Контакт',
-                onTap: _sendContact),
+                onTap: _sendContact,),
           ],
         ),
       );
@@ -300,7 +299,7 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK')),
+              child: const Text('OK'),),
         ],
       ),
     );

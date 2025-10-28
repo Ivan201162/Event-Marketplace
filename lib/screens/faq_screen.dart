@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/support_ticket.dart';
+import 'package:event_marketplace_app/services/support_service.dart';
+import 'package:event_marketplace_app/widgets/faq_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/support_ticket.dart';
-import '../services/support_service.dart';
-import '../widgets/faq_widget.dart';
 
 /// Экран FAQ
 class FAQScreen extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
           title: const Text('Часто задаваемые вопросы'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.search), onPressed: _showSearchDialog)
+                icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
           ],
         ),
         body: Column(
@@ -98,7 +98,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -116,7 +116,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
             itemCount: filteredItems.length,
             itemBuilder: (context, index) {
               final faqItem = filteredItems[index];
-              return FAQWidget(onItemTap: (item) => _showFAQDetail(item));
+              return FAQWidget(onItemTap: _showFAQDetail);
             },
           );
         },
@@ -129,7 +129,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
             Icon(Icons.help_outline, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Нет вопросов',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             SizedBox(height: 8),
             Text(
               'Попробуйте изменить категорию или поисковый запрос',
@@ -165,7 +165,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -186,7 +186,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('Создание тикета для: ${faqItem.question}')));
+        SnackBar(content: Text('Создание тикета для: ${faqItem.question}')),);
   }
 
   void _showSearchDialog() {
@@ -208,10 +208,10 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Поиск')),
+              child: const Text('Поиск'),),
         ],
       ),
     );
@@ -220,7 +220,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
 
 /// Экран детального просмотра FAQ
 class FAQDetailScreen extends StatelessWidget {
-  const FAQDetailScreen({super.key, required this.faqItem});
+  const FAQDetailScreen({required this.faqItem, super.key});
   final FAQItem faqItem;
 
   @override
@@ -230,7 +230,7 @@ class FAQDetailScreen extends StatelessWidget {
           actions: [
             IconButton(
                 icon: const Icon(Icons.share),
-                onPressed: () => _shareFAQ(context))
+                onPressed: () => _shareFAQ(context),),
           ],
         ),
         body: SingleChildScrollView(
@@ -269,13 +269,13 @@ class FAQDetailScreen extends StatelessWidget {
               // Вопрос
               Text(faqItem.question,
                   style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold)),
+                      fontSize: 24, fontWeight: FontWeight.bold,),),
 
               const SizedBox(height: 16),
 
               // Ответ
               Text(faqItem.answer,
-                  style: const TextStyle(fontSize: 16, height: 1.6)),
+                  style: const TextStyle(fontSize: 16, height: 1.6),),
 
               const SizedBox(height: 24),
 
@@ -283,7 +283,7 @@ class FAQDetailScreen extends StatelessWidget {
               if (faqItem.tags.isNotEmpty) ...[
                 const Text('Теги:',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -292,14 +292,14 @@ class FAQDetailScreen extends StatelessWidget {
                       .map(
                         (tag) => Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text('#$tag',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[700])),
+                                  fontSize: 12, color: Colors.grey[700],),),
                         ),
                       )
                       .toList(),
@@ -364,7 +364,7 @@ class FAQDetailScreen extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('Создание тикета для: ${faqItem.question}')));
+        SnackBar(content: Text('Создание тикета для: ${faqItem.question}')),);
   }
 
   void _shareFAQ(BuildContext context) {
@@ -372,7 +372,7 @@ class FAQDetailScreen extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('FAQ скопирован в буфер обмена')));
+        const SnackBar(content: Text('FAQ скопирован в буфер обмена')),);
   }
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';

@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/providers/chat_providers.dart';
+import 'package:event_marketplace_app/screens/chat/chat_screen.dart';
+import 'package:event_marketplace_app/widgets/chat_list_item.dart';
+import 'package:event_marketplace_app/widgets/chat_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../providers/chat_providers.dart';
-import '../../widgets/chat_list_item.dart';
-import '../../widgets/chat_search_bar.dart';
-import 'chat_screen.dart';
 
 /// Экран списка чатов
 class ChatListScreen extends ConsumerStatefulWidget {
@@ -29,11 +28,11 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () => _showSearchDialog(),
+            onPressed: _showSearchDialog,
           ),
           IconButton(
             icon: const Icon(Icons.filter_list),
-            onPressed: () => _showFilterDialog(),
+            onPressed: _showFilterDialog,
           ),
         ],
       ),
@@ -70,7 +69,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.error_outline,
-                          size: 64, color: Colors.red),
+                          size: 64, color: Colors.red,),
                       const SizedBox(height: 16),
                       Text('Ошибка загрузки чатов: $error'),
                       const SizedBox(height: 16),

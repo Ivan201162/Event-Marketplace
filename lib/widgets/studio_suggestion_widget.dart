@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/models/photo_studio.dart';
 import 'package:flutter/material.dart';
-import '../models/photo_studio.dart';
 
 /// Виджет для предложения фотостудий фотографам
 class StudioSuggestionWidget extends StatelessWidget {
   const StudioSuggestionWidget({
-    super.key,
-    required this.photoStudio,
-    required this.onSuggest,
+    required this.photoStudio, required this.onSuggest, super.key,
     this.onViewDetails,
     this.isSuggested = false,
   });
@@ -49,7 +47,7 @@ class StudioSuggestionWidget extends StatelessWidget {
                     if (isSuggested)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.green.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -58,7 +56,7 @@ class StudioSuggestionWidget extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Icon(Icons.check,
-                                size: 14, color: Colors.green),
+                                size: 14, color: Colors.green,),
                             const SizedBox(width: 4),
                             Text(
                               'Предложено',
@@ -145,7 +143,7 @@ class StudioSuggestionWidget extends StatelessWidget {
                         .map(
                           (amenity) => Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                                horizontal: 8, vertical: 4,),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surface,
                               borderRadius: BorderRadius.circular(12),
@@ -182,7 +180,7 @@ class StudioSuggestionWidget extends StatelessWidget {
                     if (photoStudio.hourlyRate != null) ...[
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                            horizontal: 12, vertical: 6,),
                         decoration: BoxDecoration(
                           color: Colors.green.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16),
@@ -200,7 +198,7 @@ class StudioSuggestionWidget extends StatelessWidget {
                     if (photoStudio.dailyRate != null) ...[
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                            horizontal: 12, vertical: 6,),
                         decoration: BoxDecoration(
                           color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16),
@@ -297,7 +295,7 @@ class StudioSuggestionWidget extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7)
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
                 borderRadius:
@@ -321,7 +319,7 @@ class StudioSuggestionWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(Icons.photo_library,
-                        size: 14, color: Colors.white),
+                        size: 14, color: Colors.white,),
                     const SizedBox(width: 4),
                     Text(
                       '${photoStudio.imageCount}',
@@ -372,7 +370,7 @@ class StudioSuggestionWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.photo_camera,
-                size: 48, color: theme.colorScheme.outline),
+                size: 48, color: theme.colorScheme.outline,),
             const SizedBox(height: 8),
             Text(
               'Фотостудия',

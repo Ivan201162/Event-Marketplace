@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/services/support_service.dart';
 import 'package:flutter/material.dart';
-
-import '../services/support_service.dart';
 
 /// Виджет чата поддержки
 class SupportChatWidget extends StatefulWidget {
   const SupportChatWidget(
-      {super.key, required this.userId, this.onTransferToOperator});
+      {required this.userId, super.key, this.onTransferToOperator,});
 
   final String userId;
   final void Function(String reason)? onTransferToOperator;
@@ -118,7 +117,7 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
           actions: [
             TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
           ],
         ),
       );
@@ -149,7 +148,7 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
         decoration: const BoxDecoration(
           color: Colors.blue,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+              topLeft: Radius.circular(16), topRight: Radius.circular(16),),
         ),
         child: Row(
           children: [
@@ -161,7 +160,7 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
               ),
             ),
             if (_transferStatus == TransferStatus.notRequested)
@@ -188,7 +187,7 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
           if (snapshot.hasError) {
             return _ErrorWidget(
                 error: snapshot.error.toString(),
-                onRetry: () => setState(() {}));
+                onRetry: () => setState(() {}),);
           }
 
           final messages = snapshot.data ?? [];
@@ -244,7 +243,7 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
                     )
                   : const Icon(Icons.send),
               style: IconButton.styleFrom(
-                  backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                  backgroundColor: Colors.blue, foregroundColor: Colors.white,),
             ),
           ],
         ),
@@ -254,14 +253,14 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 }
 
@@ -314,7 +313,7 @@ class _EmptyWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
             SizedBox(height: 8),
             Text(
@@ -371,7 +370,7 @@ class _MessageBubble extends StatelessWidget {
                       style: TextStyle(
                           color: message.isFromUser
                               ? Colors.white
-                              : Colors.black87),
+                              : Colors.black87,),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -404,7 +403,7 @@ class _MessageBubble extends StatelessWidget {
 enum TransferReasons {
   payment('Проблемы с оплатой', 'Вопросы по оплате, возврату средств'),
   technical(
-      'Технические проблемы', 'Ошибки в приложении, проблемы с функционалом'),
+      'Технические проблемы', 'Ошибки в приложении, проблемы с функционалом',),
   booking('Проблемы с заказами', 'Вопросы по бронированию, отмене заказов'),
   specialist('Проблемы со специалистами', 'Конфликты, некачественные услуги'),
   other('Другое', 'Прочие вопросы, требующие помощи оператора');

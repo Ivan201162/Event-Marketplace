@@ -1,4 +1,4 @@
-import 'specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Фильтры для специалистов
 class SpecialistFilters {
@@ -251,20 +251,18 @@ class RatingFilterOption {
   static const List<RatingFilterOption> options = [
     RatingFilterOption(minRating: 4.5, label: '4.5+', description: 'Отлично'),
     RatingFilterOption(
-        minRating: 4, label: '4.0+', description: 'Очень хорошо'),
+        minRating: 4, label: '4.0+', description: 'Очень хорошо',),
     RatingFilterOption(minRating: 3.5, label: '3.5+', description: 'Хорошо'),
     RatingFilterOption(
-        minRating: 3, label: '3.0+', description: 'Удовлетворительно'),
+        minRating: 3, label: '3.0+', description: 'Удовлетворительно',),
   ];
 }
 
 /// Опции цены для фильтра
 class PriceFilterOption {
   const PriceFilterOption({
-    this.minPrice,
+    required this.label, required this.description, this.minPrice,
     this.maxPrice,
-    required this.label,
-    required this.description,
   });
   final double? minPrice;
   final double? maxPrice;
@@ -275,7 +273,7 @@ class PriceFilterOption {
     PriceFilterOption(
         maxPrice: 10000,
         label: 'До 10 000 ₽',
-        description: 'Бюджетный вариант'),
+        description: 'Бюджетный вариант',),
     PriceFilterOption(
       minPrice: 10000,
       maxPrice: 25000,
@@ -289,6 +287,6 @@ class PriceFilterOption {
       description: 'Премиум сегмент',
     ),
     PriceFilterOption(
-        minPrice: 50000, label: 'От 50 000 ₽', description: 'Люкс сегмент'),
+        minPrice: 50000, label: 'От 50 000 ₽', description: 'Люкс сегмент',),
   ];
 }

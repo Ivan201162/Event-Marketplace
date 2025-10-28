@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/providers/calendar_providers.dart';
+import 'package:event_marketplace_app/providers/firestore_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../providers/calendar_providers.dart';
-import '../providers/firestore_providers.dart';
 
 /// Экран для тестирования интеграции всех компонентов
 class IntegrationTestScreen extends ConsumerStatefulWidget {
@@ -124,7 +123,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                    onPressed: onTest, child: const Text('Запустить тест')),
+                    onPressed: onTest, child: const Text('Запустить тест'),),
               ),
             ],
           ),
@@ -174,7 +173,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка получения занятых дат: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -193,7 +192,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Календарь работает: дата ${isAvailable ? 'доступна' : 'занята'}'),
+                'Календарь работает: дата ${isAvailable ? 'доступна' : 'занята'}',),
             backgroundColor: Colors.green,
           ),
         );
@@ -203,7 +202,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка календаря: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -237,7 +236,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка проверки бронирования: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -270,7 +269,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка FCM: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка FCM: $e'), backgroundColor: Colors.red,),);
       }
     }
   }

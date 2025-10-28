@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/payment_models.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/payment_models.dart';
-import 'payment_service.dart';
 
 class DisputeService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -52,7 +51,7 @@ class DisputeService {
 
       // Update payment status to disputed
       await _paymentService.updatePaymentStatus(
-          paymentId, PaymentStatus.disputed);
+          paymentId, PaymentStatus.disputed,);
 
       debugPrint('Dispute created: $disputeId');
       return dispute;
@@ -94,7 +93,7 @@ class DisputeService {
         final dispute = await getDispute(disputeId);
         if (dispute != null) {
           await _paymentService.updatePaymentStatus(
-              dispute.paymentId, PaymentStatus.completed);
+              dispute.paymentId, PaymentStatus.completed,);
         }
       }
 
@@ -257,18 +256,18 @@ class DisputeService {
 
   /// Gets dispute statistics
   Future<DisputeStatistics> getDisputeStatistics(
-      {DateTime? startDate, DateTime? endDate}) async {
+      {DateTime? startDate, DateTime? endDate,}) async {
     try {
       Query query = _firestore.collection('disputes');
 
       if (startDate != null) {
         query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final snapshot = await query.get();
@@ -284,16 +283,12 @@ class DisputeService {
         switch (dispute.status) {
           case DisputeStatus.open:
             openCount++;
-            break;
           case DisputeStatus.resolved:
             resolvedCount++;
-            break;
           case DisputeStatus.escalated:
             escalatedCount++;
-            break;
           case DisputeStatus.closed:
             closedCount++;
-            break;
         }
       }
 
@@ -322,7 +317,7 @@ class DisputeService {
   double _calculateAverageResolutionTime(List<Dispute> disputes) {
     final resolvedDisputes = disputes
         .where(
-            (d) => d.status == DisputeStatus.resolved && d.resolvedAt != null)
+            (d) => d.status == DisputeStatus.resolved && d.resolvedAt != null,)
         .toList();
 
     if (resolvedDisputes.isEmpty) return 0;
@@ -348,11 +343,9 @@ class Dispute {
     required this.status,
     required this.raisedBy,
     required this.attachments,
-    this.resolution,
+    required this.createdAt, required this.updatedAt, this.resolution,
     this.resolvedBy,
     this.escalatedBy,
-    required this.createdAt,
-    required this.updatedAt,
     this.resolvedAt,
     this.escalatedAt,
   });

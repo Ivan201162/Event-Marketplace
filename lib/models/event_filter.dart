@@ -1,4 +1,4 @@
-import 'event.dart';
+import 'package:event_marketplace_app/models/event.dart';
 
 /// Модель фильтра для поиска событий
 class EventFilter {

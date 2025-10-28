@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/ab_test.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/ab_test.dart';
 
 /// Сервис A/B тестирования
 class ABTestService {
@@ -140,7 +139,7 @@ class ABTestService {
 
   /// Получить список A/B тестов
   Future<List<ABTest>> getABTests(
-      {ABTestStatus? status, String? createdBy, int limit = 50}) async {
+      {ABTestStatus? status, String? createdBy, int limit = 50,}) async {
     try {
       Query<Map<String, dynamic>> query = _firestore.collection('abTests');
 
@@ -273,7 +272,7 @@ class ABTestService {
 
   /// Записать участие пользователя
   Future<void> _recordParticipation(
-      String testId, String userId, String variantId) async {
+      String testId, String userId, String variantId,) async {
     try {
       final participation = ABTestParticipation(
         id: _uuid.v4(),
@@ -295,7 +294,7 @@ class ABTestService {
 
   /// Получить участие пользователя
   Future<ABTestParticipation?> _getUserParticipation(
-      String testId, String userId) async {
+      String testId, String userId,) async {
     try {
       final snapshot = await _firestore
           .collection('abTestParticipations')
@@ -330,7 +329,7 @@ class ABTestService {
       final events = Map<String, dynamic>.from(participation.events);
       events[eventName] = {
         'timestamp': DateTime.now().toIso8601String(),
-        'data': eventData ?? {}
+        'data': eventData ?? {},
       };
 
       await _firestore
@@ -403,7 +402,7 @@ class ABTestService {
 
   /// Получить участия в тесте
   Future<List<ABTestParticipation>> _getTestParticipations(
-      String testId) async {
+      String testId,) async {
     try {
       final snapshot = await _firestore
           .collection('abTestParticipations')
@@ -421,7 +420,7 @@ class ABTestService {
 
   /// Вычислить среднее время до конверсии
   Duration? _calculateAverageTimeToConversion(
-      List<ABTestParticipation> participations) {
+      List<ABTestParticipation> participations,) {
     final convertedParticipations =
         participations.where((p) => p.isConverted).toList();
     if (convertedParticipations.isEmpty) return null;
@@ -433,7 +432,7 @@ class ABTestService {
 
     return Duration(
         milliseconds:
-            totalTime.inMilliseconds ~/ convertedParticipations.length);
+            totalTime.inMilliseconds ~/ convertedParticipations.length,);
   }
 
   /// Проверить статистическую значимость
@@ -468,7 +467,7 @@ class ABTestService {
 
   /// Вычислить уровень доверия
   double _calculateConfidenceLevel(
-      Map<String, ABTestVariantStatistics> statistics) {
+      Map<String, ABTestVariantStatistics> statistics,) {
     // Упрощенный расчет уровня доверия
     if (statistics.length < 2) return 0;
 
@@ -530,7 +529,7 @@ class ABTestService {
       for (final participation in participations) {
         batch.delete(_firestore
             .collection('abTestParticipations')
-            .doc(participation.id));
+            .doc(participation.id),);
       }
       await batch.commit();
 

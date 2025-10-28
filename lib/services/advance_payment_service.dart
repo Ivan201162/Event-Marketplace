@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/payment.dart';
-import 'bank_integration_service.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/services/bank_integration_service.dart';
 
 /// Сервис для управления авансами и финальными платежами
 class AdvancePaymentService {
@@ -38,7 +38,6 @@ class AdvancePaymentService {
         specialistId: specialistId,
         bookingId: bookingId,
         amount: advanceAmount,
-        currency: 'RUB',
         method: PaymentMethod.bankTransfer,
         status: PaymentStatus.pending,
         type: PaymentType.advance,

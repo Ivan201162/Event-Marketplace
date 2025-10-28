@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет наложения загрузки
 class LoadingOverlay extends StatelessWidget {
   const LoadingOverlay({
-    super.key,
-    required this.isLoading,
-    required this.child,
+    required this.isLoading, required this.child, super.key,
     this.message,
   });
 
@@ -19,7 +17,7 @@ class LoadingOverlay extends StatelessWidget {
       children: [
         child,
         if (isLoading)
-          Container(
+          ColoredBox(
             color: Colors.black.withOpacity(0.3),
             child: Center(
               child: Card(

@@ -1,16 +1,13 @@
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/story.dart';
-import '../providers/auth_providers.dart';
-import '../services/story_service.dart';
 
 /// Экран просмотра сторис
 class StoryViewerScreen extends ConsumerStatefulWidget {
   const StoryViewerScreen({
-    super.key,
-    required this.stories,
-    required this.initialIndex,
+    required this.stories, required this.initialIndex, super.key,
     this.onStoryViewed,
   });
 
@@ -176,11 +173,11 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                       return child;
                     }
                     return const Center(
-                        child: CircularProgressIndicator(color: Colors.white));
+                        child: CircularProgressIndicator(color: Colors.white),);
                   },
                   errorBuilder: (context, error, stackTrace) => const Center(
                       child: Icon(Icons.broken_image,
-                          color: Colors.white, size: 64)),
+                          color: Colors.white, size: 64,),),
                 )
               : story.isVideo
                   ? const Center(
@@ -239,7 +236,7 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                             value: _progressAnimation.value,
                             backgroundColor: Colors.transparent,
                             valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.white),
+                                Colors.white,),
                           ),
                         )
                       : isCompleted
@@ -286,11 +283,11 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
                 Text(story.timeAgo,
                     style:
-                        const TextStyle(color: Colors.white70, fontSize: 12)),
+                        const TextStyle(color: Colors.white70, fontSize: 12),),
               ],
             ),
           ),

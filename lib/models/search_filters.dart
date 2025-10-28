@@ -2,16 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Search filters for specialists
 class SearchFilters extends Equatable {
-  final String? query;
-  final String? city;
-  final String? specialization;
-  final double? minRating;
-  final int? minPrice;
-  final int? maxPrice;
-  final bool? isAvailable;
-  final List<String>? services;
-  final String? sortBy; // 'rating', 'price', 'name', 'experience'
-  final bool? sortAscending;
 
   const SearchFilters({
     this.query,
@@ -47,6 +37,16 @@ class SearchFilters extends Equatable {
       sortAscending: map['sortAscending'] as bool?,
     );
   }
+  final String? query;
+  final String? city;
+  final String? specialization;
+  final double? minRating;
+  final int? minPrice;
+  final int? maxPrice;
+  final bool? isAvailable;
+  final List<String>? services;
+  final String? sortBy; // 'rating', 'price', 'name', 'experience'
+  final bool? sortAscending;
 
   /// Convert to map
   Map<String, dynamic> toMap() {
@@ -109,7 +109,7 @@ class SearchFilters extends Equatable {
 
   /// Get active filters count
   int get activeFiltersCount {
-    int count = 0;
+    var count = 0;
     if (query != null && query!.isNotEmpty) count++;
     if (city != null) count++;
     if (specialization != null) count++;

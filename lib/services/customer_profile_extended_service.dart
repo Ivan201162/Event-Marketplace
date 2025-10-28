@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/customer_profile_extended.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-import '../models/customer_profile_extended.dart';
 
 /// Сервис для работы с расширенным профилем заказчика
 class CustomerProfileExtendedService {
@@ -333,7 +332,7 @@ class CustomerProfileExtendedService {
 
   /// Обновить предпочтения
   Future<void> updatePreferences(
-      String userId, CustomerPreferences preferences) async {
+      String userId, CustomerPreferences preferences,) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
@@ -370,7 +369,7 @@ class CustomerProfileExtendedService {
 
   /// Получить фото по тегу
   Future<List<InspirationPhoto>> getPhotosByTag(
-      String userId, String tag) async {
+      String userId, String tag,) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
@@ -406,7 +405,7 @@ class CustomerProfileExtendedService {
 
   /// Поиск по фото
   Future<List<InspirationPhoto>> searchPhotos(
-      String userId, String query) async {
+      String userId, String query,) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];

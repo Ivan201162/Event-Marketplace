@@ -10,27 +10,18 @@ class Incident {
     required this.severity,
     required this.status,
     required this.priority,
-    this.assignedTo,
+    required this.affectedServices, required this.affectedUsers, required this.tags, required this.metadata, required this.attachments, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.assignedTo,
     this.assignedToName,
     this.reporterId,
     this.reporterName,
     this.reporterEmail,
-    required this.affectedServices,
-    required this.affectedUsers,
     this.rootCause,
     this.resolution,
-    required this.tags,
-    required this.metadata,
-    required this.attachments,
     this.detectedAt,
     this.reportedAt,
     this.acknowledgedAt,
     this.resolvedAt,
     this.closedAt,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory Incident.fromMap(Map<String, dynamic> map) => Incident(
@@ -49,14 +40,14 @@ class Incident {
         reporterName: map['reporterName'] as String?,
         reporterEmail: map['reporterEmail'] as String?,
         affectedServices: List<String>.from(
-            (map['affectedServices'] as List<dynamic>?) ?? []),
+            (map['affectedServices'] as List<dynamic>?) ?? [],),
         affectedUsers:
             List<String>.from((map['affectedUsers'] as List<dynamic>?) ?? []),
         rootCause: map['rootCause'] as String?,
         resolution: map['resolution'] as String?,
         tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
-            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         attachments:
             List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
         detectedAt: map['detectedAt'] != null
@@ -444,15 +435,8 @@ class IncidentComment {
     required this.id,
     required this.incidentId,
     required this.content,
-    this.parentId,
-    required this.authorId,
-    required this.authorName,
+    required this.authorId, required this.authorName, required this.type, required this.isInternal, required this.attachments, required this.createdAt, required this.updatedAt, this.parentId,
     this.authorEmail,
-    required this.type,
-    required this.isInternal,
-    required this.attachments,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory IncidentComment.fromMap(Map<String, dynamic> map) => IncidentComment(
@@ -601,15 +585,11 @@ class IncidentSLA {
     required this.id,
     required this.incidentId,
     required this.status,
-    this.acknowledgedDeadline,
+    required this.acknowledgedOnTime, required this.resolvedOnTime, required this.createdAt, required this.updatedAt, this.acknowledgedDeadline,
     this.resolvedDeadline,
     this.acknowledgedAt,
     this.resolvedAt,
-    required this.acknowledgedOnTime,
-    required this.resolvedOnTime,
     this.breachReason,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory IncidentSLA.fromMap(Map<String, dynamic> map) => IncidentSLA(

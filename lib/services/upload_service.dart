@@ -1,15 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/utils/storage_guard.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../utils/storage_guard.dart';
 
 /// Типы файлов для загрузки
 enum FileType { image, video, audio, document, archive, other }
@@ -94,7 +93,7 @@ class UploadService {
     'aac',
     'flac',
     'ogg',
-    'm4a'
+    'm4a',
   ];
   static const List<String> _allowedDocumentExtensions = [
     'pdf',
@@ -112,7 +111,7 @@ class UploadService {
     'rar',
     '7z',
     'tar',
-    'gz'
+    'gz',
   ];
 
   final FirebaseStorage? _storage = getStorage();
@@ -167,7 +166,7 @@ class UploadService {
       SafeLog.info('UploadService: Picking video from ${source.name}');
 
       final video = await _imagePicker.pickVideo(
-          source: source, maxDuration: maxDuration);
+          source: source, maxDuration: maxDuration,);
 
       if (video == null) {
         SafeLog.info('UploadService: No video selected');
@@ -193,7 +192,7 @@ class UploadService {
 
     try {
       SafeLog.info(
-          'UploadService: Picking file with extensions: $allowedExtensions');
+          'UploadService: Picking file with extensions: $allowedExtensions',);
 
       final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -266,14 +265,14 @@ class UploadService {
         file,
         SettableMetadata(
             contentType: _getContentType(fileExtension),
-            customMetadata: metadata),
+            customMetadata: metadata,),
       );
 
       // Отслеживаем прогресс загрузки
       uploadTask.snapshotEvents.listen((snapshot) {
         final progress = snapshot.bytesTransferred / snapshot.totalBytes;
         SafeLog.info(
-            'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%');
+            'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%',);
       });
 
       // Ждем завершения загрузки
@@ -351,7 +350,7 @@ class UploadService {
         bytes,
         SettableMetadata(
             contentType: _getContentType(fileExtension),
-            customMetadata: metadata),
+            customMetadata: metadata,),
       );
 
       // Ждем завершения загрузки
@@ -359,7 +358,7 @@ class UploadService {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       SafeLog.info(
-          'UploadService: File uploaded successfully from bytes: $downloadUrl');
+          'UploadService: File uploaded successfully from bytes: $downloadUrl',);
 
       // Создаем превью для изображений
       String? thumbnailUrl;
@@ -384,7 +383,7 @@ class UploadService {
       );
     } catch (e, stackTrace) {
       SafeLog.error(
-          'UploadService: Error uploading file from bytes', e, stackTrace);
+          'UploadService: Error uploading file from bytes', e, stackTrace,);
 
       if (e is UploadException) {
         rethrow;
@@ -432,7 +431,7 @@ class UploadService {
       return await ref.getMetadata();
     } catch (e, stackTrace) {
       SafeLog.error(
-          'UploadService: Error getting file metadata', e, stackTrace);
+          'UploadService: Error getting file metadata', e, stackTrace,);
       throw UploadException('Ошибка получения метаданных файла: $e');
     }
   }
@@ -444,22 +443,16 @@ class UploadService {
     switch (fileType) {
       case FileType.image:
         maxSize = _maxImageSize;
-        break;
       case FileType.video:
         maxSize = _maxVideoSize;
-        break;
       case FileType.audio:
         maxSize = _maxAudioSize;
-        break;
       case FileType.document:
         maxSize = _maxDocumentSize;
-        break;
       case FileType.archive:
         maxSize = _maxArchiveSize;
-        break;
       case FileType.other:
         maxSize = _maxOtherSize;
-        break;
     }
 
     if (fileSize > maxSize) {
@@ -477,19 +470,14 @@ class UploadService {
     switch (fileType) {
       case FileType.image:
         allowedExtensions = _allowedImageExtensions;
-        break;
       case FileType.video:
         allowedExtensions = _allowedVideoExtensions;
-        break;
       case FileType.audio:
         allowedExtensions = _allowedAudioExtensions;
-        break;
       case FileType.document:
         allowedExtensions = _allowedDocumentExtensions;
-        break;
       case FileType.archive:
         allowedExtensions = _allowedArchiveExtensions;
-        break;
       case FileType.other:
         allowedExtensions = [
           ..._allowedImageExtensions,
@@ -498,7 +486,6 @@ class UploadService {
           ..._allowedDocumentExtensions,
           ..._allowedArchiveExtensions,
         ];
-        break;
     }
 
     if (!allowedExtensions.contains(extension.toLowerCase())) {

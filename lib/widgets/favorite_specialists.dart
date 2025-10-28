@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Виджет для отображения избранных специалистов
 class FavoriteSpecialists extends ConsumerWidget {
-  const FavoriteSpecialists({super.key, required this.userId});
+  const FavoriteSpecialists({required this.userId, super.key});
   final String userId;
 
   @override
@@ -37,7 +37,7 @@ class FavoriteSpecialists extends ConsumerWidget {
   }
 
   Widget _buildSpecialistItem(
-          BuildContext context, Map<String, dynamic> specialist) =>
+          BuildContext context, Map<String, dynamic> specialist,) =>
       Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
@@ -81,7 +81,7 @@ class FavoriteSpecialists extends ConsumerWidget {
                         border: Border.all(color: Colors.white, width: 2),
                       ),
                       child: const Icon(Icons.verified,
-                          color: Colors.white, size: 12),
+                          color: Colors.white, size: 12,),
                     ),
                   ),
               ],
@@ -150,7 +150,7 @@ class FavoriteSpecialists extends ConsumerWidget {
                   Row(
                     children: [
                       Icon(Icons.location_on,
-                          size: 16, color: Colors.grey[600]),
+                          size: 16, color: Colors.grey[600],),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -170,7 +170,7 @@ class FavoriteSpecialists extends ConsumerWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: specialist['isAvailable']
                               ? Colors.green.withValues(alpha: 0.1)
@@ -243,11 +243,11 @@ class FavoriteSpecialists extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Удалить из избранного'),
         content: const Text(
-            'Вы уверены, что хотите удалить этого специалиста из избранного?'),
+            'Вы уверены, что хотите удалить этого специалиста из избранного?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -255,7 +255,7 @@ class FavoriteSpecialists extends ConsumerWidget {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(
-                  const SnackBar(content: Text('Удалено из избранного')));
+                  const SnackBar(content: Text('Удалено из избранного')),);
             },
             child: const Text('Удалить'),
           ),

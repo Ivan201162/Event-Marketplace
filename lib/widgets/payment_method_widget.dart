@@ -1,12 +1,9 @@
+import 'package:event_marketplace_app/models/payment.dart';
 import 'package:flutter/material.dart';
-
-import '../models/payment.dart';
 
 class PaymentMethodWidget extends StatelessWidget {
   const PaymentMethodWidget({
-    super.key,
-    required this.selectedMethod,
-    required this.onMethodChanged,
+    required this.selectedMethod, required this.onMethodChanged, super.key,
   });
   final PaymentMethod selectedMethod;
   final ValueChanged<PaymentMethod> onMethodChanged;

@@ -1,29 +1,27 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/services/advertisement_service.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/services/promotion_service.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/advertisement.dart';
-import '../../models/promotion_boost.dart';
-import '../../models/subscription_plan.dart';
-import '../../services/advertisement_service.dart';
-import '../../services/payment_service.dart';
-import '../../services/promotion_service.dart';
-import '../../services/subscription_service.dart';
 
 enum PaymentType { subscription, promotion, advertisement }
 
 class PaymentScreen extends StatefulWidget {
+
+  const PaymentScreen({
+    required this.type, super.key,
+    this.plan,
+    this.promotionPackage,
+    this.advertisement,
+  });
   final SubscriptionPlan? plan;
   final PromotionPackage? promotionPackage;
   final Advertisement? advertisement;
   final PaymentType type;
-
-  const PaymentScreen({
-    super.key,
-    this.plan,
-    this.promotionPackage,
-    this.advertisement,
-    required this.type,
-  });
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -141,7 +139,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _buildOrderItem(
-      String title, String subtitle, String price, IconData icon, Color color) {
+      String title, String subtitle, String price, IconData icon, Color color,) {
     return Row(
       children: [
         Container(
@@ -295,7 +293,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 groupValue: _selectedPaymentMethod,
                 onChanged: (value) {
                   setState(() {
-                    _selectedPaymentMethod = value!;
+                    _selectedPaymentMethod = value;
                   });
                 },
                 activeColor: color,
@@ -400,7 +398,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 groupValue: _selectedProvider,
                 onChanged: (value) {
                   setState(() {
-                    _selectedProvider = value!;
+                    _selectedProvider = value;
                   });
                 },
                 activeColor: color,
@@ -486,7 +484,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             paymentMethod: _selectedPaymentMethod,
             provider: _selectedProvider,
           );
-          break;
 
         case PaymentType.promotion:
           if (widget.promotionPackage == null) {
@@ -498,7 +495,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             paymentMethod: _selectedPaymentMethod,
             provider: _selectedProvider,
           );
-          break;
 
         case PaymentType.advertisement:
           if (widget.advertisement == null) {
@@ -510,12 +506,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
             paymentMethod: _selectedPaymentMethod,
             provider: _selectedProvider,
           );
-          break;
       }
 
       if (result.success) {
         // Активируем услугу
-        bool activationResult = false;
+        var activationResult = false;
 
         switch (widget.type) {
           case PaymentType.subscription:
@@ -524,7 +519,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               planId: widget.plan!.id,
               transactionId: result.transactionId!,
             );
-            break;
 
           case PaymentType.promotion:
             activationResult = await _promotionService.activatePromotion(
@@ -532,7 +526,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               packageId: widget.promotionPackage!.id,
               transactionId: result.transactionId!,
             );
-            break;
 
           case PaymentType.advertisement:
             activationResult =
@@ -540,7 +533,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               adId: widget.advertisement!.id,
               transactionId: result.transactionId!,
             );
-            break;
         }
 
         if (activationResult) {
@@ -558,7 +550,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {

@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:event_marketplace_app/firebase_options.dart';
+import 'package:event_marketplace_app/services/fcm_service.dart';
+import 'package:event_marketplace_app/services/push_notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
-import '../firebase_options.dart';
-import '../services/fcm_service.dart';
-import '../services/push_notification_service.dart';
 
 /// Bootstrap class for safe app initialization
 class Bootstrap {
@@ -64,7 +63,7 @@ class Bootstrap {
   /// Set up global error handling
   static void _setupErrorHandling() {
     // Flutter framework errors
-    FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.onError = (details) {
       debugPrint('🚨 Flutter Error: ${details.exception}');
       debugPrint('Stack trace: ${details.stack}');
 
@@ -93,7 +92,7 @@ class Bootstrap {
     };
 
     // Error widget builder
-    ErrorWidget.builder = (FlutterErrorDetails details) {
+    ErrorWidget.builder = (details) {
       return MaterialApp(
         home: Scaffold(
           body: Center(
@@ -160,7 +159,7 @@ class Bootstrap {
       if (message.contains('duplicate-app') ||
           message.contains('A Firebase App named "[DEFAULT]" already exists')) {
         debugPrint(
-            'ℹ️ Firebase already initialized (duplicate-app), continuing.');
+            'ℹ️ Firebase already initialized (duplicate-app), continuing.',);
         return;
       }
       rethrow;
@@ -173,7 +172,7 @@ class Bootstrap {
       // Get package info
       final packageInfo = await PackageInfo.fromPlatform();
       debugPrint(
-          '📱 App version: ${packageInfo.version} (${packageInfo.buildNumber})');
+          '📱 App version: ${packageInfo.version} (${packageInfo.buildNumber})',);
 
       // Set system UI overlay style
       SystemChrome.setSystemUIOverlayStyle(

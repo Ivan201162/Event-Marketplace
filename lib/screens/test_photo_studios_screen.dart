@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/services/photo_studio_service.dart';
+import 'package:event_marketplace_app/services/test_photo_studio_data.dart';
+import 'package:event_marketplace_app/widgets/photo_studio_card.dart';
 import 'package:flutter/material.dart';
-
-import '../models/photo_studio.dart';
-import '../services/photo_studio_service.dart';
-import '../services/test_photo_studio_data.dart';
-import '../widgets/photo_studio_card.dart';
 
 class TestPhotoStudiosScreen extends StatefulWidget {
   const TestPhotoStudiosScreen({super.key});
@@ -137,7 +136,7 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
                         icon: const Icon(Icons.clear),
                         label: const Text('Очистить данные'),
                         style: OutlinedButton.styleFrom(
-                            foregroundColor: theme.colorScheme.error),
+                            foregroundColor: theme.colorScheme.error,),
                       ),
                     ),
                   ],
@@ -161,7 +160,7 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Загрузка...')
+            Text('Загрузка...'),
           ],
         ),
       );
@@ -173,10 +172,10 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.photo_camera_outlined,
-                size: 64, color: Colors.grey[400]),
+                size: 64, color: Colors.grey[400],),
             const SizedBox(height: 16),
             Text('Фотостудии не найдены',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Создайте тестовые данные для проверки функционала',
@@ -235,7 +234,7 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

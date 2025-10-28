@@ -327,9 +327,9 @@ class RevenueForecast {
   /// Расчет точности прогноза
   double? get calculatedAccuracy {
     if (actualRevenue == null) return null;
-    if (predictedRevenue == 0) return 0.0;
+    if (predictedRevenue == 0) return 0;
 
-    final double error = (actualRevenue! - predictedRevenue).abs();
+    final error = (actualRevenue! - predictedRevenue).abs();
     return ((1 - (error / predictedRevenue)) * 100).clamp(0.0, 100.0);
   }
 

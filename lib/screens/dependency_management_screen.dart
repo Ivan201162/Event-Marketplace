@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/dependency_management.dart';
+import 'package:event_marketplace_app/services/dependency_management_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/dependency_management.dart';
-import '../services/dependency_management_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления зависимостями
 class DependencyManagementScreen extends ConsumerStatefulWidget {
@@ -67,10 +67,10 @@ class _DependencyManagementScreenState
           children: [
             Expanded(
                 child: _buildTabButton(
-                    'dependencies', 'Зависимости', Icons.inventory)),
+                    'dependencies', 'Зависимости', Icons.inventory,),),
             Expanded(
                 child: _buildTabButton(
-                    'updates', 'Обновления', Icons.system_update)),
+                    'updates', 'Обновления', Icons.system_update,),),
           ],
         ),
       );
@@ -93,7 +93,7 @@ class _DependencyManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -128,7 +128,7 @@ class _DependencyManagementScreenState
                   hint: const Text('Все типы'),
                   items: [
                     const DropdownMenuItem<DependencyType?>(
-                        child: Text('Все типы')),
+                        child: Text('Все типы'),),
                     ...DependencyType.values.map(
                       (type) => DropdownMenuItem<DependencyType?>(
                         value: type,
@@ -149,7 +149,7 @@ class _DependencyManagementScreenState
                   hint: const Text('Все статусы'),
                   items: [
                     const DropdownMenuItem<DependencyStatus?>(
-                        child: Text('Все статусы')),
+                        child: Text('Все статусы'),),
                     ...DependencyStatus.values.map(
                       (status) => DropdownMenuItem<DependencyStatus?>(
                         value: status,
@@ -171,7 +171,7 @@ class _DependencyManagementScreenState
                     hint: const Text('Все типы обновлений'),
                     items: [
                       const DropdownMenuItem<UpdateType?>(
-                          child: Text('Все типы обновлений')),
+                          child: Text('Все типы обновлений'),),
                       ...UpdateType.values.map(
                         (type) => DropdownMenuItem<UpdateType?>(
                           value: type,
@@ -193,7 +193,7 @@ class _DependencyManagementScreenState
                     hint: const Text('Все приоритеты'),
                     items: [
                       const DropdownMenuItem<UpdatePriority?>(
-                          child: Text('Все приоритеты')),
+                          child: Text('Все приоритеты'),),
                       ...UpdatePriority.values.map(
                         (priority) => DropdownMenuItem<UpdatePriority?>(
                           value: priority,
@@ -236,7 +236,7 @@ class _DependencyManagementScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Анализ зависимостей',
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context).textTheme.titleMedium,),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -283,7 +283,7 @@ class _DependencyManagementScreenState
   }
 
   Widget _buildAnalysisCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -298,12 +298,12 @@ class _DependencyManagementScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(title,
                 style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
           ],
         ),
       );
@@ -315,7 +315,7 @@ class _DependencyManagementScreenState
             child: Row(
               children: [
                 Text('Зависимости',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showAddDependencyDialog,
@@ -367,10 +367,10 @@ class _DependencyManagementScreenState
                     Text(
                       dependency.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text('v${dependency.version}',
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -386,7 +386,7 @@ class _DependencyManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -402,7 +402,7 @@ class _DependencyManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -413,19 +413,19 @@ class _DependencyManagementScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   const PopupMenuItem(
                     value: 'update',
                     child: ListTile(
                         leading: Icon(Icons.system_update),
-                        title: Text('Обновить')),
+                        title: Text('Обновить'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -446,13 +446,13 @@ class _DependencyManagementScreenState
             children: [
               if (dependency.latestVersion != null)
                 _buildInfoChip('Последняя версия',
-                    'v${dependency.latestVersion}', Colors.green),
+                    'v${dependency.latestVersion}', Colors.green,),
               const SizedBox(width: 8),
               _buildInfoChip('Зависимости', '${dependency.dependencies.length}',
-                  Colors.blue),
+                  Colors.blue,),
               const SizedBox(width: 8),
               _buildInfoChip('Зависимые', '${dependency.dependents.length}',
-                  Colors.orange),
+                  Colors.orange,),
             ],
           ),
 
@@ -481,7 +481,7 @@ class _DependencyManagementScreenState
             child: Row(
               children: [
                 Text('Обновления',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _checkForUpdates,
@@ -546,7 +546,7 @@ class _DependencyManagementScreenState
                     Text(
                       dependency.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(
                       '${update.currentVersion} → ${update.newVersion}',
@@ -567,7 +567,7 @@ class _DependencyManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -583,7 +583,7 @@ class _DependencyManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: priorityColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -593,12 +593,12 @@ class _DependencyManagementScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'apply',
                     child: ListTile(
-                        leading: Icon(Icons.check), title: Text('Применить')),
+                        leading: Icon(Icons.check), title: Text('Применить'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -626,11 +626,11 @@ class _DependencyManagementScreenState
               const SizedBox(width: 8),
               if (update.bugFixes.isNotEmpty)
                 _buildInfoChip('Исправления ошибок',
-                    '${update.bugFixes.length}', Colors.orange),
+                    '${update.bugFixes.length}', Colors.orange,),
               const SizedBox(width: 8),
               if (update.newFeatures.isNotEmpty)
                 _buildInfoChip('Новые функции', '${update.newFeatures.length}',
-                    Colors.green),
+                    Colors.green,),
             ],
           ),
 
@@ -662,7 +662,7 @@ class _DependencyManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -785,7 +785,7 @@ class _DependencyManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -844,7 +844,7 @@ class _DependencyManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка проверки обновлений: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -853,13 +853,10 @@ class _DependencyManagementScreenState
     switch (action) {
       case 'view':
         _viewDependency(dependency);
-        break;
       case 'edit':
         _editDependency(dependency);
-        break;
       case 'update':
         _updateDependency(dependency);
-        break;
     }
   }
 
@@ -867,10 +864,8 @@ class _DependencyManagementScreenState
     switch (action) {
       case 'view':
         _viewUpdate(update);
-        break;
       case 'apply':
         _applyUpdate(update);
-        break;
     }
   }
 
@@ -879,7 +874,7 @@ class _DependencyManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Просмотр зависимости "${dependency.name}" будет реализован')),
+              'Просмотр зависимости "${dependency.name}" будет реализован',),),
     );
   }
 
@@ -888,7 +883,7 @@ class _DependencyManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование зависимости "${dependency.name}" будет реализовано')),
+              'Редактирование зависимости "${dependency.name}" будет реализовано',),),
     );
   }
 
@@ -897,7 +892,7 @@ class _DependencyManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Обновление зависимости "${dependency.name}" будет реализовано')),
+              'Обновление зависимости "${dependency.name}" будет реализовано',),),
     );
   }
 
@@ -906,7 +901,7 @@ class _DependencyManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Просмотр обновления будет реализован')));
+        const SnackBar(content: Text('Просмотр обновления будет реализован')),);
   }
 
   Future<void> _applyUpdate(DependencyUpdate update) async {
@@ -932,7 +927,7 @@ class _DependencyManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка применения обновления: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -942,6 +937,6 @@ class _DependencyManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Добавление зависимости будет реализовано')));
+        content: Text('Добавление зависимости будет реализовано'),),);
   }
 }

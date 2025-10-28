@@ -1,17 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter/material.dart';
-
-import '../models/review.dart';
 
 /// Widget for displaying review information in a card
 class ReviewCard extends StatelessWidget {
+
+  const ReviewCard(
+      {required this.review, super.key, this.onTap, this.onLike, this.onReply,});
   final Review review;
   final VoidCallback? onTap;
   final VoidCallback? onLike;
   final VoidCallback? onReply;
-
-  const ReviewCard(
-      {super.key, required this.review, this.onTap, this.onLike, this.onReply});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class ReviewCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                       radius: 20,
-                      child: Text(review.clientName.substring(0, 1))),
+                      child: Text(review.clientName.substring(0, 1)),),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -39,7 +38,7 @@ class ReviewCard extends StatelessWidget {
                         Text(
                           review.clientName,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold, fontSize: 16,),
                         ),
                         Text(
                           review.timeAgo,
@@ -61,7 +60,7 @@ class ReviewCard extends StatelessWidget {
               // Images
               if (review.hasImages) ...[
                 const SizedBox(height: 12),
-                _buildImagesGrid()
+                _buildImagesGrid(),
               ],
 
               const SizedBox(height: 12),
@@ -87,7 +86,7 @@ class ReviewCard extends StatelessWidget {
                   const SizedBox(width: 16),
                   IconButton(
                       icon: const Icon(Icons.reply, size: 20),
-                      onPressed: onReply),
+                      onPressed: onReply,),
                   const Text('Ответить', style: TextStyle(fontSize: 12)),
                 ],
               ),

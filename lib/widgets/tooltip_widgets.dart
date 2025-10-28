@@ -2,22 +2,20 @@ import 'package:flutter/material.dart';
 
 /// Виджет с всплывающей подсказкой
 class TooltipButton extends StatelessWidget {
+
+  const TooltipButton({
+    required this.tooltip, required this.child, super.key,
+    this.onPressed,
+    this.message,
+    this.duration,
+    this.triggerMode = TooltipTriggerMode.tap,
+  });
   final String tooltip;
   final Widget child;
   final VoidCallback? onPressed;
   final String? message;
   final Duration? duration;
   final TooltipTriggerMode triggerMode;
-
-  const TooltipButton({
-    super.key,
-    required this.tooltip,
-    required this.child,
-    this.onPressed,
-    this.message,
-    this.duration,
-    this.triggerMode = TooltipTriggerMode.tap,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +41,14 @@ class TooltipButton extends StatelessWidget {
 
 /// Интерактивная подсказка с анимацией
 class InteractiveTooltip extends StatefulWidget {
+
+  const InteractiveTooltip({
+    required this.child, required this.title, required this.description, super.key,
+    this.icon,
+    this.backgroundColor,
+    this.textColor,
+    this.duration,
+  });
   final Widget child;
   final String title;
   final String description;
@@ -50,17 +56,6 @@ class InteractiveTooltip extends StatefulWidget {
   final Color? backgroundColor;
   final Color? textColor;
   final Duration? duration;
-
-  const InteractiveTooltip({
-    super.key,
-    required this.child,
-    required this.title,
-    required this.description,
-    this.icon,
-    this.backgroundColor,
-    this.textColor,
-    this.duration,
-  });
 
   @override
   State<InteractiveTooltip> createState() => _InteractiveTooltipState();
@@ -83,19 +78,19 @@ class _InteractiveTooltipState extends State<InteractiveTooltip>
 
     _scaleAnimation = Tween<double>(
       begin: 0.8,
-      end: 1.0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.elasticOut,
-    ));
+    ),);
 
     _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
-    ));
+    ),);
   }
 
   @override
@@ -215,10 +210,7 @@ class _InteractiveTooltipState extends State<InteractiveTooltip>
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  _hideTooltip();
-                  // Здесь можно добавить действие "Больше не показывать"
-                },
+                onPressed: _hideTooltip,
                 child: Text(
                   'Больше не показывать',
                   style: TextStyle(
@@ -237,6 +229,14 @@ class _InteractiveTooltipState extends State<InteractiveTooltip>
 
 /// Подсказка для новых пользователей
 class OnboardingTooltip extends StatefulWidget {
+
+  const OnboardingTooltip({
+    required this.child, required this.title, required this.description, super.key,
+    this.buttonText,
+    this.onButtonPressed,
+    this.showOnce = true,
+    this.storageKey,
+  });
   final Widget child;
   final String title;
   final String description;
@@ -244,17 +244,6 @@ class OnboardingTooltip extends StatefulWidget {
   final VoidCallback? onButtonPressed;
   final bool showOnce;
   final String? storageKey;
-
-  const OnboardingTooltip({
-    super.key,
-    required this.child,
-    required this.title,
-    required this.description,
-    this.buttonText,
-    this.onButtonPressed,
-    this.showOnce = true,
-    this.storageKey,
-  });
 
   @override
   State<OnboardingTooltip> createState() => _OnboardingTooltipState();
@@ -277,20 +266,20 @@ class _OnboardingTooltipState extends State<OnboardingTooltip>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.elasticOut,
-    ));
+    ),);
 
     _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _checkShouldShow();
   }
@@ -354,7 +343,7 @@ class _OnboardingTooltipState extends State<OnboardingTooltip>
         widget.child,
         if (_isVisible)
           Positioned.fill(
-            child: Container(
+            child: ColoredBox(
               color: Colors.black.withOpacity(0.5),
               child: Center(
                 child: AnimatedBuilder(
@@ -448,22 +437,20 @@ class _OnboardingTooltipState extends State<OnboardingTooltip>
 
 /// Подсказка с позиционированием
 class PositionedTooltip extends StatefulWidget {
+
+  const PositionedTooltip({
+    required this.child, required this.message, super.key,
+    this.position = TooltipPosition.top,
+    this.duration,
+    this.backgroundColor,
+    this.textColor,
+  });
   final Widget child;
   final String message;
   final TooltipPosition position;
   final Duration? duration;
   final Color? backgroundColor;
   final Color? textColor;
-
-  const PositionedTooltip({
-    super.key,
-    required this.child,
-    required this.message,
-    this.position = TooltipPosition.top,
-    this.duration,
-    this.backgroundColor,
-    this.textColor,
-  });
 
   @override
   State<PositionedTooltip> createState() => _PositionedTooltipState();

@@ -1,20 +1,11 @@
+import 'package:event_marketplace_app/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
-import '../../utils/responsive_utils.dart';
 
 /// Адаптивный контейнер
 class ResponsiveContainer extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final double? borderRadius;
-  final Color? color;
-  final BoxDecoration? decoration;
-  final double? width;
-  final double? height;
 
   const ResponsiveContainer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.margin,
     this.borderRadius,
@@ -23,6 +14,14 @@ class ResponsiveContainer extends StatelessWidget {
     this.width,
     this.height,
   });
+  final Widget child;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final double? borderRadius;
+  final Color? color;
+  final BoxDecoration? decoration;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +45,6 @@ class ResponsiveContainer extends StatelessWidget {
 
 /// Адаптивный текст
 class ResponsiveText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
 
   const ResponsiveText(
     this.text, {
@@ -60,6 +54,11 @@ class ResponsiveText extends StatelessWidget {
     this.maxLines,
     this.overflow,
   });
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +79,9 @@ class ResponsiveText extends StatelessWidget {
 
 /// Адаптивная кнопка
 class ResponsiveButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onPressed;
-  final Color? backgroundColor;
-  final Color? textColor;
-  final EdgeInsets? padding;
-  final double? borderRadius;
-  final double? width;
-  final double? height;
 
   const ResponsiveButton({
-    super.key,
-    required this.text,
+    required this.text, super.key,
     this.onPressed,
     this.backgroundColor,
     this.textColor,
@@ -100,6 +90,14 @@ class ResponsiveButton extends StatelessWidget {
     this.width,
     this.height,
   });
+  final String text;
+  final VoidCallback? onPressed;
+  final Color? backgroundColor;
+  final Color? textColor;
+  final EdgeInsets? padding;
+  final double? borderRadius;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +134,6 @@ class ResponsiveButton extends StatelessWidget {
 
 /// Адаптивная иконка
 class ResponsiveIcon extends StatelessWidget {
-  final IconData icon;
-  final Color? color;
-  final double? size;
 
   const ResponsiveIcon(
     this.icon, {
@@ -146,6 +141,9 @@ class ResponsiveIcon extends StatelessWidget {
     this.color,
     this.size,
   });
+  final IconData icon;
+  final Color? color;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -159,19 +157,9 @@ class ResponsiveIcon extends StatelessWidget {
 
 /// Адаптивная карточка
 class ResponsiveCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final double? borderRadius;
-  final Color? color;
-  final BoxDecoration? decoration;
-  final double? elevation;
-  final double? width;
-  final double? height;
 
   const ResponsiveCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.margin,
     this.borderRadius,
@@ -181,6 +169,15 @@ class ResponsiveCard extends StatelessWidget {
     this.width,
     this.height,
   });
+  final Widget child;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final double? borderRadius;
+  final Color? color;
+  final BoxDecoration? decoration;
+  final double? elevation;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -213,22 +210,21 @@ class ResponsiveCard extends StatelessWidget {
 
 /// Адаптивная сетка
 class ResponsiveGrid extends StatelessWidget {
-  final List<Widget> children;
-  final double spacing;
-  final double runSpacing;
-  final int? crossAxisCount;
-  final double? childAspectRatio;
-  final double? mainAxisSpacing;
 
   const ResponsiveGrid({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.spacing = 8.0,
     this.runSpacing = 8.0,
     this.crossAxisCount,
     this.childAspectRatio,
     this.mainAxisSpacing,
   });
+  final List<Widget> children;
+  final double spacing;
+  final double runSpacing;
+  final int? crossAxisCount;
+  final double? childAspectRatio;
+  final double? mainAxisSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -247,18 +243,17 @@ class ResponsiveGrid extends StatelessWidget {
 
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
-  final List<Widget> children;
-  final double spacing;
-  final bool shrinkWrap;
-  final ScrollPhysics? physics;
 
   const ResponsiveList({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.spacing = 8.0,
     this.shrinkWrap = false,
     this.physics,
   });
+  final List<Widget> children;
+  final double spacing;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
 
   @override
   Widget build(BuildContext context) {
@@ -274,22 +269,21 @@ class ResponsiveList extends StatelessWidget {
 
 /// Адаптивный AppBar
 class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final List<Widget>? actions;
-  final Widget? leading;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final double? elevation;
 
   const ResponsiveAppBar({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.actions,
     this.leading,
     this.backgroundColor,
     this.foregroundColor,
     this.elevation,
   });
+  final String title;
+  final List<Widget>? actions;
+  final Widget? leading;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? elevation;
 
   @override
   Widget build(BuildContext context) {
@@ -299,9 +293,9 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
           fontSize: ResponsiveUtils.getResponsiveFontSize(
             context,
-            mobile: 18.0,
-            tablet: 20.0,
-            desktop: 22.0,
+            mobile: 18,
+            tablet: 20,
+            desktop: 22,
           ),
         ),
       ),
@@ -321,6 +315,14 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 /// Адаптивный BottomNavigationBar
 class ResponsiveBottomNavBar extends StatelessWidget {
+
+  const ResponsiveBottomNavBar({
+    required this.items, required this.currentIndex, required this.onTap, super.key,
+    this.backgroundColor,
+    this.selectedItemColor,
+    this.unselectedItemColor,
+    this.elevation,
+  });
   final List<BottomNavigationBarItem> items;
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -328,17 +330,6 @@ class ResponsiveBottomNavBar extends StatelessWidget {
   final Color? selectedItemColor;
   final Color? unselectedItemColor;
   final double? elevation;
-
-  const ResponsiveBottomNavBar({
-    super.key,
-    required this.items,
-    required this.currentIndex,
-    required this.onTap,
-    this.backgroundColor,
-    this.selectedItemColor,
-    this.unselectedItemColor,
-    this.elevation,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -359,11 +350,6 @@ class ResponsiveBottomNavBar extends StatelessWidget {
 
 /// Адаптивный разделитель
 class ResponsiveDivider extends StatelessWidget {
-  final double? height;
-  final double? thickness;
-  final Color? color;
-  final double? indent;
-  final double? endIndent;
 
   const ResponsiveDivider({
     super.key,
@@ -373,6 +359,11 @@ class ResponsiveDivider extends StatelessWidget {
     this.indent,
     this.endIndent,
   });
+  final double? height;
+  final double? thickness;
+  final Color? color;
+  final double? indent;
+  final double? endIndent;
 
   @override
   Widget build(BuildContext context) {
@@ -388,9 +379,6 @@ class ResponsiveDivider extends StatelessWidget {
 
 /// Адаптивный отступ
 class ResponsiveSpacing extends StatelessWidget {
-  final double? width;
-  final double? height;
-  final double multiplier;
 
   const ResponsiveSpacing({
     super.key,
@@ -398,6 +386,9 @@ class ResponsiveSpacing extends StatelessWidget {
     this.height,
     this.multiplier = 1.0,
   });
+  final double? width;
+  final double? height;
+  final double multiplier;
 
   @override
   Widget build(BuildContext context) {
@@ -412,16 +403,15 @@ class ResponsiveSpacing extends StatelessWidget {
 
 /// Адаптивный LayoutBuilder
 class ResponsiveLayoutBuilder extends StatelessWidget {
-  final Widget Function(BuildContext context) mobile;
-  final Widget Function(BuildContext context)? tablet;
-  final Widget Function(BuildContext context)? desktop;
 
   const ResponsiveLayoutBuilder({
-    super.key,
-    required this.mobile,
+    required this.mobile, super.key,
     this.tablet,
     this.desktop,
   });
+  final Widget Function(BuildContext context) mobile;
+  final Widget Function(BuildContext context)? tablet;
+  final Widget Function(BuildContext context)? desktop;
 
   @override
   Widget build(BuildContext context) {
@@ -436,20 +426,19 @@ class ResponsiveLayoutBuilder extends StatelessWidget {
 
 /// Адаптивный SafeArea
 class ResponsiveSafeArea extends StatelessWidget {
-  final Widget child;
-  final bool top;
-  final bool bottom;
-  final bool left;
-  final bool right;
 
   const ResponsiveSafeArea({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.top = true,
     this.bottom = true,
     this.left = true,
     this.right = true,
   });
+  final Widget child;
+  final bool top;
+  final bool bottom;
+  final bool left;
+  final bool right;
 
   @override
   Widget build(BuildContext context) {
@@ -465,12 +454,6 @@ class ResponsiveSafeArea extends StatelessWidget {
 
 /// Адаптивный Scaffold
 class ResponsiveScaffold extends StatelessWidget {
-  final Widget? body;
-  final PreferredSizeWidget? appBar;
-  final Widget? bottomNavigationBar;
-  final Widget? floatingActionButton;
-  final Color? backgroundColor;
-  final bool resizeToAvoidBottomInset;
 
   const ResponsiveScaffold({
     super.key,
@@ -481,6 +464,12 @@ class ResponsiveScaffold extends StatelessWidget {
     this.backgroundColor,
     this.resizeToAvoidBottomInset = true,
   });
+  final Widget? body;
+  final PreferredSizeWidget? appBar;
+  final Widget? bottomNavigationBar;
+  final Widget? floatingActionButton;
+  final Color? backgroundColor;
+  final bool resizeToAvoidBottomInset;
 
   @override
   Widget build(BuildContext context) {

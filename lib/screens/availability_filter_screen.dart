@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/services/availability_filter_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../services/availability_filter_service.dart';
 
 /// Экран фильтрации специалистов по занятости
 class AvailabilityFilterScreen extends ConsumerStatefulWidget {
@@ -127,7 +126,7 @@ class _AvailabilityFilterScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Период поиска',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -154,13 +153,13 @@ class _AvailabilityFilterScreenState
       );
 
   Widget _buildDateField(
-          String label, DateTime? date, Function(DateTime?) onChanged) =>
+          String label, DateTime? date, Function(DateTime?) onChanged,) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
               style:
-                  const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                  const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),),
           const SizedBox(height: 8),
           InkWell(
             onTap: () async {
@@ -189,7 +188,7 @@ class _AvailabilityFilterScreenState
                           : 'Выберите дату',
                       style: TextStyle(
                           color:
-                              date != null ? Colors.black : Colors.grey[600]),
+                              date != null ? Colors.black : Colors.grey[600],),
                     ),
                   ),
                 ],
@@ -304,7 +303,7 @@ class _AvailabilityFilterScreenState
               SwitchListTile(
                 title: const Text('Только доступные специалисты'),
                 subtitle: const Text(
-                    'Показать только специалистов с высокой доступностью'),
+                    'Показать только специалистов с высокой доступностью',),
                 value: _onlyAvailable,
                 onChanged: (value) {
                   setState(() {
@@ -329,7 +328,7 @@ class _AvailabilityFilterScreenState
               ? const SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2))
+                  child: CircularProgressIndicator(strokeWidth: 2),)
               : const Icon(Icons.search),
           label: Text(_isLoading ? 'Поиск...' : 'Применить фильтры'),
           style: ElevatedButton.styleFrom(
@@ -362,10 +361,10 @@ class _AvailabilityFilterScreenState
             Icon(Icons.search_off, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Специалисты не найдены',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             SizedBox(height: 8),
             Text('Попробуйте изменить параметры фильтра',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -407,18 +406,18 @@ class _AvailabilityFilterScreenState
                         Text(
                           specialist.specialistName,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
                             Icon(Icons.schedule,
-                                size: 16, color: Colors.grey[600]),
+                                size: 16, color: Colors.grey[600],),
                             const SizedBox(width: 4),
                             Text(
                               '${specialist.availableSlots.length} доступных слотов',
                               style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 14),
+                                  color: Colors.grey[600], fontSize: 14,),
                             ),
                           ],
                         ),
@@ -512,10 +511,10 @@ class _AvailabilityFilterScreenState
             Icon(Icons.calendar_today, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Календарь занятости',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             SizedBox(height: 8),
             Text('Функция будет добавлена в следующей версии',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -557,7 +556,7 @@ class _AvailabilityFilterScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red,),);
     }
   }
 

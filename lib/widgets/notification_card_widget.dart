@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/enhanced_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/enhanced_notification.dart';
 
 /// Виджет карточки уведомления
 class NotificationCardWidget extends ConsumerStatefulWidget {
   const NotificationCardWidget({
-    super.key,
-    required this.notification,
+    required this.notification, super.key,
     this.onTap,
     this.onMarkAsRead,
     this.onArchive,
@@ -43,7 +41,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
       begin: 1,
       end: 0.95,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
   }
 
   @override
@@ -143,7 +141,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
         ),
         child: Center(
             child: Text(widget.notification.type.icon,
-                style: const TextStyle(fontSize: 20))),
+                style: const TextStyle(fontSize: 20),),),
       );
 
   Widget _buildNotificationContent() => Column(
@@ -163,7 +161,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                   CircleAvatar(
                     radius: 12,
                     backgroundImage: CachedNetworkImageProvider(
-                        widget.notification.senderAvatar!),
+                        widget.notification.senderAvatar!,),
                   )
                 else
                   CircleAvatar(
@@ -192,18 +190,18 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
           const SizedBox(height: 8),
           if (widget.notification.actionUrl != null)
             _buildDetailRow(
-                'Действие', 'Нажмите для перехода', Icons.open_in_new),
+                'Действие', 'Нажмите для перехода', Icons.open_in_new,),
           if (widget.notification.category != null)
             _buildDetailRow(
-                'Категория', widget.notification.category!, Icons.category),
+                'Категория', widget.notification.category!, Icons.category,),
           _buildDetailRow('Приоритет', widget.notification.priority.displayName,
-              Icons.priority_high),
+              Icons.priority_high,),
           if (widget.notification.expiresAt != null)
             _buildDetailRow('Истекает',
-                _formatDate(widget.notification.expiresAt!), Icons.schedule),
+                _formatDate(widget.notification.expiresAt!), Icons.schedule,),
           if (widget.notification.readAt != null)
             _buildDetailRow('Прочитано',
-                _formatDate(widget.notification.readAt!), Icons.check_circle),
+                _formatDate(widget.notification.readAt!), Icons.check_circle,),
         ],
       );
 
@@ -218,11 +216,11 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey[700]),
+                  color: Colors.grey[700],),
             ),
             Expanded(
               child: Text(value,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),),
             ),
           ],
         ),
@@ -256,8 +254,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                 child: Row(children: [
                   Icon(Icons.archive),
                   SizedBox(width: 8),
-                  Text('Архивировать')
-                ]),
+                  Text('Архивировать'),
+                ],),
               ),
               const PopupMenuItem(
                 value: 'delete',
@@ -319,13 +317,10 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
         setState(() {
           _isExpanded = !_isExpanded;
         });
-        break;
       case 'archive':
         widget.onArchive?.call();
-        break;
       case 'delete':
         widget.onDelete?.call();
-        break;
     }
   }
 

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
+import 'package:event_marketplace_app/widgets/create_story_dialog.dart';
+import 'package:event_marketplace_app/widgets/story_viewer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/story.dart';
-import '../providers/auth_providers.dart';
-import '../services/story_service.dart';
-import 'create_story_dialog.dart';
-import 'story_viewer_screen.dart';
 
 /// Виджет для отображения сторис
 class StoryWidget extends ConsumerStatefulWidget {
@@ -39,9 +38,9 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
 
       List<Story> stories;
       if (widget.showAllStories) {
-        stories = await _storyService.getAllActiveStories();
+        stories = _storyService.getAllActiveStories();
       } else if (widget.userId != null) {
-        stories = await _storyService.getUserStories(widget.userId!);
+        stories = _storyService.getUserStories(widget.userId!);
       } else {
         stories = [];
       }
@@ -149,7 +148,7 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
             Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки сторис',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -161,7 +160,7 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadStories, child: const Text('Повторить')),
+                onPressed: _loadStories, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -171,7 +170,7 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.auto_stories_outlined,
-                size: 64, color: Colors.grey[400]),
+                size: 64, color: Colors.grey[400],),
             const SizedBox(height: 16),
             Text(
               widget.showAllStories ? 'Нет активных сторис' : 'Нет сторис',
@@ -252,7 +251,7 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Сторис удалена'), backgroundColor: Colors.green),
+                content: Text('Сторис удалена'), backgroundColor: Colors.green,),
           );
         }
       } catch (e) {
@@ -261,7 +260,7 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
             context,
           ).showSnackBar(SnackBar(
               content: Text('Ошибка удаления: $e'),
-              backgroundColor: Colors.red));
+              backgroundColor: Colors.red,),);
         }
       }
     }
@@ -271,7 +270,7 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
 /// Круглая иконка сторис
 class StoryCircle extends StatelessWidget {
   const StoryCircle(
-      {super.key, required this.story, this.onTap, this.onDelete});
+      {required this.story, super.key, this.onTap, this.onDelete,});
 
   final Story story;
   final VoidCallback? onTap;
@@ -309,7 +308,7 @@ class StoryCircle extends StatelessWidget {
                             height: 80,
                             color: Colors.grey[200],
                             child: const Center(
-                                child: CircularProgressIndicator()),
+                                child: CircularProgressIndicator(),),
                           );
                         },
                         errorBuilder: (context, error, stackTrace) => Container(
@@ -376,9 +375,9 @@ class StoryCircle extends StatelessWidget {
                       width: 20,
                       height: 20,
                       decoration: const BoxDecoration(
-                          color: Colors.red, shape: BoxShape.circle),
+                          color: Colors.red, shape: BoxShape.circle,),
                       child: const Icon(Icons.close,
-                          color: Colors.white, size: 12),
+                          color: Colors.white, size: 12,),
                     ),
                   ),
                 ),
@@ -399,7 +398,7 @@ class StoryCircle extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(Icons.visibility,
-                            color: Colors.white, size: 10),
+                            color: Colors.white, size: 10,),
                         const SizedBox(width: 2),
                         Text(
                           story.viewCount.toString(),

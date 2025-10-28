@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/review.dart';
+import 'package:event_marketplace_app/models/review.dart';
 
 /// Улучшенный сервис для работы с отзывами и рейтингами
 class EnhancedReviewService {
@@ -42,7 +42,7 @@ class EnhancedReviewService {
         final bookingData = bookingDoc.data()!;
         if (bookingData['status'] != 'completed') {
           throw Exception(
-              'Отзыв можно оставить только для завершенных заказов');
+              'Отзыв можно оставить только для завершенных заказов',);
         }
       }
 
@@ -148,7 +148,7 @@ class EnhancedReviewService {
 
       if (reviewsSnapshot.docs.isEmpty) {
         return const ReviewStats(
-            totalReviews: 0, averageRating: 0, ratingDistribution: {});
+            totalReviews: 0, averageRating: 0, ratingDistribution: {},);
       }
 
       final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
@@ -173,7 +173,7 @@ class EnhancedReviewService {
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
       return const ReviewStats(
-          totalReviews: 0, averageRating: 0, ratingDistribution: {});
+          totalReviews: 0, averageRating: 0, ratingDistribution: {},);
     }
   }
 
@@ -187,7 +187,7 @@ class EnhancedReviewService {
           .map((snapshot) {
         if (snapshot.docs.isEmpty) {
           return const ReviewStats(
-              totalReviews: 0, averageRating: 0, ratingDistribution: {});
+              totalReviews: 0, averageRating: 0, ratingDistribution: {},);
         }
 
         final reviews = snapshot.docs.map(Review.fromDocument).toList();

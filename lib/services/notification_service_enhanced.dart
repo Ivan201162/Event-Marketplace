@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 /// Улучшенный сервис уведомлений
 class NotificationServiceEnhanced {
@@ -22,9 +23,7 @@ class NotificationServiceEnhanced {
       const androidSettings =
           AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
+        
       );
 
       const initSettings = InitializationSettings(
@@ -57,17 +56,11 @@ class NotificationServiceEnhanced {
   static Future<void> _requestPermissions() async {
     try {
       final settings = await _messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
+        
       );
 
       debugPrint(
-          '📱 Notification permission status: ${settings.authorizationStatus}');
+          '📱 Notification permission status: ${settings.authorizationStatus}',);
     } catch (e) {
       debugPrint('❌ Error requesting notification permissions: $e');
     }
@@ -149,7 +142,7 @@ class NotificationServiceEnhanced {
   /// Показать локальное уведомление
   static Future<void> _showLocalNotification(RemoteMessage message) async {
     try {
-      final androidDetails = AndroidNotificationDetails(
+      const androidDetails = AndroidNotificationDetails(
         'event_marketplace_channel',
         'Event Marketplace Notifications',
         channelDescription: 'Уведомления от Event Marketplace',
@@ -164,7 +157,7 @@ class NotificationServiceEnhanced {
         presentSound: true,
       );
 
-      final notificationDetails = NotificationDetails(
+      const notificationDetails = NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
       );

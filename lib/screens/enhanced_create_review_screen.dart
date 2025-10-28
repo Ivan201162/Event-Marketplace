@@ -1,15 +1,13 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/enhanced_review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/review.dart';
-import '../providers/auth_providers.dart';
-import '../services/enhanced_review_service.dart';
 
 /// Улучшенный экран создания отзыва
 class EnhancedCreateReviewScreen extends ConsumerStatefulWidget {
   const EnhancedCreateReviewScreen({
-    super.key,
-    required this.specialistId,
+    required this.specialistId, super.key,
     this.specialistName,
     this.existingReview,
   });
@@ -66,12 +64,12 @@ class _EnhancedCreateReviewScreenState
         appBar: AppBar(
           title: Text(widget.existingReview != null
               ? 'Редактировать отзыв'
-              : 'Оставить отзыв'),
+              : 'Оставить отзыв',),
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           actions: [
             if (widget.existingReview != null)
               IconButton(
-                  icon: const Icon(Icons.delete), onPressed: _deleteReview),
+                  icon: const Icon(Icons.delete), onPressed: _deleteReview,),
           ],
         ),
         body: Form(
@@ -138,7 +136,7 @@ class _EnhancedCreateReviewScreenState
                     Text(
                       widget.specialistName ?? 'Специалист',
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18, fontWeight: FontWeight.bold,),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -260,7 +258,7 @@ class _EnhancedCreateReviewScreenState
           ),
           const SizedBox(height: 8),
           Text('Выберите до 5 характеристик',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -320,7 +318,7 @@ class _EnhancedCreateReviewScreenState
                       ? 'Обновить отзыв'
                       : 'Оставить отзыв',
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                 ),
         ),
       );
@@ -386,7 +384,7 @@ class _EnhancedCreateReviewScreenState
           SnackBar(
             content: Text(widget.existingReview != null
                 ? 'Отзыв обновлен'
-                : 'Отзыв добавлен'),
+                : 'Отзыв добавлен',),
             backgroundColor: Colors.green,
           ),
         );
@@ -397,7 +395,7 @@ class _EnhancedCreateReviewScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {
@@ -441,7 +439,7 @@ class _EnhancedCreateReviewScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Отзыв удален'), backgroundColor: Colors.green),
+              content: Text('Отзыв удален'), backgroundColor: Colors.green,),
         );
         Navigator.of(context).pop(true);
       }
@@ -450,7 +448,7 @@ class _EnhancedCreateReviewScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {

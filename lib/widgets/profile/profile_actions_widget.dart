@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../models/user.dart';
 
 /// Виджет действий профиля
 class ProfileActionsWidget extends StatelessWidget {
   const ProfileActionsWidget(
-      {super.key, required this.user, required this.isCurrentUser});
+      {required this.user, required this.isCurrentUser, super.key,});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -31,7 +30,7 @@ class ProfileActionsWidget extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
               ),
             ),
@@ -46,7 +45,7 @@ class ProfileActionsWidget extends StatelessWidget {
                   side: BorderSide(color: theme.primaryColor),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
               ),
             ),
@@ -62,7 +61,7 @@ class ProfileActionsWidget extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
               ),
             ),
@@ -77,7 +76,7 @@ class ProfileActionsWidget extends StatelessWidget {
                   side: BorderSide(color: theme.primaryColor),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),),
                 ),
               ),
             ),
@@ -96,7 +95,7 @@ class ProfileActionsWidget extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
+        const SnackBar(content: Text('Функция шаринга будет добавлена позже')),);
   }
 
   void _sendMessage(BuildContext context) {
@@ -104,7 +103,7 @@ class ProfileActionsWidget extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция сообщений будет добавлена позже')));
+        content: Text('Функция сообщений будет добавлена позже'),),);
   }
 
   void _followUser(BuildContext context) {
@@ -112,6 +111,6 @@ class ProfileActionsWidget extends StatelessWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция подписки будет добавлена позже')));
+        content: Text('Функция подписки будет добавлена позже'),),);
   }
 }

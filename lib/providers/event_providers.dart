@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/services/event_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/event.dart';
-import '../services/event_service.dart';
 
 /// Провайдер сервиса событий
 final eventServiceProvider = Provider<EventService>((ref) => EventService());
@@ -75,6 +74,6 @@ final userEventStatsProvider =
     'totalEvents': 0,
     'upcomingEvents': 0,
     'pastEvents': 0,
-    'cancelledEvents': 0
+    'cancelledEvents': 0,
   };
 });

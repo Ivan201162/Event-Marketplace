@@ -1,22 +1,18 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
+import 'package:event_marketplace_app/services/upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/review.dart';
-import '../providers/auth_providers.dart';
-import '../services/review_service.dart';
-import '../services/upload_service.dart';
 
 /// Экран создания/редактирования отзыва
 class ReviewFormScreen extends ConsumerStatefulWidget {
   // Для редактирования
 
   const ReviewFormScreen({
-    super.key,
-    required this.targetId,
-    required this.type,
-    required this.targetName,
+    required this.targetId, required this.type, required this.targetName, super.key,
     this.existingReview,
   });
   final String targetId;
@@ -77,11 +73,11 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       appBar: AppBar(
         title: Text(widget.existingReview != null
             ? 'Редактировать отзыв'
-            : 'Новый отзыв'),
+            : 'Новый отзыв',),
         actions: [
           if (widget.existingReview != null)
             IconButton(
-                icon: const Icon(Icons.delete), onPressed: _showDeleteDialog),
+                icon: const Icon(Icons.delete), onPressed: _showDeleteDialog,),
         ],
       ),
       body: _buildForm(currentUser),
@@ -136,7 +132,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         child: Row(
           children: [
             Icon(_getTargetIcon(),
-                color: Theme.of(context).colorScheme.primary, size: 32),
+                color: Theme.of(context).colorScheme.primary, size: 32,),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -147,7 +143,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
                     style: Theme.of(
                       context,
                     ).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary),
+                        color: Theme.of(context).colorScheme.primary,),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -349,12 +345,12 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.add_photo_alternate,
-                  color: Theme.of(context).colorScheme.primary, size: 32),
+                  color: Theme.of(context).colorScheme.primary, size: 32,),
               const SizedBox(height: 4),
               Text(
                 'Добавить',
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary, fontSize: 12),
+                    color: Theme.of(context).colorScheme.primary, fontSize: 12,),
               ),
             ],
           ),
@@ -391,7 +387,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: const BoxDecoration(
-                    color: Colors.red, shape: BoxShape.circle),
+                    color: Colors.red, shape: BoxShape.circle,),
                 child: const Icon(Icons.close, color: Colors.white, size: 16),
               ),
             ),
@@ -420,7 +416,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
                     )
                   : Text(widget.existingReview != null
                       ? 'Обновить'
-                      : 'Опубликовать'),
+                      : 'Опубликовать',),
             ),
           ),
         ],
@@ -459,7 +455,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Загрузка изображений отключена')));
+          const SnackBar(content: Text('Загрузка изображений отключена')),);
       return;
     }
 
@@ -478,7 +474,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки изображения: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -548,7 +544,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {
@@ -568,7 +564,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -593,7 +589,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Отзыв удален'), backgroundColor: Colors.green),
+              content: Text('Отзыв удален'), backgroundColor: Colors.green,),
         );
         Navigator.of(context).pop(true);
       }
@@ -604,7 +600,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red,),);
       }
     } finally {
       if (mounted) {

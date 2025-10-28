@@ -1,15 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-import '../../models/user.dart';
-import '../../services/image_upload_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/services/image_upload_service.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Виджет заголовка профиля
 class ProfileHeaderWidget extends StatefulWidget {
   const ProfileHeaderWidget(
-      {super.key, required this.user, required this.isCurrentUser});
+      {required this.user, required this.isCurrentUser, super.key,});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -26,7 +26,7 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
     if (!widget.isCurrentUser) return;
 
     try {
-      final XFile? image = await _picker.pickImage(
+      final image = await _picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 512,
         maxHeight: 512,
@@ -98,7 +98,7 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                           child: CircularProgressIndicator(
                             strokeWidth: 3,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                theme.primaryColor),
+                                theme.primaryColor,),
                           ),
                         )
                       : widget.user.avatarUrl != null
@@ -114,7 +114,7 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                                   color:
                                       theme.primaryColor.withValues(alpha: 0.1),
                                   child: Icon(Icons.person,
-                                      size: 50, color: theme.primaryColor),
+                                      size: 50, color: theme.primaryColor,),
                                 ),
                                 errorWidget: (context, url, error) => Container(
                                   width: 100,
@@ -122,12 +122,12 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                                   color:
                                       theme.primaryColor.withValues(alpha: 0.1),
                                   child: Icon(Icons.person,
-                                      size: 50, color: theme.primaryColor),
+                                      size: 50, color: theme.primaryColor,),
                                 ),
                               ),
                             )
                           : Icon(Icons.person,
-                              size: 50, color: theme.primaryColor),
+                              size: 50, color: theme.primaryColor,),
                 ),
               ),
               if (widget.user.isVerified)
@@ -143,7 +143,7 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                       border: Border.all(color: theme.cardColor, width: 2),
                     ),
                     child: const Icon(Icons.verified,
-                        color: Colors.white, size: 14),
+                        color: Colors.white, size: 14,),
                   ),
                 ),
               // Кнопка редактирования аватарки
@@ -244,7 +244,7 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
           if (widget.user.bio != null && widget.user.bio!.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(widget.user.bio!,
-                style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+                style: theme.textTheme.bodyMedium, textAlign: TextAlign.center,),
           ],
 
           // Специализации (для специалистов)
@@ -259,7 +259,7 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                   .map(
                     (specialty) => Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: theme.primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),

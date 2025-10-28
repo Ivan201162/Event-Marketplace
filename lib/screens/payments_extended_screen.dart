@@ -1,14 +1,14 @@
+import 'package:event_marketplace_app/models/payment_extended.dart';
+import 'package:event_marketplace_app/services/payment_extended_service.dart';
+import 'package:event_marketplace_app/widgets/payment_card_widget.dart';
+import 'package:event_marketplace_app/widgets/payment_type_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/payment_extended.dart';
-import '../services/payment_extended_service.dart';
-import '../widgets/payment_card_widget.dart';
-import '../widgets/payment_type_selector.dart';
 
 /// Расширенный экран управления платежами
 class PaymentsExtendedScreen extends ConsumerStatefulWidget {
   const PaymentsExtendedScreen(
-      {super.key, required this.userId, this.isCustomer = true});
+      {required this.userId, super.key, this.isCustomer = true,});
   final String userId;
   final bool isCustomer;
 
@@ -51,11 +51,11 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
           actions: [
             IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: _showCreatePaymentDialog),
+                onPressed: _showCreatePaymentDialog,),
             if (!widget.isCustomer)
               IconButton(
                   icon: const Icon(Icons.settings),
-                  onPressed: _showSettingsDialog),
+                  onPressed: _showSettingsDialog,),
           ],
         ),
         body: TabBarView(
@@ -63,14 +63,14 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
           children: [
             _buildAllPaymentsTab(),
             _buildPendingPaymentsTab(),
-            _buildStatsTab()
+            _buildStatsTab(),
           ],
         ),
       );
 
   Widget _buildAllPaymentsTab() => StreamBuilder<List<PaymentExtended>>(
         stream: _paymentService.getUserPayments(widget.userId,
-            isCustomer: widget.isCustomer),
+            isCustomer: widget.isCustomer,),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -87,7 +87,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -128,7 +128,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
 
   Widget _buildPendingPaymentsTab() => StreamBuilder<List<PaymentExtended>>(
         stream: _paymentService.getUserPayments(widget.userId,
-            isCustomer: widget.isCustomer),
+            isCustomer: widget.isCustomer,),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -138,7 +138,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
           final pendingPayments = allPayments
               .where((p) =>
                   p.status == PaymentStatus.pending ||
-                  p.status == PaymentStatus.processing)
+                  p.status == PaymentStatus.processing,)
               .toList();
 
           if (pendingPayments.isEmpty) {
@@ -172,7 +172,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
 
   Widget _buildStatsTab() => FutureBuilder<PaymentStats>(
         future: _paymentService.getPaymentStats(widget.userId,
-            isCustomer: widget.isCustomer),
+            isCustomer: widget.isCustomer,),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -188,13 +188,13 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
                 // Общая статистика
                 _buildStatsCard('Общая статистика', [
                   _buildStatItem('Всего платежей',
-                      stats.totalPayments.toString(), Icons.payment),
+                      stats.totalPayments.toString(), Icons.payment,),
                   _buildStatItem('Завершено',
-                      stats.completedPayments.toString(), Icons.check_circle),
+                      stats.completedPayments.toString(), Icons.check_circle,),
                   _buildStatItem('Ожидают', stats.pendingPayments.toString(),
-                      Icons.pending),
+                      Icons.pending,),
                   _buildStatItem(
-                      'Ошибки', stats.failedPayments.toString(), Icons.error),
+                      'Ошибки', stats.failedPayments.toString(), Icons.error,),
                 ]),
 
                 const SizedBox(height: 16),
@@ -272,7 +272,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
             const SizedBox(height: 16),
             Text(title,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Text(
               subtitle,
@@ -291,7 +291,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
             children: [
               Text(title,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
+                      fontSize: 16, fontWeight: FontWeight.bold,),),
               const SizedBox(height: 12),
               ...children,
             ],
@@ -308,7 +308,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
             Expanded(child: Text(label, style: const TextStyle(fontSize: 14))),
             Text(value,
                 style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
           ],
         ),
       );
@@ -358,7 +358,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
               Text('Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
               const SizedBox(height: 16),
               const Text('Взносы:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold),),
               ...payment.installments.map(
                 (installment) => ListTile(
                   title: Text(_formatDate(installment.dueDate)),
@@ -372,7 +372,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -384,11 +384,11 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       builder: (context) => AlertDialog(
         title: const Text('Оплата'),
         content: const Text(
-            'Функция оплаты будет интегрирована с платежными системами.'),
+            'Функция оплаты будет интегрирована с платежными системами.',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -407,11 +407,11 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       builder: (context) => AlertDialog(
         title: const Text('Настройки предоплаты'),
         content: const Text(
-            'Настройки предоплаты будут доступны в следующих версиях.'),
+            'Настройки предоплаты будут доступны в следующих версиях.',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -441,7 +441,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка создания платежа')));
+            const SnackBar(content: Text('Ошибка создания платежа')),);
       }
     }
   }
@@ -460,12 +460,12 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Платеж выполнен успешно')));
+            const SnackBar(content: Text('Платеж выполнен успешно')),);
       } else {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка выполнения платежа')));
+            const SnackBar(content: Text('Ошибка выполнения платежа')),);
       }
     }
   }
@@ -477,13 +477,13 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Квитанция сгенерирована')));
+            const SnackBar(content: Text('Квитанция сгенерирована')),);
       }
     } else if (mounted) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Скачивание квитанции (в разработке)')));
+          const SnackBar(content: Text('Скачивание квитанции (в разработке)')),);
     }
   }
 
@@ -499,7 +499,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Скачивание счёта (в разработке)')));
+          const SnackBar(content: Text('Скачивание счёта (в разработке)')),);
     }
   }
 

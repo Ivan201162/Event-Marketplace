@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../models/specialist.dart';
 
 /// Сервис для напоминаний об обновлении цен
 class PriceReminderService {
@@ -16,7 +16,7 @@ class PriceReminderService {
           .collection('specialists')
           .where('isActive', isEqualTo: true)
           .where('lastPriceUpdateAt',
-              isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+              isLessThan: Timestamp.fromDate(thirtyDaysAgo),)
           .get();
 
       return snapshot.docs.map(Specialist.fromDocument).toList();
@@ -93,7 +93,7 @@ class PriceReminderService {
           .collection('specialists')
           .where('isActive', isEqualTo: true)
           .where('lastPriceUpdateAt',
-              isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+              isLessThan: Timestamp.fromDate(thirtyDaysAgo),)
           .get();
 
       // Специалисты, которым уже напомнили
@@ -101,7 +101,7 @@ class PriceReminderService {
           .collection('specialists')
           .where('isActive', isEqualTo: true)
           .where('lastPriceReminderAt',
-              isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
+              isGreaterThan: Timestamp.fromDate(thirtyDaysAgo),)
           .get();
 
       return {
@@ -124,7 +124,7 @@ class PriceReminderService {
       });
     } catch (e) {
       throw Exception(
-          'Ошибка обновления времени последнего обновления цен: $e');
+          'Ошибка обновления времени последнего обновления цен: $e',);
     }
   }
 
@@ -137,7 +137,7 @@ class PriceReminderService {
           .collection('specialists')
           .where('isActive', isEqualTo: true)
           .where('lastPriceUpdateAt',
-              isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+              isLessThan: Timestamp.fromDate(thirtyDaysAgo),)
           .get();
 
       return snapshot.docs.map((doc) {

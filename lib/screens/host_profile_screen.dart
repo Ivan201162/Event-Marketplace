@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/host_profile.dart';
+import 'package:event_marketplace_app/widgets/host_profile/availability_block.dart';
+import 'package:event_marketplace_app/widgets/host_profile/avatar_block.dart';
+import 'package:event_marketplace_app/widgets/host_profile/info_block.dart';
+import 'package:event_marketplace_app/widgets/host_profile/reviews_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../models/host_profile.dart';
-import '../widgets/host_profile/availability_block.dart';
-import '../widgets/host_profile/avatar_block.dart';
-import '../widgets/host_profile/info_block.dart';
-import '../widgets/host_profile/reviews_block.dart';
-
 /// Страница профиля ведущего мероприятия
 class HostProfileScreen extends StatefulWidget {
-  const HostProfileScreen({super.key, required this.hostId});
+  const HostProfileScreen({required this.hostId, super.key});
   final String hostId;
 
   @override
@@ -36,7 +35,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
 
   void _initializeAnimations() {
     _fadeController = AnimationController(
-        duration: const Duration(milliseconds: 800), vsync: this);
+        duration: const Duration(milliseconds: 800), vsync: this,);
 
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 600),
@@ -47,13 +46,13 @@ class _HostProfileScreenState extends State<HostProfileScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(
-        CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic));
+        CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),);
   }
 
   Future<void> _loadHostData() async {
@@ -125,7 +124,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
+              valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),),
           const SizedBox(height: 16),
           Text(
             'Загрузка профиля...',
@@ -198,7 +197,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
 
               // Блок с отзывами
               ReviewsBlock(
-                  reviews: _host!.reviews, onViewAllReviews: _viewAllReviews),
+                  reviews: _host!.reviews, onViewAllReviews: _viewAllReviews,),
 
               const SizedBox(height: 16),
 
@@ -275,7 +274,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция "Поделиться" будет реализована')));
+        content: Text('Функция "Поделиться" будет реализована'),),);
   }
 
   void _toggleFavorite() {
@@ -283,7 +282,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция "Избранное" будет реализована')));
+        const SnackBar(content: Text('Функция "Избранное" будет реализована')),);
   }
 
   void _showPhotoDialog() {
@@ -325,7 +324,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Переход к полному списку отзывов')));
+        const SnackBar(content: Text('Переход к полному списку отзывов')),);
   }
 
   void _selectDate(DateTime date) {
@@ -337,7 +336,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('Выбрана дата: ${_formatDate(date)}')));
+        SnackBar(content: Text('Выбрана дата: ${_formatDate(date)}')),);
   }
 
   void _contactHost() {
@@ -362,7 +361,7 @@ class _HostProfileScreenState extends State<HostProfileScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Отклик на дату: ${_formatDate(_selectedDate!)}')));
+        content: Text('Отклик на дату: ${_formatDate(_selectedDate!)}'),),);
   }
 
   String _formatDate(DateTime date) {

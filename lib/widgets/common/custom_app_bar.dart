@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Кастомная панель приложения
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.actions,
     this.leading,
     this.automaticallyImplyLeading = true,

@@ -1,8 +1,9 @@
 import 'dart:async';
+
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/firestore_providers.dart';
+import 'package:event_marketplace_app/services/anniversary_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../models/user.dart';
-import '../services/anniversary_service.dart';
-import 'firestore_providers.dart';
 
 part 'anniversary_providers.g.dart';
 
@@ -14,7 +15,7 @@ AnniversaryService anniversaryService(AnniversaryServiceRef ref) =>
 /// Провайдер информации о годовщине пользователя
 @riverpod
 Future<Map<String, dynamic>> userAnniversaryInfo(
-    UserAnniversaryInfoRef ref, String userId) async {
+    UserAnniversaryInfoRef ref, String userId,) async {
   final service = ref.watch(anniversaryServiceProvider);
 
   // Получаем пользователя из Firestore
@@ -76,11 +77,11 @@ class AnniversarySettingsNotifier extends _$AnniversarySettingsNotifier {
 /// Провайдер пользователей с годовщинами в ближайшие дни
 @riverpod
 Future<List<AppUser>> upcomingAnniversaries(
-    UpcomingAnniversariesRef ref, int daysAhead) async {
+    UpcomingAnniversariesRef ref, int daysAhead,) async {
   final service = ref.watch(anniversaryServiceProvider);
   final now = DateTime.now();
   final endDate = now.add(Duration(days: daysAhead));
 
   return service.getUsersWithAnniversariesInPeriod(
-      startDate: now, endDate: endDate);
+      startDate: now, endDate: endDate,);
 }

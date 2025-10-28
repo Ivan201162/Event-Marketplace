@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 
 /// Loading overlay widget
 class LoadingOverlay extends StatelessWidget {
+
+  const LoadingOverlay({
+    required this.isLoading, required this.child, super.key,
+    this.loadingText,
+  });
   final bool isLoading;
   final Widget child;
   final String? loadingText;
-
-  const LoadingOverlay({
-    super.key,
-    required this.isLoading,
-    required this.child,
-    this.loadingText,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +17,7 @@ class LoadingOverlay extends StatelessWidget {
       children: [
         child,
         if (isLoading)
-          Container(
+          ColoredBox(
             color: Colors.black.withValues(alpha: 0.3),
             child: Center(
               child: Container(

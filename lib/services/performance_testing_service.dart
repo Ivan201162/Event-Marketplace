@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'error_logging_service.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
 
 /// Сервис для тестирования производительности
 class PerformanceTestingService {
@@ -17,7 +17,7 @@ class PerformanceTestingService {
 
   /// Тестировать производительность ленты
   Future<Map<String, dynamic>> testFeedPerformance(
-      {int postsCount = 10, String? userId}) async {
+      {int postsCount = 10, String? userId,}) async {
     final stopwatch = Stopwatch()..start();
 
     try {
@@ -86,7 +86,7 @@ class PerformanceTestingService {
 
   /// Тестировать производительность чатов
   Future<Map<String, dynamic>> testChatsPerformance(
-      {int chatsCount = 5, String? userId}) async {
+      {int chatsCount = 5, String? userId,}) async {
     final stopwatch = Stopwatch()..start();
 
     try {
@@ -362,7 +362,7 @@ class PerformanceTestingService {
       );
 
       developer.log(
-          'Full performance test completed in ${stopwatch.elapsedMilliseconds}ms');
+          'Full performance test completed in ${stopwatch.elapsedMilliseconds}ms',);
       return results;
     } catch (e, stackTrace) {
       stopwatch.stop();
@@ -387,7 +387,7 @@ class PerformanceTestingService {
 
   /// Получить статистику производительности
   Future<Map<String, dynamic>> getPerformanceStats(
-      {DateTime? startDate, DateTime? endDate}) async {
+      {DateTime? startDate, DateTime? endDate,}) async {
     try {
       Query query = _firestore.collection('performance_logs');
 

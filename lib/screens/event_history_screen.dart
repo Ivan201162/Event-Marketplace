@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/booking_status.dart';
+import 'package:event_marketplace_app/providers/auth_provider.dart';
+import 'package:event_marketplace_app/services/firestore_service.dart';
+import 'package:event_marketplace_app/widgets/booking_card.dart';
+import 'package:event_marketplace_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../models/booking.dart';
-import '../models/booking_status.dart';
-import '../providers/auth_provider.dart';
-import '../services/firestore_service.dart';
-import '../widgets/booking_card.dart';
-import '../widgets/loading_widget.dart';
 
 class EventHistoryScreen extends StatefulWidget {
   const EventHistoryScreen({super.key});
@@ -63,15 +62,15 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(
-                    value: 'all', child: Text('Все мероприятия')),
+                    value: 'all', child: Text('Все мероприятия'),),
                 const PopupMenuItem(
-                    value: 'this_month', child: Text('Этот месяц')),
+                    value: 'this_month', child: Text('Этот месяц'),),
                 const PopupMenuItem(
-                    value: 'last_month', child: Text('Прошлый месяц')),
+                    value: 'last_month', child: Text('Прошлый месяц'),),
                 const PopupMenuItem(
-                    value: 'this_year', child: Text('Этот год')),
+                    value: 'this_year', child: Text('Этот год'),),
                 const PopupMenuItem(
-                    value: 'date_range', child: Text('Выбрать период')),
+                    value: 'date_range', child: Text('Выбрать период'),),
               ],
             ),
             PopupMenuButton<String>(
@@ -83,13 +82,13 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(
-                    value: 'date_desc', child: Text('По дате (новые)')),
+                    value: 'date_desc', child: Text('По дате (новые)'),),
                 const PopupMenuItem(
-                    value: 'date_asc', child: Text('По дате (старые)')),
+                    value: 'date_asc', child: Text('По дате (старые)'),),
                 const PopupMenuItem(
-                    value: 'price_desc', child: Text('По цене (убывание)')),
+                    value: 'price_desc', child: Text('По цене (убывание)'),),
                 const PopupMenuItem(
-                    value: 'price_asc', child: Text('По цене (возрастание)')),
+                    value: 'price_asc', child: Text('По цене (возрастание)'),),
               ],
             ),
           ],
@@ -181,7 +180,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
               itemBuilder: (context, index) {
                 final booking = bookings[index];
                 return BookingCard(
-                    booking: booking, onTap: () => _showEventDetails(booking));
+                    booking: booking, onTap: () => _showEventDetails(booking),);
               },
             ),
           );
@@ -196,11 +195,9 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
       case 'completed':
         message = 'Нет завершенных мероприятий';
         icon = Icons.done_all;
-        break;
       case 'cancelled':
         message = 'Нет отмененных мероприятий';
         icon = Icons.cancel;
-        break;
       default:
         message = 'История мероприятий пуста';
         icon = Icons.history;
@@ -213,7 +210,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
           Text(message,
-              style: const TextStyle(fontSize: 18, color: Colors.grey)),
+              style: const TextStyle(fontSize: 18, color: Colors.grey),),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
@@ -240,15 +237,12 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
       case 'this_month':
         startDate = DateTime(now.year, now.month);
         endDate = DateTime(now.year, now.month + 1, 0);
-        break;
       case 'last_month':
         startDate = DateTime(now.year, now.month - 1);
         endDate = DateTime(now.year, now.month, 0);
-        break;
       case 'this_year':
         startDate = DateTime(now.year);
         endDate = DateTime(now.year, 12, 31);
-        break;
       default:
         if (_startDate != null && _endDate != null) {
           startDate = _startDate!;
@@ -269,16 +263,12 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
     switch (sortOption) {
       case 'date_desc':
         bookings.sort((a, b) => b.eventDate.compareTo(a.eventDate));
-        break;
       case 'date_asc':
         bookings.sort((a, b) => a.eventDate.compareTo(b.eventDate));
-        break;
       case 'price_desc':
         bookings.sort((a, b) => b.totalPrice.compareTo(a.totalPrice));
-        break;
       case 'price_asc':
         bookings.sort((a, b) => a.totalPrice.compareTo(b.totalPrice));
-        break;
     }
     return bookings;
   }
@@ -346,14 +336,14 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
                       booking.status.name,
                       style: TextStyle(
                           color: booking.status.color,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               _buildDetailRow(Icons.person, 'Специалист',
-                  booking.specialistName ?? 'Не указан'),
+                  booking.specialistName ?? 'Не указан',),
               _buildDetailRow(
                 Icons.calendar_today,
                 'Дата',
@@ -372,7 +362,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
                 '${booking.totalPrice.toStringAsFixed(0)} ₽',
               ),
               _buildDetailRow(Icons.payment, 'Аванс',
-                  '${booking.prepayment.toStringAsFixed(0)} ₽'),
+                  '${booking.prepayment.toStringAsFixed(0)} ₽',),
               _buildDetailRow(
                 Icons.schedule,
                 'Создано',
@@ -382,7 +372,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
                 const SizedBox(height: 16),
                 const Text('Описание',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
                 const SizedBox(height: 8),
                 Text(booking.description!),
               ],
@@ -403,7 +393,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
                       Text(
                         'Мероприятие успешно завершено',
                         style: TextStyle(
-                            color: Colors.green, fontWeight: FontWeight.w500),
+                            color: Colors.green, fontWeight: FontWeight.w500,),
                       ),
                     ],
                   ),
@@ -425,7 +415,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
                       Text(
                         'Мероприятие отменено',
                         style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.w500),
+                            color: Colors.red, fontWeight: FontWeight.w500,),
                       ),
                     ],
                   ),
@@ -444,7 +434,7 @@ class _EventHistoryScreenState extends State<EventHistoryScreen>
             Icon(icon, size: 20, color: Colors.grey[600]),
             const SizedBox(width: 12),
             Text('$label: ',
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
             Expanded(child: Text(value)),
           ],
         ),

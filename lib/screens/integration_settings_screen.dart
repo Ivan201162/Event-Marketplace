@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/screens/connection_settings_screen.dart';
+import 'package:event_marketplace_app/screens/integrations_screen.dart';
+import 'package:event_marketplace_app/screens/location_settings_screen.dart';
+import 'package:event_marketplace_app/screens/sharing_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'connection_settings_screen.dart';
-import 'integrations_screen.dart';
-import 'location_settings_screen.dart';
-import 'sharing_settings_screen.dart';
 
 /// Экран настроек интеграций
 class IntegrationSettingsScreen extends ConsumerWidget {
@@ -32,7 +31,7 @@ class IntegrationSettingsScreen extends ConsumerWidget {
                   title: 'Геолокация',
                   subtitle: 'Настройки определения местоположения',
                   onTap: () => _navigateToScreen(
-                      context, const LocationSettingsScreen()),
+                      context, const LocationSettingsScreen(),),
                 ),
                 _buildSettingsTile(
                   icon: Icons.share,
@@ -46,7 +45,7 @@ class IntegrationSettingsScreen extends ConsumerWidget {
                   title: 'Подключение',
                   subtitle: 'Настройки сетевого подключения',
                   onTap: () => _navigateToScreen(
-                      context, const ConnectionSettingsScreen()),
+                      context, const ConnectionSettingsScreen(),),
                 ),
               ],
             ),
@@ -161,13 +160,13 @@ class IntegrationSettingsScreen extends ConsumerWidget {
       );
 
   Widget _buildSection(
-          {required String title, required List<Widget> children}) =>
+          {required String title, required List<Widget> children,}) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           ...children,
         ],
@@ -193,9 +192,9 @@ class IntegrationSettingsScreen extends ConsumerWidget {
           ),
           title: Text(title,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           subtitle: Text(subtitle,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
           trailing: const Icon(Icons.chevron_right),
           onTap: onTap,
         ),
@@ -212,11 +211,11 @@ class IntegrationSettingsScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Скоро будет доступно'),
         content: Text(
-            'Функция "$feature" будет доступна в следующих обновлениях приложения.'),
+            'Функция "$feature" будет доступна в следующих обновлениях приложения.',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Понятно')),
+              child: const Text('Понятно'),),
         ],
       ),
     );

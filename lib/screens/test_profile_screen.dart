@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/features/specialists/presentation/create_test_specialist_button.dart';
+import 'package:event_marketplace_app/screens/specialist_profile_instagram_screen.dart';
+import 'package:event_marketplace_app/services/test_data_service.dart';
 import 'package:flutter/material.dart';
-
-import '../features/specialists/presentation/create_test_specialist_button.dart';
-import '../services/test_data_service.dart';
-import 'specialist_profile_instagram_screen.dart';
 
 class TestProfileScreen extends StatefulWidget {
   const TestProfileScreen({super.key});
@@ -103,7 +102,7 @@ class _TestProfileScreenState extends State<TestProfileScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Тестовые данные очищены'),
-              backgroundColor: Colors.orange),
+              backgroundColor: Colors.orange,),
         );
       }
     } catch (e) {
@@ -127,7 +126,7 @@ class _TestProfileScreenState extends State<TestProfileScreen> {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (context) => SpecialistProfileInstagramScreen(
-              specialistId: _testSpecialistId!),
+              specialistId: _testSpecialistId!,),
         ),
       );
     }
@@ -160,7 +159,7 @@ class _TestProfileScreenState extends State<TestProfileScreen> {
                       Text(
                         'Функционал профиля:',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                       SizedBox(height: 8),
                       Text('• Шапка профиля с фото и информацией'),
@@ -258,7 +257,7 @@ class _TestProfileScreenState extends State<TestProfileScreen> {
                     children: [
                       Text('Инструкция:',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                              fontSize: 16, fontWeight: FontWeight.bold,),),
                       SizedBox(height: 8),
                       Text('1. Создайте тестового специалиста'),
                       Text('2. Нажмите "Посмотреть профиль"'),

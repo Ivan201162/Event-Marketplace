@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/specialist_schedule.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/calendar_providers.dart';
+import 'package:event_marketplace_app/widgets/calendar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_schedule.dart';
-import '../providers/auth_providers.dart';
-import '../providers/calendar_providers.dart';
-import '../widgets/calendar_widget.dart';
 
 class SpecialistCalendarScreen extends ConsumerStatefulWidget {
   const SpecialistCalendarScreen({super.key});
@@ -43,7 +42,7 @@ class _SpecialistCalendarScreenState
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => _showAddEventDialog(context)),
+              onPressed: () => _showAddEventDialog(context),),
           IconButton(
             icon: const Icon(Icons.analytics),
             onPressed: () => _showAnalyticsDialog(context),
@@ -153,13 +152,13 @@ class _SpecialistCalendarScreenState
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatItem(
-                        context, 'Всего событий', totalEvents, Colors.blue),
+                        context, 'Всего событий', totalEvents, Colors.blue,),
                     _buildStatItem(
-                        context, 'Бронирования', bookingEvents, Colors.green),
+                        context, 'Бронирования', bookingEvents, Colors.green,),
                     _buildStatItem(context, 'Недоступность', unavailableEvents,
-                        Colors.red),
+                        Colors.red,),
                     _buildStatItem(
-                        context, 'Отпуск', vacationEvents, Colors.orange),
+                        context, 'Отпуск', vacationEvents, Colors.orange,),
                   ],
                 );
               },
@@ -174,17 +173,17 @@ class _SpecialistCalendarScreenState
 
   /// Элемент статистики
   Widget _buildStatItem(
-          BuildContext context, String label, int count, Color color) =>
+          BuildContext context, String label, int count, Color color,) =>
       Column(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+                color: color.withValues(alpha: 0.1), shape: BoxShape.circle,),
             child: Text(
               count.toString(),
               style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: color,),
             ),
           ),
           const SizedBox(height: 8),
@@ -272,7 +271,7 @@ class _SpecialistCalendarScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -312,7 +311,7 @@ class _SpecialistCalendarScreenState
                 TextField(
                   controller: descriptionController,
                   decoration: const InputDecoration(
-                      labelText: 'Описание (необязательно)'),
+                      labelText: 'Описание (необязательно)',),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
@@ -360,7 +359,7 @@ class _SpecialistCalendarScreenState
           actions: [
             TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             ElevatedButton(
               onPressed: () async {
                 if (titleController.text.isEmpty ||
@@ -369,7 +368,7 @@ class _SpecialistCalendarScreenState
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(const SnackBar(
-                      content: Text('Заполните все обязательные поля')));
+                      content: Text('Заполните все обязательные поля'),),);
                   return;
                 }
 
@@ -390,7 +389,7 @@ class _SpecialistCalendarScreenState
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(const SnackBar(
-                        content: Text('Недоступность добавлена')));
+                        content: Text('Недоступность добавлена'),),);
                   }
                 } on Exception catch (e) {
                   if (context.mounted) {
@@ -435,7 +434,7 @@ class _SpecialistCalendarScreenState
                 TextField(
                   controller: descriptionController,
                   decoration: const InputDecoration(
-                      labelText: 'Описание (необязательно)'),
+                      labelText: 'Описание (необязательно)',),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
@@ -483,7 +482,7 @@ class _SpecialistCalendarScreenState
           actions: [
             TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             ElevatedButton(
               onPressed: () async {
                 if (titleController.text.isEmpty ||
@@ -492,7 +491,7 @@ class _SpecialistCalendarScreenState
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(const SnackBar(
-                      content: Text('Заполните все обязательные поля')));
+                      content: Text('Заполните все обязательные поля'),),);
                   return;
                 }
 
@@ -511,7 +510,7 @@ class _SpecialistCalendarScreenState
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(
-                        const SnackBar(content: Text('Отпуск добавлен')));
+                        const SnackBar(content: Text('Отпуск добавлен')),);
                   }
                 } on Exception catch (e) {
                   if (context.mounted) {
@@ -540,7 +539,7 @@ class _SpecialistCalendarScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               try {
@@ -552,7 +551,7 @@ class _SpecialistCalendarScreenState
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(const SnackBar(
-                      content: Text('Тестовые данные добавлены')));
+                      content: Text('Тестовые данные добавлены'),),);
                 }
               } on Exception catch (e) {
                 if (context.mounted) {
@@ -578,11 +577,11 @@ class _SpecialistCalendarScreenState
       builder: (context) => AlertDialog(
         title: const Text('Аналитика календаря'),
         content: const Text(
-            'Здесь будет отображаться аналитика календаря специалиста'),
+            'Здесь будет отображаться аналитика календаря специалиста',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

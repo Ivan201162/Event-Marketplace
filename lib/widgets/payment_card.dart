@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/payment.dart';
 import 'package:flutter/material.dart';
-
-import '../models/payment.dart';
 
 /// Widget for displaying a payment card
 class PaymentCard extends StatelessWidget {
+
+  const PaymentCard({required this.payment, super.key, this.onTap});
   final Payment payment;
   final VoidCallback? onTap;
-
-  const PaymentCard({super.key, required this.payment, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +76,7 @@ class PaymentCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
+                            horizontal: 8, vertical: 2,),
                         decoration: BoxDecoration(
                           color: _getStatusColor(payment.status)
                               .withValues(alpha: 0.1),
@@ -183,7 +182,7 @@ class PaymentCard extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(Icons.error_outline,
-                          size: 16, color: Colors.red[700]),
+                          size: 16, color: Colors.red[700],),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(

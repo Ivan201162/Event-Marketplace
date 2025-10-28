@@ -9,12 +9,7 @@ class ChatAttachment {
     required this.fileName,
     required this.originalFileName,
     required this.fileUrl,
-    this.thumbnailUrl,
-    required this.type,
-    required this.fileSize,
-    required this.mimeType,
-    required this.uploadedAt,
-    required this.uploadedBy,
+    required this.type, required this.fileSize, required this.mimeType, required this.uploadedAt, required this.uploadedBy, this.thumbnailUrl,
     this.metadata,
   });
 

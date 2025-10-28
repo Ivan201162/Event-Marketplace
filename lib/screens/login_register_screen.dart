@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/radio_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/user.dart';
-import '../providers/auth_providers.dart';
-import '../widgets/radio_group.dart';
 
 class LoginRegisterScreen extends ConsumerStatefulWidget {
   const LoginRegisterScreen({super.key});
@@ -80,7 +79,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(Icons.event,
-                size: 40, color: Theme.of(context).colorScheme.onPrimary),
+                size: 40, color: Theme.of(context).colorScheme.onPrimary,),
           ),
           const SizedBox(height: 24),
           Text(
@@ -181,7 +180,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Роль',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           const SizedBox(height: 8),
           RadioGroup<UserRole>(
             value: _selectedRole,
@@ -269,7 +268,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             ? const SizedBox(
                 height: 20,
                 width: 20,
-                child: CircularProgressIndicator(strokeWidth: 2))
+                child: CircularProgressIndicator(strokeWidth: 2),)
             : Text(
                 _isSignUpMode ? 'Зарегистрироваться' : 'Войти',
                 style:
@@ -290,14 +289,14 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             },
             child: Text(_isSignUpMode
                 ? 'Уже есть аккаунт? Войти'
-                : 'Нет аккаунта? Зарегистрироваться'),
+                : 'Нет аккаунта? Зарегистрироваться',),
           ),
 
           // Сброс пароля
           if (!_isSignUpMode) ...[
             TextButton(
                 onPressed: _showResetPasswordDialog,
-                child: const Text('Забыли пароль?')),
+                child: const Text('Забыли пароль?'),),
           ],
         ],
       );
@@ -327,7 +326,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             child: Text(
               message,
               style: TextStyle(
-                  color: isSuccess ? Colors.green : Colors.red, fontSize: 14),
+                  color: isSuccess ? Colors.green : Colors.red, fontSize: 14,),
             ),
           ),
         ],
@@ -339,7 +338,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   Widget _buildDivider(BuildContext context) => Row(
         children: [
           Expanded(
-              child: Divider(color: Theme.of(context).colorScheme.outline)),
+              child: Divider(color: Theme.of(context).colorScheme.outline),),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
@@ -348,11 +347,11 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withValues(alpha: 0.6)),
+                      .withValues(alpha: 0.6),),
             ),
           ),
           Expanded(
-              child: Divider(color: Theme.of(context).colorScheme.outline)),
+              child: Divider(color: Theme.of(context).colorScheme.outline),),
         ],
       );
 
@@ -387,7 +386,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),),
               ),
             ),
           ),
@@ -403,14 +402,14 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                 width: 20,
                 height: 20,
                 decoration: const BoxDecoration(
-                    color: Color(0xFF0077FF), shape: BoxShape.circle),
+                    color: Color(0xFF0077FF), shape: BoxShape.circle,),
                 child: const Center(
                   child: Text(
                     'VK',
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 10,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,),
                   ),
                 ),
               ),
@@ -418,7 +417,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),),
               ),
             ),
           ),
@@ -433,7 +432,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           icon: const Icon(Icons.login),
           label: const Text('Войти через Google'),
           style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12)),
+              padding: const EdgeInsets.symmetric(vertical: 12),),
         ),
       );
 
@@ -513,13 +512,13 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Добро пожаловать!'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         context.go('/home');
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Ошибка входа через Google: ${e.toString()}';
+        _errorMessage = 'Ошибка входа через Google: $e';
       });
     } finally {
       if (mounted) {
@@ -552,14 +551,14 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
-                  labelText: 'Email', border: OutlineInputBorder()),
+                  labelText: 'Email', border: OutlineInputBorder(),),
             ),
           ],
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               try {
@@ -581,7 +580,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text('Ошибка: $e'),
-                        backgroundColor: Colors.red),
+                        backgroundColor: Colors.red,),
                   );
                 }
               }

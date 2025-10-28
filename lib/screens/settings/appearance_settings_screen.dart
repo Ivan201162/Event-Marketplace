@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
+import 'package:event_marketplace_app/services/user_profile_service.dart';
+import 'package:event_marketplace_app/widgets/appearance/theme_preview_widget.dart';
+import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
+import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
-import '../../services/user_profile_service.dart';
-import '../../widgets/common/custom_app_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
-import '../../widgets/appearance/theme_preview_widget.dart';
 
 /// Экран настроек внешнего вида
 class AppearanceSettingsScreen extends StatefulWidget {
@@ -210,7 +210,7 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
                       setState(() => _selectedTheme = value);
                     }
                   },
-                )),
+                ),),
           ],
         ),
       ),
@@ -239,7 +239,7 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
                       setState(() => _selectedFontSize = value);
                     }
                   },
-                )),
+                ),),
           ],
         ),
       ),
@@ -268,7 +268,7 @@ class _AppearanceSettingsScreenState extends State<AppearanceSettingsScreen> {
                       setState(() => _selectedTabPosition = value);
                     }
                   },
-                )),
+                ),),
           ],
         ),
       ),

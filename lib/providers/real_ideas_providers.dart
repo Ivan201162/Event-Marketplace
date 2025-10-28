@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/idea.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/idea.dart';
-import '../core/feature_flags.dart';
 
 /// Провайдеры для реальных данных идей
 class RealIdeasProviders {
@@ -87,7 +87,7 @@ class RealIdeasProviders {
     final snapshot = await FirebaseFirestore.instance
         .collection('ideas')
         .where('title', isGreaterThanOrEqualTo: query)
-        .where('title', isLessThanOrEqualTo: query + '\uf8ff')
+        .where('title', isLessThanOrEqualTo: '$query\uf8ff')
         .orderBy('title')
         .orderBy('createdAt', descending: true)
         .limit(20)

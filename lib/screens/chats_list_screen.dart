@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
 
 /// Экран списка чатов
 class ChatsListScreen extends ConsumerStatefulWidget {
@@ -77,7 +76,7 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Ошибка загрузки чатов',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -86,7 +85,7 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadChats, child: const Text('Повторить')),
+                onPressed: _loadChats, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -100,7 +99,7 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
             Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Нет сообщений',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Начните общение с другими пользователями',
@@ -141,7 +140,7 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
             : null,
       ),
       title: Text(chat.otherUser.name,
-          style: const TextStyle(fontWeight: FontWeight.w600)),
+          style: const TextStyle(fontWeight: FontWeight.w600),),
       subtitle: chat.lastMessage != null
           ? Text(
               chat.lastMessage!,

@@ -1,16 +1,15 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/media_item.dart';
+import 'package:event_marketplace_app/services/upload_service.dart';
+import 'package:event_marketplace_app/utils/storage_guard.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/media_item.dart';
-import '../utils/storage_guard.dart';
-import 'upload_service.dart';
 
 /// Сервис для работы с медиафайлами в профиле специалиста
 class MediaService {
@@ -207,7 +206,7 @@ class MediaService {
           .set(mediaItem.toMap());
 
       SafeLog.info(
-          'MediaService: Media uploaded successfully: ${mediaItem.id}');
+          'MediaService: Media uploaded successfully: ${mediaItem.id}',);
       return mediaItem;
     } on Exception catch (e) {
       SafeLog.error('MediaService: Error uploading media file: $e');
@@ -308,7 +307,7 @@ class MediaService {
 
   /// Обновить информацию о медиафайле
   Future<void> updateMedia(String mediaId,
-      {String? title, String? description}) async {
+      {String? title, String? description,}) async {
     try {
       SafeLog.info('MediaService: Updating media: $mediaId');
 

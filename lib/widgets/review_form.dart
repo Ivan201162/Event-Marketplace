@@ -1,16 +1,13 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/review_providers.dart';
+import 'package:event_marketplace_app/widgets/rating_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/review.dart';
-import '../providers/review_providers.dart';
-import 'rating_widget.dart';
 
 /// Форма для добавления отзыва
 class ReviewForm extends ConsumerStatefulWidget {
   const ReviewForm({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.onReviewSubmitted,
     this.initialReview,
   });
@@ -84,10 +81,10 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
                 ),
                 const SizedBox(height: 16),
                 RatingSelectorWidget(
-                  rating: _rating.toDouble(),
+                  rating: _rating,
                   onRatingChanged: (rating) {
                     setState(() {
-                      _rating = rating.toDouble();
+                      _rating = rating;
                     });
                   },
                   starSize: 40,
@@ -95,7 +92,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
                 const SizedBox(height: 8),
                 if (_rating > 0)
                   Text(
-                    _getRatingText(_rating.toDouble()),
+                    _getRatingText(_rating),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.primaryColor,
                       fontWeight: FontWeight.w500,
@@ -196,7 +193,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Пожалуйста, выберите оценку'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
       return;
     }
@@ -249,7 +246,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           SnackBar(
             content: Text(widget.initialReview != null
                 ? 'Отзыв обновлен'
-                : 'Отзыв добавлен'),
+                : 'Отзыв добавлен',),
             backgroundColor: Colors.green,
           ),
         );
@@ -259,7 +256,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {
@@ -274,9 +271,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
 /// Диалог для добавления отзыва
 class ReviewFormDialog extends StatelessWidget {
   const ReviewFormDialog({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.onReviewSubmitted,
     this.initialReview,
   });

@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/event_idea_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../models/event_idea.dart';
-import '../providers/auth_providers.dart';
-import '../services/event_idea_service.dart';
 
 /// Диалог создания идеи мероприятия
 class CreateIdeaDialog extends ConsumerStatefulWidget {
@@ -109,7 +108,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
                     ),
                     items: _categories
                         .map((category) => DropdownMenuItem(
-                            value: category, child: Text(category)))
+                            value: category, child: Text(category),),)
                         .toList(),
                     onChanged: (value) {
                       setState(() {
@@ -153,7 +152,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(_error!,
-                                style: TextStyle(color: Colors.red[600])),
+                                style: TextStyle(color: Colors.red[600]),),
                           ),
                         ],
                       ),
@@ -187,7 +186,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Изображения',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           if (_selectedImages.isEmpty) ...[
             Row(
@@ -248,7 +247,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(Icons.close,
-                                  color: Colors.white, size: 12),
+                                  color: Colors.white, size: 12,),
                             ),
                           ),
                         ),
@@ -281,7 +280,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Дополнительная информация',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+              style: TextStyle(fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -332,7 +331,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
                 child: TextFormField(
                   controller: _locationController,
                   decoration: const InputDecoration(
-                      labelText: 'Место', border: OutlineInputBorder()),
+                      labelText: 'Место', border: OutlineInputBorder(),),
                 ),
               ),
             ],
@@ -444,7 +443,7 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Идея создана'), backgroundColor: Colors.green),
+              content: Text('Идея создана'), backgroundColor: Colors.green,),
         );
       }
     } catch (e) {

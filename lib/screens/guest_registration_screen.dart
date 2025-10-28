@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/guest.dart';
+import 'package:event_marketplace_app/services/guest_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/guest.dart';
-import '../services/guest_service.dart';
 
 /// Экран регистрации гостей
 class GuestRegistrationScreen extends ConsumerStatefulWidget {
-  const GuestRegistrationScreen({super.key, required this.eventId});
+  const GuestRegistrationScreen({required this.eventId, super.key});
   final String eventId;
 
   @override
@@ -98,7 +98,7 @@ class _GuestRegistrationScreenState
                     child: Text(
                       _event!.title,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ],
@@ -129,7 +129,7 @@ class _GuestRegistrationScreenState
                   const SizedBox(width: 8),
                   Expanded(
                       child: Text(_event!.location,
-                          style: const TextStyle(fontSize: 14))),
+                          style: const TextStyle(fontSize: 14),),),
                 ],
               ),
 
@@ -179,7 +179,7 @@ class _GuestRegistrationScreenState
               children: [
                 const Text('Данные гостя',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
 
                 const SizedBox(height: 16),
 
@@ -257,7 +257,7 @@ class _GuestRegistrationScreenState
                             'Информация о регистрации',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue),
+                                color: Colors.blue,),
                           ),
                         ],
                       ),
@@ -287,7 +287,7 @@ class _GuestRegistrationScreenState
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Событие не найдено'), backgroundColor: Colors.red),
+              content: Text('Событие не найдено'), backgroundColor: Colors.red,),
         );
         Navigator.pop(context);
       }
@@ -295,7 +295,7 @@ class _GuestRegistrationScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки события: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
       Navigator.pop(context);
     }
@@ -340,7 +340,7 @@ class _GuestRegistrationScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() {
         _isLoading = false;

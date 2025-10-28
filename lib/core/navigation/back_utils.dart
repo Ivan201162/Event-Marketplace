@@ -51,7 +51,7 @@ class BackUtils {
 /// Виджет для правильной обработки системной кнопки "Назад"
 class BackButtonHandler extends StatelessWidget {
   const BackButtonHandler(
-      {super.key, required this.child, this.canPop = true, this.onBackPressed});
+      {required this.child, super.key, this.canPop = true, this.onBackPressed,});
   final Widget child;
   final bool canPop;
   final VoidCallback? onBackPressed;
@@ -74,7 +74,7 @@ class BackButtonHandler extends StatelessWidget {
 
 /// Виджет для экранов, которые должны закрывать приложение при нажатии "Назад"
 class ExitAppHandler extends StatelessWidget {
-  const ExitAppHandler({super.key, required this.child});
+  const ExitAppHandler({required this.child, super.key});
   final Widget child;
 
   @override
@@ -91,7 +91,7 @@ class ExitAppHandler extends StatelessWidget {
 
 /// Виджет для экранов с кастомной логикой обработки "Назад"
 class CustomBackHandler extends StatelessWidget {
-  const CustomBackHandler({super.key, required this.child, this.onWillPop});
+  const CustomBackHandler({required this.child, super.key, this.onWillPop});
   final Widget child;
   final Future<bool> Function()? onWillPop;
 

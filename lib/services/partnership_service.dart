@@ -1,9 +1,8 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/partnership_program.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/partnership_program.dart';
 
 class PartnershipService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,10 +29,10 @@ class PartnershipService {
     String? notes,
   }) async {
     try {
-      final String partnerId = _uuid.v4();
-      final String partnerCode = _generatePartnerCode();
+      final partnerId = _uuid.v4();
+      final partnerCode = _generatePartnerCode();
 
-      final Partner partner = Partner(
+      final partner = Partner(
         id: partnerId,
         name: name,
         email: email,
@@ -76,15 +75,15 @@ class PartnershipService {
 
   /// Генерация уникального кода партнёра
   String _generatePartnerCode() {
-    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
 
     String code;
-    bool isUnique = false;
+    var isUnique = false;
 
     do {
       code = '';
-      for (int i = 0; i < 8; i++) {
+      for (var i = 0; i < 8; i++) {
         code += chars[random.nextInt(chars.length)];
       }
 
@@ -98,17 +97,17 @@ class PartnershipService {
   /// Создание начальной статистики партнёра
   Future<void> _createPartnerStats(String partnerId) async {
     try {
-      final PartnerStats stats = PartnerStats(
+      final stats = PartnerStats(
         partnerId: partnerId,
         period: _getCurrentPeriod(),
         totalReferrals: 0,
         totalTransactions: 0,
-        totalRevenue: 0.0,
-        totalCommissions: 0.0,
-        paidCommissions: 0.0,
-        pendingCommissions: 0.0,
-        conversionRate: 0.0,
-        averageOrderValue: 0.0,
+        totalRevenue: 0,
+        totalCommissions: 0,
+        paidCommissions: 0,
+        pendingCommissions: 0,
+        conversionRate: 0,
+        averageOrderValue: 0,
         updatedAt: DateTime.now(),
       );
 
@@ -118,13 +117,13 @@ class PartnershipService {
           .set(stats.toMap());
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to create partner stats: $e');
+          'ERROR: [PartnershipService] Failed to create partner stats: $e',);
     }
   }
 
   /// Получение текущего периода
   String _getCurrentPeriod() {
-    final DateTime now = DateTime.now();
+    final now = DateTime.now();
     return '${now.year}-${now.month.toString().padLeft(2, '0')}';
   }
 
@@ -173,29 +172,29 @@ class PartnershipService {
           .collection('partners')
           .where('partnerCode', isEqualTo: partnerCode)
           .where('status',
-              isEqualTo: PartnershipStatus.active.toString().split('.').last)
+              isEqualTo: PartnershipStatus.active.toString().split('.').last,)
           .limit(1)
           .get();
 
       if (partnerSnapshot.docs.isEmpty) {
         debugPrint(
-            'WARNING: [PartnershipService] Partner not found or inactive: $partnerCode');
+            'WARNING: [PartnershipService] Partner not found or inactive: $partnerCode',);
         return;
       }
 
-      final Partner partner = Partner.fromMap(
-        partnerSnapshot.docs.first.data() as Map<String, dynamic>,
+      final partner = Partner.fromMap(
+        partnerSnapshot.docs.first.data()! as Map<String, dynamic>,
       );
 
       // Рассчитываем комиссию
-      final double commissionAmount = _calculateCommission(
+      final commissionAmount = _calculateCommission(
         amount: amount,
         commissionRate: partner.commissionRate,
         commissionType: partner.commissionType,
       );
 
       // Создаем партнёрскую транзакцию
-      final PartnerTransaction partnerTransaction = PartnerTransaction(
+      final partnerTransaction = PartnerTransaction(
         id: _uuid.v4(),
         partnerId: partner.id,
         transactionId: transactionId,
@@ -222,7 +221,7 @@ class PartnershipService {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to register user via partner: $e');
+          'ERROR: [PartnershipService] Failed to register user via partner: $e',);
     }
   }
 
@@ -251,10 +250,10 @@ class PartnershipService {
 
   /// Обновление статистики партнёра
   Future<void> _updatePartnerStats(
-      String partnerId, double amount, double commission) async {
+      String partnerId, double amount, double commission,) async {
     try {
-      final String period = _getCurrentPeriod();
-      final String statsId = '${partnerId}_$period';
+      final period = _getCurrentPeriod();
+      final statsId = '${partnerId}_$period';
 
       await _firestore.collection('partner_stats').doc(statsId).set({
         'partnerId': partnerId,
@@ -264,13 +263,13 @@ class PartnershipService {
         'totalCommissions': FieldValue.increment(commission),
         'pendingCommissions': FieldValue.increment(commission),
         'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
 
       debugPrint(
-          'INFO: [PartnershipService] Partner stats updated: $partnerId');
+          'INFO: [PartnershipService] Partner stats updated: $partnerId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to update partner stats: $e');
+          'ERROR: [PartnershipService] Failed to update partner stats: $e',);
     }
   }
 
@@ -281,34 +280,34 @@ class PartnershipService {
           .collection('partners')
           .where('partnerCode', isEqualTo: partnerCode)
           .where('status',
-              isEqualTo: PartnershipStatus.active.toString().split('.').last)
+              isEqualTo: PartnershipStatus.active.toString().split('.').last,)
           .limit(1)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
         return Partner.fromMap(
-            snapshot.docs.first.data() as Map<String, dynamic>);
+            snapshot.docs.first.data()! as Map<String, dynamic>,);
       }
       return null;
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to get partner by code: $e');
+          'ERROR: [PartnershipService] Failed to get partner by code: $e',);
       return null;
     }
   }
 
   /// Получение статистики партнёра
   Future<PartnerStats?> getPartnerStats(String partnerId,
-      {String? period}) async {
+      {String? period,}) async {
     try {
-      final String statsPeriod = period ?? _getCurrentPeriod();
-      final String statsId = '${partnerId}_$statsPeriod';
+      final statsPeriod = period ?? _getCurrentPeriod();
+      final statsId = '${partnerId}_$statsPeriod';
 
       final DocumentSnapshot doc =
           await _firestore.collection('partner_stats').doc(statsId).get();
 
       if (doc.exists) {
-        return PartnerStats.fromMap(doc.data() as Map<String, dynamic>);
+        return PartnerStats.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -333,21 +332,21 @@ class PartnershipService {
 
       if (startDate != null) {
         query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
-      final QuerySnapshot snapshot = await query.get();
+      final snapshot = await query.get();
       return snapshot.docs
           .map((doc) =>
-              PartnerTransaction.fromMap(doc.data() as Map<String, dynamic>))
+              PartnerTransaction.fromMap(doc.data()! as Map<String, dynamic>),)
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to get partner transactions: $e');
+          'ERROR: [PartnershipService] Failed to get partner transactions: $e',);
       return [];
     }
   }
@@ -362,7 +361,7 @@ class PartnershipService {
     List<String>? transactionIds,
   }) async {
     try {
-      final PartnerPayment payment = PartnerPayment(
+      final payment = PartnerPayment(
         id: _uuid.v4(),
         partnerId: partnerId,
         amount: amount,
@@ -404,11 +403,11 @@ class PartnershipService {
       });
 
       debugPrint(
-          'INFO: [PartnershipService] Partner payment created: ${payment.id}');
+          'INFO: [PartnershipService] Partner payment created: ${payment.id}',);
       return payment.id;
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to create partner payment: $e');
+          'ERROR: [PartnershipService] Failed to create partner payment: $e',);
       rethrow;
     }
   }
@@ -423,10 +422,10 @@ class PartnershipService {
       });
 
       debugPrint(
-          'INFO: [PartnershipService] Partner payment confirmed: $paymentId');
+          'INFO: [PartnershipService] Partner payment confirmed: $paymentId',);
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to confirm partner payment: $e');
+          'ERROR: [PartnershipService] Failed to confirm partner payment: $e',);
       rethrow;
     }
   }
@@ -447,21 +446,21 @@ class PartnershipService {
 
       if (startDate != null) {
         query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
-      final QuerySnapshot snapshot = await query.get();
+      final snapshot = await query.get();
       return snapshot.docs
           .map((doc) =>
-              PartnerPayment.fromMap(doc.data() as Map<String, dynamic>))
+              PartnerPayment.fromMap(doc.data()! as Map<String, dynamic>),)
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to get partner payments: $e');
+          'ERROR: [PartnershipService] Failed to get partner payments: $e',);
       return [];
     }
   }
@@ -486,9 +485,9 @@ class PartnershipService {
         query = query.where('type', isEqualTo: type.toString().split('.').last);
       }
 
-      final QuerySnapshot snapshot = await query.get();
+      final snapshot = await query.get();
       return snapshot.docs
-          .map((doc) => Partner.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => Partner.fromMap(doc.data()! as Map<String, dynamic>))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [PartnershipService] Failed to get all partners: $e');
@@ -499,7 +498,7 @@ class PartnershipService {
   /// Обновление партнёра
   Future<void> updatePartner(Partner partner) async {
     try {
-      final Partner updatedPartner =
+      final updatedPartner =
           partner.copyWith(updatedAt: DateTime.now());
 
       await _firestore
@@ -531,26 +530,26 @@ class PartnershipService {
       final QuerySnapshot paymentsSnapshot =
           await _firestore.collection('partner_payments').get();
 
-      final int totalPartners = partnersSnapshot.docs.length;
-      final int activePartners = partnersSnapshot.docs
+      final totalPartners = partnersSnapshot.docs.length;
+      final activePartners = partnersSnapshot.docs
           .where((doc) =>
-              Partner.fromMap(doc.data() as Map<String, dynamic>).isActive)
+              Partner.fromMap(doc.data()! as Map<String, dynamic>).isActive,)
           .length;
 
-      double totalCommissions = 0.0;
-      double paidCommissions = 0.0;
-      final int totalTransactions = transactionsSnapshot.docs.length;
+      var totalCommissions = 0;
+      var paidCommissions = 0;
+      final totalTransactions = transactionsSnapshot.docs.length;
 
       for (final doc in transactionsSnapshot.docs) {
-        final PartnerTransaction transaction = PartnerTransaction.fromMap(
-          doc.data() as Map<String, dynamic>,
+        final transaction = PartnerTransaction.fromMap(
+          doc.data()! as Map<String, dynamic>,
         );
         totalCommissions += transaction.commissionAmount;
       }
 
       for (final doc in paymentsSnapshot.docs) {
-        final PartnerPayment payment =
-            PartnerPayment.fromMap(doc.data() as Map<String, dynamic>);
+        final payment =
+            PartnerPayment.fromMap(doc.data()! as Map<String, dynamic>);
         if (payment.isPaid) {
           paidCommissions += payment.amount;
         }
@@ -568,7 +567,7 @@ class PartnershipService {
       };
     } catch (e) {
       debugPrint(
-          'ERROR: [PartnershipService] Failed to get partnership program stats: $e');
+          'ERROR: [PartnershipService] Failed to get partnership program stats: $e',);
       return {};
     }
   }

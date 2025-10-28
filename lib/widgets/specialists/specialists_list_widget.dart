@@ -1,19 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/services/test_data_service.dart';
 import 'package:flutter/material.dart';
-
-import '../../services/test_data_service.dart';
 
 /// Виджет списка специалистов
 class SpecialistsListWidget extends StatefulWidget {
   const SpecialistsListWidget({
-    super.key,
-    required this.searchQuery,
-    required this.category,
-    required this.city,
-    required this.sortBy,
-    required this.minPrice,
-    required this.maxPrice,
-    required this.onSpecialistTap,
+    required this.searchQuery, required this.category, required this.city, required this.sortBy, required this.minPrice, required this.maxPrice, required this.onSpecialistTap, super.key,
   });
 
   final String searchQuery;
@@ -104,35 +96,30 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
             final ratingB = (b['rating'] as num?)?.toDouble() ?? 0;
             return ratingB.compareTo(ratingA);
           });
-          break;
         case 'Цена (по возрастанию)':
           sortedSpecialists.sort((a, b) {
             final priceA = (a['price'] as num?)?.toDouble() ?? 0;
             final priceB = (b['price'] as num?)?.toDouble() ?? 0;
             return priceA.compareTo(priceB);
           });
-          break;
         case 'Цена (по убыванию)':
           sortedSpecialists.sort((a, b) {
             final priceA = (a['price'] as num?)?.toDouble() ?? 0;
             final priceB = (b['price'] as num?)?.toDouble() ?? 0;
             return priceB.compareTo(priceA);
           });
-          break;
         case 'Популярность':
           sortedSpecialists.sort((a, b) {
             final reviewsA = (a['reviewsCount'] as num?)?.toInt() ?? 0;
             final reviewsB = (b['reviewsCount'] as num?)?.toInt() ?? 0;
             return reviewsB.compareTo(reviewsA);
           });
-          break;
         case 'Дата регистрации':
           sortedSpecialists.sort((a, b) {
             final dateA = a['createdAt'] as DateTime? ?? DateTime.now();
             final dateB = b['createdAt'] as DateTime? ?? DateTime.now();
             return dateB.compareTo(dateA);
           });
-          break;
       }
 
       setState(() {
@@ -193,7 +180,7 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
   }
 
   Widget _buildSpecialistCard(
-      BuildContext context, Map<String, dynamic> specialist) {
+      BuildContext context, Map<String, dynamic> specialist,) {
     final theme = Theme.of(context);
     final name = specialist['name'] as String? ?? 'Неизвестно';
     final city = specialist['city'] as String? ?? '';
@@ -230,14 +217,14 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                             height: 60,
                             color: theme.primaryColor.withValues(alpha: 0.1),
                             child: Icon(Icons.person,
-                                size: 30, color: theme.primaryColor),
+                                size: 30, color: theme.primaryColor,),
                           ),
                           errorWidget: (context, url, error) => Container(
                             width: 60,
                             height: 60,
                             color: theme.primaryColor.withValues(alpha: 0.1),
                             child: Icon(Icons.person,
-                                size: 30, color: theme.primaryColor),
+                                size: 30, color: theme.primaryColor,),
                           ),
                         ),
                       )
@@ -282,7 +269,7 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                             .map(
                               (specialty) => Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
+                                    horizontal: 6, vertical: 2,),
                                 decoration: BoxDecoration(
                                   color:
                                       theme.primaryColor.withValues(alpha: 0.1),

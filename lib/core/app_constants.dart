@@ -67,28 +67,28 @@ class AppConstants {
     'jpeg',
     'png',
     'gif',
-    'webp'
+    'webp',
   ];
   static const List<String> supportedVideoFormats = [
     'mp4',
     'avi',
     'mov',
     'wmv',
-    'flv'
+    'flv',
   ];
   static const List<String> supportedAudioFormats = [
     'mp3',
     'wav',
     'aac',
     'ogg',
-    'm4a'
+    'm4a',
   ];
   static const List<String> supportedDocumentFormats = [
     'pdf',
     'doc',
     'docx',
     'txt',
-    'rtf'
+    'rtf',
   ];
 
   // Лимиты загрузки файлов

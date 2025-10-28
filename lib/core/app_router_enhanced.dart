@@ -1,26 +1,25 @@
+import 'package:event_marketplace_app/screens/auth/login_screen.dart';
+import 'package:event_marketplace_app/screens/auth/onboarding_screen.dart';
+import 'package:event_marketplace_app/screens/auth/register_screen.dart';
+import 'package:event_marketplace_app/screens/feed/feed_screen_improved.dart';
+import 'package:event_marketplace_app/screens/help/help_screen.dart';
+import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
+import 'package:event_marketplace_app/screens/ideas/ideas_screen.dart';
+import 'package:event_marketplace_app/screens/loading/loading_screen.dart';
+import 'package:event_marketplace_app/screens/main_navigation_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/monetization/monetization_screen.dart';
+import 'package:event_marketplace_app/screens/notifications/notifications_screen.dart';
+import 'package:event_marketplace_app/screens/posts/create_post_screen.dart';
+import 'package:event_marketplace_app/screens/profile/edit_profile_screen.dart';
+import 'package:event_marketplace_app/screens/profile/profile_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/requests/create_request_screen.dart';
+import 'package:event_marketplace_app/screens/search/search_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/settings/settings_screen.dart';
+import 'package:event_marketplace_app/services/navigation_service.dart';
+import 'package:event_marketplace_app/services/session_service.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../screens/main_navigation_screen_enhanced.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/register_screen.dart';
-import '../screens/auth/onboarding_screen.dart';
-import '../screens/profile/profile_screen_enhanced.dart';
-import '../screens/profile/edit_profile_screen.dart';
-import '../screens/feed/feed_screen_improved.dart';
-import '../screens/ideas/ideas_screen.dart';
-import '../screens/ideas/create_idea_screen.dart';
-import '../screens/requests/create_request_screen.dart';
-import '../screens/posts/create_post_screen.dart';
-import '../screens/settings/settings_screen.dart';
-import '../screens/help/help_screen.dart';
-import '../screens/search/search_screen_enhanced.dart';
-import '../screens/notifications/notifications_screen.dart';
-import '../screens/monetization/monetization_screen.dart';
-import '../screens/loading/loading_screen.dart';
-import '../services/navigation_service.dart';
-import '../services/session_service.dart';
+import 'package:go_router/go_router.dart';
 
 /// Улучшенный роутер с анимациями и унифицированной навигацией
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -194,8 +193,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
     ],
-    errorBuilder: (context, state) => _buildErrorPage(context, state),
-    redirect: (context, state) => _handleRedirect(context, state),
+    errorBuilder: _buildErrorPage,
+    redirect: _handleRedirect,
   );
 });
 
@@ -221,10 +220,8 @@ Page<void> _buildPageWithAnimation(
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return _buildTransition(
-          animation, secondaryAnimation, child, transitionType);
+          animation, secondaryAnimation, child, transitionType,);
     },
-    transitionDuration: const Duration(milliseconds: 300),
-    reverseTransitionDuration: const Duration(milliseconds: 300),
   );
 }
 
@@ -239,45 +236,45 @@ Widget _buildTransition(
     case PageTransitionType.slideLeft:
       return SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(1.0, 0.0),
+          begin: const Offset(1, 0),
           end: Offset.zero,
         ).animate(CurvedAnimation(
           parent: animation,
           curve: Curves.easeInOut,
-        )),
+        ),),
         child: child,
       );
     case PageTransitionType.slideRight:
       return SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(-1.0, 0.0),
+          begin: const Offset(-1, 0),
           end: Offset.zero,
         ).animate(CurvedAnimation(
           parent: animation,
           curve: Curves.easeInOut,
-        )),
+        ),),
         child: child,
       );
     case PageTransitionType.slideUp:
       return SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(0.0, 1.0),
+          begin: const Offset(0, 1),
           end: Offset.zero,
         ).animate(CurvedAnimation(
           parent: animation,
           curve: Curves.easeOutCubic,
-        )),
+        ),),
         child: child,
       );
     case PageTransitionType.slideDown:
       return SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(0.0, -1.0),
+          begin: const Offset(0, -1),
           end: Offset.zero,
         ).animate(CurvedAnimation(
           parent: animation,
           curve: Curves.easeInOut,
-        )),
+        ),),
         child: child,
       );
     case PageTransitionType.fade:
@@ -288,23 +285,23 @@ Widget _buildTransition(
     case PageTransitionType.scale:
       return ScaleTransition(
         scale: Tween<double>(
-          begin: 0.0,
-          end: 1.0,
+          begin: 0,
+          end: 1,
         ).animate(CurvedAnimation(
           parent: animation,
           curve: Curves.elasticOut,
-        )),
+        ),),
         child: child,
       );
     case PageTransitionType.rotation:
       return RotationTransition(
         turns: Tween<double>(
-          begin: 0.0,
-          end: 1.0,
+          begin: 0,
+          end: 1,
         ).animate(CurvedAnimation(
           parent: animation,
           curve: Curves.easeInOut,
-        )),
+        ),),
         child: child,
       );
   }
@@ -312,7 +309,7 @@ Widget _buildTransition(
 
 /// Обработать редирект
 Future<String?> _handleRedirect(
-    BuildContext context, GoRouterState state) async {
+    BuildContext context, GoRouterState state,) async {
   try {
     // Проверяем, есть ли активная сессия
     final hasSession = await SessionService.hasActiveSession();
@@ -321,14 +318,14 @@ Future<String?> _handleRedirect(
     // Если пользователь не авторизован и не на экранах входа
     if (!hasSession && !_isAuthPath(currentPath)) {
       NavigationService.logNavigation(currentPath, '/login',
-          data: {'reason': 'no_session'});
+          data: {'reason': 'no_session'},);
       return '/login';
     }
 
     // Если пользователь авторизован и на экране входа, перенаправляем на главную
     if (hasSession && _isAuthPath(currentPath)) {
       NavigationService.logNavigation(currentPath, '/main',
-          data: {'reason': 'already_authenticated'});
+          data: {'reason': 'already_authenticated'},);
       return '/main';
     }
 

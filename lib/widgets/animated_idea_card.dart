@@ -1,28 +1,25 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/idea.dart';
-import '../providers/auth_providers.dart';
-import '../providers/ideas_providers.dart';
-
 /// Animated idea card with smooth appearance animation
 class AnimatedIdeaCard extends ConsumerStatefulWidget {
-  final Idea idea;
-  final VoidCallback? onTap;
-  final VoidCallback? onLike;
-  final VoidCallback? onShare;
-  final VoidCallback? onSave;
-  final int index;
 
   const AnimatedIdeaCard({
-    super.key,
-    required this.idea,
+    required this.idea, super.key,
     this.onTap,
     this.onLike,
     this.onShare,
     this.onSave,
     this.index = 0,
   });
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onShare;
+  final VoidCallback? onSave;
+  final int index;
 
   @override
   ConsumerState<AnimatedIdeaCard> createState() => _AnimatedIdeaCardState();
@@ -43,12 +40,12 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -56,7 +53,7 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeOut,
-    ));
+    ),);
 
     // Start animation with delay
     Future.delayed(Duration(milliseconds: widget.index * 100), () {
@@ -175,13 +172,10 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
                               switch (value) {
                                 case 'share':
                                   widget.onShare?.call();
-                                  break;
                                 case 'save':
                                   widget.onSave?.call();
-                                  break;
                                 case 'report':
                                   _showReportDialog();
-                                  break;
                               }
                             },
                             itemBuilder: (context) => [
@@ -307,7 +301,7 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
                                 widget.idea.difficultyText,
                                 style: TextStyle(
                                   color: _getDifficultyColor(
-                                      widget.idea.difficulty!),
+                                      widget.idea.difficulty!,),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),

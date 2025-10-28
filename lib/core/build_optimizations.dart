@@ -59,7 +59,7 @@ class BuildOptimizations {
   static void _optimizeAnimations() {
     // Отключаем системные анимации для лучшей производительности
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-        overlays: [SystemUiOverlay.top]);
+        overlays: [SystemUiOverlay.top],);
   }
 
   /// Оптимизация для разных платформ
@@ -157,7 +157,7 @@ class BuildOptimizations {
 /// Оптимизированный виджет для release сборки
 class OptimizedWidget extends StatelessWidget {
   const OptimizedWidget(
-      {super.key, required this.child, this.enableOptimizations = true});
+      {required this.child, super.key, this.enableOptimizations = true,});
 
   final Widget child;
   final bool enableOptimizations;
@@ -175,9 +175,7 @@ class OptimizedWidget extends StatelessWidget {
 /// Оптимизированный виджет для списков
 class OptimizedListView extends StatelessWidget {
   const OptimizedListView({
-    super.key,
-    required this.itemCount,
-    required this.itemBuilder,
+    required this.itemCount, required this.itemBuilder, super.key,
     this.separatorBuilder,
     this.scrollController,
     this.physics,
@@ -209,10 +207,7 @@ class OptimizedListView extends StatelessWidget {
 /// Оптимизированный виджет для сетки
 class OptimizedGridView extends StatelessWidget {
   const OptimizedGridView({
-    super.key,
-    required this.itemCount,
-    required this.itemBuilder,
-    required this.crossAxisCount,
+    required this.itemCount, required this.itemBuilder, required this.crossAxisCount, super.key,
     this.crossAxisSpacing = 8.0,
     this.mainAxisSpacing = 8.0,
     this.childAspectRatio = 1.0,

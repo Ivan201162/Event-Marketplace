@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/utils/responsive_utils.dart';
+import 'package:event_marketplace_app/widgets/responsive/responsive_widgets.dart';
 import 'package:flutter/material.dart';
-import '../../utils/responsive_utils.dart';
-import '../../widgets/responsive/responsive_widgets.dart';
 
 /// Адаптивный экран ленты
 class ResponsiveFeedScreen extends StatelessWidget {
@@ -9,7 +9,7 @@ class ResponsiveFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
-      appBar: ResponsiveAppBar(
+      appBar: const ResponsiveAppBar(
         title: 'Лента',
         actions: [
           ResponsiveIcon(Icons.search),
@@ -19,9 +19,9 @@ class ResponsiveFeedScreen extends StatelessWidget {
         ],
       ),
       body: ResponsiveLayoutBuilder(
-        mobile: (context) => _buildMobileLayout(context),
-        tablet: (context) => _buildTabletLayout(context),
-        desktop: (context) => _buildDesktopLayout(context),
+        mobile: _buildMobileLayout,
+        tablet: _buildTabletLayout,
+        desktop: _buildDesktopLayout,
       ),
     );
   }
@@ -39,12 +39,12 @@ class ResponsiveFeedScreen extends StatelessWidget {
   Widget _buildTabletLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 2,
         children: [
           _buildCreatePostSection(context),
           _buildFiltersSection(context),
           _buildPostsSection(context),
         ],
-        crossAxisCount: 2,
       ),
     );
   }
@@ -52,12 +52,12 @@ class ResponsiveFeedScreen extends StatelessWidget {
   Widget _buildDesktopLayout(BuildContext context) {
     return ResponsiveContainer(
       child: ResponsiveGrid(
+        crossAxisCount: 3,
         children: [
           _buildCreatePostSection(context),
           _buildFiltersSection(context),
           _buildPostsSection(context),
         ],
-        crossAxisCount: 3,
       ),
     );
   }
@@ -71,11 +71,11 @@ class ResponsiveFeedScreen extends StatelessWidget {
             'Создать пост',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           TextField(
             decoration: InputDecoration(
               hintText: 'Что у вас нового?',
@@ -87,8 +87,10 @@ class ResponsiveFeedScreen extends StatelessWidget {
             ),
             maxLines: 3,
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveGrid(
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 3, tablet: 3,),
             children: [
               ResponsiveButton(
                 text: 'Фото',
@@ -106,8 +108,6 @@ class ResponsiveFeedScreen extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
-                mobile: 3, tablet: 3, desktop: 3),
           ),
         ],
       ),
@@ -123,20 +123,20 @@ class ResponsiveFeedScreen extends StatelessWidget {
             'Фильтры',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveGrid(
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 2, tablet: 4, desktop: 4,),
             children: [
               _buildFilterChip(context, 'Все', true),
               _buildFilterChip(context, 'Мои', false),
               _buildFilterChip(context, 'Популярные', false),
               _buildFilterChip(context, 'Недавние', false),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
-                mobile: 2, tablet: 4, desktop: 4),
           ),
         ],
       ),
@@ -163,19 +163,19 @@ class ResponsiveFeedScreen extends StatelessWidget {
             'Посты',
             style: TextStyle(
               fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
+                  mobile: 18, tablet: 20, desktop: 22,),
               fontWeight: FontWeight.bold,
             ),
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveList(
             children: [
               _buildPostItem(context, 'Анна Петрова', 'Отличное мероприятие!',
-                  '2 часа назад', 15, 3),
+                  '2 часа назад', 15, 3,),
               _buildPostItem(context, 'Иван Сидоров',
-                  'Новые фотографии с свадьбы', '4 часа назад', 28, 7),
+                  'Новые фотографии с свадьбы', '4 часа назад', 28, 7,),
               _buildPostItem(context, 'Мария Козлова',
-                  'Готовлю кейтеринг для корпоратива', '6 часов назад', 12, 2),
+                  'Готовлю кейтеринг для корпоратива', '6 часов назад', 12, 2,),
             ],
           ),
         ],
@@ -184,7 +184,7 @@ class ResponsiveFeedScreen extends StatelessWidget {
   }
 
   Widget _buildPostItem(BuildContext context, String author, String content,
-      String time, int likes, int comments) {
+      String time, int likes, int comments,) {
     return ResponsiveCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,18 +193,17 @@ class ResponsiveFeedScreen extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: ResponsiveUtils.getResponsiveIconSize(context,
-                    mobile: 20.0, tablet: 24.0, desktop: 28.0),
+                    mobile: 20, tablet: 24, desktop: 28,),
                 backgroundColor: Colors.blue,
                 child: ResponsiveText(
                   author[0],
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                        mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(context,),
                   ),
                 ),
               ),
-              ResponsiveSpacing(width: 16),
+              const ResponsiveSpacing(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,8 +211,7 @@ class ResponsiveFeedScreen extends StatelessWidget {
                     ResponsiveText(
                       author,
                       style: TextStyle(
-                        fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                            mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(context,),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -221,36 +219,35 @@ class ResponsiveFeedScreen extends StatelessWidget {
                       time,
                       style: TextStyle(
                         fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                            mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                            mobile: 12, tablet: 14, desktop: 16,),
                         color: Colors.grey[600],
                       ),
                     ),
                   ],
                 ),
               ),
-              ResponsiveIcon(Icons.more_vert),
+              const ResponsiveIcon(Icons.more_vert),
             ],
           ),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
           ResponsiveText(
             content,
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
-                  mobile: 14.0, tablet: 16.0, desktop: 18.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,),
             ),
           ),
-          ResponsiveSpacing(height: 16),
-          ResponsiveDivider(),
-          ResponsiveSpacing(height: 16),
+          const ResponsiveSpacing(height: 16),
+          const ResponsiveDivider(),
+          const ResponsiveSpacing(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildActionButton(
-                  context, Icons.thumb_up, '$likes', Colors.blue),
+                  context, Icons.thumb_up, '$likes', Colors.blue,),
               _buildActionButton(
-                  context, Icons.comment, '$comments', Colors.green),
+                  context, Icons.comment, '$comments', Colors.green,),
               _buildActionButton(
-                  context, Icons.share, 'Поделиться', Colors.orange),
+                  context, Icons.share, 'Поделиться', Colors.orange,),
             ],
           ),
         ],
@@ -259,7 +256,7 @@ class ResponsiveFeedScreen extends StatelessWidget {
   }
 
   Widget _buildActionButton(
-      BuildContext context, IconData icon, String label, Color color) {
+      BuildContext context, IconData icon, String label, Color color,) {
     return ResponsiveButton(
       text: label,
       onPressed: () {},

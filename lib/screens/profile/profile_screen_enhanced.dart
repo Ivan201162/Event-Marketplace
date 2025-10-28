@@ -1,18 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../providers/auth_providers.dart';
-import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенный экран профиля пользователя
 class ProfileScreenEnhanced extends ConsumerStatefulWidget {
-  final String? userId;
 
   const ProfileScreenEnhanced({super.key, this.userId});
+  final String? userId;
 
   @override
   ConsumerState<ProfileScreenEnhanced> createState() =>
@@ -45,12 +43,12 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
     _tabController = TabController(length: 4, vsync: this);
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -147,9 +145,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
           // Действия
           if (isOwnProfile) ...[
             IconButton(
-              onPressed: () {
-                _showProfileOptions();
-              },
+              onPressed: _showProfileOptions,
               icon: const Icon(
                 Icons.more_vert,
                 color: Colors.white,
@@ -158,9 +154,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
             ),
           ] else ...[
             IconButton(
-              onPressed: () {
-                _showUserOptions();
-              },
+              onPressed: _showUserOptions,
               icon: const Icon(
                 Icons.more_vert,
                 color: Colors.white,
@@ -210,7 +204,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
           ),
         );
       },
-      loading: () => _buildLoadingState(),
+      loading: _buildLoadingState,
       error: (error, stack) => _buildErrorState(error.toString()),
     );
   }
@@ -257,9 +251,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
                   bottom: 0,
                   right: 0,
                   child: GestureDetector(
-                    onTap: () {
-                      _changeAvatar();
-                    },
+                    onTap: _changeAvatar,
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(
@@ -515,9 +507,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
         children: [
           Expanded(
             child: ElevatedButton.icon(
-              onPressed: () {
-                _startChat();
-              },
+              onPressed: _startChat,
               icon: const Icon(Icons.chat),
               label: const Text('Написать'),
               style: ElevatedButton.styleFrom(
@@ -530,9 +520,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
           const SizedBox(width: 12),
           Expanded(
             child: OutlinedButton.icon(
-              onPressed: () {
-                _followUser();
-              },
+              onPressed: _followUser,
               icon: const Icon(Icons.person_add),
               label: const Text('Подписаться'),
               style: OutlinedButton.styleFrom(
@@ -753,7 +741,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
             ListTile(
               leading: const Icon(Icons.report, color: Colors.red),
               title: const Text('Пожаловаться',
-                  style: TextStyle(color: Colors.red)),
+                  style: TextStyle(color: Colors.red),),
               onTap: () {
                 Navigator.pop(context);
                 _reportUser();
@@ -776,7 +764,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
   }
 
   /// Сохранить профиль
-  void _saveProfile() async {
+  Future<void> _saveProfile() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
@@ -872,7 +860,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
   }
 
   /// Выйти из аккаунта
-  void _logout() async {
+  Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
       if (mounted) {

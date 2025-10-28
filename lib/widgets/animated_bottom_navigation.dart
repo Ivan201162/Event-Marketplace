@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 /// Анимированное нижнее меню с плавными переходами
 class AnimatedBottomNavigation extends StatefulWidget {
   const AnimatedBottomNavigation({
-    super.key,
-    required this.items,
-    required this.onTap,
+    required this.items, required this.onTap, super.key,
     this.currentIndex = 0,
     this.backgroundColor,
     this.activeColor,
@@ -163,7 +161,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
 /// Элемент нижнего меню
 class BottomNavigationItem {
   const BottomNavigationItem(
-      {required this.icon, required this.activeIcon, required this.label});
+      {required this.icon, required this.activeIcon, required this.label,});
 
   final IconData icon;
   final IconData activeIcon;
@@ -173,9 +171,7 @@ class BottomNavigationItem {
 /// Кривое анимированное нижнее меню
 class CurvedBottomNavigation extends StatefulWidget {
   const CurvedBottomNavigation({
-    super.key,
-    required this.items,
-    required this.onTap,
+    required this.items, required this.onTap, super.key,
     this.currentIndex = 0,
     this.backgroundColor,
     this.activeColor,
@@ -227,9 +223,7 @@ class _CurvedBottomNavigationState extends State<CurvedBottomNavigation> {
 /// Анимированное плавающее меню
 class FloatingBottomNavigation extends StatefulWidget {
   const FloatingBottomNavigation({
-    super.key,
-    required this.items,
-    required this.onTap,
+    required this.items, required this.onTap, super.key,
     this.currentIndex = 0,
     this.backgroundColor,
     this.activeColor,

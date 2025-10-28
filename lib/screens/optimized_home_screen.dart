@@ -1,15 +1,11 @@
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/widgets/optimized_category_grid.dart';
+import 'package:event_marketplace_app/widgets/optimized_search_section.dart';
+import 'package:event_marketplace_app/widgets/optimized_specialists_carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/app_user.dart';
-import '../models/specialist.dart';
-import '../models/category.dart';
-import '../providers/auth_providers.dart';
-import '../providers/optimized_data_providers.dart';
-import '../widgets/optimized_category_grid.dart';
-import '../widgets/optimized_specialists_carousel.dart';
-import '../widgets/optimized_search_section.dart';
 
 /// Оптимизированная главная страница с реальными данными из Firestore
 class OptimizedHomeScreen extends ConsumerStatefulWidget {
@@ -116,7 +112,7 @@ class _OptimizedHomeScreenState extends ConsumerState<OptimizedHomeScreen> {
                     Row(
                       children: [
                         const Icon(Icons.location_on,
-                            size: 16, color: Colors.white70),
+                            size: 16, color: Colors.white70,),
                         const SizedBox(width: 4),
                         Text(
                           user!.city!,

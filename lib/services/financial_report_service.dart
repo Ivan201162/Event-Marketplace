@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/payment.dart';
+import 'package:event_marketplace_app/models/payment.dart';
 
 /// Сервис для генерации финансовых отчетов
 class FinancialReportService {
@@ -90,7 +90,7 @@ class FinancialReportService {
           .toList();
 
       final totalIncome = incomePayments.fold<double>(
-          0, (sum, payment) => sum + payment.amount);
+          0, (sum, payment) => sum + payment.amount,);
 
       final totalFees = incomePayments.fold<double>(
         0,
@@ -140,10 +140,8 @@ class FinancialReportService {
 
   /// Получить платежи за период
   Future<List<Payment>> _getPaymentsForPeriod({
-    String? userId,
+    required DateTime startDate, required DateTime endDate, String? userId,
     String? specialistId,
-    required DateTime startDate,
-    required DateTime endDate,
   }) async {
     Query<Map<String, dynamic>> query = _firestore.collection('payments');
 
@@ -157,7 +155,7 @@ class FinancialReportService {
 
     query = query
         .where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),)
         .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
         .orderBy('createdAt', descending: true);
 

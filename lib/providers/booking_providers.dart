@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../services/booking_service.dart';
 
 /// Booking service provider
 final bookingServiceProvider = Provider<BookingService>((ref) {
@@ -119,7 +118,7 @@ final pendingBookingsCountStreamProvider =
   final bookingService = ref.read(bookingServiceProvider);
   return bookingService.getBookingsByStatusStream(BookingStatus.pending).map(
       (bookings) =>
-          bookings.where((b) => b.specialistId == specialistId).length);
+          bookings.where((b) => b.specialistId == specialistId).length,);
 });
 
 /// Today's bookings provider

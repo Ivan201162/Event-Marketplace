@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 /// Виджет для редактируемого изображения
 class EditableImage extends StatelessWidget {
   const EditableImage({
-    super.key,
+    required this.onImageChanged, required this.placeholder, super.key,
     this.imageUrl,
-    required this.onImageChanged,
-    required this.placeholder,
   });
 
   final String? imageUrl;
@@ -24,7 +22,7 @@ class EditableImage extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                  color: Colors.grey[300], shape: BoxShape.circle),
+                  color: Colors.grey[300], shape: BoxShape.circle,),
               child: imageUrl != null
                   ? CachedNetworkImage(
                       imageUrl: imageUrl!,
@@ -35,7 +33,7 @@ class EditableImage extends StatelessWidget {
                       ),
                       errorWidget: (context, url, error) => Container(
                           color: Colors.grey[300],
-                          child: Icon(placeholder, size: 50)),
+                          child: Icon(placeholder, size: 50),),
                     )
                   : Icon(placeholder, size: 50),
             ),

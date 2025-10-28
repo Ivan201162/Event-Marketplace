@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/contract.dart';
-import '../models/specialist.dart';
-import '../models/user.dart';
-import 'work_act_service.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/contract.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/services/work_act_service.dart';
 
 /// Сервис для автоматического формирования договоров
 class ContractService {
@@ -110,7 +110,7 @@ class ContractService {
 
   /// Подписать договор
   Future<void> signContract(
-      {required String contractId, required String userId}) async {
+      {required String contractId, required String userId,}) async {
     try {
       final contract = await _getContract(contractId);
       if (contract == null) {
@@ -134,7 +134,7 @@ class ContractService {
 
       // Обновляем статус подписи
       final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now())
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       };
 
       if (isCustomer) {
@@ -309,7 +309,7 @@ Email: ${customer.email ?? 'Не указан'}
 ''';
 
   Map<String, dynamic> _generateDefaultTerms(
-      Booking booking, Map<String, dynamic>? customTerms) {
+      Booking booking, Map<String, dynamic>? customTerms,) {
     final defaultTerms = {
       'paymentTerms': {
         'advanceRequired': true,
@@ -321,7 +321,7 @@ Email: ${customer.email ?? 'Не указан'}
         'refundPercentage': {
           'more_than_7_days': 100,
           '3_to_7_days': 50,
-          'less_than_3_days': 0
+          'less_than_3_days': 0,
         },
       },
       'liability': {
@@ -332,7 +332,7 @@ Email: ${customer.email ?? 'Не указан'}
         'includes': [
           'natural_disasters',
           'government_restrictions',
-          'pandemics'
+          'pandemics',
         ],
         'resolution': 'reschedule_or_refund',
       },

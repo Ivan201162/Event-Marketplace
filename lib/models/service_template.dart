@@ -8,11 +8,9 @@ class ServiceTemplate {
     required this.categoryName,
     required this.serviceName,
     required this.description,
-    this.requiredFields = const [],
+    required this.createdAt, required this.updatedAt, this.requiredFields = const [],
     this.defaultPricing = const {},
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из документа Firestore
@@ -78,11 +76,9 @@ class SpecialistService {
     required this.description,
     required this.priceMin,
     required this.priceMax,
-    this.currency = 'RUB',
+    required this.createdAt, required this.updatedAt, this.currency = 'RUB',
     this.pricingDetails = const {},
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из документа Firestore

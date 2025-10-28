@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для отображения бейджей специалистов
 class SpecialistBadgesWidget extends StatelessWidget {
   const SpecialistBadgesWidget({
-    super.key,
-    required this.badges,
+    required this.badges, super.key,
     this.size = 20.0,
     this.showText = true,
   });
@@ -19,7 +18,7 @@ class SpecialistBadgesWidget extends StatelessWidget {
     }
 
     return Wrap(
-        spacing: 4, runSpacing: 4, children: badges.map(_buildBadge).toList());
+        spacing: 4, runSpacing: 4, children: badges.map(_buildBadge).toList(),);
   }
 
   Widget _buildBadge(SpecialistBadge badge) => Container(

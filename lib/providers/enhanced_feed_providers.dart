@@ -1,20 +1,20 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
+import 'package:event_marketplace_app/providers/real_feed_providers.dart';
+import 'package:event_marketplace_app/test_data/mock_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/enhanced_feed_post.dart';
-import '../test_data/mock_data.dart';
-import '../core/feature_flags.dart';
-import 'real_feed_providers.dart';
 
 /// Состояние ленты
 class EnhancedFeedState {
   const EnhancedFeedState(
-      {this.posts = const [], this.isLoading = false, this.error});
+      {this.posts = const [], this.isLoading = false, this.error,});
   final List<EnhancedFeedPost> posts;
   final bool isLoading;
   final String? error;
 
   EnhancedFeedState copyWith(
-          {List<EnhancedFeedPost>? posts, bool? isLoading, String? error}) =>
+          {List<EnhancedFeedPost>? posts, bool? isLoading, String? error,}) =>
       EnhancedFeedState(
         posts: posts ?? this.posts,
         isLoading: isLoading ?? this.isLoading,

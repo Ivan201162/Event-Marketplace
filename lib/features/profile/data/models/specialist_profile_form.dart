@@ -2,19 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Форма профиля специалиста
 class SpecialistProfileForm extends Equatable {
-  final String id;
-  final String name;
-  final String email;
-  final String phone;
-  final String city;
-  final String category;
-  final String description;
-  final String experience;
-  final double hourlyRate;
-  final List<String> services;
-  final List<String> portfolio;
-  final bool isAvailable;
-  final String? avatarUrl;
 
   const SpecialistProfileForm({
     required this.id,
@@ -31,6 +18,19 @@ class SpecialistProfileForm extends Equatable {
     required this.isAvailable,
     this.avatarUrl,
   });
+  final String id;
+  final String name;
+  final String email;
+  final String phone;
+  final String city;
+  final String category;
+  final String description;
+  final String experience;
+  final double hourlyRate;
+  final List<String> services;
+  final List<String> portfolio;
+  final bool isAvailable;
+  final String? avatarUrl;
 
   SpecialistProfileForm copyWith({
     String? id,

@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/promotion.dart';
+import 'package:event_marketplace_app/services/promotion_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/promotion.dart';
-import '../services/promotion_service.dart';
-import '../widgets/responsive_widgets.dart';
 
 /// Экран акций и предложений
 class PromotionsScreen extends ConsumerStatefulWidget {
@@ -38,7 +37,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
     _loadPromotions();
   }
 
@@ -107,7 +106,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
           actions: [
             IconButton(
                 icon: const Icon(Icons.filter_list),
-                onPressed: _showFilterDialog)
+                onPressed: _showFilterDialog,),
           ],
         ),
         body: _isLoading
@@ -119,7 +118,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
                   children: [
                     _buildDiscountsTab(),
                     _buildSeasonalTab(),
-                    _buildGiftsTab()
+                    _buildGiftsTab(),
                   ],
                 ),
               ),
@@ -155,7 +154,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.local_offer_outlined,
-                size: 64, color: Colors.grey.shade400),
+                size: 64, color: Colors.grey.shade400,),
             const SizedBox(height: 16),
             Text(
               'Нет доступных акций',
@@ -219,7 +218,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               gradient: LinearGradient(
                 colors: [
                   Colors.orange.shade50,
-                  Colors.orange.shade100.withValues(alpha: 0.3)
+                  Colors.orange.shade100.withValues(alpha: 0.3),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -244,7 +243,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                          horizontal: 12, vertical: 6,),
                       decoration: BoxDecoration(
                         color: Colors.red.shade500,
                         borderRadius: BorderRadius.circular(20),
@@ -293,7 +292,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
                       ),
                     ),
                     Icon(Icons.access_time,
-                        size: 16, color: Colors.grey.shade600),
+                        size: 16, color: Colors.grey.shade600,),
                     const SizedBox(width: 4),
                     Text(
                       promotion.formattedTimeRemaining,
@@ -310,7 +309,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
                   Row(
                     children: [
                       Icon(Icons.location_on,
-                          size: 16, color: Colors.grey.shade600),
+                          size: 16, color: Colors.grey.shade600,),
                       const SizedBox(width: 4),
                       Text(
                         promotion.city!,
@@ -386,7 +385,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               Row(
                 children: [
                   Icon(Icons.location_on,
-                      size: 16, color: Colors.grey.shade600),
+                      size: 16, color: Colors.grey.shade600,),
                   const SizedBox(width: 8),
                   Text('Город: ${promotion.city}'),
                 ],
@@ -397,7 +396,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -428,9 +427,9 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
               items: const [
                 DropdownMenuItem(value: 'all', child: Text('Все категории')),
                 DropdownMenuItem(
-                    value: 'photographer', child: Text('Фотографы')),
+                    value: 'photographer', child: Text('Фотографы'),),
                 DropdownMenuItem(
-                    value: 'videographer', child: Text('Видеографы')),
+                    value: 'videographer', child: Text('Видеографы'),),
                 DropdownMenuItem(value: 'dj', child: Text('DJ')),
                 DropdownMenuItem(value: 'host', child: Text('Ведущие')),
                 DropdownMenuItem(value: 'decorator', child: Text('Декораторы')),
@@ -474,7 +473,7 @@ class _PromotionsScreenState extends ConsumerState<PromotionsScreen>
           ),
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               _applyFilters();

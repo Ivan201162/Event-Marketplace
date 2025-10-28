@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 /// Полноценный экран настроек
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -15,7 +15,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _isDarkMode = false;
   bool _notificationsEnabled = true;
   bool _pushNotifications = true;
-  bool _emailNotifications = true;
+  final bool _emailNotifications = true;
   String _language = 'ru';
   String _currency = 'RUB';
 
@@ -59,7 +59,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             icon: Icons.language,
             title: 'Язык',
             subtitle: _language == 'ru' ? 'Русский' : 'English',
-            onTap: () => _showLanguageDialog(),
+            onTap: _showLanguageDialog,
           ),
 
           // Уведомления
@@ -126,7 +126,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             icon: Icons.attach_money,
             title: 'Валюта',
             subtitle: _currency,
-            onTap: () => _showCurrencyDialog(),
+            onTap: _showCurrencyDialog,
           ),
 
           // Поддержка
@@ -147,7 +147,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             icon: Icons.info,
             title: 'О приложении',
             subtitle: 'Версия 1.0.1 (2)',
-            onTap: () => _showAboutDialog(),
+            onTap: _showAboutDialog,
           ),
 
           // Выход
@@ -157,7 +157,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: 'Выйти',
             subtitle: 'Завершить сессию',
             textColor: Colors.red,
-            onTap: () => _showLogoutDialog(),
+            onTap: _showLogoutDialog,
           ),
         ],
       ),

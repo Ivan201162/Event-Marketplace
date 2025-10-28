@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/models/contract.dart';
+import 'package:event_marketplace_app/services/contract_service.dart';
 import 'package:flutter/material.dart';
-import '../models/contract.dart';
-import '../services/contract_service.dart';
 
 class ContractSigningWidget extends StatefulWidget {
   const ContractSigningWidget({
-    super.key,
-    required this.contract,
-    required this.currentUserId,
+    required this.contract, required this.currentUserId, super.key,
     this.onSigned,
   });
   final Contract contract;
@@ -60,7 +58,7 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
                           )
                         : const Icon(Icons.edit),
                     label: Text(
-                        _isSigning ? 'Подписание...' : 'Подписать договор'),
+                        _isSigning ? 'Подписание...' : 'Подписать договор',),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,
                       foregroundColor: Colors.white,
@@ -98,7 +96,7 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
           color: isSigned ? Colors.green.shade50 : Colors.orange.shade50,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-              color: isSigned ? Colors.green.shade300 : Colors.orange.shade300),
+              color: isSigned ? Colors.green.shade300 : Colors.orange.shade300,),
         ),
         child: Row(
           children: [
@@ -167,7 +165,7 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(_errorMessage!,
-                  style: TextStyle(color: Colors.red.shade600)),
+                  style: TextStyle(color: Colors.red.shade600),),
             ),
           ],
         ),
@@ -194,7 +192,7 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Договор успешно подписан'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
 
         // Вызываем callback для обновления UI

@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/widgets/media_gallery_widget.dart';
+import 'package:event_marketplace_app/widgets/media_upload_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../widgets/media_gallery_widget.dart';
-import '../widgets/media_upload_widget.dart';
 
 /// Тестовый экран для проверки функциональности хранения медиафайлов
 class MediaStorageTestScreen extends StatefulWidget {
@@ -66,9 +65,9 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
             ),
             const SizedBox(height: 8),
             Text('Booking ID: $_testBookingId',
-                style: const TextStyle(fontSize: 14)),
+                style: const TextStyle(fontSize: 14),),
             Text('Specialist ID: $_testSpecialistId',
-                style: const TextStyle(fontSize: 14)),
+                style: const TextStyle(fontSize: 14),),
             const SizedBox(height: 8),
             const Text(
               'Этот экран позволяет протестировать функциональность загрузки и просмотра медиафайлов мероприятий.',
@@ -88,10 +87,10 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
                     setState(() => _showUploadWidget = !_showUploadWidget),
                 icon: Icon(_showUploadWidget
                     ? Icons.visibility_off
-                    : Icons.visibility),
+                    : Icons.visibility,),
                 label: Text(_showUploadWidget
                     ? 'Скрыть загрузку'
-                    : 'Показать загрузку'),
+                    : 'Показать загрузку',),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       _showUploadWidget ? Colors.green : Colors.grey,
@@ -106,9 +105,9 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
                     setState(() => _showGalleryWidget = !_showGalleryWidget),
                 icon: Icon(_showGalleryWidget
                     ? Icons.visibility_off
-                    : Icons.visibility),
+                    : Icons.visibility,),
                 label: Text(
-                    _showGalleryWidget ? 'Скрыть галерею' : 'Показать галерею'),
+                    _showGalleryWidget ? 'Скрыть галерею' : 'Показать галерею',),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       _showGalleryWidget ? Colors.green : Colors.grey,
@@ -154,7 +153,7 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     content: Text('Загрузка завершена!'),
-                    backgroundColor: Colors.green),
+                    backgroundColor: Colors.green,),
               );
               // Обновляем галерею
               setState(() {});
@@ -163,7 +162,7 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                     content: Text('Ошибка загрузки: $error'),
-                    backgroundColor: Colors.red),
+                    backgroundColor: Colors.red,),
               );
             },
           ),
@@ -198,7 +197,7 @@ class _MediaStorageTestScreenState extends State<MediaStorageTestScreen> {
           ),
           const SizedBox(height: 8),
           MediaGalleryWidget(
-              bookingId: _testBookingId, specialistId: _testSpecialistId),
+              bookingId: _testBookingId, specialistId: _testSpecialistId,),
         ],
       );
 }

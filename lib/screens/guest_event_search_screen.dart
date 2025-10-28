@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/services/event_service.dart';
+import 'package:event_marketplace_app/services/guest_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/feature_flags.dart';
-import '../models/event.dart';
-import '../services/event_service.dart';
-import '../services/guest_service.dart';
 
 /// Экран поиска события по ссылке/QR для гостей
 class GuestEventSearchScreen extends ConsumerStatefulWidget {
@@ -54,7 +53,7 @@ class _GuestEventSearchScreenState
     return Scaffold(
       appBar: AppBar(
           title: const Text('Доступ к событию'),
-          backgroundColor: Colors.blue[50]),
+          backgroundColor: Colors.blue[50],),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -86,7 +85,7 @@ class _GuestEventSearchScreenState
               Row(
                 children: [
                   Icon(Icons.qr_code_scanner,
-                      color: Colors.blue[600], size: 32),
+                      color: Colors.blue[600], size: 32,),
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(
@@ -114,7 +113,7 @@ class _GuestEventSearchScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Код доступа',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               TextField(
                 controller: _accessCodeController,
@@ -123,7 +122,7 @@ class _GuestEventSearchScreenState
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.vpn_key),
                   suffixIcon: IconButton(
-                      icon: const Icon(Icons.search), onPressed: _searchEvent),
+                      icon: const Icon(Icons.search), onPressed: _searchEvent,),
                 ),
                 onSubmitted: (_) => _searchEvent(),
               ),
@@ -135,7 +134,7 @@ class _GuestEventSearchScreenState
                   icon: const Icon(Icons.search),
                   label: const Text('Найти событие'),
                   style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12)),
+                      padding: const EdgeInsets.symmetric(vertical: 12),),
                 ),
               ),
             ],
@@ -151,7 +150,7 @@ class _GuestEventSearchScreenState
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16),
-                Text('Поиск события...')
+                Text('Поиск события...'),
               ],
             ),
           ),
@@ -168,7 +167,7 @@ class _GuestEventSearchScreenState
               const SizedBox(width: 12),
               Expanded(
                 child: Text(_errorMessage!,
-                    style: TextStyle(color: Colors.red[600])),
+                    style: TextStyle(color: Colors.red[600]),),
               ),
             ],
           ),
@@ -192,14 +191,14 @@ class _GuestEventSearchScreenState
                   child: Text(
                     _foundEvent!.title,
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
+                        fontSize: 20, fontWeight: FontWeight.bold,),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
             Text(_foundEvent!.description,
-                style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 16, color: Colors.grey[600]),),
             const SizedBox(height: 16),
             _buildEventDetails(),
             const SizedBox(height: 16),
@@ -237,7 +236,7 @@ class _GuestEventSearchScreenState
           _buildDetailRow(Icons.location_on, 'Место', _foundEvent!.location),
           if (_foundEvent!.price > 0)
             _buildDetailRow(Icons.attach_money, 'Цена',
-                '${_foundEvent!.price.toStringAsFixed(0)} ₽'),
+                '${_foundEvent!.price.toStringAsFixed(0)} ₽',),
           _buildDetailRow(
             Icons.people,
             'Участники',
@@ -253,7 +252,7 @@ class _GuestEventSearchScreenState
             Icon(icon, size: 20, color: Colors.grey[600]),
             const SizedBox(width: 12),
             Text('$label: ',
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
             Expanded(child: Text(value)),
           ],
         ),
@@ -266,7 +265,7 @@ class _GuestEventSearchScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('QR-код',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               Text(
                 'Отсканируйте QR-код для быстрого доступа к событию',
@@ -280,7 +279,7 @@ class _GuestEventSearchScreenState
                   icon: const Icon(Icons.qr_code_scanner),
                   label: const Text('Сканировать QR-код'),
                   style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12)),
+                      padding: const EdgeInsets.symmetric(vertical: 12),),
                 ),
               ),
             ],
@@ -295,7 +294,7 @@ class _GuestEventSearchScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Помощь',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               _buildHelpItem(
                 Icons.info,
@@ -330,10 +329,10 @@ class _GuestEventSearchScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                      style: const TextStyle(fontWeight: FontWeight.w500),),
                   const SizedBox(height: 4),
                   Text(description,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
                 ],
               ),
             ),
@@ -383,7 +382,7 @@ class _GuestEventSearchScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-            'Функция сканирования QR-кода будет добавлена в следующих версиях'),
+            'Функция сканирования QR-кода будет добавлена в следующих версиях',),
       ),
     );
   }
@@ -416,7 +415,7 @@ class _GuestEventSearchScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 }

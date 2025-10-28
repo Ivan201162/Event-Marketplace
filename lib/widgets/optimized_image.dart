@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 /// Оптимизированный виджет для загрузки изображений с кэшированием
 class OptimizedImage extends StatelessWidget {
   const OptimizedImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -60,15 +59,14 @@ class OptimizedImage extends StatelessWidget {
         height: height,
         color: Colors.grey[300],
         child: const Center(
-            child: Icon(Icons.error_outline, color: Colors.grey, size: 32)),
+            child: Icon(Icons.error_outline, color: Colors.grey, size: 32),),
       );
 }
 
 /// Оптимизированный виджет для аватаров пользователей
 class OptimizedAvatar extends StatelessWidget {
   const OptimizedAvatar({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.radius = 20,
     this.backgroundColor,
     this.placeholder,
@@ -102,8 +100,7 @@ class OptimizedAvatar extends StatelessWidget {
 /// Оптимизированный виджет для изображений в списках
 class OptimizedListImage extends StatelessWidget {
   const OptimizedListImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width = 80,
     this.height = 80,
     this.fit = BoxFit.cover,

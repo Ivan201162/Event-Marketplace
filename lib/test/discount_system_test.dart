@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/models/booking.dart';
 import 'package:flutter_test/flutter_test.dart';
-import '../models/booking.dart';
 
 void main() {
   group('Discount System Tests', () {

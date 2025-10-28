@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/core/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import '../core/i18n/app_localizations.dart';
 
 /// Виджет для локализованного текста
 class LocalizedText extends StatelessWidget {

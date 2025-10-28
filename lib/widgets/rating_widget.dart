@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для отображения рейтинга звездами
 class RatingWidget extends StatelessWidget {
   const RatingWidget({
-    super.key,
-    required this.rating,
+    required this.rating, super.key,
     this.maxRating = 5,
     this.starSize = 20.0,
     this.color = Colors.amber,
@@ -51,9 +50,7 @@ class RatingWidget extends StatelessWidget {
 /// Виджет для отображения рейтинга с числом
 class RatingDisplayWidget extends StatelessWidget {
   const RatingDisplayWidget({
-    super.key,
-    required this.rating,
-    required this.reviewCount,
+    required this.rating, required this.reviewCount, super.key,
     this.showCount = true,
     this.starSize = 16.0,
     this.textStyle,
@@ -94,9 +91,7 @@ class RatingDisplayWidget extends StatelessWidget {
 /// Виджет для отображения распределения рейтингов
 class RatingDistributionWidget extends StatelessWidget {
   const RatingDistributionWidget({
-    super.key,
-    required this.ratingDistribution,
-    required this.totalReviews,
+    required this.ratingDistribution, required this.totalReviews, super.key,
     this.maxRating = 5,
   });
 
@@ -160,9 +155,7 @@ class RatingDistributionWidget extends StatelessWidget {
 /// Виджет для выбора рейтинга
 class RatingSelectorWidget extends StatelessWidget {
   const RatingSelectorWidget({
-    super.key,
-    required this.rating,
-    required this.onRatingChanged,
+    required this.rating, required this.onRatingChanged, super.key,
     this.maxRating = 5,
     this.starSize = 32.0,
     this.color = Colors.amber,
@@ -186,7 +179,7 @@ class RatingSelectorWidget extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 4),
               child: Icon(isFilled ? Icons.star : Icons.star_border,
-                  size: starSize, color: color),
+                  size: starSize, color: color,),
             ),
           );
         }),

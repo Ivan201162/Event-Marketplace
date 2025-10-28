@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/price_range.dart';
+import 'package:event_marketplace_app/models/specialist_filters_simple.dart';
+import 'package:event_marketplace_app/services/mock_data_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/price_range.dart';
-import '../models/specialist_filters_simple.dart';
-import '../services/mock_data_service.dart';
 
 /// Провайдер для состояния фильтров специалистов (мигрирован с StateNotifierProvider)
 final specialistFiltersProvider =
     NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
-  () => SpecialistFiltersNotifier(),
+  SpecialistFiltersNotifier.new,
 );
 
 /// Провайдер для отфильтрованных специалистов
@@ -21,7 +20,7 @@ final filteredSpecialistsProvider =
 
 /// Параметры для фильтрации
 class FilterParams {
-  const FilterParams({this.categoryId, required this.filters});
+  const FilterParams({required this.filters, this.categoryId});
   final String? categoryId;
   final SpecialistFilters filters;
 
@@ -222,9 +221,9 @@ final filterStatsProvider =
       cities: specialists.map((s) => s.city).toSet().toList(),
     ),
     loading: () => const FilterStats(
-        totalCount: 0, averageRating: 0, priceRange: null, cities: []),
+        totalCount: 0, averageRating: 0, priceRange: null, cities: [],),
     error: (_, __) => const FilterStats(
-        totalCount: 0, averageRating: 0, priceRange: null, cities: []),
+        totalCount: 0, averageRating: 0, priceRange: null, cities: [],),
   );
 });
 
@@ -260,5 +259,5 @@ PriceRange? _calculatePriceRange(List<Specialist> specialists) {
   if (!hasPrice) return null;
 
   return PriceRange(
-      min: minPrice == double.infinity ? 0 : minPrice, max: maxPrice);
+      min: minPrice == double.infinity ? 0 : minPrice, max: maxPrice,);
 }

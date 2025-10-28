@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import '../models/specialist.dart';
 
 /// Виджет календаря для отображения занятых и свободных дат специалиста
 class SpecialistCalendarWidget extends StatefulWidget {
   const SpecialistCalendarWidget({
-    super.key,
-    required this.specialist,
+    required this.specialist, super.key,
     this.onDateSelected,
     this.onDateTapped,
   });
@@ -89,15 +87,15 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                     shape: BoxShape.circle,
                   ),
                   todayDecoration: const BoxDecoration(
-                      color: Colors.orange, shape: BoxShape.circle),
+                      color: Colors.orange, shape: BoxShape.circle,),
                   markerDecoration: const BoxDecoration(
-                      color: Colors.red, shape: BoxShape.circle),
+                      color: Colors.red, shape: BoxShape.circle,),
                   markersMaxCount: 1,
                   markerSize: 6,
                   markerMargin: const EdgeInsets.symmetric(horizontal: 1),
                 ),
                 headerStyle: const HeaderStyle(
-                    formatButtonVisible: false, titleCentered: true),
+                    formatButtonVisible: false, titleCentered: true,),
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
                     setState(() {
@@ -126,7 +124,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                           width: 6,
                           height: 6,
                           decoration: const BoxDecoration(
-                              color: Colors.red, shape: BoxShape.circle),
+                              color: Colors.red, shape: BoxShape.circle,),
                         ),
                       );
                     }
@@ -148,18 +146,18 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildLegendItem(
-              color: Colors.green, label: 'Свободно', icon: Icons.check_circle),
+              color: Colors.green, label: 'Свободно', icon: Icons.check_circle,),
           _buildLegendItem(
-              color: Colors.red, label: 'Занято', icon: Icons.cancel),
+              color: Colors.red, label: 'Занято', icon: Icons.cancel,),
           _buildLegendItem(
-              color: Colors.orange, label: 'Сегодня', icon: Icons.today),
+              color: Colors.orange, label: 'Сегодня', icon: Icons.today,),
         ],
       );
 
   Widget _buildLegendItem(
           {required Color color,
           required String label,
-          required IconData icon}) =>
+          required IconData icon,}) =>
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -168,7 +166,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
           Text(
             label,
             style: TextStyle(
-                color: color, fontSize: 12, fontWeight: FontWeight.w500),
+                color: color, fontSize: 12, fontWeight: FontWeight.w500,),
           ),
         ],
       );
@@ -256,7 +254,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                 Text(
                   _formatDate(_selectedDay!),
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+                      fontWeight: FontWeight.bold, fontSize: 16,),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -266,7 +264,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                           ? 'Специалист занят в этот день'
                           : 'Специалист доступен для бронирования',
                   style: TextStyle(
-                      color: isBusy ? Colors.red : Colors.green, fontSize: 14),
+                      color: isBusy ? Colors.red : Colors.green, fontSize: 14,),
                 ),
               ],
             ),
@@ -310,7 +308,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
 /// Упрощенный виджет календаря для быстрого просмотра
 class CompactSpecialistCalendarWidget extends StatelessWidget {
   const CompactSpecialistCalendarWidget(
-      {super.key, required this.specialist, this.onDateSelected});
+      {required this.specialist, super.key, this.onDateSelected,});
 
   final Specialist specialist;
   final void Function(DateTime)? onDateSelected;
@@ -326,7 +324,7 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
               Row(
                 children: [
                   const Icon(Icons.calendar_today,
-                      size: 20, color: Colors.blue),
+                      size: 20, color: Colors.blue,),
                   const SizedBox(width: 8),
                   Text(
                     'Доступность',
@@ -379,7 +377,7 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
                     day,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
+                        fontSize: 12, fontWeight: FontWeight.bold,),
                   ),
                 ),
               )
@@ -463,7 +461,7 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
           Text(
             '$count',
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(label, style: TextStyle(fontSize: 12, color: color)),
         ],

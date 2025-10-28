@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/post.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/post_service.dart';
 import 'package:flutter/material.dart';
-import '../models/post.dart';
-import '../models/specialist.dart';
-import '../services/post_service.dart';
 
 class InstagramPostViewer extends StatefulWidget {
   const InstagramPostViewer(
-      {super.key, required this.post, required this.specialist});
+      {required this.post, required this.specialist, super.key,});
   final Post post;
   final Specialist specialist;
 
@@ -49,7 +49,7 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -77,7 +77,7 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
         height: 300,
         color: Colors.grey.shade200,
         child: const Center(
-            child: Icon(Icons.image, size: 100, color: Colors.grey)),
+            child: Icon(Icons.image, size: 100, color: Colors.grey),),
       );
     }
 
@@ -87,10 +87,10 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
         child: Image.network(
           widget.post.mediaUrls.first,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
+          errorBuilder: (context, error, stackTrace) => ColoredBox(
             color: Colors.grey.shade200,
             child: const Center(
-                child: Icon(Icons.image, size: 100, color: Colors.grey)),
+                child: Icon(Icons.image, size: 100, color: Colors.grey),),
           ),
         ),
       );
@@ -104,10 +104,10 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
         itemBuilder: (context, index) => Image.network(
           widget.post.mediaUrls[index],
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
+          errorBuilder: (context, error, stackTrace) => ColoredBox(
             color: Colors.grey.shade200,
             child: const Center(
-                child: Icon(Icons.image, size: 100, color: Colors.grey)),
+                child: Icon(Icons.image, size: 100, color: Colors.grey),),
           ),
         ),
       ),
@@ -135,7 +135,7 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
                   Text(
                     widget.specialist.name,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14),
+                        fontWeight: FontWeight.bold, fontSize: 14,),
                   ),
                   Text(
                     _formatTime(widget.post.createdAt),
@@ -187,7 +187,7 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
                     height: 6,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.grey.shade400),
+                        shape: BoxShape.circle, color: Colors.grey.shade400,),
                   ),
                 ),
               ),
@@ -204,7 +204,7 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
       );
 
   Widget _buildPostCaption() {
-    if (widget.post.text == null || widget.post.text!.isEmpty) {
+    if (widget.post.text.isEmpty) {
       return const SizedBox.shrink();
     }
 

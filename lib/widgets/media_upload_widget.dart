@@ -1,17 +1,14 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/services/media_storage_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../services/media_storage_service.dart';
-
 /// Виджет для загрузки медиафайлов мероприятия
 class MediaUploadWidget extends StatefulWidget {
   const MediaUploadWidget({
-    super.key,
-    required this.bookingId,
-    required this.specialistId,
+    required this.bookingId, required this.specialistId, super.key,
     this.onUploadComplete,
     this.onUploadError,
   });
@@ -129,7 +126,7 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Выбранные файлы:',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
         const SizedBox(height: 8),
         ...(_selectedFiles.asMap().entries.map((entry) {
           final index = entry.key;
@@ -146,7 +143,7 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
           leading: _getFileIcon(file.path),
           title: Text(file.name, style: const TextStyle(fontSize: 14)),
           subtitle: Text(_getFileSize(file.path),
-              style: const TextStyle(fontSize: 12)),
+              style: const TextStyle(fontSize: 12),),
           trailing: IconButton(
             onPressed: _isUploading ? null : () => _removeFile(index),
             icon: const Icon(Icons.close, color: Colors.red),
@@ -192,11 +189,11 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
               ? const SizedBox(
                   width: 16,
                   height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2))
+                  child: CircularProgressIndicator(strokeWidth: 2),)
               : const Icon(Icons.cloud_upload),
           label: Text(_isUploading ? 'Загрузка...' : 'Загрузить файлы'),
           style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12)),
+              padding: const EdgeInsets.symmetric(vertical: 12),),
         ),
       );
 
@@ -206,7 +203,7 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
           LinearProgressIndicator(value: _uploadProgress),
           const SizedBox(height: 8),
           Text('${(_uploadProgress * 100).toStringAsFixed(1)}%',
-              style: const TextStyle(fontSize: 14)),
+              style: const TextStyle(fontSize: 14),),
         ],
       );
 
@@ -224,7 +221,7 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(_uploadError!,
-                  style: TextStyle(color: Colors.red.shade700)),
+                  style: TextStyle(color: Colors.red.shade700),),
             ),
             IconButton(
               onPressed: () => setState(() => _uploadError = null),

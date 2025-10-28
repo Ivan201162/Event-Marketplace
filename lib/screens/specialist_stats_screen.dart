@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/analytics_service.dart';
 
 /// Экран статистики для специалистов
 class SpecialistStatsScreen extends ConsumerStatefulWidget {
@@ -85,13 +84,13 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.error_outline,
-                            size: 64, color: Colors.red[300]),
+                            size: 64, color: Colors.red[300],),
                         const SizedBox(height: 16),
                         Text(_error!, style: const TextStyle(fontSize: 16)),
                         const SizedBox(height: 16),
                         ElevatedButton(
                             onPressed: _loadUserStats,
-                            child: const Text('Повторить')),
+                            child: const Text('Повторить'),),
                       ],
                     ),
                   )
@@ -100,7 +99,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                     children: [
                       _buildGeneralStatsTab(),
                       _buildChartsTab(),
-                      _buildAnalyticsTab()
+                      _buildAnalyticsTab(),
                     ],
                   ),
       );
@@ -296,14 +295,14 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                             'Просмотры',
                             'Заявки',
                             'Сообщения',
-                            'Лайки'
+                            'Лайки',
                           ];
                           return Text(titles[value.toInt() % titles.length]);
                         },
                       ),
                     ),
                     leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: true)),
+                        sideTitles: SideTitles(showTitles: true),),
                     topTitles: const AxisTitles(),
                     rightTitles: const AxisTitles(),
                   ),
@@ -405,7 +404,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   }
 
   Widget _buildStatsCard(
-          {required String title, required List<Widget> children}) =>
+          {required String title, required List<Widget> children,}) =>
       Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -447,7 +446,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
             const SizedBox(width: 12),
             Expanded(
                 child:
-                    Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(title, style: Theme.of(context).textTheme.bodyMedium),),
             Text(
               value,
               style: Theme.of(
@@ -532,7 +531,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
             const SizedBox(width: 8),
             Expanded(
                 child:
-                    Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(title, style: Theme.of(context).textTheme.bodyMedium),),
             Text(
               value,
               style: Theme.of(context)
@@ -545,7 +544,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
       );
 
   Widget _buildRecommendationItem(
-          String title, String description, IconData icon) =>
+          String title, String description, IconData icon,) =>
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
@@ -598,7 +597,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
           BarChartRodData(
               toY: (stats['views'] ?? 0).toDouble(),
               color: Colors.blue,
-              width: 20),
+              width: 20,),
         ],
       ),
       BarChartGroupData(
@@ -607,7 +606,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
           BarChartRodData(
               toY: (stats['requests'] ?? 0).toDouble(),
               color: Colors.green,
-              width: 20),
+              width: 20,),
         ],
       ),
       BarChartGroupData(
@@ -626,7 +625,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
           BarChartRodData(
               toY: (stats['likes'] ?? 0).toDouble(),
               color: Colors.pink,
-              width: 20),
+              width: 20,),
         ],
       ),
     ];

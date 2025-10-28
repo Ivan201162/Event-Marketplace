@@ -58,12 +58,12 @@ class OptimizedSearchSection extends StatelessWidget {
       {
         'label': 'Фотографы',
         'icon': Icons.camera_alt,
-        'category': 'photographer'
+        'category': 'photographer',
       },
       {
         'label': 'Видеографы',
         'icon': Icons.videocam,
-        'category': 'videographer'
+        'category': 'videographer',
       },
       {'label': 'Ведущие', 'icon': Icons.mic, 'category': 'host'},
       {'label': 'DJ', 'icon': Icons.music_note, 'category': 'dj'},
@@ -81,7 +81,7 @@ class OptimizedSearchSection extends StatelessWidget {
           return _buildFilterChip(
             context,
             label: filter['label']!,
-            icon: filter['icon'] as IconData,
+            icon: filter['icon']! as IconData,
             onTap: () => context.push('/search?category=${filter['category']}'),
           );
         },

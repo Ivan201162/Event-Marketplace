@@ -1,15 +1,11 @@
+import 'package:event_marketplace_app/models/analytics.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
-import '../models/analytics.dart';
 
 /// Виджет для отображения графиков аналитики
 class AnalyticsChartWidget extends StatelessWidget {
   const AnalyticsChartWidget({
-    super.key,
-    required this.data,
-    required this.type,
-    required this.title,
+    required this.data, required this.type, required this.title, super.key,
     this.subtitle,
   });
   final List<ChartData> data;
@@ -27,11 +23,11 @@ class AnalyticsChartWidget extends StatelessWidget {
               // Заголовок
               Text(title,
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
+                      fontSize: 18, fontWeight: FontWeight.bold,),),
               if (subtitle != null) ...[
                 const SizedBox(height: 4),
                 Text(subtitle!,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
               ],
               const SizedBox(height: 16),
 
@@ -71,7 +67,7 @@ class AnalyticsChartWidget extends StatelessWidget {
               showTitles: true,
               reservedSize: 40,
               getTitlesWidget: (value, meta) => Text(value.toInt().toString(),
-                  style: const TextStyle(fontSize: 12)),
+                  style: const TextStyle(fontSize: 12),),
             ),
           ),
           bottomTitles: AxisTitles(
@@ -80,7 +76,7 @@ class AnalyticsChartWidget extends StatelessWidget {
               getTitlesWidget: (value, meta) {
                 if (value.toInt() < data.length) {
                   return Text(data[value.toInt()].label,
-                      style: const TextStyle(fontSize: 12));
+                      style: const TextStyle(fontSize: 12),);
                 }
                 return const Text('');
               },
@@ -125,7 +121,7 @@ class AnalyticsChartWidget extends StatelessWidget {
               showTitles: true,
               reservedSize: 40,
               getTitlesWidget: (value, meta) => Text(value.toInt().toString(),
-                  style: const TextStyle(fontSize: 12)),
+                  style: const TextStyle(fontSize: 12),),
             ),
           ),
           bottomTitles: AxisTitles(
@@ -134,7 +130,7 @@ class AnalyticsChartWidget extends StatelessWidget {
               getTitlesWidget: (value, meta) {
                 if (value.toInt() < data.length) {
                   return Text(data[value.toInt()].label,
-                      style: const TextStyle(fontSize: 12));
+                      style: const TextStyle(fontSize: 12),);
                 }
                 return const Text('');
               },
@@ -231,7 +227,7 @@ enum ChartType { line, bar, pie }
 /// Виджет для отображения статистики
 class AnalyticsStatsWidget extends StatelessWidget {
   const AnalyticsStatsWidget(
-      {super.key, required this.stats, this.onViewDetails});
+      {required this.stats, super.key, this.onViewDetails,});
   final IncomeExpenseStats stats;
   final VoidCallback? onViewDetails;
 
@@ -246,12 +242,12 @@ class AnalyticsStatsWidget extends StatelessWidget {
                 children: [
                   const Text('Статистика',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   const Spacer(),
                   if (onViewDetails != null)
                     TextButton(
                         onPressed: onViewDetails,
-                        child: const Text('Подробнее')),
+                        child: const Text('Подробнее'),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -261,7 +257,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildStatCard('Доходы', stats.totalIncome,
-                        Colors.green, Icons.trending_up),
+                        Colors.green, Icons.trending_up,),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -353,7 +349,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                      fontSize: 12, color: color, fontWeight: FontWeight.w500),
+                      fontSize: 12, color: color, fontWeight: FontWeight.w500,),
                 ),
               ],
             ),
@@ -363,7 +359,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
                   ? value.toInt().toString()
                   : '${value.toStringAsFixed(0)} ₽',
               style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color,),
             ),
           ],
         ),
@@ -390,7 +386,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                    fontSize: 12, color: color, fontWeight: FontWeight.w500),
+                    fontSize: 12, color: color, fontWeight: FontWeight.w500,),
               ),
             ],
           ),
@@ -398,7 +394,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
           Text(
             '${isPositive ? '+' : ''}${percentage.toStringAsFixed(1)}%',
             style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                fontSize: 16, fontWeight: FontWeight.bold, color: color,),
           ),
         ],
       ),
@@ -408,7 +404,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
 
 /// Виджет для отображения целей
 class BudgetGoalsWidget extends StatelessWidget {
-  const BudgetGoalsWidget({super.key, required this.goals, this.onAddGoal});
+  const BudgetGoalsWidget({required this.goals, super.key, this.onAddGoal});
   final List<BudgetGoal> goals;
   final VoidCallback? onAddGoal;
 
@@ -461,7 +457,7 @@ class BudgetGoalsWidget extends StatelessWidget {
                   child: Text(
                     goal.name,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                        fontSize: 16, fontWeight: FontWeight.bold,),
                   ),
                 ),
                 Container(
@@ -486,7 +482,7 @@ class BudgetGoalsWidget extends StatelessWidget {
             if (goal.description != null) ...[
               const SizedBox(height: 4),
               Text(goal.description!,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
             ],
 
             const SizedBox(height: 12),
@@ -501,7 +497,7 @@ class BudgetGoalsWidget extends StatelessWidget {
                       Text(
                         '${goal.currentAmount.toStringAsFixed(0)} / ${goal.targetAmount.toStringAsFixed(0)} ₽',
                         style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500),
+                            fontSize: 14, fontWeight: FontWeight.w500,),
                       ),
                       const SizedBox(height: 4),
                       LinearProgressIndicator(

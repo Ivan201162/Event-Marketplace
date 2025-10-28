@@ -87,7 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       hintText: 'Поиск по имени или специализации...',
                       prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),),
                       filled: true,
                       fillColor: theme.colorScheme.surface,
                     ),
@@ -107,14 +107,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           decoration: InputDecoration(
                             labelText: 'Категория',
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                                borderRadius: BorderRadius.circular(12),),
                             filled: true,
                             fillColor: theme.colorScheme.surface,
                           ),
                           items: _categories
                               .map(
                                 (category) => DropdownMenuItem(
-                                    value: category, child: Text(category)),
+                                    value: category, child: Text(category),),
                               )
                               .toList(),
                           onChanged: (value) {
@@ -161,7 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
               delegate: SliverChildBuilderDelegate((context, index) {
                 final specialist = _specialists[index];
                 return _buildSpecialistCard(specialist, theme);
-              }, childCount: _specialists.length),
+              }, childCount: _specialists.length,),
             ),
           ),
         ],
@@ -170,7 +170,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildSpecialistCard(
-          Map<String, dynamic> specialist, ThemeData theme) =>
+          Map<String, dynamic> specialist, ThemeData theme,) =>
       Card(
         margin: const EdgeInsets.only(bottom: 16),
         elevation: 2,
@@ -188,7 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     CircleAvatar(
                         radius: 30,
-                        backgroundImage: NetworkImage(specialist['avatar'])),
+                        backgroundImage: NetworkImage(specialist['avatar']),),
                     if (specialist['isVerified'])
                       Positioned(
                         bottom: 0,
@@ -200,7 +200,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(Icons.verified,
-                              color: Colors.white, size: 16),
+                              color: Colors.white, size: 16,),
                         ),
                       ),
                   ],
@@ -230,7 +230,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           const Icon(Icons.star, color: Colors.amber, size: 16),
                           const SizedBox(width: 4),
                           Text(specialist['rating'].toString(),
-                              style: theme.textTheme.bodyMedium),
+                              style: theme.textTheme.bodyMedium,),
                           const SizedBox(width: 16),
                           Text(
                             '${specialist['price']}₽/час',
@@ -278,7 +278,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage(specialist['avatar'])),
+                      backgroundImage: NetworkImage(specialist['avatar']),),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
@@ -324,7 +324,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(const SnackBar(
-                            content: Text('Заявка отправлена!')));
+                            content: Text('Заявка отправлена!'),),);
                       },
                       icon: const Icon(Icons.send),
                       label: const Text('Отправить заявку'),
@@ -338,7 +338,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(
-                            const SnackBar(content: Text('Чат открыт!')));
+                            const SnackBar(content: Text('Чат открыт!')),);
                       },
                       icon: const Icon(Icons.chat),
                       label: const Text('Написать'),

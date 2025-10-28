@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/utils/debug_utils.dart';
+import 'package:event_marketplace_app/models/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../core/utils/debug_utils.dart';
-import '../../models/user.dart';
 
 /// Репозиторий для работы с пользователями
 class UserRepository {

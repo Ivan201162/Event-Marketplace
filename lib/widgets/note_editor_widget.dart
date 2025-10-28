@@ -1,16 +1,13 @@
+import 'package:event_marketplace_app/models/customer_profile_extended.dart';
+import 'package:event_marketplace_app/providers/customer_profile_extended_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/customer_profile_extended.dart';
-import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет редактора заметок
 class NoteEditorWidget extends ConsumerStatefulWidget {
   const NoteEditorWidget({
-    super.key,
-    required this.userId,
+    required this.userId, required this.onNoteSaved, super.key,
     this.existingNote,
-    required this.onNoteSaved,
   });
   final String userId;
   final CustomerNote? existingNote;
@@ -56,7 +53,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
               AppBar(
                 title: Text(widget.existingNote == null
                     ? 'Новая заметка'
-                    : 'Редактировать заметку'),
+                    : 'Редактировать заметку',),
                 actions: [
                   TextButton(
                     onPressed: _isSaving ? null : _saveNote,
@@ -121,7 +118,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Теги',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
 
           // Поле ввода тегов
@@ -140,7 +137,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
               const SizedBox(width: 8),
               IconButton(
                   onPressed: () => _addTag(_tagsController.text),
-                  icon: const Icon(Icons.add)),
+                  icon: const Icon(Icons.add),),
             ],
           ),
           const SizedBox(height: 8),
@@ -187,7 +184,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
       children: [
         const SizedBox(height: 8),
         const Text('Предложенные теги:',
-            style: TextStyle(fontSize: 12, color: Colors.grey)),
+            style: TextStyle(fontSize: 12, color: Colors.grey),),
         const SizedBox(height: 4),
         Wrap(
           spacing: 4,
@@ -211,7 +208,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Настройки',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           SwitchListTile(
             title: const Text('Закрепить заметку'),
@@ -251,7 +248,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Заполните заголовок и содержимое')));
+          const SnackBar(content: Text('Заполните заголовок и содержимое')),);
       return;
     }
 
@@ -291,7 +288,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           SnackBar(
             content: Text(widget.existingNote == null
                 ? 'Заметка создана'
-                : 'Заметка обновлена'),
+                : 'Заметка обновлена',),
           ),
         );
       }

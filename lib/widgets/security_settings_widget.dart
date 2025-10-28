@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/core/responsive_utils.dart';
+import 'package:event_marketplace_app/providers/security_provider.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/responsive_utils.dart';
-import '../providers/security_provider.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Виджет для отображения настроек безопасности
 class SecuritySettingsWidget extends ConsumerWidget {
@@ -24,7 +23,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
               const SizedBox(width: 12),
               const Expanded(
                   child:
-                      ResponsiveText('Настройки безопасности', isTitle: true)),
+                      ResponsiveText('Настройки безопасности', isTitle: true),),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => ref.read(securityProvider.notifier).refresh(),
@@ -71,7 +70,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
                       : () => _showEncryptionDialog(context, ref),
                   icon: Icon(securityState.isEncryptionEnabled
                       ? Icons.lock_open
-                      : Icons.lock),
+                      : Icons.lock,),
                   label: Text(
                     securityState.isEncryptionEnabled
                         ? 'Отключить шифрование'
@@ -176,7 +175,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -192,7 +191,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
               foregroundColor: Colors.white,
             ),
             child: Text(
-                securityState.isEncryptionEnabled ? 'Отключить' : 'Включить'),
+                securityState.isEncryptionEnabled ? 'Отключить' : 'Включить',),
           ),
         ],
       ),
@@ -210,7 +209,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -253,7 +252,7 @@ class PasswordValidationWidget extends ConsumerWidget {
             suffixIcon: IconButton(
               icon: Icon(passwordState.isVisible
                   ? Icons.visibility
-                  : Icons.visibility_off),
+                  : Icons.visibility_off,),
               onPressed: () => ref
                   .read(passwordValidationProvider.notifier)
                   .toggleVisibility(),
@@ -288,7 +287,7 @@ class PasswordValidationWidget extends ConsumerWidget {
                   Expanded(
                     child: Text(error,
                         style:
-                            const TextStyle(color: Colors.red, fontSize: 12)),
+                            const TextStyle(color: Colors.red, fontSize: 12),),
                   ),
                 ],
               ),
@@ -391,7 +390,7 @@ class SecurityStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatRow(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(
@@ -410,7 +409,7 @@ class SecurityStatsWidget extends ConsumerWidget {
 
 /// Виджет для отображения рекомендаций по безопасности
 class SecurityRecommendationsWidget extends ConsumerWidget {
-  const SecurityRecommendationsWidget({super.key, required this.dataType});
+  const SecurityRecommendationsWidget({required this.dataType, super.key});
   final String dataType;
 
   @override
@@ -426,11 +425,11 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
           Row(
             children: [
               Icon(_getSecurityIcon(securityLevel),
-                  color: _getSecurityColor(securityLevel)),
+                  color: _getSecurityColor(securityLevel),),
               const SizedBox(width: 12),
               const Expanded(
                   child: ResponsiveText('Рекомендации по безопасности',
-                      isTitle: true)),
+                      isTitle: true,),),
             ],
           ),
           const SizedBox(height: 16),
@@ -463,10 +462,10 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Icon(Icons.check_circle_outline,
-                      size: 16, color: Colors.green),
+                      size: 16, color: Colors.green,),
                   const SizedBox(width: 8),
                   Expanded(
-                      child: ResponsiveText(recommendation, isSubtitle: true)),
+                      child: ResponsiveText(recommendation, isSubtitle: true),),
                 ],
               ),
             ),

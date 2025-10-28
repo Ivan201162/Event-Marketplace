@@ -10,13 +10,11 @@ class ChatBotMessage {
     required this.chatId,
     required this.message,
     required this.type,
-    this.quickReplies,
+    required this.createdAt, required this.isFromBot, this.quickReplies,
     this.cards,
     this.listItems,
     this.imageUrl,
     this.metadata,
-    required this.createdAt,
-    required this.isFromBot,
   });
 
   factory ChatBotMessage.fromMap(Map<String, dynamic> map, String id) =>

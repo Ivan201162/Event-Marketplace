@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Виджет поиска в чатах
 class ChatSearchWidget extends StatefulWidget {
-  const ChatSearchWidget({super.key, required this.onSearchChanged});
+  const ChatSearchWidget({required this.onSearchChanged, super.key});
   final Function(String) onSearchChanged;
 
   @override
@@ -27,7 +27,7 @@ class _ChatSearchWidgetState extends State<ChatSearchWidget> {
           prefixIcon: const Icon(Icons.search),
           suffixIcon: _controller.text.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear), onPressed: _clearSearch)
+                  icon: const Icon(Icons.clear), onPressed: _clearSearch,)
               : null,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,

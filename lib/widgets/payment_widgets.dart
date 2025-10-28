@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/organization_type.dart';
+import 'package:event_marketplace_app/models/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/organization_type.dart';
-import '../models/payment.dart';
 
 /// Виджет для отображения платежа
 class PaymentCard extends ConsumerWidget {
   const PaymentCard(
-      {super.key, required this.payment, this.onTap, this.showActions = false});
+      {required this.payment, super.key, this.onTap, this.showActions = false,});
   final Payment payment;
   final VoidCallback? onTap;
   final bool showActions;
@@ -31,7 +30,7 @@ class PaymentCard extends ConsumerWidget {
                       child: Text(
                         payment.typeDisplayName ?? payment.displayName,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     _buildStatusChip(payment.status),
@@ -44,12 +43,12 @@ class PaymentCard extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(Icons.attach_money,
-                        size: 20, color: Theme.of(context).colorScheme.primary),
+                        size: 20, color: Theme.of(context).colorScheme.primary,),
                     const SizedBox(width: 8),
                     Text(
                       '${payment.amount.toStringAsFixed(0)} ${payment.currency}',
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18, fontWeight: FontWeight.bold,),
                     ),
                   ],
                 ),
@@ -101,7 +100,7 @@ class PaymentCard extends ConsumerWidget {
                   Row(
                     children: [
                       const Icon(Icons.check_circle,
-                          size: 16, color: Colors.green),
+                          size: 16, color: Colors.green,),
                       const SizedBox(width: 8),
                       Text(
                         'Завершен: ${_formatDate(payment.completedAt!)}',
@@ -132,31 +131,24 @@ class PaymentCard extends ConsumerWidget {
       case PaymentStatus.pending:
         color = Colors.orange;
         icon = Icons.schedule;
-        break;
       case PaymentStatus.processing:
         color = Colors.blue;
         icon = Icons.hourglass_empty;
-        break;
       case PaymentStatus.completed:
         color = Colors.green;
         icon = Icons.check_circle;
-        break;
       case PaymentStatus.failed:
         color = Colors.red;
         icon = Icons.error;
-        break;
       case PaymentStatus.cancelled:
         color = Colors.grey;
         icon = Icons.cancel;
-        break;
       case PaymentStatus.refunded:
         color = Colors.purple;
         icon = Icons.undo;
-        break;
       case PaymentStatus.disputed:
         color = Colors.amber;
         icon = Icons.gavel;
-        break;
     }
 
     return Container(
@@ -174,7 +166,7 @@ class PaymentCard extends ConsumerWidget {
           Text(
             _getStatusDisplayName(status),
             style: TextStyle(
-                color: color, fontSize: 12, fontWeight: FontWeight.w500),
+                color: color, fontSize: 12, fontWeight: FontWeight.w500,),
           ),
         ],
       ),
@@ -225,7 +217,7 @@ class PaymentCard extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -236,7 +228,7 @@ class PaymentCard extends ConsumerWidget {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Платеж отменен')));
+                      const SnackBar(content: Text('Платеж отменен')),);
                 }
               } catch (e) {
                 if (context.mounted) {
@@ -280,7 +272,7 @@ class PaymentCard extends ConsumerWidget {
 
 /// Диалог оплаты
 class PaymentDialog extends ConsumerStatefulWidget {
-  const PaymentDialog({super.key, required this.payment});
+  const PaymentDialog({required this.payment, super.key});
   final Payment payment;
 
   @override
@@ -312,9 +304,9 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
       actions: [
         TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена')),
+            child: const Text('Отмена'),),
         ElevatedButton(
-            onPressed: _processPayment, child: const Text('Оплатить')),
+            onPressed: _processPayment, child: const Text('Оплатить'),),
       ],
     );
   }
@@ -379,7 +371,7 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
 
 /// Виджет статистики платежей
 class PaymentStatisticsWidget extends ConsumerWidget {
-  const PaymentStatisticsWidget({super.key, required this.statistics});
+  const PaymentStatisticsWidget({required this.statistics, super.key});
   final Map<String, dynamic> statistics;
 
   @override
@@ -489,7 +481,7 @@ class PaymentStatisticsWidget extends ConsumerWidget {
             Text(
               count,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(
@@ -506,7 +498,7 @@ class PaymentStatisticsWidget extends ConsumerWidget {
             Text(
               amount,
               style: TextStyle(
-                  fontSize: 10, color: color, fontWeight: FontWeight.w500),
+                  fontSize: 10, color: color, fontWeight: FontWeight.w500,),
             ),
           ],
         ),
@@ -516,9 +508,7 @@ class PaymentStatisticsWidget extends ConsumerWidget {
 /// Виджет расчета платежей
 class PaymentCalculationWidget extends ConsumerWidget {
   const PaymentCalculationWidget({
-    super.key,
-    required this.totalAmount,
-    required this.organizationType,
+    required this.totalAmount, required this.organizationType, super.key,
   });
   final double totalAmount;
   final OrganizationType organizationType;
@@ -590,7 +580,7 @@ class PaymentCalculationWidget extends ConsumerWidget {
 
   /// Построить строку платежа
   Widget _buildPaymentRow(
-          BuildContext context, String label, String amount, Color color) =>
+          BuildContext context, String label, String amount, Color color,) =>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -598,7 +588,7 @@ class PaymentCalculationWidget extends ConsumerWidget {
           Text(
             amount,
             style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: color),
+                fontSize: 14, fontWeight: FontWeight.bold, color: color,),
           ),
         ],
       );

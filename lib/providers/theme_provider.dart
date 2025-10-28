@@ -1,7 +1,7 @@
+import 'package:event_marketplace_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../theme/app_theme.dart';
 
 /// Провайдер для управления темами приложения
 class ThemeNotifier extends Notifier<ThemeMode> {

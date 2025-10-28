@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/portfolio_item.dart';
-import '../models/profile_statistics.dart';
-import '../models/social_link.dart';
+import 'package:event_marketplace_app/models/portfolio_item.dart';
+import 'package:event_marketplace_app/models/profile_statistics.dart';
+import 'package:event_marketplace_app/models/social_link.dart';
 
 /// Сервис для управления профилем специалиста
 class SpecialistProfileService {
@@ -78,7 +78,7 @@ class SpecialistProfileService {
 
   /// Обновить элемент портфолио
   Future<void> updatePortfolioItem(
-      String specialistId, String itemId, PortfolioItem item) async {
+      String specialistId, String itemId, PortfolioItem item,) async {
     try {
       await _firestore
           .collection('specialists')
@@ -142,7 +142,7 @@ class SpecialistProfileService {
 
   /// Обновить социальную ссылку
   Future<void> updateSocialLink(
-      String specialistId, String linkId, SocialLink link) async {
+      String specialistId, String linkId, SocialLink link,) async {
     try {
       await _firestore
           .collection('specialists')

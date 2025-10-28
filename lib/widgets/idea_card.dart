@@ -1,25 +1,23 @@
+import 'package:event_marketplace_app/models/idea.dart';
 import 'package:flutter/material.dart';
-
-import '../models/idea.dart';
 
 /// Карточка идеи в ленте
 class IdeaCard extends StatelessWidget {
-  final Idea idea;
-  final VoidCallback? onTap;
-  final VoidCallback? onLike;
-  final VoidCallback? onComment;
-  final VoidCallback? onSave;
-  final VoidCallback? onShare;
 
   const IdeaCard({
-    super.key,
-    required this.idea,
+    required this.idea, super.key,
     this.onTap,
     this.onLike,
     this.onComment,
     this.onSave,
     this.onShare,
   });
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +80,9 @@ class IdeaCard extends StatelessWidget {
 
 /// Заголовок идеи с аватаром автора
 class _IdeaHeader extends StatelessWidget {
-  final Idea idea;
 
   const _IdeaHeader({required this.idea});
+  final Idea idea;
 
   @override
   Widget build(BuildContext context) {
@@ -165,9 +163,9 @@ class _IdeaHeader extends StatelessWidget {
 
 /// Медиа контент идеи
 class _IdeaMedia extends StatelessWidget {
-  final List<String> media;
 
   const _IdeaMedia({required this.media});
+  final List<String> media;
 
   @override
   Widget build(BuildContext context) {
@@ -227,9 +225,9 @@ class _IdeaMedia extends StatelessWidget {
 
 /// Теги идеи
 class _IdeaTags extends StatelessWidget {
-  final List<String> tags;
 
   const _IdeaTags({required this.tags});
+  final List<String> tags;
 
   @override
   Widget build(BuildContext context) {
@@ -259,11 +257,6 @@ class _IdeaTags extends StatelessWidget {
 
 /// Действия с идеей
 class _IdeaActions extends StatelessWidget {
-  final Idea idea;
-  final VoidCallback? onLike;
-  final VoidCallback? onComment;
-  final VoidCallback? onSave;
-  final VoidCallback? onShare;
 
   const _IdeaActions({
     required this.idea,
@@ -272,6 +265,11 @@ class _IdeaActions extends StatelessWidget {
     this.onSave,
     this.onShare,
   });
+  final Idea idea;
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -307,9 +305,9 @@ class _IdeaActions extends StatelessWidget {
 
 /// Статистика идеи
 class _IdeaStats extends StatelessWidget {
-  final Idea idea;
 
   const _IdeaStats({required this.idea});
+  final Idea idea;
 
   @override
   Widget build(BuildContext context) {

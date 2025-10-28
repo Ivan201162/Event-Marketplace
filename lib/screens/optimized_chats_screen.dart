@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/providers/optimized_data_providers.dart';
+import 'package:event_marketplace_app/services/optimized_chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat.dart';
-import '../models/app_user.dart';
-import '../providers/optimized_data_providers.dart';
-import '../services/optimized_chat_service.dart';
 
 /// Оптимизированная лента с реальными данными и обработкой состояний
 class OptimizedChatsScreen extends ConsumerStatefulWidget {
@@ -185,11 +184,11 @@ class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
       'search': _searchQuery,
       'onlineOnly': _showOnlineOnly,
       'unreadOnly': _showUnreadOnly,
-    }));
+    }),);
 
     return chatAsync.when(
-      data: (chatsState) => _buildChatsContent(chatsState),
-      loading: () => _buildLoadingState(),
+      data: _buildChatsContent,
+      loading: _buildLoadingState,
       error: (error, stack) => _buildErrorState(error.toString()),
     );
   }
@@ -342,10 +341,8 @@ class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
     switch (action) {
       case 'filter':
         _showFilterDialog();
-        break;
       case 'new_chat':
         _startNewChat();
-        break;
     }
   }
 
@@ -406,7 +403,7 @@ class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
     // TODO: Открыть экран выбора пользователя для нового чата
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Функция создания нового чата в разработке')),
+          content: Text('Функция создания нового чата в разработке'),),
     );
   }
 
@@ -560,7 +557,7 @@ class _ChatListItemWidget extends ConsumerWidget {
   }
 
   void _showChatOptions(
-      BuildContext context, Chat chat, OptimizedChatService chatService) {
+      BuildContext context, Chat chat, OptimizedChatService chatService,) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -590,7 +587,7 @@ class _ChatListItemWidget extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
               title: const Text('Удалить чат',
-                  style: TextStyle(color: Colors.red)),
+                  style: TextStyle(color: Colors.red),),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteChat(context, chat, chatService);
@@ -603,13 +600,13 @@ class _ChatListItemWidget extends ConsumerWidget {
   }
 
   void _confirmDeleteChat(
-      BuildContext context, Chat chat, OptimizedChatService chatService) {
+      BuildContext context, Chat chat, OptimizedChatService chatService,) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить чат'),
         content: Text(
-            'Вы уверены, что хотите удалить чат с ${chat.participantName}?'),
+            'Вы уверены, что хотите удалить чат с ${chat.participantName}?',),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/utils/back_utils.dart';
 import 'package:flutter/material.dart';
-import '../utils/back_utils.dart';
 
 /// Виджет для обработки кнопки "Назад"
 class BackButtonHandler extends StatelessWidget {
   const BackButtonHandler({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.showExitConfirmation = false,
     this.showBackConfirmation = false,
     this.backConfirmationMessage,

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/post.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/post.dart';
 
 /// Service for managing posts
 class PostService {
@@ -12,7 +11,7 @@ class PostService {
 
   /// Get all posts with pagination
   Future<List<Post>> getPosts(
-      {int limit = 20, DocumentSnapshot? lastDocument}) async {
+      {int limit = 20, DocumentSnapshot? lastDocument,}) async {
     try {
       Query query = _firestore
           .collection(_collection)
@@ -24,7 +23,7 @@ class PostService {
       }
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Post.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting posts: $e');
       return [];
@@ -41,7 +40,7 @@ class PostService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Post.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting posts by user: $e');
       return [];
@@ -50,7 +49,7 @@ class PostService {
 
   /// Get posts by specialist
   Future<List<Post>> getPostsBySpecialist(String specialistId,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -59,7 +58,7 @@ class PostService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Post.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting posts by specialist: $e');
       return [];
@@ -76,7 +75,7 @@ class PostService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Post.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting posts by tags: $e');
       return [];
@@ -246,7 +245,7 @@ class PostService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Post.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting popular posts: $e');
       return [];
@@ -267,7 +266,7 @@ class PostService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Post.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting trending posts: $e');
       return [];
@@ -285,7 +284,7 @@ class PostService {
           .get();
 
       final posts =
-          snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+          snapshot.docs.map(Post.fromFirestore).toList();
 
       // Filter posts that contain the query in text or tags
       return posts.where((post) {
@@ -307,7 +306,7 @@ class PostService {
         .limit(limit)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
+            snapshot.docs.map(Post.fromFirestore).toList(),);
   }
 
   /// Stream of posts by user
@@ -319,7 +318,7 @@ class PostService {
         .limit(limit)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
+            snapshot.docs.map(Post.fromFirestore).toList(),);
   }
 
   /// Get post statistics
@@ -330,7 +329,7 @@ class PostService {
         final data = doc.data()!;
         return {
           'likes': data['likesCount'] ?? 0,
-          'comments': data['commentsCount'] ?? 0
+          'comments': data['commentsCount'] ?? 0,
         };
       }
       return {'likes': 0, 'comments': 0};

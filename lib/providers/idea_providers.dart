@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/models/idea_filter.dart';
+import 'package:event_marketplace_app/models/idea_stats.dart';
+import 'package:event_marketplace_app/services/idea_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/idea.dart';
-import '../models/idea_filter.dart';
-import '../models/idea_stats.dart';
-import '../services/idea_service.dart';
 
 /// Провайдер сервиса идей
 final ideaServiceProvider = Provider<IdeaService>((ref) => IdeaService());

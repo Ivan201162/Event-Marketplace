@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/services/test_data_service.dart';
 import 'package:flutter/material.dart';
-import '../services/test_data_service.dart';
 
 /// Экран для управления тестовыми данными
 class TestDataManagementScreen extends StatefulWidget {
@@ -100,13 +100,13 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
   void _showSuccessSnackBar(String message) => ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text(message), backgroundColor: Colors.green));
+          SnackBar(content: Text(message), backgroundColor: Colors.green),);
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   @override
@@ -173,7 +173,7 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Статистика',
-                                style: Theme.of(context).textTheme.titleLarge),
+                                style: Theme.of(context).textTheme.titleLarge,),
                             const SizedBox(height: 8),
                             if (_stats.isEmpty)
                               const Text('Нет данных')
@@ -187,11 +187,11 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                          _getCollectionDisplayName(entry.key)),
+                                          _getCollectionDisplayName(entry.key),),
                                       Text(
                                         entry.value.toString(),
                                         style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,),
                                       ),
                                     ],
                                   ),
@@ -212,7 +212,7 @@ class _TestDataManagementScreenState extends State<TestDataManagementScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text('Управление',
-                                style: Theme.of(context).textTheme.titleLarge),
+                                style: Theme.of(context).textTheme.titleLarge,),
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               onPressed: _hasTestData ? null : _createTestData,

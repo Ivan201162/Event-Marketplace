@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/services/marketing_admin_service.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../models/advertisement.dart';
-import '../../services/marketing_admin_service.dart';
 
 class AdminAdvertisementManagementScreen extends StatefulWidget {
   const AdminAdvertisementManagementScreen({super.key});
@@ -46,7 +45,7 @@ class _AdminAdvertisementManagementScreenState
         actions: [
           IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => _showCreateAdDialog())
+              onPressed: _showCreateAdDialog,),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -72,7 +71,7 @@ class _AdminAdvertisementManagementScreenState
             padding: const EdgeInsets.all(16),
             itemCount: ads.length,
             itemBuilder: (context, index) {
-              final adData = ads[index].data() as Map<String, dynamic>;
+              final adData = ads[index].data()! as Map<String, dynamic>;
               final ad = Advertisement.fromMap(adData);
 
               return Card(
@@ -114,7 +113,7 @@ class _AdminAdvertisementManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.check, color: Colors.green),
                           title: Text('Одобрить',
-                              style: TextStyle(color: Colors.green)),
+                              style: TextStyle(color: Colors.green),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -123,7 +122,7 @@ class _AdminAdvertisementManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.close, color: Colors.red),
                           title: Text('Отклонить',
-                              style: TextStyle(color: Colors.red)),
+                              style: TextStyle(color: Colors.red),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -132,7 +131,7 @@ class _AdminAdvertisementManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.pause, color: Colors.orange),
                           title: Text('Приостановить',
-                              style: TextStyle(color: Colors.orange)),
+                              style: TextStyle(color: Colors.orange),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -141,7 +140,7 @@ class _AdminAdvertisementManagementScreenState
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
                           title: Text('Удалить',
-                              style: TextStyle(color: Colors.red)),
+                              style: TextStyle(color: Colors.red),),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -216,7 +215,7 @@ class _AdminAdvertisementManagementScreenState
                 ),
                 items: AdvertisementType.values.map((type) {
                   return DropdownMenuItem(
-                      value: type, child: Text(_getAdTypeName(type)));
+                      value: type, child: Text(_getAdTypeName(type)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -233,7 +232,7 @@ class _AdminAdvertisementManagementScreenState
                 ),
                 items: AdvertisementStatus.values.map((status) {
                   return DropdownMenuItem(
-                      value: status, child: Text(_getAdStatusName(status)));
+                      value: status, child: Text(_getAdStatusName(status)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -245,7 +244,7 @@ class _AdminAdvertisementManagementScreenState
               ListTile(
                 title: const Text('Дата начала'),
                 subtitle: Text(
-                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                    '${_startDate.day}.${_startDate.month}.${_startDate.year}',),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
@@ -262,7 +261,7 @@ class _AdminAdvertisementManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(onPressed: _createAd, child: const Text('Создать')),
         ],
       ),
@@ -293,7 +292,7 @@ class _AdminAdvertisementManagementScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Заполните все обязательные поля')));
+          const SnackBar(content: Text('Заполните все обязательные поля')),);
       return;
     }
 
@@ -324,7 +323,7 @@ class _AdminAdvertisementManagementScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Рекламное объявление создано успешно')));
+          content: Text('Рекламное объявление создано успешно'),),);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
@@ -335,19 +334,14 @@ class _AdminAdvertisementManagementScreenState
     switch (action) {
       case 'edit':
         _showEditAdDialog(ad);
-        break;
       case 'approve':
         _updateAdStatus(ad, AdvertisementStatus.active);
-        break;
       case 'reject':
         _updateAdStatus(ad, AdvertisementStatus.rejected);
-        break;
       case 'pause':
         _updateAdStatus(ad, AdvertisementStatus.paused);
-        break;
       case 'delete':
         _deleteAd(ad);
-        break;
     }
   }
 
@@ -411,7 +405,7 @@ class _AdminAdvertisementManagementScreenState
                 ),
                 items: AdvertisementType.values.map((type) {
                   return DropdownMenuItem(
-                      value: type, child: Text(_getAdTypeName(type)));
+                      value: type, child: Text(_getAdTypeName(type)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -428,7 +422,7 @@ class _AdminAdvertisementManagementScreenState
                 ),
                 items: AdvertisementStatus.values.map((status) {
                   return DropdownMenuItem(
-                      value: status, child: Text(_getAdStatusName(status)));
+                      value: status, child: Text(_getAdStatusName(status)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -440,7 +434,7 @@ class _AdminAdvertisementManagementScreenState
               ListTile(
                 title: const Text('Дата начала'),
                 subtitle: Text(
-                    '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                    '${_startDate.day}.${_startDate.month}.${_startDate.year}',),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(true),
               ),
@@ -457,9 +451,9 @@ class _AdminAdvertisementManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
-              onPressed: () => _updateAd(ad), child: const Text('Сохранить')),
+              onPressed: () => _updateAd(ad), child: const Text('Сохранить'),),
         ],
       ),
     );
@@ -488,7 +482,7 @@ class _AdminAdvertisementManagementScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Рекламное объявление обновлено успешно')));
+          content: Text('Рекламное объявление обновлено успешно'),),);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
@@ -496,7 +490,7 @@ class _AdminAdvertisementManagementScreenState
   }
 
   Future<void> _updateAdStatus(
-      Advertisement ad, AdvertisementStatus newStatus) async {
+      Advertisement ad, AdvertisementStatus newStatus,) async {
     try {
       await FirebaseFirestore.instance
           .collection('advertisements')
@@ -509,7 +503,7 @@ class _AdminAdvertisementManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                'Статус объявления изменен на ${_getAdStatusName(newStatus)}')),
+                'Статус объявления изменен на ${_getAdStatusName(newStatus)}',),),
       );
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -527,7 +521,7 @@ class _AdminAdvertisementManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -537,7 +531,7 @@ class _AdminAdvertisementManagementScreenState
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         await FirebaseFirestore.instance
             .collection('advertisements')
@@ -546,7 +540,7 @@ class _AdminAdvertisementManagementScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Рекламное объявление удалено')));
+            const SnackBar(content: Text('Рекламное объявление удалено')),);
       } catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Ошибка удаления: $e')));

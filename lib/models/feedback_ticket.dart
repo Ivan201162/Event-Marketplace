@@ -33,19 +33,6 @@ class FeedbackTicket {
     this.tags = const [],
   });
 
-  final String id;
-  final String title;
-  final String description;
-  final TicketCategory category;
-  final TicketStatus status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> attachments; // URLs файлов
-  final String? userId;
-  final String? adminId;
-  final TicketPriority priority;
-  final List<String> tags;
-
   /// Создать из документа Firestore
   factory FeedbackTicket.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
@@ -78,6 +65,19 @@ class FeedbackTicket {
       tags: List<String>.from(data['tags'] ?? []),
     );
   }
+
+  final String id;
+  final String title;
+  final String description;
+  final TicketCategory category;
+  final TicketStatus status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<String> attachments; // URLs файлов
+  final String? userId;
+  final String? adminId;
+  final TicketPriority priority;
+  final List<String> tags;
 
   /// Конвертировать в Map для Firestore
   Map<String, dynamic> toMap() {
@@ -163,15 +163,6 @@ class TicketMessage {
     this.isRead = false,
   });
 
-  final String id;
-  final String ticketId;
-  final String content;
-  final String senderId;
-  final MessageSenderType senderType;
-  final DateTime createdAt;
-  final List<String> attachments;
-  final bool isRead;
-
   /// Создать из Map
   factory TicketMessage.fromMap(Map<String, dynamic> data, [String? id]) {
     return TicketMessage(
@@ -188,6 +179,15 @@ class TicketMessage {
       isRead: data['isRead'] as bool? ?? false,
     );
   }
+
+  final String id;
+  final String ticketId;
+  final String content;
+  final String senderId;
+  final MessageSenderType senderType;
+  final DateTime createdAt;
+  final List<String> attachments;
+  final bool isRead;
 
   /// Конвертировать в Map для Firestore
   Map<String, dynamic> toMap() {

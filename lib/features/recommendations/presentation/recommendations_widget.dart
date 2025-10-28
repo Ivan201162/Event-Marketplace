@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/features/recommendations/recommendation_service.dart';
+import 'package:event_marketplace_app/features/specialists/data/models/specialist.dart';
+import 'package:event_marketplace_app/features/specialists/presentation/specialist_card.dart';
 import 'package:flutter/material.dart';
-
-import '../../specialists/data/models/specialist.dart';
-import '../../specialists/presentation/specialist_card.dart';
-import '../recommendation_service.dart';
 
 /// Виджет рекомендаций специалистов
 class RecommendationsWidget extends StatefulWidget {
   const RecommendationsWidget(
-      {super.key, this.city, this.category, this.budget, this.limit = 10});
+      {super.key, this.city, this.category, this.budget, this.limit = 10,});
   final String? city;
   final String? category;
   final double? budget;
@@ -101,7 +100,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
 
   /// Состояние загрузки
   Widget _buildLoadingState() => const SizedBox(
-      height: 200, child: Center(child: CircularProgressIndicator()));
+      height: 200, child: Center(child: CircularProgressIndicator()),);
 
   /// Состояние ошибки
   Widget _buildErrorState() => SizedBox(
@@ -113,7 +112,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
               Icon(Icons.error_outline, color: Colors.grey[400], size: 48),
               const SizedBox(height: 16),
               Text('Ошибка загрузки рекомендаций',
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context).textTheme.titleMedium,),
               const SizedBox(height: 8),
               Text(
                 _error!,
@@ -126,7 +125,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
               const SizedBox(height: 16),
               ElevatedButton(
                   onPressed: _loadRecommendations,
-                  child: const Text('Повторить')),
+                  child: const Text('Повторить'),),
             ],
           ),
         ),
@@ -142,7 +141,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
               Icon(Icons.search_off, color: Colors.grey[400], size: 48),
               const SizedBox(height: 16),
               Text('Рекомендации не найдены',
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context).textTheme.titleMedium,),
               const SizedBox(height: 8),
               Text(
                 'Попробуйте изменить фильтры поиска',
@@ -167,7 +166,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
             child: Row(
               children: [
                 Icon(Icons.recommend,
-                    color: Theme.of(context).primaryColor, size: 24),
+                    color: Theme.of(context).primaryColor, size: 24,),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендуем',
@@ -179,7 +178,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
                 const Spacer(),
                 TextButton(
                     onPressed: _showAllRecommendations,
-                    child: const Text('Все')),
+                    child: const Text('Все'),),
               ],
             ),
           ),
@@ -230,7 +229,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
                 child: Row(
                   children: [
                     Icon(Icons.recommend,
-                        color: Theme.of(context).primaryColor, size: 24),
+                        color: Theme.of(context).primaryColor, size: 24,),
                     const SizedBox(width: 8),
                     Text(
                       'Рекомендуемые специалисты',
@@ -288,7 +287,7 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
 /// Виджет похожих специалистов
 class SimilarSpecialistsWidget extends StatefulWidget {
   const SimilarSpecialistsWidget(
-      {super.key, required this.specialistId, this.limit = 5});
+      {required this.specialistId, super.key, this.limit = 5,});
   final String specialistId;
   final int limit;
 
@@ -359,7 +358,7 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
           child: Row(
             children: [
               Icon(Icons.people,
-                  color: Theme.of(context).primaryColor, size: 24),
+                  color: Theme.of(context).primaryColor, size: 24,),
               const SizedBox(width: 8),
               Text(
                 'Похожие специалисты',
@@ -397,7 +396,7 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
 
   /// Состояние загрузки
   Widget _buildLoadingState() => const SizedBox(
-      height: 200, child: Center(child: CircularProgressIndicator()));
+      height: 200, child: Center(child: CircularProgressIndicator()),);
 
   /// Переход к профилю специалиста
   void _navigateToSpecialist(Specialist specialist) {

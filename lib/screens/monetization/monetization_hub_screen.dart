@@ -1,19 +1,18 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/screens/monetization/advertisement_campaigns_screen.dart';
+import 'package:event_marketplace_app/screens/monetization/my_advertisements_screen.dart';
+import 'package:event_marketplace_app/screens/monetization/my_promotions_screen.dart';
+import 'package:event_marketplace_app/screens/monetization/my_subscriptions_screen.dart';
+import 'package:event_marketplace_app/screens/monetization/promotion_packages_screen.dart';
+import 'package:event_marketplace_app/screens/monetization/subscription_plans_screen.dart';
+import 'package:event_marketplace_app/services/advertisement_service.dart';
+import 'package:event_marketplace_app/services/promotion_service.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/advertisement.dart';
-import '../../models/promotion_boost.dart';
-import '../../models/subscription_plan.dart';
-import '../../providers/auth_providers.dart';
-import '../../services/advertisement_service.dart';
-import '../../services/promotion_service.dart';
-import '../../services/subscription_service.dart';
-import 'advertisement_campaigns_screen.dart';
-import 'my_advertisements_screen.dart';
-import 'my_promotions_screen.dart';
-import 'my_subscriptions_screen.dart';
-import 'promotion_packages_screen.dart';
-import 'subscription_plans_screen.dart';
 
 class MonetizationHubScreen extends ConsumerStatefulWidget {
   const MonetizationHubScreen({super.key});
@@ -101,7 +100,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
         children: [
           _buildSubscriptionsTab(),
           _buildPromotionsTab(),
-          _buildAdvertisementsTab()
+          _buildAdvertisementsTab(),
         ],
       ),
     );
@@ -281,11 +280,11 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MySubscriptionsScreen()),
+                          builder: (context) => const MySubscriptionsScreen(),),
                     );
                   },
                   child: const Text('Управлять',
-                      style: TextStyle(color: Colors.white)),
+                      style: TextStyle(color: Colors.white),),
                 ),
               ],
             ),
@@ -361,11 +360,11 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const MyPromotionsScreen()),
+                      builder: (context) => const MyPromotionsScreen(),),
                 );
               },
               child: const Text('Посмотреть все',
-                  style: TextStyle(color: Colors.white)),
+                  style: TextStyle(color: Colors.white),),
             ),
           ],
         ),
@@ -439,11 +438,11 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const MyAdvertisementsScreen()),
+                      builder: (context) => const MyAdvertisementsScreen(),),
                 );
               },
               child: const Text('Посмотреть все',
-                  style: TextStyle(color: Colors.white)),
+                  style: TextStyle(color: Colors.white),),
             ),
           ],
         ),
@@ -452,7 +451,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
   }
 
   Widget _buildSectionHeader(
-      String title, String subtitle, IconData icon, Color color) {
+      String title, String subtitle, IconData icon, Color color,) {
     return Row(
       children: [
         Container(
@@ -508,7 +507,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const SubscriptionPlansScreen()),
+                  builder: (context) => const SubscriptionPlansScreen(),),
             );
           },
         ),
@@ -523,7 +522,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const SubscriptionPlansScreen()),
+                  builder: (context) => const SubscriptionPlansScreen(),),
             );
           },
         ),
@@ -551,7 +550,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const PromotionPackagesScreen()),
+                  builder: (context) => const PromotionPackagesScreen(),),
             );
           },
         ),
@@ -566,7 +565,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const PromotionPackagesScreen()),
+                  builder: (context) => const PromotionPackagesScreen(),),
             );
           },
         ),
@@ -594,7 +593,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const AdvertisementCampaignsScreen()),
+                  builder: (context) => const AdvertisementCampaignsScreen(),),
             );
           },
         ),
@@ -609,7 +608,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const AdvertisementCampaignsScreen()),
+                  builder: (context) => const AdvertisementCampaignsScreen(),),
             );
           },
         ),
@@ -686,7 +685,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(feature,
-                                style: Theme.of(context).textTheme.bodySmall),
+                                style: Theme.of(context).textTheme.bodySmall,),
                           ),
                         ],
                       ),
@@ -768,7 +767,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(feature,
-                                style: Theme.of(context).textTheme.bodySmall),
+                                style: Theme.of(context).textTheme.bodySmall,),
                           ),
                         ],
                       ),
@@ -850,7 +849,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(feature,
-                                style: Theme.of(context).textTheme.bodySmall),
+                                style: Theme.of(context).textTheme.bodySmall,),
                           ),
                         ],
                       ),
@@ -874,7 +873,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const MySubscriptionsScreen()),
+                builder: (context) => const MySubscriptionsScreen(),),
           );
         },
       ),
@@ -909,7 +908,7 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const MyAdvertisementsScreen()),
+                builder: (context) => const MyAdvertisementsScreen(),),
           );
         },
       ),

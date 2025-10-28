@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/booking.dart';
+import 'package:event_marketplace_app/models/booking.dart';
 
 /// Сервис для управления скидками специалистов
 class SpecialistDiscountService {
@@ -46,7 +46,7 @@ class SpecialistDiscountService {
 
   /// Получить скидки для заказа
   Future<List<SpecialistDiscount>> getDiscountsForBooking(
-      String bookingId) async {
+      String bookingId,) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -64,7 +64,7 @@ class SpecialistDiscountService {
 
   /// Получить активные скидки специалиста
   Future<List<SpecialistDiscount>> getActiveDiscountsForSpecialist(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -146,7 +146,7 @@ class SpecialistDiscountService {
 
   /// Получить статистику скидок специалиста
   Future<SpecialistDiscountStats> getSpecialistDiscountStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -163,7 +163,7 @@ class SpecialistDiscountService {
           .where((d) =>
               d.expiresAt.isBefore(DateTime.now()) &&
               !d.isAccepted &&
-              !d.isRejected)
+              !d.isRejected,)
           .length;
 
       final averageDiscount = discounts.isNotEmpty
@@ -209,7 +209,7 @@ class SpecialistDiscountService {
 
   /// Отправить уведомление о скидке
   Future<void> _sendDiscountNotification(
-      String bookingId, String discountId) async {
+      String bookingId, String discountId,) async {
     try {
       // Получаем информацию о заказе
       final bookingDoc =
@@ -269,11 +269,7 @@ class SpecialistDiscount {
     required this.specialistId,
     required this.bookingId,
     required this.discountPercent,
-    this.message,
-    required this.isActive,
-    required this.isAccepted,
-    required this.createdAt,
-    required this.expiresAt,
+    required this.isActive, required this.isAccepted, required this.createdAt, required this.expiresAt, this.message,
     this.isRejected = false,
     this.isCancelled = false,
     this.acceptedAt,

@@ -1,4 +1,4 @@
-import 'enhanced_message.dart';
+import 'package:event_marketplace_app/models/enhanced_message.dart';
 
 /// Расширенная модель чата
 class EnhancedChat {
@@ -25,7 +25,7 @@ class EnhancedChat {
         type: ChatType.fromString(map['type'] as String),
         members: (map['members'] as List?)
                 ?.map((member) =>
-                    ChatMember.fromMap(member as Map<String, dynamic>))
+                    ChatMember.fromMap(member as Map<String, dynamic>),)
                 .toList() ??
             [],
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
@@ -34,7 +34,7 @@ class EnhancedChat {
         avatarUrl: map['avatarUrl'] as String?,
         lastMessage: map['lastMessage'] != null
             ? ChatLastMessage.fromMap(
-                map['lastMessage'] as Map<String, dynamic>)
+                map['lastMessage'] as Map<String, dynamic>,)
             : null,
         updatedAt: map['updatedAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
@@ -214,7 +214,7 @@ class ChatMember {
         nickname: map['nickname'] as String?,
         permissions: map['permissions'] != null
             ? ChatPermissions.fromMap(
-                map['permissions'] as Map<String, dynamic>)
+                map['permissions'] as Map<String, dynamic>,)
             : const ChatPermissions(),
         isOnline: (map['isOnline'] as bool?) ?? false,
         lastSeen: map['lastSeen'] != null
@@ -340,7 +340,7 @@ class ChatLastMessage {
         createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
         attachments: (map['attachments'] as List?)
                 ?.map((attachment) => MessageAttachment.fromMap(
-                    attachment as Map<String, dynamic>))
+                    attachment as Map<String, dynamic>,),)
                 .toList() ??
             [],
       );

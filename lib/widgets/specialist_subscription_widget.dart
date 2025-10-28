@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/services/news_feed_service.dart';
 import 'package:flutter/material.dart';
-import '../services/news_feed_service.dart';
 
 /// Виджет для управления подписками на специалистов
 class SpecialistSubscriptionWidget extends StatefulWidget {
   const SpecialistSubscriptionWidget(
-      {super.key, required this.userId, this.onSubscriptionChanged});
+      {required this.userId, super.key, this.onSubscriptionChanged,});
 
   final String userId;
   final VoidCallback? onSubscriptionChanged;
@@ -65,7 +65,7 @@ class _SpecialistSubscriptionWidgetState
 
   Widget _buildLoading() => const Center(
         child: Padding(
-            padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+            padding: EdgeInsets.all(32), child: CircularProgressIndicator(),),
       );
 
   Widget _buildError() => Container(
@@ -84,7 +84,7 @@ class _SpecialistSubscriptionWidgetState
                   Text(_error!, style: TextStyle(color: Colors.red.shade700)),
             ),
             TextButton(
-                onPressed: _loadSubscriptions, child: const Text('Повторить')),
+                onPressed: _loadSubscriptions, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -113,14 +113,14 @@ class _SpecialistSubscriptionWidgetState
         child: Column(
           children: [
             Icon(Icons.subscriptions_outlined,
-                size: 64, color: Colors.grey.shade400),
+                size: 64, color: Colors.grey.shade400,),
             const SizedBox(height: 16),
             Text(
               'Нет подписок',
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -138,7 +138,7 @@ class _SpecialistSubscriptionWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Ваши подписки:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           ...(_subscriptions.map(_buildSubscriptionItem)),
         ],
@@ -152,11 +152,11 @@ class _SpecialistSubscriptionWidgetState
             child: Text(
               specialistId.isNotEmpty ? specialistId[0].toUpperCase() : '?',
               style: TextStyle(
-                  color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+                  color: Colors.blue.shade700, fontWeight: FontWeight.bold,),
             ),
           ),
           title: Text('Специалист $specialistId',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+              style: const TextStyle(fontWeight: FontWeight.bold),),
           subtitle: const Text('Подписан'),
           trailing: IconButton(
             onPressed: () => _unsubscribeFromSpecialist(specialistId),
@@ -223,7 +223,7 @@ class _SpecialistSubscriptionWidgetState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка отписки: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка отписки: $e'), backgroundColor: Colors.red,),);
       }
     }
   }
@@ -253,7 +253,7 @@ class _SpecialistSubscriptionWidgetState
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               final specialistId = controller.text.trim();
@@ -296,7 +296,7 @@ class _SpecialistSubscriptionWidgetState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка подписки: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка подписки: $e'), backgroundColor: Colors.red,),);
       }
     }
   }

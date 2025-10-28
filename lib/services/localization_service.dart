@@ -1,7 +1,8 @@
 import 'dart:convert';
+
+import 'package:event_marketplace_app/models/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/localization.dart';
 
 /// Сервис локализации
 class LocalizationService {
@@ -59,12 +60,12 @@ class LocalizationService {
         _settings = LocalizationSettings.fromMap(settingsMap);
       } else {
         _settings = LocalizationSettings(
-            currentLanguage: 'ru', lastUpdated: DateTime.now());
+            currentLanguage: 'ru', lastUpdated: DateTime.now(),);
       }
     } catch (e) {
       debugPrint('Ошибка загрузки настроек локализации: $e');
       _settings = LocalizationSettings(
-          currentLanguage: 'ru', lastUpdated: DateTime.now());
+          currentLanguage: 'ru', lastUpdated: DateTime.now(),);
     }
   }
 
@@ -440,7 +441,7 @@ class LocalizationService {
     try {
       await _setCurrentLanguage(languageCode);
       _settings = _settings?.copyWith(
-          currentLanguage: languageCode, lastUpdated: DateTime.now());
+          currentLanguage: languageCode, lastUpdated: DateTime.now(),);
       await _saveSettings();
     } catch (e) {
       debugPrint('Ошибка установки языка: $e');
@@ -567,7 +568,7 @@ class LocalizationService {
 
   /// Импортировать переводы
   Future<void> importTranslations(
-      String languageCode, Map<String, String> translations) async {
+      String languageCode, Map<String, String> translations,) async {
     try {
       final language = SupportedLanguage.values.firstWhere(
         (lang) => lang.languageCode == languageCode,

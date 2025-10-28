@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 
 /// Виджет фильтров для идей
 class IdeaFilters extends StatelessWidget {
+
+  const IdeaFilters({
+    required this.selectedFilter, required this.selectedSort, required this.onFilterChanged, required this.onSortChanged, super.key,
+  });
   final String selectedFilter;
   final String selectedSort;
   final ValueChanged<String> onFilterChanged;
   final ValueChanged<String> onSortChanged;
-
-  const IdeaFilters({
-    super.key,
-    required this.selectedFilter,
-    required this.selectedSort,
-    required this.onFilterChanged,
-    required this.onSortChanged,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +82,15 @@ class IdeaFilters extends StatelessWidget {
 
 /// Чип фильтра
 class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onSelected;
 
   const _FilterChip({
     required this.label,
     required this.isSelected,
     required this.onSelected,
   });
+  final String label;
+  final bool isSelected;
+  final VoidCallback onSelected;
 
   @override
   Widget build(BuildContext context) {

@@ -7,10 +7,7 @@ class PriceHistory {
     required this.bookingId,
     required this.oldPrice,
     required this.newPrice,
-    this.discountPercent,
-    required this.reason,
-    required this.changedBy,
-    required this.changedAt,
+    required this.reason, required this.changedBy, required this.changedAt, this.discountPercent,
     this.metadata,
   });
 
@@ -96,7 +93,7 @@ class PriceHistory {
 
   @override
   int get hashCode => Object.hash(id, bookingId, oldPrice, newPrice,
-      discountPercent, reason, changedBy, changedAt);
+      discountPercent, reason, changedBy, changedAt,);
 
   @override
   String toString() =>

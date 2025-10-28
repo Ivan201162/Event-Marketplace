@@ -3,22 +3,6 @@ import 'package:equatable/equatable.dart';
 
 /// Unified notification model
 class AppNotification extends Equatable {
-  final String id;
-  final String userId;
-  final String type;
-  final String title;
-  final String body;
-  final DateTime createdAt;
-  final bool read;
-  final String? data;
-  final String? imageUrl;
-  final String? actionUrl;
-  final String? senderId;
-  final String? senderName;
-  final String? senderAvatarUrl;
-  final String? targetId;
-  final String? message;
-  final bool isRead;
 
   const AppNotification({
     required this.id,
@@ -41,7 +25,7 @@ class AppNotification extends Equatable {
 
   /// Create AppNotification from Firestore document
   factory AppNotification.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppNotification(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -61,6 +45,22 @@ class AppNotification extends Equatable {
       isRead: data['isRead'] ?? false,
     );
   }
+  final String id;
+  final String userId;
+  final String type;
+  final String title;
+  final String body;
+  final DateTime createdAt;
+  final bool read;
+  final String? data;
+  final String? imageUrl;
+  final String? actionUrl;
+  final String? senderId;
+  final String? senderName;
+  final String? senderAvatarUrl;
+  final String? targetId;
+  final String? message;
+  final bool isRead;
 
   /// Convert AppNotification to Firestore document
   Map<String, dynamic> toFirestore() {

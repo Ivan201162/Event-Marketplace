@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/revenue_analytics.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/revenue_analytics.dart';
 
 class RevenueAnalyticsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -18,7 +17,7 @@ class RevenueAnalyticsService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final RevenueStats stats = RevenueStats(
+      final stats = RevenueStats(
         id: _uuid.v4(),
         date: DateTime.now(),
         period: RevenuePeriod.daily,
@@ -45,14 +44,14 @@ class RevenueAnalyticsService {
       );
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to record revenue: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to record revenue: $e',);
     }
   }
 
   /// Обновление агрегированной статистики
   Future<void> _updateAggregatedStats(RevenueStats stats) async {
     try {
-      final String dateKey = _getDateKey(stats.date);
+      final dateKey = _getDateKey(stats.date);
 
       // Обновляем дневную статистику
       await _firestore
@@ -63,7 +62,7 @@ class RevenueAnalyticsService {
         'totalRevenue': FieldValue.increment(stats.amount),
         'transactionCount': FieldValue.increment(1),
         'lastUpdated': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
 
       // Обновляем статистику по источникам
       await _firestore
@@ -74,7 +73,7 @@ class RevenueAnalyticsService {
         'totalRevenue': FieldValue.increment(stats.amount),
         'transactionCount': FieldValue.increment(1),
         'lastUpdated': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
 
       // Обновляем статистику по регионам
       await _firestore
@@ -85,10 +84,10 @@ class RevenueAnalyticsService {
         'totalRevenue': FieldValue.increment(stats.amount),
         'transactionCount': FieldValue.increment(1),
         'lastUpdated': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to update aggregated stats: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to update aggregated stats: $e',);
     }
   }
 
@@ -99,48 +98,48 @@ class RevenueAnalyticsService {
     DateTime? endDate,
   }) async {
     try {
-      final DateTime now = DateTime.now();
-      final DateTime periodStart = startDate ?? _getPeriodStart(now, period);
-      final DateTime periodEnd = endDate ?? now;
+      final now = DateTime.now();
+      final periodStart = startDate ?? _getPeriodStart(now, period);
+      final periodEnd = endDate ?? now;
 
       // Получаем статистику доходов за период
       final QuerySnapshot revenueSnapshot = await _firestore
           .collection('revenue_stats')
           .where('date',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(periodStart))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(periodStart),)
           .where('date', isLessThanOrEqualTo: Timestamp.fromDate(periodEnd))
           .get();
 
       // Получаем статистику за предыдущий период для расчета роста
-      final DateTime prevPeriodStart = _getPeriodStart(
+      final prevPeriodStart = _getPeriodStart(
         periodStart.subtract(const Duration(days: 1)),
         period,
       );
-      final DateTime prevPeriodEnd =
+      final prevPeriodEnd =
           periodStart.subtract(const Duration(days: 1));
 
       final QuerySnapshot prevRevenueSnapshot = await _firestore
           .collection('revenue_stats')
           .where('date',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(prevPeriodStart))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(prevPeriodStart),)
           .where('date', isLessThanOrEqualTo: Timestamp.fromDate(prevPeriodEnd))
           .get();
 
       // Рассчитываем метрики
-      final Map<String, double> revenueBySource = {};
-      final Map<String, double> revenueByRegion = {};
-      double totalRevenue = 0.0;
-      int totalTransactions = 0;
+      final revenueBySource = <String, double>{};
+      final revenueByRegion = <String, double>{};
+      var totalRevenue = 0;
+      var totalTransactions = 0;
 
       for (final doc in revenueSnapshot.docs) {
-        final RevenueStats stats =
-            RevenueStats.fromMap(doc.data() as Map<String, dynamic>);
+        final stats =
+            RevenueStats.fromMap(doc.data()! as Map<String, dynamic>);
 
         totalRevenue += stats.amount;
         totalTransactions++;
 
         // По источникам
-        final String sourceKey = stats.sourceType.toString().split('.').last;
+        final sourceKey = stats.sourceType.toString().split('.').last;
         revenueBySource[sourceKey] =
             (revenueBySource[sourceKey] ?? 0.0) + stats.amount;
 
@@ -150,44 +149,44 @@ class RevenueAnalyticsService {
       }
 
       // Рассчитываем рост
-      double prevTotalRevenue = 0.0;
+      var prevTotalRevenue = 0;
       for (final doc in prevRevenueSnapshot.docs) {
-        final RevenueStats stats =
-            RevenueStats.fromMap(doc.data() as Map<String, dynamic>);
+        final stats =
+            RevenueStats.fromMap(doc.data()! as Map<String, dynamic>);
         prevTotalRevenue += stats.amount;
       }
 
-      final double growthRate = prevTotalRevenue > 0
+      final growthRate = prevTotalRevenue > 0
           ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100
           : 0.0;
 
       // Рассчитываем средний чек
-      final double averageOrderValue =
+      final averageOrderValue =
           totalTransactions > 0 ? totalRevenue / totalTransactions : 0.0;
 
       // Получаем дневную статистику
-      final List<Map<String, dynamic>> dailyRevenue = await _getDailyRevenue(
+      final dailyRevenue = await _getDailyRevenue(
         periodStart,
         periodEnd,
       );
 
       // Получаем месячную статистику
-      final List<Map<String, dynamic>> monthlyRevenue =
+      final monthlyRevenue =
           await _getMonthlyRevenue(
         periodStart,
         periodEnd,
       );
 
       // Рассчитываем LTV и CAC
-      final double ltv = await _calculateLTV();
-      final double cac = await _calculateCAC();
-      final double roi = cac > 0 ? (ltv / cac) * 100 : 0.0;
+      final ltv = await _calculateLTV();
+      final cac = await _calculateCAC();
+      final roi = cac > 0 ? (ltv / cac) * 100 : 0.0;
 
       // Рассчитываем конверсию
-      final double conversionRate =
+      final conversionRate =
           await _calculateConversionRate(periodStart, periodEnd);
 
-      final RevenueDashboard dashboard = RevenueDashboard(
+      final dashboard = RevenueDashboard(
         period: period,
         totalRevenue: totalRevenue,
         revenueBySource: revenueBySource,
@@ -215,37 +214,37 @@ class RevenueAnalyticsService {
           .set(dashboard.toMap());
 
       debugPrint(
-          'INFO: [RevenueAnalyticsService] Revenue dashboard generated for $period');
+          'INFO: [RevenueAnalyticsService] Revenue dashboard generated for $period',);
       return dashboard;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to get revenue dashboard: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to get revenue dashboard: $e',);
       rethrow;
     }
   }
 
   /// Получение дневной статистики доходов
   Future<List<Map<String, dynamic>>> _getDailyRevenue(
-      DateTime startDate, DateTime endDate) async {
+      DateTime startDate, DateTime endDate,) async {
     try {
-      final List<Map<String, dynamic>> dailyRevenue = [];
-      final DateTime current = startDate;
+      final dailyRevenue = <Map<String, dynamic>>[];
+      final current = startDate;
 
       while (current.isBefore(endDate)) {
-        final String dateKey = _getDateKey(current);
+        final dateKey = _getDateKey(current);
 
         final QuerySnapshot daySnapshot = await _firestore
             .collection('revenue_stats')
             .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(current))
             .where('date',
                 isLessThan:
-                    Timestamp.fromDate(current.add(const Duration(days: 1))))
+                    Timestamp.fromDate(current.add(const Duration(days: 1))),)
             .get();
 
-        double dayRevenue = 0.0;
+        var dayRevenue = 0;
         for (final doc in daySnapshot.docs) {
-          final RevenueStats stats =
-              RevenueStats.fromMap(doc.data() as Map<String, dynamic>);
+          final stats =
+              RevenueStats.fromMap(doc.data()! as Map<String, dynamic>);
           dayRevenue += stats.amount;
         }
 
@@ -261,7 +260,7 @@ class RevenueAnalyticsService {
       return dailyRevenue;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to get daily revenue: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to get daily revenue: $e',);
       return [];
     }
   }
@@ -272,12 +271,12 @@ class RevenueAnalyticsService {
     DateTime endDate,
   ) async {
     try {
-      final List<Map<String, dynamic>> monthlyRevenue = [];
-      final DateTime current = DateTime(startDate.year, startDate.month);
+      final monthlyRevenue = <Map<String, dynamic>>[];
+      final current = DateTime(startDate.year, startDate.month);
 
       while (current.isBefore(endDate)) {
-        final DateTime monthEnd = DateTime(current.year, current.month + 1, 0);
-        final DateTime actualEnd =
+        final monthEnd = DateTime(current.year, current.month + 1, 0);
+        final actualEnd =
             monthEnd.isAfter(endDate) ? endDate : monthEnd;
 
         final QuerySnapshot monthSnapshot = await _firestore
@@ -286,10 +285,10 @@ class RevenueAnalyticsService {
             .where('date', isLessThanOrEqualTo: Timestamp.fromDate(actualEnd))
             .get();
 
-        double monthRevenue = 0.0;
+        var monthRevenue = 0;
         for (final doc in monthSnapshot.docs) {
-          final RevenueStats stats =
-              RevenueStats.fromMap(doc.data() as Map<String, dynamic>);
+          final stats =
+              RevenueStats.fromMap(doc.data()! as Map<String, dynamic>);
           monthRevenue += stats.amount;
         }
 
@@ -306,7 +305,7 @@ class RevenueAnalyticsService {
       return monthlyRevenue;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to get monthly revenue: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to get monthly revenue: $e',);
       return [];
     }
   }
@@ -320,17 +319,17 @@ class RevenueAnalyticsService {
 
       if (usersSnapshot.docs.isEmpty) return 0.0;
 
-      double totalLtv = 0.0;
+      var totalLtv = 0;
       for (final doc in usersSnapshot.docs) {
-        final UserLifetimeValue ltv =
-            UserLifetimeValue.fromMap(doc.data() as Map<String, dynamic>);
+        final ltv =
+            UserLifetimeValue.fromMap(doc.data()! as Map<String, dynamic>);
         totalLtv += ltv.predictedLtv;
       }
 
       return totalLtv / usersSnapshot.docs.length;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to calculate LTV: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to calculate LTV: $e',);
       return 0.0;
     }
   }
@@ -345,19 +344,19 @@ class RevenueAnalyticsService {
       final QuerySnapshot partnershipsSnapshot =
           await _firestore.collection('partner_transactions').get();
 
-      double totalAcquisitionCost = 0.0;
-      int totalAcquisitions = 0;
+      var totalAcquisitionCost = 0;
+      var totalAcquisitions = 0;
 
       // Стоимость рефералов
       for (final doc in referralsSnapshot.docs) {
-        final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         totalAcquisitionCost += (data['value'] ?? 0.0).toDouble();
         totalAcquisitions++;
       }
 
       // Стоимость партнерских программ
       for (final doc in partnershipsSnapshot.docs) {
-        final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         totalAcquisitionCost += (data['commission_amount'] ?? 0.0).toDouble();
         totalAcquisitions++;
       }
@@ -367,20 +366,20 @@ class RevenueAnalyticsService {
           : 0.0;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to calculate CAC: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to calculate CAC: $e',);
       return 0.0;
     }
   }
 
   /// Расчет конверсии
   Future<double> _calculateConversionRate(
-      DateTime startDate, DateTime endDate) async {
+      DateTime startDate, DateTime endDate,) async {
     try {
       // Получаем количество пользователей за период
       final QuerySnapshot usersSnapshot = await _firestore
           .collection('users')
           .where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),)
           .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
           .get();
 
@@ -391,22 +390,22 @@ class RevenueAnalyticsService {
           .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
           .get();
 
-      final Set<String> usersWithPurchases = {};
+      final usersWithPurchases = <String>{};
       for (final doc in purchasesSnapshot.docs) {
-        final RevenueStats stats =
-            RevenueStats.fromMap(doc.data() as Map<String, dynamic>);
+        final stats =
+            RevenueStats.fromMap(doc.data()! as Map<String, dynamic>);
         if (stats.userId != null) {
           usersWithPurchases.add(stats.userId!);
         }
       }
 
-      final int totalUsers = usersSnapshot.docs.length;
-      final int convertedUsers = usersWithPurchases.length;
+      final totalUsers = usersSnapshot.docs.length;
+      final convertedUsers = usersWithPurchases.length;
 
       return totalUsers > 0 ? (convertedUsers / totalUsers) * 100 : 0.0;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to calculate conversion rate: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to calculate conversion rate: $e',);
       return 0.0;
     }
   }
@@ -423,36 +422,36 @@ class RevenueAnalyticsService {
 
       if (transactionsSnapshot.docs.isEmpty) return;
 
-      final List<RevenueStats> transactions = transactionsSnapshot.docs
+      final transactions = transactionsSnapshot.docs
           .map(
-              (doc) => RevenueStats.fromMap(doc.data() as Map<String, dynamic>))
+              (doc) => RevenueStats.fromMap(doc.data()! as Map<String, dynamic>),)
           .toList();
 
-      final double totalSpent =
+      final totalSpent =
           transactions.map((t) => t.amount).reduce((a, b) => a + b);
-      final int totalTransactions = transactions.length;
-      final DateTime firstPurchaseDate = transactions.first.date;
-      final DateTime lastPurchaseDate = transactions.last.date;
-      final double averageOrderValue = totalSpent / totalTransactions;
+      final totalTransactions = transactions.length;
+      final firstPurchaseDate = transactions.first.date;
+      final lastPurchaseDate = transactions.last.date;
+      final averageOrderValue = totalSpent / totalTransactions;
 
       // Рассчитываем частоту покупок (покупок в месяц)
-      final int daysSinceFirst =
+      final daysSinceFirst =
           DateTime.now().difference(firstPurchaseDate).inDays;
-      final double purchaseFrequency =
+      final purchaseFrequency =
           daysSinceFirst > 0 ? (totalTransactions / daysSinceFirst) * 30 : 0.0;
 
       // Рассчитываем retention rate (упрощенно)
-      final double retentionRate = _calculateRetentionRate(userId);
+      final retentionRate = _calculateRetentionRate(userId);
 
       // Предсказываем LTV
-      final double predictedLtv = _predictLTV(
+      final predictedLtv = _predictLTV(
         totalSpent: totalSpent,
         purchaseFrequency: purchaseFrequency,
         retentionRate: retentionRate,
         daysSinceFirst: daysSinceFirst,
       );
 
-      final UserLifetimeValue ltv = UserLifetimeValue(
+      final ltv = UserLifetimeValue(
         userId: userId,
         totalSpent: totalSpent,
         totalTransactions: totalTransactions,
@@ -474,7 +473,7 @@ class RevenueAnalyticsService {
       debugPrint('INFO: [RevenueAnalyticsService] User LTV updated: $userId');
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to update user LTV: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to update user LTV: $e',);
     }
   }
 
@@ -492,8 +491,8 @@ class RevenueAnalyticsService {
     required int daysSinceFirst,
   }) {
     // Упрощенная модель предсказания LTV
-    final double monthlyValue = (totalSpent / daysSinceFirst) * 30;
-    final double predictedMonths =
+    final monthlyValue = (totalSpent / daysSinceFirst) * 30;
+    final predictedMonths =
         12 * retentionRate; // Предсказываем на год с учетом retention
     return monthlyValue * predictedMonths;
   }
@@ -513,12 +512,12 @@ class RevenueAnalyticsService {
       case RevenuePeriod.daily:
         return DateTime(date.year, date.month, date.day);
       case RevenuePeriod.weekly:
-        final int daysFromMonday = date.weekday - 1;
+        final daysFromMonday = date.weekday - 1;
         return DateTime(date.year, date.month, date.day - daysFromMonday);
       case RevenuePeriod.monthly:
         return DateTime(date.year, date.month);
       case RevenuePeriod.quarterly:
-        final int quarter = ((date.month - 1) / 3).floor();
+        final quarter = ((date.month - 1) / 3).floor();
         return DateTime(date.year, quarter * 3 + 1);
       case RevenuePeriod.yearly:
         return DateTime(date.year);
@@ -537,7 +536,7 @@ class RevenueAnalyticsService {
     required RevenuePeriod period,
   }) async {
     try {
-      final ConversionFunnel funnel = ConversionFunnel(
+      final funnel = ConversionFunnel(
         id: _uuid.v4(),
         name: name,
         steps: steps,
@@ -554,11 +553,11 @@ class RevenueAnalyticsService {
           .set(funnel.toMap());
 
       debugPrint(
-          'INFO: [RevenueAnalyticsService] Conversion funnel created: ${funnel.id}');
+          'INFO: [RevenueAnalyticsService] Conversion funnel created: ${funnel.id}',);
       return funnel.id;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to create conversion funnel: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to create conversion funnel: $e',);
       rethrow;
     }
   }
@@ -572,7 +571,7 @@ class RevenueAnalyticsService {
     required Map<String, dynamic> factors,
   }) async {
     try {
-      final RevenueForecast forecast = RevenueForecast(
+      final forecast = RevenueForecast(
         id: _uuid.v4(),
         period: period,
         forecastDate: forecastDate,
@@ -588,11 +587,11 @@ class RevenueAnalyticsService {
           .set(forecast.toMap());
 
       debugPrint(
-          'INFO: [RevenueAnalyticsService] Revenue forecast created: ${forecast.id}');
+          'INFO: [RevenueAnalyticsService] Revenue forecast created: ${forecast.id}',);
       return forecast.id;
     } catch (e) {
       debugPrint(
-          'ERROR: [RevenueAnalyticsService] Failed to create revenue forecast: $e');
+          'ERROR: [RevenueAnalyticsService] Failed to create revenue forecast: $e',);
       rethrow;
     }
   }

@@ -1,18 +1,17 @@
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/event_providers.dart';
+import 'package:event_marketplace_app/providers/favorites_providers.dart';
+import 'package:event_marketplace_app/screens/create_booking_screen.dart';
+import 'package:event_marketplace_app/screens/create_event_screen.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event.dart';
-import '../models/review.dart';
-import '../providers/auth_providers.dart';
-import '../providers/event_providers.dart';
-import '../providers/favorites_providers.dart';
-import '../services/review_service.dart';
-import 'create_booking_screen.dart';
-import 'create_event_screen.dart';
-
 /// Экран детального просмотра события
 class EventDetailScreen extends ConsumerWidget {
-  const EventDetailScreen({super.key, required this.event});
+  const EventDetailScreen({required this.event, super.key});
   final Event event;
 
   @override
@@ -54,28 +53,28 @@ class EventDetailScreen extends ConsumerWidget {
                                 ref.read(favoritesServiceProvider);
                             if (isFavorite) {
                               await favoritesService.removeFromFavorites(
-                                  user.id, event.id);
+                                  user.id, event.id,);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Удалено из избранного')),
+                                    content: Text('Удалено из избранного'),),
                               );
                             } else {
                               await favoritesService.addToFavorites(
-                                  user.id, event.id);
+                                  user.id, event.id,);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Добавлено в избранное')),
+                                    content: Text('Добавлено в избранное'),),
                               );
                             }
                             ref.invalidate(
                               isFavoriteProvider(
-                                  (userId: user.id, eventId: event.id)),
+                                  (userId: user.id, eventId: event.id),),
                             );
                           } catch (e) {
                             ScaffoldMessenger.of(
                               context,
                             ).showSnackBar(
-                                SnackBar(content: Text('Ошибка: $e')));
+                                SnackBar(content: Text('Ошибка: $e')),);
                           }
                         },
                       );
@@ -98,10 +97,8 @@ class EventDetailScreen extends ConsumerWidget {
                         builder: (context) => CreateEventScreen(event: event),
                       ),
                     );
-                    break;
                   case 'delete':
                     _showDeleteDialog(context, ref);
-                    break;
                 }
               },
               itemBuilder: (context) => [
@@ -111,7 +108,7 @@ class EventDetailScreen extends ConsumerWidget {
                     children: [
                       Icon(Icons.edit),
                       SizedBox(width: 8),
-                      Text('Редактировать')
+                      Text('Редактировать'),
                     ],
                   ),
                 ),
@@ -188,7 +185,7 @@ class EventDetailScreen extends ConsumerWidget {
               Row(
                 children: [
                   Icon(event.categoryIcon,
-                      size: 32, color: Theme.of(context).colorScheme.primary),
+                      size: 32, color: Theme.of(context).colorScheme.primary,),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -223,13 +220,13 @@ class EventDetailScreen extends ConsumerWidget {
                       color: event.statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                          color: event.statusColor.withValues(alpha: 0.3)),
+                          color: event.statusColor.withValues(alpha: 0.3),),
                     ),
                     child: Text(
                       event.statusText,
                       style: TextStyle(
                           color: event.statusColor,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,),
                     ),
                   ),
                 ],
@@ -246,10 +243,10 @@ class EventDetailScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Описание',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               Text(event.description,
-                  style: Theme.of(context).textTheme.bodyLarge),
+                  style: Theme.of(context).textTheme.bodyLarge,),
             ],
           ),
         ),
@@ -262,7 +259,7 @@ class EventDetailScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Дата и время',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -273,9 +270,9 @@ class EventDetailScreen extends ConsumerWidget {
                     children: [
                       const Text('Дата начала'),
                       Text(event.formattedDate,
-                          style: const TextStyle(fontWeight: FontWeight.w500)),
+                          style: const TextStyle(fontWeight: FontWeight.w500),),
                       Text(event.formattedTime,
-                          style: const TextStyle(fontWeight: FontWeight.w500)),
+                          style: const TextStyle(fontWeight: FontWeight.w500),),
                     ],
                   ),
                 ],
@@ -325,7 +322,7 @@ class EventDetailScreen extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(event.location,
-                        style: const TextStyle(fontWeight: FontWeight.w500)),
+                        style: const TextStyle(fontWeight: FontWeight.w500),),
                   ),
                 ],
               ),
@@ -359,7 +356,7 @@ class EventDetailScreen extends ConsumerWidget {
                             Text(
                               event.formattedPrice,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 16),
+                                  fontWeight: FontWeight.w500, fontSize: 16,),
                             ),
                           ],
                         ),
@@ -378,7 +375,7 @@ class EventDetailScreen extends ConsumerWidget {
                             Text(
                               '${event.currentParticipants}/${event.maxParticipants}',
                               style: const TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 16),
+                                  fontWeight: FontWeight.w500, fontSize: 16,),
                             ),
                           ],
                         ),
@@ -392,14 +389,14 @@ class EventDetailScreen extends ConsumerWidget {
                 Text(
                   'Свободных мест: ${event.availableSpots}',
                   style: TextStyle(
-                      color: Colors.green[700], fontWeight: FontWeight.w500),
+                      color: Colors.green[700], fontWeight: FontWeight.w500,),
                 ),
               ] else ...[
                 const SizedBox(height: 8),
                 Text(
                   'Мест нет',
                   style: TextStyle(
-                      color: Colors.red[700], fontWeight: FontWeight.w500),
+                      color: Colors.red[700], fontWeight: FontWeight.w500,),
                 ),
               ],
             ],
@@ -431,7 +428,7 @@ class EventDetailScreen extends ConsumerWidget {
                           const Text('Контактная информация'),
                           Text(event.contactInfo!,
                               style:
-                                  const TextStyle(fontWeight: FontWeight.w500)),
+                                  const TextStyle(fontWeight: FontWeight.w500),),
                         ],
                       ),
                     ),
@@ -466,7 +463,7 @@ class EventDetailScreen extends ConsumerWidget {
       );
 
   Widget _buildActionButtons(
-          BuildContext context, WidgetRef ref, bool isOwner) =>
+          BuildContext context, WidgetRef ref, bool isOwner,) =>
       Column(
         children: [
           if (isOwner) ...[
@@ -478,13 +475,13 @@ class EventDetailScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                        builder: (context) => CreateEventScreen(event: event)),
+                        builder: (context) => CreateEventScreen(event: event),),
                   );
                 },
                 icon: const Icon(Icons.edit),
                 label: const Text('Редактировать мероприятие'),
                 style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16)),
+                    padding: const EdgeInsets.symmetric(vertical: 16),),
               ),
             ),
             const SizedBox(height: 12),
@@ -548,7 +545,7 @@ class EventDetailScreen extends ConsumerWidget {
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey),
+                      color: Colors.grey,),
                 ),
               ),
             ],
@@ -566,19 +563,19 @@ class EventDetailScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
                 final eventService = ref.read(eventServiceProvider);
                 await eventService.updateEventStatus(
-                    event.id, EventStatus.completed);
+                    event.id, EventStatus.completed,);
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Мероприятие завершено')));
+                      const SnackBar(content: Text('Мероприятие завершено')),);
                 }
               } catch (e) {
                 if (context.mounted) {
@@ -603,19 +600,19 @@ class EventDetailScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
                 final eventService = ref.read(eventServiceProvider);
                 await eventService.updateEventStatus(
-                    event.id, EventStatus.cancelled);
+                    event.id, EventStatus.cancelled,);
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Мероприятие отменено')));
+                      const SnackBar(content: Text('Мероприятие отменено')),);
                 }
               } catch (e) {
                 if (context.mounted) {
@@ -643,7 +640,7 @@ class EventDetailScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -655,7 +652,7 @@ class EventDetailScreen extends ConsumerWidget {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Мероприятие удалено')));
+                      const SnackBar(content: Text('Мероприятие удалено')),);
                 }
               } catch (e) {
                 if (context.mounted) {
@@ -724,7 +721,7 @@ class EventDetailScreen extends ConsumerWidget {
 
                 if (totalReviews == 0) {
                   return const Text('Пока нет отзывов',
-                      style: TextStyle(color: Colors.grey));
+                      style: TextStyle(color: Colors.grey),);
                 }
 
                 return Column(
@@ -748,7 +745,7 @@ class EventDetailScreen extends ConsumerWidget {
                         Text(
                           averageRating.toStringAsFixed(1),
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -766,7 +763,7 @@ class EventDetailScreen extends ConsumerWidget {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
-                              child: CircularProgressIndicator());
+                              child: CircularProgressIndicator(),);
                         }
 
                         final reviews = snapshot.data ?? [];
@@ -778,7 +775,7 @@ class EventDetailScreen extends ConsumerWidget {
 
                         return Column(
                             children:
-                                recentReviews.map(_buildReviewItem).toList());
+                                recentReviews.map(_buildReviewItem).toList(),);
                       },
                     ),
                   ],
@@ -820,7 +817,7 @@ class EventDetailScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(review.userName,
-                          style: const TextStyle(fontWeight: FontWeight.w500)),
+                          style: const TextStyle(fontWeight: FontWeight.w500),),
                       Row(
                         children: [
                           Row(
@@ -840,7 +837,7 @@ class EventDetailScreen extends ConsumerWidget {
                             review.ratingText,
                             style: TextStyle(
                                 fontSize: 12,
-                                color: _getRatingColor(review.rating)),
+                                color: _getRatingColor(review.rating),),
                           ),
                         ],
                       ),
@@ -860,7 +857,7 @@ class EventDetailScreen extends ConsumerWidget {
                       style: TextStyle(
                           color: Colors.green,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
               ],
@@ -961,7 +958,7 @@ class EventDetailScreen extends ConsumerWidget {
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
           );
         }
@@ -969,7 +966,7 @@ class EventDetailScreen extends ConsumerWidget {
         return FutureBuilder<bool>(
           future: ref.read(
               hasUserBookedEventProvider((userId: user.id, eventId: event.id))
-                  .future),
+                  .future,),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
@@ -996,7 +993,7 @@ class EventDetailScreen extends ConsumerWidget {
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.blue),
+                      color: Colors.blue,),
                 ),
               );
             }
@@ -1008,14 +1005,14 @@ class EventDetailScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute<bool>(
-                      builder: (context) => CreateBookingScreen(),
+                      builder: (context) => const CreateBookingScreen(),
                     ),
                   ).then((result) {
-                    if (result == true) {
+                    if (result ?? false) {
                       // Обновляем данные после создания бронирования
                       ref.invalidate(
                         hasUserBookedEventProvider(
-                            (userId: user.id, eventId: event.id)),
+                            (userId: user.id, eventId: event.id),),
                       );
                     }
                   });
@@ -1023,7 +1020,7 @@ class EventDetailScreen extends ConsumerWidget {
                 icon: const Icon(Icons.book_online),
                 label: const Text('Забронировать участие'),
                 style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16)),
+                    padding: const EdgeInsets.symmetric(vertical: 16),),
               ),
             );
           },
@@ -1038,7 +1035,7 @@ class EventDetailScreen extends ConsumerWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-            color: Colors.red[100], borderRadius: BorderRadius.circular(8)),
+            color: Colors.red[100], borderRadius: BorderRadius.circular(8),),
         child: Text(
           'Ошибка: $error',
           textAlign: TextAlign.center,

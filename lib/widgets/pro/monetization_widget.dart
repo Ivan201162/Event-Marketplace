@@ -14,9 +14,9 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
   bool _subscriptionsEnabled = false;
   bool _directStreamsEnabled = false;
 
-  double _storyPrice = 50.0;
-  double _streamPrice = 200.0;
-  double _subscriptionPrice = 500.0;
+  double _storyPrice = 50;
+  double _streamPrice = 200;
+  double _subscriptionPrice = 500;
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +188,7 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
             SwitchListTile(
               title: const Text('Включить подписки'),
               subtitle: const Text(
-                  'Пользователи могут подписаться на эксклюзивный контент'),
+                  'Пользователи могут подписаться на эксклюзивный контент',),
               value: _subscriptionsEnabled,
               onChanged: (value) {
                 setState(() => _subscriptionsEnabled = value);
@@ -368,7 +368,7 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
               child: ElevatedButton.icon(
                 onPressed: () {
                   _showInfoSnackBar(
-                      'Добавление способа оплаты будет реализовано');
+                      'Добавление способа оплаты будет реализовано',);
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Добавить способ оплаты'),
@@ -381,7 +381,7 @@ class _MonetizationWidgetState extends State<MonetizationWidget> {
   }
 
   Widget _buildStatItem(
-      String title, String value, IconData icon, Color color) {
+      String title, String value, IconData icon, Color color,) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

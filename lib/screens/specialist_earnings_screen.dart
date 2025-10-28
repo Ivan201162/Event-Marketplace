@@ -1,12 +1,12 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/screens/payment_history_screen.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/payment.dart';
-import '../services/payment_service.dart';
-import 'payment_history_screen.dart';
 
 /// Экран доходов специалиста
 class SpecialistEarningsScreen extends ConsumerStatefulWidget {
-  const SpecialistEarningsScreen({super.key, required this.specialistId});
+  const SpecialistEarningsScreen({required this.specialistId, super.key});
 
   final String specialistId;
 
@@ -65,7 +65,7 @@ class _SpecialistEarningsScreenState
           title: const Text('Доходы'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.refresh), onPressed: _loadEarningsData),
+                icon: const Icon(Icons.refresh), onPressed: _loadEarningsData,),
             PopupMenuButton<String>(
               onSelected: (period) {
                 setState(() {
@@ -76,7 +76,7 @@ class _SpecialistEarningsScreenState
               itemBuilder: (context) => [
                 const PopupMenuItem(value: 'month', child: Text('За месяц')),
                 const PopupMenuItem(
-                    value: 'quarter', child: Text('За квартал')),
+                    value: 'quarter', child: Text('За квартал'),),
                 const PopupMenuItem(value: 'year', child: Text('За год')),
               ],
             ),
@@ -98,7 +98,7 @@ class _SpecialistEarningsScreenState
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки данных',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -107,7 +107,7 @@ class _SpecialistEarningsScreenState
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadEarningsData, child: const Text('Повторить')),
+                onPressed: _loadEarningsData, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -152,7 +152,7 @@ class _SpecialistEarningsScreenState
                 const Icon(Icons.trending_up, color: Colors.green, size: 28),
                 const SizedBox(width: 12),
                 Text('Обзор доходов',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                    style: Theme.of(context).textTheme.headlineSmall,),
               ],
             ),
             const SizedBox(height: 20),
@@ -202,7 +202,7 @@ class _SpecialistEarningsScreenState
             if (holdPayments > 0) ...[
               const SizedBox(height: 16),
               _buildStatCard(
-                  'Заморожено', '$holdPayments', Colors.purple, Icons.lock),
+                  'Заморожено', '$holdPayments', Colors.purple, Icons.lock,),
             ],
           ],
         ),
@@ -211,7 +211,7 @@ class _SpecialistEarningsScreenState
   }
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -232,7 +232,7 @@ class _SpecialistEarningsScreenState
                     style: TextStyle(
                         color: color,
                         fontSize: 12,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,),
                   ),
                 ),
               ],
@@ -241,7 +241,7 @@ class _SpecialistEarningsScreenState
             Text(
               value,
               style: TextStyle(
-                  color: color, fontSize: 18, fontWeight: FontWeight.bold),
+                  color: color, fontSize: 18, fontWeight: FontWeight.bold,),
             ),
           ],
         ),
@@ -259,7 +259,7 @@ class _SpecialistEarningsScreenState
                   const Icon(Icons.bar_chart, color: Colors.blue, size: 28),
                   const SizedBox(width: 12),
                   Text('Динамика доходов',
-                      style: Theme.of(context).textTheme.headlineSmall),
+                      style: Theme.of(context).textTheme.headlineSmall,),
                 ],
               ),
               const SizedBox(height: 20),
@@ -294,14 +294,14 @@ class _SpecialistEarningsScreenState
                   const Icon(Icons.history, color: Colors.orange, size: 28),
                   const SizedBox(width: 12),
                   Text('Последние платежи',
-                      style: Theme.of(context).textTheme.headlineSmall),
+                      style: Theme.of(context).textTheme.headlineSmall,),
                   const Spacer(),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute<void>(
                           builder: (context) => PaymentHistoryScreen(
-                              userId: widget.specialistId, isSpecialist: true),
+                              userId: widget.specialistId, isSpecialist: true,),
                         ),
                       );
                     },
@@ -315,7 +315,7 @@ class _SpecialistEarningsScreenState
                   child: Padding(
                     padding: EdgeInsets.all(32),
                     child: Text('Платежей пока нет',
-                        style: TextStyle(color: Colors.grey)),
+                        style: TextStyle(color: Colors.grey),),
                   ),
                 )
               else
@@ -343,7 +343,7 @@ class _SpecialistEarningsScreenState
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Icon(payment.typeIcon,
-                  color: _getStatusColor(payment.status), size: 20),
+                  color: _getStatusColor(payment.status), size: 20,),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -353,11 +353,11 @@ class _SpecialistEarningsScreenState
                   Text(
                     payment.typeName,
                     style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 14),
+                        fontWeight: FontWeight.w600, fontSize: 14,),
                   ),
                   const SizedBox(height: 4),
                   Text(payment.description,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),),
                   const SizedBox(height: 4),
                   Text(
                     _formatDate(payment.createdAt),
@@ -423,14 +423,14 @@ class _SpecialistEarningsScreenState
                 const Icon(Icons.pie_chart, color: Colors.purple, size: 28),
                 const SizedBox(width: 12),
                 Text('Детализация',
-                    style: Theme.of(context).textTheme.headlineSmall),
+                    style: Theme.of(context).textTheme.headlineSmall,),
               ],
             ),
             const SizedBox(height: 20),
             _buildBreakdownRow('Доходы от услуг', totalIncome, Colors.green),
             _buildBreakdownRow('Возвраты', totalExpenses, Colors.red),
             _buildBreakdownRow('Завершенные платежи',
-                completedPayments.toDouble(), Colors.blue),
+                completedPayments.toDouble(), Colors.blue,),
             if (refundedPayments > 0)
               _buildBreakdownRow(
                 'Возвращенные платежи',
@@ -451,7 +451,7 @@ class _SpecialistEarningsScreenState
               width: 12,
               height: 12,
               decoration: BoxDecoration(
-                  color: color, borderRadius: BorderRadius.circular(6)),
+                  color: color, borderRadius: BorderRadius.circular(6),),
             ),
             const SizedBox(width: 12),
             Expanded(child: Text(label, style: const TextStyle(fontSize: 14))),
@@ -460,7 +460,7 @@ class _SpecialistEarningsScreenState
                   ? value.toStringAsFixed(0)
                   : '${value.toStringAsFixed(0)} ₽',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: color, fontSize: 14),
+                  fontWeight: FontWeight.bold, color: color, fontSize: 14,),
             ),
           ],
         ),

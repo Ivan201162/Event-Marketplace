@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../models/enhanced_feed_post.dart';
 
 /// Сервис для работы с расширенной лентой
 class EnhancedFeedService {
@@ -147,7 +146,7 @@ class EnhancedFeedService {
   }) async {
     try {
       final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (content != null) updates['content'] = content;
@@ -406,7 +405,7 @@ class EnhancedFeedService {
         if (query.isEmpty ||
             post.content.toLowerCase().contains(query.toLowerCase()) ||
             post.tags.any(
-                (tag) => tag.toLowerCase().contains(query.toLowerCase()))) {
+                (tag) => tag.toLowerCase().contains(query.toLowerCase()),)) {
           posts.add(post);
         }
       }

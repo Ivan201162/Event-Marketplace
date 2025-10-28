@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/firebase_options.dart';
+import 'package:event_marketplace_app/test_data/chat_data_generator.dart';
+import 'package:event_marketplace_app/test_data/test_data_generator.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import '../firebase_options.dart';
-import 'chat_data_generator.dart';
-import 'test_data_generator.dart';
 
 /// Главный файл для запуска генерации тестовых данных
 Future<void> main() async {
@@ -12,7 +11,7 @@ Future<void> main() async {
   try {
     // Инициализация Firebase
     await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
+        options: DefaultFirebaseOptions.currentPlatform,);
     print('✅ Firebase инициализирован');
 
     // Создаем генератор данных

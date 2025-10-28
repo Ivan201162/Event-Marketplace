@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет сводки по рейтингу
 class RatingSummaryWidget extends StatelessWidget {
   const RatingSummaryWidget({
-    super.key,
-    required this.averageRating,
-    required this.totalReviews,
-    required this.ratingDistribution,
+    required this.averageRating, required this.totalReviews, required this.ratingDistribution, super.key,
   });
   final double averageRating;
   final int totalReviews;
@@ -96,7 +93,7 @@ class RatingSummaryWidget extends StatelessWidget {
         SizedBox(
           width: 60,
           child: Text(label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+              style: TextStyle(fontSize: 12, color: Colors.grey[700]),),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -174,13 +171,13 @@ class RatingSummaryWidget extends StatelessWidget {
                   // Рейтинг
                   Text('$rating',
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold)),
+                          fontSize: 12, fontWeight: FontWeight.bold,),),
 
                   const SizedBox(height: 4),
 
                   // Количество
                   Text('$count',
-                      style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 10, color: Colors.grey[600]),),
                 ],
               );
             }),

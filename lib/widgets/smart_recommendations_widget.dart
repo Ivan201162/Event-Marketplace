@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/advanced_search_filters.dart';
+import 'package:event_marketplace_app/models/city_region.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_category.dart';
+import 'package:event_marketplace_app/providers/advanced_search_providers.dart';
+import 'package:event_marketplace_app/providers/city_region_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/advanced_search_filters.dart';
-import '../models/city_region.dart';
-import '../models/specialist.dart';
-import '../models/specialist_category.dart';
-import '../providers/advanced_search_providers.dart';
-import '../providers/city_region_providers.dart';
 
 /// Виджет интеллектуальных рекомендаций
 class SmartRecommendationsWidget extends ConsumerWidget {
@@ -107,7 +106,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               data: (results) {
                 if (results.isEmpty) {
                   return _buildEmptyRecommendations(
-                      context, 'Специалисты не найдены');
+                      context, 'Специалисты не найдены',);
                 }
 
                 return SizedBox(
@@ -119,7 +118,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final result = results[index];
                       return _buildSpecialistRecommendationCard(
-                          context, result);
+                          context, result,);
                     },
                   ),
                 );
@@ -141,7 +140,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
       builder: (context, ref, child) {
         final categoriesState = ref.watch(
           popularCategoriesProvider(
-              {'city': selectedCity, 'region': selectedRegion, 'limit': 8}),
+              {'city': selectedCity, 'region': selectedRegion, 'limit': 8},),
         );
 
         return Column(
@@ -160,7 +159,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               data: (categories) {
                 if (categories.isEmpty) {
                   return _buildEmptyRecommendations(
-                      context, 'Категории не найдены');
+                      context, 'Категории не найдены',);
                 }
 
                 return Padding(
@@ -171,7 +170,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                     children: categories
                         .map<Widget>(
                           (category) => _buildCategoryChip(
-                              context, category! as SpecialistCategory),
+                              context, category! as SpecialistCategory,),
                         )
                         .toList(),
                   ),
@@ -210,7 +209,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               data: (cities) {
                 if (cities.isEmpty) {
                   return _buildEmptyRecommendations(
-                      context, 'Города не найдены');
+                      context, 'Города не найдены',);
                 }
 
                 return SizedBox(
@@ -285,7 +284,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
   }
 
   Widget _buildSpecialistRecommendationCard(
-      BuildContext context, AdvancedSearchResult result) {
+      BuildContext context, AdvancedSearchResult result,) {
     final specialist = result.specialist;
     final theme = Theme.of(context);
 
@@ -349,7 +348,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                     const Icon(Icons.star, size: 14, color: Colors.amber),
                     const SizedBox(width: 4),
                     Text(specialist.rating.toStringAsFixed(1),
-                        style: theme.textTheme.bodySmall),
+                        style: theme.textTheme.bodySmall,),
                     const Spacer(),
                     Text(
                       '${specialist.price?.toInt() ?? 0} ₽',
@@ -417,7 +416,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   ),
                   child: Center(
                     child: Text(city.citySize.icon,
-                        style: const TextStyle(fontSize: 20)),
+                        style: const TextStyle(fontSize: 20),),
                   ),
                 ),
 
@@ -462,7 +461,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
   }
 
   Widget _buildTrendSection(
-      BuildContext context, String title, List<dynamic> items) {
+      BuildContext context, String title, List<dynamic> items,) {
     final theme = Theme.of(context);
 
     return Column(
@@ -470,7 +469,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
       children: [
         Text(title,
             style: theme.textTheme.titleSmall
-                ?.copyWith(fontWeight: FontWeight.w600)),
+                ?.copyWith(fontWeight: FontWeight.w600),),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -506,7 +505,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16),
         child: Center(
           child: Text('Ошибка: $error',
-              style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),),
         ),
       );
 
@@ -517,7 +516,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
         child: Center(
           child: Text(message,
               style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),),
         ),
       );
 

@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/backup.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/backup.dart';
 
 /// Сервис бэкапов и восстановления
 class BackupService {
@@ -143,7 +142,7 @@ class BackupService {
 
       // Обновляем статус на "ошибка"
       await _updateBackupStatus(backupId, BackupStatus.failed,
-          errorMessage: e.toString());
+          errorMessage: e.toString(),);
     }
   }
 
@@ -359,7 +358,7 @@ class BackupService {
 
       // Обновляем статус на "ошибка"
       await _updateRestoreStatus(restoreId, RestoreStatus.failed,
-          errorMessage: e.toString());
+          errorMessage: e.toString(),);
     }
   }
 
@@ -379,7 +378,7 @@ class BackupService {
 
   /// Импортировать данные бэкапа
   Future<void> _importBackupData(
-      Map<String, dynamic> backupData, Restore restore) async {
+      Map<String, dynamic> backupData, Restore restore,) async {
     try {
       final data = backupData['data'] as Map<String, dynamic>?;
       if (data == null) return;
@@ -393,7 +392,7 @@ class BackupService {
         if (collectionData == null) continue;
 
         await _importCollection(
-            collectionName, collectionData, restore.options);
+            collectionName, collectionData, restore.options,);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -527,10 +526,8 @@ class BackupService {
                 backup.completedAt!.isAfter(lastBackup)) {
               lastBackup = backup.completedAt!;
             }
-            break;
           case BackupStatus.failed:
             failedBackups++;
-            break;
           default:
             break;
         }

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/screens/payment_history_screen.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../models/payment.dart';
-import '../services/booking_service.dart';
-import '../services/payment_service.dart';
-import 'payment_history_screen.dart';
 
 /// Тестовый экран для проверки финансового модуля
 class TestPaymentsScreen extends ConsumerStatefulWidget {
@@ -59,7 +58,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         appBar: AppBar(
           title: const Text('Тест финансового модуля'),
           actions: [
-            IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData)
+            IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData),
           ],
         ),
         body: _isLoading
@@ -78,7 +77,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
             Text('Ошибка: $_error'),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadData, child: const Text('Повторить')),
+                onPressed: _loadData, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -124,17 +123,17 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
                   ),
                   ElevatedButton(
                       onPressed: _createTestRefund,
-                      child: const Text('Создать возврат')),
+                      child: const Text('Создать возврат'),),
                   ElevatedButton(
                       onPressed: _updatePaymentStatus,
-                      child: const Text('Обновить статус')),
+                      child: const Text('Обновить статус'),),
                   ElevatedButton(
                     onPressed: _generateFinancialReport,
                     child: const Text('Создать отчет'),
                   ),
                   ElevatedButton(
                       onPressed: _showPaymentHistory,
-                      child: const Text('История платежей')),
+                      child: const Text('История платежей'),),
                   ElevatedButton(
                     onPressed: _showSpecialistPayments,
                     child: const Text('Платежи специалиста'),
@@ -164,7 +163,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Статистика',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -232,7 +231,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
                 ..._payments.take(5).map(
                       (payment) => _PaymentListItem(
                           payment: payment,
-                          onTap: () => _showPaymentDetails(payment)),
+                          onTap: () => _showPaymentDetails(payment),),
                     ),
             ],
           ),
@@ -246,7 +245,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Бронирования',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               if (_bookings.isEmpty)
                 const Text('Бронирования не найдены')
@@ -254,7 +253,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
                 ..._bookings.take(3).map(
                       (booking) => _BookingListItem(
                           booking: booking,
-                          onTap: () => _showBookingDetails(booking)),
+                          onTap: () => _showBookingDetails(booking),),
                     ),
             ],
           ),
@@ -293,7 +292,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
       );
 
       _showSuccessMessage(
-          'Окончательный платеж создан: ${payment.formattedAmount}');
+          'Окончательный платеж создан: ${payment.formattedAmount}',);
       _loadData();
     } on Exception catch (e) {
       _showErrorMessage('Ошибка создания окончательного платежа: $e');
@@ -371,7 +370,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
   void _showPaymentHistory() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-          builder: (context) => PaymentHistoryScreen(userId: _selectedUserId)),
+          builder: (context) => PaymentHistoryScreen(userId: _selectedUserId),),
     );
   }
 
@@ -379,7 +378,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => PaymentHistoryScreen(
-            userId: _selectedSpecialistId, isSpecialist: true),
+            userId: _selectedSpecialistId, isSpecialist: true,),
       ),
     );
   }
@@ -441,7 +440,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -469,7 +468,7 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -479,14 +478,14 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   String _formatDate(DateTime date) =>
@@ -522,11 +521,11 @@ class _StatCard extends StatelessWidget {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(title,
                 style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
           ],
         ),
       );
@@ -586,12 +585,12 @@ class _BookingListItem extends StatelessWidget {
           child: Text(
             booking.status.name[0].toUpperCase(),
             style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+                color: Colors.white, fontWeight: FontWeight.bold,),
           ),
         ),
         title: Text(booking.eventTitle),
         subtitle: Text(
-            '${booking.participantsCount} участников • ${booking.totalPrice} ₽'),
+            '${booking.participantsCount} участников • ${booking.totalPrice} ₽',),
         trailing: Text(_formatDate(booking.bookingDate)),
         onTap: onTap,
       );

@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
 
 class SocialChatsListScreen extends ConsumerStatefulWidget {
   const SocialChatsListScreen({super.key});
@@ -54,7 +53,7 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
           IconButton(
               onPressed: _loadChats,
               icon: const Icon(Icons.refresh),
-              tooltip: 'Обновить'),
+              tooltip: 'Обновить',),
         ],
       ),
       body: SafeArea(child: _buildBody()),
@@ -74,7 +73,7 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
             Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
             const SizedBox(height: 16),
             Text('Ошибка загрузки чатов',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -83,7 +82,7 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadChats, child: const Text('Повторить')),
+                onPressed: _loadChats, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -101,14 +100,14 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
             ),
             const SizedBox(height: 16),
             Text('Нет сообщений',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
             Text(
               'Начните общение с другими пользователями',
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color),
+                  color: Theme.of(context).textTheme.bodySmall?.color,),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -148,17 +147,17 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
             chat.otherUser.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
       title: Text(chat.otherUser.name,
-          style: const TextStyle(fontWeight: FontWeight.w500)),
+          style: const TextStyle(fontWeight: FontWeight.w500),),
       subtitle: chat.lastMessage != null
           ? Text(
               chat.lastMessage!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                  color: Theme.of(context).textTheme.bodySmall?.color),
+                  color: Theme.of(context).textTheme.bodySmall?.color,),
             )
           : const Text('Нет сообщений',
-              style: TextStyle(fontStyle: FontStyle.italic)),
+              style: TextStyle(fontStyle: FontStyle.italic),),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -169,7 +168,7 @@ class _SocialChatsListScreenState extends ConsumerState<SocialChatsListScreen> {
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color),
+                  color: Theme.of(context).textTheme.bodySmall?.color,),
             ),
           const SizedBox(height: 4),
           // Индикатор непрочитанных сообщений (можно добавить позже)

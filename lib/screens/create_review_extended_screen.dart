@@ -1,14 +1,12 @@
+import 'package:event_marketplace_app/models/review_extended.dart';
+import 'package:event_marketplace_app/services/review_extended_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/review_extended.dart';
-import '../services/review_extended_service.dart';
 
 /// Экран создания расширенного отзыва
 class CreateReviewExtendedScreen extends ConsumerStatefulWidget {
   const CreateReviewExtendedScreen({
-    super.key,
-    required this.specialistId,
-    required this.bookingId,
+    required this.specialistId, required this.bookingId, super.key,
   });
   final String specialistId;
   final String bookingId;
@@ -50,7 +48,7 @@ class _CreateReviewExtendedScreenState
           actions: [
             TextButton(
                 onPressed: _isLoading ? null : _submitReview,
-                child: const Text('Отправить')),
+                child: const Text('Отправить'),),
           ],
         ),
         body: Form(
@@ -108,7 +106,7 @@ class _CreateReviewExtendedScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Общая оценка',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -131,7 +129,7 @@ class _CreateReviewExtendedScreenState
                   Text(
                     _getRatingText(_rating),
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                        fontSize: 16, fontWeight: FontWeight.bold,),
                   ),
                 ],
               ),
@@ -177,7 +175,7 @@ class _CreateReviewExtendedScreenState
       );
 
   Widget _buildRatingSlider(
-          String label, double value, Function(double) onChanged) =>
+          String label, double value, Function(double) onChanged,) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -186,7 +184,7 @@ class _CreateReviewExtendedScreenState
             children: [
               Text(label),
               Text(value.toStringAsFixed(1),
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontWeight: FontWeight.bold),),
             ],
           ),
           Slider(
@@ -194,7 +192,7 @@ class _CreateReviewExtendedScreenState
               min: 1,
               max: 5,
               divisions: 40,
-              onChanged: onChanged),
+              onChanged: onChanged,),
         ],
       );
 
@@ -205,7 +203,7 @@ class _CreateReviewExtendedScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Комментарий',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _commentController,
@@ -236,10 +234,10 @@ class _CreateReviewExtendedScreenState
                 children: [
                   const Text('Медиа',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   const Spacer(),
                   Text('${_media.length}/10',
-                      style: TextStyle(color: Colors.grey[600])),
+                      style: TextStyle(color: Colors.grey[600]),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -303,14 +301,14 @@ class _CreateReviewExtendedScreenState
                                 errorBuilder: (context, error, stackTrace) =>
                                     Container(
                                         color: Colors.grey[200],
-                                        child: const Icon(Icons.error)),
+                                        child: const Icon(Icons.error),),
                               ),
                             ),
                             if (media.type == MediaType.video)
                               const Positioned.fill(
                                 child: Center(
                                   child: Icon(Icons.play_circle_filled,
-                                      color: Colors.white, size: 32),
+                                      color: Colors.white, size: 32,),
                                 ),
                               ),
                             Positioned(
@@ -325,7 +323,7 @@ class _CreateReviewExtendedScreenState
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Icon(Icons.close,
-                                      color: Colors.white, size: 16),
+                                      color: Colors.white, size: 16,),
                                 ),
                               ),
                             ),
@@ -348,7 +346,7 @@ class _CreateReviewExtendedScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Теги',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
 
               // Поле ввода тегов
@@ -401,7 +399,7 @@ class _CreateReviewExtendedScreenState
                   'Отличная работа',
                 ]
                     .map((tag) => ActionChip(
-                        label: Text(tag), onPressed: () => _addTag(tag)))
+                        label: Text(tag), onPressed: () => _addTag(tag),),)
                     .toList(),
               ),
             ],
@@ -548,13 +546,13 @@ class _CreateReviewExtendedScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 }

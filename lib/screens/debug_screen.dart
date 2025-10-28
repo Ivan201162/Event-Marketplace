@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/screens/integration_test_screen.dart';
+import 'package:event_marketplace_app/services/logger_service.dart';
+import 'package:event_marketplace_app/services/monitoring_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/logger_service.dart';
-import '../services/monitoring_service.dart';
-import 'integration_test_screen.dart';
 
 class DebugScreen extends ConsumerStatefulWidget {
   const DebugScreen({super.key});
@@ -110,7 +110,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                   ),
                   const SizedBox(width: 8),
                   Text('Статус мониторинга',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                 ],
               ),
               const SizedBox(height: 8),
@@ -136,7 +136,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Статистика производительности',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             FutureBuilder<Map<String, dynamic>>(
               future: stats,
@@ -178,7 +178,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Статистика ошибок',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             FutureBuilder<Map<String, dynamic>>(
               future: stats,
@@ -229,7 +229,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Статистика памяти',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
             FutureBuilder<Map<String, dynamic>>(
               future: stats,
@@ -428,12 +428,12 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Настройки мониторинга',
-                        style: Theme.of(context).textTheme.titleMedium),
+                        style: Theme.of(context).textTheme.titleMedium,),
                     const SizedBox(height: 16),
                     SwitchListTile(
                       title: const Text('Автоматический мониторинг'),
                       subtitle: const Text(
-                          'Запускать мониторинг при старте приложения'),
+                          'Запускать мониторинг при старте приложения',),
                       value: _isMonitoring,
                       onChanged: (value) => _toggleMonitoring(),
                     ),
@@ -466,7 +466,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Настройки логирования',
-                        style: Theme.of(context).textTheme.titleMedium),
+                        style: Theme.of(context).textTheme.titleMedium,),
                     const SizedBox(height: 16),
                     ListTile(
                       title: const Text('Уровень логирования'),
@@ -505,14 +505,14 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Информация о приложении',
-                        style: Theme.of(context).textTheme.titleMedium),
+                        style: Theme.of(context).textTheme.titleMedium,),
                     const SizedBox(height: 16),
                     _buildInfoItem('Версия', '1.0.0'),
                     _buildInfoItem('Сборка', '1'),
                     _buildInfoItem('Платформа', 'Flutter'),
                     _buildInfoItem('Режим отладки', kDebugMode ? 'Да' : 'Нет'),
                     _buildInfoItem(
-                        'Профиль', kProfileMode ? 'Профилирование' : 'Релиз'),
+                        'Профиль', kProfileMode ? 'Профилирование' : 'Релиз',),
                   ],
                 ),
               ),
@@ -525,10 +525,10 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Информация о мониторинге',
-                        style: Theme.of(context).textTheme.titleMedium),
+                        style: Theme.of(context).textTheme.titleMedium,),
                     const SizedBox(height: 16),
                     _buildInfoItem(
-                        'Статус', _isMonitoring ? 'Активен' : 'Остановлен'),
+                        'Статус', _isMonitoring ? 'Активен' : 'Остановлен',),
                     FutureBuilder<Map<String, dynamic>>(
                       future: _monitoring.getPerformanceMetrics(),
                       builder: (context, snapshot) => _buildInfoItem(
@@ -575,7 +575,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
             ),
             Expanded(
                 child:
-                    Text(value, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(value, style: Theme.of(context).textTheme.bodyMedium),),
           ],
         ),
       );
@@ -611,7 +611,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Метрики скопированы в буфер обмена')));
+        const SnackBar(content: Text('Метрики скопированы в буфер обмена')),);
   }
 
   void _testPerformance() {
@@ -624,7 +624,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Тест производительности выполнен')));
+          const SnackBar(content: Text('Тест производительности выполнен')),);
       setState(() {});
     });
   }
@@ -646,25 +646,20 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
     switch (level) {
       case LogLevel.debug:
         _logger.debug('Тестовое debug сообщение', tag: 'TEST');
-        break;
       case LogLevel.info:
         _logger.info('Тестовое info сообщение', tag: 'TEST');
-        break;
       case LogLevel.warning:
         _logger.warning('Тестовое warning сообщение', tag: 'TEST');
-        break;
       case LogLevel.error:
         _logger.error('Тестовое error сообщение', tag: 'TEST');
-        break;
       case LogLevel.fatal:
         _logger.fatal('Тестовое fatal сообщение', tag: 'TEST');
-        break;
     }
 
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('${level.name} сообщение отправлено')));
+        SnackBar(content: Text('${level.name} сообщение отправлено')),);
   }
 
   Widget _buildTestsTab() => Padding(
@@ -689,7 +684,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                        'Запустите тесты для проверки интеграции всех компонентов:'),
+                        'Запустите тесты для проверки интеграции всех компонентов:',),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,

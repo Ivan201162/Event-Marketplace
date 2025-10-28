@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/models/transaction.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/payment.dart';
-import '../models/transaction.dart';
-import '../services/payment_service.dart';
 
 /// Payment service provider
 final paymentServiceProvider = Provider<PaymentService>((ref) {
@@ -168,7 +167,7 @@ final monthlyIncomeProvider =
   }).toList();
 
   return monthlyTransactions.fold(
-      0, (sum, transaction) => sum + transaction.amount);
+      0, (sum, transaction) => sum + transaction.amount,);
 });
 
 /// Monthly expense provider
@@ -185,7 +184,7 @@ final monthlyExpenseProvider =
   }).toList();
 
   return monthlyTransactions.fold(
-      0, (sum, transaction) => sum + transaction.amount);
+      0, (sum, transaction) => sum + transaction.amount,);
 });
 
 /// Total income provider
@@ -197,7 +196,7 @@ final totalIncomeProvider =
   final incomeTransactions =
       transactions.where((transaction) => transaction.isIncome).toList();
   return incomeTransactions.fold(
-      0, (sum, transaction) => sum + transaction.amount);
+      0, (sum, transaction) => sum + transaction.amount,);
 });
 
 /// Total expense provider
@@ -209,7 +208,7 @@ final totalExpenseProvider =
   final expenseTransactions =
       transactions.where((transaction) => transaction.isExpense).toList();
   return expenseTransactions.fold(
-      0, (sum, transaction) => sum + transaction.amount);
+      0, (sum, transaction) => sum + transaction.amount,);
 });
 
 /// Payment methods provider

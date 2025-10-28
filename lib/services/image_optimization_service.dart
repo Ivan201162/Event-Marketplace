@@ -67,7 +67,7 @@ class ImageOptimizationService {
     int height = _thumbnailHeight,
   }) async =>
       compressImage(imageBytes,
-          maxWidth: width, maxHeight: height, quality: 80);
+          maxWidth: width, maxHeight: height, quality: 80,);
 
   /// Получить размер изображения
   static Future<Size> getImageSize(Uint8List imageBytes) async {
@@ -85,7 +85,7 @@ class ImageOptimizationService {
 
   /// Сохранить изображение локально
   static Future<String> saveImageLocally(
-      Uint8List imageBytes, String fileName) async {
+      Uint8List imageBytes, String fileName,) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final imagesDir = Directory(path.join(directory.path, 'images'));
@@ -182,8 +182,7 @@ class ImageOptimizationService {
 /// Виджет для оптимизированного отображения изображений
 class OptimizedImage extends StatefulWidget {
   const OptimizedImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -375,8 +374,7 @@ class _OptimizedImageState extends State<OptimizedImage> {
 /// Виджет для отображения миниатюр
 class ThumbnailImage extends StatelessWidget {
   const ThumbnailImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.size = 100,
     this.fit = BoxFit.cover,
     this.placeholder,
@@ -417,8 +415,7 @@ class ThumbnailImage extends StatelessWidget {
 /// Виджет для отображения изображений в сетке с lazy loading
 class LazyImageGrid extends StatefulWidget {
   const LazyImageGrid({
-    super.key,
-    required this.imageUrls,
+    required this.imageUrls, super.key,
     this.crossAxisCount = 3,
     this.crossAxisSpacing = 8,
     this.mainAxisSpacing = 8,

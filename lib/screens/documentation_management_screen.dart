@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/documentation_management.dart';
+import 'package:event_marketplace_app/services/documentation_management_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/documentation_management.dart';
-import '../services/documentation_management_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления документацией
 class DocumentationManagementScreen extends ConsumerStatefulWidget {
@@ -70,13 +70,13 @@ class _DocumentationManagementScreenState
           children: [
             Expanded(
                 child: _buildTabButton(
-                    'documents', 'Документы', Icons.description)),
+                    'documents', 'Документы', Icons.description,),),
             Expanded(
                 child: _buildTabButton(
-                    'templates', 'Шаблоны', Icons.content_copy)),
+                    'templates', 'Шаблоны', Icons.content_copy,),),
             Expanded(
                 child:
-                    _buildTabButton('comments', 'Комментарии', Icons.comment)),
+                    _buildTabButton('comments', 'Комментарии', Icons.comment),),
           ],
         ),
       );
@@ -99,7 +99,7 @@ class _DocumentationManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -123,7 +123,7 @@ class _DocumentationManagementScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Поиск и фильтры',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 16),
 
             // Поиск
@@ -153,7 +153,7 @@ class _DocumentationManagementScreenState
                   hint: const Text('Все типы'),
                   items: [
                     const DropdownMenuItem<DocumentType?>(
-                        child: Text('Все типы')),
+                        child: Text('Все типы'),),
                     ...DocumentType.values.map(
                       (type) => DropdownMenuItem<DocumentType?>(
                         value: type,
@@ -174,7 +174,7 @@ class _DocumentationManagementScreenState
                   hint: const Text('Все категории'),
                   items: [
                     const DropdownMenuItem<DocumentCategory?>(
-                        child: Text('Все категории')),
+                        child: Text('Все категории'),),
                     ...DocumentCategory.values.map(
                       (category) => DropdownMenuItem<DocumentCategory?>(
                         value: category,
@@ -195,7 +195,7 @@ class _DocumentationManagementScreenState
                   hint: const Text('Все статусы'),
                   items: [
                     const DropdownMenuItem<DocumentStatus?>(
-                        child: Text('Все статусы')),
+                        child: Text('Все статусы'),),
                     ...DocumentStatus.values.map(
                       (status) => DropdownMenuItem<DocumentStatus?>(
                         value: status,
@@ -230,7 +230,7 @@ class _DocumentationManagementScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Анализ документации',
-              style: Theme.of(context).textTheme.titleMedium),
+              style: Theme.of(context).textTheme.titleMedium,),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -277,7 +277,7 @@ class _DocumentationManagementScreenState
   }
 
   Widget _buildAnalysisCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -292,12 +292,12 @@ class _DocumentationManagementScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(title,
                 style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
           ],
         ),
       );
@@ -309,7 +309,7 @@ class _DocumentationManagementScreenState
             child: Row(
               children: [
                 Text('Документы',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showAddDocumentDialog,
@@ -362,7 +362,7 @@ class _DocumentationManagementScreenState
                     Text(
                       document.title,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     if (document.summary != null)
                       Text(
@@ -386,7 +386,7 @@ class _DocumentationManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -402,7 +402,7 @@ class _DocumentationManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: categoryColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -418,7 +418,7 @@ class _DocumentationManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -428,19 +428,19 @@ class _DocumentationManagementScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   const PopupMenuItem(
                     value: 'comments',
                     child: ListTile(
                         leading: Icon(Icons.comment),
-                        title: Text('Комментарии')),
+                        title: Text('Комментарии'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -472,7 +472,7 @@ class _DocumentationManagementScreenState
                   .map(
                     (tag) => Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                          horizontal: 6, vertical: 2,),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -515,7 +515,7 @@ class _DocumentationManagementScreenState
             child: Row(
               children: [
                 Text('Шаблоны документов',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showAddTemplateDialog,
@@ -567,10 +567,10 @@ class _DocumentationManagementScreenState
                     Text(
                       template.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(template.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -586,7 +586,7 @@ class _DocumentationManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -602,7 +602,7 @@ class _DocumentationManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: categoryColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -612,19 +612,19 @@ class _DocumentationManagementScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   const PopupMenuItem(
                     value: 'use',
                     child: ListTile(
                         leading: Icon(Icons.play_arrow),
-                        title: Text('Использовать')),
+                        title: Text('Использовать'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -638,7 +638,7 @@ class _DocumentationManagementScreenState
           Row(
             children: [
               _buildInfoChip(
-                  'Использований', '${template.usageCount}', Colors.blue),
+                  'Использований', '${template.usageCount}', Colors.blue,),
               const SizedBox(width: 8),
               _buildInfoChip('Теги', '${template.tags.length}', Colors.green),
             ],
@@ -669,7 +669,7 @@ class _DocumentationManagementScreenState
             child: Row(
               children: [
                 Text('Комментарии к документам',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadData,
@@ -714,7 +714,7 @@ class _DocumentationManagementScreenState
                     Text(
                       comment.authorName,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
+                          fontWeight: FontWeight.bold, fontSize: 14,),
                     ),
                     if (document != null)
                       Text(
@@ -733,7 +733,7 @@ class _DocumentationManagementScreenState
                       : Colors.orange.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: comment.isResolved ? Colors.green : Colors.orange),
+                      color: comment.isResolved ? Colors.green : Colors.orange,),
                 ),
                 child: Text(
                   comment.isResolved ? 'Решен' : 'Открыт',
@@ -751,13 +751,13 @@ class _DocumentationManagementScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   if (!comment.isResolved)
                     const PopupMenuItem(
                       value: 'resolve',
                       child: ListTile(
-                          leading: Icon(Icons.check), title: Text('Решить')),
+                          leading: Icon(Icons.check), title: Text('Решить'),),
                     ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -800,7 +800,7 @@ class _DocumentationManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -918,7 +918,7 @@ class _DocumentationManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -975,13 +975,10 @@ class _DocumentationManagementScreenState
     switch (action) {
       case 'view':
         _viewDocument(document);
-        break;
       case 'edit':
         _editDocument(document);
-        break;
       case 'comments':
         _viewDocumentComments(document);
-        break;
     }
   }
 
@@ -989,13 +986,10 @@ class _DocumentationManagementScreenState
     switch (action) {
       case 'view':
         _viewTemplate(template);
-        break;
       case 'edit':
         _editTemplate(template);
-        break;
       case 'use':
         _useTemplate(template);
-        break;
     }
   }
 
@@ -1003,10 +997,8 @@ class _DocumentationManagementScreenState
     switch (action) {
       case 'view':
         _viewComment(comment);
-        break;
       case 'resolve':
         _resolveComment(comment);
-        break;
     }
   }
 
@@ -1015,7 +1007,7 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Просмотр документа "${document.title}" будет реализован')),
+              Text('Просмотр документа "${document.title}" будет реализован'),),
     );
   }
 
@@ -1024,7 +1016,7 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование документа "${document.title}" будет реализовано')),
+              'Редактирование документа "${document.title}" будет реализовано',),),
     );
   }
 
@@ -1033,7 +1025,7 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Комментарии к документу "${document.title}" будут реализованы')),
+              'Комментарии к документу "${document.title}" будут реализованы',),),
     );
   }
 
@@ -1042,7 +1034,7 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Просмотр шаблона "${template.name}" будет реализован')));
+        content: Text('Просмотр шаблона "${template.name}" будет реализован'),),);
   }
 
   void _editTemplate(DocumentTemplate template) {
@@ -1050,7 +1042,7 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование шаблона "${template.name}" будет реализовано')),
+              'Редактирование шаблона "${template.name}" будет реализовано',),),
     );
   }
 
@@ -1068,7 +1060,7 @@ class _DocumentationManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка использования шаблона: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -1078,7 +1070,7 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Просмотр комментария будет реализован')));
+        const SnackBar(content: Text('Просмотр комментария будет реализован')),);
   }
 
   Future<void> _resolveComment(DocumentComment comment) async {
@@ -1086,14 +1078,14 @@ class _DocumentationManagementScreenState
       await _docService.updateComment(id: comment.id, isResolved: true);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Комментарий решен'), backgroundColor: Colors.green),
+            content: Text('Комментарий решен'), backgroundColor: Colors.green,),
       );
       _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка решения комментария: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -1103,7 +1095,7 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Добавление документа будет реализовано')));
+        content: Text('Добавление документа будет реализовано'),),);
   }
 
   void _showAddTemplateDialog() {
@@ -1111,6 +1103,6 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Добавление шаблона будет реализовано')));
+        const SnackBar(content: Text('Добавление шаблона будет реализовано')),);
   }
 }

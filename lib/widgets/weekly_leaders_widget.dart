@@ -1,15 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/social_models.dart';
 import 'package:flutter/material.dart';
-
-import '../models/social_models.dart';
 
 /// Виджет топ специалистов недели
 class WeeklyLeadersWidget extends StatelessWidget {
-  final List<WeeklyLeader> leaders;
-  final Function(WeeklyLeader)? onLeaderTap;
 
   const WeeklyLeadersWidget(
-      {super.key, required this.leaders, this.onLeaderTap});
+      {required this.leaders, super.key, this.onLeaderTap,});
+  final List<WeeklyLeader> leaders;
+  final Function(WeeklyLeader)? onLeaderTap;
 
   @override
   Widget build(BuildContext context) {
@@ -68,15 +67,12 @@ class WeeklyLeadersWidget extends StatelessWidget {
       case 1:
         positionColor = Colors.amber;
         positionIcon = Icons.emoji_events;
-        break;
       case 2:
         positionColor = Colors.grey[400]!;
         positionIcon = Icons.emoji_events;
-        break;
       case 3:
         positionColor = Colors.orange[300]!;
         positionIcon = Icons.emoji_events;
-        break;
       default:
         positionColor = Colors.grey[300]!;
         positionIcon = Icons.circle;
@@ -109,7 +105,7 @@ class WeeklyLeadersWidget extends StatelessWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                      color: positionColor, shape: BoxShape.circle),
+                      color: positionColor, shape: BoxShape.circle,),
                   child: Center(
                     child: position <= 3
                         ? Icon(positionIcon, size: 14, color: Colors.white)
@@ -137,7 +133,7 @@ class WeeklyLeadersWidget extends StatelessWidget {
                         : null,
                     child: leader.avatarUrl == null
                         ? Icon(Icons.person,
-                            size: 20, color: theme.primaryColor)
+                            size: 20, color: theme.primaryColor,)
                         : null,
                   ),
                 ),
@@ -148,7 +144,7 @@ class WeeklyLeadersWidget extends StatelessWidget {
                 Text(
                   leader.name,
                   style: const TextStyle(
-                      fontSize: 10, fontWeight: FontWeight.w600),
+                      fontSize: 10, fontWeight: FontWeight.w600,),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,

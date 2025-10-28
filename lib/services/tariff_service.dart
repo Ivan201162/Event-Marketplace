@@ -3,37 +3,22 @@ import 'package:flutter/foundation.dart';
 
 /// Tariff model
 class Tariff {
-  final String id;
-  final String name;
-  final String description;
-  final double price;
-  final String currency;
-  final int duration; // in days
-  final List<String> features;
-  final bool isActive;
-  final bool isPopular;
-  final int sortOrder;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const Tariff({
     required this.id,
     required this.name,
     required this.description,
     required this.price,
-    this.currency = 'RUB',
-    required this.duration,
+    required this.duration, required this.createdAt, required this.updatedAt, this.currency = 'RUB',
     this.features = const [],
     this.isActive = true,
     this.isPopular = false,
     this.sortOrder = 0,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Create Tariff from Firestore document
   factory Tariff.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Tariff(
       id: doc.id,
       name: data['name'] ?? '',
@@ -49,6 +34,18 @@ class Tariff {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String name;
+  final String description;
+  final double price;
+  final String currency;
+  final int duration; // in days
+  final List<String> features;
+  final bool isActive;
+  final bool isPopular;
+  final int sortOrder;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Convert Tariff to Firestore document
   Map<String, dynamic> toFirestore() {
@@ -91,7 +88,7 @@ class TariffService {
           .orderBy('sortOrder')
           .get();
 
-      return snapshot.docs.map((doc) => Tariff.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Tariff.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting tariffs: $e');
       return [];
@@ -108,7 +105,7 @@ class TariffService {
           .orderBy('sortOrder')
           .get();
 
-      return snapshot.docs.map((doc) => Tariff.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Tariff.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting popular tariffs: $e');
       return [];
@@ -143,7 +140,7 @@ class TariffService {
 
   /// Update tariff (admin only)
   Future<bool> updateTariff(
-      String tariffId, Map<String, dynamic> updates) async {
+      String tariffId, Map<String, dynamic> updates,) async {
     try {
       await _firestore.collection(_collection).doc(tariffId).update({
         ...updates,
@@ -175,12 +172,12 @@ class TariffService {
         .orderBy('sortOrder')
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Tariff.fromFirestore(doc)).toList());
+            snapshot.docs.map(Tariff.fromFirestore).toList(),);
   }
 
   /// Get tariffs by price range
   Future<List<Tariff>> getTariffsByPriceRange(
-      double minPrice, double maxPrice) async {
+      double minPrice, double maxPrice,) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -190,7 +187,7 @@ class TariffService {
           .orderBy('price')
           .get();
 
-      return snapshot.docs.map((doc) => Tariff.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Tariff.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting tariffs by price range: $e');
       return [];
@@ -207,7 +204,7 @@ class TariffService {
           .orderBy('sortOrder')
           .get();
 
-      return snapshot.docs.map((doc) => Tariff.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Tariff.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting tariffs by duration: $e');
       return [];

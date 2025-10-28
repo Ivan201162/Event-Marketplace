@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/event_ideas_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/event_idea.dart';
-import '../providers/auth_providers.dart';
-import '../services/event_ideas_service.dart';
-
 class ShareIdeaScreen extends ConsumerStatefulWidget {
-  const ShareIdeaScreen({super.key, required this.idea});
+  const ShareIdeaScreen({required this.idea, super.key});
   final EventIdea idea;
 
   @override
@@ -35,7 +34,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
         data: (user) {
           if (user == null) {
             return const Center(
-                child: Text('Войдите в аккаунт, чтобы поделиться идеей'));
+                child: Text('Войдите в аккаунт, чтобы поделиться идеей'),);
           }
 
           return Column(
@@ -89,7 +88,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
                               ),
                               const Center(
                                 child: Icon(Icons.play_circle_fill,
-                                    color: Colors.white, size: 30),
+                                    color: Colors.white, size: 30,),
                               ),
                             ],
                           )
@@ -99,7 +98,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
                             errorBuilder: (context, error, stackTrace) =>
                                 Container(
                                     color: Colors.grey[300],
-                                    child: const Icon(Icons.image)),
+                                    child: const Icon(Icons.image),),
                           )
                     : Icon(
                         widget.idea.isVideo ?? false
@@ -119,7 +118,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
                   Text(
                     widget.idea.title,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                        fontSize: 16, fontWeight: FontWeight.bold,),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -153,7 +152,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
 
           if (snapshot.hasError) {
             return Center(
-                child: Text('Ошибка загрузки чатов: ${snapshot.error}'));
+                child: Text('Ошибка загрузки чатов: ${snapshot.error}'),);
           }
 
           final chats = snapshot.data?.docs ?? [];
@@ -166,7 +165,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
                   Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Нет чатов',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   Text(
                     'Начните общение с другими пользователями',
                     style: TextStyle(color: Colors.grey),
@@ -198,7 +197,7 @@ class _ShareIdeaScreenState extends ConsumerState<ShareIdeaScreen> {
       );
 
   Widget _buildChatItem(String chatId, String otherParticipantId,
-          Map<String, dynamic> chat) =>
+          Map<String, dynamic> chat,) =>
       FutureBuilder<DocumentSnapshot>(
         future: _firestore.collection('users').doc(otherParticipantId).get(),
         builder: (context, snapshot) {

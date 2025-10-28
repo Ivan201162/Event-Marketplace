@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/price_range.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_filters.dart' as filters;
+import 'package:event_marketplace_app/models/specialist_sorting.dart' as sorting_utils;
+import 'package:event_marketplace_app/models/specialist_sorting.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/price_range.dart';
-import '../models/specialist.dart';
-import '../models/specialist_filters.dart' as filters;
-import '../models/specialist_sorting.dart' as sorting_utils;
-import '../models/specialist_sorting.dart';
-import '../services/specialist_service.dart';
 
 /// Notifier для поискового запроса (мигрирован с StateProvider)
 class SearchQueryNotifier extends Notifier<String> {

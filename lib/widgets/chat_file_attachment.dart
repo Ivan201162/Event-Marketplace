@@ -1,17 +1,16 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:event_marketplace_app/core/app_constants.dart';
+import 'package:event_marketplace_app/services/chat_file_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/app_constants.dart';
-import '../services/chat_file_service.dart';
-
 /// Виджет для прикрепления файлов в чате
 class ChatFileAttachment extends ConsumerStatefulWidget {
   const ChatFileAttachment(
-      {super.key, required this.onFileSelected, this.onCancel});
+      {required this.onFileSelected, super.key, this.onCancel,});
   final Function(String fileUrl, String fileName, int fileSize, String fileType)
       onFileSelected;
   final Function()? onCancel;
@@ -42,7 +41,7 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                    icon: const Icon(Icons.close), onPressed: widget.onCancel),
+                    icon: const Icon(Icons.close), onPressed: widget.onCancel,),
               ],
             ),
             const SizedBox(height: 16),
@@ -181,10 +180,10 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
                   children: [
                     Text(label,
                         style: const TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 16)),
+                            fontWeight: FontWeight.w500, fontSize: 16,),),
                     Text(description,
                         style:
-                            TextStyle(color: Colors.grey[600], fontSize: 12)),
+                            TextStyle(color: Colors.grey[600], fontSize: 12),),
                   ],
                 ),
               ),
@@ -195,7 +194,7 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
       );
 
   Future<void> _pickFiles(FileType fileType,
-      {List<String>? allowedExtensions}) async {
+      {List<String>? allowedExtensions,}) async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: fileType,
@@ -302,18 +301,14 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 }
 
 /// Виджет для отображения прикрепленного файла в чате
 class ChatFileMessage extends StatelessWidget {
   const ChatFileMessage({
-    super.key,
-    required this.fileUrl,
-    required this.fileName,
-    required this.fileSize,
-    required this.fileType,
+    required this.fileUrl, required this.fileName, required this.fileSize, required this.fileType, super.key,
     this.thumbnailUrl,
     this.onTap,
   });
@@ -348,7 +343,7 @@ class ChatFileMessage extends StatelessWidget {
                       Text(
                         fileName,
                         style: const TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                            fontWeight: FontWeight.w500, fontSize: 14,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -375,19 +370,15 @@ class ChatFileMessage extends StatelessWidget {
       case 'image':
         icon = Icons.image;
         color = Colors.green;
-        break;
       case 'video':
         icon = Icons.videocam;
         color = Colors.red;
-        break;
       case 'audio':
         icon = Icons.audiotrack;
         color = Colors.orange;
-        break;
       case 'document':
         icon = Icons.description;
         color = Colors.blue;
-        break;
       default:
         icon = Icons.attach_file;
         color = Colors.grey;

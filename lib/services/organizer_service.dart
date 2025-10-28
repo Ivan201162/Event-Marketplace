@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/organizer_profile.dart';
+import 'package:event_marketplace_app/models/organizer_profile.dart';
 
 /// Сервис для управления профилями организаторов
 class OrganizerService {
@@ -134,7 +134,7 @@ class OrganizerService {
 
   /// Поиск организаторов по названию
   Future<List<OrganizerProfile>> searchOrganizers(String searchQuery,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       // Firestore не поддерживает полнотекстовый поиск, поэтому используем простой фильтр
       final querySnapshot = await _firestore
@@ -208,7 +208,7 @@ class OrganizerService {
 
   /// Обновить рейтинг организатора
   Future<void> updateOrganizerRating(
-      String organizerId, double newRating, int reviewCount) async {
+      String organizerId, double newRating, int reviewCount,) async {
     try {
       await _firestore
           .collection('organizer_profiles')
@@ -324,7 +324,7 @@ class OrganizerService {
           .collection('bookings')
           .where('organizerId', isEqualTo: organizerId)
           .where('status',
-              whereIn: ['pending', 'confirmed', 'in_progress']).get();
+              whereIn: ['pending', 'confirmed', 'in_progress'],).get();
 
       return {
         'totalProjects': organizer.pastEvents.length,

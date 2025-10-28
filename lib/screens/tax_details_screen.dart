@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/tax_info.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/services/tax_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/tax_info.dart';
-import '../models/user.dart';
-import '../services/tax_service.dart';
-
 /// Экран детального просмотра налогов специалиста
 class TaxDetailsScreen extends ConsumerStatefulWidget {
-  const TaxDetailsScreen({super.key, required this.user});
+  const TaxDetailsScreen({required this.user, super.key});
 
   final AppUser user;
 
@@ -56,7 +55,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки данных: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -102,11 +101,11 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
             const SizedBox(height: 8),
             const Text('Добавьте первую запись о налоге',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: _showAddTaxDialog,
@@ -141,7 +140,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
               Row(
                 children: [
                   Text(taxInfo.taxTypeIcon,
-                      style: const TextStyle(fontSize: 24)),
+                      style: const TextStyle(fontSize: 24),),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -150,7 +149,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
                         Text(
                           taxInfo.taxTypeDisplayName,
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
+                              fontSize: 16, fontWeight: FontWeight.w600,),
                         ),
                         Text(
                           'Период: ${taxInfo.period}',
@@ -239,7 +238,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
       );
 
   Widget _buildTaxInfoItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Column(
         children: [
           Icon(icon, size: 20, color: color),
@@ -248,7 +247,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
           Text(
             value,
             style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: color),
+                fontSize: 14, fontWeight: FontWeight.bold, color: color,),
           ),
         ],
       );
@@ -315,7 +314,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
                   Text(
                     'Оплачено: ${(stats['paymentPercentage'] as double? ?? 0.0).toStringAsFixed(1)}%',
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                        fontSize: 16, fontWeight: FontWeight.w500,),
                   ),
                 ]),
               ],
@@ -332,7 +331,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
             children: [
               Text(title,
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w600)),
+                      fontSize: 18, fontWeight: FontWeight.w600,),),
               const SizedBox(height: 16),
               ...children,
             ],
@@ -341,7 +340,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
       );
 
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(
@@ -352,7 +351,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
             Text(
               value,
               style: TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 14, fontWeight: FontWeight.bold, color: color,),
             ),
           ],
         ),
@@ -367,7 +366,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -386,11 +385,11 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
       builder: (context) => AlertDialog(
         title: const Text('Отметить как оплаченный'),
         content: const Text(
-            'Вы уверены, что хотите отметить этот налог как оплаченный?'),
+            'Вы уверены, что хотите отметить этот налог как оплаченный?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -413,7 +412,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text('Ошибка: $e'),
-                        backgroundColor: Colors.red),
+                        backgroundColor: Colors.red,),
                   );
                 }
               }
@@ -434,7 +433,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -453,7 +452,7 @@ class _TaxDetailsScreenState extends ConsumerState<TaxDetailsScreen>
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text('Ошибка: $e'),
-                        backgroundColor: Colors.red),
+                        backgroundColor: Colors.red,),
                   );
                 }
               }

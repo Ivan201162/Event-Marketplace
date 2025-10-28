@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/admin_models.dart';
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/services/admin_service.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/admin_models.dart';
-import '../models/subscription_plan.dart';
-import 'admin_service.dart';
 
 class MarketingAdminService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -33,11 +32,11 @@ class MarketingAdminService {
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] Subscription plan created: ${plan.name}');
+          'INFO: [MarketingAdminService] Subscription plan created: ${plan.name}',);
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create subscription plan: $e');
+          'ERROR: [MarketingAdminService] Failed to create subscription plan: $e',);
       await _adminService.logAdminAction(
         adminId: adminId,
         adminEmail: adminEmail,
@@ -75,11 +74,11 @@ class MarketingAdminService {
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] Subscription plan updated: $planId');
+          'INFO: [MarketingAdminService] Subscription plan updated: $planId',);
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to update subscription plan: $e');
+          'ERROR: [MarketingAdminService] Failed to update subscription plan: $e',);
       return false;
     }
   }
@@ -107,11 +106,11 @@ class MarketingAdminService {
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] Marketing campaign created: ${campaign.name}');
+          'INFO: [MarketingAdminService] Marketing campaign created: ${campaign.name}',);
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create marketing campaign: $e');
+          'ERROR: [MarketingAdminService] Failed to create marketing campaign: $e',);
       return false;
     }
   }
@@ -142,11 +141,11 @@ class MarketingAdminService {
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] Marketing campaign updated: $campaignId');
+          'INFO: [MarketingAdminService] Marketing campaign updated: $campaignId',);
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to update marketing campaign: $e');
+          'ERROR: [MarketingAdminService] Failed to update marketing campaign: $e',);
       return false;
     }
   }
@@ -172,16 +171,16 @@ class MarketingAdminService {
         description: 'Created newsletter: ${newsletter.title}',
         metadata: {
           'newsletterTitle': newsletter.title,
-          'type': newsletter.type.name
+          'type': newsletter.type.name,
         },
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] Newsletter created: ${newsletter.title}');
+          'INFO: [MarketingAdminService] Newsletter created: ${newsletter.title}',);
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create newsletter: $e');
+          'ERROR: [MarketingAdminService] Failed to create newsletter: $e',);
       return false;
     }
   }
@@ -211,11 +210,11 @@ class MarketingAdminService {
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] Newsletter sent: $newsletterId');
+          'INFO: [MarketingAdminService] Newsletter sent: $newsletterId',);
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to send newsletter: $e');
+          'ERROR: [MarketingAdminService] Failed to send newsletter: $e',);
       return false;
     }
   }
@@ -242,7 +241,7 @@ class MarketingAdminService {
       final thisMonthReferrals = await _firestore
           .collection('referrals')
           .where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(thisMonth))
+              isGreaterThanOrEqualTo: Timestamp.fromDate(thisMonth),)
           .get();
       stats['thisMonthReferrals'] = thisMonthReferrals.docs.length;
 
@@ -267,7 +266,7 @@ class MarketingAdminService {
       return stats;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to get referral stats: $e');
+          'ERROR: [MarketingAdminService] Failed to get referral stats: $e',);
       return {};
     }
   }
@@ -291,7 +290,7 @@ class MarketingAdminService {
       // Общая сумма комиссий
       final partnerTransactionsSnapshot =
           await _firestore.collection('partner_transactions').get();
-      double totalCommissions = 0.0;
+      var totalCommissions = 0;
       for (final doc in partnerTransactionsSnapshot.docs) {
         totalCommissions += (doc.data()['commissionAmount'] ?? 0.0).toDouble();
       }
@@ -313,13 +312,13 @@ class MarketingAdminService {
       stats['topPartners'] = sortedPartners
           .take(10)
           .map(
-              (entry) => {'partnerId': entry.key, 'totalEarnings': entry.value})
+              (entry) => {'partnerId': entry.key, 'totalEarnings': entry.value},)
           .toList();
 
       return stats;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to get partner stats: $e');
+          'ERROR: [MarketingAdminService] Failed to get partner stats: $e',);
       return {};
     }
   }
@@ -335,11 +334,11 @@ class MarketingAdminService {
 
       if (startDate != null) {
         query = query.where('date',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         query = query.where('date',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       query = query.where('period', isEqualTo: period);
@@ -347,11 +346,11 @@ class MarketingAdminService {
       final snapshot = await query.orderBy('date', descending: true).get();
       return snapshot.docs
           .map((doc) =>
-              FinancialAnalytics.fromMap(doc.data() as Map<String, dynamic>))
+              FinancialAnalytics.fromMap(doc.data()! as Map<String, dynamic>),)
           .toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to get financial analytics: $e');
+          'ERROR: [MarketingAdminService] Failed to get financial analytics: $e',);
       return [];
     }
   }
@@ -392,11 +391,11 @@ class MarketingAdminService {
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] User segment created: ${segment.name}');
+          'INFO: [MarketingAdminService] User segment created: ${segment.name}',);
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to create user segment: $e');
+          'ERROR: [MarketingAdminService] Failed to create user segment: $e',);
       return false;
     }
   }
@@ -411,7 +410,7 @@ class MarketingAdminService {
           final condition = entry.value as Map<String, dynamic>;
           if (condition.containsKey('gte')) {
             query = query.where(entry.key,
-                isGreaterThanOrEqualTo: condition['gte']);
+                isGreaterThanOrEqualTo: condition['gte'],);
           } else if (condition.containsKey('lte')) {
             query =
                 query.where(entry.key, isLessThanOrEqualTo: condition['lte']);
@@ -427,7 +426,7 @@ class MarketingAdminService {
       return snapshot.docs.length;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to count users in segment: $e');
+          'ERROR: [MarketingAdminService] Failed to count users in segment: $e',);
       return 0;
     }
   }
@@ -466,7 +465,7 @@ class MarketingAdminService {
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => UserSegment.fromMap(doc.data()))
-            .toList());
+            .toList(),);
   }
 
   /// Активация/деактивация кампании
@@ -502,7 +501,7 @@ class MarketingAdminService {
       return true;
     } catch (e) {
       debugPrint(
-          'ERROR: [MarketingAdminService] Failed to toggle campaign status: $e');
+          'ERROR: [MarketingAdminService] Failed to toggle campaign status: $e',);
       return false;
     }
   }

@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/screens/create_booking_screen.dart';
+import 'package:event_marketplace_app/services/firestore_service.dart';
+import 'package:event_marketplace_app/widgets/booking_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../providers/auth_providers.dart';
-import '../services/firestore_service.dart';
-import '../widgets/booking_card.dart';
-import 'create_booking_screen.dart';
 
 /// Улучшенный экран заявок с полным функционалом
 class EnhancedBookingsScreen extends ConsumerStatefulWidget {
@@ -125,14 +124,14 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                     hint: const Text('Все статусы'),
                     items: [
                       const DropdownMenuItem<BookingStatus?>(
-                          child: Text('Все статусы')),
+                          child: Text('Все статусы'),),
                       ...BookingStatus.values.map(
                         (status) => DropdownMenuItem<BookingStatus?>(
                           value: status,
                           child: Row(
                             children: [
                               Icon(_getStatusIcon(status),
-                                  size: 16, color: _getStatusColor(status)),
+                                  size: 16, color: _getStatusColor(status),),
                               const SizedBox(width: 8),
                               Text(_getStatusText(status)),
                             ],
@@ -236,7 +235,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Загрузка заявок...')
+            Text('Загрузка заявок...'),
           ],
         ),
       ),
@@ -251,7 +250,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    bookingsByCustomerStreamProvider(currentUser.uid));
+                    bookingsByCustomerStreamProvider(currentUser.uid),);
               },
               child: const Text('Повторить'),
             ),
@@ -304,7 +303,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Загрузка заявок...')
+            Text('Загрузка заявок...'),
           ],
         ),
       ),
@@ -319,7 +318,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             ElevatedButton(
               onPressed: () {
                 ref.invalidate(
-                    bookingsBySpecialistStreamProvider(currentUser.uid));
+                    bookingsBySpecialistStreamProvider(currentUser.uid),);
               },
               child: const Text('Повторить'),
             ),
@@ -472,7 +471,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => const CreateBookingScreen()));
+        builder: (context) => const CreateBookingScreen(),),);
   }
 
   /// Редактировать заявку
@@ -481,7 +480,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Редактирование заявки будет реализовано')));
+        content: Text('Редактирование заявки будет реализовано'),),);
   }
 
   /// Отменить заявку
@@ -494,7 +493,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -506,7 +505,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Заявка отменена')));
+                      const SnackBar(content: Text('Заявка отменена')),);
                 }
               } catch (e) {
                 if (mounted) {
@@ -532,7 +531,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -544,7 +543,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Заявка подтверждена')));
+                      const SnackBar(content: Text('Заявка подтверждена')),);
                 }
               } catch (e) {
                 if (mounted) {
@@ -570,7 +569,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -582,7 +581,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Заявка отклонена')));
+                      const SnackBar(content: Text('Заявка отклонена')),);
                 }
               } catch (e) {
                 if (mounted) {
@@ -608,7 +607,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -620,7 +619,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Заявка завершена')));
+                      const SnackBar(content: Text('Заявка завершена')),);
                 }
               } catch (e) {
                 if (mounted) {

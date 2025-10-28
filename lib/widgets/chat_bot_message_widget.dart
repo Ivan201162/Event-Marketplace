@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/models/chat_bot.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat_bot.dart';
 
 /// Виджет для отображения сообщений бота
 class ChatBotMessageWidget extends ConsumerWidget {
   const ChatBotMessageWidget({
-    super.key,
-    required this.message,
+    required this.message, super.key,
     this.onQuickReplyTap,
     this.onButtonTap,
   });
@@ -74,7 +72,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
   Widget _buildTextMessage(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
         child: Text(message.message, style: const TextStyle(fontSize: 14)),
       );
 
@@ -86,7 +84,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
                 color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),),
             child: Text(message.message, style: const TextStyle(fontSize: 14)),
           ),
           const SizedBox(height: 8),
@@ -101,7 +99,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
                       onTap: () => onQuickReplyTap?.call(reply.payload),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                            horizontal: 12, vertical: 8,),
                         decoration: BoxDecoration(
                           color: Colors.blue[50],
                           borderRadius: BorderRadius.circular(20),
@@ -253,12 +251,12 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 children: [
                   Text(card.title,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold)),
+                          fontSize: 16, fontWeight: FontWeight.bold,),),
                   if (card.subtitle != null) ...[
                     const SizedBox(height: 4),
                     Text(card.subtitle!,
                         style:
-                            TextStyle(fontSize: 14, color: Colors.grey[600])),
+                            TextStyle(fontSize: 14, color: Colors.grey[600]),),
                   ],
                   // Кнопки карточки
                   if (card.buttons != null && card.buttons!.isNotEmpty) ...[
@@ -289,7 +287,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
               height: 40,
               decoration: BoxDecoration(
                   color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),),
               child:
                   Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
             ),
@@ -301,12 +299,12 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 children: [
                   Text(item.title,
                       style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold)),
+                          fontSize: 14, fontWeight: FontWeight.bold,),),
                   if (item.subtitle != null) ...[
                     const SizedBox(height: 2),
                     Text(item.subtitle!,
                         style:
-                            TextStyle(fontSize: 12, color: Colors.grey[600])),
+                            TextStyle(fontSize: 12, color: Colors.grey[600]),),
                   ],
                 ],
               ),

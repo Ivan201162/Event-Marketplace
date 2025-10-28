@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/data/models/up_user.dart';
+import 'package:event_marketplace_app/data/repositories/user_repository.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import '../data/models/up_user.dart';
-import '../data/repositories/user_repository.dart';
-import '../services/analytics_service.dart';
 
 /// Современный экран аутентификации
 class ModernAuthScreen extends ConsumerStatefulWidget {
@@ -79,7 +78,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
           child: CustomScrollView(
-              slivers: [_buildHeader(), _buildTabBar(), _buildTabContent()]),
+              slivers: [_buildHeader(), _buildTabBar(), _buildTabContent()],),
         ),
       );
 
@@ -206,7 +205,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                       suffixIcon: IconButton(
                         icon: Icon(_isPasswordVisible
                             ? Icons.visibility
-                            : Icons.visibility_off),
+                            : Icons.visibility_off,),
                         onPressed: () {
                           setState(() {
                             _isPasswordVisible = !_isPasswordVisible;
@@ -247,7 +246,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(const SnackBar(
-                          content: Text('Восстановление пароля')));
+                          content: Text('Восстановление пароля'),),);
                     },
                     child: const Text('Забыли пароль?'),
                   ),
@@ -352,7 +351,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                   border: Border.all(
                       color: Theme.of(context)
                           .colorScheme
-                          .surfaceContainerHighest),
+                          .surfaceContainerHighest,),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.1),
@@ -384,7 +383,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
                     ),
                     const SizedBox(height: 16),
                     Text('Войти через Google',
-                        style: Theme.of(context).textTheme.headlineSmall),
+                        style: Theme.of(context).textTheme.headlineSmall,),
                     const SizedBox(height: 8),
                     Text(
                       'Быстрый и безопасный вход с помощью вашего Google аккаунта',
@@ -459,7 +458,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка входа: ${e.message}'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -505,7 +504,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка регистрации: ${e.message}'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -547,7 +546,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                     content: Text('Ошибка: ${e.message}'),
-                    backgroundColor: Colors.red),
+                    backgroundColor: Colors.red,),
               );
             }
           },
@@ -559,7 +558,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     content: Text('SMS код отправлен'),
-                    backgroundColor: Colors.green),
+                    backgroundColor: Colors.green,),
               );
             }
           },
@@ -591,7 +590,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка: ${e.message}'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -614,8 +613,8 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
         return; // User cancelled
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth =
+          googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -651,7 +650,7 @@ class _ModernAuthScreenState extends ConsumerState<ModernAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка входа через Google: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -676,9 +675,9 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      Container(
-          color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
+          BuildContext context, double shrinkOffset, bool overlapsContent,) =>
+      ColoredBox(
+          color: Theme.of(context).scaffoldBackgroundColor, child: tabBar,);
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>

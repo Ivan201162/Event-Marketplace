@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/analytics/analytics_service.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../analytics/analytics_service.dart';
-import '../core/feature_flags.dart';
 
 /// Провайдер сервиса аналитики
 final analyticsServiceProvider =

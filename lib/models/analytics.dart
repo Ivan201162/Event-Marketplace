@@ -178,7 +178,7 @@ class MonthlyData {
 /// Данные для графика
 class ChartData {
   const ChartData(
-      {required this.label, required this.value, this.color, this.description});
+      {required this.label, required this.value, this.color, this.description,});
   final String label;
   final double value;
   final Color? color;
@@ -327,9 +327,8 @@ class BudgetGoal {
     required this.currentAmount,
     required this.targetDate,
     required this.type,
-    this.description,
+    required this.createdAt, this.description,
     this.isCompleted = false,
-    required this.createdAt,
   });
 
   factory BudgetGoal.fromDocument(DocumentSnapshot doc) {
@@ -420,10 +419,10 @@ class AnalyticsReport {
         generatedAt:
             (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         stats: IncomeExpenseStatsSerializer.fromMap(
-            map['stats'] as Map<String, dynamic>? ?? {}),
+            map['stats'] as Map<String, dynamic>? ?? {},),
         chartData: (map['chartData'] as List<dynamic>?)
                 ?.map((e) =>
-                    ChartDataSerializer.fromMap(e as Map<String, dynamic>))
+                    ChartDataSerializer.fromMap(e as Map<String, dynamic>),)
                 .toList() ??
             [],
         notes: map['notes'] as String?,

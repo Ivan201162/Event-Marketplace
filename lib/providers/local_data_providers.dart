@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/tool/seed_local_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../tool/seed_local_data.dart';
 
 /// Провайдер для статуса инициализации локальных данных
 final localDataInitializedProvider = FutureProvider<bool>((ref) async {

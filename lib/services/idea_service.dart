@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/idea.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/idea.dart';
 
 /// Service for managing ideas
 class IdeaService {
@@ -12,7 +11,7 @@ class IdeaService {
 
   /// Get all ideas with pagination
   Future<List<Idea>> getIdeas(
-      {int limit = 20, DocumentSnapshot? lastDocument}) async {
+      {int limit = 20, DocumentSnapshot? lastDocument,}) async {
     try {
       Query query = _firestore
           .collection(_collection)
@@ -24,7 +23,7 @@ class IdeaService {
       }
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Idea.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting ideas: $e');
       return [];
@@ -33,7 +32,7 @@ class IdeaService {
 
   /// Get ideas by category
   Future<List<Idea>> getIdeasByCategory(String category,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -42,7 +41,7 @@ class IdeaService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Idea.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting ideas by category: $e');
       return [];
@@ -59,7 +58,7 @@ class IdeaService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Idea.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting ideas by tags: $e');
       return [];
@@ -68,7 +67,7 @@ class IdeaService {
 
   /// Get ideas by difficulty
   Future<List<Idea>> getIdeasByDifficulty(String difficulty,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -77,7 +76,7 @@ class IdeaService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Idea.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting ideas by difficulty: $e');
       return [];
@@ -94,7 +93,7 @@ class IdeaService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Idea.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting popular ideas: $e');
       return [];
@@ -111,7 +110,7 @@ class IdeaService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      return snapshot.docs.map(Idea.fromFirestore).toList();
     } catch (e) {
       debugPrint('Error getting trending ideas: $e');
       return [];
@@ -284,7 +283,7 @@ class IdeaService {
           .get();
 
       final ideas =
-          snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+          snapshot.docs.map(Idea.fromFirestore).toList();
 
       // Filter ideas that contain the query in title, description, or tags
       return ideas.where((idea) {
@@ -372,12 +371,12 @@ class IdeaService {
         .limit(limit)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
+            snapshot.docs.map(Idea.fromFirestore).toList(),);
   }
 
   /// Stream of ideas by category
   Stream<List<Idea>> getIdeasByCategoryStream(String category,
-      {int limit = 20}) {
+      {int limit = 20,}) {
     return _firestore
         .collection(_collection)
         .where('category', isEqualTo: category)
@@ -385,7 +384,7 @@ class IdeaService {
         .limit(limit)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
+            snapshot.docs.map(Idea.fromFirestore).toList(),);
   }
 
   /// Get idea statistics
@@ -396,7 +395,7 @@ class IdeaService {
         final data = doc.data()!;
         return {
           'likes': data['likesCount'] ?? 0,
-          'views': data['viewsCount'] ?? 0
+          'views': data['viewsCount'] ?? 0,
         };
       }
       return {'likes': 0, 'views': 0};

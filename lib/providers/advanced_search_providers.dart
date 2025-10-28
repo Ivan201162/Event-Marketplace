@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/advanced_search_filters.dart';
+import 'package:event_marketplace_app/services/advanced_specialist_search_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/advanced_search_filters.dart';
-import '../services/advanced_specialist_search_service.dart';
 
 /// Провайдер сервиса расширенного поиска
 final advancedSearchServiceProvider = Provider<AdvancedSpecialistSearchService>(
@@ -174,7 +173,7 @@ class AdvancedSearchNotifier extends Notifier<AsyncValue<AdvancedSearchState>> {
 
   /// Обновить сортировку
   Future<void> updateSorting(
-      AdvancedSearchSortBy sortBy, bool ascending) async {
+      AdvancedSearchSortBy sortBy, bool ascending,) async {
     final newFilters =
         _currentFilters.copyWith(sortBy: sortBy, sortAscending: ascending);
     await searchSpecialists(newFilters);
@@ -330,7 +329,7 @@ final recommendedSpecialistsProvider =
   );
 
   return service.searchSpecialists(
-      filters: filters, limit: params['limit'] as int? ?? 10);
+      filters: filters, limit: params['limit'] as int? ?? 10,);
 });
 
 /// Провайдер для похожих специалистов

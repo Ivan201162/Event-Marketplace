@@ -126,7 +126,7 @@ class StorageService {
 
   /// Загружает изображение заявки
   Future<String> uploadRequestImage(
-      String userId, File imageFile, String fileName) async {
+      String userId, File imageFile, String fileName,) async {
     try {
       final ref = _storage.ref().child('requests/$userId/$fileName.jpg');
 
@@ -154,7 +154,7 @@ class StorageService {
 
   /// Загружает изображение идеи
   Future<String> uploadIdeaImage(
-      String userId, File imageFile, String fileName) async {
+      String userId, File imageFile, String fileName,) async {
     try {
       final ref = _storage.ref().child('ideas/$userId/$fileName.jpg');
 
@@ -182,7 +182,7 @@ class StorageService {
 
   /// Загружает видео идеи
   Future<String> uploadIdeaVideo(
-      String userId, File videoFile, String fileName) async {
+      String userId, File videoFile, String fileName,) async {
     try {
       final ref = _storage.ref().child('ideas/$userId/$fileName.mp4');
 

@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/screens/idea_detail_screen.dart';
+import 'package:event_marketplace_app/services/idea_service.dart';
+import 'package:event_marketplace_app/widgets/idea_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/idea.dart';
-import '../services/idea_service.dart';
-import '../widgets/idea_widget.dart';
-import 'idea_detail_screen.dart';
 
 /// Экран топ идей
 class TopIdeasScreen extends ConsumerStatefulWidget {
@@ -24,7 +24,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
           actions: [
             IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () => setState(() {}))
+                onPressed: () => setState(() {}),),
           ],
         ),
         body: StreamBuilder<List<Idea>>(
@@ -45,7 +45,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                         onPressed: () => setState(() {}),
-                        child: const Text('Повторить')),
+                        child: const Text('Повторить'),),
                   ],
                 ),
               );
@@ -81,7 +81,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
             const Icon(Icons.trending_up, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             const Text('Нет топ идей',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             const Text(
               'Пока нет популярных идей за эту неделю',
@@ -95,7 +95,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(
-                    const SnackBar(content: Text('Переход к экрану идей')));
+                    const SnackBar(content: Text('Переход к экрану идей')),);
               },
               icon: const Icon(Icons.lightbulb),
               label: const Text('Просмотреть все идеи'),
@@ -131,7 +131,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Идея скопирована в буфер обмена')));
+        const SnackBar(content: Text('Идея скопирована в буфер обмена')),);
   }
 }
 
@@ -187,12 +187,12 @@ class _IdeaCategoriesScreenState extends ConsumerState<IdeaCategoriesScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(_getCategoryIcon(category),
-                    size: 48, color: _getCategoryColor(category)),
+                    size: 48, color: _getCategoryColor(category),),
                 const SizedBox(height: 12),
                 Text(
                   category,
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -289,7 +289,7 @@ class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                       icon: const Icon(Icons.search),
-                      onPressed: _performSearch),
+                      onPressed: _performSearch,),
                 ),
                 onSubmitted: (_) => _performSearch(),
               ),
@@ -323,7 +323,7 @@ class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
             Icon(Icons.search, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Поиск идей',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             SizedBox(height: 8),
             Text(
               'Введите поисковый запрос для поиска идей',
@@ -379,6 +379,6 @@ class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Идея скопирована в буфер обмена')));
+        const SnackBar(content: Text('Идея скопирована в буфер обмена')),);
   }
 }

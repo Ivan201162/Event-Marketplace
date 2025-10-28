@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Упрощенный экран профиля
 class ProfileScreenAdvanced extends ConsumerWidget {
-  final String userId;
 
   const ProfileScreenAdvanced({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
   });
+  final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

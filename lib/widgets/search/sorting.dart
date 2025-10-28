@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/models/specialist_sorting.dart' as sorting_utils;
+import 'package:event_marketplace_app/providers/search_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/specialist_sorting.dart' as sorting_utils;
-import '../../providers/search_providers.dart';
 
 class SearchSortingWidget extends ConsumerStatefulWidget {
   const SearchSortingWidget(
-      {super.key, this.onSortingChanged, this.showTitle = true});
+      {super.key, this.onSortingChanged, this.showTitle = true,});
   final VoidCallback? onSortingChanged;
   final bool showTitle;
 
@@ -30,14 +30,14 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
           children: [
             if (widget.showTitle)
               const ListTile(
-                  leading: Icon(Icons.sort), title: Text('Сортировка')),
+                  leading: Icon(Icons.sort), title: Text('Сортировка'),),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   _buildSortingOptions(),
                   const SizedBox(height: 16),
-                  _buildActionButtons()
+                  _buildActionButtons(),
                 ],
               ),
             ),
@@ -52,7 +52,7 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Сортировать по:',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
         const SizedBox(height: 12),
         ...sortOptions.map(_buildSortOption),
       ],
@@ -145,7 +145,7 @@ class QuickSortingWidget extends ConsumerWidget {
                 onSelected: (selected) {
                   if (selected) {
                     ref.read(searchSortingProvider.notifier).updateSorting(
-                        sorting_utils.SpecialistSorting(sortOption: option));
+                        sorting_utils.SpecialistSorting(sortOption: option),);
                   } else {
                     ref
                         .read(searchSortingProvider.notifier)
@@ -182,7 +182,7 @@ class CurrentSortingWidget extends ConsumerWidget {
           Text(
             'Сортировка: ${currentSorting.displayName}',
             style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blue),
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blue,),
           ),
           const Spacer(),
           TextButton(
@@ -261,7 +261,7 @@ class _SortingDialogState extends ConsumerState<SortingDialog> {
         ),
         TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена')),
+            child: const Text('Отмена'),),
         ElevatedButton(
           onPressed: () {
             ref
@@ -319,12 +319,12 @@ class SortingStatsWidget extends ConsumerWidget {
             children: [
               Expanded(
                 child: _buildStatItem('Найдено',
-                    '${searchStats['totalCount'] ?? 0}', Icons.search),
+                    '${searchStats['totalCount'] ?? 0}', Icons.search,),
               ),
               Expanded(
                 child: _buildStatItem(
                   'Средняя цена',
-                  '${(searchStats['averagePrice'] ?? 0).toInt()}₽',
+                  '${searchStats['averagePrice'] ?? 0}₽',
                   Icons.attach_money,
                 ),
               ),
@@ -351,10 +351,10 @@ class SortingStatsWidget extends ConsumerWidget {
             style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue.shade700),
+                color: Colors.blue.shade700,),
           ),
           Text(label,
-              style: TextStyle(fontSize: 10, color: Colors.blue.shade600)),
+              style: TextStyle(fontSize: 10, color: Colors.blue.shade600),),
         ],
       );
 }

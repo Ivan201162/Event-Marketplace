@@ -1,15 +1,10 @@
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
 import 'package:flutter/material.dart';
-import '../models/specialist_profile_extended.dart';
 
 /// Виджет элемента FAQ
 class FAQItemWidget extends StatelessWidget {
   const FAQItemWidget({
-    super.key,
-    required this.faqItem,
-    required this.onTap,
-    required this.onEdit,
-    required this.onDelete,
-    required this.onTogglePublish,
+    required this.faqItem, required this.onTap, required this.onEdit, required this.onDelete, required this.onTogglePublish, super.key,
   });
   final FAQItem faqItem;
   final VoidCallback onTap;
@@ -42,7 +37,7 @@ class FAQItemWidget extends StatelessWidget {
                       child: Text(
                         faqItem.question,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -52,13 +47,10 @@ class FAQItemWidget extends StatelessWidget {
                         switch (value) {
                           case 'publish':
                             onTogglePublish();
-                            break;
                           case 'edit':
                             onEdit();
-                            break;
                           case 'delete':
                             onDelete();
-                            break;
                         }
                       },
                       itemBuilder: (context) => [
@@ -75,7 +67,7 @@ class FAQItemWidget extends StatelessWidget {
                               const SizedBox(width: 8),
                               Text(faqItem.isPublished
                                   ? 'Скрыть'
-                                  : 'Опубликовать'),
+                                  : 'Опубликовать',),
                             ],
                           ),
                         ),
@@ -85,7 +77,7 @@ class FAQItemWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.edit),
                               SizedBox(width: 8),
-                              Text('Редактировать')
+                              Text('Редактировать'),
                             ],
                           ),
                         ),
@@ -96,7 +88,7 @@ class FAQItemWidget extends StatelessWidget {
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
                               Text('Удалить',
-                                  style: TextStyle(color: Colors.red)),
+                                  style: TextStyle(color: Colors.red),),
                             ],
                           ),
                         ),

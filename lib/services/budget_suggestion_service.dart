@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/budget_suggestion.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-import '../models/booking.dart';
-import '../models/budget_suggestion.dart';
-import '../models/specialist.dart';
 
 /// Сервис для работы с предложениями по увеличению бюджета
 class BudgetSuggestionService {
@@ -31,7 +30,7 @@ class BudgetSuggestionService {
         message: message,
         createdAt: now,
         metadata: {
-          'expiresAt': now.add(const Duration(hours: 24)).toIso8601String()
+          'expiresAt': now.add(const Duration(hours: 24)).toIso8601String(),
         },
       );
 
@@ -86,7 +85,7 @@ class BudgetSuggestionService {
 
       // Отправляем уведомление специалисту
       await _sendBudgetSuggestionAcceptedNotification(
-          suggestion.specialistId, suggestion);
+          suggestion.specialistId, suggestion,);
 
       // Логируем принятие предложения
       await _logBudgetSuggestionAction(suggestionId, 'accepted', customerId);
@@ -125,7 +124,7 @@ class BudgetSuggestionService {
 
       // Отправляем уведомление специалисту
       await _sendBudgetSuggestionRejectedNotification(
-          suggestion.specialistId, suggestion, reason);
+          suggestion.specialistId, suggestion, reason,);
 
       // Логируем отклонение предложения
       await _logBudgetSuggestionAction(suggestionId, 'rejected', customerId);
@@ -151,7 +150,7 @@ class BudgetSuggestionService {
 
   /// Получить предложения по бюджету для клиента
   Future<List<BudgetSuggestion>> getCustomerSuggestions(
-      String customerId) async {
+      String customerId,) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -167,7 +166,7 @@ class BudgetSuggestionService {
 
   /// Получить предложения по бюджету для специалиста
   Future<List<BudgetSuggestion>> getSpecialistSuggestions(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -178,7 +177,7 @@ class BudgetSuggestionService {
       return snapshot.docs.map(BudgetSuggestion.fromDocument).toList();
     } catch (e) {
       throw Exception(
-          'Ошибка получения предложений по бюджету специалиста: $e');
+          'Ошибка получения предложений по бюджету специалиста: $e',);
     }
   }
 
@@ -237,7 +236,7 @@ class BudgetSuggestionService {
 
   /// Получить статистику предложений по бюджету
   Future<Map<String, dynamic>> getBudgetSuggestionStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -258,13 +257,10 @@ class BudgetSuggestionService {
           case BudgetSuggestionStatus.accepted:
             acceptedSuggestions++;
             totalRevenue += suggestion.totalCost;
-            break;
           case BudgetSuggestionStatus.rejected:
             rejectedSuggestions++;
-            break;
           case BudgetSuggestionStatus.viewed:
             viewedSuggestions++;
-            break;
           case BudgetSuggestionStatus.pending:
           case BudgetSuggestionStatus.expired:
             break;
@@ -315,7 +311,7 @@ class BudgetSuggestionService {
       await _firestore.collection('bookings').add(booking);
     } catch (e) {
       throw Exception(
-          'Ошибка создания бронирования из предложения по бюджету: $e');
+          'Ошибка создания бронирования из предложения по бюджету: $e',);
     }
   }
 
@@ -409,7 +405,7 @@ class BudgetSuggestionService {
       }
     } catch (e) {
       debugPrint(
-          'Ошибка отправки уведомления о принятии предложения по бюджету: $e');
+          'Ошибка отправки уведомления о принятии предложения по бюджету: $e',);
     }
   }
 
@@ -456,13 +452,13 @@ class BudgetSuggestionService {
       }
     } catch (e) {
       debugPrint(
-          'Ошибка отправки уведомления об отклонении предложения по бюджету: $e');
+          'Ошибка отправки уведомления об отклонении предложения по бюджету: $e',);
     }
   }
 
   /// Логировать действие с предложением по бюджету
   Future<void> _logBudgetSuggestionAction(
-      String suggestionId, String action, String userId) async {
+      String suggestionId, String action, String userId,) async {
     try {
       await _firestore.collection('budgetSuggestionLogs').add({
         'suggestionId': suggestionId,
@@ -508,7 +504,7 @@ class BudgetSuggestionService {
         'currentBudget': currentBudget,
         'recommendedBudget': currentBudget +
             missingCategories.fold(
-                0, (sum, cat) => sum + (categoryPrices[cat] ?? 0)),
+                0, (sum, cat) => sum + (categoryPrices[cat] ?? 0),),
       };
     } catch (e) {
       throw Exception('Ошибка анализа бюджета: $e');
@@ -607,7 +603,7 @@ class BudgetSuggestionService {
 
   /// Получить рекомендуемого специалиста
   Future<Specialist?> _getRecommendedSpecialist(
-      String categoryId, String? location) async {
+      String categoryId, String? location,) async {
     try {
       var query = _firestore
           .collection('specialists')

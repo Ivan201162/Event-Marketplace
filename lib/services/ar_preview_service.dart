@@ -1,4 +1,4 @@
-import '../core/feature_flags.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
 /// Сервис для поддержки AR-превью
 class ArPreviewService {
@@ -77,7 +77,7 @@ class ArPreviewService {
 
   /// Запустить AR-просмотр
   Future<void> launchArViewer(
-      {required String arModelUrl, required String eventTitle}) async {
+      {required String arModelUrl, required String eventTitle,}) async {
     if (!FeatureFlags.arPreviewEnabled) {
       throw Exception('AR-превью отключено');
     }
@@ -287,14 +287,8 @@ class ArPreview {
     required this.eventLocation,
     required this.eventDate,
     required this.eventImages,
-    this.venueLayout,
+    required this.arModelUrl, required this.previewImageUrl, required this.status, required this.createdAt, required this.updatedAt, required this.metadata, this.venueLayout,
     this.decorationStyle,
-    required this.arModelUrl,
-    required this.previewImageUrl,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.metadata,
   });
   final String id;
   final String eventId;
@@ -322,12 +316,8 @@ class ArDecorationPreview {
     required this.decorationType,
     required this.modelUrl,
     required this.dimensions,
-    this.color,
+    required this.status, required this.createdAt, required this.updatedAt, required this.metadata, this.color,
     this.material,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.metadata,
   });
   final String id;
   final String decorationId;
@@ -352,12 +342,8 @@ class ArEquipmentPreview {
     required this.equipmentType,
     required this.modelUrl,
     required this.dimensions,
-    this.brand,
+    required this.status, required this.createdAt, required this.updatedAt, required this.metadata, this.brand,
     this.specifications,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.metadata,
   });
   final String id;
   final String equipmentId;

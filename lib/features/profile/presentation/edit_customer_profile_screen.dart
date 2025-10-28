@@ -1,19 +1,18 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/core/navigation/back_utils.dart';
+import 'package:event_marketplace_app/features/profile/data/models/customer_profile.dart';
+import 'package:event_marketplace_app/features/profile/data/repositories/customer_profile_repository.dart';
+import 'package:event_marketplace_app/widgets/form_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../core/navigation/back_utils.dart';
-import '../../../widgets/form_validators.dart';
-import '../data/models/customer_profile.dart';
-import '../data/repositories/customer_profile_repository.dart';
-
 /// Экран редактирования профиля заказчика
 class EditCustomerProfileScreen extends ConsumerStatefulWidget {
   const EditCustomerProfileScreen(
-      {super.key, required this.customerId, this.isCreating = false});
+      {required this.customerId, super.key, this.isCreating = false,});
   final String customerId;
   final bool isCreating;
 
@@ -180,7 +179,7 @@ class _EditCustomerProfileScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка сохранения: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -248,7 +247,7 @@ class _EditCustomerProfileScreenState
 
                         // Основная информация
                         Text('Основная информация',
-                            style: Theme.of(context).textTheme.titleLarge),
+                            style: Theme.of(context).textTheme.titleLarge,),
                         const SizedBox(height: 16),
 
                         TextFormField(
@@ -339,7 +338,7 @@ class _EditCustomerProfileScreenState
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(_errorMessage!,
-                                style: TextStyle(color: Colors.red.shade700)),
+                                style: TextStyle(color: Colors.red.shade700),),
                           ),
 
                         if (_successMessage != null)
@@ -371,7 +370,7 @@ class _EditCustomerProfileScreenState
                                         width: 20,
                                         height: 20,
                                         child: CircularProgressIndicator(
-                                            strokeWidth: 2),
+                                            strokeWidth: 2,),
                                       ),
                                       SizedBox(width: 12),
                                       Text('Сохранение...'),

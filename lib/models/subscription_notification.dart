@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/models/notification_template.dart';
 import 'package:flutter/foundation.dart';
-import 'notification_template.dart';
 
 /// Уведомление о подписке
 @immutable
@@ -11,8 +11,7 @@ class SubscriptionNotification {
     required this.type,
     required this.title,
     required this.body,
-    this.data = const {},
-    required this.createdAt,
+    required this.createdAt, this.data = const {},
     this.isRead = false,
     this.specialistPhotoUrl,
   });

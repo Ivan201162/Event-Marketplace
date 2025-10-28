@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/services/advertisement_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/advertisement.dart';
-import '../../services/advertisement_service.dart';
 
 class CreateAdvertisementScreen extends StatefulWidget {
   const CreateAdvertisementScreen({super.key});
@@ -40,26 +39,26 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
     'Москва',
     'Санкт-Петербург',
     'Новосибирск',
-    'Екатеринбург'
+    'Екатеринбург',
   ];
   final List<String> _cities = [
     'Москва',
     'Санкт-Петербург',
     'Новосибирск',
-    'Екатеринбург'
+    'Екатеринбург',
   ];
   final List<String> _categories = [
     'Фотографы',
     'Видеографы',
     'Организаторы',
-    'Диджеи'
+    'Диджеи',
   ];
   final List<String> _targetAudiences = [
     'Все',
     '18-25 лет',
     '26-35 лет',
     '36-45 лет',
-    '45+ лет'
+    '45+ лет',
   ];
 
   @override
@@ -137,7 +136,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 ),
                 items: AdType.values.map((type) {
                   return DropdownMenuItem(
-                      value: type, child: Text(_getTypeText(type)));
+                      value: type, child: Text(_getTypeText(type)),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -252,7 +251,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
               DropdownButtonFormField<String>(
                 initialValue: _selectedCity,
                 decoration: const InputDecoration(
-                    labelText: 'Город', border: OutlineInputBorder()),
+                    labelText: 'Город', border: OutlineInputBorder(),),
                 items: _cities.map((city) {
                   return DropdownMenuItem(value: city, child: Text(city));
                 }).toList(),
@@ -272,7 +271,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 ),
                 items: _categories.map((category) {
                   return DropdownMenuItem(
-                      value: category, child: Text(category));
+                      value: category, child: Text(category),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -290,7 +289,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                 ),
                 items: _targetAudiences.map((audience) {
                   return DropdownMenuItem(
-                      value: audience, child: Text(audience));
+                      value: audience, child: Text(audience),);
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -328,7 +327,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text('Создать рекламу',
-                          style: TextStyle(fontSize: 16)),
+                          style: TextStyle(fontSize: 16),),
                 ),
               ),
             ],
@@ -473,7 +472,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {

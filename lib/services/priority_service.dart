@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/advertisement.dart';
-import '../models/promotion_boost.dart';
-import '../models/subscription_plan.dart';
-import '../services/advertisement_service.dart';
-import '../services/promotion_service.dart';
-import '../services/subscription_service.dart';
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/models/promotion_boost.dart';
+import 'package:event_marketplace_app/models/subscription_plan.dart';
+import 'package:event_marketplace_app/services/advertisement_service.dart';
+import 'package:event_marketplace_app/services/promotion_service.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 
 class PriorityService {
-  static final PriorityService _instance = PriorityService._internal();
   factory PriorityService() => _instance;
   PriorityService._internal();
+  static final PriorityService _instance = PriorityService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final SubscriptionService _subscriptionService = SubscriptionService();
@@ -21,7 +21,7 @@ class PriorityService {
   Future<int> getUserPriority(String userId) async {
     try {
       // Базовый приоритет
-      int priority = 0;
+      var priority = 0;
 
       // Проверяем активную подписку
       final subscription =
@@ -33,13 +33,10 @@ class PriorityService {
           switch (plan.tier) {
             case SubscriptionTier.free:
               priority += 0;
-              break;
             case SubscriptionTier.premium:
               priority += 100;
-              break;
             case SubscriptionTier.pro:
               priority += 200;
-              break;
           }
         }
       }
@@ -50,30 +47,26 @@ class PriorityService {
         switch (promotion.priorityLevel) {
           case PromotionPriority.low:
             priority += 50;
-            break;
           case PromotionPriority.medium:
             priority += 100;
-            break;
           case PromotionPriority.high:
             priority += 200;
-            break;
           case PromotionPriority.premium:
             priority += 300;
-            break;
         }
       }
 
       return priority;
     } catch (e) {
       debugPrint(
-          'ERROR: [priority_service] Ошибка получения приоритета пользователя: $e');
+          'ERROR: [priority_service] Ошибка получения приоритета пользователя: $e',);
       return 0;
     }
   }
 
   /// Сортировка пользователей по приоритету
   Future<List<Map<String, dynamic>>> sortUsersByPriority(
-      List<Map<String, dynamic>> users) async {
+      List<Map<String, dynamic>> users,) async {
     try {
       final usersWithPriority = <Map<String, dynamic>>[];
 
@@ -85,12 +78,12 @@ class PriorityService {
 
       // Сортируем по приоритету (убывание)
       usersWithPriority.sort(
-          (a, b) => (b['priority'] as int).compareTo(a['priority'] as int));
+          (a, b) => (b['priority'] as int).compareTo(a['priority'] as int),);
 
       return usersWithPriority;
     } catch (e) {
       debugPrint(
-          'ERROR: [priority_service] Ошибка сортировки пользователей: $e');
+          'ERROR: [priority_service] Ошибка сортировки пользователей: $e',);
       return users;
     }
   }
@@ -123,7 +116,7 @@ class PriorityService {
           await query.limit(limit * 2).get(); // Берем больше для сортировки
 
       final users = snapshot.docs
-          .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
+          .map((doc) => {'id': doc.id, ...doc.data()! as Map<String, dynamic>})
           .toList();
 
       // Сортируем по приоритету
@@ -132,7 +125,7 @@ class PriorityService {
       return sortedUsers.take(limit).toList();
     } catch (e) {
       debugPrint(
-          'ERROR: [priority_service] Ошибка получения топ пользователей: $e');
+          'ERROR: [priority_service] Ошибка получения топ пользователей: $e',);
       return [];
     }
   }
@@ -146,7 +139,7 @@ class PriorityService {
   }) async {
     try {
       debugPrint(
-          'INFO: [priority_service] Получение продвинутых пользователей');
+          'INFO: [priority_service] Получение продвинутых пользователей',);
 
       // Получаем активные продвижения профилей
       final promotions = await _promotionService.getPromotedProfiles(
@@ -176,7 +169,7 @@ class PriorityService {
       return promotedUsers;
     } catch (e) {
       debugPrint(
-          'ERROR: [priority_service] Ошибка получения продвинутых пользователей: $e');
+          'ERROR: [priority_service] Ошибка получения продвинутых пользователей: $e',);
       return [];
     }
   }
@@ -214,7 +207,7 @@ class PriorityService {
       return plan?.tier != SubscriptionTier.free;
     } catch (e) {
       debugPrint(
-          'ERROR: [priority_service] Ошибка проверки премиум статуса: $e');
+          'ERROR: [priority_service] Ошибка проверки премиум статуса: $e',);
       return false;
     }
   }
@@ -225,7 +218,7 @@ class PriorityService {
       return await _subscriptionService.getUserSubscriptionTier(userId);
     } catch (e) {
       debugPrint(
-          'ERROR: [priority_service] Ошибка получения уровня подписки: $e');
+          'ERROR: [priority_service] Ошибка получения уровня подписки: $e',);
       return SubscriptionTier.free;
     }
   }
@@ -236,7 +229,7 @@ class PriorityService {
       return await _subscriptionService.hasPremiumAccess(userId);
     } catch (e) {
       debugPrint(
-          'ERROR: [priority_service] Ошибка проверки премиум доступа: $e');
+          'ERROR: [priority_service] Ошибка проверки премиум доступа: $e',);
       return false;
     }
   }

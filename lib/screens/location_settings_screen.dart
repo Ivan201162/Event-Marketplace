@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/integration.dart';
+import 'package:event_marketplace_app/providers/integration_providers.dart';
+import 'package:event_marketplace_app/services/integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/integration.dart';
-import '../providers/integration_providers.dart';
-import '../services/integration_service.dart';
 
 /// Экран настроек геолокации
 class LocationSettingsScreen extends ConsumerStatefulWidget {
@@ -67,7 +67,7 @@ class _LocationSettingsScreenState
               SwitchListTile(
                 title: const Text('Включить геолокацию'),
                 subtitle: const Text(
-                    'Разрешить приложению использовать ваше местоположение'),
+                    'Разрешить приложению использовать ваше местоположение',),
                 value: _locationEnabled,
                 onChanged: (value) {
                   setState(() {
@@ -85,7 +85,7 @@ class _LocationSettingsScreenState
               SwitchListTile(
                 title: const Text('Автоматическое определение'),
                 subtitle: const Text(
-                    'Автоматически определять местоположение при создании событий'),
+                    'Автоматически определять местоположение при создании событий',),
                 value: _autoLocationEnabled,
                 onChanged: _locationEnabled
                     ? (value) {
@@ -172,7 +172,7 @@ class _LocationSettingsScreenState
                         return Column(
                           children: [
                             const Icon(Icons.location_off,
-                                size: 48, color: Colors.grey),
+                                size: 48, color: Colors.grey,),
                             const SizedBox(height: 16),
                             const Text(
                               'Местоположение не определено',
@@ -195,12 +195,12 @@ class _LocationSettingsScreenState
                           const Row(
                             children: [
                               Icon(Icons.location_on,
-                                  color: Colors.green, size: 24),
+                                  color: Colors.green, size: 24,),
                               SizedBox(width: 8),
                               Text(
                                 'Местоположение определено',
                                 style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                    fontSize: 16, fontWeight: FontWeight.w500,),
                               ),
                             ],
                           ),
@@ -260,7 +260,7 @@ class _LocationSettingsScreenState
   Widget _buildLocationInfo(LocationData location) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8),),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -283,10 +283,10 @@ class _LocationSettingsScreenState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label,
-                style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
             Text(value,
                 style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),),
           ],
         ),
       );
@@ -306,7 +306,7 @@ class _LocationSettingsScreenState
                   ),
                   TextButton(
                       onPressed: _clearLocationHistory,
-                      child: const Text('Очистить')),
+                      child: const Text('Очистить'),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -348,7 +348,7 @@ class _LocationSettingsScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -359,7 +359,7 @@ class _LocationSettingsScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Местоположение обновлено'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -373,7 +373,7 @@ class _LocationSettingsScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -395,14 +395,14 @@ class _LocationSettingsScreenState
               Text('Адрес: $address'),
               const SizedBox(height: 8),
               const Text('Полный адрес:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold),),
               Text(address),
             ],
           ),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Закрыть')),
+                child: const Text('Закрыть'),),
           ],
         ),
       );
@@ -410,7 +410,7 @@ class _LocationSettingsScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -420,11 +420,11 @@ class _LocationSettingsScreenState
       builder: (context) => AlertDialog(
         title: const Text('Очистить историю'),
         content: const Text(
-            'Вы уверены, что хотите очистить историю местоположений?'),
+            'Вы уверены, что хотите очистить историю местоположений?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);

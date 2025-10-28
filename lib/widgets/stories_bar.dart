@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/providers/feed_providers.dart';
+import 'package:event_marketplace_app/widgets/story_circle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/story.dart';
-import '../providers/feed_providers.dart';
-import 'story_circle.dart';
 
 /// Горизонтальная полоса Stories
 class StoriesBar extends ConsumerWidget {

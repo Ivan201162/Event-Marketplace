@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/payment_models.dart';
 import 'package:flutter/foundation.dart';
-import '../models/payment_models.dart';
 
 /// Ответ от СБП
 class SbpPaymentResponse {
   const SbpPaymentResponse(
-      {required this.id, required this.confirmationUrl, this.qrCode});
+      {required this.id, required this.confirmationUrl, this.qrCode,});
   final String id;
   final String confirmationUrl;
   final String? qrCode;
@@ -13,7 +13,7 @@ class SbpPaymentResponse {
 /// Ответ от ЮKassa
 class YooKassaPaymentResponse {
   const YooKassaPaymentResponse(
-      {required this.id, required this.confirmationUrl, this.qrCode});
+      {required this.id, required this.confirmationUrl, this.qrCode,});
   final String id;
   final String confirmationUrl;
   final String? qrCode;
@@ -22,7 +22,7 @@ class YooKassaPaymentResponse {
 /// Ответ от Тинькофф
 class TinkoffPaymentResponse {
   const TinkoffPaymentResponse(
-      {required this.paymentId, required this.paymentUrl, this.qrCode});
+      {required this.paymentId, required this.paymentUrl, this.qrCode,});
   final String paymentId;
   final String paymentUrl;
   final String? qrCode;
@@ -149,7 +149,7 @@ class RussianBankService {
 
   /// Получить статус платежа ЮKassa
   Future<YooKassaPaymentStatus> getYooKassaPaymentStatus(
-      String externalPaymentId) async {
+      String externalPaymentId,) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в ЮKassa
       // Пока возвращаем заглушку
@@ -164,7 +164,7 @@ class RussianBankService {
 
   /// Получить статус платежа Тинькофф
   Future<TinkoffPaymentStatus> getTinkoffPaymentStatus(
-      String externalPaymentId) async {
+      String externalPaymentId,) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в Тинькофф
       // Пока возвращаем заглушку

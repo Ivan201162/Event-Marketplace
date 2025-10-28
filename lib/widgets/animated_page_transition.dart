@@ -18,7 +18,7 @@ class AnimatedPageTransitions {
           final tween =
               Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return SlideTransition(
-              position: animation.drive(tween), child: child);
+              position: animation.drive(tween), child: child,);
         },
         transitionDuration: duration,
         reverseTransitionDuration: duration,
@@ -39,7 +39,7 @@ class AnimatedPageTransitions {
           final tween =
               Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return SlideTransition(
-              position: animation.drive(tween), child: child);
+              position: animation.drive(tween), child: child,);
         },
         transitionDuration: duration,
         reverseTransitionDuration: duration,
@@ -60,7 +60,7 @@ class AnimatedPageTransitions {
           final tween =
               Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return SlideTransition(
-              position: animation.drive(tween), child: child);
+              position: animation.drive(tween), child: child,);
         },
         transitionDuration: duration,
         reverseTransitionDuration: duration,
@@ -101,7 +101,7 @@ class AnimatedPageTransitions {
           final tween =
               Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           return RotationTransition(
-              turns: animation.drive(tween), child: child);
+              turns: animation.drive(tween), child: child,);
         },
         transitionDuration: duration,
         reverseTransitionDuration: duration,
@@ -131,8 +131,7 @@ class AnimatedPageTransitions {
 /// Анимированный виджет для появления элементов
 class AnimatedAppearance extends StatelessWidget {
   const AnimatedAppearance({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 600),
     this.offset = const Offset(0, 20),
@@ -155,8 +154,7 @@ class AnimatedAppearance extends StatelessWidget {
 /// Анимированная кнопка с эффектом нажатия
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onPressed,
     this.duration = const Duration(milliseconds: 150),
     this.scale = 0.95,
@@ -202,7 +200,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
         child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) => Transform.scale(
-              scale: _scaleAnimation.value, child: widget.child),
+              scale: _scaleAnimation.value, child: widget.child,),
         ),
       );
 }
@@ -210,8 +208,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 /// Анимированная карточка с эффектом наведения
 class AnimatedCard extends StatefulWidget {
   const AnimatedCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onTap,
     this.margin,
     this.padding,
@@ -240,7 +237,7 @@ class _AnimatedCardState extends State<AnimatedCard>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 200), vsync: this);
+        duration: const Duration(milliseconds: 200), vsync: this,);
     _elevationAnimation = Tween<double>(
       begin: widget.elevation,
       end: widget.elevation + 4.0,
@@ -261,7 +258,7 @@ class _AnimatedCardState extends State<AnimatedCard>
           elevation: _elevationAnimation.value,
           color: widget.color,
           shape: RoundedRectangleBorder(
-              borderRadius: widget.borderRadius ?? BorderRadius.circular(12)),
+              borderRadius: widget.borderRadius ?? BorderRadius.circular(12),),
           child: InkWell(
             onTap: widget.onTap,
             onTapDown: (_) => _controller.forward(),
@@ -270,7 +267,7 @@ class _AnimatedCardState extends State<AnimatedCard>
             borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
             child: Padding(
                 padding: widget.padding ?? const EdgeInsets.all(16),
-                child: widget.child),
+                child: widget.child,),
           ),
         ),
       );
@@ -279,8 +276,7 @@ class _AnimatedCardState extends State<AnimatedCard>
 /// Анимированный список с эффектом появления элементов
 class AnimatedList extends StatelessWidget {
   const AnimatedList({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.delay = const Duration(milliseconds: 100),
     this.duration = const Duration(milliseconds: 600),
     this.controller,

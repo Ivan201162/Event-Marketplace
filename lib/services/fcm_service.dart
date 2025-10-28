@@ -69,7 +69,7 @@ class FCMService {
   /// Обработка сообщений в foreground
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
     debugPrint(
-        '📬 Получено уведомление в foreground: ${message.notification?.title}');
+        '📬 Получено уведомление в foreground: ${message.notification?.title}',);
 
     // Сохраняем уведомление в историю
     await _saveNotificationToHistory(message);
@@ -133,13 +133,11 @@ class FCMService {
         if (chatId != null) {
           context.push('/chat/$chatId');
         }
-        break;
       case 'post':
         final postId = data['id'] ?? data['postId'];
         if (postId != null) {
           context.push('/post/$postId');
         }
-        break;
       case 'request':
         final requestId = data['id'] ?? data['requestId'];
         if (requestId != null) {
@@ -147,26 +145,22 @@ class FCMService {
         } else {
           context.go('/requests');
         }
-        break;
       case 'profile':
         final userId = data['id'] ?? data['userId'];
         if (userId != null) {
           context.push('/profile/$userId');
         }
-        break;
       case 'like':
       case 'comment':
         final postId = data['id'] ?? data['postId'];
         if (postId != null) {
           context.push('/post/$postId');
         }
-        break;
       case 'follow':
         final userId = data['id'] ?? data['userId'];
         if (userId != null) {
           context.push('/profile/$userId');
         }
-        break;
       default:
         context.go('/notifications');
     }

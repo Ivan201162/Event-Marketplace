@@ -5,18 +5,6 @@ enum BookingStatus { pending, confirmed, inProgress, completed, cancelled }
 
 /// Модель заявки
 class Booking {
-  final String id;
-  final String customerId;
-  final String specialistId;
-  final String eventType;
-  final String description;
-  final DateTime eventDate;
-  final String location;
-  final double budget;
-  final BookingStatus status;
-  final Map<String, dynamic>? requirements;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const Booking({
     required this.id,
@@ -28,13 +16,11 @@ class Booking {
     required this.location,
     required this.budget,
     required this.status,
-    this.requirements,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.requirements,
   });
 
   factory Booking.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Booking(
       id: doc.id,
       customerId: data['customerId'] ?? '',
@@ -55,6 +41,18 @@ class Booking {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String customerId;
+  final String specialistId;
+  final String eventType;
+  final String description;
+  final DateTime eventDate;
+  final String location;
+  final double budget;
+  final BookingStatus status;
+  final Map<String, dynamic>? requirements;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toFirestore() {
     return {

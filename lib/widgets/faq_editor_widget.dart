@@ -1,16 +1,13 @@
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
+import 'package:event_marketplace_app/providers/specialist_profile_extended_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_profile_extended.dart';
-import '../providers/specialist_profile_extended_providers.dart';
 
 /// Виджет редактора FAQ
 class FAQEditorWidget extends ConsumerStatefulWidget {
   const FAQEditorWidget({
-    super.key,
-    required this.specialistId,
+    required this.specialistId, required this.onFAQSaved, super.key,
     this.existingFAQ,
-    required this.onFAQSaved,
   });
   final String specialistId;
   final FAQItem? existingFAQ;
@@ -57,7 +54,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
               AppBar(
                 title: Text(widget.existingFAQ == null
                     ? 'Новый вопрос'
-                    : 'Редактировать вопрос'),
+                    : 'Редактировать вопрос',),
                 actions: [
                   TextButton(
                     onPressed: _isSaving ? null : _saveFAQ,
@@ -116,18 +113,18 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
                               items: const [
                                 DropdownMenuItem(
                                     value: 'general',
-                                    child: Text('Общие вопросы')),
+                                    child: Text('Общие вопросы'),),
                                 DropdownMenuItem(
                                     value: 'pricing',
-                                    child: Text('Цены и оплата')),
+                                    child: Text('Цены и оплата'),),
                                 DropdownMenuItem(
                                     value: 'booking',
-                                    child: Text('Бронирование')),
+                                    child: Text('Бронирование'),),
                                 DropdownMenuItem(
-                                    value: 'services', child: Text('Услуги')),
+                                    value: 'services', child: Text('Услуги'),),
                                 DropdownMenuItem(
                                     value: 'equipment',
-                                    child: Text('Оборудование')),
+                                    child: Text('Оборудование'),),
                                 DropdownMenuItem(
                                   value: 'cancellation',
                                   child: Text('Отмена и возврат'),
@@ -171,7 +168,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Настройки',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
           SwitchListTile(
             title: const Text('Опубликовать вопрос'),
@@ -237,7 +234,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
         SnackBar(
             content: Text(widget.existingFAQ == null
                 ? 'Вопрос добавлен'
-                : 'Вопрос обновлён')),
+                : 'Вопрос обновлён',),),
       );
     } catch (e) {
       ScaffoldMessenger.of(context)

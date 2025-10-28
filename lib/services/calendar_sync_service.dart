@@ -1,6 +1,6 @@
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/event.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/event.dart';
 
 /// Сервис для синхронизации с внешними календарями
 class CalendarSyncService {

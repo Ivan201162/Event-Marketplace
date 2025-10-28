@@ -10,19 +10,12 @@ class KPIMetric {
     required this.category,
     required this.unit,
     required this.value,
-    this.target,
+    required this.status, required this.timestamp, required this.metadata, required this.tags, required this.isActive, required this.createdBy, required this.updatedBy, this.target,
     this.previousValue,
     this.change,
     this.changePercentage,
-    required this.status,
-    required this.timestamp,
     this.lastUpdated,
     this.dataSource,
-    required this.metadata,
-    required this.tags,
-    required this.isActive,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory KPIMetric.fromMap(Map<String, dynamic> map) => KPIMetric(
@@ -174,7 +167,7 @@ enum MetricType {
 
   static MetricType fromString(String value) =>
       MetricType.values.firstWhere((type) => type.value == value,
-          orElse: () => MetricType.counter);
+          orElse: () => MetricType.counter,);
 
   String get icon {
     switch (this) {
@@ -510,15 +503,8 @@ class KPIReport {
     required this.dashboardIds,
     required this.startDate,
     required this.endDate,
-    this.template,
-    required this.filters,
-    required this.settings,
-    required this.status,
+    required this.filters, required this.settings, required this.status, required this.createdAt, required this.updatedAt, required this.createdBy, required this.updatedBy, this.template,
     this.fileUrl,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
-    required this.updatedBy,
   });
 
   factory KPIReport.fromMap(Map<String, dynamic> map) => KPIReport(
@@ -646,7 +632,7 @@ enum ReportType {
 
   static ReportType fromString(String value) =>
       ReportType.values.firstWhere((type) => type.value == value,
-          orElse: () => ReportType.summary);
+          orElse: () => ReportType.summary,);
 
   String get icon {
     switch (this) {

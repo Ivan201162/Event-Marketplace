@@ -1,13 +1,13 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Сервис для работы с уведомлениями
 class NotificationService {
-  static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
+  static final NotificationService _instance = NotificationService._internal();
 
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   static final FlutterLocalNotificationsPlugin _localNotifications =
@@ -46,14 +46,8 @@ class NotificationService {
   Future<void> _requestPermissions() async {
     try {
       // Запрос разрешений для FCM
-      NotificationSettings settings = await _messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
+      final var settings = await _messaging.requestPermission(
+        
       );
 
       print('Статус разрешений: ${settings.authorizationStatus}');
@@ -73,7 +67,7 @@ class NotificationService {
     try {
       // Обработка сообщений в фоне
       FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
+          _firebaseMessagingBackgroundHandler,);
 
       // Обработка сообщений в активном состоянии
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
@@ -108,7 +102,7 @@ class NotificationService {
       await _firestore.collection('users').doc(user.uid).set({
         'fcmToken': token,
         'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      }, SetOptions(merge: true),);
     } catch (e) {
       print('Ошибка сохранения токена: $e');
     }
@@ -118,7 +112,7 @@ class NotificationService {
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
     try {
       print(
-          'Получено сообщение в активном состоянии: ${message.notification?.title}');
+          'Получено сообщение в активном состоянии: ${message.notification?.title}',);
 
       // Показ локального уведомления
       await _showLocalNotification(message);
@@ -354,7 +348,7 @@ class NotificationService {
 
   /// Получение уведомлений для пользователя
   Future<List<Map<String, dynamic>>> getNotificationsForUser(
-      String userId) async {
+      String userId,) async {
     try {
       final snapshot = await _firestore
           .collection('notifications')
@@ -453,7 +447,7 @@ class NotificationService {
           .where('isRead', isEqualTo: false)
           .get();
 
-      for (var doc in snapshot.docs) {
+      for (final doc in snapshot.docs) {
         batch.update(doc.reference, {'isRead': true});
       }
 

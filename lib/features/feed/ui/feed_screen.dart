@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/features/feed/data/feed_model.dart';
+import 'package:event_marketplace_app/features/feed/providers/feed_providers.dart';
+import 'package:event_marketplace_app/features/feed/ui/create_post_screen.dart';
+import 'package:event_marketplace_app/features/feed/ui/feed_filters_bar.dart';
+import 'package:event_marketplace_app/features/feed/ui/feed_post_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../data/feed_model.dart';
-import '../providers/feed_providers.dart';
-import 'create_post_screen.dart';
-import 'feed_filters_bar.dart';
-import 'feed_post_card.dart';
 
 /// Экран ленты активности
 class FeedScreen extends ConsumerStatefulWidget {
@@ -45,14 +44,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
         title: const Text(
           'Лента',
           style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black,),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline,
-                color: Colors.black, size: 28),
+                color: Colors.black, size: 28,),
             onPressed: () => _showCreatePostDialog(context),
           ),
         ],
@@ -90,7 +89,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   }
 
   Widget _buildFeedContent(
-          AsyncValue<List<FeedPost>> feedPosts, FeedFilter filter) =>
+          AsyncValue<List<FeedPost>> feedPosts, FeedFilter filter,) =>
       feedPosts.when(
         data: (posts) {
           if (posts.isEmpty) {
@@ -127,7 +126,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               Text('Ошибка загрузки ленты',
-                  style: Theme.of(context).textTheme.headlineSmall),
+                  style: Theme.of(context).textTheme.headlineSmall,),
               const SizedBox(height: 8),
               Text(
                 error.toString(),
@@ -159,22 +158,18 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
         title = 'Нет подписок';
         subtitle = 'Подпишитесь на специалистов, чтобы видеть их посты здесь';
         icon = Icons.person_add;
-        break;
       case FeedFilter.photos:
         title = 'Нет фото';
         subtitle = 'В вашем городе пока нет фото постов';
         icon = Icons.photo_camera;
-        break;
       case FeedFilter.videos:
         title = 'Нет видео';
         subtitle = 'В вашем городе пока нет видео постов';
         icon = Icons.videocam;
-        break;
       default:
         title = 'Лента пуста';
         subtitle = 'Будьте первым, кто опубликует пост в вашем городе!';
         icon = Icons.feed;
-        break;
     }
 
     return Center(
@@ -232,7 +227,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Комментарии будут добавлены позже')));
+        const SnackBar(content: Text('Комментарии будут добавлены позже')),);
   }
 
   void _handleShare(FeedPost post) {
@@ -240,7 +235,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
+        const SnackBar(content: Text('Функция шаринга будет добавлена позже')),);
   }
 
   void _handleProfileTap(String authorId) {

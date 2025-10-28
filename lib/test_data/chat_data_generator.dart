@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/booking.dart';
-import '../models/specialist.dart';
-import '../models/user.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/user.dart';
 
 /// Генератор данных для чатов
 class ChatDataGenerator {
@@ -190,7 +190,7 @@ class ChatDataGenerator {
 
   /// Генерация сообщения в зависимости от номера и контекста
   String _generateMessage(
-      int messageIndex, bool isFromCustomer, bool hasBooking) {
+      int messageIndex, bool isFromCustomer, bool hasBooking,) {
     if (messageIndex == 0) {
       // Первое сообщение - приветствие от заказчика
       return greetingMessages[_random.nextInt(greetingMessages.length)];

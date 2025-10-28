@@ -6,8 +6,7 @@ import 'package:shimmer/shimmer.dart';
 /// Оптимизированный виджет для кэшированных изображений с предзагрузкой
 class OptimizedCachedImageWidget extends StatefulWidget {
   const OptimizedCachedImageWidget({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -50,7 +49,7 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
     try {
       await precacheImage(
         CachedNetworkImageProvider(widget.imageUrl,
-            cacheManager: widget.cacheManager),
+            cacheManager: widget.cacheManager,),
         context,
       );
     } catch (e) {
@@ -67,7 +66,7 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
           width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: widget.borderRadius),
+              color: Colors.white, borderRadius: widget.borderRadius,),
         ),
       );
 
@@ -75,7 +74,7 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-            color: Colors.grey[200], borderRadius: widget.borderRadius),
+            color: Colors.grey[200], borderRadius: widget.borderRadius,),
         child: Icon(
           Icons.error_outline,
           color: Colors.grey[400],
@@ -117,15 +116,14 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
     }
 
     return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300), child: imageWidget);
+        duration: const Duration(milliseconds: 300), child: imageWidget,);
   }
 }
 
 /// Виджет для аватара с кэшированием
 class CachedAvatarWidget extends StatelessWidget {
   const CachedAvatarWidget({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.radius = 20,
     this.borderColor,
     this.borderWidth = 2,
@@ -167,8 +165,7 @@ class CachedAvatarWidget extends StatelessWidget {
 /// Виджет для карточки изображения с кэшированием
 class CachedImageCard extends StatelessWidget {
   const CachedImageCard({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height = 200,
     this.borderRadius = 12,
@@ -220,8 +217,7 @@ class CachedImageCard extends StatelessWidget {
 /// Виджет для сетки изображений с кэшированием
 class CachedImageGrid extends StatelessWidget {
   const CachedImageGrid({
-    super.key,
-    required this.imageUrls,
+    required this.imageUrls, super.key,
     this.crossAxisCount = 3,
     this.crossAxisSpacing = 4,
     this.mainAxisSpacing = 4,

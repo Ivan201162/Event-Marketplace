@@ -69,7 +69,7 @@ class SpecialistTeam {
         data['specialistRoles'] as Map<dynamic, dynamic>? ?? {},
       ),
       paymentSplit: Map<String, double>.from(
-          data['paymentSplit'] as Map<dynamic, dynamic>? ?? {}),
+          data['paymentSplit'] as Map<dynamic, dynamic>? ?? {},),
     );
   }
 

@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/automatic_recommendation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-import '../services/automatic_recommendation_service.dart';
 
 /// Провайдер сервиса автоматических рекомендаций
 final automaticRecommendationServiceProvider =
@@ -199,7 +199,7 @@ final selectedSpecialistsRecommendationsProvider = FutureProvider.family<
 /// Параметры для получения рекомендаций по выбранным специалистам
 class SelectedSpecialistsParams {
   const SelectedSpecialistsParams(
-      {required this.selectedSpecialistIds, required this.userId});
+      {required this.selectedSpecialistIds, required this.userId,});
 
   final List<String> selectedSpecialistIds;
   final String userId;

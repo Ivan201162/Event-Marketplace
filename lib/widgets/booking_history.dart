@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/booking.dart';
-import '../services/booking_service.dart';
-
 /// Виджет для отображения истории заказов заказчика
 class BookingHistory extends ConsumerWidget {
-  const BookingHistory({super.key, required this.userId});
+  const BookingHistory({required this.userId, super.key});
   final String userId;
 
   @override
@@ -116,7 +115,7 @@ class BookingHistory extends ConsumerWidget {
                         : 'С',
                     style: TextStyle(
                         color: Colors.blue.shade700,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -151,13 +150,13 @@ class BookingHistory extends ConsumerWidget {
 
             // Детали заказа
             _buildDetailRow(
-                Icons.calendar_today, 'Дата', _formatDate(booking.eventDate)),
+                Icons.calendar_today, 'Дата', _formatDate(booking.eventDate),),
             _buildDetailRow(
-                Icons.access_time, 'Время', _formatTime(booking.eventDate)),
+                Icons.access_time, 'Время', _formatTime(booking.eventDate),),
             _buildDetailRow(Icons.location_on, 'Место',
-                booking.location ?? 'Место не указано'),
+                booking.location ?? 'Место не указано',),
             _buildDetailRow(Icons.attach_money, 'Стоимость',
-                '${booking.totalPrice.toInt()} ₽'),
+                '${booking.totalPrice} ₽',),
 
             const SizedBox(height: 16),
 
@@ -196,15 +195,12 @@ class BookingHistory extends ConsumerWidget {
       case 'completed':
         color = Colors.green;
         text = 'Завершен';
-        break;
       case 'upcoming':
         color = Colors.blue;
         text = 'Предстоящий';
-        break;
       case 'cancelled':
         color = Colors.red;
         text = 'Отменен';
-        break;
       default:
         color = Colors.grey;
         text = 'Неизвестно';
@@ -265,7 +261,7 @@ class BookingHistory extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -330,11 +326,11 @@ class BookingHistory extends ConsumerWidget {
             Icon(icon, size: 16, color: Colors.grey[600]),
             const SizedBox(width: 8),
             Text('$label: ',
-                style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),),
             Expanded(
               child: Text(value,
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500)),
+                      fontSize: 14, fontWeight: FontWeight.w500,),),
             ),
           ],
         ),

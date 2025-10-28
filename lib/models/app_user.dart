@@ -28,46 +28,11 @@ enum UserType {
 
 /// App user model
 class AppUser extends Equatable {
-  final String uid;
-  final String name;
-  final String? firstName;
-  final String? lastName;
-  final String? email;
-  final String? phone;
-  final String? city;
-  final String? status;
-  final String? avatarUrl;
-  final String? displayName;
-  final String? photoURL;
-  final UserType type;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isOnline;
-  final Map<String, dynamic>? preferences;
-  final List<String> favoriteSpecialists;
-  final String? bio;
-  final String? description;
-  final double? hourlyRate;
-  final String? specialistType;
-
-  // Pro account fields
-  final bool isProAccount;
-  final String? proCategory; // Ведущий, Диджей, Фотограф и т.д.
-  final bool isVerified;
-  final List<String> socialLinks; // Ссылки на соцсети
-  final String? website;
-  final Map<String, String> ctaButtons; // CTA кнопки для Pro аккаунтов
-  final int followersCount;
-  final int followingCount;
-  final int postsCount;
-
-  /// Get user ID (alias for uid)
-  String get id => uid;
 
   const AppUser({
     required this.uid,
     required this.name,
-    this.firstName,
+    required this.createdAt, required this.updatedAt, this.firstName,
     this.lastName,
     this.email,
     this.phone,
@@ -75,8 +40,6 @@ class AppUser extends Equatable {
     this.status,
     this.avatarUrl,
     this.type = UserType.physical,
-    required this.createdAt,
-    required this.updatedAt,
     this.isOnline = false,
     this.preferences,
     this.favoriteSpecialists = const [],
@@ -99,7 +62,7 @@ class AppUser extends Equatable {
 
   /// Create AppUser from Firestore document
   factory AppUser.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppUser(
       uid: doc.id,
       name: data['name'] ?? '',
@@ -136,6 +99,41 @@ class AppUser extends Equatable {
       postsCount: data['postsCount'] ?? 0,
     );
   }
+  final String uid;
+  final String name;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? phone;
+  final String? city;
+  final String? status;
+  final String? avatarUrl;
+  final String? displayName;
+  final String? photoURL;
+  final UserType type;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isOnline;
+  final Map<String, dynamic>? preferences;
+  final List<String> favoriteSpecialists;
+  final String? bio;
+  final String? description;
+  final double? hourlyRate;
+  final String? specialistType;
+
+  // Pro account fields
+  final bool isProAccount;
+  final String? proCategory; // Ведущий, Диджей, Фотограф и т.д.
+  final bool isVerified;
+  final List<String> socialLinks; // Ссылки на соцсети
+  final String? website;
+  final Map<String, String> ctaButtons; // CTA кнопки для Pro аккаунтов
+  final int followersCount;
+  final int followingCount;
+  final int postsCount;
+
+  /// Get user ID (alias for uid)
+  String get id => uid;
 
   /// Convert AppUser to Firestore document
   Map<String, dynamic> toFirestore() {

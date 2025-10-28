@@ -96,7 +96,7 @@ class AppConstants {
     'png',
     'gif',
     'webp',
-    'bmp'
+    'bmp',
   ];
   static const List<String> supportedVideoFormats = [
     'mp4',
@@ -104,21 +104,21 @@ class AppConstants {
     'mov',
     'wmv',
     'flv',
-    'webm'
+    'webm',
   ];
   static const List<String> supportedAudioFormats = [
     'mp3',
     'wav',
     'ogg',
     'aac',
-    'm4a'
+    'm4a',
   ];
   static const List<String> supportedDocumentFormats = [
     'pdf',
     'doc',
     'docx',
     'txt',
-    'rtf'
+    'rtf',
   ];
 
   // Размеры изображений
@@ -232,7 +232,7 @@ class AppConstants {
     'in_app',
     'push',
     'email',
-    'sms'
+    'sms',
   ];
 
   // Типы отчетов
@@ -287,7 +287,7 @@ class AppConstants {
   static const List<String> syncDirections = [
     'inbound',
     'outbound',
-    'bidirectional'
+    'bidirectional',
   ];
 
   // Статусы синхронизации
@@ -305,7 +305,7 @@ class AppConstants {
     'video',
     'audio',
     'document',
-    'other'
+    'other',
   ];
 
   // Статусы контента
@@ -400,7 +400,7 @@ class AppConstants {
     'info',
     'warning',
     'error',
-    'critical'
+    'critical',
   ];
 
   // Типы разрешений
@@ -409,7 +409,7 @@ class AppConstants {
     'write',
     'delete',
     'manage',
-    'moderate'
+    'moderate',
   ];
 
   // Окружения
@@ -417,7 +417,7 @@ class AppConstants {
     'development',
     'staging',
     'production',
-    'testing'
+    'testing',
   ];
 
   // Режимы темы

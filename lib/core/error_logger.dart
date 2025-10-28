@@ -162,7 +162,7 @@ class ErrorLogger {
 
   /// Получение логов по типу ошибки
   static Future<List<Map<String, dynamic>>> getLogsByType(
-      String errorType) async {
+      String errorType,) async {
     try {
       final allLogs = await getAllLogs();
       return allLogs.where((log) => log['errorType'] == errorType).toList();
@@ -320,7 +320,7 @@ class ErrorLogger {
         'dateRange': earliestDate != null && latestDate != null
             ? {
                 'earliest': earliestDate.toIso8601String(),
-                'latest': latestDate.toIso8601String()
+                'latest': latestDate.toIso8601String(),
               }
             : null,
       };

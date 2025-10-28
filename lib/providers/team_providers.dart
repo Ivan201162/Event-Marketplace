@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/models/specialist_team.dart';
+import 'package:event_marketplace_app/services/team_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_team.dart';
-import '../services/team_service.dart';
 
 /// Провайдер сервиса команд
 final teamServiceProvider = Provider<TeamService>((ref) => TeamService());
@@ -60,20 +59,20 @@ final canAddSpecialistProvider =
 /// Провайдер состояния создания команды (мигрирован с StateNotifierProvider)
 final teamCreationProvider =
     NotifierProvider<TeamCreationNotifier, TeamCreationState>(
-  () => TeamCreationNotifier(),
+  TeamCreationNotifier.new,
 );
 
 /// Состояние создания команды
 class TeamCreationState {
   const TeamCreationState(
-      {this.isLoading = false, this.error, this.createdTeam});
+      {this.isLoading = false, this.error, this.createdTeam,});
 
   final bool isLoading;
   final String? error;
   final SpecialistTeam? createdTeam;
 
   TeamCreationState copyWith(
-          {bool? isLoading, String? error, SpecialistTeam? createdTeam}) =>
+          {bool? isLoading, String? error, SpecialistTeam? createdTeam,}) =>
       TeamCreationState(
         isLoading: isLoading ?? this.isLoading,
         error: error,
@@ -128,20 +127,20 @@ class TeamCreationNotifier extends Notifier<TeamCreationState> {
 /// Провайдер состояния управления командой (мигрирован с StateNotifierProvider)
 final teamManagementProvider =
     NotifierProvider<TeamManagementNotifier, TeamManagementState>(
-  () => TeamManagementNotifier(),
+  TeamManagementNotifier.new,
 );
 
 /// Состояние управления командой
 class TeamManagementState {
   const TeamManagementState(
-      {this.isLoading = false, this.error, this.successMessage});
+      {this.isLoading = false, this.error, this.successMessage,});
 
   final bool isLoading;
   final String? error;
   final String? successMessage;
 
   TeamManagementState copyWith(
-          {bool? isLoading, String? error, String? successMessage}) =>
+          {bool? isLoading, String? error, String? successMessage,}) =>
       TeamManagementState(
         isLoading: isLoading ?? this.isLoading,
         error: error,
@@ -175,7 +174,7 @@ class TeamManagementNotifier extends Notifier<TeamManagementState> {
       );
 
       state = state.copyWith(
-          isLoading: false, successMessage: 'Специалист добавлен в команду');
+          isLoading: false, successMessage: 'Специалист добавлен в команду',);
     } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -189,10 +188,10 @@ class TeamManagementNotifier extends Notifier<TeamManagementState> {
 
     try {
       await _teamService.removeSpecialistFromTeam(
-          teamId: teamId, specialistId: specialistId);
+          teamId: teamId, specialistId: specialistId,);
 
       state = state.copyWith(
-          isLoading: false, successMessage: 'Специалист удален из команды');
+          isLoading: false, successMessage: 'Специалист удален из команды',);
     } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -205,14 +204,14 @@ class TeamManagementNotifier extends Notifier<TeamManagementState> {
       await _teamService.confirmTeam(teamId: teamId, notes: notes);
 
       state = state.copyWith(
-          isLoading: false, successMessage: 'Команда подтверждена');
+          isLoading: false, successMessage: 'Команда подтверждена',);
     } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
   Future<void> rejectTeam(
-      {required String teamId, required String reason}) async {
+      {required String teamId, required String reason,}) async {
     state = state.copyWith(isLoading: true);
 
     try {

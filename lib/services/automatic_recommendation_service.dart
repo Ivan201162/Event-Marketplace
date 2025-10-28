@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис автоматических рекомендаций на основе выбранных специалистов
 class AutomaticRecommendationService {
@@ -116,7 +116,7 @@ class AutomaticRecommendationService {
 
   /// Получить специалистов по ID
   Future<List<Specialist>> _getSpecialistsByIds(
-      List<String> specialistIds) async {
+      List<String> specialistIds,) async {
     final specialists = <Specialist>[];
 
     for (final id in specialistIds) {
@@ -135,7 +135,7 @@ class AutomaticRecommendationService {
 
   /// Анализировать выбранные категории
   Map<SpecialistCategory, int> _analyzeSelectedCategories(
-      List<Specialist> specialists) {
+      List<Specialist> specialists,) {
     final categoryCount = <SpecialistCategory, int>{};
 
     for (final specialist in specialists) {
@@ -179,7 +179,7 @@ class AutomaticRecommendationService {
             reason:
                 _getRecommendationReason(selectedCategory, recommendedCategory),
             score: _calculateRecommendationScore(
-                    selectedCategory, recommendedCategory) *
+                    selectedCategory, recommendedCategory,) *
                 count,
             timestamp: DateTime.now(),
             category: recommendedCategory,
@@ -199,7 +199,7 @@ class AutomaticRecommendationService {
 
   /// Получить рекомендуемые категории для данной категории
   List<SpecialistCategory> _getRecommendedCategoriesFor(
-      SpecialistCategory category) {
+      SpecialistCategory category,) {
     switch (category) {
       case SpecialistCategory.host:
         return [
@@ -289,7 +289,7 @@ class AutomaticRecommendationService {
 
   /// Получить причину рекомендации
   String _getRecommendationReason(
-      SpecialistCategory selected, SpecialistCategory recommended) {
+      SpecialistCategory selected, SpecialistCategory recommended,) {
     final reasons = {
       '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}':
           'Рекомендуем добавить фотографа для съемки ведущего',
@@ -360,7 +360,7 @@ class SpecialistRecommendation {
         id: data['id'] as String? ?? '',
         specialistId: data['specialistId'] as String? ?? '',
         specialist: Specialist.fromMap(
-            data['specialist'] as Map<String, dynamic>? ?? {}),
+            data['specialist'] as Map<String, dynamic>? ?? {},),
         reason: data['reason'] as String? ?? '',
         score: (data['score'] as num?)?.toDouble() ?? 0.0,
         timestamp: data['timestamp'] != null

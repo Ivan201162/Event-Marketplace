@@ -1,14 +1,14 @@
+import 'package:event_marketplace_app/models/budget_suggestion.dart';
+import 'package:event_marketplace_app/services/budget_suggestion_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
+import 'package:event_marketplace_app/widgets/responsive_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/budget_suggestion.dart';
-import '../services/budget_suggestion_service.dart';
-import 'responsive_layout.dart';
-import 'responsive_text.dart';
 
 /// Виджет для отображения предложения по увеличению бюджета
 class BudgetSuggestionWidget extends ConsumerWidget {
   const BudgetSuggestionWidget(
-      {super.key, required this.suggestion, this.onSuggestionChanged});
+      {required this.suggestion, super.key, this.onSuggestionChanged,});
   final BudgetSuggestion suggestion;
   final VoidCallback? onSuggestionChanged;
 
@@ -21,7 +21,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
             Row(
               children: [
                 Icon(_getSuggestionIcon(),
-                    color: suggestion.status.color, size: 24),
+                    color: suggestion.status.color, size: 24,),
                 const SizedBox(width: 8),
                 Expanded(
                   child: ResponsiveText(
@@ -67,7 +67,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                         '${suggestion.suggestionCount}',
                         style: TextStyle(
                             color: suggestion.status.color,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,),
                       ),
                     ],
                   ),
@@ -88,7 +88,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                         '${suggestion.totalCost.toStringAsFixed(0)} ₽',
                         style: TextStyle(
                             color: suggestion.status.color,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,),
                       ),
                     ],
                   ),
@@ -110,7 +110,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                           '${suggestion.minCost.toStringAsFixed(0)} - ${suggestion.maxCost.toStringAsFixed(0)} ₽',
                           style: TextStyle(
                               color: suggestion.status.color,
-                              fontWeight: FontWeight.bold),
+                              fontWeight: FontWeight.bold,),
                         ),
                       ],
                     ),
@@ -224,7 +224,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
           style: TextStyle(
               color: suggestion.status.color,
               fontSize: 12,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.bold,),
         ),
       );
 
@@ -303,7 +303,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 child: Row(
                   children: [
                     const Icon(Icons.info_outline,
-                        size: 16, color: Colors.blue),
+                        size: 16, color: Colors.blue,),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -369,7 +369,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     }
   }
 
@@ -389,10 +389,7 @@ class BudgetSuggestionWidget extends ConsumerWidget {
 /// Виджет для создания предложения по увеличению бюджета
 class CreateBudgetSuggestionWidget extends ConsumerStatefulWidget {
   const CreateBudgetSuggestionWidget({
-    super.key,
-    required this.bookingId,
-    required this.customerId,
-    required this.specialistId,
+    required this.bookingId, required this.customerId, required this.specialistId, super.key,
     this.onSuggestionCreated,
   });
   final String bookingId;
@@ -505,7 +502,7 @@ class _CreateBudgetSuggestionWidgetState
                           )
                         : const Icon(Icons.send),
                     label: Text(
-                        _isLoading ? 'Создание...' : 'Создать предложение'),
+                        _isLoading ? 'Создание...' : 'Создать предложение',),
                   ),
                 ),
               ],
@@ -590,7 +587,7 @@ class _CreateBudgetSuggestionWidgetState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка анализа бюджета: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -635,7 +632,7 @@ class _CreateBudgetSuggestionWidgetState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() {
         _isLoading = false;
@@ -647,7 +644,7 @@ class _CreateBudgetSuggestionWidgetState
 /// Диалог для отклонения предложения
 class _RejectSuggestionDialog extends StatefulWidget {
   const _RejectSuggestionDialog(
-      {required this.suggestion, required this.onRejected});
+      {required this.suggestion, required this.onRejected,});
   final BudgetSuggestion suggestion;
   final VoidCallback onRejected;
 
@@ -692,7 +689,7 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
           ElevatedButton(
             onPressed: _isLoading ? null : _rejectSuggestion,
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, foregroundColor: Colors.white),
+                backgroundColor: Colors.red, foregroundColor: Colors.white,),
             child: _isLoading
                 ? const SizedBox(
                     width: 16,
@@ -724,7 +721,7 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Предложение отклонено'),
-            backgroundColor: Colors.orange),
+            backgroundColor: Colors.orange,),
       );
 
       widget.onRejected();
@@ -732,7 +729,7 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() {
         _isLoading = false;

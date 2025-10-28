@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/category.dart';
+import 'package:event_marketplace_app/providers/optimized_data_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/category.dart';
-import '../providers/optimized_data_providers.dart';
 
 /// Оптимизированная сетка категорий с реальными данными
 class OptimizedCategoryGrid extends ConsumerWidget {

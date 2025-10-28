@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/services/integration_service.dart';
+import 'package:event_marketplace_app/services/vk_integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/feature_flags.dart';
-import '../models/user.dart';
-import '../services/integration_service.dart';
-import '../services/vk_integration_service.dart';
-
 /// Экран интеграции с VK для специалистов
 class VKIntegrationScreen extends ConsumerStatefulWidget {
-  const VKIntegrationScreen({super.key, required this.specialist});
+  const VKIntegrationScreen({required this.specialist, super.key});
   final AppUser specialist;
 
   @override
@@ -146,7 +145,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                   prefixIcon: const Icon(Icons.link),
                   suffixIcon: IconButton(
                       icon: const Icon(Icons.search),
-                      onPressed: _loadVKProfile),
+                      onPressed: _loadVKProfile,),
                 ),
                 onSubmitted: (_) => _loadVKProfile(),
               ),
@@ -158,7 +157,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                   icon: const Icon(Icons.search),
                   label: const Text('Загрузить профиль'),
                   style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12)),
+                      padding: const EdgeInsets.symmetric(vertical: 12),),
                 ),
               ),
             ],
@@ -191,7 +190,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
               const SizedBox(width: 12),
               Expanded(
                 child: Text(_errorMessage!,
-                    style: TextStyle(color: Colors.red[600])),
+                    style: TextStyle(color: Colors.red[600]),),
               ),
             ],
           ),
@@ -231,18 +230,18 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                       Text(
                         _vkProfile!.displayName,
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold,),
                       ),
                       if (_vkProfile!.isVerified)
                         Row(
                           children: [
                             Icon(Icons.verified,
-                                color: Colors.blue[600], size: 16),
+                                color: Colors.blue[600], size: 16,),
                             const SizedBox(width: 4),
                             Text(
                               'Верифицирован',
                               style: TextStyle(
-                                  color: Colors.blue[600], fontSize: 12),
+                                  color: Colors.blue[600], fontSize: 12,),
                             ),
                           ],
                         ),
@@ -258,7 +257,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
             if (_vkProfile!.description != null) ...[
               const SizedBox(height: 16),
               Text(_vkProfile!.description!,
-                  style: const TextStyle(fontSize: 16)),
+                  style: const TextStyle(fontSize: 16),),
             ],
             const SizedBox(height: 16),
             SizedBox(
@@ -287,7 +286,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Помощь',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
               _buildHelpItem(
                 Icons.info,
@@ -322,10 +321,10 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                      style: const TextStyle(fontWeight: FontWeight.w500),),
                   const SizedBox(height: 4),
                   Text(description,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
                 ],
               ),
             ),
@@ -342,10 +341,10 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
             Icon(Icons.person_off, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Профиль VK не загружен',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             SizedBox(height: 8),
             Text('Сначала подключите VK профиль',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -357,7 +356,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
         children: [
           _buildVKProfileCard(),
           const SizedBox(height: 16),
-          _buildVKStatsCard()
+          _buildVKStatsCard(),
         ],
       ),
     );
@@ -393,7 +392,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                         Text(
                           _vkProfile!.displayName,
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -406,7 +405,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                           Row(
                             children: [
                               Icon(Icons.verified,
-                                  color: Colors.blue[600], size: 16),
+                                  color: Colors.blue[600], size: 16,),
                               const SizedBox(width: 4),
                               Text(
                                 'Верифицирован',
@@ -428,10 +427,10 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                 const SizedBox(height: 16),
                 const Text('Описание',
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 8),
                 Text(_vkProfile!.description!,
-                    style: const TextStyle(fontSize: 16)),
+                    style: const TextStyle(fontSize: 16),),
               ],
             ],
           ),
@@ -445,15 +444,15 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Статистика',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildStatItem(Icons.people, 'Подписчики',
-                      _vkProfile!.followersCount.toString()),
+                      _vkProfile!.followersCount.toString(),),
                   _buildStatItem(Icons.article, 'Посты',
-                      _vkProfile!.recentPosts.length.toString()),
+                      _vkProfile!.recentPosts.length.toString(),),
                   _buildStatItem(
                     Icons.verified,
                     'Статус',
@@ -472,7 +471,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
           const SizedBox(height: 8),
           Text(value,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         ],
       );
@@ -486,10 +485,10 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
             Icon(Icons.article_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Посты VK не загружены',
-                style: TextStyle(fontSize: 18, color: Colors.grey)),
+                style: TextStyle(fontSize: 18, color: Colors.grey),),
             SizedBox(height: 8),
             Text('Сначала подключите VK профиль',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -531,7 +530,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                         Text(
                           _vkProfile!.displayName,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                              fontWeight: FontWeight.bold, fontSize: 16,),
                         ),
                         Text(
                           '${index + 1} дн. назад',
@@ -550,21 +549,21 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
               Row(
                 children: [
                   Icon(Icons.favorite_border,
-                      size: 16, color: Colors.grey[600]),
+                      size: 16, color: Colors.grey[600],),
                   const SizedBox(width: 4),
                   Text('${(index + 1) * 10}',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),),
                   const SizedBox(width: 16),
                   Icon(Icons.comment_outlined,
-                      size: 16, color: Colors.grey[600]),
+                      size: 16, color: Colors.grey[600],),
                   const SizedBox(width: 4),
                   Text('${(index + 1) * 3}',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),),
                   const SizedBox(width: 16),
                   Icon(Icons.share, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text('${(index + 1) * 2}',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),),
                 ],
               ),
             ],
@@ -627,7 +626,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка сохранения: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка сохранения: $e'), backgroundColor: Colors.red,),);
     }
   }
 }

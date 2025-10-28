@@ -1,19 +1,15 @@
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/screens/review_form_screen.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/safe_log.dart';
-import '../models/review.dart';
-import '../providers/auth_providers.dart';
-import '../services/review_service.dart';
-import 'review_form_screen.dart';
 
 /// Экран отзывов
 class ReviewsScreen extends ConsumerStatefulWidget {
   const ReviewsScreen({
-    super.key,
-    required this.targetId,
-    required this.type,
-    required this.targetName,
+    required this.targetId, required this.type, required this.targetName, super.key,
   });
   final String targetId;
   final ReviewType type;
@@ -60,10 +56,10 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         ),
         actions: [
           IconButton(
-              icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+              icon: const Icon(Icons.search), onPressed: _showSearchDialog,),
           IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: _showFilterDialog),
+              onPressed: _showFilterDialog,),
           IconButton(icon: const Icon(Icons.add), onPressed: _createReview),
         ],
       ),
@@ -76,7 +72,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
 
   Widget _buildReviewsList(currentUser) => StreamBuilder<List<Review>>(
         stream: _reviewService.getReviewsForTarget(widget.targetId, widget.type,
-            filter: _filter),
+            filter: _filter,),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -93,7 +89,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -109,7 +105,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   const Icon(Icons.reviews, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
                   Text('Пока нет отзывов',
-                      style: Theme.of(context).textTheme.headlineSmall),
+                      style: Theme.of(context).textTheme.headlineSmall,),
                   const SizedBox(height: 8),
                   const Text(
                     'Станьте первым, кто оставит отзыв!',
@@ -171,10 +167,10 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           }
 
           final stats = snapshot.data ??
-              ReviewStats(
+              const ReviewStats(
                 averageRating: 0,
                 totalReviews: 0,
-                ratingDistribution: const {},
+                ratingDistribution: {},
                 verifiedReviews: 0,
                 recentReviews: 0,
               );
@@ -210,11 +206,11 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         child: Row(
           children: [
             Icon(Icons.filter_list,
-                size: 16, color: Theme.of(context).colorScheme.primary),
+                size: 16, color: Theme.of(context).colorScheme.primary,),
             const SizedBox(width: 8),
             Expanded(
               child: Text(_getFilterDescription(),
-                  style: Theme.of(context).textTheme.bodySmall),
+                  style: Theme.of(context).textTheme.bodySmall,),
             ),
             TextButton(onPressed: _clearFilters, child: const Text('Очистить')),
           ],
@@ -245,7 +241,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   if (review.isVerified)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),
@@ -303,7 +299,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
 
               // Содержимое отзыва
               Text(review.content,
-                  style: Theme.of(context).textTheme.bodyMedium),
+                  style: Theme.of(context).textTheme.bodyMedium,),
 
               // Изображения
               if (review.images.isNotEmpty) ...[
@@ -320,7 +316,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
               // Ответ на отзыв
               if (review.hasResponse) ...[
                 const SizedBox(height: 16),
-                _buildReviewResponse(review)
+                _buildReviewResponse(review),
               ],
 
               const SizedBox(height: 12),
@@ -336,7 +332,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         children: List.generate(
           5,
           (index) => Icon(index < rating ? Icons.star : Icons.star_border,
-              color: Colors.amber, size: 16),
+              color: Colors.amber, size: 16,),
         ),
       );
 
@@ -395,7 +391,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           borderRadius: BorderRadius.circular(8),
           border: Border(
               left: BorderSide(
-                  color: Theme.of(context).colorScheme.primary, width: 3)),
+                  color: Theme.of(context).colorScheme.primary, width: 3,),),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,7 +399,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             Row(
               children: [
                 Icon(Icons.business,
-                    size: 16, color: Theme.of(context).colorScheme.primary),
+                    size: 16, color: Theme.of(context).colorScheme.primary,),
                 const SizedBox(width: 8),
                 Text(
                   'Ответ владельца',
@@ -427,7 +423,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             ),
             const SizedBox(height: 8),
             Text(review.response!,
-                style: Theme.of(context).textTheme.bodyMedium),
+                style: Theme.of(context).textTheme.bodyMedium,),
           ],
         ),
       );
@@ -492,7 +488,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           if (currentUser != null && currentUser.id == review.reviewerId) ...[
             TextButton(
                 onPressed: () => _editReview(review),
-                child: const Text('Редактировать')),
+                child: const Text('Редактировать'),),
           ],
         ],
       );
@@ -546,9 +542,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildStatItem(
-                            'Проверенные отзывы', '${stats.verifiedReviews}'),
+                            'Проверенные отзывы', '${stats.verifiedReviews}',),
                         _buildStatItem(
-                            'Полезные отзывы', '${stats.helpfulReviews}'),
+                            'Полезные отзывы', '${stats.helpfulReviews}',),
                         _buildStatItem(
                           'Процент полезности',
                           '${stats.helpfulPercentage.toStringAsFixed(1)}%',
@@ -653,7 +649,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
               ),
               const SizedBox(height: 16),
               _buildStatItem(
-                  'Последнее обновление', _formatDate(stats.lastUpdated)),
+                  'Последнее обновление', _formatDate(stats.lastUpdated),),
               _buildStatItem('Всего отзывов', '${stats.totalReviews}'),
               _buildStatItem('Проверенные отзывы', '${stats.verifiedReviews}'),
               _buildStatItem('Полезные отзывы', '${stats.helpfulReviews}'),
@@ -729,7 +725,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -751,7 +747,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('ОК')),
+              child: const Text('ОК'),),
         ],
       ),
     );
@@ -769,7 +765,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -788,7 +784,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -813,7 +809,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка голосования: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }

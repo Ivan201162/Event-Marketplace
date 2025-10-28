@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/widgets/back_button_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import '../models/booking.dart';
-import '../services/booking_service.dart';
-import '../widgets/back_button_handler.dart';
 
 class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
@@ -68,7 +67,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки данных: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -159,7 +158,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 Text(_isSpecialist ? 'Календарь специалиста' : 'Мой календарь'),
             leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.pop()),
+                onPressed: () => context.pop(),),
             actions: [
               if (_isSpecialist)
                 IconButton(
@@ -210,7 +209,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           selectedDecoration:
               const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
           todayDecoration: BoxDecoration(
-              color: Colors.blue.shade100, shape: BoxShape.circle),
+              color: Colors.blue.shade100, shape: BoxShape.circle,),
           weekendTextStyle: const TextStyle(color: Colors.red),
         ),
         headerStyle: const HeaderStyle(
@@ -253,7 +252,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 return Container(
                   margin: const EdgeInsets.only(top: 5),
                   child: const Icon(Icons.check_circle,
-                      color: Colors.green, size: 16),
+                      color: Colors.green, size: 16,),
                 );
               }
             }
@@ -300,7 +299,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK')),
+              child: const Text('OK'),),
         ],
       ),
     );
@@ -366,7 +365,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             const Expanded(
               child: Center(
                 child: Text('На эту дату событий нет',
-                    style: TextStyle(color: Colors.grey)),
+                    style: TextStyle(color: Colors.grey),),
               ),
             )
           else
@@ -397,21 +396,21 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           Text(
                             '${booking.eventDate.hour.toString().padLeft(2, '0')}:${booking.eventDate.minute.toString().padLeft(2, '0')} - ${_getStatusText(booking.status)}',
                             style: TextStyle(
-                                color: Colors.grey.shade600, fontSize: 12),
+                                color: Colors.grey.shade600, fontSize: 12,),
                           ),
                         ],
                       ),
                       trailing: Text(
-                        '${booking.totalPrice.toInt() ?? 0}₽',
+                        '${booking.totalPrice ?? 0}₽',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.green),
+                            fontWeight: FontWeight.bold, color: Colors.green,),
                       ),
                       onTap: () {
                         // TODO(developer): Показать детали заявки
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(const SnackBar(
-                            content: Text('Детали заявки в разработке')));
+                            content: Text('Детали заявки в разработке'),),);
                       },
                     ),
                   );

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет поиска специалистов
 class SpecialistsSearchWidget extends StatelessWidget {
   const SpecialistsSearchWidget({
-    super.key,
-    required this.controller,
-    required this.onSearchChanged,
+    required this.controller, required this.onSearchChanged, super.key,
   });
 
   final TextEditingController controller;

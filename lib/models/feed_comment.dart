@@ -3,30 +3,13 @@ import 'package:equatable/equatable.dart';
 
 /// Feed comment model
 class FeedComment extends Equatable {
-  final String id;
-  final String postId;
-  final String authorId;
-  final String authorName;
-  final String? authorAvatarUrl;
-  final String content;
-  final String? userPhotoUrl;
-  final String? userName;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int likesCount;
-  final List<String> likedBy;
-  final String? parentCommentId;
-  final List<String> replies;
 
   const FeedComment({
     required this.id,
     required this.postId,
     required this.authorId,
     required this.authorName,
-    this.authorAvatarUrl,
-    required this.content,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.content, required this.createdAt, required this.updatedAt, this.authorAvatarUrl,
     this.likesCount = 0,
     this.likedBy = const [],
     this.parentCommentId,
@@ -37,7 +20,7 @@ class FeedComment extends Equatable {
 
   /// Create FeedComment from Firestore document
   factory FeedComment.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return FeedComment(
       id: doc.id,
       postId: data['postId'] ?? '',
@@ -55,6 +38,20 @@ class FeedComment extends Equatable {
       userName: data['userName'],
     );
   }
+  final String id;
+  final String postId;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatarUrl;
+  final String content;
+  final String? userPhotoUrl;
+  final String? userName;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int likesCount;
+  final List<String> likedBy;
+  final String? parentCommentId;
+  final List<String> replies;
 
   /// Convert FeedComment to Firestore document
   Map<String, dynamic> toFirestore() {

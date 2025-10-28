@@ -1,14 +1,12 @@
+import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/specialist.dart';
-
 /// Современная карточка специалиста в едином стиле
 class ModernSpecialistCard extends ConsumerWidget {
   const ModernSpecialistCard({
-    super.key,
-    required this.specialist,
+    required this.specialist, super.key,
     this.onTap,
     this.showFavoriteButton = true,
     this.showQuickActions = true,
@@ -247,7 +245,7 @@ class ModernSpecialistCard extends ConsumerWidget {
 /// Компактная версия карточки для списков
 class CompactSpecialistCard extends StatelessWidget {
   const CompactSpecialistCard(
-      {super.key, required this.specialist, this.onTap});
+      {required this.specialist, super.key, this.onTap,});
 
   final Specialist specialist;
   final VoidCallback? onTap;

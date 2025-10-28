@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/payment_extended.dart';
+import 'package:event_marketplace_app/services/payment_extended_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/payment_extended.dart';
-import '../services/payment_extended_service.dart';
 
 /// Провайдер для сервиса расширенных платежей
 final paymentExtendedServiceProvider = Provider<PaymentExtendedService>(
@@ -72,7 +72,7 @@ final completedPaymentsProvider =
   return ref.watch(userPaymentsProvider(params)).when(
         data: (payments) => Stream.value(payments
             .where((p) => p.status == PaymentStatus.completed)
-            .toList()),
+            .toList(),),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
       );
@@ -299,16 +299,12 @@ final filteredPaymentsProvider =
           switch (filter.sortBy) {
             case PaymentSortBy.date:
               filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-              break;
             case PaymentSortBy.amount:
               filtered.sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
-              break;
             case PaymentSortBy.status:
               filtered.sort((a, b) => a.status.name.compareTo(b.status.name));
-              break;
             case PaymentSortBy.type:
               filtered.sort((a, b) => a.type.name.compareTo(b.type.name));
-              break;
           }
 
           return Stream.value(filtered);

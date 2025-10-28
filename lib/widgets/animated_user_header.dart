@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 /// Анимированная плашка пользователя с эффектами при скролле
 class AnimatedUserHeader extends StatefulWidget {
   const AnimatedUserHeader(
-      {super.key, required this.user, required this.isVisible});
+      {required this.user, required this.isVisible, super.key,});
 
   final dynamic user;
   final bool isVisible;
@@ -29,16 +29,16 @@ class _AnimatedUserHeaderState extends State<AnimatedUserHeader>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -0.5),
       end: Offset.zero,
     ).animate(CurvedAnimation(
-        parent: _animationController, curve: Curves.easeOutBack));
+        parent: _animationController, curve: Curves.easeOutBack,),);
 
     if (widget.isVisible) {
       _animationController.forward();
@@ -71,7 +71,7 @@ class _AnimatedUserHeaderState extends State<AnimatedUserHeader>
         return FadeTransition(
           opacity: _fadeAnimation,
           child: SlideTransition(
-              position: _slideAnimation, child: _buildUserCard()),
+              position: _slideAnimation, child: _buildUserCard(),),
         );
       },
     );
@@ -142,11 +142,11 @@ class _AnimatedUserHeaderState extends State<AnimatedUserHeader>
                               errorWidget: (context, url, error) => Icon(
                                   Icons.person,
                                   size: 35,
-                                  color: Theme.of(context).primaryColor),
+                                  color: Theme.of(context).primaryColor,),
                             ),
                           )
                         : Icon(Icons.person,
-                            size: 35, color: Theme.of(context).primaryColor),
+                            size: 35, color: Theme.of(context).primaryColor,),
                   ),
                 ),
               ),
@@ -174,14 +174,14 @@ class _AnimatedUserHeaderState extends State<AnimatedUserHeader>
                   Row(
                     children: [
                       const Icon(Icons.location_on,
-                          color: Colors.white70, size: 18),
+                          color: Colors.white70, size: 18,),
                       const SizedBox(width: 6),
                       Text(
                         widget.user?.city?.trim().isNotEmpty == true
                             ? widget.user!.city as String
                             : 'Город не указан',
                         style: const TextStyle(
-                            color: Colors.white70, fontSize: 13),
+                            color: Colors.white70, fontSize: 13,),
                       ),
                     ],
                   ),

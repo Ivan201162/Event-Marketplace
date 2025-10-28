@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Исправленный экран профиля с безопасной загрузкой данных
 class FixedProfileScreen extends ConsumerStatefulWidget {
   const FixedProfileScreen(
-      {super.key, required this.userId, this.isOwnProfile = false});
+      {required this.userId, super.key, this.isOwnProfile = false,});
 
   final String userId;
   final bool isOwnProfile;
@@ -33,7 +33,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
     _animationController.forward();
   }
 
@@ -77,10 +77,10 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.person_off,
-                            size: 64, color: theme.colorScheme.error),
+                            size: 64, color: theme.colorScheme.error,),
                         const SizedBox(height: 16),
                         Text('Профиль не найден',
-                            style: theme.textTheme.headlineSmall),
+                            style: theme.textTheme.headlineSmall,),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context),
@@ -104,7 +104,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
   }
 
   Widget _buildProfileContent(
-      Map<String, dynamic> userData, bool isOwnProfile) {
+      Map<String, dynamic> userData, bool isOwnProfile,) {
     final theme = Theme.of(context);
 
     return CustomScrollView(
@@ -147,7 +147,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  Colors.black.withValues(alpha: 0.7)
+                  Colors.black.withValues(alpha: 0.7),
                 ],
               ),
             ),
@@ -191,7 +191,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
             // Имя
             Text(name,
                 style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold)),
+                    ?.copyWith(fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
 
             // Город
@@ -341,7 +341,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           children: [
             _buildBookingsTab(),
             _buildReviewsTab(),
-            _buildPortfolioTab()
+            _buildPortfolioTab(),
           ],
         ),
       );
@@ -381,7 +381,7 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
         children: [
           Icon(Icons.star,
               size: 64,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),),
           const SizedBox(height: 16),
           Text('Отзывы', style: theme.textTheme.headlineSmall),
           const SizedBox(height: 8),

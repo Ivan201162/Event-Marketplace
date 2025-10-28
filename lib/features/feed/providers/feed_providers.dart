@@ -1,10 +1,11 @@
 import 'dart:io';
+
+import 'package:event_marketplace_app/features/feed/data/feed_model.dart';
+import 'package:event_marketplace_app/features/feed/data/feed_service.dart';
+import 'package:event_marketplace_app/features/feed/data/subscription_service.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/auth_providers.dart';
-import '../data/feed_model.dart';
-import '../data/feed_service.dart';
-import '../data/subscription_service.dart';
 
 /// Нотификатор для фильтра ленты
 class FeedFilterNotifier extends StateNotifier<FeedFilter> {
@@ -34,12 +35,12 @@ final subscriptionServiceProvider =
 /// Провайдер текущего фильтра ленты
 final feedFilterProvider =
     StateNotifierProvider<FeedFilterNotifier, FeedFilter>(
-        (ref) => FeedFilterNotifier());
+        (ref) => FeedFilterNotifier(),);
 
 /// Провайдер выбранной категории для фильтрации
 final selectedCategoryProvider =
     StateNotifierProvider<SelectedCategoryNotifier, String?>(
-        (ref) => SelectedCategoryNotifier());
+        (ref) => SelectedCategoryNotifier(),);
 
 /// Провайдер постов ленты с фильтрацией
 final feedPostsProvider = StreamProvider<List<FeedPost>>((ref) {
@@ -302,7 +303,7 @@ final subscriptionStatsProvider =
 /// Провайдер для управления состоянием создания поста
 final createPostStateProvider =
     NotifierProvider<CreatePostNotifier, CreatePostState>(
-  () => CreatePostNotifier(),
+  CreatePostNotifier.new,
 );
 
 /// Состояние создания поста

@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 class BoostPlanCard extends StatelessWidget {
   const BoostPlanCard({
-    super.key,
-    required this.days,
-    required this.price,
-    required this.isSelected,
-    required this.onTap,
+    required this.days, required this.price, required this.isSelected, required this.onTap, super.key,
   });
   final int days;
   final double price;
@@ -39,7 +35,7 @@ class BoostPlanCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(
                       color: isSelected ? Colors.orange : Colors.grey[400]!,
-                      width: 2),
+                      width: 2,),
                   color: isSelected ? Colors.orange : Colors.transparent,
                 ),
                 child: isSelected

@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/models/advanced_search_filters.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/widgets/city_selection_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/advanced_search_filters.dart';
-import '../models/specialist.dart';
-import 'city_selection_widget.dart';
 
 /// Виджет расширенных фильтров поиска
 class AdvancedSearchFiltersWidget extends ConsumerStatefulWidget {
   const AdvancedSearchFiltersWidget(
-      {super.key, required this.filters, this.onFiltersChanged});
+      {required this.filters, super.key, this.onFiltersChanged,});
 
   final AdvancedSearchFilters filters;
   final Function(AdvancedSearchFilters)? onFiltersChanged;
@@ -80,7 +79,7 @@ class _AdvancedSearchFiltersWidgetState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Местоположение',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 16),
 
             // Выбор города
@@ -150,7 +149,7 @@ class _AdvancedSearchFiltersWidgetState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Категории и услуги',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 16),
 
             // Категории специалистов
@@ -174,7 +173,7 @@ class _AdvancedSearchFiltersWidgetState
                       newCategories.remove(category);
                     }
                     _updateFilters(
-                        _filters.copyWith(categories: newCategories));
+                        _filters.copyWith(categories: newCategories),);
                   },
                 );
               }).toList(),
@@ -184,7 +183,7 @@ class _AdvancedSearchFiltersWidgetState
 
             // Подкатегории
             Text('Подкатегории',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
 
             TextField(
@@ -236,21 +235,21 @@ class _AdvancedSearchFiltersWidgetState
 
             // Ценовой диапазон
             Text('Ценовой диапазон',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
 
             RangeSlider(
               values: RangeValues(
-                  _filters.minPrice.toDouble(), _filters.maxPrice.toDouble()),
+                  _filters.minPrice.toDouble(), _filters.maxPrice.toDouble(),),
               max: 100000,
               divisions: 100,
               labels: RangeLabels(
-                  '${_filters.minPrice} ₽', '${_filters.maxPrice} ₽'),
+                  '${_filters.minPrice} ₽', '${_filters.maxPrice} ₽',),
               onChanged: (values) {
                 _updateFilters(
                   _filters.copyWith(
                       minPrice: values.start.round(),
-                      maxPrice: values.end.round()),
+                      maxPrice: values.end.round(),),
                 );
               },
             ),
@@ -259,7 +258,7 @@ class _AdvancedSearchFiltersWidgetState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('${_filters.minPrice} ₽'),
-                Text('${_filters.maxPrice} ₽')
+                Text('${_filters.maxPrice} ₽'),
               ],
             ),
 
@@ -271,11 +270,11 @@ class _AdvancedSearchFiltersWidgetState
 
             RangeSlider(
               values: RangeValues(_filters.minExperience.toDouble(),
-                  _filters.maxExperience.toDouble()),
+                  _filters.maxExperience.toDouble(),),
               max: 50,
               divisions: 50,
               labels: RangeLabels('${_filters.minExperience} лет',
-                  '${_filters.maxExperience} лет'),
+                  '${_filters.maxExperience} лет',),
               onChanged: (values) {
                 _updateFilters(
                   _filters.copyWith(
@@ -290,7 +289,7 @@ class _AdvancedSearchFiltersWidgetState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('${_filters.minExperience} лет'),
-                Text('${_filters.maxExperience} лет')
+                Text('${_filters.maxExperience} лет'),
               ],
             ),
 
@@ -298,17 +297,17 @@ class _AdvancedSearchFiltersWidgetState
 
             // Уровень опыта
             Text('Уровень опыта',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme.of(context).textTheme.titleMedium,),
             const SizedBox(height: 8),
 
             DropdownButtonFormField<ExperienceLevel>(
               decoration: const InputDecoration(border: OutlineInputBorder()),
               items: [
                 const DropdownMenuItem<ExperienceLevel>(
-                    child: Text('Любой уровень')),
+                    child: Text('Любой уровень'),),
                 ...ExperienceLevel.values.map(
                   (level) => DropdownMenuItem<ExperienceLevel>(
-                      value: level, child: Text(level.displayName)),
+                      value: level, child: Text(level.displayName),),
                 ),
               ],
               initialValue: _filters.experienceLevel,
@@ -326,7 +325,7 @@ class _AdvancedSearchFiltersWidgetState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Дополнительные фильтры',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 16),
 
             // Рейтинг
@@ -346,7 +345,7 @@ class _AdvancedSearchFiltersWidgetState
               ),
               onChanged: (values) {
                 _updateFilters(_filters.copyWith(
-                    minRating: values.start, maxRating: values.end));
+                    minRating: values.start, maxRating: values.end,),);
               },
             ),
 
@@ -434,12 +433,12 @@ class _AdvancedSearchFiltersWidgetState
           children: [
             Expanded(
               child: OutlinedButton(
-                  onPressed: _previousPage, child: const Text('Назад')),
+                  onPressed: _previousPage, child: const Text('Назад'),),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: ElevatedButton(
-                  onPressed: _nextPage, child: const Text('Далее')),
+                  onPressed: _nextPage, child: const Text('Далее'),),
             ),
           ],
         ),

@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/providers/ideas_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../models/idea.dart';
-import '../../providers/ideas_providers.dart';
 
 /// Модальное окно создания идеи
 class CreateIdeaSheet extends ConsumerStatefulWidget {
@@ -17,11 +16,11 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
   final _textController = TextEditingController();
   final _tagsController = TextEditingController();
 
-  List<String> _attachments = [];
+  final List<String> _attachments = [];
   List<String> _tags = [];
   bool _isPoll = false;
   String _pollQuestion = '';
-  List<String> _pollOptions = ['', ''];
+  final List<String> _pollOptions = ['', ''];
 
   @override
   void dispose() {
@@ -269,7 +268,7 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
     );
   }
 
-  void _publishIdea() async {
+  Future<void> _publishIdea() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -280,7 +279,6 @@ class _CreateIdeaSheetState extends ConsumerState<CreateIdeaSheet> {
         authorId: 'current_user_id', // TODO: Получить ID текущего пользователя
         authorName:
             'Текущий пользователь', // TODO: Получить имя текущего пользователя
-        authorAvatar: null, // TODO: Получить аватар текущего пользователя
         media: _attachments,
         tags: _tags,
         poll: _isPoll && _pollQuestion.isNotEmpty

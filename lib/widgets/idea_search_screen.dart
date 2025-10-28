@@ -1,5 +1,5 @@
+import 'package:event_marketplace_app/widgets/idea_search_widget.dart';
 import 'package:flutter/material.dart';
-import 'idea_search_widget.dart';
 
 /// Экран поиска идей мероприятий
 class IdeaSearchScreen extends StatelessWidget {

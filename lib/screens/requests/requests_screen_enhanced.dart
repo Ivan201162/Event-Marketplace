@@ -3,9 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенный экран заявок с полным функционалом
 class RequestsScreenEnhanced extends ConsumerStatefulWidget {
@@ -20,7 +17,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
     with TickerProviderStateMixin {
   String _selectedFilter = 'all';
   String _selectedSort = 'date';
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -53,12 +50,12 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -199,7 +196,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                          horizontal: 16, vertical: 8,),
                       decoration: BoxDecoration(
                         color:
                             isSelected ? const Color(0xFF1E3A8A) : Colors.white,
@@ -319,7 +316,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+            final data = doc.data()! as Map<String, dynamic>;
 
             return _buildRequestCard(doc.id, data);
           },
@@ -348,16 +345,12 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
     switch (_selectedSort) {
       case 'date':
         query = query.orderBy('createdAt', descending: true);
-        break;
       case 'budget':
         query = query.orderBy('budget', descending: true);
-        break;
       case 'status':
         query = query.orderBy('status');
-        break;
       case 'title':
         query = query.orderBy('title');
-        break;
     }
 
     return query.snapshots();
@@ -512,22 +505,18 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
         color = Colors.orange;
         label = 'В ожидании';
         icon = Icons.schedule;
-        break;
       case 'confirmed':
         color = Colors.green;
         label = 'Подтверждено';
         icon = Icons.check_circle;
-        break;
       case 'cancelled':
         color = Colors.red;
         label = 'Отменено';
         icon = Icons.cancel;
-        break;
       case 'completed':
         color = Colors.blue;
         label = 'Завершено';
         icon = Icons.done_all;
-        break;
       default:
         color = Colors.grey;
         label = 'Неизвестно';
@@ -742,7 +731,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
               _buildDetailRow('Локация', data['location'] ?? 'Не указано'),
               _buildDetailRow('Дата события', _formatDate(data['eventDate'])),
               _buildDetailRow(
-                  'Статус', _getStatusLabel(data['status'] ?? 'pending')),
+                  'Статус', _getStatusLabel(data['status'] ?? 'pending'),),
             ],
           ),
         ),

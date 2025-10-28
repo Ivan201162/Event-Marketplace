@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:flutter/material.dart';
-import '../../models/user_profile_enhanced.dart';
 
 /// Редактор социальных ссылок
 class SocialLinksEditor extends StatefulWidget {
   const SocialLinksEditor({
-    super.key,
-    required this.initialLinks,
+    required this.initialLinks, super.key,
   });
 
   final List<SocialLink> initialLinks;
@@ -212,8 +211,7 @@ class _SocialLinksEditorState extends State<SocialLinksEditor> {
 /// Диалог для добавления/редактирования социальной ссылки
 class _SocialLinkDialog extends StatefulWidget {
   const _SocialLinkDialog({
-    this.initialLink,
-    required this.onSave,
+    required this.onSave, this.initialLink,
   });
 
   final SocialLink? initialLink;
@@ -263,7 +261,7 @@ class _SocialLinkDialogState extends State<_SocialLinkDialog> {
     return AlertDialog(
       title: Text(widget.initialLink == null
           ? 'Добавить ссылку'
-          : 'Редактировать ссылку'),
+          : 'Редактировать ссылку',),
       content: Form(
         key: _formKey,
         child: Column(

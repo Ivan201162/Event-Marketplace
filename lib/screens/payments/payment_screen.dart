@@ -1,26 +1,22 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/payment_providers.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
-import '../../models/payment.dart';
-import '../../providers/auth_providers.dart';
-import '../../providers/payment_providers.dart';
-import '../../services/payment_service.dart';
-
 /// Screen for processing payments
 class PaymentScreen extends ConsumerStatefulWidget {
+
+  const PaymentScreen({
+    required this.specialistId, required this.serviceName, required this.amount, super.key,
+    this.bookingId,
+  });
   final String specialistId;
   final String serviceName;
   final int amount;
   final String? bookingId;
-
-  const PaymentScreen({
-    super.key,
-    required this.specialistId,
-    required this.serviceName,
-    required this.amount,
-    this.bookingId,
-  });
 
   @override
   ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
@@ -42,7 +38,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             ? null
             : IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context)),
+                onPressed: () => Navigator.pop(context),),
       ),
       body: currentUser.when(
         data: (user) {
@@ -151,7 +147,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Стоимость услуги:',
-                          style: Theme.of(context).textTheme.bodyLarge),
+                          style: Theme.of(context).textTheme.bodyLarge,),
                       Text(
                         '${(widget.amount / 100).toStringAsFixed(2)} ₽',
                         style: Theme.of(
@@ -241,7 +237,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                           ? null
                           : (value) {
                               setState(() {
-                                _selectedMethod = value!;
+                                _selectedMethod = value;
                               });
                             },
                     ),
@@ -266,7 +262,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(_errorMessage!,
-                        style: const TextStyle(color: Colors.red)),
+                        style: const TextStyle(color: Colors.red),),
                   ),
                 ],
               ),
@@ -282,7 +278,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),),
               ),
               child: _isProcessing
                   ? const Row(
@@ -304,7 +300,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   : Text(
                       'Оплатить ${(widget.amount / 100).toStringAsFixed(2)} ₽',
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold,),
                     ),
             ),
           ),

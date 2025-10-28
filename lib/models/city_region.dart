@@ -10,7 +10,7 @@ class CityRegion {
     required this.regionName,
     required this.coordinates,
     required this.population,
-    this.isCapital = false,
+    required this.createdAt, required this.updatedAt, this.isCapital = false,
     this.isMajorCity = false,
     this.timeZone = 'Europe/Moscow',
     this.postalCode,
@@ -26,8 +26,6 @@ class CityRegion {
     this.avgSpecialistRating = 0.0,
     this.totalSpecialists = 0,
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из документа Firestore
@@ -52,7 +50,7 @@ class CityRegion {
       attractions:
           List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
       neighboringCities: List<String>.from(
-          (data['neighboringCities'] as List<dynamic>?) ?? []),
+          (data['neighboringCities'] as List<dynamic>?) ?? [],),
       transportHubs:
           List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
       economicSectors:
@@ -93,13 +91,13 @@ class CityRegion {
         attractions:
             List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
         neighboringCities: List<String>.from(
-            (data['neighboringCities'] as List<dynamic>?) ?? []),
+            (data['neighboringCities'] as List<dynamic>?) ?? [],),
         transportHubs:
             List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
         economicSectors: List<String>.from(
-            (data['economicSectors'] as List<dynamic>?) ?? []),
+            (data['economicSectors'] as List<dynamic>?) ?? [],),
         specialistCategories: List<String>.from(
-            (data['specialistCategories'] as List<dynamic>?) ?? []),
+            (data['specialistCategories'] as List<dynamic>?) ?? [],),
         avgSpecialistRating:
             (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
         totalSpecialists: data['totalSpecialists'] as int? ?? 0,
@@ -268,7 +266,7 @@ class CityRegion {
 /// Координаты города
 class Coordinates {
   const Coordinates(
-      {required this.latitude, required this.longitude, this.altitude});
+      {required this.latitude, required this.longitude, this.altitude,});
 
   factory Coordinates.fromMap(Map<String, dynamic> map) => Coordinates(
         latitude: (map['latitude'] as num).toDouble(),

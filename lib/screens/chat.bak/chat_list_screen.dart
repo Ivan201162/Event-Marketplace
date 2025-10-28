@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/chat_providers.dart';
+import 'package:event_marketplace_app/widgets/animations/animated_content.dart';
+import 'package:event_marketplace_app/widgets/error/error_state_widget.dart';
+import 'package:event_marketplace_app/widgets/loading/loading_state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../models/chat.dart';
-import '../../providers/auth_providers.dart';
-import '../../providers/chat_providers.dart';
-import '../../widgets/animations/animated_content.dart';
-import '../../widgets/error/error_state_widget.dart';
-import '../../widgets/loading/loading_state_widget.dart';
 
 /// Экран списка чатов
 class ChatListScreen extends ConsumerStatefulWidget {
@@ -42,12 +41,12 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
@@ -55,7 +54,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
     ).animate(CurvedAnimation(
       parent: _slideController,
       curve: Curves.easeOutCubic,
-    ));
+    ),);
 
     _fadeController.forward();
     _slideController.forward();
@@ -252,7 +251,6 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
               border: hasUnread
                   ? Border.all(
                       color: theme.primaryColor.withValues(alpha: 0.2),
-                      width: 1,
                     )
                   : null,
             ),
@@ -269,7 +267,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
                           : null,
                       child: chat.displayAvatar == null
                           ? Icon(Icons.person,
-                              size: 24, color: theme.primaryColor)
+                              size: 24, color: theme.primaryColor,)
                           : null,
                     ),
                     if (chat.isOnline)
@@ -428,7 +426,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
       'otherUserId': chat.otherUserId,
       'otherUserName': chat.otherUserName,
       'otherUserAvatar': chat.otherUserAvatar,
-    });
+    },);
   }
 
   void _showNewChatDialog() {
@@ -437,7 +435,7 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
       builder: (context) => AlertDialog(
         title: const Text('Новый чат'),
         content: const Text(
-            'Функция поиска пользователей будет добавлена в следующем обновлении'),
+            'Функция поиска пользователей будет добавлена в следующем обновлении',),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

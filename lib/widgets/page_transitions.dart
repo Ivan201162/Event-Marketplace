@@ -16,7 +16,7 @@ class PageTransitions {
           begin: begin,
           end: end,
         ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),),
         child: child,
       );
 
@@ -34,7 +34,7 @@ class PageTransitions {
           begin: begin,
           end: end,
         ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),),
         child: FadeTransition(opacity: animation, child: child),
       );
 
@@ -52,7 +52,7 @@ class PageTransitions {
           begin: begin,
           end: end,
         ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),),
         child: FadeTransition(opacity: animation, child: child),
       );
 
@@ -68,7 +68,7 @@ class PageTransitions {
           begin: const Offset(0, 1),
           end: Offset.zero,
         ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),),
         child: child,
       );
 
@@ -84,7 +84,7 @@ class PageTransitions {
           begin: const Offset(0, -1),
           end: Offset.zero,
         ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),),
         child: child,
       );
 
@@ -100,7 +100,7 @@ class PageTransitions {
           begin: const Offset(-1, 0),
           end: Offset.zero,
         ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),),
         child: child,
       );
 
@@ -116,7 +116,7 @@ class PageTransitions {
           begin: const Offset(1, 0),
           end: Offset.zero,
         ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+            CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic),),
         child: child,
       );
 
@@ -332,8 +332,7 @@ extension CustomNavigator on NavigatorState {
 /// Виджет для анимированного появления контента
 class AnimatedContent extends StatefulWidget {
   const AnimatedContent({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOutCubic,

@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:flutter/material.dart';
-import '../services/notification_service.dart';
 
 /// Виджет для отображения счетчика непрочитанных уведомлений
 class NotificationBadgeWidget extends StatelessWidget {
   const NotificationBadgeWidget(
-      {super.key, required this.userId, required this.child, this.onTap});
+      {required this.userId, required this.child, super.key, this.onTap,});
 
   final String userId;
   final Widget child;
@@ -13,8 +13,8 @@ class NotificationBadgeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FutureBuilder<int>(
         future: NotificationService.getUnreadCount(userId),
-        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-          final int unreadCount = snapshot.data ?? 0;
+        builder: (context, snapshot) {
+          final unreadCount = snapshot.data ?? 0;
 
           return GestureDetector(
             onTap: onTap,
@@ -54,8 +54,7 @@ class NotificationBadgeWidget extends StatelessWidget {
 /// Виджет иконки уведомлений с бейджем
 class NotificationIconWidget extends StatelessWidget {
   const NotificationIconWidget({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.onTap,
     this.icon = Icons.notifications,
     this.size = 24,
@@ -77,8 +76,7 @@ class NotificationIconWidget extends StatelessWidget {
 /// Виджет кнопки уведомлений с бейджем
 class NotificationButtonWidget extends StatelessWidget {
   const NotificationButtonWidget({
-    super.key,
-    required this.userId,
+    required this.userId, super.key,
     this.onTap,
     this.icon = Icons.notifications,
     this.label = 'Уведомления',
@@ -94,6 +92,6 @@ class NotificationButtonWidget extends StatelessWidget {
         userId: userId,
         onTap: onTap,
         child: ElevatedButton.icon(
-            onPressed: onTap, icon: Icon(icon), label: Text(label)),
+            onPressed: onTap, icon: Icon(icon), label: Text(label),),
       );
 }

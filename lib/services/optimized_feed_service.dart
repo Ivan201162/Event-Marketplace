@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/enhanced_feed_post.dart';
 
 /// Оптимизированный сервис для работы с лентой
 class OptimizedFeedService {
@@ -26,7 +25,6 @@ class OptimizedFeedService {
           return FeedState(
             posts: _cachedPosts,
             isLoading: false,
-            error: null,
             hasMore: true,
           );
         }
@@ -79,7 +77,6 @@ class OptimizedFeedService {
       return FeedState(
         posts: posts,
         isLoading: false,
-        error: null,
         hasMore: posts.length == limit,
         lastDocument: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
       );
@@ -110,7 +107,7 @@ class OptimizedFeedService {
         final likes = data['likes']?.toInt() ?? 0;
         final likedBy = List<String>.from(data['likedBy'] ?? []);
 
-        bool isLiked = likedBy.contains(userId);
+        final isLiked = likedBy.contains(userId);
 
         if (isLiked) {
           likedBy.remove(userId);
@@ -151,7 +148,7 @@ class OptimizedFeedService {
         final data = userDoc.data()!;
         final savedPosts = List<String>.from(data['savedPosts'] ?? []);
 
-        bool isSaved = savedPosts.contains(postId);
+        final var isSaved = savedPosts.contains(postId);
 
         if (isSaved) {
           savedPosts.remove(postId);
@@ -176,8 +173,7 @@ class OptimizedFeedService {
   Future<String?> createPost({
     required String authorId,
     required String authorName,
-    String? authorAvatar,
-    required String content,
+    required String content, String? authorAvatar,
     List<FeedPostMedia>? media,
     List<String>? tags,
   }) async {
@@ -210,7 +206,7 @@ class OptimizedFeedService {
 
   /// Получить посты пользователя
   Future<List<EnhancedFeedPost>> getUserPosts(String userId,
-      {int limit = 20}) async {
+      {int limit = 20,}) async {
     try {
       final snapshot = await _firestore
           .collection('posts')
@@ -285,19 +281,18 @@ class OptimizedFeedService {
 
 /// Состояние ленты
 class FeedState {
+
+  const FeedState({
+    required this.posts,
+    required this.isLoading,
+    required this.hasMore, this.error,
+    this.lastDocument,
+  });
   final List<EnhancedFeedPost> posts;
   final bool isLoading;
   final String? error;
   final bool hasMore;
   final DocumentSnapshot? lastDocument;
-
-  const FeedState({
-    required this.posts,
-    required this.isLoading,
-    this.error,
-    required this.hasMore,
-    this.lastDocument,
-  });
 
   bool get isEmpty => posts.isEmpty && !isLoading;
   bool get hasError => error != null;

@@ -33,20 +33,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                    labelText: 'Имя', border: OutlineInputBorder()),
+                    labelText: 'Имя', border: OutlineInputBorder(),),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
-                    labelText: 'Email', border: OutlineInputBorder()),
+                    labelText: 'Email', border: OutlineInputBorder(),),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
-                    labelText: 'Пароль', border: OutlineInputBorder()),
+                    labelText: 'Пароль', border: OutlineInputBorder(),),
               ),
               const SizedBox(height: 24),
               ElevatedButton(

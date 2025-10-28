@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/enhanced_notification.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-import '../models/enhanced_notification.dart';
 
 /// Сервис для работы с расширенными уведомлениями
 class EnhancedNotificationsService {
@@ -196,7 +195,7 @@ class EnhancedNotificationsService {
 
   /// Получить уведомление по ID
   Future<EnhancedNotification?> getNotificationById(
-      String notificationId) async {
+      String notificationId,) async {
     try {
       final DocumentSnapshot doc = await _firestore
           .collection('notifications')
@@ -205,7 +204,7 @@ class EnhancedNotificationsService {
 
       if (doc.exists) {
         return EnhancedNotification.fromMap(
-            doc.data()! as Map<String, dynamic>);
+            doc.data()! as Map<String, dynamic>,);
       }
       return null;
     } catch (e) {
@@ -322,7 +321,7 @@ class EnhancedNotificationsService {
 
       for (final doc in snapshot.docs) {
         batch.update(doc.reference,
-            {'isRead': true, 'readAt': FieldValue.serverTimestamp()});
+            {'isRead': true, 'readAt': FieldValue.serverTimestamp()},);
       }
 
       await batch.commit();
@@ -397,7 +396,7 @@ class EnhancedNotificationsService {
         byType[type] = (byType[type] ?? 0) + 1;
 
         final priority = NotificationPriority.fromString(
-            data['priority'] as String? ?? 'normal');
+            data['priority'] as String? ?? 'normal',);
         byPriority[priority] = (byPriority[priority] ?? 0) + 1;
       }
 

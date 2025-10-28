@@ -27,7 +27,7 @@ class BackUtils {
 
   /// Создание стандартной кнопки "Назад"
   static Widget createBackButton(BuildContext context,
-          {VoidCallback? onPressed}) =>
+          {VoidCallback? onPressed,}) =>
       IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: onPressed ?? () => handleBackButton(context),
@@ -149,7 +149,7 @@ class BackUtils {
 
   /// Переход на страницу написания отзыва
   static void goToWriteReview(BuildContext context, String specialistId,
-      {String? bookingId}) {
+      {String? bookingId,}) {
     final path = bookingId != null
         ? '/write-review/$specialistId?bookingId=$bookingId'
         : '/write-review/$specialistId';
@@ -163,19 +163,19 @@ class BackUtils {
 
   /// Переход на страницу портфолио специалиста
   static void goToSpecialistPortfolio(
-      BuildContext context, String specialistId) {
+      BuildContext context, String specialistId,) {
     context.go('/specialist/$specialistId/portfolio');
   }
 
   /// Переход на страницу прайс-листа специалиста
   static void goToSpecialistPriceList(
-      BuildContext context, String specialistId) {
+      BuildContext context, String specialistId,) {
     context.go('/specialist/$specialistId/price-list');
   }
 
   /// Переход на страницу календаря специалиста
   static void goToSpecialistCalendar(
-      BuildContext context, String specialistId) {
+      BuildContext context, String specialistId,) {
     context.go('/specialist/$specialistId/calendar');
   }
 
@@ -191,7 +191,7 @@ class BackUtils {
 
   /// Переход на страницу годовщин заказчика
   static void goToCustomerAnniversaries(
-      BuildContext context, String customerId) {
+      BuildContext context, String customerId,) {
     context.go('/customer/$customerId/anniversaries');
   }
 
@@ -205,10 +205,10 @@ class BackUtils {
           actions: [
             TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Выйти')),
+                child: const Text('Выйти'),),
           ],
         ),
       );
@@ -224,7 +224,7 @@ class BackUtils {
           actions: [
             TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: const Text('Продолжить'),

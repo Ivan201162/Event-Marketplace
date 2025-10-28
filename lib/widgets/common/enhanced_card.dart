@@ -2,21 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Улучшенная карточка с анимациями и состояниями
 class EnhancedCard extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onTap;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final double? elevation;
-  final Color? backgroundColor;
-  final BorderRadius? borderRadius;
-  final Border? border;
-  final bool isAnimated;
-  final bool isSelected;
-  final bool isLoading;
 
   const EnhancedCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onTap,
     this.padding,
     this.margin,
@@ -28,6 +16,17 @@ class EnhancedCard extends StatefulWidget {
     this.isSelected = false,
     this.isLoading = false,
   });
+  final Widget child;
+  final VoidCallback? onTap;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final double? elevation;
+  final Color? backgroundColor;
+  final BorderRadius? borderRadius;
+  final Border? border;
+  final bool isAnimated;
+  final bool isSelected;
+  final bool isLoading;
 
   @override
   State<EnhancedCard> createState() => _EnhancedCardState();
@@ -48,12 +47,12 @@ class _EnhancedCardState extends State<EnhancedCard>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.98,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _elevationAnimation = Tween<double>(
       begin: widget.elevation ?? 2,
@@ -61,7 +60,7 @@ class _EnhancedCardState extends State<EnhancedCard>
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
   }
 
   @override
@@ -155,6 +154,20 @@ class _EnhancedCardState extends State<EnhancedCard>
 
 /// Карточка с заголовком
 class EnhancedCardWithHeader extends StatelessWidget {
+
+  const EnhancedCardWithHeader({
+    required this.title, required this.child, super.key,
+    this.subtitle,
+    this.onTap,
+    this.action,
+    this.padding,
+    this.margin,
+    this.elevation,
+    this.backgroundColor,
+    this.borderRadius,
+    this.isAnimated = true,
+    this.isSelected = false,
+  });
   final String title;
   final String? subtitle;
   final Widget child;
@@ -167,22 +180,6 @@ class EnhancedCardWithHeader extends StatelessWidget {
   final BorderRadius? borderRadius;
   final bool isAnimated;
   final bool isSelected;
-
-  const EnhancedCardWithHeader({
-    super.key,
-    required this.title,
-    this.subtitle,
-    required this.child,
-    this.onTap,
-    this.action,
-    this.padding,
-    this.margin,
-    this.elevation,
-    this.backgroundColor,
-    this.borderRadius,
-    this.isAnimated = true,
-    this.isSelected = false,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -237,22 +234,20 @@ class EnhancedCardWithHeader extends StatelessWidget {
 
 /// Карточка статистики
 class StatCard extends StatelessWidget {
+
+  const StatCard({
+    required this.title, required this.value, super.key,
+    this.subtitle,
+    this.icon,
+    this.color,
+    this.onTap,
+  });
   final String title;
   final String value;
   final String? subtitle;
   final IconData? icon;
   final Color? color;
   final VoidCallback? onTap;
-
-  const StatCard({
-    super.key,
-    required this.title,
-    required this.value,
-    this.subtitle,
-    this.icon,
-    this.color,
-    this.onTap,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -303,22 +298,20 @@ class StatCard extends StatelessWidget {
 
 /// Карточка действия
 class ActionCard extends StatelessWidget {
+
+  const ActionCard({
+    required this.title, required this.icon, super.key,
+    this.subtitle,
+    this.color,
+    this.onTap,
+    this.isEnabled = true,
+  });
   final String title;
   final String? subtitle;
   final IconData icon;
   final Color? color;
   final VoidCallback? onTap;
   final bool isEnabled;
-
-  const ActionCard({
-    super.key,
-    required this.title,
-    this.subtitle,
-    required this.icon,
-    this.color,
-    this.onTap,
-    this.isEnabled = true,
-  });
 
   @override
   Widget build(BuildContext context) {

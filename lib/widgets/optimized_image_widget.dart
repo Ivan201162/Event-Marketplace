@@ -1,13 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/widgets/profile_image_placeholder.dart';
 import 'package:flutter/material.dart';
-
-import 'profile_image_placeholder.dart';
 
 /// Оптимизированный виджет для загрузки изображений с кэшированием
 class OptimizedImage extends StatelessWidget {
   const OptimizedImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -120,8 +118,7 @@ class OptimizedImage extends StatelessWidget {
 /// Оптимизированный аватар с кэшированием
 class OptimizedAvatar extends StatelessWidget {
   const OptimizedAvatar({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.name,
     this.size = 60,
     this.backgroundColor,
@@ -163,7 +160,7 @@ class OptimizedAvatar extends StatelessWidget {
           border: showBorder
               ? (border ??
                   Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.2)))
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2),))
               : null,
           image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
         ),
@@ -212,8 +209,7 @@ class OptimizedAvatar extends StatelessWidget {
 /// Оптимизированная галерея изображений
 class OptimizedImageGallery extends StatelessWidget {
   const OptimizedImageGallery({
-    super.key,
-    required this.imageUrls,
+    required this.imageUrls, super.key,
     this.crossAxisCount = 3,
     this.crossAxisSpacing = 4,
     this.mainAxisSpacing = 4,
@@ -283,7 +279,7 @@ class OptimizedImageGallery extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.more_horiz,
-                color: theme.colorScheme.onSurfaceVariant, size: 24),
+                color: theme.colorScheme.onSurfaceVariant, size: 24,),
             Text(
               '+$remainingCount',
               style: theme.textTheme.bodySmall?.copyWith(
@@ -301,8 +297,7 @@ class OptimizedImageGallery extends StatelessWidget {
 /// Оптимизированный виджет для отображения изображения с ленивой загрузкой
 class LazyImage extends StatefulWidget {
   const LazyImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -406,7 +401,7 @@ class IntersectionObserver {
 
 class IntersectionObserverEntry {
   IntersectionObserverEntry(
-      {required this.isIntersecting, required this.intersectionRatio});
+      {required this.isIntersecting, required this.intersectionRatio,});
   final bool isIntersecting;
   final double intersectionRatio;
 }
@@ -414,7 +409,7 @@ class IntersectionObserverEntry {
 /// Простой VisibilityDetector для Flutter
 class VisibilityDetector extends StatefulWidget {
   const VisibilityDetector(
-      {super.key, required this.onVisibilityChanged, required this.child});
+      {required this.onVisibilityChanged, required this.child, super.key,});
   final Function(VisibilityInfo) onVisibilityChanged;
   final Widget child;
 

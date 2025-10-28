@@ -1,6 +1,6 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart' as path;
 import 'package:flutter/foundation.dart';
 
 /// Сервис для загрузки изображений в Firebase Storage
@@ -120,9 +120,9 @@ class ImageUploadService {
     String folderPath,
   ) async {
     try {
-      final List<String> downloadUrls = [];
+      final downloadUrls = <String>[];
 
-      for (int i = 0; i < imageFiles.length; i++) {
+      for (var i = 0; i < imageFiles.length; i++) {
         final fileName =
             'image_${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
         final ref = _storage.ref().child('$folderPath/$fileName');

@@ -2,16 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// Review statistics model
 class ReviewStats extends Equatable {
-  final String specialistId;
-  final int totalReviews;
-  final double averageRating;
-  final Map<int, int> ratingDistribution; // rating -> count
-  final List<String> topTags;
-  final List<String> tags;
-  final int verifiedReviews;
-  final int recentReviews;
-  final double responseRate;
-  final double satisfactionRate;
 
   const ReviewStats({
     required this.specialistId,
@@ -41,6 +31,16 @@ class ReviewStats extends Equatable {
       satisfactionRate: (data['satisfactionRate'] ?? 0.0).toDouble(),
     );
   }
+  final String specialistId;
+  final int totalReviews;
+  final double averageRating;
+  final Map<int, int> ratingDistribution; // rating -> count
+  final List<String> topTags;
+  final List<String> tags;
+  final int verifiedReviews;
+  final int recentReviews;
+  final double responseRate;
+  final double satisfactionRate;
 
   /// Convert ReviewStats to Map
   Map<String, dynamic> toMap() {
@@ -106,22 +106,15 @@ class ReviewStats extends Equatable {
 }
 
 /// Specialist review statistics model
-class SpecialistReviewStats extends ReviewStats {
-  final String specialistName;
-  final String? specialistAvatar;
-  final List<String> specializations;
-  final int completedBookings;
-  final double responseTime; // in hours
+class SpecialistReviewStats extends ReviewStats { // in hours
 
   const SpecialistReviewStats({
     required super.specialistId,
     required this.specialistName,
-    this.specialistAvatar,
+    required super.totalReviews, required super.averageRating, this.specialistAvatar,
     this.specializations = const [],
     this.completedBookings = 0,
     this.responseTime = 0.0,
-    required super.totalReviews,
-    required super.averageRating,
     super.ratingDistribution,
     super.topTags,
     super.tags,
@@ -151,6 +144,11 @@ class SpecialistReviewStats extends ReviewStats {
       satisfactionRate: (data['satisfactionRate'] ?? 0.0).toDouble(),
     );
   }
+  final String specialistName;
+  final String? specialistAvatar;
+  final List<String> specializations;
+  final int completedBookings;
+  final double responseTime;
 
   /// Convert SpecialistReviewStats to Map
   @override

@@ -20,7 +20,7 @@ class BackController {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Нажмите «Назад» ещё раз, чтобы выйти')));
+          content: Text('Нажмите «Назад» ещё раз, чтобы выйти'),),);
       return false;
     }
 

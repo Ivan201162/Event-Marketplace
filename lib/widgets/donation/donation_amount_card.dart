@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 
 class DonationAmountCard extends StatelessWidget {
   const DonationAmountCard({
-    super.key,
-    required this.amount,
-    required this.isSelected,
-    required this.onTap,
+    required this.amount, required this.isSelected, required this.onTap, super.key,
   });
   final double amount;
   final bool isSelected;
@@ -30,7 +27,7 @@ class DonationAmountCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.favorite,
-                  color: isSelected ? Colors.pink : Colors.grey[600], size: 24),
+                  color: isSelected ? Colors.pink : Colors.grey[600], size: 24,),
               const SizedBox(height: 8),
               Text(
                 '${amount.toInt()} ₽',

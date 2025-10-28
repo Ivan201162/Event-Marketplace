@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/services/review_service.dart';
+import 'package:event_marketplace_app/widgets/review_card.dart';
 import 'package:flutter/material.dart';
-
-import '../models/review.dart';
-import '../services/review_service.dart';
-import '../widgets/review_card.dart';
 
 /// Экран отзывов пользователя
 class MyReviewsScreen extends StatefulWidget {
-  const MyReviewsScreen({super.key, required this.userId});
+  const MyReviewsScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -70,7 +69,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   @override
@@ -146,7 +145,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
               ? const CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: _loadMoreReviews,
-                  child: const Text('Загрузить еще')),
+                  child: const Text('Загрузить еще'),),
         ),
       );
 
@@ -164,7 +163,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);

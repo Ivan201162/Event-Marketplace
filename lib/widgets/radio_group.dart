@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 /// A custom radio group widget that manages a group of radio buttons
 class RadioGroup<T> extends StatelessWidget {
   const RadioGroup({
-    super.key,
-    required this.value,
-    required this.onChanged,
-    required this.children,
+    required this.value, required this.onChanged, required this.children, super.key,
   });
 
   final T value;

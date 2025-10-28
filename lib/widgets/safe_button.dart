@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Безопасная кнопка с защитой от повторных нажатий и индикатором загрузки
 class SafeButton extends StatefulWidget {
   const SafeButton({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onPressed,
     this.isLoading = false,
     this.cooldownDuration = const Duration(milliseconds: 1000),
@@ -83,8 +82,7 @@ class _SafeButtonState extends State<SafeButton> {
 /// Безопасная кнопка с иконкой
 class SafeIconButton extends StatefulWidget {
   const SafeIconButton({
-    super.key,
-    required this.icon,
+    required this.icon, super.key,
     this.onPressed,
     this.isLoading = false,
     this.cooldownDuration = const Duration(milliseconds: 1000),
@@ -115,7 +113,7 @@ class _SafeIconButtonState extends State<SafeIconButton> {
             ? const SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2))
+                child: CircularProgressIndicator(strokeWidth: 2),)
             : widget.icon,
         tooltip: widget.tooltip,
         style: widget.style,

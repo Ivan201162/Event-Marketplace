@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/discount_notification.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/discount_notification_service.dart';
+import 'package:event_marketplace_app/widgets/discount_notification_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/discount_notification.dart';
-import '../providers/auth_providers.dart';
-import '../services/discount_notification_service.dart';
-import '../widgets/discount_notification_card.dart';
 
 /// Экран уведомлений о скидках
 class DiscountNotificationsScreen extends ConsumerStatefulWidget {
@@ -117,7 +116,7 @@ class _DiscountNotificationsScreenState
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -133,7 +132,7 @@ class _DiscountNotificationsScreenState
                   Icon(Icons.notifications_off, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Нет новых уведомлений',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text(
                     'Когда специалисты предложат скидки, они появятся здесь',
@@ -187,7 +186,7 @@ class _DiscountNotificationsScreenState
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -203,7 +202,7 @@ class _DiscountNotificationsScreenState
                   Icon(Icons.local_offer, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Нет уведомлений о скидках',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text(
                     'Уведомления о скидках от специалистов будут отображаться здесь',
@@ -255,7 +254,7 @@ class _DiscountNotificationsScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }

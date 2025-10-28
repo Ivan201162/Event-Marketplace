@@ -1,14 +1,14 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/services/priority_service.dart';
 import 'package:flutter/material.dart';
-import '../models/advertisement.dart';
-import '../services/priority_service.dart';
 
 class AdvertisementWidget extends StatelessWidget {
+
+  const AdvertisementWidget(
+      {required this.advertisement, super.key, this.onTap, this.onClose,});
   final Advertisement advertisement;
   final VoidCallback? onTap;
   final VoidCallback? onClose;
-
-  const AdvertisementWidget(
-      {super.key, required this.advertisement, this.onTap, this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class AdvertisementWidget extends StatelessWidget {
                     style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12),
+                        fontSize: 12,),
                   ),
                   const Spacer(),
                   if (onClose != null)
@@ -109,7 +109,7 @@ class AdvertisementWidget extends StatelessWidget {
                               height: 200,
                               color: Colors.grey[300],
                               child: const Icon(Icons.image,
-                                  color: Colors.grey, size: 48),
+                                  color: Colors.grey, size: 48,),
                             );
                           },
                         ),
@@ -130,13 +130,13 @@ class AdvertisementWidget extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             const Icon(Icons.play_circle_filled,
-                                color: Colors.white, size: 64),
+                                color: Colors.white, size: 64,),
                             Positioned(
                               bottom: 8,
                               right: 8,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
+                                    horizontal: 8, vertical: 4,),
                                 decoration: BoxDecoration(
                                   color: Colors.black.withValues(alpha: 0.7),
                                   borderRadius: BorderRadius.circular(4),
@@ -144,7 +144,7 @@ class AdvertisementWidget extends StatelessWidget {
                                 child: const Text(
                                   'Видео',
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 12),
+                                      color: Colors.white, fontSize: 12,),
                                 ),
                               ),
                             ),
@@ -167,7 +167,7 @@ class AdvertisementWidget extends StatelessWidget {
                           'Подробнее',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: Colors.white, fontWeight: FontWeight.bold,),
                         ),
                       ),
                     ],
@@ -183,16 +183,15 @@ class AdvertisementWidget extends StatelessWidget {
 }
 
 class AdvertisementBannerWidget extends StatelessWidget {
-  final Advertisement advertisement;
-  final VoidCallback? onTap;
-  final VoidCallback? onClose;
 
   const AdvertisementBannerWidget({
-    super.key,
-    required this.advertisement,
+    required this.advertisement, super.key,
     this.onTap,
     this.onClose,
   });
+  final Advertisement advertisement;
+  final VoidCallback? onTap;
+  final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +209,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   Colors.blue.withValues(alpha: 0.1),
-                  Colors.blue.withValues(alpha: 0.05)
+                  Colors.blue.withValues(alpha: 0.05),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -233,7 +232,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(Icons.campaign,
-                            color: Colors.blue, size: 24),
+                            color: Colors.blue, size: 24,),
                       ),
                       const SizedBox(width: 12),
 
@@ -274,7 +273,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
 
                       // Стрелка
                       const Icon(Icons.arrow_forward_ios,
-                          color: Colors.blue, size: 16),
+                          color: Colors.blue, size: 16,),
                     ],
                   ),
                 ),
@@ -294,7 +293,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Icons.close,
-                            color: Colors.white, size: 16),
+                            color: Colors.white, size: 16,),
                       ),
                     ),
                   ),
@@ -308,17 +307,9 @@ class AdvertisementBannerWidget extends StatelessWidget {
 }
 
 class AdvertisementListWidget extends StatefulWidget {
-  final AdPlacement placement;
-  final String? region;
-  final String? city;
-  final String? category;
-  final int limit;
-  final VoidCallback? onAdTap;
-  final VoidCallback? onAdClose;
 
   const AdvertisementListWidget({
-    super.key,
-    required this.placement,
+    required this.placement, super.key,
     this.region,
     this.city,
     this.category,
@@ -326,6 +317,13 @@ class AdvertisementListWidget extends StatefulWidget {
     this.onAdTap,
     this.onAdClose,
   });
+  final AdPlacement placement;
+  final String? region;
+  final String? city;
+  final String? category;
+  final int limit;
+  final VoidCallback? onAdTap;
+  final VoidCallback? onAdClose;
 
   @override
   State<AdvertisementListWidget> createState() =>

@@ -6,14 +6,7 @@ class WeddingAnniversary {
     required this.id,
     required this.customerId,
     required this.customerName,
-    this.customerEmail,
-    required this.weddingDate,
-    required this.yearsMarried,
-    required this.nextAnniversary,
-    required this.isActive,
-    required this.reminderDates,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.weddingDate, required this.yearsMarried, required this.nextAnniversary, required this.isActive, required this.reminderDates, required this.createdAt, required this.updatedAt, this.customerEmail,
     this.metadata = const {},
   });
 
@@ -223,19 +216,19 @@ class WeddingAnniversary {
         return [
           'Повторение свадебной церемонии',
           'Семейная фотосессия',
-          'Подарок с розами'
+          'Подарок с розами',
         ];
       case 25:
         return [
           'Торжественный прием',
           'Обновление свадебных колец',
-          'Серебряные подарки'
+          'Серебряные подарки',
         ];
       case 50:
         return [
           'Большой семейный праздник',
           'Золотые подарки',
-          'Повторение свадебной церемонии'
+          'Повторение свадебной церемонии',
         ];
       default:
         return ['Романтический ужин', 'Подарок по случаю', 'Время вдвоем'];
@@ -252,8 +245,7 @@ class AnniversaryReminder {
     required this.reminderDate,
     required this.message,
     required this.isSent,
-    this.sentAt,
-    required this.createdAt,
+    required this.createdAt, this.sentAt,
   });
 
   /// Создать из Map

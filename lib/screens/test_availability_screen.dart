@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/availability_calendar.dart';
+import 'package:event_marketplace_app/services/availability_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/availability_calendar.dart';
-import '../services/availability_service.dart';
 
 class TestAvailabilityScreen extends ConsumerStatefulWidget {
   const TestAvailabilityScreen({super.key});
@@ -176,7 +175,7 @@ class _TestAvailabilityScreenState
                     children: [
                       Icon(Icons.edit),
                       SizedBox(width: 8),
-                      Text('Редактировать')
+                      Text('Редактировать'),
                     ],
                   ),
                 ),
@@ -237,7 +236,7 @@ class _TestAvailabilityScreenState
     if (timeSlot == null) return;
 
     final success = await _availabilityService.addTimeSlot(
-        _testSpecialistId, date, timeSlot);
+        _testSpecialistId, date, timeSlot,);
 
     if (success) {
       _loadAvailabilityData();
@@ -245,14 +244,14 @@ class _TestAvailabilityScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Временной слот добавлен')));
+            const SnackBar(content: Text('Временной слот добавлен')),);
       }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка добавления слота')));
+            const SnackBar(content: Text('Ошибка добавления слота')),);
       }
     }
   }
@@ -292,11 +291,11 @@ class _TestAvailabilityScreenState
       builder: (context) => AlertDialog(
         title: const Text('Очистить все данные'),
         content: const Text(
-            'Вы уверены, что хотите удалить все данные о доступности?'),
+            'Вы уверены, что хотите удалить все данные о доступности?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -313,7 +312,7 @@ class _TestAvailabilityScreenState
       // Удаляем все записи
       for (final availability in _availabilityData) {
         await _availabilityService.removeBusyDate(
-            _testSpecialistId, availability.date);
+            _testSpecialistId, availability.date,);
       }
 
       _loadAvailabilityData();
@@ -336,7 +335,7 @@ class _TestAvailabilityScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -394,7 +393,7 @@ class _TestAvailabilityScreenState
             if (availability.timeSlots.isNotEmpty) ...[
               const SizedBox(height: 16),
               const Text('Временные слоты:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold),),
               const SizedBox(height: 8),
               ...availability.timeSlots.map(_buildTimeSlotInfo),
             ],
@@ -403,7 +402,7 @@ class _TestAvailabilityScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -433,7 +432,7 @@ class _TestAvailabilityScreenState
             if (slot.note != null) ...[
               const Spacer(),
               Text(slot.note!,
-                  style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                  style: const TextStyle(color: Colors.grey, fontSize: 10),),
             ],
           ],
         ),
@@ -467,7 +466,7 @@ class _TestAvailabilityScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Добавить'),
@@ -499,7 +498,7 @@ class _TestAvailabilityScreenState
                 ),
                 onTap: () async {
                   final time = await showTimePicker(
-                      context: context, initialTime: TimeOfDay.now());
+                      context: context, initialTime: TimeOfDay.now(),);
                   if (time != null) {
                     setState(() {
                       startTime = time;
@@ -538,7 +537,7 @@ class _TestAvailabilityScreenState
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Отмена')),
+                child: const Text('Отмена'),),
             ElevatedButton(
               onPressed: (startTime != null && endTime != null)
                   ? () {

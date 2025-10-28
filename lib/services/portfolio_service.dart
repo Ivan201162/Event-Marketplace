@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/specialist_profile.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../models/specialist_profile.dart';
 
 /// Сервис для работы с портфолио специалиста
 class PortfolioService {
@@ -131,7 +130,7 @@ class PortfolioService {
 
   /// Добавить элемент портфолио в профиль специалиста
   Future<void> _addPortfolioItemToProfile(
-      String userId, PortfolioItem item) async {
+      String userId, PortfolioItem item,) async {
     try {
       final profileRef =
           _firestore.collection('specialist_profiles').doc(userId);
@@ -191,7 +190,7 @@ class PortfolioService {
 
   /// Обновить элемент портфолио
   Future<void> updatePortfolioItem(
-      String userId, PortfolioItem updatedItem) async {
+      String userId, PortfolioItem updatedItem,) async {
     try {
       final profileRef =
           _firestore.collection('specialist_profiles').doc(userId);

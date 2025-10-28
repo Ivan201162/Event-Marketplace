@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/monitoring.dart';
+import 'package:event_marketplace_app/services/monitoring_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/monitoring.dart';
-import '../services/monitoring_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран мониторинга и алертов
 class MonitoringScreen extends ConsumerStatefulWidget {
@@ -53,11 +53,11 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('metrics', 'Метрики', Icons.analytics)),
+                child: _buildTabButton('metrics', 'Метрики', Icons.analytics),),
             Expanded(child: _buildTabButton('alerts', 'Алерты', Icons.warning)),
             Expanded(
                 child:
-                    _buildTabButton('dashboards', 'Дашборды', Icons.dashboard)),
+                    _buildTabButton('dashboards', 'Дашборды', Icons.dashboard),),
           ],
         ),
       );
@@ -80,7 +80,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -106,22 +106,22 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             child: Row(
               children: [
                 Text('Метрики системы',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 DropdownButton<String?>(
                   hint: const Text('Все категории'),
                   items: const [
                     DropdownMenuItem<String?>(child: Text('Все категории')),
                     DropdownMenuItem<String?>(
-                        value: 'system', child: Text('Система')),
+                        value: 'system', child: Text('Система'),),
                     DropdownMenuItem<String?>(
-                        value: 'network', child: Text('Сеть')),
+                        value: 'network', child: Text('Сеть'),),
                     DropdownMenuItem<String?>(
-                        value: 'database', child: Text('База данных')),
+                        value: 'database', child: Text('База данных'),),
                     DropdownMenuItem<String?>(
-                        value: 'users', child: Text('Пользователи')),
+                        value: 'users', child: Text('Пользователи'),),
                     DropdownMenuItem<String?>(
-                        value: 'errors', child: Text('Ошибки')),
+                        value: 'errors', child: Text('Ошибки'),),
                   ],
                   onChanged: (value) {
                     // TODO(developer): Реализовать фильтрацию
@@ -171,10 +171,10 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     Text(
                       metric.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(metric.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -190,7 +190,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
             ],
@@ -254,7 +254,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             child: Row(
               children: [
                 Text('Алерты мониторинга',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showCreateAlertDialog,
@@ -306,10 +306,10 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     Text(
                       alert.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(alert.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -325,7 +325,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: severityColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -341,7 +341,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -351,24 +351,24 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   if (alert.isTriggered)
                     const PopupMenuItem(
                       value: 'resolve',
                       child: ListTile(
-                          leading: Icon(Icons.check), title: Text('Решить')),
+                          leading: Icon(Icons.check), title: Text('Решить'),),
                     ),
                   const PopupMenuItem(
                     value: 'disable',
                     child: ListTile(
-                        leading: Icon(Icons.block), title: Text('Отключить')),
+                        leading: Icon(Icons.block), title: Text('Отключить'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -401,7 +401,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
               _buildInfoChip('Метрика', alert.metricName, Colors.blue),
               const SizedBox(width: 8),
               _buildInfoChip('Каналы', '${alert.notificationChannels.length}',
-                  Colors.green),
+                  Colors.green,),
             ],
           ),
 
@@ -437,7 +437,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             child: Row(
               children: [
                 Text('Дашборды мониторинга',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showCreateDashboardDialog,
@@ -485,10 +485,10 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                       Text(
                         dashboard.name,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
                       Text(dashboard.description,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                     ],
                   ),
                 ),
@@ -524,7 +524,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.green,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 PopupMenuButton<String>(
@@ -535,19 +535,19 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
                       value: 'view',
                       child: ListTile(
                           leading: Icon(Icons.visibility),
-                          title: Text('Просмотр')),
+                          title: Text('Просмотр'),),
                     ),
                     const PopupMenuItem(
                       value: 'edit',
                       child: ListTile(
                           leading: Icon(Icons.edit),
-                          title: Text('Редактировать')),
+                          title: Text('Редактировать'),),
                     ),
                     const PopupMenuItem(
                       value: 'export',
                       child: ListTile(
                           leading: Icon(Icons.download),
-                          title: Text('Экспорт')),
+                          title: Text('Экспорт'),),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),
@@ -561,10 +561,10 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             Row(
               children: [
                 _buildInfoChip(
-                    'Метрики', '${dashboard.metricCount}', Colors.blue),
+                    'Метрики', '${dashboard.metricCount}', Colors.blue,),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Алерты', '${dashboard.alertCount}', Colors.orange),
+                    'Алерты', '${dashboard.alertCount}', Colors.orange,),
               ],
             ),
 
@@ -600,7 +600,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -664,7 +664,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -699,16 +699,12 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     switch (action) {
       case 'view':
         _viewAlert(alert);
-        break;
       case 'edit':
         _editAlert(alert);
-        break;
       case 'resolve':
         _resolveAlert(alert);
-        break;
       case 'disable':
         _disableAlert(alert);
-        break;
     }
   }
 
@@ -735,7 +731,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
               if (alert.notificationChannels.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
-                    'Каналы уведомлений: ${alert.notificationChannels.join(', ')}'),
+                    'Каналы уведомлений: ${alert.notificationChannels.join(', ')}',),
               ],
             ],
           ),
@@ -743,7 +739,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -754,7 +750,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Редактирование алерта "${alert.name}" будет реализовано')),
+              Text('Редактирование алерта "${alert.name}" будет реализовано'),),
     );
   }
 
@@ -763,7 +759,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Решение алерта "${alert.name}" будет реализовано')));
+        content: Text('Решение алерта "${alert.name}" будет реализовано'),),);
   }
 
   void _disableAlert(MonitoringAlert alert) {
@@ -771,20 +767,17 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Отключение алерта "${alert.name}" будет реализовано')));
+        content: Text('Отключение алерта "${alert.name}" будет реализовано'),),);
   }
 
   void _handleDashboardAction(String action, MonitoringDashboard dashboard) {
     switch (action) {
       case 'view':
         _viewDashboard(dashboard);
-        break;
       case 'edit':
         _editDashboard(dashboard);
-        break;
       case 'export':
         _exportDashboard(dashboard);
-        break;
     }
   }
 
@@ -793,7 +786,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Просмотр дашборда "${dashboard.name}" будет реализован')),
+              Text('Просмотр дашборда "${dashboard.name}" будет реализован'),),
     );
   }
 
@@ -802,7 +795,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование дашборда "${dashboard.name}" будет реализовано')),
+              'Редактирование дашборда "${dashboard.name}" будет реализовано',),),
     );
   }
 
@@ -811,7 +804,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Экспорт дашборда "${dashboard.name}" будет реализован')),
+              Text('Экспорт дашборда "${dashboard.name}" будет реализован'),),
     );
   }
 
@@ -820,7 +813,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание алерта будет реализовано')));
+        const SnackBar(content: Text('Создание алерта будет реализовано')),);
   }
 
   void _showCreateDashboardDialog() {
@@ -828,6 +821,6 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание дашборда будет реализовано')));
+        const SnackBar(content: Text('Создание дашборда будет реализовано')),);
   }
 }

@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/services/category_service.dart';
+import 'package:event_marketplace_app/services/post_service.dart';
+import 'package:event_marketplace_app/services/tariff_service.dart';
+import 'package:event_marketplace_app/services/test_data_service.dart';
 import 'package:flutter/foundation.dart';
-
-import 'auth_service.dart';
-import 'category_service.dart';
-import 'post_service.dart';
-import 'tariff_service.dart';
-import 'test_data_service.dart';
 
 /// Service for testing Firestore configuration
 class FirestoreTestService {
@@ -20,7 +19,7 @@ class FirestoreTestService {
   Future<bool> testAuthenticatedUserPermissions() async {
     try {
       debugPrint(
-          '🔐 Тестирование прав доступа для авторизованных пользователей...');
+          '🔐 Тестирование прав доступа для авторизованных пользователей...',);
 
       // Test reading posts (feed)
       final posts = await _postService.getPosts(limit: 5);
@@ -29,12 +28,12 @@ class FirestoreTestService {
       // Test reading categories
       final categories = await _categoryService.getIdeaCategories();
       debugPrint(
-          '✅ Чтение категорий: ${categories.length} категорий загружено');
+          '✅ Чтение категорий: ${categories.length} категорий загружено',);
 
       // Test reading specialists
       final specialists = await _testDataService.getTestSpecialists();
       debugPrint(
-          '✅ Чтение специалистов: ${specialists.length} специалистов загружено');
+          '✅ Чтение специалистов: ${specialists.length} специалистов загружено',);
 
       // Test reading tariffs
       final tariffs = await _tariffService.getTariffs();
@@ -51,7 +50,7 @@ class FirestoreTestService {
   Future<bool> testUnauthenticatedUserPermissions() async {
     try {
       debugPrint(
-          '🔓 Тестирование прав доступа для неавторизованных пользователей...');
+          '🔓 Тестирование прав доступа для неавторизованных пользователей...',);
 
       // Sign out first
       await _authService.signOut();
@@ -59,27 +58,27 @@ class FirestoreTestService {
       // Test reading posts (should work for unauthenticated users)
       final posts = await _postService.getPosts(limit: 5);
       debugPrint(
-          '✅ Чтение ленты (неавторизованный): ${posts.length} постов загружено');
+          '✅ Чтение ленты (неавторизованный): ${posts.length} постов загружено',);
 
       // Test reading categories (should work for unauthenticated users)
       final categories = await _categoryService.getIdeaCategories();
       debugPrint(
-          '✅ Чтение категорий (неавторизованный): ${categories.length} категорий загружено');
+          '✅ Чтение категорий (неавторизованный): ${categories.length} категорий загружено',);
 
       // Test reading specialists (should work for unauthenticated users)
       final specialists = await _testDataService.getTestSpecialists();
       debugPrint(
-          '✅ Чтение специалистов (неавторизованный): ${specialists.length} специалистов загружено');
+          '✅ Чтение специалистов (неавторизованный): ${specialists.length} специалистов загружено',);
 
       // Test reading tariffs (should work for unauthenticated users)
       final tariffs = await _tariffService.getTariffs();
       debugPrint(
-          '✅ Чтение тарифов (неавторизованный): ${tariffs.length} тарифов загружено');
+          '✅ Чтение тарифов (неавторизованный): ${tariffs.length} тарифов загружено',);
 
       return true;
     } catch (e) {
       debugPrint(
-          '❌ Ошибка тестирования прав неавторизованного пользователя: $e');
+          '❌ Ошибка тестирования прав неавторизованного пользователя: $e',);
       return false;
     }
   }
@@ -145,7 +144,7 @@ class FirestoreTestService {
         return true;
       } else {
         debugPrint(
-            '⚠️ Профиль пользователя не найден (это нормально для тестов)');
+            '⚠️ Профиль пользователя не найден (это нормально для тестов)',);
         return true;
       }
     } catch (e) {
@@ -180,7 +179,7 @@ class FirestoreTestService {
     debugPrint('\n📊 Результаты тестирования:');
     results.forEach((test, result) {
       debugPrint(
-          '${result ? '✅' : '❌'} $test: ${result ? 'ПРОЙДЕН' : 'ПРОВАЛЕН'}');
+          '${result ? '✅' : '❌'} $test: ${result ? 'ПРОЙДЕН' : 'ПРОВАЛЕН'}',);
     });
 
     final passedTests = results.values.where((result) => result).length;

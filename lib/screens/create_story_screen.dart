@@ -1,17 +1,15 @@
 import 'dart:io';
+
+import 'package:event_marketplace_app/models/specialist_story.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/specialist_story.dart';
-import '../models/story.dart';
-import '../services/story_service.dart';
-
 class CreateStoryScreen extends ConsumerStatefulWidget {
   const CreateStoryScreen({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
+    required this.specialistId, required this.specialistName, super.key,
     this.specialistAvatar,
   });
   final String specialistId;
@@ -93,7 +91,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Тип контента',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           Row(
             children: StoryContentType.values
@@ -124,7 +122,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
                         child: Column(
                           children: [
                             Text(_getContentTypeIcon(type),
-                                style: const TextStyle(fontSize: 24)),
+                                style: const TextStyle(fontSize: 24),),
                             const SizedBox(height: 8),
                             Text(
                               _getContentTypeName(type),
@@ -150,7 +148,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Выберите файл',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           Container(
             width: double.infinity,
@@ -176,7 +174,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
                           'Нажмите для выбора ${_getContentTypeName(_selectedType).toLowerCase()}',
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.outline,
-                              fontSize: 16),
+                              fontSize: 16,),
                         ),
                       ],
                     ),
@@ -228,7 +226,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
             onPressed: _pickFile,
             icon: const Icon(Icons.add_photo_alternate),
             label: Text(
-                'Выбрать ${_getContentTypeName(_selectedType).toLowerCase()}'),
+                'Выбрать ${_getContentTypeName(_selectedType).toLowerCase()}',),
           ),
         ],
       );
@@ -252,9 +250,9 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
               borderRadius: BorderRadius.circular(12),
               child: _selectedType == StoryContentType.image
                   ? Image.file(_selectedFile!, fit: BoxFit.cover)
-                  : Container(
+                  : const ColoredBox(
                       color: Colors.black,
-                      child: const Center(
+                      child: Center(
                         child: Text(
                           'Видео предварительный просмотр',
                           style: TextStyle(color: Colors.white),
@@ -270,7 +268,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Текст и подпись',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
 
           // Текст (для текстовых сторис)
@@ -333,7 +331,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
             SizedBox(
               width: 100,
               child: Text('$label:',
-                  style: const TextStyle(fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontWeight: FontWeight.w500),),
             ),
             Expanded(child: Text(value)),
           ],

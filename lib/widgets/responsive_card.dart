@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Адаптивная карточка для различных размеров экрана с поддержкой Material Design 3
 class ResponsiveCard extends StatelessWidget {
   const ResponsiveCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.margin,
     this.padding,
     this.elevation,

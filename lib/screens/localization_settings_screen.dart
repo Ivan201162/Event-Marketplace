@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/localization.dart';
+import 'package:event_marketplace_app/providers/localization_providers.dart';
+import 'package:event_marketplace_app/services/localization_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/localization.dart';
-import '../providers/localization_providers.dart';
-import '../services/localization_service.dart';
 
 /// Экран настроек локализации
 class LocalizationSettingsScreen extends ConsumerStatefulWidget {
@@ -33,7 +33,7 @@ class _LocalizationSettingsScreenState
           actions: [
             IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: _refreshLocalization)
+                onPressed: _refreshLocalization,),
           ],
         ),
         body: Consumer(
@@ -107,7 +107,7 @@ class _LocalizationSettingsScreenState
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(Icons.language,
-                            color: Colors.blue, size: 24),
+                            color: Colors.blue, size: 24,),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -117,19 +117,19 @@ class _LocalizationSettingsScreenState
                             Text(
                               currentLocalization?.displayName ?? 'Русский',
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16, fontWeight: FontWeight.w500,),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               currentLocalization?.nativeName ?? 'Русский',
                               style: TextStyle(
-                                  fontSize: 14, color: Colors.grey[600]),
+                                  fontSize: 14, color: Colors.grey[600],),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Код: $currentLanguage',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[500]),
+                                  fontSize: 12, color: Colors.grey[500],),
                             ),
                           ],
                         ),
@@ -150,7 +150,7 @@ class _LocalizationSettingsScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Выберите язык',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               Consumer(
                 builder: (context, ref, child) {
@@ -193,7 +193,7 @@ class _LocalizationSettingsScreenState
                           ),
                         ),
                         subtitle: Text(language.nativeName,
-                            style: TextStyle(color: Colors.grey[600])),
+                            style: TextStyle(color: Colors.grey[600]),),
                         trailing: isSelected
                             ? const Icon(Icons.check, color: Colors.blue)
                             : null,
@@ -234,7 +234,7 @@ class _LocalizationSettingsScreenState
                       _updateSettings(
                         settings?.copyWith(
                             autoDetectLanguage: value,
-                            lastUpdated: DateTime.now()),
+                            lastUpdated: DateTime.now(),),
                       );
                     },
                   ),
@@ -245,13 +245,13 @@ class _LocalizationSettingsScreenState
                   SwitchListTile(
                     title: const Text('Показывать родные названия'),
                     subtitle: const Text(
-                        'Отображать названия языков на их родном языке'),
+                        'Отображать названия языков на их родном языке',),
                     value: settings?.showNativeNames ?? false,
                     onChanged: (value) {
                       _updateSettings(
                         settings?.copyWith(
                             showNativeNames: value,
-                            lastUpdated: DateTime.now()),
+                            lastUpdated: DateTime.now(),),
                       );
                     },
                   ),
@@ -281,7 +281,7 @@ class _LocalizationSettingsScreenState
                     data: (stats) {
                       if (stats.isEmpty) {
                         return const Center(
-                            child: Text('Нет данных о статистике'));
+                            child: Text('Нет данных о статистике'),);
                       }
 
                       return ListView.builder(
@@ -310,7 +310,7 @@ class _LocalizationSettingsScreenState
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8),),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -320,7 +320,7 @@ class _LocalizationSettingsScreenState
                 Text(
                   stat.language.toUpperCase(),
                   style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.bold,),
                 ),
                 Text(
                   '${stat.completionPercentage.toStringAsFixed(1)}%',
@@ -377,7 +377,7 @@ class _LocalizationSettingsScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Действия',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
 
               // Очистить кэш
@@ -434,7 +434,7 @@ class _LocalizationSettingsScreenState
             const SizedBox(height: 16),
             ElevatedButton(
                 onPressed: _refreshLocalization,
-                child: const Text('Повторить')),
+                child: const Text('Повторить'),),
           ],
         ),
       );
@@ -445,13 +445,13 @@ class _LocalizationSettingsScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Язык изменён на $languageCode'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка изменения языка: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -464,13 +464,13 @@ class _LocalizationSettingsScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Настройки сохранены'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка сохранения настроек: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -481,13 +481,13 @@ class _LocalizationSettingsScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Локализация обновлена'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка обновления: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка обновления: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -497,12 +497,12 @@ class _LocalizationSettingsScreenState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Кэш очищен'), backgroundColor: Colors.green));
+          content: Text('Кэш очищен'), backgroundColor: Colors.green,),);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка очистки кэша: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -513,11 +513,11 @@ class _LocalizationSettingsScreenState
       builder: (context) => AlertDialog(
         title: const Text('Экспорт переводов'),
         content: const Text(
-            'Функция экспорта переводов будет доступна в следующих обновлениях.'),
+            'Функция экспорта переводов будет доступна в следующих обновлениях.',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -529,11 +529,11 @@ class _LocalizationSettingsScreenState
       builder: (context) => AlertDialog(
         title: const Text('Импорт переводов'),
         content: const Text(
-            'Функция импорта переводов будет доступна в следующих обновлениях.'),
+            'Функция импорта переводов будет доступна в следующих обновлениях.',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

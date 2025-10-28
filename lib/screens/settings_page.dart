@@ -1,16 +1,15 @@
+import 'package:event_marketplace_app/core/i18n/app_localizations.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/locale_provider.dart';
+import 'package:event_marketplace_app/screens/admin_analytics_screen.dart';
+import 'package:event_marketplace_app/screens/admin_panel_screen.dart';
+import 'package:event_marketplace_app/screens/user_reports_screen.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
+import 'package:event_marketplace_app/widgets/theme_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../core/i18n/app_localizations.dart';
-import '../models/user.dart';
-import '../providers/auth_providers.dart';
-import '../providers/locale_provider.dart';
-import '../services/analytics_service.dart';
-import '../widgets/theme_switch.dart';
-import 'admin_analytics_screen.dart';
-import 'admin_panel_screen.dart';
-import 'user_reports_screen.dart';
 
 /// Экран настроек
 class SettingsPage extends ConsumerWidget {
@@ -63,7 +62,7 @@ class SettingsPage extends ConsumerWidget {
                 // Админ-панель (только для администраторов)
                 if (user.isAdmin) ...[
                   _buildAdminSection(context),
-                  const SizedBox(height: 24)
+                  const SizedBox(height: 24),
                 ],
 
                 // Дополнительные настройки
@@ -90,7 +89,7 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Профиль',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -114,15 +113,15 @@ class SettingsPage extends ConsumerWidget {
                         Text(
                           user.displayNameOrEmail,
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 4),
                         Text(user.email,
-                            style: TextStyle(color: Colors.grey[600])),
+                            style: TextStyle(color: Colors.grey[600]),),
                         const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
                             color: Theme.of(context)
                                 .colorScheme
@@ -156,7 +155,7 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Уведомления',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               SwitchListTile(
                 title: const Text('Push-уведомления'),
@@ -168,7 +167,7 @@ class SettingsPage extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text(
-                            'Push-уведомления ${value ? 'включены' : 'отключены'}')),
+                            'Push-уведомления ${value ? 'включены' : 'отключены'}',),),
                   );
                 },
               ),
@@ -183,7 +182,7 @@ class SettingsPage extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text(
-                            'Email-уведомления ${value ? 'включены' : 'отключены'}')),
+                            'Email-уведомления ${value ? 'включены' : 'отключены'}',),),
                   );
                 },
               ),
@@ -199,7 +198,7 @@ class SettingsPage extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                          'Уведомления о бронированиях ${value ? 'включены' : 'отключены'}'),
+                          'Уведомления о бронированиях ${value ? 'включены' : 'отключены'}',),
                     ),
                   );
                 },
@@ -226,7 +225,7 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Язык',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.language),
@@ -241,7 +240,7 @@ class SettingsPage extends ConsumerWidget {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Язык изменен на русский')));
+                      const SnackBar(content: Text('Язык изменен на русский')),);
                 },
               ),
               const Divider(),
@@ -263,7 +262,7 @@ class SettingsPage extends ConsumerWidget {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(const SnackBar(
-                      content: Text('Язык изменен на английский')));
+                      content: Text('Язык изменен на английский'),),);
                 },
               ),
             ],
@@ -278,7 +277,7 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Тема приложения',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               SizedBox(height: 16),
               ThemeSwitch(showLabel: false),
             ],
@@ -299,7 +298,7 @@ class SettingsPage extends ConsumerWidget {
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.admin_panel_settings,
-                    color: Colors.orange),
+                    color: Colors.orange,),
                 title: const Text('Админ-панель'),
                 subtitle: const Text('Управление событиями и пользователями'),
                 trailing: const Icon(Icons.arrow_forward_ios),
@@ -307,7 +306,7 @@ class SettingsPage extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                        builder: (context) => const AdminPanelScreen()),
+                        builder: (context) => const AdminPanelScreen(),),
                   );
                 },
               ),
@@ -321,7 +320,7 @@ class SettingsPage extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                        builder: (context) => const AdminAnalyticsScreen()),
+                        builder: (context) => const AdminAnalyticsScreen(),),
                   );
                 },
               ),
@@ -337,7 +336,7 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Дополнительно',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.analytics),
@@ -348,7 +347,7 @@ class SettingsPage extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                        builder: (context) => const UserReportsScreen()),
+                        builder: (context) => const UserReportsScreen(),),
                   );
                 },
               ),
@@ -393,7 +392,7 @@ class SettingsPage extends ConsumerWidget {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Функция в разработке')));
+                      const SnackBar(content: Text('Функция в разработке')),);
                 },
               ),
             ],
@@ -408,7 +407,7 @@ class SettingsPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Аккаунт',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.logout, color: Colors.red),
@@ -446,7 +445,7 @@ class SettingsPage extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -468,7 +467,7 @@ class SettingsPage extends ConsumerWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text('Ошибка выхода: $e'),
-                        backgroundColor: Colors.red),
+                        backgroundColor: Colors.red,),
                   );
                 }
               }

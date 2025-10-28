@@ -1,8 +1,8 @@
-import '../models/enhanced_feed_post.dart';
-import '../models/enhanced_idea.dart';
-import '../models/event.dart';
-import '../models/review.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/enhanced_feed_post.dart';
+import 'package:event_marketplace_app/models/enhanced_idea.dart';
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Тестовые данные для приложения
 class MockData {
@@ -57,7 +57,7 @@ class MockData {
           specialties: const [
             'Свадебные фильмы',
             'Корпоративы',
-            'Промо-ролики'
+            'Промо-ролики',
           ],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -136,7 +136,7 @@ class MockData {
           specialties: const [
             'Свадебный декор',
             'Оформление мероприятий',
-            'Флористика'
+            'Флористика',
           ],
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -312,8 +312,6 @@ class MockData {
           likes: 150,
           comments: 25,
           shares: 10,
-          isLiked: false,
-          isSaved: false,
           createdAt: DateTime.now().subtract(Duration(hours: 2)),
           tags: ['свадьба', 'фотограф', 'любовь'],
           type: 'image',
@@ -340,7 +338,6 @@ class MockData {
           comments: 40,
           shares: 15,
           isLiked: true,
-          isSaved: false,
           createdAt: DateTime.now().subtract(Duration(hours: 5)),
           tags: ['видео', 'промо', 'технологии'],
           type: 'video',
@@ -370,7 +367,6 @@ class MockData {
           likes: 180,
           comments: 30,
           shares: 8,
-          isLiked: false,
           isSaved: true,
           createdAt: DateTime.now().subtract(Duration(days: 1)),
           tags: ['юбилей', 'ведущая', 'праздник'],
@@ -426,8 +422,6 @@ class MockData {
           likes: 190,
           comments: 35,
           shares: 12,
-          isLiked: false,
-          isSaved: false,
           createdAt: DateTime.now().subtract(Duration(days: 3)),
           tags: ['декор', 'детский праздник', 'оформление'],
           type: 'image',

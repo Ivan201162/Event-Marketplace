@@ -1,10 +1,8 @@
+import 'package:event_marketplace_app/models/user_preferences.dart';
+import 'package:event_marketplace_app/services/ai_assistant_service.dart';
+import 'package:event_marketplace_app/services/smart_search_service.dart';
+import 'package:event_marketplace_app/services/smart_specialist_data_generator.dart';
 import 'package:flutter/material.dart';
-
-import 'models/smart_specialist.dart';
-import 'models/user_preferences.dart';
-import 'services/ai_assistant_service.dart';
-import 'services/smart_search_service.dart';
-import 'services/smart_specialist_data_generator.dart';
 
 /// Тестовый класс для проверки функциональности умного поиска
 class SmartSearchTester {
@@ -64,7 +62,7 @@ class SmartSearchTester {
         limit: 5,
       );
       debugPrint(
-          '✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов');
+          '✅ Поиск по категории: найдено ${specialistsByCategory.length} специалистов',);
 
       // Поиск по городу
       final specialistsByCity = await _smartSearchService.searchSpecialists(
@@ -72,7 +70,7 @@ class SmartSearchTester {
         limit: 5,
       );
       debugPrint(
-          '✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов');
+          '✅ Поиск по городу: найдено ${specialistsByCity.length} специалистов',);
 
       // Поиск по цене
       final specialistsByPrice = await _smartSearchService.searchSpecialists(
@@ -80,7 +78,7 @@ class SmartSearchTester {
         limit: 5,
       );
       debugPrint(
-          '✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов');
+          '✅ Поиск по цене: найдено ${specialistsByPrice.length} специалистов',);
 
       // Поиск по стилю
       final specialistsByStyle = await _smartSearchService.searchSpecialists(
@@ -88,7 +86,7 @@ class SmartSearchTester {
         limit: 5,
       );
       debugPrint(
-          '✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов');
+          '✅ Поиск по стилю: найдено ${specialistsByStyle.length} специалистов',);
     } catch (e) {
       debugPrint('❌ Ошибка умного поиска: $e');
     }
@@ -329,14 +327,14 @@ class _SmartSearchTestWidgetState extends State<SmartSearchTestWidget> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                     color: Colors.black,
-                    borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),),
                 child: SingleChildScrollView(
                   child: Text(
                     _output,
                     style: const TextStyle(
                         color: Colors.green,
                         fontFamily: 'monospace',
-                        fontSize: 12),
+                        fontSize: 12,),
                   ),
                 ),
               ),

@@ -1,24 +1,13 @@
 class Profile {
-  final String id;
-  final String username;
-  final String name;
-  final String? avatarUrl;
-  final String? city;
-  final String? bio;
-  final List<String> skills;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   Profile({
     required this.id,
     required this.username,
     required this.name,
-    this.avatarUrl,
+    required this.createdAt, required this.updatedAt, this.avatarUrl,
     this.city,
     this.bio,
     this.skills = const [],
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -34,6 +23,15 @@ class Profile {
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
   }
+  final String id;
+  final String username;
+  final String name;
+  final String? avatarUrl;
+  final String? city;
+  final String? bio;
+  final List<String> skills;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toJson() {
     return {
@@ -75,20 +73,13 @@ class Profile {
 }
 
 class WeeklyLeader {
-  final String userId;
-  final String username;
-  final String name;
-  final String? avatarUrl;
-  final String? city;
-  final int score7d;
 
   WeeklyLeader({
     required this.userId,
     required this.username,
     required this.name,
-    this.avatarUrl,
+    required this.score7d, this.avatarUrl,
     this.city,
-    required this.score7d,
   });
 
   factory WeeklyLeader.fromJson(Map<String, dynamic> json) {
@@ -101,6 +92,12 @@ class WeeklyLeader {
       score7d: json['score_7d'] as int,
     );
   }
+  final String userId;
+  final String username;
+  final String name;
+  final String? avatarUrl;
+  final String? city;
+  final int score7d;
 
   Map<String, dynamic> toJson() {
     return {
@@ -115,18 +112,12 @@ class WeeklyLeader {
 }
 
 class ChatListItem {
-  final String chatId;
-  final Profile otherUser;
-  final String? lastMessage;
-  final String? lastMessageTime;
-  final String updatedAt;
 
   ChatListItem({
     required this.chatId,
     required this.otherUser,
-    this.lastMessage,
+    required this.updatedAt, this.lastMessage,
     this.lastMessageTime,
-    required this.updatedAt,
   });
 
   factory ChatListItem.fromJson(Map<String, dynamic> json) {
@@ -138,6 +129,11 @@ class ChatListItem {
       updatedAt: json['updated_at'] as String,
     );
   }
+  final String chatId;
+  final Profile otherUser;
+  final String? lastMessage;
+  final String? lastMessageTime;
+  final String updatedAt;
 
   Map<String, dynamic> toJson() {
     return {
@@ -151,14 +147,6 @@ class ChatListItem {
 }
 
 class Message {
-  final String id;
-  final String chatId;
-  final String senderId;
-  final String text;
-  final DateTime createdAt;
-  final String? senderUsername;
-  final String? senderName;
-  final String? senderAvatarUrl;
 
   Message({
     required this.id,
@@ -183,6 +171,14 @@ class Message {
       senderAvatarUrl: json['profiles']?['avatar_url'] as String?,
     );
   }
+  final String id;
+  final String chatId;
+  final String senderId;
+  final String text;
+  final DateTime createdAt;
+  final String? senderUsername;
+  final String? senderName;
+  final String? senderAvatarUrl;
 
   Map<String, dynamic> toJson() {
     return {
@@ -194,7 +190,7 @@ class Message {
       'profiles': {
         'username': senderUsername,
         'name': senderName,
-        'avatar_url': senderAvatarUrl
+        'avatar_url': senderAvatarUrl,
       },
     };
   }
@@ -206,9 +202,6 @@ class Message {
 }
 
 class FollowStats {
-  final int followersCount;
-  final int followingCount;
-  final bool isFollowing;
 
   FollowStats({
     required this.followersCount,
@@ -223,6 +216,9 @@ class FollowStats {
       isFollowing: json['is_following'] as bool,
     );
   }
+  final int followersCount;
+  final int followingCount;
+  final bool isFollowing;
 
   Map<String, dynamic> toJson() {
     return {
@@ -234,31 +230,17 @@ class FollowStats {
 }
 
 class Idea {
-  final String id;
-  final String userId;
-  final String type; // 'text', 'photo', 'video', 'reel'
-  final String? content;
-  final List<String> mediaUrls;
-  final String? category;
-  final bool isPublic;
-  final int likesCount;
-  final int commentsCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Profile? author;
 
   Idea({
     required this.id,
     required this.userId,
     required this.type,
-    this.content,
+    required this.createdAt, required this.updatedAt, this.content,
     this.mediaUrls = const [],
     this.category,
     this.isPublic = true,
     this.likesCount = 0,
     this.commentsCount = 0,
-    required this.createdAt,
-    required this.updatedAt,
     this.author,
   });
 
@@ -280,6 +262,18 @@ class Idea {
           : null,
     );
   }
+  final String id;
+  final String userId;
+  final String type; // 'text', 'photo', 'video', 'reel'
+  final String? content;
+  final List<String> mediaUrls;
+  final String? category;
+  final bool isPublic;
+  final int likesCount;
+  final int commentsCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Profile? author;
 
   Map<String, dynamic> toJson() {
     return {
@@ -329,34 +323,17 @@ class Idea {
 }
 
 class Request {
-  final String id;
-  final String createdBy;
-  final String? assignedTo;
-  final String title;
-  final String? description;
-  final String? category;
-  final double? budget;
-  final String status; // 'open', 'in_progress', 'completed', 'cancelled'
-  final DateTime? deadline;
-  final String? location;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Profile? creator;
-  final Profile? assignee;
 
   Request({
     required this.id,
     required this.createdBy,
-    this.assignedTo,
-    required this.title,
+    required this.title, required this.createdAt, required this.updatedAt, this.assignedTo,
     this.description,
     this.category,
     this.budget,
     this.status = 'open',
     this.deadline,
     this.location,
-    required this.createdAt,
-    required this.updatedAt,
     this.creator,
     this.assignee,
   });
@@ -386,6 +363,20 @@ class Request {
           : null,
     );
   }
+  final String id;
+  final String createdBy;
+  final String? assignedTo;
+  final String title;
+  final String? description;
+  final String? category;
+  final double? budget;
+  final String status; // 'open', 'in_progress', 'completed', 'cancelled'
+  final DateTime? deadline;
+  final String? location;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Profile? creator;
+  final Profile? assignee;
 
   Map<String, dynamic> toJson() {
     return {

@@ -1,15 +1,16 @@
 import 'dart:convert';
+
+import 'package:event_marketplace_app/services/encryption_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'encryption_service.dart';
 
 /// Сервис для безопасного хранения данных
 class SecureStorageService {
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
     iOptions: IOSOptions(
-        accessibility: KeychainAccessibility.first_unlock_this_device),
+        accessibility: KeychainAccessibility.first_unlock_this_device,),
   );
 
   static const String _encryptionKeyKey = 'encryption_key';
@@ -33,12 +34,12 @@ class SecureStorageService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_isEncryptionEnabledKey, true);
       await prefs.setInt(
-          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch,);
 
       // Генерируем новый ключ шифрования
       final key = EncryptionService.generateKey();
       await _secureStorage.write(
-          key: _encryptionKeyKey, value: base64Encode(key));
+          key: _encryptionKeyKey, value: base64Encode(key),);
 
       debugPrint('Шифрование включено');
     } catch (e) {
@@ -53,7 +54,7 @@ class SecureStorageService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_isEncryptionEnabledKey, false);
       await prefs.setInt(
-          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch,);
 
       // Удаляем ключ шифрования
       await _secureStorage.delete(key: _encryptionKeyKey);
@@ -171,7 +172,7 @@ class SecureStorageService {
 
   /// Сохранить данные с паролем
   static Future<void> storeWithPassword(
-      String key, String value, String password) async {
+      String key, String value, String password,) async {
     try {
       final encryptedData =
           EncryptionService.encryptWithPassword(value, password);
@@ -220,7 +221,7 @@ class SecureStorageService {
           : null;
     } catch (e) {
       debugPrint(
-          'Ошибка получения времени последнего обновления шифрования: $e');
+          'Ошибка получения времени последнего обновления шифрования: $e',);
       return null;
     }
   }
@@ -268,12 +269,12 @@ class SecureStorageService {
 
       // Сохраняем новый ключ
       await _secureStorage.write(
-          key: _encryptionKeyKey, value: base64Encode(newKey));
+          key: _encryptionKeyKey, value: base64Encode(newKey),);
 
       // Обновляем время последнего обновления
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(
-          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch,);
 
       debugPrint('Ключ шифрования обновлен');
     } catch (e) {

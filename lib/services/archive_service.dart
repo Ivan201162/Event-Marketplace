@@ -1,15 +1,14 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/event_archive.dart';
+import 'package:event_marketplace_app/services/upload_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
-
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import '../models/event_archive.dart';
-import 'upload_service.dart';
 
 /// Сервис для работы с архивами мероприятий
 class ArchiveService {
@@ -162,7 +161,7 @@ class ArchiveService {
           .set(archive.toMap());
 
       SafeLog.info(
-          'ArchiveService: Archive uploaded successfully: ${archive.id}');
+          'ArchiveService: Archive uploaded successfully: ${archive.id}',);
       return archive;
     } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error uploading archive file: $e');
@@ -196,7 +195,7 @@ class ArchiveService {
   Stream<List<EventArchive>> getArchivesByBookingStream(String bookingId) {
     try {
       SafeLog.info(
-          'ArchiveService: Getting archives stream for booking: $bookingId');
+          'ArchiveService: Getting archives stream for booking: $bookingId',);
 
       return _firestore
           .collection(_collection)
@@ -204,7 +203,7 @@ class ArchiveService {
           .orderBy('uploadedAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(EventArchive.fromDocument).toList());
+              snapshot.docs.map(EventArchive.fromDocument).toList(),);
     } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error getting archives stream: $e');
       rethrow;
@@ -231,7 +230,7 @@ class ArchiveService {
           await _storage.ref().child(storagePath).delete();
         } on Exception catch (e) {
           SafeLog.warning(
-              'ArchiveService: Error deleting file from storage: $e');
+              'ArchiveService: Error deleting file from storage: $e',);
         }
       }
 
@@ -247,7 +246,7 @@ class ArchiveService {
 
   /// Обновить описание архива
   Future<void> updateArchiveDescription(
-      String archiveId, String description) async {
+      String archiveId, String description,) async {
     try {
       SafeLog.info('ArchiveService: Updating archive description: $archiveId');
 
@@ -267,7 +266,7 @@ class ArchiveService {
   Future<Map<String, int>> getArchiveStats(String bookingId) async {
     try {
       SafeLog.info(
-          'ArchiveService: Getting archive stats for booking: $bookingId');
+          'ArchiveService: Getting archive stats for booking: $bookingId',);
 
       final querySnapshot = await _firestore
           .collection(_collection)

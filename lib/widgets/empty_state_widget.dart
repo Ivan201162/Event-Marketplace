@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для отображения пустого состояния
 class EmptyStateWidget extends StatelessWidget {
   const EmptyStateWidget({
-    super.key,
-    required this.icon,
-    required this.title,
+    required this.icon, required this.title, super.key,
     this.subtitle,
     this.action,
   });
@@ -29,7 +27,7 @@ class EmptyStateWidget extends StatelessWidget {
                 style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey),
+                    color: Colors.grey,),
                 textAlign: TextAlign.center,
               ),
               if (subtitle != null) ...[

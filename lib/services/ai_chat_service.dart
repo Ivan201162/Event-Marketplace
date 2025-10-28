@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/ai_chat.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
 import 'package:flutter/material.dart';
-import '../models/ai_chat.dart';
-import '../services/specialist_service.dart';
 
 /// Сервис для работы с AI-чатом
 class AiChatService {
@@ -69,7 +69,7 @@ class AiChatService {
 
   /// Отправить сообщение пользователя
   Future<ChatMessage?> sendUserMessage(
-      String sessionId, String userId, String content) async {
+      String sessionId, String userId, String content,) async {
     try {
       final message = ChatMessage(
         id: '${sessionId}_${DateTime.now().millisecondsSinceEpoch}',
@@ -99,7 +99,7 @@ class AiChatService {
 
   /// Получить ответ от AI
   Future<ChatMessage?> getAiResponse(
-      String sessionId, String userId, String userMessage) async {
+      String sessionId, String userId, String userMessage,) async {
     try {
       // Получаем контекст сессии
       final sessionDoc =
@@ -143,7 +143,7 @@ class AiChatService {
 
   /// Обработка сообщения пользователя
   Future<Map<String, dynamic>> _processUserMessage(
-      String message, UserContext context) async {
+      String message, UserContext context,) async {
     final lowerMessage = message.toLowerCase();
 
     // Приветствие
@@ -155,15 +155,15 @@ class AiChatService {
         'metadata': {
           'quickReplies': [
             const QuickReply(
-                    text: 'Свадьба', value: 'wedding', icon: Icons.favorite)
+                    text: 'Свадьба', value: 'wedding', icon: Icons.favorite,)
                 .toJson(),
             const QuickReply(
                     text: 'Корпоратив',
                     value: 'corporate',
-                    icon: Icons.business)
+                    icon: Icons.business,)
                 .toJson(),
             const QuickReply(
-                    text: 'День рождения', value: 'birthday', icon: Icons.cake)
+                    text: 'День рождения', value: 'birthday', icon: Icons.cake,)
                 .toJson(),
             const QuickReply(text: 'Другое', value: 'other', icon: Icons.event)
                 .toJson(),
@@ -312,7 +312,7 @@ class AiChatService {
           'metadata': {
             'quickReplies': [
               const QuickReply(
-                      text: 'Изменить критерии', value: 'change_criteria')
+                      text: 'Изменить критерии', value: 'change_criteria',)
                   .toJson(),
               const QuickReply(text: 'Показать всех', value: 'show_all')
                   .toJson(),
@@ -361,7 +361,7 @@ class AiChatService {
 
   /// Обновить контекст сессии
   Future<void> _updateSessionContext(
-      String sessionId, UserContext? newContext) async {
+      String sessionId, UserContext? newContext,) async {
     if (newContext == null) return;
 
     try {
@@ -431,7 +431,7 @@ class AiChatService {
       'санкт-петербург',
       'спб',
       'екатеринбург',
-      'новосибирск'
+      'новосибирск',
     ];
     return cities.any((city) => message.contains(city));
   }

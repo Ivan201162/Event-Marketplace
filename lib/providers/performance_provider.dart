@@ -118,7 +118,7 @@ class PerformanceNotifier extends ChangeNotifier {
     if (batteryLevel != _state.batteryLevel ||
         isLowBattery != _state.isLowBattery) {
       _state = _state.copyWith(
-          batteryLevel: batteryLevel, isLowBattery: isLowBattery);
+          batteryLevel: batteryLevel, isLowBattery: isLowBattery,);
       notifyListeners();
     }
   }
@@ -152,16 +152,12 @@ class PerformanceNotifier extends ChangeNotifier {
     switch (level) {
       case OptimizationLevel.low:
         _applyLowOptimizations();
-        break;
       case OptimizationLevel.normal:
         _applyNormalOptimizations();
-        break;
       case OptimizationLevel.high:
         _applyHighOptimizations();
-        break;
       case OptimizationLevel.maximum:
         _applyMaximumOptimizations();
-        break;
     }
   }
 
@@ -215,12 +211,12 @@ class PerformanceNotifier extends ChangeNotifier {
 
     if (state.isLowBattery) {
       recommendations.add(
-          'Низкий заряд батареи: рекомендуется снизить качество изображений');
+          'Низкий заряд батареи: рекомендуется снизить качество изображений',);
     }
 
     if (state.isSlowConnection) {
       recommendations.add(
-          'Медленное соединение: рекомендуется использовать сжатые изображения');
+          'Медленное соединение: рекомендуется использовать сжатые изображения',);
     }
 
     if (state.fps < 30) {

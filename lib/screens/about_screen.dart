@@ -162,13 +162,13 @@ class _AboutScreenState extends State<AboutScreen> {
 
 /// Карточка с информацией
 class _InfoCard extends StatelessWidget {
-  final String title;
-  final String value;
 
   const _InfoCard({
     required this.title,
     required this.value,
   });
+  final String title;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
@@ -189,15 +189,15 @@ class _InfoCard extends StatelessWidget {
 
 /// Элемент функции
 class _FeatureItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String description;
 
   const _FeatureItem({
     required this.icon,
     required this.title,
     required this.description,
   });
+  final IconData icon;
+  final String title;
+  final String description;
 
   @override
   Widget build(BuildContext context) {

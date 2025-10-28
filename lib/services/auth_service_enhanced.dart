@@ -1,11 +1,11 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import '../models/app_user.dart';
 
 /// Улучшенный сервис авторизации с исправленными ошибками
 class AuthServiceEnhanced {
@@ -15,7 +15,7 @@ class AuthServiceEnhanced {
 
   /// Поток текущего пользователя
   Stream<AppUser?> get currentUserStream {
-    return _auth.authStateChanges().asyncMap((User? firebaseUser) async {
+    return _auth.authStateChanges().asyncMap((firebaseUser) async {
       if (firebaseUser == null) return null;
 
       try {
@@ -96,7 +96,7 @@ class AuthServiceEnhanced {
         }
 
         return await _createUserDocument(credential.user!,
-            name: name, city: city);
+            name: name, city: city,);
       }
       return null;
     } catch (e) {
@@ -111,8 +111,8 @@ class AuthServiceEnhanced {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth =
+          googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -140,7 +140,7 @@ class AuthServiceEnhanced {
     try {
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
+        verificationCompleted: (credential) async {
           try {
             final userCredential = await _auth.signInWithCredential(credential);
             if (userCredential.user != null) {
@@ -150,13 +150,13 @@ class AuthServiceEnhanced {
             onError('Ошибка автоматической верификации: $e');
           }
         },
-        verificationFailed: (FirebaseAuthException e) {
+        verificationFailed: (e) {
           onError('Ошибка верификации: ${e.message}');
         },
-        codeSent: (String verificationId, int? resendToken) {
+        codeSent: (verificationId, resendToken) {
           onCodeSent(verificationId);
         },
-        codeAutoRetrievalTimeout: (String verificationId) {
+        codeAutoRetrievalTimeout: (verificationId) {
           // Таймаут автоматического получения кода
         },
       );

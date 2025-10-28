@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 /// Widget for displaying specialist portfolio in a grid
 class PortfolioGrid extends StatelessWidget {
-  final List<String> portfolio;
-  final Function(String) onImageTap;
 
   const PortfolioGrid(
-      {super.key, required this.portfolio, required this.onImageTap});
+      {required this.portfolio, required this.onImageTap, super.key,});
+  final List<String> portfolio;
+  final Function(String) onImageTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class PortfolioGrid extends StatelessWidget {
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
             SizedBox(height: 8),
             Text('Специалист еще не добавил работы',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: Colors.grey),),
           ],
         ),
       );
@@ -79,7 +79,7 @@ class PortfolioGrid extends StatelessWidget {
                 errorWidget: (context, url, error) => Container(
                   color: Colors.grey[300],
                   child: const Icon(Icons.broken_image,
-                      color: Colors.grey, size: 40),
+                      color: Colors.grey, size: 40,),
                 ),
               ),
 

@@ -1,12 +1,10 @@
+import 'package:event_marketplace_app/providers/specialist_profile_extended_providers.dart';
 import 'package:flutter/material.dart';
-import '../providers/specialist_profile_extended_providers.dart';
 
 /// Виджет фильтрации FAQ
 class FAQFilterWidget extends StatefulWidget {
   const FAQFilterWidget(
-      {super.key,
-      required this.currentFilters,
-      required this.onFiltersChanged});
+      {required this.currentFilters, required this.onFiltersChanged, super.key,});
   final FAQFilters currentFilters;
   final Function(FAQFilters) onFiltersChanged;
 
@@ -50,9 +48,9 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                 title: const Text('Фильтры FAQ'),
                 actions: [
                   TextButton(
-                      onPressed: _clearFilters, child: const Text('Сбросить')),
+                      onPressed: _clearFilters, child: const Text('Сбросить'),),
                   TextButton(
-                      onPressed: _applyFilters, child: const Text('Применить')),
+                      onPressed: _applyFilters, child: const Text('Применить'),),
                 ],
               ),
               Expanded(
@@ -77,7 +75,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       SwitchListTile(
                         title: const Text('Только опубликованные вопросы'),
                         subtitle: const Text(
-                            'Показать только вопросы, доступные клиентам'),
+                            'Показать только вопросы, доступные клиентам',),
                         value: _showPublishedOnly,
                         onChanged: (value) {
                           setState(() {
@@ -92,7 +90,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       SwitchListTile(
                         title: const Text('Фильтр по дате'),
                         subtitle: const Text(
-                            'Показать вопросы за определённый период'),
+                            'Показать вопросы за определённый период',),
                         value: _showByDate,
                         onChanged: (value) {
                           setState(() {
@@ -139,7 +137,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       const Text(
                         'Категории',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 8),
                       _buildCategoryFilters(),
@@ -204,7 +202,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
             children: _selectedCategories.map((category) {
               final displayName = categories
                   .firstWhere((c) => c.$1 == category,
-                      orElse: () => (category, category))
+                      orElse: () => (category, category),)
                   .$2;
               return Chip(
                 label: Text(displayName),

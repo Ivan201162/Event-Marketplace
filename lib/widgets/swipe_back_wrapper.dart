@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 /// Обёртка для поддержки свайпов назад
 class SwipeBackWrapper extends StatelessWidget {
   const SwipeBackWrapper({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.enableSwipeBack = true,
     this.swipeThreshold = 100.0,
     this.onSwipeBack,
@@ -129,7 +128,7 @@ class QuickHomeButton extends StatelessWidget {
 /// Виджет для быстрого доступа к профилю
 class QuickProfileButton extends StatelessWidget {
   const QuickProfileButton(
-      {super.key, this.icon = Icons.person, this.tooltip = 'Профиль'});
+      {super.key, this.icon = Icons.person, this.tooltip = 'Профиль',});
 
   final IconData icon;
   final String tooltip;
@@ -224,12 +223,12 @@ class QuickNavigationBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon,
-                size: 24, color: Theme.of(context).colorScheme.onSurface),
+                size: 24, color: Theme.of(context).colorScheme.onSurface,),
             const SizedBox(height: 4),
             Text(label,
                 style: TextStyle(
                     fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface)),
+                    color: Theme.of(context).colorScheme.onSurface,),),
           ],
         ),
       );

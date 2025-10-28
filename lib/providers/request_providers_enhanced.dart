@@ -1,21 +1,20 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:event_marketplace_app/models/request_enhanced.dart';
+import 'package:event_marketplace_app/services/request_service_enhanced.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../models/request_enhanced.dart';
-import '../services/request_service_enhanced.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для получения заявок
 final requestsProvider =
     FutureProvider.family<List<RequestEnhanced>, RequestFilters?>(
   (ref, filters) async {
-    return await RequestServiceEnhanced.getRequests(filters: filters);
+    return RequestServiceEnhanced.getRequests(filters: filters);
   },
 );
 
 /// Провайдер для получения заявки по ID
 final requestByIdProvider = FutureProvider.family<RequestEnhanced?, String>(
   (ref, requestId) async {
-    return await RequestServiceEnhanced.getRequestById(requestId);
+    return RequestServiceEnhanced.getRequestById(requestId);
   },
 );
 
@@ -25,7 +24,7 @@ final userRequestsProvider = FutureProvider<List<RequestEnhanced>>(
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return [];
 
-    return await RequestServiceEnhanced.getUserRequests(user.uid);
+    return RequestServiceEnhanced.getUserRequests(user.uid);
   },
 );
 
@@ -38,7 +37,7 @@ final nearbyRequestsProvider =
     final radiusKm = params['radiusKm'] as double;
     final filters = params['filters'] as RequestFilters?;
 
-    return await RequestServiceEnhanced.getNearbyRequests(
+    return RequestServiceEnhanced.getNearbyRequests(
       latitude: latitude,
       longitude: longitude,
       radiusKm: radiusKm,
@@ -88,14 +87,14 @@ final requestSubcategoriesProvider =
         'Портретная',
         'Студийная',
         'Уличная',
-        'Событийная'
+        'Событийная',
       ],
       'Кейтеринг': [
         'Банкет',
         'Фуршет',
         'Кофе-брейк',
         'Детский',
-        'Корпоративный'
+        'Корпоративный',
       ],
       'Музыка': ['Живая музыка', 'DJ', 'Вокал', 'Инструментальная', 'Караоке'],
       'Декор': ['Цветы', 'Шары', 'Свет', 'Ткани', 'Мебель'],
@@ -104,34 +103,34 @@ final requestSubcategoriesProvider =
         'Корпоратив',
         'День рождения',
         'Детский праздник',
-        'Конференция'
+        'Конференция',
       ],
       'Видеосъемка': [
         'Свадебная',
         'Корпоративная',
         'Реклама',
         'Документальная',
-        'Событийная'
+        'Событийная',
       ],
       'Анимация': [
         'Детская',
         'Взрослая',
         'Корпоративная',
         'Свадебная',
-        'Тематическая'
+        'Тематическая',
       ],
       'Транспорт': [
         'Автомобиль',
         'Микроавтобус',
         'Автобус',
         'Лимузин',
-        'Мотоцикл'
+        'Мотоцикл',
       ],
       'Безопасность': [
         'Охрана',
         'Контроль доступа',
         'Видеонаблюдение',
-        'Пожарная безопасность'
+        'Пожарная безопасность',
       ],
       'Другое': ['Услуги', 'Консультации', 'Обучение', 'Ремонт', 'Доставка'],
     };
@@ -254,9 +253,9 @@ final userRequestStatsProvider = FutureProvider<Map<String, dynamic>>(
           userRequests.where((r) => r.status == RequestStatus.completed).length,
       'cancelledRequests':
           userRequests.where((r) => r.status == RequestStatus.cancelled).length,
-      'totalBudget': userRequests.fold(0.0, (sum, r) => sum + r.budget),
+      'totalBudget': userRequests.fold(0, (sum, r) => sum + r.budget),
       'averageBudget': userRequests.isNotEmpty
-          ? userRequests.fold(0.0, (sum, r) => sum + r.budget) /
+          ? userRequests.fold(0, (sum, r) => sum + r.budget) /
               userRequests.length
           : 0.0,
       'categories': userRequests.map((r) => r.category).toSet().toList(),
@@ -281,8 +280,8 @@ final requestNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>(
             .map((doc) => {
                   'id': doc.id,
                   ...doc.data(),
-                })
-            .toList());
+                },)
+            .toList(),);
   },
 );
 
@@ -308,7 +307,6 @@ class RequestFiltersNotifier extends StateNotifier<RequestFilters> {
   void updateCategory(String? category) {
     state = RequestFilters(
       category: category,
-      subcategory: null, // Сбрасываем подкатегорию при смене категории
       city: state.city,
       minBudget: state.minBudget,
       maxBudget: state.maxBudget,

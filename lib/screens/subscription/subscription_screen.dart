@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/config/payment_config.dart';
+import 'package:event_marketplace_app/models/subscription.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/widgets/subscription/subscription_plan_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../config/payment_config.dart';
-import '../../models/subscription.dart';
-import '../../services/payment_service.dart';
-import '../../widgets/subscription/subscription_plan_card.dart';
-
 class SubscriptionScreen extends ConsumerStatefulWidget {
-  const SubscriptionScreen({super.key, required this.userId});
+  const SubscriptionScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -66,7 +65,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -142,7 +141,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),),
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
@@ -151,7 +150,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                                 ? 'Активировать бесплатный тариф'
                                 : 'Оплатить ${PaymentConfig.subscriptionPlans[_selectedPlan.toString().split('.').last]} ₽/мес',
                             style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 18, fontWeight: FontWeight.bold,),
                           ),
                   ),
                 ),
@@ -170,7 +169,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                          borderRadius: BorderRadius.circular(12),),
                     ),
                     child: const Text(
                       'Отменить подписку',
@@ -314,7 +313,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Нет')),
+              child: const Text('Нет'),),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Да, отменить'),
@@ -328,7 +327,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       // For now, just show a success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Подписка отменена'), backgroundColor: Colors.green),
+            content: Text('Подписка отменена'), backgroundColor: Colors.green,),
       );
     }
   }
@@ -345,11 +344,11 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           ],
         ),
         content: Text(
-            'Подписка ${_getPlanName(_selectedPlan!)} успешно активирована!'),
+            'Подписка ${_getPlanName(_selectedPlan!)} успешно активирована!',),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отлично')),
+              child: const Text('Отлично'),),
         ],
       ),
     );
@@ -373,7 +372,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Понятно')),
+              child: const Text('Понятно'),),
         ],
       ),
     );

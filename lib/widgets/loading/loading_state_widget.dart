@@ -1,6 +1,5 @@
+import 'package:event_marketplace_app/widgets/loading/loading_indicators.dart';
 import 'package:flutter/material.dart';
-
-import 'loading_indicators.dart';
 
 /// Виджет для отображения состояния загрузки
 class LoadingStateWidget extends StatelessWidget {
@@ -147,12 +146,12 @@ class _SkeletonShimmerState extends State<_SkeletonShimmer>
       vsync: this,
     );
     _animation = Tween<double>(
-      begin: -1.0,
-      end: 2.0,
+      begin: -1,
+      end: 2,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
-    ));
+    ),);
     _controller.repeat();
   }
 
@@ -170,8 +169,6 @@ class _SkeletonShimmerState extends State<_SkeletonShimmer>
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
               colors: [
                 Colors.grey[300]!,
                 Colors.grey[100]!,
@@ -193,8 +190,7 @@ class _SkeletonShimmerState extends State<_SkeletonShimmer>
 /// Виджет для отображения состояния загрузки с прогрессом
 class ProgressLoadingWidget extends StatelessWidget {
   const ProgressLoadingWidget({
-    super.key,
-    required this.progress,
+    required this.progress, super.key,
     this.message,
     this.color,
     this.backgroundColor,

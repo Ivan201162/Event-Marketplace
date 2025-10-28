@@ -180,12 +180,12 @@ class _PulseLoadingIndicatorState extends State<_PulseLoadingIndicator>
       vsync: this,
     );
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
-    ));
+    ),);
     _controller.repeat(reverse: true);
   }
 
@@ -243,10 +243,10 @@ class _WaveLoadingIndicatorState extends State<_WaveLoadingIndicator>
       ),
     );
     _animations = _controllers.map((controller) {
-      return Tween<double>(begin: 0.0, end: 1.0).animate(controller);
+      return Tween<double>(begin: 0, end: 1).animate(controller);
     }).toList();
 
-    for (int i = 0; i < _controllers.length; i++) {
+    for (var i = 0; i < _controllers.length; i++) {
       Future.delayed(Duration(milliseconds: i * 200), () {
         if (mounted) {
           _controllers[i].repeat(reverse: true);
@@ -314,7 +314,7 @@ class _DotsLoadingIndicatorState extends State<_DotsLoadingIndicator>
       vsync: this,
     );
     _animations = List.generate(3, (index) {
-      return Tween<double>(begin: 0.0, end: 1.0).animate(
+      return Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(
           parent: _controller,
           curve: Interval(

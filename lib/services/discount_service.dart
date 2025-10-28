@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking_discount.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../models/booking_discount.dart';
 
 /// Сервис для работы со скидками
 class DiscountService {
@@ -48,7 +48,7 @@ class DiscountService {
 
   /// Принять скидку
   Future<void> acceptDiscount(
-      {required String bookingId, required String customerId}) async {
+      {required String bookingId, required String customerId,}) async {
     try {
       final now = DateTime.now();
 
@@ -81,7 +81,7 @@ class DiscountService {
 
       // Отправляем уведомление специалисту
       await _sendDiscountAcceptedNotification(
-          bookingData['specialistId'], updatedDiscount);
+          bookingData['specialistId'], updatedDiscount,);
 
       // Логируем принятие скидки
       await _logDiscountAcceptance(bookingId, customerId, updatedDiscount);
@@ -122,7 +122,7 @@ class DiscountService {
 
       // Отправляем уведомление специалисту
       await _sendDiscountRejectedNotification(
-          bookingData['specialistId'], reason);
+          bookingData['specialistId'], reason,);
 
       // Логируем отклонение скидки
       await _logDiscountRejection(bookingId, customerId, reason);
@@ -164,7 +164,7 @@ class DiscountService {
 
   /// Получить статистику скидок для специалиста
   Future<Map<String, dynamic>> getSpecialistDiscountStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final snapshot = await _firestore
           .collection('bookings')
@@ -192,16 +192,13 @@ class DiscountService {
             if (discount.savings != null) {
               totalSavings += discount.savings!;
             }
-            break;
           case DiscountStatus.expired:
             expired++;
-            break;
           case DiscountStatus.pending:
             // Считаем как отклоненные, если истекли
             if (discount.isExpired) {
               expired++;
             }
-            break;
           case DiscountStatus.notOffered:
             break;
         }
@@ -226,7 +223,7 @@ class DiscountService {
 
   /// Отправить уведомление о предложении скидки
   Future<void> _sendDiscountNotification(
-      String customerId, BookingDiscount discount) async {
+      String customerId, BookingDiscount discount,) async {
     try {
       // Получаем FCM токены клиента
       final customerDoc =
@@ -315,7 +312,7 @@ class DiscountService {
 
   /// Отправить уведомление об отклонении скидки
   Future<void> _sendDiscountRejectedNotification(
-      String specialistId, String? reason) async {
+      String specialistId, String? reason,) async {
     try {
       // Получаем FCM токены специалиста
       final specialistDoc =
@@ -394,7 +391,7 @@ class DiscountService {
 
   /// Логировать отклонение скидки
   Future<void> _logDiscountRejection(
-      String bookingId, String customerId, String? reason) async {
+      String bookingId, String customerId, String? reason,) async {
     try {
       await _firestore.collection('discountLogs').add({
         'bookingId': bookingId,

@@ -1,6 +1,7 @@
 import 'dart:convert';
+
+import 'package:event_marketplace_app/test_data/mock_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../test_data/mock_data.dart';
 
 /// Утилита для заполнения локальных данных
 class LocalDataSeeder {
@@ -44,19 +45,19 @@ class LocalDataSeeder {
           'id': 'cat_3',
           'name': 'Фотографы',
           'icon': 'camera_alt',
-          'color': 0xFFFF9800
+          'color': 0xFFFF9800,
         },
         {
           'id': 'cat_4',
           'name': 'Видеографы',
           'icon': 'videocam',
-          'color': 0xFFF44336
+          'color': 0xFFF44336,
         },
         {
           'id': 'cat_5',
           'name': 'Декораторы',
           'icon': 'palette',
-          'color': 0xFF4CAF50
+          'color': 0xFF4CAF50,
         },
         {
           'id': 'cat_6',
@@ -68,25 +69,25 @@ class LocalDataSeeder {
           'id': 'cat_7',
           'name': 'Организатор мероприятий',
           'icon': 'event',
-          'color': 0xFF3F51B5
+          'color': 0xFF3F51B5,
         },
         {
           'id': 'cat_8',
           'name': 'Музыканты',
           'icon': 'music_note',
-          'color': 0xFFE91E63
+          'color': 0xFFE91E63,
         },
         {
           'id': 'cat_9',
           'name': 'Танцоры',
           'icon': 'dance',
-          'color': 0xFF795548
+          'color': 0xFF795548,
         },
         {
           'id': 'cat_10',
           'name': 'Кейтеринг',
           'icon': 'restaurant',
-          'color': 0xFF607D8B
+          'color': 0xFF607D8B,
         },
       ],
       'requests': [

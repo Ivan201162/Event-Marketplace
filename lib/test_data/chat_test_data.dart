@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../services/chat_service.dart';
-import '../services/firebase_auth_service.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
+import 'package:event_marketplace_app/services/firebase_auth_service.dart';
 
 /// Генератор тестовых данных для чатов
 class ChatTestDataGenerator {
@@ -127,7 +127,7 @@ class ChatTestDataGenerator {
             'Здравствуйте! Меня интересует проведение свадьбы на 50 человек.',
         'status': 'read',
         'timestamp': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(hours: 2))),
+            DateTime.now().subtract(const Duration(hours: 2)),),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -196,7 +196,7 @@ class ChatTestDataGenerator {
             'https://via.placeholder.com/200x150/FF6B6B/FFFFFF?text=Video+Thumb',
         'status': 'read',
         'timestamp': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(minutes: 45))),
+            DateTime.now().subtract(const Duration(minutes: 45)),),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -212,7 +212,7 @@ class ChatTestDataGenerator {
       'lastMessageContent': 'Видео с предыдущей свадьбы',
       'lastMessageType': 'video',
       'lastMessageTime': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 45))),
+          DateTime.now().subtract(const Duration(minutes: 45)),),
       'lastMessageSenderId': specialistId,
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -235,7 +235,7 @@ class ChatTestDataGenerator {
         'content': 'Привет! Нужен фотограф на свадьбу 15 июня.',
         'status': 'read',
         'timestamp': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(hours: 3))),
+            DateTime.now().subtract(const Duration(hours: 3)),),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -304,7 +304,7 @@ class ChatTestDataGenerator {
             'https://via.placeholder.com/200x150/96CEB4/FFFFFF?text=Shooting+Thumb',
         'status': 'read',
         'timestamp': Timestamp.fromDate(
-            DateTime.now().subtract(const Duration(minutes: 30))),
+            DateTime.now().subtract(const Duration(minutes: 30)),),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -320,7 +320,7 @@ class ChatTestDataGenerator {
       'lastMessageContent': 'Свадебная съемка - пример',
       'lastMessageType': 'video',
       'lastMessageTime': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 30))),
+          DateTime.now().subtract(const Duration(minutes: 30)),),
       'lastMessageSenderId': specialistId,
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -356,7 +356,7 @@ class ChatTestDataGenerator {
       final testUserIds = [
         'test_customer_001',
         'test_specialist_001',
-        'test_specialist_002'
+        'test_specialist_002',
       ];
       for (final userId in testUserIds) {
         await _firestore.collection('users').doc(userId).delete();
@@ -370,7 +370,7 @@ class ChatTestDataGenerator {
 
   /// Создать дополнительные тестовые сообщения
   Future<void> addMoreTestMessages(
-      String chatId, String senderId, String senderName) async {
+      String chatId, String senderId, String senderName,) async {
     final additionalMessages = [
       {
         'chatId': chatId,

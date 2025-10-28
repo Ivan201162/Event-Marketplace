@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/specialist_recommendation.dart';
+import 'package:event_marketplace_app/models/subscription.dart';
+import 'package:event_marketplace_app/models/subscription_notification.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_recommendation.dart';
-import '../models/subscription.dart';
-import '../models/subscription_notification.dart';
-import '../services/subscription_service.dart';
 
 /// Провайдер сервиса подписок
 final subscriptionServiceProvider =

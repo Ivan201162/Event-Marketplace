@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
 
 /// Типы событий аналитики
 enum AnalyticsEventType {
@@ -60,8 +60,7 @@ enum AnalyticsEventType {
 class AnalyticsEvent {
   const AnalyticsEvent({
     required this.type,
-    this.parameters = const {},
-    required this.timestamp,
+    required this.timestamp, this.parameters = const {},
     this.userId,
     this.sessionId,
   });
@@ -149,7 +148,7 @@ class AnalyticsService {
   Future<void> clearUserId() async {
     if (!isAvailable) {
       SafeLog.info(
-          'AnalyticsService: clearUserId called but analytics disabled');
+          'AnalyticsService: clearUserId called but analytics disabled',);
       return;
     }
 
@@ -166,7 +165,7 @@ class AnalyticsService {
   Future<void> setUserProperties(Map<String, String> properties) async {
     if (!isAvailable) {
       SafeLog.info(
-          'AnalyticsService: setUserProperties called but analytics disabled');
+          'AnalyticsService: setUserProperties called but analytics disabled',);
       return;
     }
 
@@ -177,7 +176,7 @@ class AnalyticsService {
       SafeLog.info('AnalyticsService: User properties set: $properties');
     } catch (e, stackTrace) {
       SafeLog.error(
-          'AnalyticsService: Error setting user properties', e, stackTrace);
+          'AnalyticsService: Error setting user properties', e, stackTrace,);
     }
   }
 
@@ -185,7 +184,7 @@ class AnalyticsService {
   Future<void> logEvent(AnalyticsEvent event) async {
     if (!isAvailable) {
       SafeLog.info(
-          'AnalyticsService: logEvent called but analytics disabled: ${event.type.name}');
+          'AnalyticsService: logEvent called but analytics disabled: ${event.type.name}',);
       return;
     }
 
@@ -206,7 +205,7 @@ class AnalyticsService {
 
   /// Отправить событие с параметрами
   Future<void> logEventWithParams(
-      AnalyticsEventType type, Map<String, dynamic> parameters) async {
+      AnalyticsEventType type, Map<String, dynamic> parameters,) async {
     final event = AnalyticsEvent(
       type: type,
       parameters: parameters,
@@ -225,10 +224,10 @@ class AnalyticsService {
 
   /// Отправить событие просмотра экрана
   Future<void> logScreenView(String screenName,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, dynamic>? parameters,}) async {
     if (!isAvailable) {
       SafeLog.info(
-          'AnalyticsService: logScreenView called but analytics disabled: $screenName');
+          'AnalyticsService: logScreenView called but analytics disabled: $screenName',);
       return;
     }
 
@@ -242,7 +241,7 @@ class AnalyticsService {
       SafeLog.info('AnalyticsService: Screen view logged: $screenName');
     } catch (e, stackTrace) {
       SafeLog.error(
-          'AnalyticsService: Error logging screen view', e, stackTrace);
+          'AnalyticsService: Error logging screen view', e, stackTrace,);
     }
   }
 
@@ -255,7 +254,7 @@ class AnalyticsService {
   }) async {
     if (!isAvailable) {
       SafeLog.info(
-          'AnalyticsService: logPurchase called but analytics disabled');
+          'AnalyticsService: logPurchase called but analytics disabled',);
       return;
     }
 
@@ -275,10 +274,10 @@ class AnalyticsService {
 
   /// Отправить событие поиска
   Future<void> logSearch(
-      {required String searchTerm, Map<String, dynamic>? parameters}) async {
+      {required String searchTerm, Map<String, dynamic>? parameters,}) async {
     if (!isAvailable) {
       SafeLog.info(
-          'AnalyticsService: logSearch called but analytics disabled: $searchTerm');
+          'AnalyticsService: logSearch called but analytics disabled: $searchTerm',);
       return;
     }
 
@@ -346,7 +345,7 @@ class AnalyticsService {
 
   /// Отправить событие аутентификации
   Future<void> logAuthEvent(AnalyticsEventType type,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, dynamic>? parameters,}) async {
     await logEventWithParams(type, parameters ?? {});
   }
 
@@ -417,7 +416,7 @@ class AnalyticsService {
 
   /// Отправить пользовательское событие
   Future<void> logCustomEvent(
-      {required String eventName, Map<String, dynamic>? parameters}) async {
+      {required String eventName, Map<String, dynamic>? parameters,}) async {
     await logEventWithParams(AnalyticsEventType.customEvent, {
       'custom_event_name': eventName,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -433,7 +432,7 @@ class AnalyticsService {
 
   /// Преобразовать параметры для Firebase Analytics
   Map<String, dynamic> _convertToFirebaseParams(
-      Map<String, dynamic> parameters) {
+      Map<String, dynamic> parameters,) {
     final converted = <String, dynamic>{};
 
     for (final entry in parameters.entries) {

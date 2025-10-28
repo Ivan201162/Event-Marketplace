@@ -1,16 +1,15 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/screens/create_idea_screen.dart';
+import 'package:event_marketplace_app/screens/idea_categories_screen.dart';
+import 'package:event_marketplace_app/screens/idea_collections_screen.dart';
+import 'package:event_marketplace_app/screens/idea_detail_screen.dart';
+import 'package:event_marketplace_app/screens/idea_search_screen.dart';
+import 'package:event_marketplace_app/screens/saved_ideas_screen.dart';
+import 'package:event_marketplace_app/screens/top_ideas_screen.dart';
+import 'package:event_marketplace_app/services/idea_service.dart';
+import 'package:event_marketplace_app/widgets/idea_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/idea.dart';
-import '../services/idea_service.dart';
-import '../widgets/idea_widget.dart';
-import 'create_idea_screen.dart';
-import 'idea_categories_screen.dart';
-import 'idea_collections_screen.dart';
-import 'idea_detail_screen.dart';
-import 'idea_search_screen.dart';
-import 'saved_ideas_screen.dart';
-import 'top_ideas_screen.dart';
 
 /// Главный экран идей
 class IdeasMainScreen extends ConsumerStatefulWidget {
@@ -30,10 +29,10 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
           title: const Text('Идеи'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.search), onPressed: _showSearchScreen),
+                icon: const Icon(Icons.search), onPressed: _showSearchScreen,),
             IconButton(
                 icon: const Icon(Icons.collections_bookmark),
-                onPressed: _showCollectionsScreen),
+                onPressed: _showCollectionsScreen,),
           ],
         ),
         body: Column(
@@ -110,7 +109,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12, fontWeight: FontWeight.w500,),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -132,7 +131,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
                 ),
                 const Spacer(),
                 TextButton(
-                    onPressed: _showTopIdeasScreen, child: const Text('Все')),
+                    onPressed: _showTopIdeasScreen, child: const Text('Все'),),
               ],
             ),
             const SizedBox(height: 8),
@@ -184,10 +183,10 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
               children: [
                 const Text('Категории',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 const Spacer(),
                 TextButton(
-                    onPressed: _showCategoriesScreen, child: const Text('Все')),
+                    onPressed: _showCategoriesScreen, child: const Text('Все'),),
               ],
             ),
             const SizedBox(height: 8),
@@ -220,12 +219,12 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(_getCategoryIcon(category),
-                    color: _getCategoryColor(category), size: 24),
+                    color: _getCategoryColor(category), size: 24,),
                 const SizedBox(height: 4),
                 Text(
                   category,
                   style: const TextStyle(
-                      fontSize: 10, fontWeight: FontWeight.w500),
+                      fontSize: 10, fontWeight: FontWeight.w500,),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -242,7 +241,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Последние идеи',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder<List<Idea>>(
@@ -332,7 +331,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   void _createIdea() {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (context) => CreateIdeaScreen()),
+        MaterialPageRoute<void>(builder: (context) => const CreateIdeaScreen()),
       );
     }
   }
@@ -364,21 +363,21 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Идея скопирована в буфер обмена')));
+        const SnackBar(content: Text('Идея скопирована в буфер обмена')),);
   }
 
   void _showTopIdeasScreen() {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => TopIdeasScreen(userId: widget.userId)));
+        builder: (context) => TopIdeasScreen(userId: widget.userId),),);
   }
 
   void _showSavedIdeasScreen() {
     if (widget.userId != null) {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
-            builder: (context) => SavedIdeasScreen(userId: widget.userId!)),
+            builder: (context) => SavedIdeasScreen(userId: widget.userId!),),
       );
     }
   }
@@ -396,7 +395,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   void _showCategoriesScreen() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-          builder: (context) => IdeaCategoriesScreen(userId: widget.userId)),
+          builder: (context) => IdeaCategoriesScreen(userId: widget.userId),),
     );
   }
 
@@ -404,7 +403,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => IdeaSearchScreen(userId: widget.userId)));
+        builder: (context) => IdeaSearchScreen(userId: widget.userId),),);
   }
 
   void _showCategoryIdeas(String category) {

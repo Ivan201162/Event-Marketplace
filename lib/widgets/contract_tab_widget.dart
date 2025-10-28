@@ -1,21 +1,16 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/contract.dart';
+import 'package:event_marketplace_app/services/contract_service.dart';
+import 'package:event_marketplace_app/services/pdf_service.dart';
+import 'package:event_marketplace_app/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../models/contract.dart';
-import '../services/contract_service.dart';
-import '../services/pdf_service.dart';
-import '../services/storage_service.dart';
 
 /// Виджет вкладки договора в деталях бронирования
 class ContractTabWidget extends ConsumerStatefulWidget {
   const ContractTabWidget({
-    super.key,
-    required this.booking,
-    required this.contracts,
-    required this.isLoading,
+    required this.booking, required this.contracts, required this.isLoading, required this.onRefresh, super.key,
     this.errorMessage,
-    required this.onRefresh,
   });
 
   final Booking booking;
@@ -58,10 +53,10 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline,
-                size: 64, color: Theme.of(context).colorScheme.error),
+                size: 64, color: Theme.of(context).colorScheme.error,),
             const SizedBox(height: 16),
             Text('Ошибка загрузки договоров',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 8),
             Text(
               widget.errorMessage!,
@@ -94,14 +89,14 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
             ),
             const SizedBox(height: 16),
             Text('Договор не создан',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: Theme.of(context).textTheme.titleLarge,),
             const SizedBox(height: 8),
             Text(
               'Для данного бронирования договор еще не был сформирован',
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -116,7 +111,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
                       )
                     : const Icon(Icons.add),
                 label: Text(
-                    _isGeneratingContract ? 'Создание...' : 'Создать договор'),
+                    _isGeneratingContract ? 'Создание...' : 'Создать договор',),
               ),
           ],
         ),
@@ -212,7 +207,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
           _buildInfoRow('Срок действия', _formatDate(contract.expiresAt)),
           if (contract.totalAmount != null)
             _buildInfoRow(
-                'Сумма', '${contract.totalAmount!.toStringAsFixed(0)} ₽'),
+                'Сумма', '${contract.totalAmount!.toStringAsFixed(0)} ₽',),
         ],
       );
 
@@ -270,7 +265,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
                 style: Theme.of(
                   context,
                 ).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,),
               ),
             ),
             Expanded(
@@ -311,7 +306,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Договор успешно создан'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -319,7 +314,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания договора: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -351,13 +346,13 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
 
       // Скачиваем файл
       await _storageService.downloadFile(
-          downloadUrl, 'contract_${contract.contractNumber}.pdf');
+          downloadUrl, 'contract_${contract.contractNumber}.pdf',);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Договор успешно скачан'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -365,7 +360,7 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка скачивания договора: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {

@@ -1,16 +1,13 @@
 import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../models/app_user.dart';
-import '../../providers/auth_providers.dart';
-import '../../services/storage_service.dart';
-import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенный экран ленты с исправленными Firestore rules
 class FeedScreenEnhanced extends ConsumerStatefulWidget {
@@ -25,7 +22,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
   final _postController = TextEditingController();
   final _scrollController = ScrollController();
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isCreatingPost = false;
   File? _selectedImage;
   String _selectedFilter = 'Все';
@@ -48,12 +45,12 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -130,7 +127,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
 
       _showSuccess('Пост опубликован!');
     } catch (e) {
-      String errorMessage = 'Ошибка при создании поста';
+      var errorMessage = 'Ошибка при создании поста';
       if (e.toString().contains('permission-denied')) {
         errorMessage = 'Нет прав для создания поста. Проверьте авторизацию.';
       } else if (e.toString().contains('network')) {
@@ -257,10 +254,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
           ),
           const Spacer(),
           IconButton(
-            onPressed: () {
-              // Открыть фильтры
-              _showFilterDialog();
-            },
+            onPressed: _showFilterDialog,
             icon: const Icon(
               Icons.filter_list,
               color: Colors.white,
@@ -488,7 +482,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final doc = snapshot.data!.docs[index];
-              final data = doc.data() as Map<String, dynamic>;
+              final data = doc.data()! as Map<String, dynamic>;
 
               return _buildPostCard(doc.id, data);
             },
@@ -535,9 +529,9 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Пользователь', // TODO: Получить имя из users коллекции
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),

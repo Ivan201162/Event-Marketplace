@@ -1,12 +1,12 @@
+import 'package:event_marketplace_app/models/review.dart';
+import 'package:event_marketplace_app/providers/review_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/review.dart';
-import '../providers/review_providers.dart';
 
 /// Виджет отзыва
 class ReviewCard extends StatelessWidget {
   const ReviewCard(
-      {super.key, required this.review, this.onTap, this.showActions = false});
+      {required this.review, super.key, this.onTap, this.showActions = false,});
   final Review review;
   final VoidCallback? onTap;
   final bool showActions;
@@ -32,10 +32,10 @@ class ReviewCard extends StatelessWidget {
                             ? review.title!
                             : 'Без заголовка',
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
-                    _buildRatingStars(review.rating.round()),
+                    _buildRatingStars(review.rating),
                   ],
                 ),
 
@@ -86,11 +86,11 @@ class ReviewCard extends StatelessWidget {
                       children: [
                         if (review.isVerified) ...[
                           const Icon(Icons.verified,
-                              size: 16, color: Colors.blue),
+                              size: 16, color: Colors.blue,),
                           const SizedBox(width: 4),
                           const Text('Проверен',
                               style:
-                                  TextStyle(fontSize: 12, color: Colors.blue)),
+                                  TextStyle(fontSize: 12, color: Colors.blue),),
                         ],
                         if (!review.isPublic) ...[
                           const SizedBox(width: 8),
@@ -98,7 +98,7 @@ class ReviewCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           const Text('Приватный',
                               style:
-                                  TextStyle(fontSize: 12, color: Colors.grey)),
+                                  TextStyle(fontSize: 12, color: Colors.grey),),
                         ],
                       ],
                     ),
@@ -116,7 +116,7 @@ class ReviewCard extends StatelessWidget {
         children: List.generate(
           5,
           (index) => Icon(index < rating ? Icons.star : Icons.star_border,
-              color: Colors.amber, size: 20),
+              color: Colors.amber, size: 20,),
         ),
       );
 
@@ -128,11 +128,11 @@ class ReviewCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
               color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),),
         ),
         child: Text(tag,
             style: TextStyle(
-                fontSize: 12, color: Theme.of(context).colorScheme.primary)),
+                fontSize: 12, color: Theme.of(context).colorScheme.primary,),),
       );
 
   /// Форматировать дату
@@ -141,7 +141,7 @@ class ReviewCard extends StatelessWidget {
 
 /// Виджет статистики отзывов
 class ReviewStatsWidget extends StatelessWidget {
-  const ReviewStatsWidget({super.key, required this.statistics});
+  const ReviewStatsWidget({required this.statistics, super.key});
   final ReviewStats statistics;
 
   @override
@@ -206,7 +206,7 @@ class ReviewStatsWidget extends StatelessWidget {
           Text(
             statistics.averageRating.toStringAsFixed(1),
             style: const TextStyle(
-                fontSize: 32, fontWeight: FontWeight.bold, color: Colors.amber),
+                fontSize: 32, fontWeight: FontWeight.bold, color: Colors.amber,),
           ),
           _buildRatingStars(statistics.averageRating.round()),
           const SizedBox(height: 4),
@@ -254,7 +254,7 @@ class ReviewStatsWidget extends StatelessWidget {
                     value: percentage / 100,
                     backgroundColor: Colors.grey.withValues(alpha: 0.3),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).colorScheme.primary),
+                        Theme.of(context).colorScheme.primary,),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -275,12 +275,12 @@ class ReviewStatsWidget extends StatelessWidget {
               color: Theme.of(context)
                   .colorScheme
                   .secondary
-                  .withValues(alpha: 0.3)),
+                  .withValues(alpha: 0.3),),
         ),
         child: Text(
           tag,
           style: TextStyle(
-              fontSize: 12, color: Theme.of(context).colorScheme.secondary),
+              fontSize: 12, color: Theme.of(context).colorScheme.secondary,),
         ),
       );
 
@@ -320,7 +320,7 @@ class ReviewStatsWidget extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: color),
+                fontSize: 14, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(
             label,
@@ -341,7 +341,7 @@ class ReviewStatsWidget extends StatelessWidget {
         children: List.generate(
           5,
           (index) => Icon(index < rating ? Icons.star : Icons.star_border,
-              color: Colors.amber, size: 16),
+              color: Colors.amber, size: 16,),
         ),
       );
 
@@ -377,10 +377,7 @@ class ReviewStatsWidget extends StatelessWidget {
 /// Виджет формы отзыва
 class ReviewFormWidget extends ConsumerStatefulWidget {
   const ReviewFormWidget({
-    super.key,
-    required this.bookingId,
-    required this.customerId,
-    required this.specialistId,
+    required this.bookingId, required this.customerId, required this.specialistId, super.key,
     this.onSubmit,
   });
   final String bookingId;
@@ -487,7 +484,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               child: ElevatedButton(
                 onPressed: (formState.isSubmitting ||
                         !((ref.read<ReviewFormNotifier>(
-                                reviewFormProvider.notifier) as dynamic)
+                                reviewFormProvider.notifier,) as dynamic)
                             .isValid as bool))
                     ? null
                     : _submitReview,
@@ -512,7 +509,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Оценка',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
           const SizedBox(height: 8),
           Row(
             children: List.generate(5, (index) {
@@ -562,7 +559,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
           'Рекомендую',
           'Быстро',
           'Качественно',
-          'Профессионально'
+          'Профессионально',
         ];
       default:
         return [];
@@ -609,7 +606,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
 
   /// Построить секцию настроек
   Widget _buildSettingsSection(
-          BuildContext context, ReviewFormState formState) =>
+          BuildContext context, ReviewFormState formState,) =>
       Column(
         children: [
           SwitchListTile(
@@ -636,8 +633,8 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         clientId: 'current_user_id',
         clientName: 'Current User',
         specialistName: 'Specialist Name',
-        rating: (ref.read(reviewFormProvider)).rating.toInt(),
-        comment: (ref.read(reviewFormProvider)).comment,
+        rating: ref.read(reviewFormProvider).rating,
+        comment: ref.read(reviewFormProvider).comment,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -679,7 +676,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
 /// Виджет списка отзывов
 class ReviewListWidget extends ConsumerWidget {
   const ReviewListWidget(
-      {super.key, required this.specialistId, this.showAll = false});
+      {required this.specialistId, super.key, this.showAll = false,});
   final String specialistId;
   final bool showAll;
 
@@ -697,7 +694,7 @@ class ReviewListWidget extends ConsumerWidget {
                 Icon(Icons.rate_review, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
                 Text('Нет отзывов',
-                    style: TextStyle(fontSize: 18, color: Colors.grey)),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),),
                 SizedBox(height: 8),
                 Text(
                   'Отзывы появятся после завершения заявок',

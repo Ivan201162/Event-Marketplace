@@ -1,13 +1,10 @@
+import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
+import 'package:event_marketplace_app/screens/feed/feed_screen_improved.dart';
+import 'package:event_marketplace_app/screens/home/home_screen_simple.dart';
+import 'package:event_marketplace_app/screens/ideas/ideas_screen.dart';
+import 'package:event_marketplace_app/screens/requests/requests_screen_improved.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'chat/chat_list_screen_improved.dart';
-import 'feed/feed_screen_improved.dart';
-import 'home/home_screen_simple.dart';
-import 'ideas/ideas_screen.dart';
-import 'monetization/monetization_screen.dart';
-import 'notifications/notifications_screen.dart';
-import 'requests/requests_screen_improved.dart';
 
 /// Main navigation screen with bottom navigation
 class MainNavigationScreen extends ConsumerStatefulWidget {
@@ -66,12 +63,12 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 1.1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
     _pageController = PageController(initialPage: _currentIndex);
   }
 
@@ -141,7 +138,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                       duration: const Duration(milliseconds: 200),
                       curve: Curves.easeInOut,
                       padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 12),
+                          vertical: 8, horizontal: 12,),
                       decoration: BoxDecoration(
                         gradient: isActive
                             ? LinearGradient(
@@ -161,7 +158,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                                 color: Theme.of(context)
                                     .primaryColor
                                     .withValues(alpha: 0.3),
-                                width: 1,
                               )
                             : null,
                       ),
@@ -211,10 +207,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
 
 /// Navigation item model
 class NavigationItem {
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  final Widget screen;
 
   const NavigationItem({
     required this.icon,
@@ -222,4 +214,8 @@ class NavigationItem {
     required this.label,
     required this.screen,
   });
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final Widget screen;
 }

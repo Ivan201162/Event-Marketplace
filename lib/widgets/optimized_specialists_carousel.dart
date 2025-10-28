@@ -1,21 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/optimized_data_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/specialist.dart';
-import '../providers/optimized_data_providers.dart';
-
 /// Оптимизированный карусель специалистов с реальными данными
 class OptimizedSpecialistsCarousel extends ConsumerWidget {
-  final bool isCountryWide;
-  final String? city;
 
   const OptimizedSpecialistsCarousel({
-    super.key,
-    required this.isCountryWide,
+    required this.isCountryWide, super.key,
     this.city,
   });
+  final bool isCountryWide;
+  final String? city;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,7 +75,7 @@ class OptimizedSpecialistsCarousel extends ConsumerWidget {
                               .withValues(alpha: 0.1),
                           backgroundImage: specialist.avatarUrl != null
                               ? CachedNetworkImageProvider(
-                                  specialist.avatarUrl!)
+                                  specialist.avatarUrl!,)
                               : null,
                           child: specialist.avatarUrl == null
                               ? Text(
@@ -102,7 +100,7 @@ class OptimizedSpecialistsCarousel extends ConsumerWidget {
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(8),
                                 border:
-                                    Border.all(color: Colors.white, width: 1),
+                                    Border.all(color: Colors.white),
                               ),
                               child: const Icon(
                                 Icons.check,
@@ -117,7 +115,7 @@ class OptimizedSpecialistsCarousel extends ConsumerWidget {
                     if (specialist.isAvailable)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                            horizontal: 6, vertical: 2,),
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(8),

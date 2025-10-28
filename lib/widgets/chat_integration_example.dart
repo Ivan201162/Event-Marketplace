@@ -1,17 +1,13 @@
+import 'package:event_marketplace_app/widgets/notification_badge.dart';
+import 'package:event_marketplace_app/widgets/propose_specialists_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'notification_badge.dart';
-import 'propose_specialists_button.dart';
 
 /// Пример интеграции кнопки предложения специалистов в чат
 class ChatWithProposalButton extends StatelessWidget {
   const ChatWithProposalButton({
-    super.key,
-    required this.customerId,
-    required this.eventId,
+    required this.customerId, required this.eventId, required this.chatMessages, super.key,
     this.message,
-    required this.chatMessages,
   });
   final String customerId;
   final String eventId;
@@ -27,7 +23,7 @@ class ChatWithProposalButton extends StatelessWidget {
         // Кнопка предложения специалистов (только для организаторов)
         if (currentUser != null && _isOrganizer(currentUser.uid))
           ProposeSpecialistsButton(
-              customerId: customerId, eventId: eventId, message: message),
+              customerId: customerId, eventId: eventId, message: message,),
 
         // Основной чат
         Expanded(child: chatMessages),
@@ -48,7 +44,7 @@ class ChatWithProposalButton extends StatelessWidget {
 class ChatAppBarWithNotifications extends StatelessWidget
     implements PreferredSizeWidget {
   const ChatAppBarWithNotifications(
-      {super.key, required this.title, this.userId});
+      {required this.title, super.key, this.userId,});
   final String title;
   final String? userId;
 
@@ -91,7 +87,7 @@ class ChatAppBarWithNotifications extends StatelessWidget
 /// Пример использования в экране чата
 class ChatScreenExample extends StatelessWidget {
   const ChatScreenExample(
-      {super.key, required this.customerId, required this.eventId});
+      {required this.customerId, required this.eventId, super.key,});
   final String customerId;
   final String eventId;
 

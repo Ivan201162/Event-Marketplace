@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../models/common_types.dart';
-import '../../../models/specialist.dart';
-import '../../../services/specialist_service.dart';
-
 /// Кнопка для создания тест-специалиста с улучшенной обработкой ошибок
 class CreateTestSpecialistButton extends ConsumerStatefulWidget {
   const CreateTestSpecialistButton(
-      {super.key, this.onSpecialistCreated, this.specialistType});
+      {super.key, this.onSpecialistCreated, this.specialistType,});
   final VoidCallback? onSpecialistCreated;
   final String? specialistType;
 
@@ -42,7 +41,7 @@ class _CreateTestSpecialistButtonState
                 border: Border.all(color: Colors.red),
               ),
               child: Text(_errorMessage!,
-                  style: const TextStyle(color: Colors.red)),
+                  style: const TextStyle(color: Colors.red),),
             ),
           if (_successMessage != null)
             Container(
@@ -55,7 +54,7 @@ class _CreateTestSpecialistButtonState
                 border: Border.all(color: Colors.green),
               ),
               child: Text(_successMessage!,
-                  style: const TextStyle(color: Colors.green)),
+                  style: const TextStyle(color: Colors.green),),
             ),
           SizedBox(
             width: double.infinity,
@@ -69,7 +68,7 @@ class _CreateTestSpecialistButtonState
                     )
                   : const Icon(Icons.person_add),
               label: Text(
-                  _isCreating ? 'Создание...' : 'Создать тест-специалиста'),
+                  _isCreating ? 'Создание...' : 'Создать тест-специалиста',),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
@@ -174,7 +173,7 @@ class _CreateTestSpecialistButtonState
 
   /// Создание фотографа
   Specialist _createPhotographer(
-          String specialistId, String userId, DateTime now) =>
+          String specialistId, String userId, DateTime now,) =>
       Specialist(
         id: specialistId,
         userId: userId,
@@ -213,7 +212,7 @@ class _CreateTestSpecialistButtonState
 
   /// Создание видеографа
   Specialist _createVideographer(
-          String specialistId, String userId, DateTime now) =>
+          String specialistId, String userId, DateTime now,) =>
       Specialist(
         id: specialistId,
         userId: userId,
@@ -355,7 +354,7 @@ class _CreateTestSpecialistButtonState
         updatedAt: now,
         contacts: const {
           'Телефон': '+7 (999) 000-00-00',
-          'Email': 'test@example.com'
+          'Email': 'test@example.com',
         },
         servicesWithPrices: const {'Тестовая услуга': 5000.0},
       );

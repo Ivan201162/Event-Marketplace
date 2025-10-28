@@ -1,11 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/enhanced_idea.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../models/enhanced_idea.dart';
 
 /// Сервис для работы с расширенными идеями
 class EnhancedIdeasService {
@@ -139,7 +138,7 @@ class EnhancedIdeasService {
   }) async {
     try {
       final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (title != null) updates['title'] = title;
@@ -443,7 +442,7 @@ class EnhancedIdeasService {
 
   /// Получить популярные идеи
   Future<List<EnhancedIdea>> getPopularIdeas(
-      {int limit = 10, IdeaType? type}) async {
+      {int limit = 10, IdeaType? type,}) async {
     try {
       Query query = _firestore
           .collection('ideas')
@@ -507,7 +506,7 @@ class EnhancedIdeasService {
 
   /// Получить коллекции пользователя
   Future<List<IdeaCollection>> getUserCollections(
-      {required String userId, int limit = 20}) async {
+      {required String userId, int limit = 20,}) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('idea_collections')
@@ -543,7 +542,7 @@ class EnhancedIdeasService {
 
   /// Удалить идею из коллекции
   Future<void> removeIdeaFromCollection(
-      String collectionId, String ideaId) async {
+      String collectionId, String ideaId,) async {
     try {
       await _firestore.collection('idea_collections').doc(collectionId).update({
         'ideas': FieldValue.arrayRemove([ideaId]),
@@ -707,7 +706,7 @@ class EnhancedIdeasService {
 
   /// Поделиться идеей в чат
   Future<void> shareIdeaToChat(
-      String ideaId, String chatId, String userId) async {
+      String ideaId, String chatId, String userId,) async {
     try {
       final idea = await getIdeaById(ideaId);
       if (idea == null) {
@@ -773,7 +772,7 @@ class EnhancedIdeasService {
 
   /// Удалить специалиста из идеи
   Future<void> removeSpecialistFromIdea(
-      String ideaId, String specialistId) async {
+      String ideaId, String specialistId,) async {
     try {
       await _firestore.collection('ideas').doc(ideaId).update({
         'specialists': FieldValue.arrayRemove([specialistId]),

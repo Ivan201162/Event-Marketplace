@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/services/upload_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../core/feature_flags.dart';
-import '../services/upload_service.dart';
 
 /// Провайдер сервиса загрузки файлов
 final uploadServiceProvider = Provider<UploadService>((ref) => UploadService());

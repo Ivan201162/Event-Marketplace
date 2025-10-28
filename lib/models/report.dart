@@ -8,9 +8,8 @@ class Report {
     required this.description,
     required this.type,
     required this.category,
-    this.parameters = const {},
+    required this.createdAt, this.parameters = const {},
     this.generatedBy,
-    required this.createdAt,
     this.generatedAt,
     this.status = ReportStatus.pending,
     this.fileUrl,
@@ -334,11 +333,9 @@ class ReportTemplate {
     required this.description,
     required this.type,
     required this.category,
-    this.defaultParameters = const {},
+    required this.createdAt, required this.updatedAt, this.defaultParameters = const {},
     this.requiredParameters = const [],
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из документа Firestore

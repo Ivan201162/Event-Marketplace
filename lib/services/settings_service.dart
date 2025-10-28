@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-
-import '../models/app_settings.dart';
 
 /// Сервис управления настройками и конфигурацией
 class SettingsService {
@@ -283,7 +282,7 @@ class SettingsService {
 
   /// Активировать конфигурацию
   Future<void> activateConfiguration(String configId,
-      {String? activatedBy}) async {
+      {String? activatedBy,}) async {
     try {
       // Деактивируем все конфигурации того же типа
       final configuration = _configurationsCache[configId];
@@ -293,7 +292,7 @@ class SettingsService {
 
       final sameTypeConfigs = _configurationsCache.values
           .where(
-              (config) => config.type == configuration.type && config.isActive)
+              (config) => config.type == configuration.type && config.isActive,)
           .toList();
 
       for (final config in sameTypeConfigs) {
@@ -348,7 +347,7 @@ class SettingsService {
 
   /// Получить историю изменений настроек
   Future<List<SettingsHistory>> getSettingsHistory(String settingKey,
-      {int limit = 50}) async {
+      {int limit = 50,}) async {
     try {
       final snapshot = await _firestore
           .collection('settingsHistory')

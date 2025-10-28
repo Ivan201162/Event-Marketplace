@@ -1,16 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/models/event_idea_category.dart';
+import 'package:event_marketplace_app/services/event_ideas_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../models/event_idea.dart';
-import '../models/event_idea_category.dart';
-import '../services/event_ideas_service.dart';
 
 /// Виджет для выбора идей при создании заявки
 class IdeaSelectorWidget extends ConsumerStatefulWidget {
   const IdeaSelectorWidget({
-    super.key,
-    required this.onIdeasSelected,
+    required this.onIdeasSelected, super.key,
     this.selectedIdeas = const [],
     this.maxSelections = 5,
   });
@@ -68,7 +66,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                 .toLowerCase()
                 .contains(_searchQuery.toLowerCase()) ||
             idea.tags.any((tag) =>
-                tag.toLowerCase().contains(_searchQuery.toLowerCase()));
+                tag.toLowerCase().contains(_searchQuery.toLowerCase()),);
 
         final matchesCategory =
             _selectedCategory == null || idea.category == _selectedCategory!.id;
@@ -111,7 +109,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                 style: Theme.of(
                   context,
                 ).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,),
               ),
             ],
           ),
@@ -126,7 +124,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
           // Выбранные идеи
           if (_selectedIdeas.isNotEmpty) ...[
             _buildSelectedIdeas(),
-            const SizedBox(height: 16)
+            const SizedBox(height: 16),
           ],
 
           // Список идей
@@ -168,7 +166,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: EventIdeaCategory.values.length + 1,
-              itemBuilder: (BuildContext context, int index) {
+              itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
@@ -185,7 +183,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                   );
                 }
 
-                final EventIdeaCategory category =
+                final category =
                     EventIdeaCategory.values[index - 1];
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
@@ -229,8 +227,8 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _selectedIdeas.length,
-              itemBuilder: (BuildContext context, int index) {
-                final EventIdea idea = _selectedIdeas[index];
+              itemBuilder: (context, index) {
+                final idea = _selectedIdeas[index];
                 return Container(
                   width: 100,
                   margin: const EdgeInsets.only(right: 8),
@@ -246,7 +244,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    Container(
+                                    ColoredBox(
                                   color: Theme.of(context)
                                       .colorScheme
                                       .surfaceContainerHighest,
@@ -308,10 +306,10 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
           mainAxisSpacing: 12,
         ),
         itemCount: _filteredIdeas.length,
-        itemBuilder: (BuildContext context, int index) {
-          final EventIdea idea = _filteredIdeas[index];
-          final bool isSelected = _selectedIdeas.contains(idea);
-          final bool canSelect =
+        itemBuilder: (context, index) {
+          final idea = _filteredIdeas[index];
+          final isSelected = _selectedIdeas.contains(idea);
+          final canSelect =
               _selectedIdeas.length < widget.maxSelections || isSelected;
 
           return Stack(
@@ -329,7 +327,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                     ),
                     child: Icon(Icons.check,
                         size: 16,
-                        color: Theme.of(context).colorScheme.onPrimary),
+                        color: Theme.of(context).colorScheme.onPrimary,),
                   ),
                 ),
               if (!canSelect)
@@ -341,7 +339,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                     ),
                     child: const Center(
                         child:
-                            Icon(Icons.block, color: Colors.white, size: 32)),
+                            Icon(Icons.block, color: Colors.white, size: 32),),
                   ),
                 ),
             ],
@@ -364,7 +362,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
             ),
             const SizedBox(height: 8),
             Text(
@@ -372,7 +370,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,),
               textAlign: TextAlign.center,
             ),
           ],
@@ -409,7 +407,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                     child: const Center(child: CircularProgressIndicator()),
                   ),
                   errorWidget: (context, url, error) => Container(
-                      color: Colors.grey[200], child: const Icon(Icons.error)),
+                      color: Colors.grey[200], child: const Icon(Icons.error),),
                 ),
               ),
             // Контент
@@ -421,7 +419,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                   Text(
                     idea.title,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                        fontSize: 16, fontWeight: FontWeight.bold,),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -445,8 +443,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
 /// Диалог выбора идей
 class IdeaSelectorDialog extends StatelessWidget {
   const IdeaSelectorDialog({
-    super.key,
-    required this.onIdeasSelected,
+    required this.onIdeasSelected, super.key,
     this.selectedIdeas = const [],
     this.maxSelections = 5,
   });

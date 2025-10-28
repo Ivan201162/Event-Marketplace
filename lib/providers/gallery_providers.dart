@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/gallery_item.dart';
+import 'package:event_marketplace_app/services/gallery_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/gallery_item.dart';
-import '../services/gallery_service.dart';
 
 /// Провайдер сервиса галереи
 final galleryServiceProvider =

@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 /// Виджет с поддержкой свайпов
 class SwipeableWidget extends StatefulWidget {
   const SwipeableWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.leftAction,
     this.rightAction,
     this.onSwipeLeft,
@@ -35,7 +34,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 200), vsync: this);
+        duration: const Duration(milliseconds: 200), vsync: this,);
     _animation = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(1, 0),
@@ -62,7 +61,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
                   children: [
                     if (widget.leftAction != null)
                       Expanded(
-                        child: Container(
+                        child: ColoredBox(
                           color: Colors.red.withValues(alpha: 0.1),
                           child: widget.leftAction,
                         ),
@@ -70,7 +69,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
                     const Spacer(),
                     if (widget.rightAction != null)
                       Expanded(
-                        child: Container(
+                        child: ColoredBox(
                           color: Colors.green.withValues(alpha: 0.1),
                           child: widget.rightAction,
                         ),
@@ -83,7 +82,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
             AnimatedBuilder(
               animation: _animation,
               builder: (context, child) => Transform.translate(
-                  offset: Offset(_dragExtent, 0), child: widget.child),
+                  offset: Offset(_dragExtent, 0), child: widget.child,),
             ),
           ],
         ),
@@ -152,8 +151,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
 /// Виджет с поддержкой долгого нажатия
 class LongPressWidget extends StatefulWidget {
   const LongPressWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onLongPress,
     this.onLongPressStart,
     this.onLongPressEnd,
@@ -199,7 +197,7 @@ class _LongPressWidgetState extends State<LongPressWidget>
         child: AnimatedBuilder(
           animation: _scaleAnimation,
           builder: (context, child) => Transform.scale(
-              scale: _scaleAnimation.value, child: widget.child),
+              scale: _scaleAnimation.value, child: widget.child,),
         ),
       );
 
@@ -233,8 +231,7 @@ class _LongPressWidgetState extends State<LongPressWidget>
 /// Виджет с поддержкой пинча (зума)
 class PinchZoomWidget extends StatefulWidget {
   const PinchZoomWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.minScale = 0.5,
     this.maxScale = 3.0,
     this.onScaleStart,
@@ -294,8 +291,7 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
 /// Виджет с поддержкой двойного нажатия
 class DoubleTapWidget extends StatefulWidget {
   const DoubleTapWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onDoubleTap,
     this.onSingleTap,
     this.doubleTapTimeout = const Duration(milliseconds: 300),
@@ -344,8 +340,7 @@ class _DoubleTapWidgetState extends State<DoubleTapWidget> {
 /// Виджет с поддержкой перетаскивания
 class DraggableWidget extends StatefulWidget {
   const DraggableWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.feedback,
     this.onDragStarted,
     this.onDragEnd,
@@ -400,9 +395,7 @@ class _DraggableWidgetState extends State<DraggableWidget> {
 /// Виджет с поддержкой сброса
 class DismissibleWidget extends StatelessWidget {
   const DismissibleWidget({
-    super.key,
-    required this.child,
-    required this.dismissKey,
+    required this.child, required this.dismissKey, super.key,
     this.onDismissed,
     this.background,
     this.secondaryBackground,
@@ -443,8 +436,7 @@ class DismissibleWidget extends StatelessWidget {
 /// Виджет с поддержкой жестов
 class GestureDetectorWidget extends StatelessWidget {
   const GestureDetectorWidget({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.onTap,
     this.onDoubleTap,
     this.onLongPress,

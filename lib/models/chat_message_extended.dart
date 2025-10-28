@@ -7,9 +7,7 @@ class ChatMessageExtended {
     required this.chatId,
     required this.senderId,
     required this.senderName,
-    this.senderAvatar,
-    required this.content,
-    required this.timestamp,
+    required this.content, required this.timestamp, this.senderAvatar,
     this.isRead = false,
     this.readBy = const [],
     this.type = MessageType.text,
@@ -67,7 +65,7 @@ class ChatMessageExtended {
       attachments:
           List<String>.from(data['attachments'] as List<dynamic>? ?? []),
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},),
     );
   }
   final String id;
@@ -235,7 +233,7 @@ class AudioWaveform {
   const AudioWaveform(
       {required this.samples,
       required this.duration,
-      required this.sampleRate});
+      required this.sampleRate,});
 
   factory AudioWaveform.fromJson() {
     // TODO(developer): Реализовать парсинг JSON

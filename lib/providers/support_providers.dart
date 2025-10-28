@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/support_ticket.dart';
+import 'package:event_marketplace_app/services/support_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/support_ticket.dart';
-import '../services/support_service.dart';
 
 /// Провайдер сервиса поддержки
 final supportServiceProvider =

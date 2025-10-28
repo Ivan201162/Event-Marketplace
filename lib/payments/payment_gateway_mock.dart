@@ -1,7 +1,7 @@
 import 'dart:math';
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
-import 'payment_gateway.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/payments/payment_gateway.dart';
 
 /// Результат платежа
 class PaymentResult {
@@ -57,7 +57,7 @@ class PaymentGatewayMock implements PaymentGateway {
   Future<void> initialize() async {
     if (!FeatureFlags.paymentsEnabled) {
       SafeLog.info(
-          'PaymentGatewayMock: Payments are disabled via feature flag');
+          'PaymentGatewayMock: Payments are disabled via feature flag',);
       return;
     }
 
@@ -162,7 +162,7 @@ class PaymentGatewayMock implements PaymentGateway {
     _payments[paymentId] = paymentInfo;
 
     SafeLog.info(
-        'PaymentGatewayMock: Payment $paymentId created with status $status');
+        'PaymentGatewayMock: Payment $paymentId created with status $status',);
 
     return PaymentResult(
       paymentId: paymentId,
@@ -225,7 +225,7 @@ class PaymentGatewayMock implements PaymentGateway {
     );
 
     SafeLog.info(
-        'PaymentGatewayMock: Payment $paymentId confirmed with status $newStatus');
+        'PaymentGatewayMock: Payment $paymentId confirmed with status $newStatus',);
 
     return PaymentResult(
       paymentId: paymentId,
@@ -288,7 +288,7 @@ class PaymentGatewayMock implements PaymentGateway {
 
   @override
   Future<PaymentResult> refundPayment(String paymentId,
-      {double? amount}) async {
+      {double? amount,}) async {
     if (!FeatureFlags.paymentsEnabled) {
       SafeLog.info('PaymentGatewayMock: Payment refund disabled');
       return PaymentResult(
@@ -333,7 +333,7 @@ class PaymentGatewayMock implements PaymentGateway {
     final newStatus = isSuccess ? PaymentStatus.refunded : PaymentStatus.failed;
 
     SafeLog.info(
-        'PaymentGatewayMock: Payment $paymentId refunded with status $newStatus');
+        'PaymentGatewayMock: Payment $paymentId refunded with status $newStatus',);
 
     return PaymentResult(
       paymentId: paymentId,
@@ -364,7 +364,7 @@ class PaymentGatewayMock implements PaymentGateway {
     }
 
     SafeLog.info(
-        'PaymentGatewayMock: Getting payment history for booking $bookingId');
+        'PaymentGatewayMock: Getting payment history for booking $bookingId',);
 
     await Future.delayed(const Duration(milliseconds: 200));
 
@@ -429,13 +429,13 @@ class PaymentGatewayMock implements PaymentGateway {
 
   @override
   Future<double> getPaymentFee(
-      {required double amount, required PaymentMethod method}) async {
+      {required double amount, required PaymentMethod method,}) async {
     if (!FeatureFlags.paymentsEnabled) {
       return 0.0;
     }
 
     SafeLog.info(
-        'PaymentGatewayMock: Calculating payment fee for amount $amount, method $method');
+        'PaymentGatewayMock: Calculating payment fee for amount $amount, method $method',);
 
     await Future.delayed(const Duration(milliseconds: 100));
 

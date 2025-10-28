@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/idea.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/idea.dart';
 
 /// Оптимизированный сервис для работы с идеями
 class OptimizedIdeasService {
@@ -27,7 +26,6 @@ class OptimizedIdeasService {
           return IdeasState(
             ideas: _cachedIdeas,
             isLoading: false,
-            error: null,
             hasMore: true,
           );
         }
@@ -85,7 +83,6 @@ class OptimizedIdeasService {
       return IdeasState(
         ideas: ideas,
         isLoading: false,
-        error: null,
         hasMore: ideas.length == limit,
         lastDocument: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
       );
@@ -104,9 +101,7 @@ class OptimizedIdeasService {
   Future<String?> createIdea({
     required String authorId,
     required String authorName,
-    String? authorAvatar,
-    required String title,
-    required String description,
+    required String title, required String description, String? authorAvatar,
     String? imageUrl,
     String? category,
     List<String>? tags,
@@ -156,7 +151,7 @@ class OptimizedIdeasService {
         final likeCount = data['likeCount']?.toInt() ?? 0;
         final likedBy = List<String>.from(data['likedBy'] ?? []);
 
-        bool isLiked = likedBy.contains(userId);
+        final var isLiked = likedBy.contains(userId);
 
         if (isLiked) {
           likedBy.remove(userId);
@@ -199,7 +194,7 @@ class OptimizedIdeasService {
         final data = userDoc.data()!;
         final savedIdeas = List<String>.from(data['savedIdeas'] ?? []);
 
-        bool isSaved = savedIdeas.contains(ideaId);
+        final var isSaved = savedIdeas.contains(ideaId);
 
         if (isSaved) {
           savedIdeas.remove(ideaId);
@@ -353,19 +348,18 @@ class OptimizedIdeasService {
 
 /// Состояние идей
 class IdeasState {
+
+  const IdeasState({
+    required this.ideas,
+    required this.isLoading,
+    required this.hasMore, this.error,
+    this.lastDocument,
+  });
   final List<Idea> ideas;
   final bool isLoading;
   final String? error;
   final bool hasMore;
   final DocumentSnapshot? lastDocument;
-
-  const IdeasState({
-    required this.ideas,
-    required this.isLoading,
-    this.error,
-    required this.hasMore,
-    this.lastDocument,
-  });
 
   bool get isEmpty => ideas.isEmpty && !isLoading;
   bool get hasError => error != null;

@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/feed_comment.dart';
+import 'package:event_marketplace_app/models/post.dart';
+import 'package:event_marketplace_app/services/feed_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/feed_comment.dart';
-import '../models/post.dart';
-import '../services/feed_service.dart';
 
 /// Feed service provider
 final feedServiceProvider = Provider<FeedService>((ref) {

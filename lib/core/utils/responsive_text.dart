@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ResponsiveText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final double? fontSize;
-  final FontWeight? fontWeight;
-  final Color? color;
 
   const ResponsiveText(
     this.text, {
@@ -21,6 +13,14 @@ class ResponsiveText extends StatelessWidget {
     this.fontWeight,
     this.color,
   });
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +32,11 @@ class ResponsiveText extends StatelessWidget {
       style: style?.copyWith(
               fontSize: responsiveFontSize,
               fontWeight: fontWeight,
-              color: color) ??
+              color: color,) ??
           TextStyle(
               fontSize: responsiveFontSize,
               fontWeight: fontWeight,
-              color: color),
+              color: color,),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -45,11 +45,11 @@ class ResponsiveText extends StatelessWidget {
 
   double _getResponsiveFontSize(double screenWidth) {
     if (screenWidth < 600) {
-      return 14.0; // Mobile
+      return 14; // Mobile
     } else if (screenWidth < 900) {
-      return 16.0; // Tablet
+      return 16; // Tablet
     } else {
-      return 18.0; // Desktop
+      return 18; // Desktop
     }
   }
 }

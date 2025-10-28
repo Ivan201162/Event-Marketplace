@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/cache_item.dart';
+import 'package:event_marketplace_app/services/cache_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/cache_item.dart';
-import '../services/cache_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления кэшем
 class CacheManagementScreen extends ConsumerStatefulWidget {
@@ -54,13 +54,13 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('overview', 'Обзор', Icons.dashboard)),
+                child: _buildTabButton('overview', 'Обзор', Icons.dashboard),),
             Expanded(child: _buildTabButton('items', 'Элементы', Icons.list)),
             Expanded(
-                child: _buildTabButton('config', 'Настройки', Icons.settings)),
+                child: _buildTabButton('config', 'Настройки', Icons.settings),),
             Expanded(
                 child: _buildTabButton(
-                    'statistics', 'Статистика', Icons.analytics)),
+                    'statistics', 'Статистика', Icons.analytics,),),
           ],
         ),
       );
@@ -86,7 +86,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -114,7 +114,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Обзор кэша',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   const SizedBox(height: 16),
                   if (_statistics == null)
                     const Center(child: Text('Статистика не загружена'))
@@ -159,7 +159,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Действия',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   const SizedBox(height: 16),
                   Row(
                     children: [
@@ -218,7 +218,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
             child: Row(
               children: [
                 Text('Элементы кэша',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadData,
@@ -284,7 +284,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                       child: Text(
                         key,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
+                            fontWeight: FontWeight.bold, fontSize: 14,),
                       ),
                     ),
                     PopupMenuButton<String>(
@@ -294,13 +294,13 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                           value: 'view',
                           child: ListTile(
                               leading: Icon(Icons.visibility),
-                              title: Text('Просмотр')),
+                              title: Text('Просмотр'),),
                         ),
                         const PopupMenuItem(
                           value: 'remove',
                           child: ListTile(
                               leading: Icon(Icons.delete),
-                              title: Text('Удалить')),
+                              title: Text('Удалить'),),
                         ),
                       ],
                       child: const Icon(Icons.more_vert),
@@ -336,7 +336,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Настройки кэша',
-                  style: Theme.of(context).textTheme.titleMedium),
+                  style: Theme.of(context).textTheme.titleMedium,),
               const SizedBox(height: 16),
               if (_config == null)
                 const Center(child: Text('Конфигурация не загружена'))
@@ -346,15 +346,15 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                     // Основные настройки
                     _buildConfigSection('Основные настройки', [
                       _buildConfigItem(
-                          'Включен', _config!.enabled ? 'Да' : 'Нет'),
+                          'Включен', _config!.enabled ? 'Да' : 'Нет',),
                       _buildConfigItem(
                         'Максимальный размер',
                         '${(_config!.maxSize / 1024 / 1024).toStringAsFixed(1)} MB',
                       ),
                       _buildConfigItem(
-                          'Максимум элементов', '${_config!.maxItems}'),
+                          'Максимум элементов', '${_config!.maxItems}',),
                       _buildConfigItem('TTL по умолчанию',
-                          '${_config!.defaultTTL.inMinutes} мин'),
+                          '${_config!.defaultTTL.inMinutes} мин',),
                     ]),
 
                     const SizedBox(height: 16),
@@ -365,7 +365,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                           'Сжатие',
                           _config!.enableCompression
                               ? 'Включено'
-                              : 'Отключено'),
+                              : 'Отключено',),
                       _buildConfigItem(
                         'Шифрование',
                         _config!.enableEncryption ? 'Включено' : 'Отключено',
@@ -385,9 +385,9 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                     // Политика вытеснения
                     _buildConfigSection('Политика вытеснения', [
                       _buildConfigItem(
-                          'Политика', _config!.evictionPolicy.displayName),
+                          'Политика', _config!.evictionPolicy.displayName,),
                       _buildConfigItem(
-                          'Описание', _config!.evictionPolicy.description),
+                          'Описание', _config!.evictionPolicy.description,),
                     ]),
 
                     const SizedBox(height: 16),
@@ -435,7 +435,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
         children: [
           Text(title,
               style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
           const SizedBox(height: 8),
           ...items,
         ],
@@ -448,7 +448,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
             SizedBox(
               width: 120,
               child: Text(label,
-                  style: const TextStyle(fontWeight: FontWeight.w500)),
+                  style: const TextStyle(fontWeight: FontWeight.w500),),
             ),
             const Text(': '),
             Expanded(child: Text(value)),
@@ -465,7 +465,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Статистика кэша',
-                      style: Theme.of(context).textTheme.titleMedium),
+                      style: Theme.of(context).textTheme.titleMedium,),
                   const SizedBox(height: 16),
                   if (_statistics == null)
                     const Center(child: Text('Статистика не загружена'))
@@ -540,17 +540,17 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                           'Детальная статистика:',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey[600]),
+                              color: Colors.grey[600],),
                         ),
 
                         const SizedBox(height: 8),
 
                         _buildStatRow(
-                            'Попадания в кэш', '${_statistics!.hitCount}'),
+                            'Попадания в кэш', '${_statistics!.hitCount}',),
                         _buildStatRow(
-                            'Промахи кэша', '${_statistics!.missCount}'),
+                            'Промахи кэша', '${_statistics!.missCount}',),
                         _buildStatRow('Средний возраст',
-                            _formatDuration(_statistics!.averageAge)),
+                            _formatDuration(_statistics!.averageAge),),
                         _buildStatRow(
                           'Среднее время до истечения',
                           _formatDuration(_statistics!.averageTimeToExpiry),
@@ -564,7 +564,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                             'Элементы по типам:',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey[600]),
+                                color: Colors.grey[600],),
                           ),
                           const SizedBox(height: 8),
                           ..._statistics!.itemsByType.entries.map(
@@ -593,7 +593,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                                     'Рекомендуется очистка кэша',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.orange),
+                                        color: Colors.orange,),
                                   ),
                                 ),
                                 ElevatedButton(
@@ -618,7 +618,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
       );
 
   Widget _buildStatCard(
-          String title, String value, Color color, IconData icon) =>
+          String title, String value, Color color, IconData icon,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -633,7 +633,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -693,7 +693,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -728,10 +728,8 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
     switch (action) {
       case 'view':
         _viewCacheItem(key);
-        break;
       case 'remove':
         _removeCacheItem(key);
-        break;
     }
   }
 
@@ -752,7 +750,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -767,7 +765,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -777,13 +775,13 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Элемент удален'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка удаления: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -805,13 +803,13 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Истекшие элементы очищены'),
-            backgroundColor: Colors.green),
+            backgroundColor: Colors.green,),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-          content: Text('Ошибка очистки: $e'), backgroundColor: Colors.red));
+          content: Text('Ошибка очистки: $e'), backgroundColor: Colors.red,),);
     }
   }
 
@@ -826,7 +824,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -836,13 +834,13 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Кэш очищен'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка очистки: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -867,7 +865,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-                'Размер кэша: ${_statistics?.formattedTotalSize ?? 'Неизвестно'}'),
+                'Размер кэша: ${_statistics?.formattedTotalSize ?? 'Неизвестно'}',),
             Text('Количество элементов: ${_statistics?.totalItems ?? 0}'),
             Text(
               'Hit Rate: ${_statistics != null ? (_statistics!.hitRate * 100).toStringAsFixed(1) : '0'}%',
@@ -878,7 +876,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -895,7 +893,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -912,7 +910,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Text('Ошибка сброса: $e'),
-                      backgroundColor: Colors.red),
+                      backgroundColor: Colors.red,),
                 );
               }
             },
@@ -932,6 +930,6 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Функция изменения настроек будет реализована')));
+        content: Text('Функция изменения настроек будет реализована'),),);
   }
 }

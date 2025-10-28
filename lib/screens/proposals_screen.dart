@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/specialist_proposal.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/specialist_proposal_service.dart';
+import 'package:event_marketplace_app/widgets/specialist_proposal_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist_proposal.dart';
-import '../providers/auth_providers.dart';
-import '../services/specialist_proposal_service.dart';
-import '../widgets/specialist_proposal_card.dart';
 
 /// Экран просмотра предложений специалистов
 class ProposalsScreen extends ConsumerStatefulWidget {
@@ -83,7 +82,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -100,7 +99,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
                   Icon(Icons.inbox, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text('Нет активных предложений',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                   SizedBox(height: 8),
                   Text(
                     'Организаторы могут отправлять вам предложения специалистов',
@@ -154,7 +153,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -170,10 +169,10 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.check_circle_outline,
-                      size: 64, color: Colors.grey),
+                      size: 64, color: Colors.grey,),
                   SizedBox(height: 16),
                   Text('Нет принятых предложений',
-                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                      style: TextStyle(fontSize: 18, color: Colors.grey),),
                 ],
               ),
             );
@@ -218,7 +217,7 @@ class _ProposalsScreenState extends ConsumerState<ProposalsScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );

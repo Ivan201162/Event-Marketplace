@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/payment_models.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
+import 'package:event_marketplace_app/services/tax_calculation_service.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/booking.dart';
-import '../models/payment_models.dart';
-import 'payment_service.dart';
-import 'tax_calculation_service.dart';
 
 class PaymentIntegrationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -126,7 +125,7 @@ class PaymentIntegrationService {
 
       // Update booking status
       await _updateBookingStatus(payment.bookingId, payment.type,
-          isCancelled: true);
+          isCancelled: true,);
 
       debugPrint('Booking payment cancelled: $paymentId');
     } catch (e) {
@@ -153,7 +152,7 @@ class PaymentIntegrationService {
 
   /// Gets payment summary for a booking
   Future<BookingPaymentSummary> getBookingPaymentSummary(
-      String bookingId) async {
+      String bookingId,) async {
     try {
       final payments = await getBookingPayments(bookingId);
       final booking = await _getBooking(bookingId);
@@ -245,7 +244,7 @@ class PaymentIntegrationService {
 
   /// Updates contract status
   Future<void> updateContractStatus(
-      String contractId, ContractStatus status) async {
+      String contractId, ContractStatus status,) async {
     try {
       await _firestore.collection('contracts').doc(contractId).update({
         'status': status.toString().split('.').last,
@@ -338,22 +337,19 @@ class PaymentIntegrationService {
   }
 
   Future<void> _updateBookingPayment(
-      String bookingId, String paymentId, PaymentType type) async {
+      String bookingId, String paymentId, PaymentType type,) async {
     try {
       final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now())
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       };
 
       switch (type) {
         case PaymentType.prepayment:
           updateData['prepaymentId'] = paymentId;
-          break;
         case PaymentType.postpayment:
           updateData['postpaymentId'] = paymentId;
-          break;
         case PaymentType.fullPayment:
           updateData['fullPaymentId'] = paymentId;
-          break;
       }
 
       await _firestore.collection('bookings').doc(bookingId).update(updateData);
@@ -369,7 +365,7 @@ class PaymentIntegrationService {
   }) async {
     try {
       final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now())
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
       };
 
       if (isCancelled) {
@@ -378,13 +374,10 @@ class PaymentIntegrationService {
         switch (type) {
           case PaymentType.prepayment:
             updateData['status'] = 'confirmed';
-            break;
           case PaymentType.postpayment:
             updateData['status'] = 'completed';
-            break;
           case PaymentType.fullPayment:
             updateData['status'] = 'confirmed';
-            break;
         }
       }
 

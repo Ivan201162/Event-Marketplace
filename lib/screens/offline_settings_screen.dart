@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/core/responsive_utils.dart';
+import 'package:event_marketplace_app/providers/offline_provider.dart';
+import 'package:event_marketplace_app/widgets/offline_status_widget.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/responsive_utils.dart';
-import '../providers/offline_provider.dart';
-import '../widgets/offline_status_widget.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран настроек офлайн-режима
 class OfflineSettingsScreen extends ConsumerWidget {
@@ -172,10 +171,10 @@ class OfflineSettingsScreen extends ConsumerWidget {
               onPressed: () =>
                   ref.read(offlineModeProvider.notifier).toggleOfflineMode(),
               icon: Icon(
-                  offlineState.isOfflineMode ? Icons.wifi : Icons.wifi_off),
+                  offlineState.isOfflineMode ? Icons.wifi : Icons.wifi_off,),
               label: Text(offlineState.isOfflineMode
                   ? 'Включить онлайн'
-                  : 'Включить офлайн'),
+                  : 'Включить офлайн',),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     offlineState.isOfflineMode ? Colors.green : Colors.orange,
@@ -202,7 +201,7 @@ class OfflineSettingsScreen extends ConsumerWidget {
                   : const Icon(Icons.sync),
               label: Text(syncState.isSyncing
                   ? 'Синхронизация...'
-                  : 'Синхронизировать'),
+                  : 'Синхронизировать',),
             ),
           ),
 
@@ -289,7 +288,7 @@ class OfflineSettingsScreen extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -326,20 +325,20 @@ class OfflineStatsWidget extends ConsumerWidget {
 
           // Время в офлайн-режиме
           _buildStatRow(
-              'Время в офлайн-режиме', '2 ч. 30 мин.', Icons.access_time),
+              'Время в офлайн-режиме', '2 ч. 30 мин.', Icons.access_time,),
 
           // Размер кэша
           _buildStatRow(
-              'Размер кэша', cacheInfo.formattedCacheSize, Icons.storage),
+              'Размер кэша', cacheInfo.formattedCacheSize, Icons.storage,),
 
           // Элементов в кэше
           _buildStatRow(
-              'Элементов в кэше', '${cacheInfo.cacheItemsCount}', Icons.folder),
+              'Элементов в кэше', '${cacheInfo.cacheItemsCount}', Icons.folder,),
 
           // Последняя синхронизация
           if (syncState.lastSyncTime != null)
             _buildStatRow('Последняя синхронизация',
-                syncState.formattedLastSyncTime, Icons.sync),
+                syncState.formattedLastSyncTime, Icons.sync,),
 
           // Статус кэша
           _buildStatRow(
@@ -354,7 +353,7 @@ class OfflineStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatRow(String label, String value, IconData icon,
-          {Color? color}) =>
+          {Color? color,}) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(

@@ -145,9 +145,9 @@ class AppStyles {
     elevation: 2,
     shadowColor: Colors.black26,
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusMedium)),
+        borderRadius: BorderRadius.circular(radiusMedium),),
     padding: const EdgeInsets.symmetric(
-        horizontal: paddingLarge, vertical: paddingMedium),
+        horizontal: paddingLarge, vertical: paddingMedium,),
     minimumSize: const Size(0, buttonHeightMedium),
   );
 
@@ -155,18 +155,18 @@ class AppStyles {
     foregroundColor: primaryColor,
     side: const BorderSide(color: primaryColor),
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusMedium)),
+        borderRadius: BorderRadius.circular(radiusMedium),),
     padding: const EdgeInsets.symmetric(
-        horizontal: paddingLarge, vertical: paddingMedium),
+        horizontal: paddingLarge, vertical: paddingMedium,),
     minimumSize: const Size(0, buttonHeightMedium),
   );
 
   static ButtonStyle textButtonStyle = TextButton.styleFrom(
     foregroundColor: primaryColor,
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusMedium)),
+        borderRadius: BorderRadius.circular(radiusMedium),),
     padding: const EdgeInsets.symmetric(
-        horizontal: paddingMedium, vertical: paddingSmall),
+        horizontal: paddingMedium, vertical: paddingSmall,),
     minimumSize: const Size(0, buttonHeightSmall),
   );
 
@@ -206,7 +206,7 @@ class AppStyles {
       borderSide: const BorderSide(color: errorColor, width: 2),
     ),
     contentPadding: const EdgeInsets.symmetric(
-        horizontal: paddingMedium, vertical: paddingMedium),
+        horizontal: paddingMedium, vertical: paddingMedium,),
   );
 
   // Стили AppBar
@@ -242,21 +242,21 @@ class AppStyles {
     selectedColor: primaryColor.withValues(alpha: 0.2),
     labelStyle: bodyText2,
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusSmall)),
+        borderRadius: BorderRadius.circular(radiusSmall),),
   );
 
   // Стили Card
   static CardTheme cardTheme = CardTheme(
     elevation: 2,
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusMedium)),
+        borderRadius: BorderRadius.circular(radiusMedium),),
     margin: const EdgeInsets.all(paddingSmall),
   );
 
   // Стили Dialog
   static DialogTheme dialogTheme = DialogTheme(
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusLarge)),
+        borderRadius: BorderRadius.circular(radiusLarge),),
     elevation: 8,
   );
 
@@ -265,7 +265,7 @@ class AppStyles {
     backgroundColor: Colors.grey[800],
     contentTextStyle: bodyText2.copyWith(color: Colors.white),
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radiusSmall)),
+        borderRadius: BorderRadius.circular(radiusSmall),),
     behavior: SnackBarBehavior.floating,
   );
 
@@ -304,7 +304,7 @@ class AppStyles {
       borderSide: const BorderSide(color: errorColor, width: 2),
     ),
     contentPadding: const EdgeInsets.symmetric(
-        horizontal: paddingMedium, vertical: paddingMedium),
+        horizontal: paddingMedium, vertical: paddingMedium,),
     fillColor: Colors.grey[800],
     filled: true,
   );

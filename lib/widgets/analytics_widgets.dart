@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/analytics.dart';
 
 /// Виджет KPI
 class KPIWidget extends StatelessWidget {
-  const KPIWidget({super.key, required this.kpi});
+  const KPIWidget({required this.kpi, super.key});
   final KPI kpi;
 
   @override
@@ -22,7 +22,7 @@ class KPIWidget extends StatelessWidget {
                     child: Text(
                       kpi.name,
                       style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w600),
+                          fontSize: 14, fontWeight: FontWeight.w600,),
                     ),
                   ),
                   _buildStatusIcon(kpi.status),
@@ -34,7 +34,7 @@ class KPIWidget extends StatelessWidget {
                   Text(
                     kpi.value.toStringAsFixed(kpi.unit == '%' ? 1 : 0),
                     style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
+                        fontSize: 24, fontWeight: FontWeight.bold,),
                   ),
                   const SizedBox(width: 4),
                   Text(
@@ -82,19 +82,15 @@ class KPIWidget extends StatelessWidget {
       case KPIStatus.excellent:
         icon = Icons.trending_up;
         color = Colors.green;
-        break;
       case KPIStatus.good:
         icon = Icons.trending_flat;
         color = Colors.blue;
-        break;
       case KPIStatus.average:
         icon = Icons.trending_down;
         color = Colors.orange;
-        break;
       case KPIStatus.poor:
         icon = Icons.trending_down;
         color = Colors.red;
-        break;
     }
 
     return Icon(icon, color: color, size: 20);
@@ -126,7 +122,7 @@ class KPIWidget extends StatelessWidget {
         Text(
           '${change.abs().toStringAsFixed(1)}%',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w600),
+              fontSize: 12, color: color, fontWeight: FontWeight.w600,),
         ),
       ],
     );
@@ -136,10 +132,7 @@ class KPIWidget extends StatelessWidget {
 /// Виджет метрики
 class MetricWidget extends StatelessWidget {
   const MetricWidget({
-    super.key,
-    required this.name,
-    required this.value,
-    required this.unit,
+    required this.name, required this.value, required this.unit, super.key,
     this.previousValue,
     this.icon,
     this.color,
@@ -170,14 +163,14 @@ class MetricWidget extends StatelessWidget {
                 if (icon != null) ...[
                   Icon(icon,
                       color: color ?? Theme.of(context).colorScheme.primary,
-                      size: 20),
+                      size: 20,),
                   const SizedBox(width: 8),
                 ],
                 Expanded(
                   child: Text(
                     name,
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600),
+                        fontSize: 14, fontWeight: FontWeight.w600,),
                   ),
                 ),
                 if (previousValue != null)
@@ -197,7 +190,7 @@ class MetricWidget extends StatelessWidget {
 
   /// Построить индикатор изменения
   Widget _buildChangeIndicator(
-      BuildContext context, double change, bool isPositive) {
+      BuildContext context, double change, bool isPositive,) {
     final color = isPositive ? Colors.green : Colors.red;
     final icon = isPositive ? Icons.arrow_upward : Icons.arrow_downward;
 
@@ -209,7 +202,7 @@ class MetricWidget extends StatelessWidget {
         Text(
           '${change.abs().toStringAsFixed(1)}%',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w600),
+              fontSize: 12, color: color, fontWeight: FontWeight.w600,),
         ),
       ],
     );
@@ -218,7 +211,7 @@ class MetricWidget extends StatelessWidget {
 
 /// Виджет статистики за период
 class PeriodStatisticsWidget extends StatelessWidget {
-  const PeriodStatisticsWidget({super.key, required this.statistics});
+  const PeriodStatisticsWidget({required this.statistics, super.key});
   final PeriodStatistics statistics;
 
   @override
@@ -309,7 +302,7 @@ class PeriodStatisticsWidget extends StatelessWidget {
 
 /// Виджет отчета
 class ReportWidget extends StatelessWidget {
-  const ReportWidget({super.key, required this.report, this.onTap});
+  const ReportWidget({required this.report, super.key, this.onTap});
   final Report report;
   final VoidCallback? onTap;
 
@@ -331,7 +324,7 @@ class ReportWidget extends StatelessWidget {
                       child: Text(
                         report.title,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     _buildTypeChip(context, report.type),
@@ -389,23 +382,18 @@ class ReportWidget extends StatelessWidget {
       case ReportType.summary:
         color = Colors.blue;
         label = 'Сводный';
-        break;
       case ReportType.financial:
         color = Colors.green;
         label = 'Финансовый';
-        break;
       case ReportType.performance:
         color = Colors.orange;
         label = 'Производительность';
-        break;
       case ReportType.userActivity:
         color = Colors.purple;
         label = 'Активность';
-        break;
       case ReportType.custom:
         color = Colors.grey;
         label = 'Пользовательский';
-        break;
     }
 
     return Container(
@@ -429,7 +417,7 @@ class ReportWidget extends StatelessWidget {
 
 /// Виджет дашборда
 class DashboardWidget extends StatelessWidget {
-  const DashboardWidget({super.key, required this.dashboard, this.onTap});
+  const DashboardWidget({required this.dashboard, super.key, this.onTap});
   final Dashboard dashboard;
   final VoidCallback? onTap;
 
@@ -451,13 +439,13 @@ class DashboardWidget extends StatelessWidget {
                       child: Text(
                         dashboard.title,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     if (dashboard.isPublic)
                       Icon(Icons.public,
                           size: 16,
-                          color: Theme.of(context).colorScheme.primary),
+                          color: Theme.of(context).colorScheme.primary,),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -540,7 +528,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
 
             // Тип отчета
             const Text('Тип отчета',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
             const SizedBox(height: 8),
             DropdownButtonFormField<ReportType>(
               initialValue: formState.selectedType,
@@ -552,7 +540,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               items: ReportType.values
                   .map(
                     (type) => DropdownMenuItem(
-                        value: type, child: Text(_getReportTypeName(type))),
+                        value: type, child: Text(_getReportTypeName(type)),),
                   )
                   .toList(),
               onChanged: (value) {
@@ -565,7 +553,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
 
             // Период
             const Text('Период',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
             const SizedBox(height: 8),
             DropdownButtonFormField<AnalyticsPeriod>(
               initialValue: formState.selectedPeriod,
@@ -577,7 +565,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               items: AnalyticsPeriod.values
                   .map(
                     (period) => DropdownMenuItem(
-                        value: period, child: Text(_getPeriodName(period))),
+                        value: period, child: Text(_getPeriodName(period)),),
                   )
                   .toList(),
               onChanged: (value) {
@@ -590,7 +578,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
 
             // Дата
             const Text('Дата',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
             const SizedBox(height: 8),
             InkWell(
               onTap: () => _selectDate(context),
@@ -675,7 +663,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
   void _createReport() {
     final formState = ref.read(reportFormProvider);
     widget.onSubmit?.call(formState.selectedType, formState.selectedPeriod,
-        formState.selectedDate);
+        formState.selectedDate,);
   }
 
   /// Получить название типа отчета

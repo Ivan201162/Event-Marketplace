@@ -1,13 +1,10 @@
+import 'package:event_marketplace_app/services/work_act_service.dart';
 import 'package:flutter/material.dart';
-import '../services/work_act_service.dart';
 
 /// Виджет для создания и управления актами выполненных работ
 class WorkActWidget extends StatefulWidget {
   const WorkActWidget({
-    super.key,
-    required this.bookingId,
-    required this.specialistId,
-    required this.customerId,
+    required this.bookingId, required this.specialistId, required this.customerId, super.key,
     this.workAct,
     this.onActCreated,
     this.onActSigned,
@@ -96,15 +93,12 @@ class _WorkActWidgetState extends State<WorkActWidget> {
       case WorkActStatus.draft:
         color = Colors.orange;
         text = 'Черновик';
-        break;
       case WorkActStatus.signed:
         color = Colors.green;
         text = 'Подписан';
-        break;
       case WorkActStatus.rejected:
         color = Colors.red;
         text = 'Отклонен';
-        break;
     }
 
     return Chip(
@@ -131,7 +125,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
             ),
             IconButton(
                 onPressed: () => setState(() => _error = null),
-                icon: const Icon(Icons.close)),
+                icon: const Icon(Icons.close),),
           ],
         ),
       );
@@ -226,7 +220,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
               ),
               child: const Center(
                 child: Text('Добавьте выполненные работы',
-                    style: TextStyle(color: Colors.grey)),
+                    style: TextStyle(color: Colors.grey),),
               ),
             )
           else
@@ -258,7 +252,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
               const SizedBox(width: 8),
               IconButton(
                   onPressed: () => _editService(index),
-                  icon: const Icon(Icons.edit)),
+                  icon: const Icon(Icons.edit),),
               IconButton(
                 onPressed: () => _removeService(index),
                 icon: const Icon(Icons.delete, color: Colors.red),
@@ -283,7 +277,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text('Итого:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(
             '${totalAmount.toStringAsFixed(2)} ₽',
             style: TextStyle(
@@ -489,7 +483,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('PDF создан успешно'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -502,7 +496,7 @@ class _WorkActWidgetState extends State<WorkActWidget> {
 
 /// Диалог для добавления/редактирования услуги
 class _ServiceDialog extends StatefulWidget {
-  const _ServiceDialog({this.service, required this.onSave});
+  const _ServiceDialog({required this.onSave, this.service});
 
   final ServiceItem? service;
   final void Function(ServiceItem) onSave;
@@ -545,7 +539,7 @@ class _ServiceDialogState extends State<_ServiceDialog> {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(widget.service == null
             ? 'Добавить работу'
-            : 'Редактировать работу'),
+            : 'Редактировать работу',),
         content: Form(
           key: _formKey,
           child: Column(
@@ -614,7 +608,7 @@ class _ServiceDialogState extends State<_ServiceDialog> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                    labelText: 'Описание', border: OutlineInputBorder()),
+                    labelText: 'Описание', border: OutlineInputBorder(),),
                 maxLines: 2,
               ),
             ],
@@ -623,9 +617,9 @@ class _ServiceDialogState extends State<_ServiceDialog> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
-              onPressed: _saveService, child: const Text('Сохранить')),
+              onPressed: _saveService, child: const Text('Сохранить'),),
         ],
       );
 

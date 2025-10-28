@@ -1,9 +1,9 @@
+import 'package:event_marketplace_app/services/reviews_service.dart';
 import 'package:flutter/material.dart';
-import '../../../services/reviews_service.dart';
 
 class ReviewFiltersBottomSheet extends StatefulWidget {
   const ReviewFiltersBottomSheet(
-      {super.key, this.currentFilter, required this.onFilterChanged});
+      {required this.onFilterChanged, super.key, this.currentFilter,});
   final ReviewFilter? currentFilter;
   final Function(ReviewFilter) onFilterChanged;
 
@@ -50,10 +50,10 @@ class _ReviewFiltersBottomSheetState extends State<ReviewFiltersBottomSheet> {
               children: [
                 Expanded(
                     child: Text('Фильтры отзывов',
-                        style: Theme.of(context).textTheme.titleLarge)),
+                        style: Theme.of(context).textTheme.titleLarge,),),
                 IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close)),
+                    icon: const Icon(Icons.close),),
               ],
             ),
             const SizedBox(height: 16),
@@ -199,12 +199,12 @@ class _ReviewFiltersBottomSheetState extends State<ReviewFiltersBottomSheet> {
         children: [
           Expanded(
             child: OutlinedButton(
-                onPressed: _clearFilters, child: const Text('Очистить')),
+                onPressed: _clearFilters, child: const Text('Очистить'),),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: ElevatedButton(
-                onPressed: _applyFilters, child: const Text('Применить')),
+                onPressed: _applyFilters, child: const Text('Применить'),),
           ),
         ],
       );

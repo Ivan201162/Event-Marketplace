@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/utils/color_utils.dart';
 import 'package:flutter/material.dart';
-
-import '../models/idea.dart';
-import '../utils/color_utils.dart';
 
 /// Виджет идеи
 class IdeaWidget extends StatelessWidget {
   const IdeaWidget({
-    super.key,
-    required this.idea,
+    required this.idea, super.key,
     this.onTap,
     this.onLike,
     this.onSave,
@@ -45,7 +43,7 @@ class IdeaWidget extends StatelessWidget {
                           child: Text(
                             idea.title,
                             style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 18, fontWeight: FontWeight.bold,),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -53,7 +51,7 @@ class IdeaWidget extends StatelessWidget {
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                              horizontal: 8, vertical: 4,),
                           decoration: BoxDecoration(
                             color: idea.categoryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -66,7 +64,7 @@ class IdeaWidget extends StatelessWidget {
                             children: [
                               Icon(
                                 ColorUtils.getCategoryIcon(
-                                    idea.category ?? 'другое'),
+                                    idea.category ?? 'другое',),
                                 size: 14,
                                 color: idea.categoryColor,
                               ),
@@ -107,7 +105,7 @@ class IdeaWidget extends StatelessWidget {
                             .map(
                               (tag) => Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
+                                    horizontal: 6, vertical: 2,),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(8),
@@ -115,7 +113,7 @@ class IdeaWidget extends StatelessWidget {
                                 child: Text(
                                   '#$tag',
                                   style: TextStyle(
-                                      fontSize: 10, color: Colors.grey[600]),
+                                      fontSize: 10, color: Colors.grey[600],),
                                 ),
                               ),
                             )
@@ -134,8 +132,8 @@ class IdeaWidget extends StatelessWidget {
                               : null,
                           child: idea.authorPhotoUrl == null
                               ? Text(
-                                  (idea.authorName?.isNotEmpty == true)
-                                      ? (idea.authorName![0]).toUpperCase()
+                                  (idea.authorName.isNotEmpty ?? false)
+                                      ? idea.authorName[0].toUpperCase()
                                       : '?',
                                   style: const TextStyle(fontSize: 10),
                                 )
@@ -146,7 +144,7 @@ class IdeaWidget extends StatelessWidget {
                           child: Text(
                             idea.authorName ?? 'Неизвестный автор',
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
+                                fontSize: 12, fontWeight: FontWeight.w500,),
                           ),
                         ),
                         Text(
@@ -177,8 +175,8 @@ class IdeaWidget extends StatelessWidget {
       height: 200,
       child: PageView.builder(
         itemCount: images.length,
-        itemBuilder: (BuildContext context, int index) {
-          final String image = images[index];
+        itemBuilder: (context, index) {
+          final image = images[index];
           return CachedNetworkImage(
             imageUrl: image,
             fit: BoxFit.cover,
@@ -187,7 +185,7 @@ class IdeaWidget extends StatelessWidget {
               child: const Center(child: CircularProgressIndicator()),
             ),
             errorWidget: (context, url, error) => Container(
-                color: Colors.grey[200], child: const Icon(Icons.error)),
+                color: Colors.grey[200], child: const Icon(Icons.error),),
           );
         },
       ),
@@ -243,7 +241,7 @@ class IdeaWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  (idea.savesCount).toString(),
+                  idea.savesCount.toString(),
                   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
@@ -258,7 +256,7 @@ class IdeaWidget extends StatelessWidget {
               Icon(Icons.comment, size: 20, color: Colors.grey[600]),
               const SizedBox(width: 4),
               Text(
-                (idea.commentsCount).toString(),
+                idea.commentsCount.toString(),
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
@@ -293,8 +291,7 @@ class IdeaWidget extends StatelessWidget {
 /// Виджет для отображения идеи в списке
 class IdeaListTile extends StatelessWidget {
   const IdeaListTile({
-    super.key,
-    required this.idea,
+    required this.idea, super.key,
     this.onTap,
     this.onLike,
     this.onSave,
@@ -308,11 +305,11 @@ class IdeaListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: (idea.images).isNotEmpty
+        leading: idea.images.isNotEmpty
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
-                  imageUrl: (idea.images).first,
+                  imageUrl: idea.images.first,
                   width: 60,
                   height: 60,
                   fit: BoxFit.cover,
@@ -353,7 +350,7 @@ class IdeaListTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(idea.description ?? idea.shortDesc,
-                maxLines: 2, overflow: TextOverflow.ellipsis),
+                maxLines: 2, overflow: TextOverflow.ellipsis,),
             const SizedBox(height: 4),
             Row(
               children: [
@@ -397,8 +394,8 @@ class IdeaListTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Text((idea.likesCount).toString(),
-                    style: const TextStyle(fontSize: 12)),
+                Text(idea.likesCount.toString(),
+                    style: const TextStyle(fontSize: 12),),
               ],
             ),
             const SizedBox(height: 4),
@@ -414,8 +411,8 @@ class IdeaListTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Text((idea.savesCount).toString(),
-                    style: const TextStyle(fontSize: 12)),
+                Text(idea.savesCount.toString(),
+                    style: const TextStyle(fontSize: 12),),
               ],
             ),
           ],
@@ -442,8 +439,7 @@ class IdeaListTile extends StatelessWidget {
 /// Виджет для отображения идеи в сетке
 class IdeaGridTile extends StatelessWidget {
   const IdeaGridTile({
-    super.key,
-    required this.idea,
+    required this.idea, super.key,
     this.onTap,
     this.onLike,
     this.onSave,
@@ -466,9 +462,9 @@ class IdeaGridTile extends StatelessWidget {
               // Изображение
               Expanded(
                 flex: 3,
-                child: (idea.images).isNotEmpty
+                child: idea.images.isNotEmpty
                     ? CachedNetworkImage(
-                        imageUrl: (idea.images).first,
+                        imageUrl: idea.images.first,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
                           color: Colors.grey[200],
@@ -477,14 +473,14 @@ class IdeaGridTile extends StatelessWidget {
                         ),
                         errorWidget: (context, url, error) => Container(
                             color: Colors.grey[200],
-                            child: const Icon(Icons.error)),
+                            child: const Icon(Icons.error),),
                       )
-                    : Container(
+                    : ColoredBox(
                         color: idea.categoryColor.withValues(alpha: 0.1),
                         child: Center(
                           child: Icon(
                             ColorUtils.getCategoryIcon(
-                                idea.category ?? 'другое'),
+                                idea.category ?? 'другое',),
                             size: 32,
                             color: idea.categoryColor,
                           ),
@@ -504,7 +500,7 @@ class IdeaGridTile extends StatelessWidget {
                       Text(
                         idea.title,
                         style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
+                            fontSize: 14, fontWeight: FontWeight.bold,),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -514,7 +510,7 @@ class IdeaGridTile extends StatelessWidget {
                       // Категория
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
+                            horizontal: 6, vertical: 2,),
                         decoration: BoxDecoration(
                           color: idea.categoryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
@@ -545,8 +541,8 @@ class IdeaGridTile extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text((idea.likesCount).toString(),
-                              style: const TextStyle(fontSize: 12)),
+                          Text(idea.likesCount.toString(),
+                              style: const TextStyle(fontSize: 12),),
                           const Spacer(),
                           GestureDetector(
                             onTap: onSave,
@@ -559,8 +555,8 @@ class IdeaGridTile extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text((idea.savesCount).toString(),
-                              style: const TextStyle(fontSize: 12)),
+                          Text(idea.savesCount.toString(),
+                              style: const TextStyle(fontSize: 12),),
                         ],
                       ),
                     ],

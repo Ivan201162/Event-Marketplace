@@ -1,10 +1,10 @@
+import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import '../../../models/review.dart';
 
 class ReviewCard extends StatefulWidget {
   const ReviewCard(
-      {super.key, required this.review, this.onLike, this.onReport});
+      {required this.review, super.key, this.onLike, this.onReport,});
   final Review review;
   final VoidCallback? onLike;
   final VoidCallback? onReport;
@@ -103,7 +103,6 @@ class _ReviewCardState extends State<ReviewCard> {
               switch (value) {
                 case 'report':
                   widget.onReport?.call();
-                  break;
               }
             },
             itemBuilder: (context) => [
@@ -113,7 +112,7 @@ class _ReviewCardState extends State<ReviewCard> {
                   children: [
                     Icon(Icons.flag, size: 16),
                     SizedBox(width: 8),
-                    Text('Пожаловаться')
+                    Text('Пожаловаться'),
                   ],
                 ),
               ),
@@ -148,7 +147,7 @@ class _ReviewCardState extends State<ReviewCard> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                  color: Colors.green, borderRadius: BorderRadius.circular(12)),
+                  color: Colors.green, borderRadius: BorderRadius.circular(12),),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -214,7 +213,7 @@ class _ReviewCardState extends State<ReviewCard> {
                 ),
                 const SizedBox(width: 4),
                 Text(widget.review.likes.toString(),
-                    style: Theme.of(context).textTheme.bodySmall),
+                    style: Theme.of(context).textTheme.bodySmall,),
               ],
             ),
           ),
@@ -233,7 +232,7 @@ class _ReviewCardState extends State<ReviewCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.chat_bubble_outline,
-                      color: Colors.grey, size: 20),
+                      color: Colors.grey, size: 20,),
                   const SizedBox(width: 4),
                   Text(
                     '${widget.review.responses.length} ответ${widget.review.responses.length == 1 ? '' : widget.review.responses.length < 5 ? 'а' : 'ов'}',
@@ -252,7 +251,7 @@ class _ReviewCardState extends State<ReviewCard> {
               style: Theme.of(
                 context,
               ).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600], fontStyle: FontStyle.italic),
+                  color: Colors.grey[600], fontStyle: FontStyle.italic,),
             ),
         ],
       );
@@ -264,7 +263,7 @@ class _ReviewCardState extends State<ReviewCard> {
       margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          color: Colors.grey[50], borderRadius: BorderRadius.circular(8)),
+          color: Colors.grey[50], borderRadius: BorderRadius.circular(8),),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -307,7 +306,7 @@ class _ReviewCardState extends State<ReviewCard> {
                   ),
                   const SizedBox(height: 4),
                   Text(response.text,
-                      style: Theme.of(context).textTheme.bodySmall),
+                      style: Theme.of(context).textTheme.bodySmall,),
                 ],
               ),
             ),

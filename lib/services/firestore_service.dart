@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/safe_log.dart';
-import '../models/app_notification.dart' as model;
-import '../models/booking.dart';
-import '../models/calendar_event.dart' as calendar;
-import '../models/notification_template.dart' as template;
-import '../models/payment.dart';
-import '../models/specialist_schedule.dart';
-import 'calendar_service.dart';
-import 'fcm_service.dart';
-import 'notification_service.dart';
-import 'payment_service.dart';
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/models/app_notification.dart' as model;
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/calendar_event.dart' as calendar;
+import 'package:event_marketplace_app/models/notification_template.dart' as template;
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/models/specialist_schedule.dart';
+import 'package:event_marketplace_app/services/calendar_service.dart';
+import 'package:event_marketplace_app/services/fcm_service.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -102,7 +102,7 @@ class FirestoreService {
 
   // Получить занятые даты с временными интервалами
   Future<List<Map<String, dynamic>>> getBusyDateRanges(
-      String specialistId) async {
+      String specialistId,) async {
     final qs = await _db
         .collection('bookings')
         .where('specialistId', isEqualTo: specialistId)
@@ -269,7 +269,7 @@ class FirestoreService {
 
       if (!isAvailable) {
         throw Exception(
-            'Выбранная дата и время недоступны в расписании специалиста');
+            'Выбранная дата и время недоступны в расписании специалиста',);
       }
 
       // Сохраняем заявку
@@ -319,7 +319,7 @@ class FirestoreService {
 
   // Обновить статус заявки с интеграцией календаря и уведомлений
   Future<void> updateBookingStatusWithCalendar(
-      String bookingId, String status) async {
+      String bookingId, String status,) async {
     try {
       // Получаем заявку
       final bookingDoc = await _db.collection('bookings').doc(bookingId).get();
@@ -372,7 +372,7 @@ class FirestoreService {
 
   // Проверить доступность даты для специалиста
   Future<bool> isSpecialistAvailable(
-          String specialistId, DateTime dateTime) async =>
+          String specialistId, DateTime dateTime,) async =>
       _calendarService.isDateTimeAvailable(specialistId, dateTime);
 
   // Получить доступные временные слоты для специалиста
@@ -385,7 +385,7 @@ class FirestoreService {
 
   // Получить события специалиста на дату
   Future<List<ScheduleEvent>> getSpecialistEventsForDate(
-      String specialistId, DateTime date) async {
+      String specialistId, DateTime date,) async {
     final calendarEvents =
         await _calendarService.getEventsForDate(specialistId, date);
     return calendarEvents
@@ -403,7 +403,7 @@ class FirestoreService {
 
   // Отправить уведомления о статусе заявки
   Future<void> _sendBookingStatusNotifications(
-      Booking booking, String status) async {
+      Booking booking, String status,) async {
     try {
       NotificationType notificationType;
       String title;
@@ -415,19 +415,16 @@ class FirestoreService {
           title = 'Заявка подтверждена!';
           body =
               'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена';
-          break;
         case 'rejected':
           notificationType = NotificationType.bookingConfirmed;
           title = 'Заявка отклонена';
           body =
               'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена';
-          break;
         case 'cancelled':
           notificationType = NotificationType.bookingConfirmed;
           title = 'Заявка отменена';
           body =
               'Заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} была отменена';
-          break;
         default:
           return; // Не отправляем уведомления для других статусов
       }
@@ -452,7 +449,7 @@ class FirestoreService {
       // Отправляем уведомление специалисту (если статус изменил клиент)
       if (status == 'cancelled') {
         await _notificationService.sendNotification(
-            booking.specialistId ?? '', title, body);
+            booking.specialistId ?? '', title, body,);
 
         // Отправляем push-уведомление специалисту
         await _sendPushNotification(
@@ -481,10 +478,8 @@ class FirestoreService {
       switch (status) {
         case 'completed':
           notificationType = NotificationType.paymentCompleted;
-          break;
         case 'failed':
           notificationType = NotificationType.paymentCompleted;
-          break;
         default:
           return; // Не отправляем уведомления для других статусов
       }
@@ -577,7 +572,7 @@ class FirestoreService {
       );
     } catch (e, stackTrace) {
       SafeLog.error(
-          'Ошибка получения бронирований с пагинацией', e, stackTrace);
+          'Ошибка получения бронирований с пагинацией', e, stackTrace,);
       rethrow;
     }
   }
@@ -618,7 +613,7 @@ class FirestoreService {
           final bookings = snapshot.docs.map(Booking.fromDocument).toList();
 
           SafeLog.debug(
-              'Найдено ${bookings.length} бронирований по запросу "$searchQuery"');
+              'Найдено ${bookings.length} бронирований по запросу "$searchQuery"',);
           controller.add(bookings);
         } catch (e, stackTrace) {
           SafeLog.error('Ошибка поиска бронирований', e, stackTrace);
@@ -655,7 +650,7 @@ class FirestoreService {
           snapshot.docs.map(model.AppNotification.fromDocument).toList();
 
       SafeLog.debug(
-          'Получено ${notifications.length} уведомлений с пагинацией');
+          'Получено ${notifications.length} уведомлений с пагинацией',);
 
       return PaginatedResult<model.AppNotification>(
         items: notifications,
@@ -698,7 +693,7 @@ class FirestoreService {
 
           final snapshot = await query.get();
           SafeLog.debug(
-              'Найдено ${snapshot.docs.length} специалистов по запросу "$searchQuery"');
+              'Найдено ${snapshot.docs.length} специалистов по запросу "$searchQuery"',);
           controller.add(snapshot.docs);
         } catch (e, stackTrace) {
           SafeLog.error('Ошибка поиска специалистов', e, stackTrace);
@@ -891,7 +886,7 @@ class FirestoreService {
 /// Результат пагинированного запроса
 class PaginatedResult<T> {
   const PaginatedResult(
-      {required this.items, this.lastDocument, required this.hasMore});
+      {required this.items, required this.hasMore, this.lastDocument,});
   final List<T> items;
   final DocumentSnapshot? lastDocument;
   final bool hasMore;

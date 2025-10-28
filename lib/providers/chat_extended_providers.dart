@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/chat_message_extended.dart';
+import 'package:event_marketplace_app/services/message_reaction_service.dart';
+import 'package:event_marketplace_app/services/voice_message_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat_message_extended.dart';
-import '../services/message_reaction_service.dart';
-import '../services/voice_message_service.dart';
 
 /// Провайдер для сервиса голосовых сообщений
 final voiceMessageServiceProvider =
@@ -23,7 +22,7 @@ final chatMessagesProvider =
       .orderBy('timestamp', descending: false)
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
+          snapshot.docs.map(ChatMessageExtended.fromDocument).toList(),),
 );
 
 /// Провайдер для последнего сообщения чата
@@ -61,7 +60,7 @@ final voiceMessagesProvider =
       .orderBy('timestamp', descending: false)
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
+          snapshot.docs.map(ChatMessageExtended.fromDocument).toList(),),
 );
 
 /// Провайдер для сообщений с реакциями
@@ -114,7 +113,7 @@ final messageSearchProvider =
         (snapshot) => snapshot.docs
             .map(ChatMessageExtended.fromDocument)
             .where((message) =>
-                message.content.toLowerCase().contains(query.toLowerCase()))
+                message.content.toLowerCase().contains(query.toLowerCase()),)
             .toList(),
       );
 });
@@ -129,7 +128,7 @@ final chatMediaProvider =
       .orderBy('timestamp', descending: true)
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
+          snapshot.docs.map(ChatMessageExtended.fromDocument).toList(),),
 );
 
 /// Нотификатор для статуса записи
@@ -199,7 +198,7 @@ final activeUsersProvider = StreamProvider.family<List<String>, String>(
       .where('isActive', isEqualTo: true)
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => doc.data()['userId'] as String).toList()),
+          snapshot.docs.map((doc) => doc.data()['userId'] as String).toList(),),
 );
 
 /// Провайдер для настроек чата

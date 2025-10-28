@@ -1,14 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/specialist_enhanced.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/notification_providers.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/services/navigation_service.dart';
+import 'package:event_marketplace_app/widgets/animated_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../providers/auth_providers.dart';
-import '../../providers/notification_providers.dart';
-import '../../providers/specialist_providers.dart';
-import '../../models/specialist_enhanced.dart';
-import '../../services/navigation_service.dart';
-import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенная главная страница с реальными данными
 class HomeScreenEnhanced extends ConsumerStatefulWidget {
@@ -32,7 +31,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
     'Фотографы',
     'Кейтеринг',
     'Музыканты',
-    'Декораторы'
+    'Декораторы',
   ];
 
   @override
@@ -53,12 +52,12 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
@@ -66,7 +65,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
     ).animate(CurvedAnimation(
       parent: _slideController,
       curve: Curves.easeOutCubic,
-    ));
+    ),);
 
     _animationController.forward();
     _slideController.forward();
@@ -499,7 +498,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                   ),
                 );
               },
-              loading: () => _buildSpecialistsLoadingState(),
+              loading: _buildSpecialistsLoadingState,
               error: (error, stack) =>
                   _buildSpecialistsErrorState(error.toString()),
             );
@@ -532,7 +531,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                   ),
                 );
               },
-              loading: () => _buildSpecialistsLoadingState(),
+              loading: _buildSpecialistsLoadingState,
               error: (error, stack) =>
                   _buildSpecialistsErrorState(error.toString()),
             );
@@ -589,10 +588,10 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
 
   /// Статистика
   Widget _buildStatistics() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Ваша статистика',
           style: TextStyle(
             fontSize: 22,
@@ -600,7 +599,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             color: Color(0xFF1E3A8A),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -608,25 +607,25 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                 title: 'Заявки',
                 value: '0',
                 subtitle: 'Активных',
-                color: const Color(0xFF3B82F6),
+                color: Color(0xFF3B82F6),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _StatCard(
                 title: 'Идеи',
                 value: '0',
                 subtitle: 'Опубликовано',
-                color: const Color(0xFF10B981),
+                color: Color(0xFF10B981),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _StatCard(
                 title: 'Чаты',
                 value: '0',
                 subtitle: 'Новых',
-                color: const Color(0xFFF59E0B),
+                color: Color(0xFFF59E0B),
               ),
             ),
           ],
@@ -771,7 +770,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
       return userData.name!;
     }
     if (userData.email != null && userData.email!.isNotEmpty) {
-      final email = userData.email!;
+      final email = userData.email;
       final atIndex = email.indexOf('@');
       if (atIndex > 0) {
         return email.substring(0, atIndex);
@@ -783,11 +782,6 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
 
 /// Карточка быстрого действия
 class _QuickActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final VoidCallback onTap;
 
   const _QuickActionCard({
     required this.icon,
@@ -796,6 +790,11 @@ class _QuickActionCard extends StatelessWidget {
     required this.color,
     required this.onTap,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -842,10 +841,6 @@ class _QuickActionCard extends StatelessWidget {
 
 /// Карточка статистики
 class _StatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final String subtitle;
-  final Color color;
 
   const _StatCard({
     required this.title,
@@ -853,6 +848,10 @@ class _StatCard extends StatelessWidget {
     required this.subtitle,
     required this.color,
   });
+  final String title;
+  final String value;
+  final String subtitle;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

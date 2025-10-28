@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/core/responsive_utils.dart';
+import 'package:event_marketplace_app/models/service_template.dart';
+import 'package:event_marketplace_app/services/service_template_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/responsive_utils.dart';
-import '../models/service_template.dart';
-import '../services/service_template_service.dart';
-import '../widgets/responsive_layout.dart';
-
 /// Экран управления услугами и ценами специалиста
 class SpecialistServicesScreen extends ConsumerStatefulWidget {
-  const SpecialistServicesScreen({super.key, required this.specialistId});
+  const SpecialistServicesScreen({required this.specialistId, super.key});
   final String specialistId;
 
   @override
@@ -36,7 +35,7 @@ class _SpecialistServicesScreenState
           actions: [
             IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: () => _showAddServiceDialog(context)),
+                onPressed: () => _showAddServiceDialog(context),),
           ],
         ),
         body: _buildContent(),
@@ -103,7 +102,7 @@ class _SpecialistServicesScreenState
                     SizedBox(width: 12),
                     Expanded(
                         child: ResponsiveText('Управление услугами и ценами',
-                            isTitle: true)),
+                            isTitle: true,),),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -173,12 +172,12 @@ class _SpecialistServicesScreenState
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(Icons.work_outline,
-                            size: 64, color: Colors.grey),
+                            size: 64, color: Colors.grey,),
                         const SizedBox(height: 16),
                         const Text('У вас пока нет услуг'),
                         const SizedBox(height: 8),
                         const Text(
-                            'Добавьте услуги, чтобы клиенты могли их заказать'),
+                            'Добавьте услуги, чтобы клиенты могли их заказать',),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
                           onPressed: () => _showAddServiceDialog(context),
@@ -223,9 +222,9 @@ class _SpecialistServicesScreenState
                   onSelected: (value) => _handleServiceAction(value, service),
                   itemBuilder: (context) => [
                     const PopupMenuItem(
-                        value: 'edit', child: Text('Редактировать')),
+                        value: 'edit', child: Text('Редактировать'),),
                     const PopupMenuItem(
-                        value: 'delete', child: Text('Удалить')),
+                        value: 'delete', child: Text('Удалить'),),
                   ],
                 ),
               ],
@@ -252,7 +251,7 @@ class _SpecialistServicesScreenState
                         ResponsiveText(
                           'Цена: ${service.priceRange}',
                           style: const TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                              color: Colors.green, fontWeight: FontWeight.bold,),
                         ),
                         if (service.priceMin != service.priceMax)
                           ResponsiveText(
@@ -276,7 +275,7 @@ class _SpecialistServicesScreenState
                 (entry) => Padding(
                   padding: const EdgeInsets.only(left: 16, bottom: 2),
                   child: ResponsiveText('${entry.key}: ${entry.value}',
-                      isSubtitle: true),
+                      isSubtitle: true,),
                 ),
               ),
             ],
@@ -288,10 +287,8 @@ class _SpecialistServicesScreenState
     switch (action) {
       case 'edit':
         _showEditServiceDialog(context, service);
-        break;
       case 'delete':
         _showDeleteServiceDialog(context, service);
-        break;
     }
   }
 
@@ -300,7 +297,7 @@ class _SpecialistServicesScreenState
       context: context,
       builder: (context) => _ServiceDialog(
           specialistId: widget.specialistId,
-          onServiceAdded: () => setState(() {})),
+          onServiceAdded: () => setState(() {}),),
     );
   }
 
@@ -316,23 +313,23 @@ class _SpecialistServicesScreenState
   }
 
   void _showDeleteServiceDialog(
-      BuildContext context, SpecialistService service) {
+      BuildContext context, SpecialistService service,) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить услугу'),
         content: Text(
-            'Вы уверены, что хотите удалить услугу "${service.serviceName}"?'),
+            'Вы уверены, что хотите удалить услугу "${service.serviceName}"?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
                 await _serviceService.deleteSpecialistService(
-                    widget.specialistId, service.id);
+                    widget.specialistId, service.id,);
                 setState(() {});
                 ScaffoldMessenger.of(
                   context,
@@ -405,7 +402,7 @@ class _ServiceDialogState extends State<_ServiceDialog> {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(widget.service == null
             ? 'Добавить услугу'
-            : 'Редактировать услугу'),
+            : 'Редактировать услугу',),
         content: Form(
           key: _formKey,
           child: Column(
@@ -557,7 +554,7 @@ class _ServiceDialogState extends State<_ServiceDialog> {
 
       if (widget.service == null) {
         await _serviceService.createSpecialistService(
-            widget.specialistId, service);
+            widget.specialistId, service,);
         widget.onServiceAdded?.call();
         ScaffoldMessenger.of(
           context,

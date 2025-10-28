@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
-import '../../providers/specialist_providers.dart';
-import '../../widgets/specialist_card.dart';
 
 /// Home screen with user profile and main content
 class HomeScreen extends ConsumerWidget {
@@ -51,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
 
                 // Top specialists section
                 _buildTopSpecialistsSection(
-                    context, ref, 'Топ-10 недели по России', true),
+                    context, ref, 'Топ-10 недели по России', true,),
                 const SizedBox(height: 24),
                 _buildTopSpecialistsSection(
                   context,
@@ -95,19 +94,19 @@ class HomeScreen extends ConsumerWidget {
                   Text(
                     user.name,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18, fontWeight: FontWeight.bold,),
                   ),
                   if (user.city != null) ...[
                     const SizedBox(height: 4),
                     Text(user.city!,
                         style:
-                            TextStyle(color: Colors.grey[600], fontSize: 14)),
+                            TextStyle(color: Colors.grey[600], fontSize: 14),),
                   ],
                   if (user.status != null) ...[
                     const SizedBox(height: 4),
                     Text(user.status!,
                         style:
-                            TextStyle(color: Colors.blue[600], fontSize: 14)),
+                            TextStyle(color: Colors.blue[600], fontSize: 14),),
                   ],
                 ],
               ),
@@ -125,7 +124,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildSearchSection(BuildContext context) {
-    final TextEditingController searchController = TextEditingController();
+    final searchController = TextEditingController();
 
     return Card(
       child: Padding(
@@ -196,7 +195,7 @@ class HomeScreen extends ConsumerWidget {
                 return GestureDetector(
                   onTap: () {
                     context.push(
-                        '/search?specialization=${Uri.encodeComponent(specialization)}');
+                        '/search?specialization=${Uri.encodeComponent(specialization)}',);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -212,7 +211,7 @@ class HomeScreen extends ConsumerWidget {
                         Text(
                           specialization,
                           style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
+                              fontSize: 13, fontWeight: FontWeight.w500,),
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -313,7 +312,7 @@ class HomeScreen extends ConsumerWidget {
           children: [
             Text(title,
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -362,7 +361,7 @@ class HomeScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Быстрые действия',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         const SizedBox(height: 12),
         Row(
           children: [

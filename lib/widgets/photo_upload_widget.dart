@@ -1,15 +1,14 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/providers/customer_profile_extended_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../providers/customer_profile_extended_providers.dart';
-
 /// Виджет загрузки фото
 class PhotoUploadWidget extends ConsumerStatefulWidget {
   const PhotoUploadWidget(
-      {super.key, required this.userId, required this.onPhotoAdded});
+      {required this.userId, required this.onPhotoAdded, super.key,});
   final String userId;
   final VoidCallback onPhotoAdded;
 
@@ -68,7 +67,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                       // Превью изображения
                       if (_selectedImage != null) ...[
                         _buildImagePreview(),
-                        const SizedBox(height: 16)
+                        const SizedBox(height: 16),
                       ],
 
                       // Подпись
@@ -90,7 +89,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                       SwitchListTile(
                         title: const Text('Публичное фото'),
                         subtitle: const Text(
-                            'Другие пользователи смогут видеть это фото'),
+                            'Другие пользователи смогут видеть это фото',),
                         value: _isPublic,
                         onChanged: (value) {
                           setState(() {
@@ -121,10 +120,10 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.add_photo_alternate,
-                          size: 48, color: Colors.grey),
+                          size: 48, color: Colors.grey,),
                       SizedBox(height: 8),
                       Text('Нажмите для выбора фото',
-                          style: TextStyle(color: Colors.grey)),
+                          style: TextStyle(color: Colors.grey),),
                     ],
                   )
                 : const Column(
@@ -133,7 +132,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                       Icon(Icons.check_circle, size: 48, color: Colors.green),
                       SizedBox(height: 8),
                       Text('Фото выбрано',
-                          style: TextStyle(color: Colors.green)),
+                          style: TextStyle(color: Colors.green),),
                     ],
                   ),
           ),
@@ -157,7 +156,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Теги',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 8),
 
           // Поле ввода тегов
@@ -176,7 +175,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
               const SizedBox(width: 8),
               IconButton(
                   onPressed: () => _addTag(_tagsController.text),
-                  icon: const Icon(Icons.add)),
+                  icon: const Icon(Icons.add),),
             ],
           ),
           const SizedBox(height: 8),
@@ -218,7 +217,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка выбора изображения: $e')));
+            SnackBar(content: Text('Ошибка выбора изображения: $e')),);
       }
     }
   }
@@ -268,7 +267,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(
-              const SnackBar(content: Text('Фото успешно загружено')));
+              const SnackBar(content: Text('Фото успешно загружено')),);
         }
       } else {
         throw Exception('Не удалось загрузить фото');

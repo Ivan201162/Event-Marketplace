@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/specialist_pricing_providers.dart';
+import 'package:event_marketplace_app/widgets/specialist_average_price_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/specialist.dart';
-import '../providers/specialist_pricing_providers.dart';
-import '../widgets/specialist_average_price_widget.dart';
 
 /// Экран для тестирования среднего прайса специалиста
 class SpecialistPricingTestScreen extends ConsumerStatefulWidget {
@@ -91,17 +90,17 @@ class _SpecialistPricingTestScreenState
   List<Widget> _buildSpecialistChips() {
     const testSpecialists = [
       _TestSpecialist(
-          'specialist_1', 'Фотограф Алексей', SpecialistCategory.photographer),
+          'specialist_1', 'Фотограф Алексей', SpecialistCategory.photographer,),
       _TestSpecialist(
-          'specialist_2', 'Видеограф Елена', SpecialistCategory.videographer),
+          'specialist_2', 'Видеограф Елена', SpecialistCategory.videographer,),
       _TestSpecialist('specialist_3', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('specialist_4', 'DJ Мария', SpecialistCategory.dj),
       _TestSpecialist(
-          'specialist_5', 'Декоратор Ольга', SpecialistCategory.decorator),
+          'specialist_5', 'Декоратор Ольга', SpecialistCategory.decorator,),
       _TestSpecialist(
-          'specialist_6', 'Музыкант Дмитрий', SpecialistCategory.musician),
+          'specialist_6', 'Музыкант Дмитрий', SpecialistCategory.musician,),
       _TestSpecialist(
-          'specialist_7', 'Аниматор Анна', SpecialistCategory.animator),
+          'specialist_7', 'Аниматор Анна', SpecialistCategory.animator,),
     ];
 
     return testSpecialists.map((specialist) {
@@ -130,7 +129,7 @@ class _SpecialistPricingTestScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Данные о ценах обновлены'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } on Exception catch (e) {
@@ -138,7 +137,7 @@ class _SpecialistPricingTestScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка обновления: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }

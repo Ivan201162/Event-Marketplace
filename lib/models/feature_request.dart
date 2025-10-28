@@ -37,23 +37,10 @@ class FeatureRequest {
     required this.id,
     required this.userId,
     required this.userName,
-    this.userEmail,
-    required this.userType,
-    required this.title,
-    required this.description,
-    required this.category,
-    required this.priority,
-    required this.status,
-    required this.tags,
-    required this.attachments,
-    required this.metadata,
-    required this.votes,
-    required this.voters,
+    required this.userType, required this.title, required this.description, required this.category, required this.priority, required this.status, required this.tags, required this.attachments, required this.metadata, required this.votes, required this.voters, required this.createdAt, required this.updatedAt, this.userEmail,
     this.adminComment,
     this.assignedTo,
     this.estimatedCompletion,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из Map
@@ -84,7 +71,7 @@ class FeatureRequest {
         attachments:
             List<String>.from((data['attachments'] as List<dynamic>?) ?? []),
         metadata: Map<String, dynamic>.from(
-            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {},),
         votes: data['votes'] as int? ?? 0,
         voters: List<String>.from((data['voters'] as List<dynamic>?) ?? []),
         adminComment: data['adminComment'] as String?,
@@ -348,7 +335,7 @@ class FeatureRequestStats {
           (data['userTypeStats'] as Map?)?.map(
                 (key, value) => MapEntry(
                   UserType.values.firstWhere((e) => e.name == key,
-                      orElse: () => UserType.customer),
+                      orElse: () => UserType.customer,),
                   value as int,
                 ),
               ) ??

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для отображения портфолио в виде сетки
 class PortfolioGridWidget extends StatelessWidget {
   const PortfolioGridWidget({
-    super.key,
-    required this.portfolioItems,
+    required this.portfolioItems, super.key,
     this.portfolioImages = const [],
     this.onAddItem,
     this.onItemTap,
@@ -40,10 +39,10 @@ class PortfolioGridWidget extends StatelessWidget {
             Icon(Icons.photo_library, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text('Портфолио пусто',
-                style: TextStyle(color: Colors.grey, fontSize: 16)),
+                style: TextStyle(color: Colors.grey, fontSize: 16),),
             SizedBox(height: 8),
             Text('Добавьте работы в портфолио',
-                style: TextStyle(color: Colors.grey, fontSize: 12)),
+                style: TextStyle(color: Colors.grey, fontSize: 12),),
           ],
         ),
       );
@@ -111,7 +110,7 @@ class PortfolioGridWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Icon(Icons.play_arrow,
-                        color: Colors.white, size: 16),
+                        color: Colors.white, size: 16,),
                   ),
                 ),
 
@@ -127,7 +126,7 @@ class PortfolioGridWidget extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withValues(alpha: 0.7)
+                        Colors.black.withValues(alpha: 0.7),
                       ],
                     ),
                   ),
@@ -151,7 +150,7 @@ class PortfolioGridWidget extends StatelessWidget {
                         Text(
                           description,
                           style: const TextStyle(
-                              color: Colors.white70, fontSize: 10),
+                              color: Colors.white70, fontSize: 10,),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -210,7 +209,7 @@ class PortfolioGridWidget extends StatelessWidget {
                 Icon(Icons.add_circle_outline, size: 32, color: Colors.grey),
                 SizedBox(height: 8),
                 Text('Добавить',
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    style: TextStyle(color: Colors.grey, fontSize: 12),),
               ],
             ),
           ),

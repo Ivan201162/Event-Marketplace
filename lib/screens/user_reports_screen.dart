@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
+import 'package:event_marketplace_app/services/weekly_reports_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/analytics_service.dart';
-import '../services/weekly_reports_service.dart';
 
 /// Экран отчётов пользователя
 class UserReportsScreen extends ConsumerStatefulWidget {
@@ -91,13 +90,13 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.error_outline,
-                            size: 64, color: Colors.red[300]),
+                            size: 64, color: Colors.red[300],),
                         const SizedBox(height: 16),
                         Text(_error!, style: const TextStyle(fontSize: 16)),
                         const SizedBox(height: 16),
                         ElevatedButton(
                             onPressed: _loadReports,
-                            child: const Text('Повторить')),
+                            child: const Text('Повторить'),),
                       ],
                     ),
                   )
@@ -142,7 +141,7 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(Icons.analytics,
-                            color: Colors.blue, size: 20),
+                            color: Colors.blue, size: 20,),
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -329,7 +328,7 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                 Icons.trending_up,
               ),
               _buildInfoItem('Рейтинг активности',
-                  '${_calculateActivityRating()}/10', Icons.star),
+                  '${_calculateActivityRating()}/10', Icons.star,),
             ],
           ),
         ),
@@ -343,7 +342,7 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
             const SizedBox(width: 8),
             Expanded(
                 child:
-                    Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(title, style: Theme.of(context).textTheme.bodyMedium),),
             Text(
               value,
               style: Theme.of(context)
@@ -412,16 +411,16 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
             const SizedBox(height: 16),
             if (isSpecialist) ...[
               _buildHistoryMetric(
-                  'Просмотры профиля', '${report['views'] ?? 0}'),
+                  'Просмотры профиля', '${report['views'] ?? 0}',),
               _buildHistoryMetric(
-                  'Получено заявок', '${report['requests'] ?? 0}'),
+                  'Получено заявок', '${report['requests'] ?? 0}',),
               _buildHistoryMetric('Сообщений', '${report['messages'] ?? 0}'),
               _buildHistoryMetric('Лайков', '${report['likes'] ?? 0}'),
             ] else ...[
               _buildHistoryMetric(
-                  'Создано заявок', '${report['totalRequests'] ?? 0}'),
+                  'Создано заявок', '${report['totalRequests'] ?? 0}',),
               _buildHistoryMetric('Просмотрено специалистами',
-                  '${report['viewedRequests'] ?? 0}'),
+                  '${report['viewedRequests'] ?? 0}',),
             ],
           ],
         ),
@@ -435,7 +434,7 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
           children: [
             Expanded(
                 child:
-                    Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+                    Text(title, style: Theme.of(context).textTheme.bodyMedium),),
             Text(
               value,
               style: Theme.of(context)

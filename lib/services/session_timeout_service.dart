@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import '../core/logger.dart';
-import 'auth_service.dart';
-import 'storage_service.dart';
+import 'package:event_marketplace_app/core/logger.dart';
+import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/services/storage_service.dart';
 
 /// Сервис для управления таймаутом сессии
 class SessionTimeoutService {
@@ -30,7 +30,7 @@ class SessionTimeoutService {
   /// Инициализировать отслеживание сессии
   void initialize() {
     AppLogger.logI(
-        'Инициализация отслеживания сессии', 'session_timeout_service');
+        'Инициализация отслеживания сессии', 'session_timeout_service',);
 
     // Запускаем таймер проверки активности
     _startActivityTimer();
@@ -52,7 +52,7 @@ class SessionTimeoutService {
   void markActivity() {
     _lastActivity = DateTime.now();
     AppLogger.logD(
-        'Активность пользователя отмечена', 'session_timeout_service');
+        'Активность пользователя отмечена', 'session_timeout_service',);
   }
 
   /// Запустить таймер проверки активности
@@ -92,20 +92,20 @@ class SessionTimeoutService {
   Future<void> _handleInactivity() async {
     try {
       AppLogger.logI(
-          'Обработка неактивности пользователя', 'session_timeout_service');
+          'Обработка неактивности пользователя', 'session_timeout_service',);
 
       // Сохраняем информацию о неактивности
       await _storageService.setString(
-          'last_inactivity', DateTime.now().toIso8601String());
+          'last_inactivity', DateTime.now().toIso8601String(),);
 
       // Выходим из системы
       await _authService.signOut();
 
       AppLogger.logI(
-          'Пользователь вышел из-за неактивности', 'session_timeout_service');
+          'Пользователь вышел из-за неактивности', 'session_timeout_service',);
     } on Exception catch (e) {
       AppLogger.logE(
-          'Ошибка обработки неактивности', 'session_timeout_service', e);
+          'Ошибка обработки неактивности', 'session_timeout_service', e,);
     }
   }
 
@@ -116,16 +116,16 @@ class SessionTimeoutService {
 
       // Сохраняем информацию о таймауте
       await _storageService.setString(
-          'session_timeout', DateTime.now().toIso8601String());
+          'session_timeout', DateTime.now().toIso8601String(),);
 
       // Выходим из системы
       await _authService.signOut();
 
       AppLogger.logI('Пользователь вышел из-за таймаута сессии',
-          'session_timeout_service');
+          'session_timeout_service',);
     } on Exception catch (e) {
       AppLogger.logE(
-          'Ошибка обработки таймаута сессии', 'session_timeout_service', e);
+          'Ошибка обработки таймаута сессии', 'session_timeout_service', e,);
     }
   }
 

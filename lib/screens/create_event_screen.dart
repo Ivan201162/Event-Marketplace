@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/calendar_event.dart' as calendar;
+import 'package:event_marketplace_app/models/event.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/event_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/calendar_event.dart' as calendar;
-import '../models/event.dart';
-import '../providers/auth_providers.dart';
-import '../providers/event_providers.dart';
 
 /// Экран создания/редактирования события
 class CreateEventScreen extends ConsumerStatefulWidget {
@@ -84,7 +83,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       appBar: AppBar(
         title: Text(widget.event != null
             ? 'Редактировать мероприятие'
-            : 'Создать мероприятие'),
+            : 'Создать мероприятие',),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           TextButton(
@@ -154,7 +153,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                         )
                       : Text(widget.event != null
                           ? 'Обновить мероприятие'
-                          : 'Создать мероприятие'),
+                          : 'Создать мероприятие',),
                 ),
               ),
 
@@ -268,7 +267,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Дата и время',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
 
               // Дата мероприятия
@@ -286,7 +285,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 leading: const Icon(Icons.event_available),
                 title: const Text('Дата окончания (опционально)'),
                 subtitle: Text(
-                    _endDate != null ? _formatDate(_endDate!) : 'Не указана'),
+                    _endDate != null ? _formatDate(_endDate!) : 'Не указана',),
                 onTap: _selectEndDate,
                 trailing: _endDate != null
                     ? IconButton(
@@ -510,7 +509,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Пользователь не авторизован'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
         return;
       }
@@ -560,7 +559,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                   content: Text('Мероприятие обновлено'),
-                  backgroundColor: Colors.green),
+                  backgroundColor: Colors.green,),
             );
           }
         } on Exception catch (e) {
@@ -568,7 +567,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content: Text('Ошибка обновления: $e'),
-                  backgroundColor: Colors.red),
+                  backgroundColor: Colors.red,),
             );
           }
         }
@@ -609,7 +608,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Мероприятие создано'),
-                backgroundColor: Colors.green),
+                backgroundColor: Colors.green,),
           );
         }
       }

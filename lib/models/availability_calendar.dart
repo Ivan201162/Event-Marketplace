@@ -7,10 +7,8 @@ class AvailabilityCalendar {
     required this.specialistId,
     required this.date,
     required this.timeSlots,
-    this.isAvailable = true,
+    required this.createdAt, required this.updatedAt, this.isAvailable = true,
     this.note,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из документа Firestore

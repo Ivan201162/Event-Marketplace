@@ -1,21 +1,11 @@
 /// Модель чата
 class Chat {
-  final String id;
-  final List<String> participants;
-  final String? lastMessage;
-  final DateTime? lastMessageTime;
-  final int unreadCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const Chat({
     required this.id,
     required this.participants,
-    this.lastMessage,
+    required this.unreadCount, required this.createdAt, required this.updatedAt, this.lastMessage,
     this.lastMessageTime,
-    required this.unreadCount,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory Chat.fromMap(Map<String, dynamic> map, String id) {
@@ -33,6 +23,13 @@ class Chat {
           DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
+  final String id;
+  final List<String> participants;
+  final String? lastMessage;
+  final DateTime? lastMessageTime;
+  final int unreadCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toMap() {
     return {

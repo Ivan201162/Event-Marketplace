@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/organizer_chat.dart';
 import 'package:flutter/material.dart';
-
-import '../models/organizer_chat.dart';
 
 class OrganizerMessageBubble extends StatelessWidget {
   const OrganizerMessageBubble(
-      {super.key, required this.message, required this.isFromCurrentUser});
+      {required this.message, required this.isFromCurrentUser, super.key,});
   final OrganizerMessage message;
   final bool isFromCurrentUser;
 
@@ -24,7 +23,7 @@ class OrganizerMessageBubble extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
               ),
             ),
             const SizedBox(width: 8),
@@ -32,7 +31,7 @@ class OrganizerMessageBubble extends StatelessWidget {
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.7),
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isFromCurrentUser
@@ -122,7 +121,7 @@ class OrganizerMessageBubble extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
               ),
             ),
           ],
@@ -137,35 +136,27 @@ class OrganizerMessageBubble extends StatelessWidget {
       case OrganizerMessageType.specialistProposal:
         headerColor = Colors.green;
         headerIcon = Icons.person_add;
-        break;
       case OrganizerMessageType.specialistRejection:
         headerColor = Colors.red;
         headerIcon = Icons.person_remove;
-        break;
       case OrganizerMessageType.bookingRequest:
         headerColor = Colors.blue;
         headerIcon = Icons.book_online;
-        break;
       case OrganizerMessageType.bookingConfirmation:
         headerColor = Colors.green;
         headerIcon = Icons.check_circle;
-        break;
       case OrganizerMessageType.bookingCancellation:
         headerColor = Colors.red;
         headerIcon = Icons.cancel;
-        break;
       case OrganizerMessageType.file:
         headerColor = Colors.orange;
         headerIcon = Icons.attach_file;
-        break;
       case OrganizerMessageType.image:
         headerColor = Colors.purple;
         headerIcon = Icons.image;
-        break;
       case OrganizerMessageType.system:
         headerColor = Colors.grey;
         headerIcon = Icons.info;
-        break;
       default:
         headerColor = Colors.blue;
         headerIcon = Icons.message;
@@ -186,7 +177,7 @@ class OrganizerMessageBubble extends StatelessWidget {
           Text(
             message.displayType,
             style: TextStyle(
-                color: headerColor, fontSize: 12, fontWeight: FontWeight.bold),
+                color: headerColor, fontSize: 12, fontWeight: FontWeight.bold,),
           ),
         ],
       ),
@@ -210,7 +201,7 @@ class OrganizerMessageBubble extends StatelessWidget {
 
 /// Виджет для отображения системных сообщений
 class SystemMessageWidget extends StatelessWidget {
-  const SystemMessageWidget({super.key, required this.message});
+  const SystemMessageWidget({required this.message, super.key});
   final OrganizerMessage message;
 
   @override
@@ -228,7 +219,7 @@ class SystemMessageWidget extends StatelessWidget {
               Icon(Icons.info_outline, size: 16, color: Colors.grey.shade600),
               const SizedBox(width: 8),
               Text(message.text,
-                  style: TextStyle(color: Colors.grey.shade700, fontSize: 12)),
+                  style: TextStyle(color: Colors.grey.shade700, fontSize: 12),),
             ],
           ),
         ),

@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/local_data_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../providers/local_data_providers.dart';
 
 class CategoryGridWidget extends ConsumerWidget {
   const CategoryGridWidget({super.key});
@@ -32,13 +31,13 @@ class CategoryGridWidget extends ConsumerWidget {
           },
         );
       },
-      loading: () => _buildLoadingState(),
+      loading: _buildLoadingState,
       error: (error, stack) => _buildErrorState(error.toString()),
     );
   }
 
   Widget _buildCategoryCard(
-      BuildContext context, Map<String, dynamic> category) {
+      BuildContext context, Map<String, dynamic> category,) {
     return GestureDetector(
       onTap: () {
         context
@@ -100,7 +99,7 @@ class CategoryGridWidget extends ConsumerWidget {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-          color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
       child: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +107,7 @@ class CategoryGridWidget extends ConsumerWidget {
             Icon(Icons.category_outlined, size: 48, color: Colors.grey),
             SizedBox(height: 8),
             Text('Нет доступных категорий',
-                style: TextStyle(color: Colors.grey, fontSize: 14)),
+                style: TextStyle(color: Colors.grey, fontSize: 14),),
           ],
         ),
       ),
@@ -119,7 +118,7 @@ class CategoryGridWidget extends ConsumerWidget {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-          color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
       child: const Center(child: CircularProgressIndicator()),
     );
   }
@@ -128,7 +127,7 @@ class CategoryGridWidget extends ConsumerWidget {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-          color: Colors.red[50], borderRadius: BorderRadius.circular(12)),
+          color: Colors.red[50], borderRadius: BorderRadius.circular(12),),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

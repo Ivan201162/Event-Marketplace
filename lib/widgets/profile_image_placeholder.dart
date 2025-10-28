@@ -44,7 +44,7 @@ class ProfileImagePlaceholder extends StatelessWidget {
         border: showBorder
             ? (border ??
                 Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2)))
+                    color: theme.colorScheme.outline.withValues(alpha: 0.2),))
             : null,
       ),
       child: Center(
@@ -132,7 +132,7 @@ class ProfileAvatar extends StatelessWidget {
                 ? (border ??
                     Border.all(
                         color:
-                            theme.colorScheme.outline.withValues(alpha: 0.2)))
+                            theme.colorScheme.outline.withValues(alpha: 0.2),))
                 : null,
             image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
           ),
@@ -181,8 +181,7 @@ class ProfileAvatar extends StatelessWidget {
 /// Виджет для отображения группы аватаров
 class AvatarGroup extends StatelessWidget {
   const AvatarGroup({
-    super.key,
-    required this.avatars,
+    required this.avatars, super.key,
     this.maxVisible = 3,
     this.size = 40,
     this.spacing = -8,

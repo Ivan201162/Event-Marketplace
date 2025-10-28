@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../core/safe_log.dart';
-import '../providers/auth_providers.dart';
 
 /// Экран сброса пароля
 class ResetPasswordScreen extends ConsumerStatefulWidget {
@@ -82,7 +81,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
           children: [
             const SizedBox(height: 32),
             Icon(Icons.lock_reset,
-                size: 80, color: Theme.of(context).colorScheme.primary),
+                size: 80, color: Theme.of(context).colorScheme.primary,),
             const SizedBox(height: 32),
             Text(
               'Сброс пароля',
@@ -128,7 +127,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             ElevatedButton(
               onPressed: _isLoading ? null : _resetPassword,
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),),
               child: _isLoading
                   ? const SizedBox(
                       height: 20,
@@ -151,7 +150,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
         children: [
           const SizedBox(height: 32),
           Icon(Icons.mark_email_read,
-              size: 80, color: Theme.of(context).colorScheme.primary),
+              size: 80, color: Theme.of(context).colorScheme.primary,),
           const SizedBox(height: 32),
           Text(
             'Письмо отправлено!',
@@ -182,7 +181,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             child: Column(
               children: [
                 Icon(Icons.info_outline,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer),
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,),
                 const SizedBox(height: 8),
                 Text(
                   'Проверьте папку "Спам", если письмо не пришло в течение нескольких минут',
@@ -197,7 +196,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
           const SizedBox(height: 32),
           ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Понятно')),
+              child: const Text('Понятно'),),
           const SizedBox(height: 16),
           TextButton(
             onPressed: () {

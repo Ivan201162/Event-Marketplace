@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/specialist_proposal.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/specialist_proposal.dart';
-import 'notification_service.dart';
 
 class ProposalService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -124,25 +124,25 @@ class ProposalService {
 
   // Получение всех предложений для заказчика
   static Stream<List<SpecialistProposal>> getCustomerProposals(
-          String customerId) =>
+          String customerId,) =>
       _firestore
           .collection(_collection)
           .where('customerId', isEqualTo: customerId)
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
+              snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),);
 
   // Получение всех предложений от организатора
   static Stream<List<SpecialistProposal>> getOrganizerProposals(
-          String organizerId) =>
+          String organizerId,) =>
       _firestore
           .collection(_collection)
           .where('organizerId', isEqualTo: organizerId)
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
+              snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),);
 
   // Получение предложений по статусу
   static Stream<List<SpecialistProposal>> getProposalsByStatus(
@@ -158,7 +158,7 @@ class ProposalService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
+            snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),);
   }
 
   // Получение активных предложений (pending)
@@ -176,7 +176,7 @@ class ProposalService {
 
   // Обновление предложения
   static Future<void> updateProposal(
-      String proposalId, Map<String, dynamic> updates) async {
+      String proposalId, Map<String, dynamic> updates,) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(proposalId).update(updates);

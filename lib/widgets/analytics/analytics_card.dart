@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 class AnalyticsCard extends StatelessWidget {
   const AnalyticsCard({
-    super.key,
-    required this.title,
-    required this.value,
-    required this.icon,
-    required this.color,
+    required this.title, required this.value, required this.icon, required this.color, super.key,
   });
   final String title;
   final String value;
@@ -47,11 +43,11 @@ class AnalyticsCard extends StatelessWidget {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(title,
-                style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),),
           ],
         ),
       );

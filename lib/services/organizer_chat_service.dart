@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/organizer_chat.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/organizer_chat.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис для управления чатами с организатором
 class OrganizerChatService {
@@ -16,8 +16,7 @@ class OrganizerChatService {
     required String organizerId,
     required String organizerName,
     required String eventTitle,
-    String? eventDescription,
-    required DateTime eventDate,
+    required DateTime eventDate, String? eventDescription,
   }) async {
     try {
       final chatId =
@@ -101,7 +100,7 @@ class OrganizerChatService {
           .orderBy('lastMessageAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(OrganizerChat.fromDocument).toList());
+              snapshot.docs.map(OrganizerChat.fromDocument).toList(),);
 
   /// Поток чатов организатора
   Stream<List<OrganizerChat>> getOrganizerChatsStream(String organizerId) =>
@@ -111,7 +110,7 @@ class OrganizerChatService {
           .orderBy('lastMessageAt', descending: true)
           .snapshots()
           .map((snapshot) =>
-              snapshot.docs.map(OrganizerChat.fromDocument).toList());
+              snapshot.docs.map(OrganizerChat.fromDocument).toList(),);
 
   /// Получить чат по ID
   Future<OrganizerChat?> getChatById(String chatId) async {
@@ -304,7 +303,7 @@ class OrganizerChatService {
 
   /// Обновить статус чата
   Future<void> updateChatStatus(
-      String chatId, OrganizerChatStatus status) async {
+      String chatId, OrganizerChatStatus status,) async {
     try {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'status': status.name,
@@ -343,7 +342,7 @@ class OrganizerChatService {
           .snapshots()
           .map((snapshot) => snapshot.docs
               .map((doc) => OrganizerMessage.fromMap(doc.data()))
-              .toList());
+              .toList(),);
 
   /// Удалить чат
   Future<void> deleteChat(String chatId) async {

@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/features/reviews/data/repositories/review_repository.dart';
+import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../models/review.dart';
-import '../data/repositories/review_repository.dart';
 
 /// Экран добавления отзыва
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen(
-      {super.key, required this.specialistId, required this.specialistName});
+      {required this.specialistId, required this.specialistName, super.key,});
   final String specialistId;
   final String specialistName;
 
@@ -160,7 +159,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     child: Column(
                       children: [
                         Icon(Icons.info_outline,
-                            color: Colors.grey[600], size: 48),
+                            color: Colors.grey[600], size: 48,),
                         const SizedBox(height: 8),
                         Text(
                           'Нет доступных заказов для отзыва',
@@ -390,7 +389,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(
-          content: Text('Выберите заказ'), backgroundColor: Colors.red));
+          content: Text('Выберите заказ'), backgroundColor: Colors.red,),);
       return;
     }
 
@@ -406,7 +405,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
       final review = Review(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        bookingId: _selectedBookingId!,
+        bookingId: _selectedBookingId,
         specialistId: widget.specialistId,
         customerId: authProvider.user!.uid,
         rating: _rating,
@@ -420,7 +419,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Спасибо! Отзыв отправлен'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         Navigator.pop(context);
       }
@@ -429,7 +428,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {

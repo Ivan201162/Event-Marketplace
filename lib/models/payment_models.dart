@@ -37,13 +37,36 @@ class PaymentMethodInfo {
     required this.userId,
     required this.type,
     required this.name,
-    this.cardLast4,
+    required this.createdAt, this.cardLast4,
     this.cardBrand,
     this.isDefault = false,
     this.isActive = true,
-    required this.createdAt,
     this.updatedAt,
   });
+
+  /// Создать из Map
+  factory PaymentMethodInfo.fromMap(Map<String, dynamic> data) {
+    return PaymentMethodInfo(
+      id: data['id'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      type: _parseType(data['type']),
+      name: data['name'] as String? ?? '',
+      cardLast4: data['cardLast4'] as String?,
+      cardBrand: data['cardBrand'] as String?,
+      isDefault: data['isDefault'] as bool? ?? false,
+      isActive: data['isActive'] as bool? ?? true,
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] is Timestamp
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
+          : null,
+    );
+  }
 
   /// Get icon for payment method
   String get icon => type.icon;
@@ -74,30 +97,6 @@ class PaymentMethodInfo {
   final bool isActive;
   final DateTime createdAt;
   final DateTime? updatedAt;
-
-  /// Создать из Map
-  factory PaymentMethodInfo.fromMap(Map<String, dynamic> data) {
-    return PaymentMethodInfo(
-      id: data['id'] as String? ?? '',
-      userId: data['userId'] as String? ?? '',
-      type: _parseType(data['type']),
-      name: data['name'] as String? ?? '',
-      cardLast4: data['cardLast4'] as String?,
-      cardBrand: data['cardBrand'] as String?,
-      isDefault: data['isDefault'] as bool? ?? false,
-      isActive: data['isActive'] as bool? ?? true,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
-          : null,
-    );
-  }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -186,43 +185,12 @@ class PaymentMethod {
     required this.userId,
     required this.type,
     required this.name,
-    this.cardLast4,
+    required this.createdAt, this.cardLast4,
     this.cardBrand,
     this.isDefault = false,
     this.isActive = true,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  /// Get icon for payment method
-  String get icon => type.icon;
-
-  /// Get display name for payment method
-  String get displayName {
-    switch (type) {
-      case PaymentMethodType.card:
-        return 'Банковская карта';
-      case PaymentMethodType.bankTransfer:
-        return 'Банковский перевод';
-      case PaymentMethodType.digitalWallet:
-        return 'Цифровой кошелек';
-      case PaymentMethodType.cash:
-        return 'Наличные';
-      case PaymentMethodType.other:
-        return 'Другое';
-    }
-  }
-
-  final String id;
-  final String userId;
-  final PaymentMethodType type;
-  final String name;
-  final String? cardLast4;
-  final String? cardBrand;
-  final bool isDefault;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory PaymentMethod.fromMap(Map<String, dynamic> data) {
@@ -257,6 +225,36 @@ class PaymentMethod {
 
     return PaymentMethod.fromMap({'id': doc.id, ...data});
   }
+
+  /// Get icon for payment method
+  String get icon => type.icon;
+
+  /// Get display name for payment method
+  String get displayName {
+    switch (type) {
+      case PaymentMethodType.card:
+        return 'Банковская карта';
+      case PaymentMethodType.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethodType.digitalWallet:
+        return 'Цифровой кошелек';
+      case PaymentMethodType.cash:
+        return 'Наличные';
+      case PaymentMethodType.other:
+        return 'Другое';
+    }
+  }
+
+  final String id;
+  final String userId;
+  final PaymentMethodType type;
+  final String name;
+  final String? cardLast4;
+  final String? cardBrand;
+  final bool isDefault;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -346,7 +344,7 @@ class Payment {
     required this.amount,
     required this.currency,
     required this.status,
-    this.paymentMethodId,
+    required this.createdAt, this.paymentMethodId,
     this.paymentMethod,
     this.externalTransactionId,
     this.provider,
@@ -354,25 +352,8 @@ class Payment {
     this.metadata = const {},
     this.failureReason,
     this.processedAt,
-    required this.createdAt,
     this.updatedAt,
   });
-
-  final String id;
-  final String userId;
-  final double amount;
-  final String currency;
-  final PaymentStatus status;
-  final String? paymentMethodId;
-  final PaymentMethod? paymentMethod;
-  final String? externalTransactionId;
-  final String? provider;
-  final String? description;
-  final Map<String, dynamic> metadata;
-  final String? failureReason;
-  final DateTime? processedAt;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
 
   /// Создать из Map
   factory Payment.fromMap(Map<String, dynamic> data) {
@@ -385,7 +366,7 @@ class Payment {
       paymentMethodId: data['paymentMethodId'] as String?,
       paymentMethod: data['paymentMethod'] != null
           ? PaymentMethod.fromMap(
-              Map<String, dynamic>.from(data['paymentMethod']))
+              Map<String, dynamic>.from(data['paymentMethod']),)
           : null,
       externalTransactionId: data['externalTransactionId'] as String?,
       provider: data['provider'] as String?,
@@ -419,6 +400,22 @@ class Payment {
 
     return Payment.fromMap({'id': doc.id, ...data});
   }
+
+  final String id;
+  final String userId;
+  final double amount;
+  final String currency;
+  final PaymentStatus status;
+  final String? paymentMethodId;
+  final PaymentMethod? paymentMethod;
+  final String? externalTransactionId;
+  final String? provider;
+  final String? description;
+  final Map<String, dynamic> metadata;
+  final String? failureReason;
+  final DateTime? processedAt;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -543,16 +540,6 @@ class PaymentStats {
     this.period,
   });
 
-  final String userId;
-  final double totalAmount;
-  final int totalTransactions;
-  final int successfulTransactions;
-  final int failedTransactions;
-  final int pendingTransactions;
-  final double averageTransactionAmount;
-  final DateTime? lastTransactionAt;
-  final String? period;
-
   /// Создать из Map
   factory PaymentStats.fromMap(Map<String, dynamic> data) {
     return PaymentStats(
@@ -572,6 +559,16 @@ class PaymentStats {
       period: data['period'] as String?,
     );
   }
+
+  final String userId;
+  final double totalAmount;
+  final int totalTransactions;
+  final int successfulTransactions;
+  final int failedTransactions;
+  final int pendingTransactions;
+  final double averageTransactionAmount;
+  final DateTime? lastTransactionAt;
+  final String? period;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -616,13 +613,13 @@ class PaymentStats {
 
   /// Получить процент успешных транзакций
   double get successRate {
-    if (totalTransactions == 0) return 0.0;
+    if (totalTransactions == 0) return 0;
     return (successfulTransactions / totalTransactions) * 100;
   }
 
   /// Получить процент неудачных транзакций
   double get failureRate {
-    if (totalTransactions == 0) return 0.0;
+    if (totalTransactions == 0) return 0;
     return (failedTransactions / totalTransactions) * 100;
   }
 

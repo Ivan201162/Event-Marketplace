@@ -1,22 +1,21 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../models/chat_enhanced.dart';
-import '../services/chat_service_enhanced.dart';
+import 'package:event_marketplace_app/models/chat_enhanced.dart';
+import 'package:event_marketplace_app/services/chat_service_enhanced.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для получения чатов пользователя
 final userChatsProvider =
     FutureProvider.family<List<ChatEnhanced>, ChatFilters?>(
   (ref, filters) async {
-    return await ChatServiceEnhanced.getUserChats(filters: filters);
+    return ChatServiceEnhanced.getUserChats(filters: filters);
   },
 );
 
 /// Провайдер для получения чата по ID
 final chatByIdProvider = FutureProvider.family<ChatEnhanced?, String>(
   (ref, chatId) async {
-    return await ChatServiceEnhanced.getChatById(chatId);
+    return ChatServiceEnhanced.getChatById(chatId);
   },
 );
 
@@ -29,7 +28,7 @@ final chatMessagesProvider =
     final limit = params['limit'] as int? ?? 50;
     final lastDocument = params['lastDocument'] as DocumentSnapshot?;
 
-    return await ChatServiceEnhanced.getChatMessages(
+    return ChatServiceEnhanced.getChatMessages(
       chatId: chatId,
       filters: filters,
       limit: limit,
@@ -46,7 +45,7 @@ final searchMessagesProvider =
     final query = params['query'] as String;
     final filters = params['filters'] as MessageFilters?;
 
-    return await ChatServiceEnhanced.searchMessages(
+    return ChatServiceEnhanced.searchMessages(
       chatId: chatId,
       query: query,
       filters: filters,
@@ -100,16 +99,16 @@ final chatNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>(
           'chat_created',
           'group_invite',
           'request_chat',
-          'message'
-        ])
+          'message',
+        ],)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => {
                   'id': doc.id,
                   ...doc.data(),
-                })
-            .toList());
+                },)
+            .toList(),);
   },
 );
 
@@ -126,7 +125,7 @@ final unreadMessagesCountProvider = StreamProvider<int>(
         .map((snapshot) => snapshot.docs.fold(0, (sum, doc) {
               final data = doc.data();
               return sum + (data['unreadCount'] ?? 0);
-            }));
+            }),);
   },
 );
 

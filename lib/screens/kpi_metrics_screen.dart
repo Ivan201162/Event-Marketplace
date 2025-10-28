@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/kpi_metrics.dart';
+import 'package:event_marketplace_app/services/kpi_metrics_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/kpi_metrics.dart';
-import '../services/kpi_metrics_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления KPI метриками
 class KPIMetricsScreen extends ConsumerStatefulWidget {
@@ -65,12 +65,12 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('metrics', 'Метрики', Icons.analytics)),
+                child: _buildTabButton('metrics', 'Метрики', Icons.analytics),),
             Expanded(
                 child:
-                    _buildTabButton('dashboards', 'Дашборды', Icons.dashboard)),
+                    _buildTabButton('dashboards', 'Дашборды', Icons.dashboard),),
             Expanded(
-                child: _buildTabButton('reports', 'Отчеты', Icons.assessment)),
+                child: _buildTabButton('reports', 'Отчеты', Icons.assessment),),
           ],
         ),
       );
@@ -93,7 +93,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -128,7 +128,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   hint: const Text('Все категории'),
                   items: [
                     const DropdownMenuItem<MetricCategory?>(
-                        child: Text('Все категории')),
+                        child: Text('Все категории'),),
                     ...MetricCategory.values.map(
                       (category) => DropdownMenuItem<MetricCategory?>(
                         value: category,
@@ -149,7 +149,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   hint: const Text('Все типы'),
                   items: [
                     const DropdownMenuItem<MetricType?>(
-                        child: Text('Все типы')),
+                        child: Text('Все типы'),),
                     ...MetricType.values.map(
                       (type) => DropdownMenuItem<MetricType?>(
                         value: type,
@@ -170,7 +170,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   hint: const Text('Все статусы'),
                   items: [
                     const DropdownMenuItem<MetricStatus?>(
-                        child: Text('Все статусы')),
+                        child: Text('Все статусы'),),
                     ...MetricStatus.values.map(
                       (status) => DropdownMenuItem<MetricStatus?>(
                         value: status,
@@ -251,7 +251,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   Widget _buildAnalysisCard(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -266,12 +266,12 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color,),
             ),
             const SizedBox(height: 4),
             Text(title,
                 style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center),
+                textAlign: TextAlign.center,),
           ],
         ),
       );
@@ -283,7 +283,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
             child: Row(
               children: [
                 Text('KPI метрики',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showAddMetricDialog,
@@ -336,10 +336,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                     Text(
                       metric.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(metric.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -355,7 +355,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -371,7 +371,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: categoryColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               const SizedBox(width: 8),
@@ -387,7 +387,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -397,13 +397,13 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -476,7 +476,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   .map(
                     (tag) => Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                          horizontal: 6, vertical: 2,),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -512,7 +512,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
             child: Row(
               children: [
                 Text('KPI дашборды',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showCreateDashboardDialog,
@@ -552,7 +552,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
             Row(
               children: [
                 Text(dashboard.layout.icon,
-                    style: const TextStyle(fontSize: 24)),
+                    style: const TextStyle(fontSize: 24),),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(
@@ -561,10 +561,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                       Text(
                         dashboard.name,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,),
                       ),
                       Text(dashboard.description,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                     ],
                   ),
                 ),
@@ -600,7 +600,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.green,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 if (dashboard.isDefault)
@@ -618,7 +618,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 PopupMenuButton<String>(
@@ -629,13 +629,13 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                       value: 'view',
                       child: ListTile(
                           leading: Icon(Icons.visibility),
-                          title: Text('Просмотр')),
+                          title: Text('Просмотр'),),
                     ),
                     const PopupMenuItem(
                       value: 'edit',
                       child: ListTile(
                           leading: Icon(Icons.edit),
-                          title: Text('Редактировать')),
+                          title: Text('Редактировать'),),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),
@@ -649,10 +649,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
             Row(
               children: [
                 _buildInfoChip(
-                    'Метрики', '${dashboard.metricIds.length}', Colors.blue),
+                    'Метрики', '${dashboard.metricIds.length}', Colors.blue,),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Теги', '${dashboard.tags.length}', Colors.green),
+                    'Теги', '${dashboard.tags.length}', Colors.green,),
               ],
             ),
 
@@ -680,7 +680,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
             child: Row(
               children: [
                 Text('KPI отчеты',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _showCreateReportDialog,
@@ -731,10 +731,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                     Text(
                       report.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(report.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -750,7 +750,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   style: TextStyle(
                       fontSize: 12,
                       color: statusColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -760,14 +760,14 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   if (report.status == ReportStatus.draft)
                     const PopupMenuItem(
                       value: 'generate',
                       child: ListTile(
                           leading: Icon(Icons.play_arrow),
-                          title: Text('Генерировать')),
+                          title: Text('Генерировать'),),
                     ),
                   if (report.status == ReportStatus.ready &&
                       report.fileUrl != null)
@@ -775,7 +775,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                       value: 'download',
                       child: ListTile(
                           leading: Icon(Icons.download),
-                          title: Text('Скачать')),
+                          title: Text('Скачать'),),
                     ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -789,10 +789,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           Row(
             children: [
               _buildInfoChip(
-                  'Метрики', '${report.metricIds.length}', Colors.blue),
+                  'Метрики', '${report.metricIds.length}', Colors.blue,),
               const SizedBox(width: 8),
               _buildInfoChip(
-                  'Дашборды', '${report.dashboardIds.length}', Colors.green),
+                  'Дашборды', '${report.dashboardIds.length}', Colors.green,),
               const SizedBox(width: 8),
               _buildInfoChip(
                 'Период',
@@ -830,7 +830,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -959,7 +959,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -1015,10 +1015,8 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     switch (action) {
       case 'view':
         _viewMetric(metric);
-        break;
       case 'edit':
         _editMetric(metric);
-        break;
     }
   }
 
@@ -1026,10 +1024,8 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     switch (action) {
       case 'view':
         _viewDashboard(dashboard);
-        break;
       case 'edit':
         _editDashboard(dashboard);
-        break;
     }
   }
 
@@ -1037,13 +1033,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     switch (action) {
       case 'view':
         _viewReport(report);
-        break;
       case 'generate':
         _generateReport(report);
-        break;
       case 'download':
         _downloadReport(report);
-        break;
     }
   }
 
@@ -1052,7 +1045,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Просмотр метрики "${metric.name}" будет реализован')));
+        content: Text('Просмотр метрики "${metric.name}" будет реализован'),),);
   }
 
   void _editMetric(KPIMetric metric) {
@@ -1060,7 +1053,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование метрики "${metric.name}" будет реализовано')),
+              'Редактирование метрики "${metric.name}" будет реализовано',),),
     );
   }
 
@@ -1069,7 +1062,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content:
-              Text('Просмотр дашборда "${dashboard.name}" будет реализован')),
+              Text('Просмотр дашборда "${dashboard.name}" будет реализован'),),
     );
   }
 
@@ -1078,7 +1071,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Редактирование дашборда "${dashboard.name}" будет реализовано')),
+              'Редактирование дашборда "${dashboard.name}" будет реализовано',),),
     );
   }
 
@@ -1087,7 +1080,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Просмотр отчета "${report.name}" будет реализован')));
+        content: Text('Просмотр отчета "${report.name}" будет реализован'),),);
   }
 
   Future<void> _generateReport(KPIReport report) async {
@@ -1104,7 +1097,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка генерации отчета: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -1114,7 +1107,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Скачивание отчета "${report.name}" будет реализовано')));
+        content: Text('Скачивание отчета "${report.name}" будет реализовано'),),);
   }
 
   void _showAddMetricDialog() {
@@ -1122,7 +1115,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Добавление метрики будет реализовано')));
+        const SnackBar(content: Text('Добавление метрики будет реализовано')),);
   }
 
   void _showCreateDashboardDialog() {
@@ -1130,7 +1123,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание дашборда будет реализовано')));
+        const SnackBar(content: Text('Создание дашборда будет реализовано')),);
   }
 
   void _showCreateReportDialog() {
@@ -1138,6 +1131,6 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание отчета будет реализовано')));
+        const SnackBar(content: Text('Создание отчета будет реализовано')),);
   }
 }

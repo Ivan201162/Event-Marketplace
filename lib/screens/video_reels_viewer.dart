@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/event_idea.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/screens/idea_detail_screen.dart';
+import 'package:event_marketplace_app/screens/share_idea_screen.dart';
+import 'package:event_marketplace_app/services/event_ideas_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
-
-import '../models/event_idea.dart';
-import '../providers/auth_providers.dart';
-import '../services/event_ideas_service.dart';
-import 'idea_detail_screen.dart';
-import 'share_idea_screen.dart';
 
 class VideoReelsViewer extends ConsumerStatefulWidget {
   const VideoReelsViewer({super.key, this.initialIdea});
@@ -42,7 +41,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
 
     _loadVideos();
     _animationController.forward();
@@ -123,7 +122,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
         backgroundColor: Colors.black,
         body: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Colors.white))
+                child: CircularProgressIndicator(color: Colors.white),)
             : _videos.isEmpty
                 ? const Center(
                     child: Text(
@@ -172,7 +171,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
             Container(
               color: Colors.grey[900],
               child: const Center(
-                  child: CircularProgressIndicator(color: Colors.white)),
+                  child: CircularProgressIndicator(color: Colors.white),),
             ),
 
           // Информация о видео
@@ -187,7 +186,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7)
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -231,7 +230,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
                             : null,
                         child: video.authorAvatar == null
                             ? const Icon(Icons.person,
-                                size: 16, color: Colors.white)
+                                size: 16, color: Colors.white,)
                             : null,
                       ),
                       const SizedBox(width: 8),
@@ -247,7 +246,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
                       Text(
                         _formatDate(video.createdAt),
                         style: const TextStyle(
-                            color: Colors.white70, fontSize: 12),
+                            color: Colors.white70, fontSize: 12,),
                       ),
                     ],
                   ),
@@ -301,9 +300,9 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: const BoxDecoration(
-                      color: Colors.black54, shape: BoxShape.circle),
+                      color: Colors.black54, shape: BoxShape.circle,),
                   child: const Icon(Icons.play_arrow,
-                      color: Colors.white, size: 60),
+                      color: Colors.white, size: 60,),
                 ),
               ),
             ),
@@ -317,7 +316,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(
-                    color: Colors.black54, shape: BoxShape.circle),
+                    color: Colors.black54, shape: BoxShape.circle,),
                 child: const Icon(Icons.close, color: Colors.white, size: 24),
               ),
             ),
@@ -354,7 +353,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: const BoxDecoration(
-              color: Colors.black54, shape: BoxShape.circle),
+              color: Colors.black54, shape: BoxShape.circle,),
           child: Column(
             children: [
               Icon(icon, color: color, size: 24),
@@ -364,7 +363,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 12,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
               ),
             ],
           ),
@@ -387,12 +386,12 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer>
 
   Future<void> _shareVideo(EventIdea video) async {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ShareIdeaScreen(idea: video)));
+        MaterialPageRoute(builder: (context) => ShareIdeaScreen(idea: video)),);
   }
 
   void _openComments(EventIdea video) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => IdeaDetailScreen(idea: video)));
+        MaterialPageRoute(builder: (context) => IdeaDetailScreen(idea: video)),);
   }
 
   String _formatDate(DateTime date) {

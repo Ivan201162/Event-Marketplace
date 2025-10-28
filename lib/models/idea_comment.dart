@@ -3,28 +3,13 @@ import 'package:equatable/equatable.dart';
 
 /// Idea comment model
 class IdeaComment extends Equatable {
-  final String id;
-  final String ideaId;
-  final String authorId;
-  final String authorName;
-  final String? authorAvatar;
-  final String content;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int likesCount;
-  final List<String> likedBy;
-  final String? parentCommentId;
-  final List<String> replies;
 
   const IdeaComment({
     required this.id,
     required this.ideaId,
     required this.authorId,
     required this.authorName,
-    this.authorAvatar,
-    required this.content,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.content, required this.createdAt, required this.updatedAt, this.authorAvatar,
     this.likesCount = 0,
     this.likedBy = const [],
     this.parentCommentId,
@@ -33,7 +18,7 @@ class IdeaComment extends Equatable {
 
   /// Create IdeaComment from Firestore document
   factory IdeaComment.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return IdeaComment(
       id: doc.id,
       ideaId: data['ideaId'] ?? '',
@@ -49,6 +34,18 @@ class IdeaComment extends Equatable {
       replies: List<String>.from(data['replies'] ?? []),
     );
   }
+  final String id;
+  final String ideaId;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatar;
+  final String content;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int likesCount;
+  final List<String> likedBy;
+  final String? parentCommentId;
+  final List<String> replies;
 
   /// Convert IdeaComment to Firestore document
   Map<String, dynamic> toFirestore() {

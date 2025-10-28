@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/booking.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис для работы с ценами специалистов
 class SpecialistPricingService {
@@ -57,7 +57,7 @@ class SpecialistPricingService {
 
       // Рассчитываем среднюю цену
       final totalPrice = specialists.fold<double>(
-          0, (sum, specialist) => sum + specialist.price);
+          0, (sum, specialist) => sum + specialist.price,);
       final averagePrice = totalPrice / specialists.length;
 
       return averagePrice;
@@ -69,7 +69,7 @@ class SpecialistPricingService {
 
   /// Получить статистику цен специалиста
   Future<SpecialistPricingStats> getSpecialistPricingStats(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       // Получаем все завершенные заказы специалиста
       final bookingsSnapshot = await _firestore
@@ -127,7 +127,7 @@ class SpecialistPricingService {
 
   /// Получить историю цен специалиста
   Future<List<PriceHistoryEntry>> getSpecialistPriceHistory(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       // Получаем все завершенные заказы специалиста с датами
       final bookingsSnapshot = await _firestore

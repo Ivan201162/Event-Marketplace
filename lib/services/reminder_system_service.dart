@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:developer' as developer;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
 import 'package:flutter/foundation.dart';
-
-import 'error_logging_service.dart';
 
 /// Сервис системы напоминаний
 class ReminderSystemService {
@@ -113,7 +112,7 @@ class ReminderSystemService {
         action: 'create_reminder',
         additionalData: {
           'title': title,
-          'reminderTime': reminderTime.toIso8601String()
+          'reminderTime': reminderTime.toIso8601String(),
         },
       );
       return null;
@@ -137,7 +136,7 @@ class ReminderSystemService {
       _activeReminders.remove(reminderId);
 
       final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp()
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       if (title != null) updates['title'] = title;
@@ -235,7 +234,7 @@ class ReminderSystemService {
       }
       if (endDate != null) {
         query = query.where('nextReminderTime',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       query = query.orderBy('nextReminderTime').limit(limit);
@@ -280,7 +279,7 @@ class ReminderSystemService {
 
   /// Планировать напоминание
   Future<void> _scheduleReminder(
-      String reminderId, Map<String, dynamic> reminder) async {
+      String reminderId, Map<String, dynamic> reminder,) async {
     try {
       final reminderTime = (reminder['nextReminderTime'] as Timestamp).toDate();
       final now = DateTime.now();
@@ -301,7 +300,7 @@ class ReminderSystemService {
 
       if (kDebugMode) {
         developer.log(
-            'Reminder scheduled: $reminderId at ${reminderTime.toIso8601String()}');
+            'Reminder scheduled: $reminderId at ${reminderTime.toIso8601String()}',);
       }
     } catch (e, stackTrace) {
       await _errorLogger.logError(
@@ -315,7 +314,7 @@ class ReminderSystemService {
 
   /// Сработать напоминание
   Future<void> _triggerReminder(
-      String reminderId, Map<String, dynamic> reminder) async {
+      String reminderId, Map<String, dynamic> reminder,) async {
     try {
       final type = ReminderType.values.firstWhere(
         (t) => t.name == reminder['type'],
@@ -363,16 +362,12 @@ class ReminderSystemService {
       switch (type) {
         case ReminderType.notification:
           await _sendNotificationReminder(reminder);
-          break;
         case ReminderType.email:
           await _sendEmailReminder(reminder);
-          break;
         case ReminderType.sms:
           await _sendSmsReminder(reminder);
-          break;
         case ReminderType.push:
           await _sendPushReminder(reminder);
-          break;
       }
     } catch (e, stackTrace) {
       await _errorLogger.logError(
@@ -419,7 +414,7 @@ class ReminderSystemService {
 
   /// Обработать повторение напоминания
   Future<void> _handleReminderRepeat(
-      String reminderId, Map<String, dynamic> reminder) async {
+      String reminderId, Map<String, dynamic> reminder,) async {
     try {
       final repeatDays = List<int>.from(reminder['repeatDays'] ?? []);
       final repeatInterval = reminder['repeatInterval'] as int?;
@@ -479,7 +474,7 @@ class ReminderSystemService {
       final nextDay = from.add(Duration(days: i));
       if (repeatDays.contains(nextDay.weekday)) {
         return DateTime(
-            nextDay.year, nextDay.month, nextDay.day, from.hour, from.minute);
+            nextDay.year, nextDay.month, nextDay.day, from.hour, from.minute,);
       }
     }
     return null;
@@ -496,7 +491,7 @@ class ReminderSystemService {
           .where('isActive', isEqualTo: true)
           .where('isTriggered', isEqualTo: false)
           .where('nextReminderTime',
-              isLessThanOrEqualTo: Timestamp.fromDate(fiveMinutesFromNow))
+              isLessThanOrEqualTo: Timestamp.fromDate(fiveMinutesFromNow),)
           .get();
 
       for (final doc in snapshot.docs) {
@@ -548,7 +543,7 @@ class ReminderSystemService {
         'repeatingReminders': allReminders
             .where((r) =>
                 (r['repeatDays'] as List).isNotEmpty ||
-                r['repeatInterval'] != null)
+                r['repeatInterval'] != null,)
             .length,
         'lastUpdated': now.toIso8601String(),
       };

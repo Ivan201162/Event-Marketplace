@@ -1,37 +1,11 @@
 /// Модель идеи
 class Idea {
-  final String id;
-  final String authorId;
-  final String authorName;
-  final String? authorAvatar;
-  final String text;
-  final List<String> media;
-  final List<String> tags;
-  final String city;
-  final int likesCount;
-  final int commentsCount;
-  final int sharesCount;
-  final bool isLiked;
-  final bool isSaved;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const Idea({
     required this.id,
     required this.authorId,
     required this.authorName,
-    this.authorAvatar,
-    required this.text,
-    required this.media,
-    required this.tags,
-    required this.city,
-    required this.likesCount,
-    required this.commentsCount,
-    required this.sharesCount,
-    required this.isLiked,
-    required this.isSaved,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.text, required this.media, required this.tags, required this.city, required this.likesCount, required this.commentsCount, required this.sharesCount, required this.isLiked, required this.isSaved, required this.createdAt, required this.updatedAt, this.authorAvatar,
   });
 
   factory Idea.fromMap(Map<String, dynamic> map, String id) {
@@ -55,6 +29,21 @@ class Idea {
           DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
+  final String id;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatar;
+  final String text;
+  final List<String> media;
+  final List<String> tags;
+  final String city;
+  final int likesCount;
+  final int commentsCount;
+  final int sharesCount;
+  final bool isLiked;
+  final bool isSaved;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toMap() {
     return {

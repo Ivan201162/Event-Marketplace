@@ -1,12 +1,9 @@
+import 'package:event_marketplace_app/models/organizer_chat.dart';
 import 'package:flutter/material.dart';
-
-import '../models/organizer_chat.dart';
 
 class SpecialistProposalWidget extends StatelessWidget {
   const SpecialistProposalWidget({
-    super.key,
-    required this.message,
-    required this.isFromCurrentUser,
+    required this.message, required this.isFromCurrentUser, super.key,
     this.onAccept,
     this.onReject,
   });
@@ -49,7 +46,7 @@ class SpecialistProposalWidget extends StatelessWidget {
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.8),
+                  maxWidth: MediaQuery.of(context).size.width * 0.8,),
               decoration: BoxDecoration(
                 color: isFromCurrentUser
                     ? Theme.of(context).colorScheme.primary
@@ -151,7 +148,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                                   Row(
                                     children: [
                                       const Icon(Icons.star,
-                                          color: Colors.amber, size: 16),
+                                          color: Colors.amber, size: 16,),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${proposal.rating.toStringAsFixed(1)} (${proposal.reviewCount})',
@@ -173,7 +170,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                             Expanded(
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
+                                    horizontal: 8, vertical: 4,),
                                 decoration: BoxDecoration(
                                   color: Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
@@ -190,7 +187,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                  horizontal: 8, vertical: 4,),
                               decoration: BoxDecoration(
                                 color: proposal.isAvailable
                                     ? Colors.green.withValues(alpha: 0.1)
@@ -240,7 +237,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                                 .map(
                                   (service) => Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
+                                        horizontal: 6, vertical: 2,),
                                     decoration: BoxDecoration(
                                       color: Theme.of(
                                         context,
@@ -280,7 +277,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(message.text,
-                                style: const TextStyle(fontSize: 14)),
+                                style: const TextStyle(fontSize: 14),),
                           ),
                           const SizedBox(height: 12),
                         ],

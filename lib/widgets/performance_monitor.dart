@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/providers/performance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../providers/performance_provider.dart';
 
 /// Виджет для мониторинга производительности
 class PerformanceMonitor extends ConsumerWidget {
@@ -44,7 +43,7 @@ class PerformanceMonitor extends ConsumerWidget {
               _buildDetailRow('Memory', '${state.memoryUsage}%'),
               _buildDetailRow('Battery', '${state.batteryLevel}%'),
               _buildDetailRow(
-                  'Connection', _getConnectionSpeedText(state.connectionSpeed)),
+                  'Connection', _getConnectionSpeedText(state.connectionSpeed),),
               const SizedBox(height: 4),
             ],
             _buildStatusIndicator(needsOptimization),
@@ -60,13 +59,13 @@ class PerformanceMonitor extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('$label: ',
-                style: const TextStyle(color: Colors.white, fontSize: 12)),
+                style: const TextStyle(color: Colors.white, fontSize: 12),),
             Text(
               value,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
             ),
           ],
         ),
@@ -169,7 +168,7 @@ class OptimizationControls extends ConsumerWidget {
   }
 
   Widget _buildOptimizationLevelSelector(
-          PerformanceState state, PerformanceNotifier notifier) =>
+          PerformanceState state, PerformanceNotifier notifier,) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -186,7 +185,7 @@ class OptimizationControls extends ConsumerWidget {
                 .map(
                   (level) => DropdownMenuItem(
                       value: level,
-                      child: Text(_getOptimizationLevelText(level))),
+                      child: Text(_getOptimizationLevelText(level)),),
                 )
                 .toList(),
           ),
@@ -197,7 +196,7 @@ class OptimizationControls extends ConsumerWidget {
         children: [
           ElevatedButton(
               onPressed: () => notifier.clearCache(),
-              child: const Text('Очистить кэш')),
+              child: const Text('Очистить кэш'),),
           const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () => notifier.forceCleanup(),
@@ -242,9 +241,9 @@ class PerformanceStats extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _buildStatRow(
-                'FPS', '${state.fps.toInt()}', _getFPSColor(state.fps)),
+                'FPS', '${state.fps.toInt()}', _getFPSColor(state.fps),),
             _buildStatRow('Память', '${state.memoryUsage}%',
-                _getMemoryColor(state.memoryUsage)),
+                _getMemoryColor(state.memoryUsage),),
             _buildStatRow(
               'Батарея',
               '${state.batteryLevel}%',

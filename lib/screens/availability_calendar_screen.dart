@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/availability_calendar.dart';
+import 'package:event_marketplace_app/services/availability_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../models/availability_calendar.dart';
-import '../services/availability_service.dart';
-
 class AvailabilityCalendarScreen extends ConsumerStatefulWidget {
-  const AvailabilityCalendarScreen({super.key, required this.specialistId});
+  const AvailabilityCalendarScreen({required this.specialistId, super.key});
   final String specialistId;
 
   @override
@@ -101,7 +100,7 @@ class _AvailabilityCalendarScreenState
                   Text(
                     '${_getMonthName(_focusedDay.month)} ${_focusedDay.year}',
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18, fontWeight: FontWeight.bold,),
                   ),
                   Row(
                     children: [
@@ -110,7 +109,7 @@ class _AvailabilityCalendarScreenState
                         onPressed: () {
                           setState(() {
                             _focusedDay = DateTime(
-                                _focusedDay.year, _focusedDay.month - 1);
+                                _focusedDay.year, _focusedDay.month - 1,);
                           });
                           _loadAvailabilityData();
                         },
@@ -120,7 +119,7 @@ class _AvailabilityCalendarScreenState
                         onPressed: () {
                           setState(() {
                             _focusedDay = DateTime(
-                                _focusedDay.year, _focusedDay.month + 1);
+                                _focusedDay.year, _focusedDay.month + 1,);
                           });
                           _loadAvailabilityData();
                         },
@@ -147,7 +146,7 @@ class _AvailabilityCalendarScreenState
                       BoxDecoration(color: Colors.red, shape: BoxShape.circle),
                 ),
                 headerStyle: const HeaderStyle(
-                    formatButtonVisible: false, titleCentered: true),
+                    formatButtonVisible: false, titleCentered: true,),
                 onDaySelected: (selectedDay, focusedDay) {
                   setState(() {
                     _selectedDay = selectedDay;
@@ -237,7 +236,7 @@ class _AvailabilityCalendarScreenState
           ),
           const SizedBox(height: 16),
           const Text('Стандартные рабочие часы: 9:00 - 18:00',
-              style: TextStyle(color: Colors.grey)),
+              style: TextStyle(color: Colors.grey),),
         ],
       );
 
@@ -268,7 +267,7 @@ class _AvailabilityCalendarScreenState
           if (availability.timeSlots.isNotEmpty) ...[
             const SizedBox(height: 16),
             const Text('Временные слоты:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             ...availability.timeSlots.map(_buildTimeSlot),
           ],
@@ -299,7 +298,7 @@ class _AvailabilityCalendarScreenState
             const Spacer(),
             if (slot.note != null)
               Text(slot.note!,
-                  style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),),
           ],
         ),
       );
@@ -346,7 +345,7 @@ class _AvailabilityCalendarScreenState
       context: context,
       builder: (context) => _AddBusyDateDialog(
           specialistId: widget.specialistId,
-          onDateAdded: _loadAvailabilityData),
+          onDateAdded: _loadAvailabilityData,),
     );
   }
 
@@ -388,7 +387,7 @@ class _AvailabilityCalendarScreenState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка освобождения даты')));
+            const SnackBar(content: Text('Ошибка освобождения даты')),);
       }
     }
   }
@@ -411,7 +410,7 @@ class _AvailabilityCalendarScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Добавить'),
@@ -424,7 +423,7 @@ class _AvailabilityCalendarScreenState
 
 class _AddBusyDateDialog extends StatefulWidget {
   const _AddBusyDateDialog(
-      {required this.specialistId, required this.onDateAdded});
+      {required this.specialistId, required this.onDateAdded,});
   final String specialistId;
   final VoidCallback onDateAdded;
 
@@ -455,7 +454,7 @@ class _AddBusyDateDialogState extends State<_AddBusyDateDialog> {
               leading: const Icon(Icons.calendar_today),
               title: const Text('Дата'),
               subtitle: Text(
-                  '${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}'),
+                  '${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}',),
               onTap: _selectDate,
             ),
 
@@ -530,7 +529,7 @@ class _AddBusyDateDialogState extends State<_AddBusyDateDialog> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(
-              const SnackBar(content: Text('Ошибка добавления даты')));
+              const SnackBar(content: Text('Ошибка добавления даты')),);
         }
       }
     } finally {

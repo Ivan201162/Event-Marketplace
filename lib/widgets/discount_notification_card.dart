@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/models/discount_notification.dart';
+import 'package:event_marketplace_app/services/discount_notification_service.dart';
 import 'package:flutter/material.dart';
-
-import '../models/discount_notification.dart';
-import '../services/discount_notification_service.dart';
 
 /// Карточка уведомления о скидке
 class DiscountNotificationCard extends StatefulWidget {
   const DiscountNotificationCard({
-    super.key,
-    required this.notification,
+    required this.notification, super.key,
     this.onRead,
     this.onDelete,
     this.showActions = true,
@@ -49,7 +47,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
               ? LinearGradient(
                   colors: [
                     Colors.green.withValues(alpha: 0.05),
-                    Colors.transparent
+                    Colors.transparent,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -71,7 +69,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(Icons.local_offer,
-                        color: Colors.green, size: 20),
+                        color: Colors.green, size: 20,),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -98,7 +96,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                   if (widget.notification.isNew)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),
@@ -160,7 +158,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                   color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2),),
                 ),
                 child: Column(
                   children: [
@@ -168,7 +166,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Исходная цена:',
-                            style: theme.textTheme.bodyMedium),
+                            style: theme.textTheme.bodyMedium,),
                         Text(
                           widget.notification.formattedOriginalPrice,
                           style: theme.textTheme.bodyMedium?.copyWith(
@@ -219,7 +217,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                          horizontal: 12, vertical: 6,),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(16),
@@ -253,10 +251,10 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                         color:
-                            theme.colorScheme.outline.withValues(alpha: 0.2)),
+                            theme.colorScheme.outline.withValues(alpha: 0.2),),
                   ),
                   child: Text(widget.notification.message,
-                      style: theme.textTheme.bodyMedium),
+                      style: theme.textTheme.bodyMedium,),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -335,7 +333,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                'Скидка принята! Перейдите к бронированию для подтверждения.'),
+                'Скидка принята! Перейдите к бронированию для подтверждения.',),
             backgroundColor: Colors.green,
           ),
         );
@@ -345,7 +343,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     } finally {
       if (mounted) {
@@ -389,7 +387,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Уведомление удалено'),
-                backgroundColor: Colors.orange),
+                backgroundColor: Colors.orange,),
           );
         }
       } catch (e) {
@@ -397,7 +395,7 @@ class _DiscountNotificationCardState extends State<DiscountNotificationCard> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(
-              content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+              content: Text('Ошибка: $e'), backgroundColor: Colors.red,),);
         }
       } finally {
         if (mounted) {

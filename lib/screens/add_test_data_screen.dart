@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/services/test_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/test_data_service.dart';
 
 /// Экран для добавления тестовых данных
 class AddTestDataScreen extends ConsumerStatefulWidget {
@@ -83,7 +82,7 @@ class _AddTestDataScreenState extends ConsumerState<AddTestDataScreen> {
                             const Text(
                               'Что будет добавлено:',
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                  fontSize: 16, fontWeight: FontWeight.bold,),
                             ),
                             const SizedBox(height: 8),
                             const Text('👥 5 тестовых пользователей'),
@@ -95,7 +94,7 @@ class _AddTestDataScreenState extends ConsumerState<AddTestDataScreen> {
                             Text(
                               'Все данные помечены флагом isTest: true',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[600]),
+                                  fontSize: 12, color: Colors.grey[600],),
                             ),
                           ],
                         ),
@@ -130,7 +129,7 @@ class _AddTestDataScreenState extends ConsumerState<AddTestDataScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('❌ Ошибка: $e'), backgroundColor: Colors.red));
+            content: Text('❌ Ошибка: $e'), backgroundColor: Colors.red,),);
       }
     } finally {
       if (mounted) {
@@ -183,7 +182,7 @@ class _AddTestDataScreenState extends ConsumerState<AddTestDataScreen> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(
-              content: Text('❌ Ошибка: $e'), backgroundColor: Colors.red));
+              content: Text('❌ Ошибка: $e'), backgroundColor: Colors.red,),);
         }
       } finally {
         if (mounted) {

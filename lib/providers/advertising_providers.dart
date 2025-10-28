@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/advertisement.dart';
+import 'package:event_marketplace_app/services/advertising_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/advertisement.dart';
-import '../services/advertising_service.dart';
 
 /// Провайдер сервиса рекламы
 final advertisingServiceProvider =
@@ -67,7 +66,7 @@ final overallAdStatsProvider =
 /// Параметры для фильтрации рекламы
 class AdvertisementFilters {
   const AdvertisementFilters(
-      {this.status, this.type, this.advertiserId, this.limit = 20});
+      {this.status, this.type, this.advertiserId, this.limit = 20,});
 
   final AdvertisementStatus? status;
   final AdvertisementType? type;
@@ -92,7 +91,7 @@ class AdvertisementFilters {
 /// Параметры для показа рекламы
 class DisplayAdParams {
   const DisplayAdParams(
-      {required this.userId, required this.context, this.limit = 5});
+      {required this.userId, required this.context, this.limit = 5,});
 
   final String userId;
   final String context;
@@ -242,7 +241,7 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
       }).toList();
 
       state = state.copyWith(
-          advertisements: updatedAdvertisements, isLoading: false);
+          advertisements: updatedAdvertisements, isLoading: false,);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

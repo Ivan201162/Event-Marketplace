@@ -2,26 +2,15 @@ import 'package:equatable/equatable.dart';
 
 /// Category model
 class Category extends Equatable {
-  final String id;
-  final String name;
-  final String? description;
-  final String? iconUrl;
-  final String? color;
-  final int order;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   const Category({
     required this.id,
     required this.name,
-    this.description,
+    required this.createdAt, required this.updatedAt, this.description,
     this.iconUrl,
     this.color,
     this.order = 0,
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory Category.fromMap(Map<String, dynamic> map) {
@@ -39,6 +28,15 @@ class Category extends Equatable {
           DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
+  final String id;
+  final String name;
+  final String? description;
+  final String? iconUrl;
+  final String? color;
+  final int order;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Map<String, dynamic> toMap() {
     return {

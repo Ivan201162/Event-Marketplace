@@ -1,8 +1,8 @@
+import 'package:event_marketplace_app/models/report.dart';
+import 'package:event_marketplace_app/services/report_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/report.dart';
-import '../services/report_service.dart';
-import '../widgets/responsive_layout.dart';
 
 /// Экран отчетов
 class ReportsScreen extends ConsumerStatefulWidget {
@@ -49,10 +49,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         child: Row(
           children: [
             Expanded(
-                child: _buildTabButton('reports', 'Отчеты', Icons.assessment)),
+                child: _buildTabButton('reports', 'Отчеты', Icons.assessment),),
             Expanded(
                 child:
-                    _buildTabButton('templates', 'Шаблоны', Icons.description)),
+                    _buildTabButton('templates', 'Шаблоны', Icons.description),),
             Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
           ],
         ),
@@ -79,7 +79,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -138,11 +138,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
             Row(
               children: [
                 Icon(_getReportIcon(report.type),
-                    color: _getReportColor(report.type), size: 24),
+                    color: _getReportColor(report.type), size: 24,),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(report.name,
-                        style: Theme.of(context).textTheme.titleMedium)),
+                        style: Theme.of(context).textTheme.titleMedium,),),
                 _buildStatusChip(report.status),
                 PopupMenuButton<String>(
                   onSelected: (value) => _handleReportAction(value, report),
@@ -152,19 +152,19 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         value: 'view',
                         child: ListTile(
                             leading: Icon(Icons.visibility),
-                            title: Text('Просмотреть')),
+                            title: Text('Просмотреть'),),
                       ),
                       const PopupMenuItem(
                         value: 'download',
                         child: ListTile(
                             leading: Icon(Icons.download),
-                            title: Text('Скачать')),
+                            title: Text('Скачать'),),
                       ),
                     ],
                     const PopupMenuItem(
                       value: 'delete',
                       child: ListTile(
-                          leading: Icon(Icons.delete), title: Text('Удалить')),
+                          leading: Icon(Icons.delete), title: Text('Удалить'),),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),
@@ -236,7 +236,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
             child: Row(
               children: [
                 Text('Шаблоны отчетов',
-                    style: Theme.of(context).textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium,),
                 const Spacer(),
                 ElevatedButton.icon(
                   onPressed: _loadTemplates,
@@ -270,11 +270,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
             Row(
               children: [
                 Icon(_getReportIcon(template.type),
-                    color: _getReportColor(template.type), size: 24),
+                    color: _getReportColor(template.type), size: 24,),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(template.name,
-                        style: Theme.of(context).textTheme.titleMedium)),
+                        style: Theme.of(context).textTheme.titleMedium,),),
                 ElevatedButton(
                   onPressed: () => _createReportFromTemplate(template),
                   child: const Text('Создать отчет'),
@@ -295,7 +295,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 _buildInfoChip('Тип', template.type.name, Colors.blue),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Категория', template.category.name, Colors.green),
+                    'Категория', template.category.name, Colors.green,),
               ],
             ),
 
@@ -305,7 +305,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               Text(
                 'Обязательные параметры:',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                    fontWeight: FontWeight.bold, color: Colors.grey[600],),
               ),
               const SizedBox(height: 4),
               Wrap(
@@ -334,19 +334,15 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       case ReportStatus.pending:
         color = Colors.orange;
         text = 'Ожидает';
-        break;
       case ReportStatus.generating:
         color = Colors.blue;
         text = 'Генерируется';
-        break;
       case ReportStatus.completed:
         color = Colors.green;
         text = 'Готов';
-        break;
       case ReportStatus.failed:
         color = Colors.red;
         text = 'Ошибка';
-        break;
     }
 
     return Container(
@@ -374,7 +370,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -451,7 +447,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки отчетов: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -466,7 +462,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки шаблонов: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     }
   }
@@ -480,7 +476,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -498,7 +494,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content: Text(
-              'Функция создания пользовательского отчета будет реализована')),
+              'Функция создания пользовательского отчета будет реализована',),),
     );
   }
 
@@ -507,7 +503,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Создание отчета по шаблону "${template.name}" будет реализовано')),
+              'Создание отчета по шаблону "${template.name}" будет реализовано',),),
     );
   }
 
@@ -515,13 +511,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     switch (action) {
       case 'view':
         _viewReport(report);
-        break;
       case 'download':
         _downloadReport(report);
-        break;
       case 'delete':
         _deleteReport(report);
-        break;
     }
   }
 
@@ -530,7 +523,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Просмотр отчета "${report.name}" будет реализован')));
+        content: Text('Просмотр отчета "${report.name}" будет реализован'),),);
   }
 
   void _downloadReport(Report report) {
@@ -538,7 +531,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Скачивание отчета "${report.name}" будет реализовано')));
+        content: Text('Скачивание отчета "${report.name}" будет реализовано'),),);
   }
 
   void _deleteReport(Report report) {
@@ -550,7 +543,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -560,7 +553,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Отчет удален'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -2,13 +2,6 @@ import 'package:equatable/equatable.dart';
 
 /// FAQ filters model
 class FAQFilters extends Equatable {
-  final String? category;
-  final String? searchQuery;
-  final bool? isPublished;
-  final DateTime? dateFrom;
-  final DateTime? dateTo;
-  final List<String>? tags;
-  final String? language;
 
   const FAQFilters({
     this.category,
@@ -33,6 +26,13 @@ class FAQFilters extends Equatable {
       language: data['language'],
     );
   }
+  final String? category;
+  final String? searchQuery;
+  final bool? isPublished;
+  final DateTime? dateFrom;
+  final DateTime? dateTo;
+  final List<String>? tags;
+  final String? language;
 
   /// Convert FAQFilters to Map
   Map<String, dynamic> toMap() {

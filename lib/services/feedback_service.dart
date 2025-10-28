@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/feedback_ticket.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-
-import '../models/feedback_ticket.dart';
 
 /// Сервис для работы с обратной связью
 class FeedbackService {
@@ -41,7 +40,7 @@ class FeedbackService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return query.docs.map((doc) => FeedbackTicket.fromDocument(doc)).toList();
+      return query.docs.map(FeedbackTicket.fromDocument).toList();
     } catch (e) {
       debugPrint('❌ Ошибка получения тикетов: $e');
       return [];
@@ -185,7 +184,7 @@ class FeedbackService {
 
   /// Изменить приоритет тикета
   Future<void> updateTicketPriority(
-      String ticketId, TicketPriority priority) async {
+      String ticketId, TicketPriority priority,) async {
     try {
       await _firestore.collection('feedback_tickets').doc(ticketId).update({
         'priority': priority.name,
@@ -225,16 +224,12 @@ class FeedbackService {
         switch (ticket.status) {
           case TicketStatus.open:
             stats['open'] = (stats['open'] ?? 0) + 1;
-            break;
           case TicketStatus.inProgress:
             stats['inProgress'] = (stats['inProgress'] ?? 0) + 1;
-            break;
           case TicketStatus.resolved:
             stats['resolved'] = (stats['resolved'] ?? 0) + 1;
-            break;
           case TicketStatus.closed:
             stats['closed'] = (stats['closed'] ?? 0) + 1;
-            break;
         }
       }
 
@@ -256,14 +251,14 @@ class FeedbackService {
           .collection('feedback_tickets')
           .where('userId', isEqualTo: userId)
           .where('title', isGreaterThanOrEqualTo: query)
-          .where('title', isLessThan: query + '\uf8ff')
+          .where('title', isLessThan: '$query\uf8ff')
           .get();
 
       final descriptionQuery = await _firestore
           .collection('feedback_tickets')
           .where('userId', isEqualTo: userId)
           .where('description', isGreaterThanOrEqualTo: query)
-          .where('description', isLessThan: query + '\uf8ff')
+          .where('description', isLessThan: '$query\uf8ff')
           .get();
 
       final allDocs = <DocumentSnapshot>[];
@@ -277,7 +272,7 @@ class FeedbackService {
       }
 
       return uniqueDocs.values
-          .map((doc) => FeedbackTicket.fromDocument(doc))
+          .map(FeedbackTicket.fromDocument)
           .toList();
     } catch (e) {
       debugPrint('❌ Ошибка поиска тикетов: $e');

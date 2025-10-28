@@ -1,15 +1,13 @@
+import 'package:event_marketplace_app/features/feed/providers/feed_providers.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../providers/auth_providers.dart';
-import '../providers/feed_providers.dart';
 
 /// Кнопка подписки/отписки
 class FollowButton extends ConsumerWidget {
   const FollowButton(
-      {super.key,
-      required this.targetUserId,
-      this.size = FollowButtonSize.medium});
+      {required this.targetUserId, super.key,
+      this.size = FollowButtonSize.medium,});
 
   final String targetUserId;
   final FollowButtonSize size;
@@ -75,7 +73,7 @@ class FollowButton extends ConsumerWidget {
       );
 
   Future<void> _handleFollow(
-      BuildContext context, WidgetRef ref, bool isFollowing) async {
+      BuildContext context, WidgetRef ref, bool isFollowing,) async {
     try {
       if (isFollowing) {
         await ref.read(unfollowUserProvider(targetUserId).future);
@@ -97,7 +95,7 @@ class FollowButton extends ConsumerWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -141,7 +139,7 @@ enum FollowButtonSize { small, medium, large }
 
 /// Кнопка подписки для карточки поста
 class PostFollowButton extends ConsumerWidget {
-  const PostFollowButton({super.key, required this.authorId});
+  const PostFollowButton({required this.authorId, super.key});
 
   final String authorId;
 
@@ -156,7 +154,7 @@ class PostFollowButton extends ConsumerWidget {
         }
 
         return FollowButton(
-            targetUserId: authorId, size: FollowButtonSize.small);
+            targetUserId: authorId, size: FollowButtonSize.small,);
       },
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),

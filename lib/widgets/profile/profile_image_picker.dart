@@ -1,13 +1,11 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 /// Виджет для выбора изображения профиля
 class ProfileImagePicker extends StatelessWidget {
   const ProfileImagePicker({
-    super.key,
+    required this.onImagePicked, super.key,
     this.imageUrl,
-    required this.onImagePicked,
     this.size = 80,
     this.isCover = false,
   });

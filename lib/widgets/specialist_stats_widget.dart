@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/enhanced_review_service.dart';
+import 'package:event_marketplace_app/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../models/specialist.dart';
-import '../services/enhanced_review_service.dart';
-import '../services/firestore_service.dart';
 
 /// Виджет статистики специалиста
 class SpecialistStatsWidget extends ConsumerWidget {
   const SpecialistStatsWidget(
-      {super.key, required this.specialistId, this.specialist});
+      {required this.specialistId, super.key, this.specialist,});
 
   final String specialistId;
   final Specialist? specialist;
@@ -161,7 +160,7 @@ class SpecialistStatsWidget extends ConsumerWidget {
 
   /// Построить статистику по статусам заявок
   Widget _buildBookingStatusStats(
-          BuildContext context, SpecialistStats stats) =>
+          BuildContext context, SpecialistStats stats,) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -278,7 +277,7 @@ class SpecialistStatsWidget extends ConsumerWidget {
             Text(
               value,
               style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -319,7 +318,7 @@ class SpecialistStatsWidget extends ConsumerWidget {
             Text(
               count.toString(),
               style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               label,

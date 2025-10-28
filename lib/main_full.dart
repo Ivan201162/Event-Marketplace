@@ -1,9 +1,10 @@
 import 'dart:async';
+
+import 'package:event_marketplace_app/core/app_router_full.dart';
+import 'package:event_marketplace_app/core/bootstrap.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'core/bootstrap.dart';
-import 'core/app_router_full.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ void main() async {
       const Duration(seconds: 10),
       onTimeout: () {
         debugPrint(
-            '⚠️ Bootstrap инициализация превысила таймаут, продолжаем...');
+            '⚠️ Bootstrap инициализация превысила таймаут, продолжаем...',);
       },
     );
 

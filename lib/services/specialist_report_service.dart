@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/specialist_profile.dart';
+import 'package:event_marketplace_app/models/specialist_profile.dart';
 
 /// Сервис для генерации отчетов по специалистам
 class SpecialistReportService {
@@ -89,7 +89,7 @@ class SpecialistReportService {
 
   /// Получить детальный отчет по конкретному специалисту
   Future<SpecialistDetailReport> generateSpecialistDetailReport(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final specialistDoc = await _firestore
           .collection('specialist_profiles')
@@ -144,7 +144,7 @@ class SpecialistReport {
   });
 
   factory SpecialistReport.fromSpecialists(
-      List<SpecialistProfile> specialists) {
+      List<SpecialistProfile> specialists,) {
     final totalSpecialists = specialists.length;
     final verifiedSpecialists = specialists.where((s) => s.isVerified).length;
     final availableSpecialists = specialists.where((s) => s.isAvailable).length;
@@ -197,7 +197,7 @@ class SpecialistReport {
 /// Отчет по категориям
 class CategoryReport {
   const CategoryReport(
-      {required this.categoryStats, required this.generatedAt});
+      {required this.categoryStats, required this.generatedAt,});
 
   factory CategoryReport.fromSpecialists(List<SpecialistProfile> specialists) {
     final categoryStats = <String, CategoryStats>{};
@@ -238,7 +238,7 @@ class CategoryReport {
     }
 
     return CategoryReport(
-        categoryStats: categoryStats, generatedAt: DateTime.now());
+        categoryStats: categoryStats, generatedAt: DateTime.now(),);
   }
 
   final Map<String, CategoryStats> categoryStats;

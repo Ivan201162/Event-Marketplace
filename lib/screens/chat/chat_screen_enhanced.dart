@@ -1,27 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../models/chat.dart';
-import '../../models/chat_message.dart';
-import '../../providers/chat_providers.dart';
-import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенный экран чата с полным функционалом
 class ChatScreenEnhanced extends ConsumerStatefulWidget {
-  final String chatId;
-  final String? recipientName;
-  final String? recipientAvatar;
 
   const ChatScreenEnhanced({
-    super.key,
-    required this.chatId,
+    required this.chatId, super.key,
     this.recipientName,
     this.recipientAvatar,
   });
+  final String chatId;
+  final String? recipientName;
+  final String? recipientAvatar;
 
   @override
   ConsumerState<ChatScreenEnhanced> createState() => _ChatScreenEnhancedState();
@@ -35,7 +29,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isSending = false;
 
   @override
@@ -52,12 +46,12 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -251,9 +245,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
 
           // Действия
           IconButton(
-            onPressed: () {
-              _showChatOptions();
-            },
+            onPressed: _showChatOptions,
             icon: const Icon(
               Icons.more_vert,
               color: Colors.white,
@@ -319,7 +311,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+            final data = doc.data()! as Map<String, dynamic>;
 
             return _buildMessageBubble(doc.id, data);
           },
@@ -394,10 +386,10 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
           ),
           if (isMe) ...[
             const SizedBox(width: 8),
-            CircleAvatar(
+            const CircleAvatar(
               radius: 16,
-              backgroundColor: const Color(0xFF1E3A8A),
-              child: const Icon(
+              backgroundColor: Color(0xFF1E3A8A),
+              child: Icon(
                 Icons.person,
                 color: Colors.white,
                 size: 16,
@@ -423,9 +415,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
         children: [
           // Кнопка прикрепления
           IconButton(
-            onPressed: () {
-              _showAttachmentOptions();
-            },
+            onPressed: _showAttachmentOptions,
             icon: const Icon(
               Icons.attach_file,
               color: Color(0xFF1E3A8A),
@@ -622,7 +612,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
             ListTile(
               leading: const Icon(Icons.block, color: Colors.red),
               title: const Text('Заблокировать',
-                  style: TextStyle(color: Colors.red)),
+                  style: TextStyle(color: Colors.red),),
               onTap: () {
                 Navigator.pop(context);
                 // TODO: Заблокировать пользователя

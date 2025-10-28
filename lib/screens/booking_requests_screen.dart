@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/discount_recommendation_service.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/booking.dart';
-import '../providers/auth_providers.dart';
-import '../services/discount_recommendation_service.dart';
-import '../services/notification_service.dart';
 
 class BookingRequestsScreen extends ConsumerStatefulWidget {
   const BookingRequestsScreen({super.key});
@@ -101,7 +100,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
         }
         if (snapshot.hasError) {
           return Center(
-              child: Text('Ошибка загрузки заявок: ${snapshot.error}'));
+              child: Text('Ошибка загрузки заявок: ${snapshot.error}'),);
         }
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return Center(
@@ -247,7 +246,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                     const Icon(Icons.phone, size: 16, color: Colors.grey),
                     const SizedBox(width: 8),
                     Text(booking.customerPhone!,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                        style: Theme.of(context).textTheme.bodyMedium,),
                   ],
                 ),
               ],
@@ -259,7 +258,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                     const Icon(Icons.email, size: 16, color: Colors.grey),
                     const SizedBox(width: 8),
                     Text(booking.customerEmail!,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                        style: Theme.of(context).textTheme.bodyMedium,),
                   ],
                 ),
               ],
@@ -277,7 +276,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 ),
                 const SizedBox(height: 4),
                 Text(booking.description!,
-                    style: Theme.of(context).textTheme.bodyMedium),
+                    style: Theme.of(context).textTheme.bodyMedium,),
                 const SizedBox(height: 12),
               ],
 
@@ -346,7 +345,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.local_offer,
-                          size: 16, color: Colors.green),
+                          size: 16, color: Colors.green,),
                       const SizedBox(width: 4),
                       Text(
                         'Скидка ${booking.discount!.toStringAsFixed(0)}%',
@@ -496,7 +495,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Заявка подтверждена'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       }
     } catch (e) {
@@ -504,7 +503,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
       }
     }
   }
@@ -543,7 +542,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Заявка отклонена'),
-                backgroundColor: Colors.orange),
+                backgroundColor: Colors.orange,),
           );
         }
       } catch (e) {
@@ -551,7 +550,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(
-              content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+              content: Text('Ошибка: $e'), backgroundColor: Colors.red,),);
         }
       }
     }
@@ -568,7 +567,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildDetailRow(
-                  'Дата и время:', _formatDateTime(booking.eventDate)),
+                  'Дата и время:', _formatDateTime(booking.eventDate),),
               _buildDetailRow('Заказчик:', booking.customerName ?? 'Не указан'),
               if (booking.customerPhone != null)
                 _buildDetailRow('Телефон:', booking.customerPhone!),
@@ -577,10 +576,10 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               if (booking.description != null)
                 _buildDetailRow('Описание:', booking.description!),
               _buildDetailRow(
-                  'Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽'),
+                  'Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽',),
               if ((booking.prepayment ?? 0) > 0)
                 _buildDetailRow('Аванс:',
-                    '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽'),
+                    '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽',),
               _buildDetailRow('Статус:', _getStatusText(booking.status)),
             ],
           ),
@@ -588,7 +587,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -599,7 +598,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Переход в чат будет реализован позже')));
+        const SnackBar(content: Text('Переход в чат будет реализован позже')),);
   }
 
   Future<void> _offerDiscount(Booking booking) async {
@@ -733,7 +732,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  'Скидка ${discountPercent!.toStringAsFixed(0)}% применена'),
+                  'Скидка ${discountPercent!.toStringAsFixed(0)}% применена',),
               backgroundColor: Colors.green,
             ),
           );
@@ -743,7 +742,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text('Ошибка применения скидки: $e'),
-                backgroundColor: Colors.red),
+                backgroundColor: Colors.red,),
           );
         }
       }
@@ -802,7 +801,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           actions: [
             TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Закрыть')),
+                child: const Text('Закрыть'),),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -832,7 +831,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                'Рекомендуемый размер скидки: ${recommendedDiscount.toStringAsFixed(0)}%'),
+                'Рекомендуемый размер скидки: ${recommendedDiscount.toStringAsFixed(0)}%',),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
@@ -868,7 +867,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                       Text(
                         '${(booking.totalPrice * (1 - recommendedDiscount / 100)).toStringAsFixed(0)} ₽',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.green),
+                            fontWeight: FontWeight.bold, color: Colors.green,),
                       ),
                     ],
                   ),
@@ -918,7 +917,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text('Ошибка применения скидки: $e'),
-                backgroundColor: Colors.red),
+                backgroundColor: Colors.red,),
           );
         }
       }
@@ -933,7 +932,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
             SizedBox(
               width: 100,
               child: Text(label,
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
+                  style: const TextStyle(fontWeight: FontWeight.w600),),
             ),
             Expanded(child: Text(value)),
           ],

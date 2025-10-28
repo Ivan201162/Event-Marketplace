@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/stubs/stubs.dart';
-import '../models/specialist.dart';
-import '../models/specialist_team.dart';
-import '../providers/booking_providers.dart';
-import '../providers/specialist_providers.dart';
-import '../services/team_service.dart';
-import '../widgets/radio_group.dart';
-import 'team_screen.dart';
+import 'package:event_marketplace_app/core/stubs/stubs.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_team.dart';
+import 'package:event_marketplace_app/providers/booking_providers.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/services/team_service.dart';
+import 'package:event_marketplace_app/widgets/radio_group.dart';
+import 'package:event_marketplace_app/screens/team_screen.dart';
 
 /// Экран формы бронирования
 class BookingFormScreen extends ConsumerStatefulWidget {
-  const BookingFormScreen({super.key, required this.specialistId, this.selectedDate});
+  const BookingFormScreen({required this.specialistId, super.key, this.selectedDate});
   final String specialistId;
   final DateTime? selectedDate;
 
@@ -187,7 +187,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                       ),
                     ],
                   ),
-              ),
+              ,,,,),
             ),
           ),
 

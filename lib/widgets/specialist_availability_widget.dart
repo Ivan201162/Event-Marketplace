@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/availability_calendar.dart';
+import 'package:event_marketplace_app/services/availability_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import '../models/availability_calendar.dart';
-import '../services/availability_service.dart';
 
 class SpecialistAvailabilityWidget extends ConsumerStatefulWidget {
   // Является ли текущий пользователь владельцем профиля
 
   const SpecialistAvailabilityWidget(
-      {super.key, required this.specialistId, this.isOwner = false});
+      {required this.specialistId, super.key, this.isOwner = false,});
   final String specialistId;
   final bool isOwner;
 
@@ -228,7 +227,7 @@ class _SpecialistAvailabilityWidgetState
               if (availability.timeSlots.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 const Text('Временные слоты:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: TextStyle(fontWeight: FontWeight.bold),),
                 const SizedBox(height: 8),
                 ...availability.timeSlots.map(_buildTimeSlotInfo),
               ],
@@ -238,7 +237,7 @@ class _SpecialistAvailabilityWidgetState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
           if (widget.isOwner) ...[
             if (availability == null)
               ElevatedButton(
@@ -294,7 +293,7 @@ class _SpecialistAvailabilityWidgetState
             if (slot.note != null) ...[
               const Spacer(),
               Text(slot.note!,
-                  style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                  style: const TextStyle(color: Colors.grey, fontSize: 10),),
             ],
           ],
         ),
@@ -350,7 +349,7 @@ class _SpecialistAvailabilityWidgetState
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Ошибка освобождения даты')));
+            const SnackBar(content: Text('Ошибка освобождения даты')),);
       }
     }
   }
@@ -373,7 +372,7 @@ class _SpecialistAvailabilityWidgetState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Добавить'),

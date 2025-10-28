@@ -192,7 +192,7 @@ class SpecialistPriceAggregate {
 
     return categoryStats.entries
         .reduce((a, b) =>
-            a.value.completedBookings > b.value.completedBookings ? a : b)
+            a.value.completedBookings > b.value.completedBookings ? a : b,)
         .key;
   }
 

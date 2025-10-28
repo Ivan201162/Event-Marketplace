@@ -1,13 +1,12 @@
+// import '../core/app_theme.dart'; // File doesn't exist
+import 'package:event_marketplace_app/core/constants/app_routes.dart';
+import 'package:event_marketplace_app/models/ai_message.dart' as ai_message;
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/ai_assistant_service.dart';
+import 'package:event_marketplace_app/widgets/enhanced_page_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-// import '../core/app_theme.dart'; // File doesn't exist
-import '../core/constants/app_routes.dart';
-import '../models/ai_message.dart' as ai_message;
-import '../providers/auth_providers.dart';
-import '../services/ai_assistant_service.dart';
-import '../widgets/enhanced_page_transition.dart';
 
 /// Экран AI-помощника
 class AIAssistantScreen extends ConsumerStatefulWidget {
@@ -36,7 +35,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),);
     _animationController.forward();
   }
 
@@ -80,7 +79,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.smart_toy_rounded,
-                  color: Colors.white, size: 24),
+                  color: Colors.white, size: 24,),
             ),
             const SizedBox(width: 12),
             const Column(
@@ -88,9 +87,9 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
               children: [
                 Text('AI-помощник',
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                 Text('Помогу с планированием',
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: Colors.grey),),
               ],
             ),
           ],
@@ -160,7 +159,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                   ],
                 ),
                 child: const Icon(Icons.smart_toy_rounded,
-                    size: 64, color: Colors.white),
+                    size: 64, color: Colors.white,),
               ),
               const SizedBox(height: 24),
               Text(
@@ -202,7 +201,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
       {
         'text': 'Найди фотографа',
         'icon': Icons.camera_alt_rounded,
-        'color': Colors.orange
+        'color': Colors.orange,
       },
     ];
 
@@ -221,13 +220,13 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                     borderRadius: BorderRadius.circular(25),
                     border: Border.all(
                         color:
-                            (action['color']! as Color).withValues(alpha: 0.3)),
+                            (action['color']! as Color).withValues(alpha: 0.3),),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(action['icon']! as IconData,
-                          color: action['color']! as Color, size: 20),
+                          color: action['color']! as Color, size: 20,),
                       const SizedBox(width: 12),
                       Text(
                         action['text']! as String,
@@ -265,14 +264,14 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Icon(Icons.smart_toy_rounded,
-                  color: Colors.white, size: 18),
+                  color: Colors.white, size: 18,),
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.75),
+                  maxWidth: MediaQuery.of(context).size.width * 0.75,),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isUser ? Colors.blue : Colors.grey[100],
@@ -303,7 +302,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                     message.content,
                     style: TextStyle(
                         color: isUser ? Colors.white : Colors.black87,
-                        fontSize: 16),
+                        fontSize: 16,),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -329,7 +328,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Icon(Icons.person_rounded,
-                  color: Colors.white, size: 18),
+                  color: Colors.white, size: 18,),
             ),
           ],
         ],
@@ -367,11 +366,11 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(Icons.person_rounded,
-                                  color: Colors.white, size: 20),
+                                  color: Colors.white, size: 20,),
                         ),
                       )
                     : const Icon(Icons.person_rounded,
-                        color: Colors.white, size: 20),
+                        color: Colors.white, size: 20,),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -381,7 +380,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                     Text(
                       message.specialistName ?? 'Специалист',
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14),
+                          fontWeight: FontWeight.bold, fontSize: 14,),
                     ),
                     if (message.specialistCategory != null)
                       Text(
@@ -395,12 +394,12 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 Row(
                   children: [
                     const Icon(Icons.star_rounded,
-                        color: Colors.amber, size: 16),
+                        color: Colors.amber, size: 16,),
                     const SizedBox(width: 4),
                     Text(
                       message.specialistRating!.toStringAsFixed(1),
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 12),
+                          fontWeight: FontWeight.bold, fontSize: 12,),
                     ),
                   ],
                 ),
@@ -429,10 +428,10 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),),
                   ),
                   child: const Text('Посмотреть профиль',
-                      style: TextStyle(fontSize: 12)),
+                      style: TextStyle(fontSize: 12),),
                 ),
               ),
               const SizedBox(width: 8),
@@ -444,10 +443,10 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                     side: const BorderSide(color: Colors.blue),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                        borderRadius: BorderRadius.circular(8),),
                   ),
                   child: const Text('Забронировать',
-                      style: TextStyle(fontSize: 12)),
+                      style: TextStyle(fontSize: 12),),
                 ),
               ),
             ],
@@ -462,7 +461,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           border: Border(
-              top: BorderSide(color: Colors.grey.withValues(alpha: 0.2))),
+              top: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),),
         ),
         child: SafeArea(
           child: Row(
@@ -509,7 +508,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
             Icon(Icons.error_outline_rounded, size: 64, color: Colors.red[300]),
             const SizedBox(height: 16),
             Text('Произошла ошибка',
-                style: Theme.of(context).textTheme.headlineSmall),
+                style: Theme.of(context).textTheme.headlineSmall,),
             const SizedBox(height: 8),
             Text(
               error,
@@ -519,7 +518,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
             const SizedBox(height: 16),
             ElevatedButton(
                 onPressed: () => setState(() {}),
-                child: const Text('Попробовать снова')),
+                child: const Text('Попробовать снова'),),
           ],
         ),
       );
@@ -577,7 +576,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();

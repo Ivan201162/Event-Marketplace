@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/chat_message_extended.dart';
+import 'package:event_marketplace_app/services/voice_message_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat_message_extended.dart';
-import '../services/voice_message_service.dart';
 
 /// Виджет для воспроизведения голосовых сообщений
 class VoicePlayerWidget extends ConsumerStatefulWidget {
   const VoicePlayerWidget(
-      {super.key, required this.message, this.isOwnMessage = false});
+      {required this.message, super.key, this.isOwnMessage = false,});
   final ChatMessageExtended message;
   final bool isOwnMessage;
 
@@ -38,7 +37,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
       begin: 0,
       end: 1,
     ).animate(
-        CurvedAnimation(parent: _waveformController, curve: Curves.easeInOut));
+        CurvedAnimation(parent: _waveformController, curve: Curves.easeInOut),);
 
     _totalDuration = Duration(seconds: widget.message.audioDuration ?? 0);
   }
@@ -136,7 +135,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
                     children: [
                       _buildWaveform(),
                       const SizedBox(height: 4),
-                      _buildProgressBar()
+                      _buildProgressBar(),
                     ],
                   ),
                 ),
@@ -241,7 +240,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 }
 
@@ -250,7 +249,7 @@ class WaveformPainter extends CustomPainter {
   WaveformPainter(
       {required this.progress,
       required this.isPlaying,
-      required this.isOwnMessage});
+      required this.isOwnMessage,});
   final double progress;
   final bool isPlaying;
   final bool isOwnMessage;

@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/reminder.dart';
+import 'package:event_marketplace_app/services/anniversary_service.dart';
+import 'package:event_marketplace_app/services/reminder_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/reminder.dart';
-import '../services/anniversary_service.dart';
-import '../services/reminder_service.dart';
 
 class TestRemindersScreen extends ConsumerStatefulWidget {
   const TestRemindersScreen({super.key});
@@ -72,7 +71,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
           IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: _loadData,
-              tooltip: 'Обновить'),
+              tooltip: 'Обновить',),
         ],
       ),
       body: Column(
@@ -145,7 +144,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Загрузка...')
+            Text('Загрузка...'),
           ],
         ),
       );
@@ -163,7 +162,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
           ),
           Expanded(
               child: TabBarView(
-                  children: [_buildRemindersTab(), _buildAnniversariesTab()])),
+                  children: [_buildRemindersTab(), _buildAnniversariesTab()],),),
         ],
       ),
     );
@@ -178,7 +177,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
             Icon(Icons.alarm_off, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Нет напоминаний',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Создайте тестовые напоминания для проверки функционала',
@@ -209,7 +208,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
             Icon(Icons.cake_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text('Нет годовщин',
-                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 18, color: Colors.grey[600]),),
             const SizedBox(height: 8),
             Text(
               'Создайте тестовые годовщины для проверки функционала',
@@ -344,7 +343,7 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
                 Chip(
                   label: Text(anniversary.isRecurring
                       ? 'Повторяющаяся'
-                      : 'Одноразовая'),
+                      : 'Одноразовая',),
                   backgroundColor: anniversary.isRecurring
                       ? Colors.green[100]
                       : Colors.blue[100],
@@ -391,19 +390,15 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
       case ReminderStatus.scheduled:
         backgroundColor = Colors.blue[100]!;
         label = 'Запланировано';
-        break;
       case ReminderStatus.sent:
         backgroundColor = Colors.green[100]!;
         label = 'Отправлено';
-        break;
       case ReminderStatus.cancelled:
         backgroundColor = Colors.grey[100]!;
         label = 'Отменено';
-        break;
       case ReminderStatus.failed:
         backgroundColor = Colors.red[100]!;
         label = 'Ошибка';
-        break;
     }
 
     return Chip(label: Text(label), backgroundColor: backgroundColor);
@@ -550,13 +545,13 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 }

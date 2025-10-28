@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/providers/requests_providers.dart';
+import 'package:event_marketplace_app/screens/requests/create_request_screen.dart';
+import 'package:event_marketplace_app/screens/requests/request_details_screen.dart';
+import 'package:event_marketplace_app/widgets/request_card.dart';
+import 'package:event_marketplace_app/widgets/request_filters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../providers/requests_providers.dart';
-import '../../widgets/request_card.dart';
-import '../../widgets/request_filters.dart';
-import 'create_request_screen.dart';
-import 'request_details_screen.dart';
 
 /// Экран списка заявок
 class RequestsScreen extends ConsumerStatefulWidget {
@@ -31,11 +30,11 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () => _showSearchDialog(),
+            onPressed: _showSearchDialog,
           ),
           IconButton(
             icon: const Icon(Icons.filter_list),
-            onPressed: () => _showFilterDialog(),
+            onPressed: _showFilterDialog,
           ),
         ],
       ),
@@ -76,7 +75,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.error_outline,
-                          size: 64, color: Colors.red),
+                          size: 64, color: Colors.red,),
                       const SizedBox(height: 16),
                       Text('Ошибка загрузки заявок: $error'),
                       const SizedBox(height: 16),
@@ -95,7 +94,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _createRequest(),
+        onPressed: _createRequest,
         child: const Icon(Icons.add),
       ),
     );

@@ -9,10 +9,8 @@ class NotificationTemplate {
     required this.body,
     required this.type,
     required this.channel,
-    this.variables = const {},
+    required this.createdAt, required this.updatedAt, this.variables = const {},
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из документа Firestore
@@ -144,7 +142,7 @@ class NotificationTemplate {
 
   @override
   int get hashCode => Object.hash(id, name, title, body, type, channel,
-      variables, isActive, createdAt, updatedAt);
+      variables, isActive, createdAt, updatedAt,);
 
   @override
   String toString() =>
@@ -173,14 +171,9 @@ class SentNotification {
   const SentNotification({
     required this.id,
     required this.templateId,
-    this.userId,
-    required this.title,
-    required this.body,
-    required this.type,
-    required this.channel,
+    required this.title, required this.body, required this.type, required this.channel, required this.sentAt, this.userId,
     this.data = const {},
     this.status = NotificationStatus.pending,
-    required this.sentAt,
     this.deliveredAt,
     this.readAt,
     this.errorMessage,

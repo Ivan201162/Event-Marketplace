@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/gallery_item.dart';
 import 'package:flutter/material.dart';
-import '../models/gallery_item.dart';
 
 /// Карточка элемента галереи
 class GalleryItemCard extends StatelessWidget {
   const GalleryItemCard({
-    super.key,
-    required this.item,
+    required this.item, super.key,
     this.onTap,
     this.onLike,
     this.onDelete,
@@ -59,7 +58,7 @@ class GalleryItemCard extends StatelessWidget {
                     color: Colors.grey[200],
                     child: const Center(
                         child: Icon(Icons.broken_image,
-                            color: Colors.grey, size: 48)),
+                            color: Colors.grey, size: 48,),),
                   ),
                 )
               : _buildVideoThumbnail(),
@@ -83,14 +82,14 @@ class GalleryItemCard extends StatelessWidget {
               color: Colors.grey[200],
               child: const Center(
                   child:
-                      Icon(Icons.video_library, color: Colors.grey, size: 48)),
+                      Icon(Icons.video_library, color: Colors.grey, size: 48),),
             ),
           ),
 
           // Иконка воспроизведения
           const Center(
               child: Icon(Icons.play_circle_filled,
-                  color: Colors.white, size: 48)),
+                  color: Colors.white, size: 48,),),
 
           // Длительность видео
           if (item.duration != null)
@@ -143,7 +142,7 @@ class GalleryItemCard extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -155,7 +154,7 @@ class GalleryItemCard extends StatelessWidget {
                 children: [
                   if (item.viewCount > 0) ...[
                     const Icon(Icons.visibility,
-                        color: Colors.white70, size: 14),
+                        color: Colors.white70, size: 14,),
                     const SizedBox(width: 4),
                     Text(
                       item.viewCount.toString(),
@@ -192,7 +191,7 @@ class GalleryItemCard extends StatelessWidget {
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                     color: Colors.amber,
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),),
                 child: const Icon(Icons.star, color: Colors.white, size: 16),
               ),
 
@@ -209,7 +208,7 @@ class GalleryItemCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: const Icon(Icons.favorite_border,
-                      color: Colors.white, size: 16),
+                      color: Colors.white, size: 16,),
                 ),
               ),
 

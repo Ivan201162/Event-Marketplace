@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/localization.dart';
+import 'package:event_marketplace_app/services/localization_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/localization.dart';
-import '../services/localization_service.dart';
 
 /// Провайдер сервиса локализации
 final localizationServiceProvider =

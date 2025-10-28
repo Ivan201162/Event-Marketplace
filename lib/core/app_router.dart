@@ -1,28 +1,27 @@
+import 'package:event_marketplace_app/screens/about_screen.dart';
+import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
+import 'package:event_marketplace_app/screens/auth/forgot_password_screen.dart';
+import 'package:event_marketplace_app/screens/auth/login_screen.dart';
+import 'package:event_marketplace_app/screens/auth/onboarding_screen.dart';
+import 'package:event_marketplace_app/screens/auth/phone_auth_screen.dart';
+import 'package:event_marketplace_app/screens/auth/phone_verification_screen.dart';
+import 'package:event_marketplace_app/screens/chat/chat_list_screen.dart';
+import 'package:event_marketplace_app/screens/chat/chat_screen.dart';
+import 'package:event_marketplace_app/screens/feed/feed_screen.dart';
+import 'package:event_marketplace_app/screens/ideas/add_idea_screen.dart';
+import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
+import 'package:event_marketplace_app/screens/ideas/ideas_screen.dart';
+import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
+import 'package:event_marketplace_app/screens/notifications/notifications_screen.dart';
+import 'package:event_marketplace_app/screens/posts/create_post_screen.dart';
+import 'package:event_marketplace_app/screens/profile/edit_profile_screen.dart';
+import 'package:event_marketplace_app/screens/profile/profile_screen.dart';
+import 'package:event_marketplace_app/screens/requests/requests_screen.dart';
+import 'package:event_marketplace_app/screens/search/search_screen.dart';
+import 'package:event_marketplace_app/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../screens/auth/auth_check_screen.dart';
-import '../screens/auth/forgot_password_screen.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/onboarding_screen.dart';
-import '../screens/auth/phone_auth_screen.dart';
-import '../screens/auth/phone_verification_screen.dart';
-import '../screens/main_navigation_screen.dart';
-import '../screens/notifications/notifications_screen.dart';
-import '../screens/profile/edit_profile_screen.dart';
-import '../screens/ideas/add_idea_screen.dart';
-import '../screens/ideas/create_idea_screen.dart';
-import '../screens/chat/chat_screen.dart';
-import '../screens/chat/chat_list_screen.dart';
-import '../screens/posts/create_post_screen.dart';
-import '../screens/search/search_screen.dart';
-import '../screens/feed/feed_screen.dart';
-import '../screens/requests/requests_screen.dart';
-import '../screens/ideas/ideas_screen.dart';
-import '../screens/profile/profile_screen.dart';
-import '../screens/settings/settings_screen.dart';
-import '../screens/about_screen.dart';
 
 /// App router provider
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -38,13 +37,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: '/',
           name: 'auth-check',
-          builder: (context, state) => const AuthCheckScreen()),
+          builder: (context, state) => const AuthCheckScreen(),),
 
       // Auth routes
       GoRoute(
           path: '/login',
           name: 'login',
-          builder: (context, state) => const LoginScreen()),
+          builder: (context, state) => const LoginScreen(),),
 
       GoRoute(
         path: '/forgot-password',
@@ -66,7 +65,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final phoneNumber = state.extra as String?;
           if (phoneNumber == null) {
             return const Scaffold(
-                body: Center(child: Text('Ошибка: номер телефона не найден')));
+                body: Center(child: Text('Ошибка: номер телефона не найден')),);
           }
           return PhoneVerificationScreen(phoneNumber: phoneNumber);
         },
@@ -82,7 +81,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: '/search',
           name: 'search',
-          builder: (context, state) => const SearchScreen()),
+          builder: (context, state) => const SearchScreen(),),
 
       // Profile routes
       GoRoute(

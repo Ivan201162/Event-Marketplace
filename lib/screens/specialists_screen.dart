@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/widgets/specialists/specialists_filters_widget.dart';
+import 'package:event_marketplace_app/widgets/specialists/specialists_list_widget.dart';
+import 'package:event_marketplace_app/widgets/specialists/specialists_search_widget.dart';
+import 'package:event_marketplace_app/widgets/specialists/specialists_sort_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../widgets/specialists/specialists_filters_widget.dart';
-import '../widgets/specialists/specialists_list_widget.dart';
-import '../widgets/specialists/specialists_search_widget.dart';
-import '../widgets/specialists/specialists_sort_widget.dart';
 
 /// Экран каталога специалистов
 class SpecialistsScreen extends ConsumerStatefulWidget {
@@ -42,7 +41,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen> {
         actions: [
           IconButton(
             icon: Icon(
-                _showFilters ? Icons.filter_list : Icons.filter_list_outlined),
+                _showFilters ? Icons.filter_list : Icons.filter_list_outlined,),
             onPressed: () {
               setState(() {
                 _showFilters = !_showFilters;

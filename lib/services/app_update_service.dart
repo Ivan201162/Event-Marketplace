@@ -28,8 +28,8 @@ class AppUpdateService {
 
       // Получаем информацию о последней версии
       final response = await http.get(Uri.parse(_updateCheckUrl), headers: {
-        'Accept': 'application/vnd.github.v3+json'
-      }).timeout(const Duration(seconds: 10));
+        'Accept': 'application/vnd.github.v3+json',
+      },).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -68,8 +68,8 @@ class AppUpdateService {
       final currentVersion = packageInfo.version;
 
       final response = await http.get(Uri.parse(_updateCheckUrl), headers: {
-        'Accept': 'application/vnd.github.v3+json'
-      }).timeout(const Duration(seconds: 10));
+        'Accept': 'application/vnd.github.v3+json',
+      },).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -237,9 +237,7 @@ class UpdateInfo {
     required this.currentVersion,
     required this.latestVersion,
     required this.releaseNotes,
-    this.downloadUrl,
-    required this.isUpdateAvailable,
-    required this.checkTime,
+    required this.isUpdateAvailable, required this.checkTime, this.downloadUrl,
   });
 
   /// Создать из JSON

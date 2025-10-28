@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/services/photo_studio_service.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/photo_studio.dart';
-import '../services/photo_studio_service.dart';
-import 'responsive_layout.dart';
 
 /// Виджет для отображения карточки фотостудии
 class PhotoStudioCard extends ConsumerWidget {
-  const PhotoStudioCard({super.key, required this.studio, this.onTap});
+  const PhotoStudioCard({required this.studio, super.key, this.onTap});
   final PhotoStudio studio;
   final VoidCallback? onTap;
 
@@ -23,14 +23,14 @@ class PhotoStudioCard extends ConsumerWidget {
                 children: [
                   Expanded(
                       child: Text(studio.name,
-                          style: Theme.of(context).textTheme.headlineSmall)),
+                          style: Theme.of(context).textTheme.headlineSmall,),),
                   ...[
                     const Icon(Icons.star, color: Colors.amber, size: 16),
                     const SizedBox(width: 4),
                     Text(
                       studio.rating.toStringAsFixed(1),
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.amber),
+                          fontWeight: FontWeight.bold, color: Colors.amber,),
                     ),
                     ...[
                       const SizedBox(width: 4),
@@ -77,7 +77,7 @@ class PhotoStudioCard extends ConsumerWidget {
                   if (studio.priceRange != null) ...[
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 8, vertical: 4,),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -95,7 +95,7 @@ class PhotoStudioCard extends ConsumerWidget {
                   Row(
                     children: [
                       const Icon(Icons.photo_library,
-                          size: 16, color: Colors.grey),
+                          size: 16, color: Colors.grey,),
                       const SizedBox(width: 4),
                       Text(
                         '${studio.photosCount} фото',
@@ -141,14 +141,14 @@ class PhotoStudioCard extends ConsumerWidget {
         child: Text(
           option.name,
           style: const TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w500, color: Colors.blue),
+              fontSize: 12, fontWeight: FontWeight.w500, color: Colors.blue,),
         ),
       );
 }
 
 /// Виджет для отображения детальной информации о фотостудии
 class PhotoStudioDetailWidget extends ConsumerWidget {
-  const PhotoStudioDetailWidget({super.key, required this.studioId});
+  const PhotoStudioDetailWidget({required this.studioId, super.key});
   final String studioId;
 
   @override
@@ -196,7 +196,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                                     Text(
                                       '(${studio.reviewCount} отзывов)',
                                       style: const TextStyle(
-                                          fontSize: 14, color: Colors.grey),
+                                          fontSize: 14, color: Colors.grey,),
                                     ),
                                   ],
                                 ],
@@ -211,13 +211,13 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                             Row(
                               children: [
                                 const Icon(Icons.location_on,
-                                    size: 16, color: Colors.grey),
+                                    size: 16, color: Colors.grey,),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
                                     studio.address,
                                     style: const TextStyle(
-                                        fontSize: 14, color: Colors.grey),
+                                        fontSize: 14, color: Colors.grey,),
                                   ),
                                 ),
                               ],
@@ -233,10 +233,10 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                           children: [
                             Text('Опции студии',
                                 style:
-                                    Theme.of(context).textTheme.headlineSmall),
+                                    Theme.of(context).textTheme.headlineSmall,),
                             const SizedBox(height: 12),
                             ...studio.studioOptions.map(
-                                (option) => _buildOptionCard(context, option)),
+                                (option) => _buildOptionCard(context, option),),
                           ],
                         ),
                       ),
@@ -251,19 +251,19 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                                 Text('Фотографии',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headlineSmall),
+                                        .headlineSmall,),
                                 const Spacer(),
                                 Text(
                                   '${studio.photosCount} фото',
                                   style: const TextStyle(
-                                      fontSize: 14, color: Colors.grey),
+                                      fontSize: 14, color: Colors.grey,),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 12),
                             if (studio.photos.isEmpty) ...[
                               const Center(
-                                  child: Text('Фотографии не загружены')),
+                                  child: Text('Фотографии не загружены'),),
                             ] else ...[
                               _buildPhotosGrid(studio.photos),
                             ],
@@ -314,7 +314,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
               children: [
                 Expanded(
                   child: Text(option.name,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                      style: const TextStyle(fontWeight: FontWeight.w500),),
                 ),
                 Container(
                   padding:
@@ -450,7 +450,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
   }
 
   void _showBookingDialog(
-      BuildContext context, WidgetRef ref, PhotoStudio studio) {
+      BuildContext context, WidgetRef ref, PhotoStudio studio,) {
     showDialog<void>(
       context: context,
       builder: (context) => _BookingDialog(
@@ -460,7 +460,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
                 content: Text('Бронирование создано'),
-                backgroundColor: Colors.green),
+                backgroundColor: Colors.green,),
           );
         },
       ),
@@ -489,7 +489,7 @@ class PhotoStudioListWidget extends ConsumerWidget {
               photoStudiosProvider({
                 'location': location,
                 'minPrice': minPrice,
-                'maxPrice': maxPrice
+                'maxPrice': maxPrice,
               }),
             )
             .when(
@@ -504,7 +504,7 @@ class PhotoStudioListWidget extends ConsumerWidget {
                     final studio = studios[index];
                     return PhotoStudioCard(
                         studio: studio,
-                        onTap: () => onStudioSelected?.call(studio));
+                        onTap: () => onStudioSelected?.call(studio),);
                   },
                 );
               },
@@ -570,7 +570,7 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
                       (option) => DropdownMenuItem(
                         value: option,
                         child: Text(
-                            '${option.name} - ${option.price.toStringAsFixed(0)} ₽/час'),
+                            '${option.name} - ${option.price.toStringAsFixed(0)} ₽/час',),
                       ),
                     )
                     .toList(),
@@ -721,7 +721,7 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() {
         _isLoading = false;

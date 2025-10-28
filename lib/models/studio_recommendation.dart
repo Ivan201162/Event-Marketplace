@@ -8,8 +8,7 @@ class StudioRecommendation {
     required this.studioId,
     required this.studioName,
     required this.studioUrl,
-    this.message,
-    required this.createdAt,
+    required this.createdAt, this.message,
     this.expiresAt,
     this.isActive = true,
   });
@@ -149,9 +148,7 @@ class DualBooking {
     required this.studioPrice,
     required this.totalPrice,
     required this.status,
-    this.notes,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.notes,
   });
 
   /// Создать из документа Firestore

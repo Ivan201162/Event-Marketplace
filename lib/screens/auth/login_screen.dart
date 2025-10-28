@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../providers/auth_providers.dart';
 
 /// Экран входа и регистрации
 class LoginScreen extends ConsumerStatefulWidget {
@@ -51,7 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       _showError(_getErrorMessage(e.code));
     } catch (e) {
-      _showError('Произошла ошибка: ${e.toString()}');
+      _showError('Произошла ошибка: $e');
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
@@ -83,7 +82,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       _showError(_getErrorMessage(e.code));
     } catch (e) {
-      _showError('Произошла ошибка: ${e.toString()}');
+      _showError('Произошла ошибка: $e');
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
@@ -107,7 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         context.go('/main');
       }
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'Ошибка входа через Google';
+      var errorMessage = 'Ошибка входа через Google';
 
       if (e.code == 'account-exists-with-different-credential') {
         errorMessage =
@@ -128,13 +127,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       _showError(errorMessage);
     } catch (e) {
-      String errorMessage = 'Ошибка входа через Google';
+      var errorMessage = 'Ошибка входа через Google';
 
       if (e.toString().contains('ApiException: 10')) {
         errorMessage =
             'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
       } else {
-        errorMessage = 'Ошибка входа через Google: ${e.toString()}';
+        errorMessage = 'Ошибка входа через Google: $e';
       }
 
       _showError(errorMessage);
@@ -150,7 +149,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   String _getErrorMessage(String errorCode) {
@@ -193,7 +192,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: LayoutBuilder(
             builder: (context, constraints) {
               return SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(24),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: constraints.maxHeight - 48, // 48 = padding * 2
@@ -328,14 +327,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
+                                        vertical: 16,),
                                   ),
                                   child: _isLoading
                                       ? const CircularProgressIndicator(
-                                          color: Colors.white)
+                                          color: Colors.white,)
                                       : Text(_isSignUp
                                           ? 'Зарегистрироваться'
-                                          : 'Войти'),
+                                          : 'Войти',),
                                 ),
                               ),
 

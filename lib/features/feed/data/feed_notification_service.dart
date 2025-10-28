@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/core/utils/debug_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-import '../../../core/utils/debug_utils.dart';
 
 /// Сервис уведомлений для ленты
 class FeedNotificationService {
@@ -60,10 +59,10 @@ class FeedNotificationService {
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       debugPrint(
-          'Пользователь предоставил временное разрешение на уведомления');
+          'Пользователь предоставил временное разрешение на уведомления',);
     } else {
       debugPrint(
-          'Пользователь отклонил или не предоставил разрешение на уведомления');
+          'Пользователь отклонил или не предоставил разрешение на уведомления',);
     }
   }
 
@@ -232,7 +231,7 @@ class FeedNotificationService {
       if (userDoc.exists) {
         final userData = userDoc.data()!;
         return List<String>.from(
-            (userData['followers'] as List<dynamic>?) ?? []);
+            (userData['followers'] as List<dynamic>?) ?? [],);
       }
 
       return [];

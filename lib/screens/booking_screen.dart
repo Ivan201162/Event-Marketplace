@@ -1,17 +1,16 @@
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
+import 'package:event_marketplace_app/widgets/back_button_handler.dart';
+import 'package:event_marketplace_app/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/booking.dart';
-import '../models/specialist.dart';
-import '../providers/auth_providers.dart';
-import '../services/booking_service.dart';
-import '../services/specialist_service.dart';
-import '../widgets/back_button_handler.dart';
-import '../widgets/custom_text_field.dart';
-
 class BookingScreen extends ConsumerStatefulWidget {
-  const BookingScreen({super.key, required this.specialistId});
+  const BookingScreen({required this.specialistId, super.key});
   final String specialistId;
 
   @override
@@ -78,7 +77,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки специалиста: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -143,7 +142,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Необходимо войти в систему'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
       return;
@@ -197,7 +196,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка создания заявки: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } finally {
@@ -221,7 +220,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           title: const Text('Бронирование'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: const Center(child: Text('Специалист не найден')),
       );
@@ -233,7 +232,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           title: const Text('Бронирование'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -280,7 +279,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                             ? _specialist!.name[0].toUpperCase()
                             : '?',
                         style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold,),
                       )
                     : null,
               ),
@@ -292,7 +291,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     Text(
                       _specialist!.name,
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18, fontWeight: FontWeight.bold,),
                     ),
                     Text(
                       _specialist!.category?.name ?? 'Специалист',
@@ -317,7 +316,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green),
+                    color: Colors.green,),
               ),
             ],
           ),
@@ -328,7 +327,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Детали мероприятия',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
           const SizedBox(height: 16),
 
           CustomTextField(
@@ -469,14 +468,14 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Стоимость',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               const SizedBox(height: 16),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                      '$_duration часов × ${(_specialist!.price ?? 0).toInt()}₽'),
+                      '$_duration часов × ${(_specialist!.price ?? 0).toInt()}₽',),
                   Text('${_totalPrice.toInt()}₽'),
                 ],
               ),
@@ -489,7 +488,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 children: [
                   const Text('Итого:',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   Text(
                     '${_totalPrice.toInt()}₽',
                     style: const TextStyle(

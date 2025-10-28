@@ -21,21 +21,10 @@ enum DocumentType {
 /// Данные для регистрации пользователя
 class UserRegistrationData {
   const UserRegistrationData({
-    this.id,
-    required this.email,
-    required this.password,
-    required this.firstName,
-    required this.lastName,
+    required this.email, required this.password, required this.firstName, required this.lastName, required this.phoneNumber, required this.birthDate, required this.userType, required this.agreeToTerms, required this.agreeToPrivacy, required this.createdAt, required this.updatedAt, this.id,
     this.middleName,
-    required this.phoneNumber,
-    required this.birthDate,
-    required this.userType,
     this.profileImageUrl,
-    required this.agreeToTerms,
-    required this.agreeToPrivacy,
     this.agreeToMarketing = false,
-    required this.createdAt,
-    required this.updatedAt,
     this.businessName,
     this.inn,
     this.ogrn,
@@ -315,11 +304,9 @@ class DocumentData {
     required this.number,
     required this.issuedBy,
     required this.issuedDate,
-    this.departmentCode,
+    required this.createdAt, required this.updatedAt, this.departmentCode,
     this.imageUrl,
     this.isVerified = false,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из Map

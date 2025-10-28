@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/budget_recommendation_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
-import '../services/budget_recommendation_service.dart';
 
 /// Провайдер сервиса рекомендаций по бюджету
 final budgetRecommendationServiceProvider =

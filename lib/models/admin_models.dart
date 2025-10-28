@@ -37,17 +37,6 @@ enum AdminActionStatus { pending, completed, failed, cancelled }
 
 /// Модель лога действий администратора
 class AdminLog {
-  final String id;
-  final String adminId;
-  final String adminEmail;
-  final AdminAction action;
-  final String target;
-  final String? targetId;
-  final String? description;
-  final AdminActionStatus status;
-  final DateTime timestamp;
-  final Map<String, dynamic>? metadata;
-  final String? errorMessage;
 
   AdminLog({
     required this.id,
@@ -55,29 +44,12 @@ class AdminLog {
     required this.adminEmail,
     required this.action,
     required this.target,
-    this.targetId,
+    required this.timestamp, this.targetId,
     this.description,
     this.status = AdminActionStatus.completed,
-    required this.timestamp,
     this.metadata,
     this.errorMessage,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'adminId': adminId,
-      'adminEmail': adminEmail,
-      'action': action.name,
-      'target': target,
-      'targetId': targetId,
-      'description': description,
-      'status': status.name,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'metadata': metadata,
-      'errorMessage': errorMessage,
-    };
-  }
 
   factory AdminLog.fromMap(Map<String, dynamic> map) {
     return AdminLog(
@@ -96,60 +68,50 @@ class AdminLog {
       errorMessage: map['errorMessage'],
     );
   }
+  final String id;
+  final String adminId;
+  final String adminEmail;
+  final AdminAction action;
+  final String target;
+  final String? targetId;
+  final String? description;
+  final AdminActionStatus status;
+  final DateTime timestamp;
+  final Map<String, dynamic>? metadata;
+  final String? errorMessage;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'adminId': adminId,
+      'adminEmail': adminEmail,
+      'action': action.name,
+      'target': target,
+      'targetId': targetId,
+      'description': description,
+      'status': status.name,
+      'timestamp': Timestamp.fromDate(timestamp),
+      'metadata': metadata,
+      'errorMessage': errorMessage,
+    };
+  }
 }
 
 /// Модель маркетинговой кампании
 class MarketingCampaign {
-  final String id;
-  final String name;
-  final String description;
-  final MarketingCampaignType type;
-  final MarketingCampaignStatus status;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String? targetAudience;
-  final Map<String, dynamic>? settings;
-  final double? budget;
-  final String? createdBy;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic>? metadata;
 
   MarketingCampaign({
     required this.id,
     required this.name,
     required this.description,
     required this.type,
-    this.status = MarketingCampaignStatus.draft,
-    required this.startDate,
-    required this.endDate,
+    required this.startDate, required this.endDate, required this.createdAt, required this.updatedAt, this.status = MarketingCampaignStatus.draft,
     this.targetAudience,
     this.settings,
     this.budget,
     this.createdBy,
-    required this.createdAt,
-    required this.updatedAt,
     this.metadata,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'type': type.name,
-      'status': status.name,
-      'startDate': Timestamp.fromDate(startDate),
-      'endDate': Timestamp.fromDate(endDate),
-      'targetAudience': targetAudience,
-      'settings': settings,
-      'budget': budget,
-      'createdBy': createdBy,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'metadata': metadata,
-    };
-  }
 
   factory MarketingCampaign.fromMap(Map<String, dynamic> map) {
     return MarketingCampaign(
@@ -172,6 +134,39 @@ class MarketingCampaign {
       updatedAt: (map['updatedAt'] as Timestamp).toDate(),
       metadata: map['metadata'],
     );
+  }
+  final String id;
+  final String name;
+  final String description;
+  final MarketingCampaignType type;
+  final MarketingCampaignStatus status;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String? targetAudience;
+  final Map<String, dynamic>? settings;
+  final double? budget;
+  final String? createdBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic>? metadata;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'type': type.name,
+      'status': status.name,
+      'startDate': Timestamp.fromDate(startDate),
+      'endDate': Timestamp.fromDate(endDate),
+      'targetAudience': targetAudience,
+      'settings': settings,
+      'budget': budget,
+      'createdBy': createdBy,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'metadata': metadata,
+    };
   }
 }
 
@@ -201,23 +196,6 @@ enum MarketingCampaignStatus {
 
 /// Модель рассылки
 class MarketingNewsletter {
-  final String id;
-  final String title;
-  final String subject;
-  final String content;
-  final NewsletterType type;
-  final NewsletterStatus status;
-  final String? targetSegment;
-  final DateTime? scheduledAt;
-  final DateTime? sentAt;
-  final int? totalRecipients;
-  final int? deliveredCount;
-  final int? openedCount;
-  final int? clickedCount;
-  final String? createdBy;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic>? metadata;
 
   MarketingNewsletter({
     required this.id,
@@ -225,7 +203,7 @@ class MarketingNewsletter {
     required this.subject,
     required this.content,
     required this.type,
-    this.status = NewsletterStatus.draft,
+    required this.createdAt, required this.updatedAt, this.status = NewsletterStatus.draft,
     this.targetSegment,
     this.scheduledAt,
     this.sentAt,
@@ -234,33 +212,8 @@ class MarketingNewsletter {
     this.openedCount,
     this.clickedCount,
     this.createdBy,
-    required this.createdAt,
-    required this.updatedAt,
     this.metadata,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'subject': subject,
-      'content': content,
-      'type': type.name,
-      'status': status.name,
-      'targetSegment': targetSegment,
-      'scheduledAt':
-          scheduledAt != null ? Timestamp.fromDate(scheduledAt!) : null,
-      'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
-      'totalRecipients': totalRecipients,
-      'deliveredCount': deliveredCount,
-      'openedCount': openedCount,
-      'clickedCount': clickedCount,
-      'createdBy': createdBy,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'metadata': metadata,
-    };
-  }
 
   factory MarketingNewsletter.fromMap(Map<String, dynamic> map) {
     return MarketingNewsletter(
@@ -288,6 +241,46 @@ class MarketingNewsletter {
       metadata: map['metadata'],
     );
   }
+  final String id;
+  final String title;
+  final String subject;
+  final String content;
+  final NewsletterType type;
+  final NewsletterStatus status;
+  final String? targetSegment;
+  final DateTime? scheduledAt;
+  final DateTime? sentAt;
+  final int? totalRecipients;
+  final int? deliveredCount;
+  final int? openedCount;
+  final int? clickedCount;
+  final String? createdBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic>? metadata;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'subject': subject,
+      'content': content,
+      'type': type.name,
+      'status': status.name,
+      'targetSegment': targetSegment,
+      'scheduledAt':
+          scheduledAt != null ? Timestamp.fromDate(scheduledAt!) : null,
+      'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
+      'totalRecipients': totalRecipients,
+      'deliveredCount': deliveredCount,
+      'openedCount': openedCount,
+      'clickedCount': clickedCount,
+      'createdBy': createdBy,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'metadata': metadata,
+    };
+  }
 }
 
 /// Типы рассылок
@@ -298,38 +291,15 @@ enum NewsletterStatus { draft, scheduled, sending, sent, failed, cancelled }
 
 /// Модель сегмента пользователей
 class UserSegment {
-  final String id;
-  final String name;
-  final String description;
-  final Map<String, dynamic> criteria;
-  final int userCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? createdBy;
 
   UserSegment({
     required this.id,
     required this.name,
     required this.description,
     required this.criteria,
-    this.userCount = 0,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.userCount = 0,
     this.createdBy,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'criteria': criteria,
-      'userCount': userCount,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'createdBy': createdBy,
-    };
-  }
 
   factory UserSegment.fromMap(Map<String, dynamic> map) {
     return UserSegment(
@@ -343,24 +313,31 @@ class UserSegment {
       createdBy: map['createdBy'],
     );
   }
+  final String id;
+  final String name;
+  final String description;
+  final Map<String, dynamic> criteria;
+  final int userCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? createdBy;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'criteria': criteria,
+      'userCount': userCount,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'createdBy': createdBy,
+    };
+  }
 }
 
 /// Модель финансовой аналитики
 class FinancialAnalytics {
-  final String id;
-  final DateTime date;
-  final String period; // daily, weekly, monthly
-  final double totalRevenue;
-  final double subscriptionRevenue;
-  final double promotionRevenue;
-  final double advertisementRevenue;
-  final double partnerCommission;
-  final int totalTransactions;
-  final int newSubscriptions;
-  final int activeUsers;
-  final double arpu; // Average Revenue Per User
-  final double ltv; // Lifetime Value
-  final Map<String, dynamic>? metadata;
 
   FinancialAnalytics({
     required this.id,
@@ -379,25 +356,6 @@ class FinancialAnalytics {
     this.metadata,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'date': Timestamp.fromDate(date),
-      'period': period,
-      'totalRevenue': totalRevenue,
-      'subscriptionRevenue': subscriptionRevenue,
-      'promotionRevenue': promotionRevenue,
-      'advertisementRevenue': advertisementRevenue,
-      'partnerCommission': partnerCommission,
-      'totalTransactions': totalTransactions,
-      'newSubscriptions': newSubscriptions,
-      'activeUsers': activeUsers,
-      'arpu': arpu,
-      'ltv': ltv,
-      'metadata': metadata,
-    };
-  }
-
   factory FinancialAnalytics.fromMap(Map<String, dynamic> map) {
     return FinancialAnalytics(
       id: map['id'] ?? '',
@@ -415,5 +373,38 @@ class FinancialAnalytics {
       ltv: (map['ltv'] ?? 0.0).toDouble(),
       metadata: map['metadata'],
     );
+  }
+  final String id;
+  final DateTime date;
+  final String period; // daily, weekly, monthly
+  final double totalRevenue;
+  final double subscriptionRevenue;
+  final double promotionRevenue;
+  final double advertisementRevenue;
+  final double partnerCommission;
+  final int totalTransactions;
+  final int newSubscriptions;
+  final int activeUsers;
+  final double arpu; // Average Revenue Per User
+  final double ltv; // Lifetime Value
+  final Map<String, dynamic>? metadata;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'date': Timestamp.fromDate(date),
+      'period': period,
+      'totalRevenue': totalRevenue,
+      'subscriptionRevenue': subscriptionRevenue,
+      'promotionRevenue': promotionRevenue,
+      'advertisementRevenue': advertisementRevenue,
+      'partnerCommission': partnerCommission,
+      'totalTransactions': totalTransactions,
+      'newSubscriptions': newSubscriptions,
+      'activeUsers': activeUsers,
+      'arpu': arpu,
+      'ltv': ltv,
+      'metadata': metadata,
+    };
   }
 }

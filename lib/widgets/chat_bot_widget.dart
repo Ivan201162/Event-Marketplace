@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/services/chat_bot_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/chat_bot_service.dart';
 
 /// Виджет бота-помощника в чате поддержки
 class ChatBotWidget extends ConsumerStatefulWidget {
   const ChatBotWidget({
-    super.key,
-    required this.chatId,
-    required this.userId,
+    required this.chatId, required this.userId, super.key,
     this.onTicketCreated,
   });
   final String chatId;
@@ -78,7 +76,7 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                       const Text(
                         'Бот-помощник',
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
+                            fontWeight: FontWeight.w600, fontSize: 16,),
                       ),
                       Text(
                         'Готов помочь с вашими вопросами',
@@ -183,7 +181,7 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                           style: TextStyle(
                               color: message.isBot
                                   ? Colors.black87
-                                  : Colors.white),
+                                  : Colors.white,),
                         ),
                         if (message.suggestions.isNotEmpty) ...[
                           const SizedBox(height: 8),
@@ -196,7 +194,7 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                                     onTap: () => _selectSuggestion(suggestion),
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
+                                          horizontal: 8, vertical: 4,),
                                       decoration: BoxDecoration(
                                         color: message.isBot
                                             ? Colors.blue[50]

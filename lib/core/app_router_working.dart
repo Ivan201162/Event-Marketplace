@@ -1,21 +1,20 @@
+import 'package:event_marketplace_app/screens/about_screen.dart';
+import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
+import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
+import 'package:event_marketplace_app/screens/auth/login_screen_improved.dart';
+import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
+import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
+import 'package:event_marketplace_app/screens/chat/chat_screen_improved.dart';
+import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
+import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
+import 'package:event_marketplace_app/screens/monetization/monetization_screen.dart';
+import 'package:event_marketplace_app/screens/notifications/notifications_screen.dart';
+import 'package:event_marketplace_app/screens/profile/edit_profile_advanced.dart';
+import 'package:event_marketplace_app/screens/profile/profile_screen_advanced.dart';
+import 'package:event_marketplace_app/screens/requests/create_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../screens/animated_splash_screen.dart';
-import '../screens/auth/auth_check_screen.dart';
-import '../screens/auth/login_screen_improved.dart';
-import '../screens/auth/phone_auth_improved.dart';
-import '../screens/main_navigation_screen.dart';
-import '../screens/profile/edit_profile_advanced.dart';
-import '../screens/profile/profile_screen_advanced.dart';
-import '../screens/chat/chat_list_screen_improved.dart';
-import '../screens/chat/chat_screen_improved.dart';
-import '../screens/monetization/monetization_screen.dart';
-import '../screens/requests/create_request_screen.dart';
-import '../screens/ideas/create_idea_screen.dart';
-import '../screens/notifications/notifications_screen.dart';
-import '../screens/about_screen.dart';
 
 /// Рабочий роутер с полным функционалом
 final appRouterProvider = Provider<GoRouter>((ref) {

@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/models/payment_models.dart';
+import 'package:event_marketplace_app/services/payment_integration_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../models/payment_models.dart';
-import '../services/payment_integration_service.dart';
-
 class ContractDetailsDialog extends StatefulWidget {
   const ContractDetailsDialog(
-      {super.key, required this.contract, this.onStatusUpdate});
+      {required this.contract, super.key, this.onStatusUpdate,});
   final Contract contract;
   final Function(ContractStatus)? onStatusUpdate;
 
@@ -66,7 +65,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                 ),
                 IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close)),
+                    icon: const Icon(Icons.close),),
               ],
             ),
 
@@ -103,13 +102,13 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                   children: [
                     _buildDetailSection(theme, 'Основная информация', [
                       _buildDetailRow(
-                          theme, 'ID контракта', widget.contract.id),
+                          theme, 'ID контракта', widget.contract.id,),
                       _buildDetailRow(
-                          theme, 'ID бронирования', widget.contract.bookingId),
+                          theme, 'ID бронирования', widget.contract.bookingId,),
                       _buildDetailRow(
-                          theme, 'ID заказчика', widget.contract.customerId),
+                          theme, 'ID заказчика', widget.contract.customerId,),
                       _buildDetailRow(theme, 'ID специалиста',
-                          widget.contract.specialistId),
+                          widget.contract.specialistId,),
                       _buildDetailRow(
                         theme,
                         'Дата создания',
@@ -143,7 +142,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                     ]),
                     const SizedBox(height: 24),
                     _buildDetailSection(
-                        theme, 'Платежи', _buildPaymentsList(theme)),
+                        theme, 'Платежи', _buildPaymentsList(theme),),
                   ],
                 ),
               ),
@@ -172,7 +171,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                         Navigator.pop(context);
                       },
                       style: OutlinedButton.styleFrom(
-                          foregroundColor: theme.colorScheme.error),
+                          foregroundColor: theme.colorScheme.error,),
                       child: const Text('Отменить контракт'),
                     ),
                   ),
@@ -197,7 +196,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
   }
 
   Widget _buildDetailSection(
-          ThemeData theme, String title, List<Widget> children) =>
+          ThemeData theme, String title, List<Widget> children,) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -252,7 +251,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
       return [
         const Center(
           child: Padding(
-              padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
+              padding: EdgeInsets.all(16), child: CircularProgressIndicator(),),
         ),
       ];
     }
@@ -285,7 +284,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),),
         ),
         child: Row(
           children: [

@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/models/tax_info.dart';
+import 'package:event_marketplace_app/services/tax_reminder_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/tax_info.dart';
-import '../services/tax_reminder_service.dart';
 
 /// Виджет для отображения напоминаний о налогах
 class TaxReminderWidget extends ConsumerStatefulWidget {
@@ -64,7 +63,7 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
                   Row(
                     children: [
                       Icon(Icons.notifications_active,
-                          color: Colors.orange[700]),
+                          color: Colors.orange[700],),
                       const SizedBox(width: 8),
                       Text(
                         'Напоминания о налогах',
@@ -127,7 +126,7 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
                   Text(
                     '${taxInfo.taxTypeDisplayName} - ${taxInfo.period}',
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                        fontSize: 12, fontWeight: FontWeight.w500,),
                   ),
                   Text(
                     'К доплате: ${taxInfo.formattedTaxAmount}',
@@ -167,7 +166,7 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
                 margin: const EdgeInsets.only(bottom: 8),
                 child: ListTile(
                   leading: Text(reminder.taxTypeIcon,
-                      style: const TextStyle(fontSize: 20)),
+                      style: const TextStyle(fontSize: 20),),
                   title: Text(reminder.taxTypeDisplayName),
                   subtitle: Text('Период: ${reminder.period}'),
                   trailing: Column(
@@ -176,11 +175,11 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
                       Text(
                         reminder.formattedTaxAmount,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.red),
+                            fontWeight: FontWeight.bold, color: Colors.red,),
                       ),
                       Text('К доплате',
                           style:
-                              TextStyle(fontSize: 10, color: Colors.grey[600])),
+                              TextStyle(fontSize: 10, color: Colors.grey[600]),),
                     ],
                   ),
                   onTap: () => _sendReminder(reminder),
@@ -192,7 +191,7 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -205,7 +204,7 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Напоминание отправлено'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
         // Обновляем виджет
         setState(() {});
@@ -215,7 +214,7 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка отправки напоминания: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -295,7 +294,7 @@ class TaxReminderStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildStatItem(
-          String label, String value, IconData icon, Color color) =>
+          String label, String value, IconData icon, Color color,) =>
       Column(
         children: [
           Icon(icon, color: color, size: 24),
@@ -303,7 +302,7 @@ class TaxReminderStatsWidget extends ConsumerWidget {
           Text(
             value,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(
             label,

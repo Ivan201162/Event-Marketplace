@@ -1,13 +1,12 @@
 import 'dart:typed_data';
 
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/contract.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/models/work_act.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
-import '../models/booking.dart';
-import '../models/contract.dart';
-import '../models/specialist.dart';
-import '../models/user.dart';
-import '../models/work_act.dart';
 
 /// Сервис для генерации PDF документов
 class PdfService {
@@ -27,7 +26,7 @@ class PdfService {
                 child: pw.Text(
                   'ДОГОВОР НА ОКАЗАНИЕ УСЛУГ',
                   style: pw.TextStyle(
-                      fontSize: 18, fontWeight: pw.FontWeight.bold),
+                      fontSize: 18, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -37,7 +36,7 @@ class PdfService {
                 child: pw.Text(
                   '№ ${contract.contractNumber}',
                   style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold),
+                      fontSize: 14, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -57,7 +56,7 @@ class PdfService {
               // Содержание договора
               pw.Expanded(
                 child: pw.Text(contract.content,
-                    style: const pw.TextStyle(fontSize: 12)),
+                    style: const pw.TextStyle(fontSize: 12),),
               ),
 
               pw.SizedBox(height: 30),
@@ -73,7 +72,7 @@ class PdfService {
                       pw.SizedBox(height: 20),
                       pw.Text('_________________'),
                       pw.Text(
-                          '${contract.metadata['specialistName'] ?? 'Специалист'}'),
+                          '${contract.metadata['specialistName'] ?? 'Специалист'}',),
                     ],
                   ),
                   pw.Column(
@@ -83,7 +82,7 @@ class PdfService {
                       pw.SizedBox(height: 20),
                       pw.Text('_________________'),
                       pw.Text(
-                          '${contract.metadata['customerName'] ?? 'Заказчик'}'),
+                          '${contract.metadata['customerName'] ?? 'Заказчик'}',),
                     ],
                   ),
                 ],
@@ -115,7 +114,7 @@ class PdfService {
                 child: pw.Text(
                   'АКТ ВЫПОЛНЕННЫХ РАБОТ',
                   style: pw.TextStyle(
-                      fontSize: 18, fontWeight: pw.FontWeight.bold),
+                      fontSize: 18, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -125,7 +124,7 @@ class PdfService {
                 child: pw.Text(
                   '№ ${workAct.actNumber}',
                   style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold),
+                      fontSize: 14, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -164,7 +163,7 @@ class PdfService {
               pw.Text(
                 'Выполнил следующие работы:',
                 style: const pw.TextStyle(
-                    fontSize: 12, fontWeight: pw.FontWeight.bold),
+                    fontSize: 12, fontWeight: pw.FontWeight.bold,),
               ),
               pw.SizedBox(height: 10),
 
@@ -180,7 +179,7 @@ class PdfService {
               pw.Text(
                 'Стоимость выполненных работ: ${workAct.totalAmount.toStringAsFixed(2)} ${workAct.currency}',
                 style: const pw.TextStyle(
-                    fontSize: 12, fontWeight: pw.FontWeight.bold),
+                    fontSize: 12, fontWeight: pw.FontWeight.bold,),
               ),
               pw.SizedBox(height: 20),
 
@@ -209,7 +208,7 @@ class PdfService {
                       pw.SizedBox(height: 20),
                       pw.Text('_________________'),
                       pw.Text(
-                          '${workAct.metadata['specialistName'] ?? 'Специалист'}'),
+                          '${workAct.metadata['specialistName'] ?? 'Специалист'}',),
                     ],
                   ),
                   pw.Column(
@@ -219,7 +218,7 @@ class PdfService {
                       pw.SizedBox(height: 20),
                       pw.Text('_________________'),
                       pw.Text(
-                          '${workAct.metadata['customerName'] ?? 'Заказчик'}'),
+                          '${workAct.metadata['customerName'] ?? 'Заказчик'}',),
                     ],
                   ),
                 ],
@@ -256,7 +255,7 @@ class PdfService {
                 child: pw.Text(
                   'СЧЕТ НА ОПЛАТУ',
                   style: pw.TextStyle(
-                      fontSize: 18, fontWeight: pw.FontWeight.bold),
+                      fontSize: 18, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -266,7 +265,7 @@ class PdfService {
                 child: pw.Text(
                   '№ $invoiceNumber',
                   style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold),
+                      fontSize: 14, fontWeight: pw.FontWeight.bold,),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -287,7 +286,7 @@ class PdfService {
 
               // Поставщик
               pw.Text('Поставщик:',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
               pw.Text(specialist.name),
               if (specialist.email != null)
                 pw.Text('Email: ${specialist.email}'),
@@ -297,7 +296,7 @@ class PdfService {
 
               // Покупатель
               pw.Text('Покупатель:',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
               pw.Text('${customer.name}'),
               if (customer.email != null) pw.Text('Email: ${customer.email}'),
               if (customer.phone != null) pw.Text('Телефон: ${customer.phone}'),
@@ -329,7 +328,7 @@ class PdfService {
                         padding: const pw.EdgeInsets.all(8),
                         child: pw.Text('Цена',
                             style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold),),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
@@ -353,12 +352,12 @@ class PdfService {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
                         child: pw.Text(
-                            '${booking.totalPrice.toStringAsFixed(2)} ₽'),
+                            '${booking.totalPrice.toStringAsFixed(2)} ₽',),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
                         child: pw.Text(
-                            '${booking.totalPrice.toStringAsFixed(2)} ₽'),
+                            '${booking.totalPrice.toStringAsFixed(2)} ₽',),
                       ),
                     ],
                   ),
@@ -373,7 +372,7 @@ class PdfService {
                   pw.Text(
                     'Итого: ${booking.totalPrice.toStringAsFixed(2)} ₽',
                     style: pw.TextStyle(
-                        fontSize: 16, fontWeight: pw.FontWeight.bold),
+                        fontSize: 16, fontWeight: pw.FontWeight.bold,),
                   ),
                 ],
               ),

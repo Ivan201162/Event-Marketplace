@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/models/photo_studio.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/photo_studio_service.dart';
+import 'package:event_marketplace_app/widgets/photo_studio_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/photo_studio.dart';
-import '../providers/auth_providers.dart';
-import '../services/photo_studio_service.dart';
-import '../widgets/photo_studio_card.dart';
 
 /// Экран просмотра фотостудий
 class PhotoStudiosScreen extends ConsumerStatefulWidget {
@@ -58,7 +57,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(
-            content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
+            content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red,),);
       }
     }
   }
@@ -100,7 +99,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     content:
-                        Text('Создание фотостудии будет реализовано позже')),
+                        Text('Создание фотостудии будет реализовано позже'),),
               );
             },
             tooltip: 'Добавить фотостудию',
@@ -381,7 +380,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
       children: [
         Text('Удобства',
             style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+                ?.copyWith(fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -396,7 +395,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                         color:
-                            theme.colorScheme.outline.withValues(alpha: 0.2)),
+                            theme.colorScheme.outline.withValues(alpha: 0.2),),
                   ),
                   child: Text(amenity, style: theme.textTheme.bodySmall),
                 ),
@@ -415,7 +414,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
       children: [
         Text('Цены',
             style: theme.textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+                ?.copyWith(fontWeight: FontWeight.bold),),
         const SizedBox(height: 8),
         if (photoStudio.hourlyRate != null)
           _buildPricingRow('За час', photoStudio.getFormattedHourlyRate()),
@@ -465,7 +464,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(day),
-                  Text(open == 'Закрыто' ? 'Закрыто' : '$open - $close')
+                  Text(open == 'Закрыто' ? 'Закрыто' : '$open - $close'),
                 ],
               ),
             );
@@ -485,7 +484,7 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK')),
+              child: const Text('OK'),),
         ],
       ),
     );

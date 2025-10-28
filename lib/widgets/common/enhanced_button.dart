@@ -2,19 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Улучшенная кнопка с анимациями и состояниями
 class EnhancedButton extends StatefulWidget {
-  final String text;
-  final VoidCallback? onPressed;
-  final IconData? icon;
-  final ButtonType type;
-  final ButtonSize size;
-  final bool isLoading;
-  final bool isFullWidth;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
 
   const EnhancedButton({
-    super.key,
-    required this.text,
+    required this.text, super.key,
     this.onPressed,
     this.icon,
     this.type = ButtonType.primary,
@@ -24,6 +14,15 @@ class EnhancedButton extends StatefulWidget {
     this.backgroundColor,
     this.foregroundColor,
   });
+  final String text;
+  final VoidCallback? onPressed;
+  final IconData? icon;
+  final ButtonType type;
+  final ButtonSize size;
+  final bool isLoading;
+  final bool isFullWidth;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   State<EnhancedButton> createState() => _EnhancedButtonState();
@@ -42,12 +41,12 @@ class _EnhancedButtonState extends State<EnhancedButton>
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.95,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
   }
 
   @override

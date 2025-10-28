@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/screens/enhanced_chat_screen.dart';
+import 'package:event_marketplace_app/services/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/chat.dart';
-import '../screens/enhanced_chat_screen.dart';
-import '../services/chat_service.dart';
 
 /// Улучшенный экран списка чатов с категориями
 class EnhancedChatsListScreen extends ConsumerStatefulWidget {
@@ -93,7 +92,7 @@ class _EnhancedChatsListScreenState
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () => setState(() {}),
-                      child: const Text('Повторить')),
+                      child: const Text('Повторить'),),
                 ],
               ),
             );
@@ -132,13 +131,11 @@ class _EnhancedChatsListScreenState
         subtitle =
             'Здесь будут отображаться чаты с организаторами ваших мероприятий';
         icon = Icons.event;
-        break;
       case 'specialists':
         title = 'Нет чатов с исполнителями';
         subtitle =
             'Здесь будут отображаться чаты с исполнителями ваших заказов';
         icon = Icons.people;
-        break;
       default:
         title = 'Нет чатов';
         subtitle = 'Начните общение, создав новый чат';
@@ -197,7 +194,7 @@ class _EnhancedChatsListScreenState
             child: Text(
               displayName,
               style: TextStyle(
-                  fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal),
+                  fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal,),
             ),
           ),
           if (hasUnread)
@@ -362,7 +359,7 @@ class _EnhancedChatsListScreenState
             ListTile(
               leading: const Icon(Icons.clear_all, color: Colors.red),
               title: const Text('Очистить чат',
-                  style: TextStyle(color: Colors.red)),
+                  style: TextStyle(color: Colors.red),),
               onTap: () {
                 Navigator.of(context).pop();
                 _clearChat(chat);
@@ -371,7 +368,7 @@ class _EnhancedChatsListScreenState
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
               title: const Text('Удалить чат',
-                  style: TextStyle(color: Colors.red)),
+                  style: TextStyle(color: Colors.red),),
               onTap: () {
                 Navigator.of(context).pop();
                 _deleteChat(chat);
@@ -388,7 +385,7 @@ class _EnhancedChatsListScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Поиск по чатам пока не реализован')));
+        const SnackBar(content: Text('Поиск по чатам пока не реализован')),);
   }
 
   void _createNewChat() {
@@ -396,7 +393,7 @@ class _EnhancedChatsListScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание чата пока не реализовано')));
+        const SnackBar(content: Text('Создание чата пока не реализовано')),);
   }
 
   void _showChatInfo(Chat chat) {
@@ -418,7 +415,7 @@ class _EnhancedChatsListScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -429,7 +426,7 @@ class _EnhancedChatsListScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Настройки уведомлений пока не реализованы')));
+        content: Text('Настройки уведомлений пока не реализованы'),),);
   }
 
   void _clearChat(Chat chat) {
@@ -438,11 +435,11 @@ class _EnhancedChatsListScreenState
       builder: (context) => AlertDialog(
         title: const Text('Очистить чат?'),
         content: const Text(
-            'Все сообщения будут удалены. Это действие нельзя отменить.'),
+            'Все сообщения будут удалены. Это действие нельзя отменить.',),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -461,11 +458,11 @@ class _EnhancedChatsListScreenState
       builder: (context) => AlertDialog(
         title: const Text('Удалить чат?'),
         content: const Text(
-            'Чат будет удален навсегда. Это действие нельзя отменить.'),
+            'Чат будет удален навсегда. Это действие нельзя отменить.',),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -473,7 +470,7 @@ class _EnhancedChatsListScreenState
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(const SnackBar(
-                  content: Text('Удаление чата пока не реализовано')));
+                  content: Text('Удаление чата пока не реализовано'),),);
             },
             child: const Text('Удалить'),
           ),

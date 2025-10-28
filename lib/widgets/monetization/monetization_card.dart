@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 
 class MonetizationCard extends StatelessWidget {
   const MonetizationCard({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.color,
-    required this.onTap,
+    required this.title, required this.description, required this.icon, required this.color, required this.onTap, super.key,
   });
   final String title;
   final String description;
@@ -57,18 +52,18 @@ class MonetizationCard extends StatelessWidget {
                       children: [
                         Text(title,
                             style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
+                                fontSize: 18, fontWeight: FontWeight.bold,),),
                         const SizedBox(height: 4),
                         Text(description,
                             style: TextStyle(
-                                color: Colors.grey[600], fontSize: 14)),
+                                color: Colors.grey[600], fontSize: 14,),),
                       ],
                     ),
                   ),
 
                   // Arrow
                   Icon(Icons.arrow_forward_ios,
-                      color: Colors.grey[400], size: 16),
+                      color: Colors.grey[400], size: 16,),
                 ],
               ),
             ),

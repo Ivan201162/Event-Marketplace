@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/services/app_optimization_service.dart';
+import 'package:event_marketplace_app/services/error_logging_service.dart';
+import 'package:event_marketplace_app/services/performance_testing_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/app_optimization_service.dart';
-import '../services/error_logging_service.dart';
-import '../services/performance_testing_service.dart';
 
 /// Экран для тестирования и мониторинга
 class TestingMonitoringScreen extends ConsumerStatefulWidget {
@@ -35,7 +34,7 @@ class _TestingMonitoringScreenState
 
   Future<void> _loadInitialData() async {
     await Future.wait(
-        [_loadCacheInfo(), _loadRecommendations(), _loadErrorStats()]);
+        [_loadCacheInfo(), _loadRecommendations(), _loadErrorStats()],);
   }
 
   Future<void> _loadCacheInfo() async {
@@ -93,7 +92,7 @@ class _TestingMonitoringScreenState
       final result = await _optimizer.clearCache();
       if (result['success'] == true) {
         _showSuccessSnackBar(
-            'Кэш очищен. Освобождено: ${result['freedSpaceMB']} МБ');
+            'Кэш очищен. Освобождено: ${result['freedSpaceMB']} МБ',);
         await _loadCacheInfo();
       } else {
         _showErrorSnackBar('Ошибка очистки кэша: ${result['error']}');
@@ -111,7 +110,7 @@ class _TestingMonitoringScreenState
         await _loadInitialData();
       } else {
         _showErrorSnackBar(
-            'Ошибка применения рекомендации: ${result['error']}');
+            'Ошибка применения рекомендации: ${result['error']}',);
       }
     } catch (e) {
       _showErrorSnackBar('Ошибка применения рекомендации: $e');
@@ -122,14 +121,14 @@ class _TestingMonitoringScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red));
+        SnackBar(content: Text(message), backgroundColor: Colors.red),);
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.green));
+        SnackBar(content: Text(message), backgroundColor: Colors.green),);
   }
 
   @override
@@ -184,17 +183,17 @@ class _TestingMonitoringScreenState
                   const Spacer(),
                   IconButton(
                       onPressed: _loadCacheInfo,
-                      icon: const Icon(Icons.refresh)),
+                      icon: const Icon(Icons.refresh),),
                 ],
               ),
               const SizedBox(height: 16),
               if (_cacheInfo != null) ...[
                 _buildInfoRow(
-                    'Временный кэш', '${_cacheInfo!['tempCacheSizeMB']} МБ'),
+                    'Временный кэш', '${_cacheInfo!['tempCacheSizeMB']} МБ',),
                 _buildInfoRow(
-                    'Документы', '${_cacheInfo!['documentsSizeMB']} МБ'),
+                    'Документы', '${_cacheInfo!['documentsSizeMB']} МБ',),
                 _buildInfoRow(
-                    'Общий размер', '${_cacheInfo!['totalSizeMB']} МБ'),
+                    'Общий размер', '${_cacheInfo!['totalSizeMB']} МБ',),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
@@ -232,7 +231,7 @@ class _TestingMonitoringScreenState
                   const Spacer(),
                   IconButton(
                       onPressed: _loadRecommendations,
-                      icon: const Icon(Icons.refresh)),
+                      icon: const Icon(Icons.refresh),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -297,7 +296,7 @@ class _TestingMonitoringScreenState
               Text(
                 'Экономия: ${recommendation['estimatedSavings']}',
                 style: TextStyle(
-                    color: Colors.green[700], fontWeight: FontWeight.w500),
+                    color: Colors.green[700], fontWeight: FontWeight.w500,),
               ),
             ],
             const SizedBox(height: 8),
@@ -332,7 +331,7 @@ class _TestingMonitoringScreenState
                   const Spacer(),
                   IconButton(
                       onPressed: _loadErrorStats,
-                      icon: const Icon(Icons.refresh)),
+                      icon: const Icon(Icons.refresh),),
                 ],
               ),
               const SizedBox(height: 16),
@@ -341,7 +340,7 @@ class _TestingMonitoringScreenState
                 if (_errorStats!['errorsByScreen'] != null) ...[
                   const SizedBox(height: 8),
                   const Text('Ошибки по экранам:',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: TextStyle(fontWeight: FontWeight.bold),),
                   ...(_errorStats!['errorsByScreen'] as Map<String, dynamic>)
                       .entries
                       .map(
@@ -385,7 +384,7 @@ class _TestingMonitoringScreenState
                         )
                       : const Icon(Icons.play_arrow),
                   label: Text(
-                      _isRunningTests ? 'Запуск тестов...' : 'Запустить тесты'),
+                      _isRunningTests ? 'Запуск тестов...' : 'Запустить тесты',),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -419,11 +418,11 @@ class _TestingMonitoringScreenState
             const SizedBox(height: 16),
             _buildInfoRow('Общее время', '${_testResults!['totalTime']} мс'),
             _buildInfoRow(
-                'Статус', _testResults!['success'] ? 'Успешно' : 'Ошибка'),
+                'Статус', _testResults!['success'] ? 'Успешно' : 'Ошибка',),
             const SizedBox(height: 16),
             if (_testResults!['tests'] != null) ...[
               const Text('Детали тестов:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontWeight: FontWeight.bold),),
               const SizedBox(height: 8),
               ...(_testResults!['tests'] as Map<String, dynamic>).entries.map(
                     (entry) => _buildTestResult(entry.key, entry.value),
@@ -453,7 +452,7 @@ class _TestingMonitoringScreenState
           Row(
             children: [
               Icon(success ? Icons.check_circle : Icons.error,
-                  color: color, size: 16),
+                  color: color, size: 16,),
               const SizedBox(width: 8),
               Text(
                 testName,
@@ -465,7 +464,7 @@ class _TestingMonitoringScreenState
             _buildInfoRow('Время', '${result['totalTime']} мс'),
           if (result['error'] != null)
             Text('Ошибка: ${result['error']}',
-                style: TextStyle(color: Colors.red[700])),
+                style: TextStyle(color: Colors.red[700]),),
         ],
       ),
     );

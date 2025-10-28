@@ -1,18 +1,17 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/social_models.dart';
-import '../providers/auth_providers.dart';
-
 /// Экран редактирования профиля
 class EditProfileScreen extends ConsumerStatefulWidget {
-  final Profile? initialProfile;
 
   const EditProfileScreen({super.key, this.initialProfile});
+  final Profile? initialProfile;
 
   @override
   ConsumerState<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -213,12 +212,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     shape: BoxShape.circle,
                     border: Border.all(
                         color: Theme.of(context).scaffoldBackgroundColor,
-                        width: 2),
+                        width: 2,),
                   ),
                   child: IconButton(
                     onPressed: _pickAvatar,
                     icon: const Icon(Icons.camera_alt,
-                        color: Colors.white, size: 20),
+                        color: Colors.white, size: 20,),
                   ),
                 ),
               ),
@@ -226,17 +225,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           ),
           const SizedBox(height: 12),
           TextButton(
-              onPressed: _pickAvatar, child: const Text('Изменить фото')),
+              onPressed: _pickAvatar, child: const Text('Изменить фото'),),
         ],
       ),
     );
   }
 
   Future<void> _pickAvatar() async {
-    final ImagePicker picker = ImagePicker();
+    final picker = ImagePicker();
 
     try {
-      final XFile? image = await picker.pickImage(
+      final image = await picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 512,
         maxHeight: 512,
@@ -273,7 +272,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       }
 
       // Загружаем аватар, если выбран новый
-      final String? avatarUrl = widget.initialProfile?.avatarUrl;
+      final avatarUrl = widget.initialProfile?.avatarUrl;
       if (_selectedAvatar != null) {
         setState(() {
           _isUploading = true;
@@ -317,7 +316,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Профиль успешно обновлен!')));
+            const SnackBar(content: Text('Профиль успешно обновлен!')),);
         context.pop();
       }
     } catch (e) {

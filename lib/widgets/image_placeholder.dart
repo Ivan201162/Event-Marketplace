@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 /// Виджет для отображения изображений с placeholder и прогрессом загрузки
 class ImagePlaceholder extends StatelessWidget {
   const ImagePlaceholder({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -69,7 +68,7 @@ class ImagePlaceholder extends StatelessWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).colorScheme.primary),
+                    Theme.of(context).colorScheme.primary,),
               ),
             ),
             const SizedBox(height: 8),
@@ -85,7 +84,7 @@ class ImagePlaceholder extends StatelessWidget {
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,),
           ),
         ],
       ),
@@ -118,7 +117,7 @@ class ImagePlaceholder extends StatelessWidget {
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onErrorContainer),
+                color: Theme.of(context).colorScheme.onErrorContainer,),
             textAlign: TextAlign.center,
           ),
         ],
@@ -173,7 +172,7 @@ class AvatarPlaceholder extends StatelessWidget {
   }
 
   Widget _buildInitialsPlaceholder(
-      BuildContext context, Color backgroundColor, Color textColor) {
+      BuildContext context, Color backgroundColor, Color textColor,) {
     final initials = _getInitials(name);
     final radius = borderRadius ?? BorderRadius.circular(size / 2);
 
@@ -211,8 +210,7 @@ class AvatarPlaceholder extends StatelessWidget {
 /// Виджет для отображения изображения с ленивой загрузкой
 class LazyImage extends StatefulWidget {
   const LazyImage({
-    super.key,
-    required this.imageUrl,
+    required this.imageUrl, super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -378,8 +376,7 @@ class _LazyImageState extends State<LazyImage>
 /// Виджет для отображения сетки изображений с placeholder
 class ImageGrid extends StatelessWidget {
   const ImageGrid({
-    super.key,
-    required this.imageUrls,
+    required this.imageUrls, super.key,
     this.crossAxisCount = 2,
     this.crossAxisSpacing = 8,
     this.mainAxisSpacing = 8,

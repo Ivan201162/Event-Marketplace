@@ -1,13 +1,11 @@
 import 'dart:io';
+
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../models/app_user.dart';
-import '../../providers/auth_providers.dart';
-import '../../services/storage_service.dart';
 
 /// Улучшенный экран редактирования профиля
 class EditProfileImproved extends ConsumerStatefulWidget {
@@ -77,7 +75,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
       final authService = ref.read(authServiceProvider);
       final storageService = ref.read(storageServiceProvider);
 
-      String? avatarUrl = _currentAvatarUrl;
+      var avatarUrl = _currentAvatarUrl;
 
       // Загружаем новое изображение, если выбрано
       if (_selectedImage != null) {
@@ -150,7 +148,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                     IconButton(
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back,
-                          color: Colors.white, size: 28),
+                          color: Colors.white, size: 28,),
                     ),
                     const Expanded(
                       child: Text(
@@ -184,7 +182,6 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                     child: Form(
                       key: _formKey,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(height: 20),
 
@@ -221,7 +218,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                                                 _currentAvatarUrl!,
                                                 fit: BoxFit.cover,
                                                 errorBuilder: (context, error,
-                                                    stackTrace) {
+                                                    stackTrace,) {
                                                   return const Icon(
                                                     Icons.person,
                                                     size: 60,
@@ -274,14 +271,14 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                             decoration: InputDecoration(
                               labelText: 'Имя',
                               prefixIcon: const Icon(Icons.person,
-                                  color: Color(0xFF1E3A8A)),
+                                  color: Color(0xFF1E3A8A),),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: const BorderSide(
-                                    color: Color(0xFF1E3A8A), width: 2),
+                                    color: Color(0xFF1E3A8A), width: 2,),
                               ),
                             ),
                             validator: (value) {
@@ -300,14 +297,14 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                             decoration: InputDecoration(
                               labelText: 'Город',
                               prefixIcon: const Icon(Icons.location_city,
-                                  color: Color(0xFF1E3A8A)),
+                                  color: Color(0xFF1E3A8A),),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: const BorderSide(
-                                    color: Color(0xFF1E3A8A), width: 2),
+                                    color: Color(0xFF1E3A8A), width: 2,),
                               ),
                             ),
                           ),
@@ -321,14 +318,14 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                             decoration: InputDecoration(
                               labelText: 'О себе',
                               prefixIcon: const Icon(Icons.description,
-                                  color: Color(0xFF1E3A8A)),
+                                  color: Color(0xFF1E3A8A),),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: const BorderSide(
-                                    color: Color(0xFF1E3A8A), width: 2),
+                                    color: Color(0xFF1E3A8A), width: 2,),
                               ),
                               alignLabelWithHint: true,
                             ),
@@ -359,14 +356,14 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                                         strokeWidth: 2,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
+                                                Colors.white,),
                                       ),
                                     )
                                   : const Text(
                                       'Сохранить изменения',
                                       style: TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w600),
+                                          fontWeight: FontWeight.w600,),
                                     ),
                             ),
                           ),

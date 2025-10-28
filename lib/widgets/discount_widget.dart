@@ -1,15 +1,14 @@
+import 'package:event_marketplace_app/models/booking_discount.dart';
+import 'package:event_marketplace_app/providers/discount_providers.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
+import 'package:event_marketplace_app/widgets/responsive_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/discount_providers.dart';
-import '../models/booking_discount.dart';
-import 'responsive_layout.dart';
-import 'responsive_text.dart';
 
 /// Виджет для отображения скидки в карточке заявки
 class DiscountWidget extends ConsumerWidget {
   const DiscountWidget({
-    super.key,
-    required this.bookingId,
+    required this.bookingId, super.key,
     this.discount,
     this.isSpecialist = false,
     this.onDiscountChanged,
@@ -34,7 +33,7 @@ class DiscountWidget extends ConsumerWidget {
               Icon(_getDiscountIcon(), color: _getDiscountColor()),
               const SizedBox(width: 8),
               const Expanded(
-                  child: ResponsiveText('Предложение скидки', isTitle: true)),
+                  child: ResponsiveText('Предложение скидки', isTitle: true),),
               _buildStatusChip(),
             ],
           ),
@@ -88,7 +87,7 @@ class DiscountWidget extends ConsumerWidget {
                     ResponsiveText(
                       '${discount!.savings?.toStringAsFixed(0)} ₽ (${discount!.discountPercent?.toStringAsFixed(0)}%)',
                       style: const TextStyle(
-                          color: Colors.green, fontWeight: FontWeight.bold),
+                          color: Colors.green, fontWeight: FontWeight.bold,),
                     ),
                   ],
                 ),
@@ -157,19 +156,15 @@ class DiscountWidget extends ConsumerWidget {
       case DiscountStatus.pending:
         chipColor = Colors.orange;
         chipText = 'Ожидает';
-        break;
       case DiscountStatus.accepted:
         chipColor = Colors.green;
         chipText = 'Принята';
-        break;
       case DiscountStatus.expired:
         chipColor = Colors.grey;
         chipText = 'Истекла';
-        break;
       case DiscountStatus.notOffered:
         chipColor = Colors.grey;
         chipText = 'Не предложена';
-        break;
     }
 
     return Container(
@@ -182,7 +177,7 @@ class DiscountWidget extends ConsumerWidget {
       child: Text(
         chipText,
         style: TextStyle(
-            color: chipColor, fontSize: 12, fontWeight: FontWeight.bold),
+            color: chipColor, fontSize: 12, fontWeight: FontWeight.bold,),
       ),
     );
   }
@@ -268,7 +263,7 @@ class DiscountWidget extends ConsumerWidget {
 /// Диалог для отклонения скидки
 class _RejectDiscountDialog extends ConsumerStatefulWidget {
   const _RejectDiscountDialog(
-      {required this.bookingId, required this.onRejected});
+      {required this.bookingId, required this.onRejected,});
   final String bookingId;
   final VoidCallback onRejected;
 
@@ -313,7 +308,7 @@ class _RejectDiscountDialogState extends ConsumerState<_RejectDiscountDialog> {
           ElevatedButton(
             onPressed: _isLoading ? null : _rejectDiscount,
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, foregroundColor: Colors.white),
+                backgroundColor: Colors.red, foregroundColor: Colors.white,),
             child: _isLoading
                 ? const SizedBox(
                     width: 16,
@@ -359,9 +354,7 @@ class _RejectDiscountDialogState extends ConsumerState<_RejectDiscountDialog> {
 /// Виджет для предложения скидки (для специалистов)
 class OfferDiscountWidget extends ConsumerWidget {
   const OfferDiscountWidget({
-    super.key,
-    required this.bookingId,
-    required this.currentPrice,
+    required this.bookingId, required this.currentPrice, super.key,
     this.onDiscountOffered,
   });
   final String bookingId;
@@ -382,7 +375,7 @@ class OfferDiscountWidget extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             const Text(
-                'Предложите клиенту скидку для увеличения шансов на бронирование.'),
+                'Предложите клиенту скидку для увеличения шансов на бронирование.',),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () => _showOfferDiscountDialog(context, ref),
@@ -516,7 +509,7 @@ class _OfferDiscountDialogState extends ConsumerState<_OfferDiscountDialog> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Новая цена:'),
-                      Text('${newPrice.toStringAsFixed(0)} ₽')
+                      Text('${newPrice.toStringAsFixed(0)} ₽'),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -527,7 +520,7 @@ class _OfferDiscountDialogState extends ConsumerState<_OfferDiscountDialog> {
                       Text(
                         '${discountPercent.toStringAsFixed(0)}% (${savings.toStringAsFixed(0)} ₽)',
                         style: const TextStyle(
-                            color: Colors.green, fontWeight: FontWeight.bold),
+                            color: Colors.green, fontWeight: FontWeight.bold,),
                       ),
                     ],
                   ),

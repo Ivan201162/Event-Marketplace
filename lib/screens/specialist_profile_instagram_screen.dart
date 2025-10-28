@@ -1,20 +1,19 @@
+import 'package:event_marketplace_app/models/post.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/story.dart';
+import 'package:event_marketplace_app/services/post_service.dart';
+import 'package:event_marketplace_app/services/specialist_service.dart';
+import 'package:event_marketplace_app/services/story_service.dart';
+import 'package:event_marketplace_app/widgets/back_button_handler.dart';
+import 'package:event_marketplace_app/widgets/instagram_post_viewer.dart';
+import 'package:event_marketplace_app/widgets/instagram_story_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/post.dart';
-import '../models/specialist.dart';
-import '../models/story.dart';
-import '../services/post_service.dart';
-import '../services/specialist_service.dart';
-import '../services/story_service.dart';
-import '../widgets/back_button_handler.dart';
-import '../widgets/instagram_post_viewer.dart';
-import '../widgets/instagram_story_viewer.dart';
-
 class SpecialistProfileInstagramScreen extends ConsumerStatefulWidget {
   const SpecialistProfileInstagramScreen(
-      {super.key, required this.specialistId});
+      {required this.specialistId, super.key,});
   final String specialistId;
 
   @override
@@ -73,7 +72,7 @@ class _SpecialistProfileInstagramScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text('Ошибка загрузки профиля: $e'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     }
@@ -84,7 +83,7 @@ class _SpecialistProfileInstagramScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Добавление поста будет реализовано')));
+        const SnackBar(content: Text('Добавление поста будет реализовано')),);
   }
 
   Future<void> _addStory() async {
@@ -92,7 +91,7 @@ class _SpecialistProfileInstagramScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Добавление сторис будет реализовано')));
+        const SnackBar(content: Text('Добавление сторис будет реализовано')),);
   }
 
   void _viewStory(Story story) {
@@ -154,7 +153,7 @@ class _SpecialistProfileInstagramScreenState
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-              color: story.isExpired ? Colors.grey : Colors.blue, width: 2),
+              color: story.isExpired ? Colors.grey : Colors.blue, width: 2,),
         ),
         child: ClipOval(
           child: Image.network(
@@ -181,7 +180,7 @@ class _SpecialistProfileInstagramScreenState
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
             SizedBox(height: 8),
             Text(
@@ -235,11 +234,11 @@ class _SpecialistProfileInstagramScreenState
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey),
+                  color: Colors.grey,),
             ),
             SizedBox(height: 8),
             Text('Добавьте свои услуги и цены',
-                style: TextStyle(color: Colors.grey, fontSize: 14)),
+                style: TextStyle(color: Colors.grey, fontSize: 14),),
           ],
         ),
       );
@@ -288,7 +287,7 @@ class _SpecialistProfileInstagramScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Контакты',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
           const SizedBox(height: 12),
           ..._specialist!.contacts.entries.map((contact) {
             IconData icon;
@@ -296,21 +295,16 @@ class _SpecialistProfileInstagramScreenState
               case 'phone':
               case 'телефон':
                 icon = Icons.phone;
-                break;
               case 'email':
               case 'почта':
                 icon = Icons.email;
-                break;
               case 'instagram':
                 icon = Icons.camera_alt;
-                break;
               case 'vk':
               case 'вконтакте':
                 icon = Icons.group;
-                break;
               case 'telegram':
                 icon = Icons.send;
-                break;
               default:
                 icon = Icons.link;
             }
@@ -323,7 +317,7 @@ class _SpecialistProfileInstagramScreenState
                   const SizedBox(width: 12),
                   Expanded(
                       child: Text(contact.value,
-                          style: const TextStyle(fontSize: 14))),
+                          style: const TextStyle(fontSize: 14),),),
                 ],
               ),
             );
@@ -345,7 +339,7 @@ class _SpecialistProfileInstagramScreenState
           title: const Text('Профиль специалиста'),
           leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop()),
+              onPressed: () => context.pop(),),
         ),
         body: const Center(child: Text('Специалист не найден')),
       );
@@ -381,7 +375,7 @@ class _SpecialistProfileInstagramScreenState
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(),),
         actions: [
           IconButton(
             icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
@@ -393,7 +387,7 @@ class _SpecialistProfileInstagramScreenState
                 SnackBar(
                   content: Text(_isFavorite
                       ? 'Добавлено в избранное'
-                      : 'Удалено из избранного'),
+                      : 'Удалено из избранного',),
                 ),
               );
             },
@@ -404,7 +398,7 @@ class _SpecialistProfileInstagramScreenState
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(const SnackBar(
-                  content: Text('Функция шаринга в разработке')));
+                  content: Text('Функция шаринга в разработке'),),);
             },
           ),
         ],
@@ -413,13 +407,13 @@ class _SpecialistProfileInstagramScreenState
               ? Image.network(
                   _specialist!.imageUrl!,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+                  errorBuilder: (context, error, stackTrace) => ColoredBox(
                     color: Colors.grey.shade300,
                     child:
                         const Icon(Icons.person, size: 100, color: Colors.grey),
                   ),
                 )
-              : Container(
+              : ColoredBox(
                   color: Colors.grey.shade300,
                   child:
                       const Icon(Icons.person, size: 100, color: Colors.grey),
@@ -441,13 +435,13 @@ class _SpecialistProfileInstagramScreenState
                       Text(
                         _specialist!.name,
                         style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24, fontWeight: FontWeight.bold,),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         _specialist!.category.displayName,
                         style: TextStyle(
-                            fontSize: 16, color: Colors.grey.shade600),
+                            fontSize: 16, color: Colors.grey.shade600,),
                       ),
                       if (_specialist!.location != null &&
                           _specialist!.location!.isNotEmpty) ...[
@@ -455,12 +449,12 @@ class _SpecialistProfileInstagramScreenState
                         Row(
                           children: [
                             Icon(Icons.location_on,
-                                size: 16, color: Colors.grey.shade600),
+                                size: 16, color: Colors.grey.shade600,),
                             const SizedBox(width: 4),
                             Text(
                               _specialist!.location!,
                               style: TextStyle(
-                                  fontSize: 14, color: Colors.grey.shade600),
+                                  fontSize: 14, color: Colors.grey.shade600,),
                             ),
                           ],
                         ),
@@ -485,10 +479,10 @@ class _SpecialistProfileInstagramScreenState
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
                                     const Icon(Icons.person,
-                                        size: 40, color: Colors.grey),
+                                        size: 40, color: Colors.grey,),
                               )
                             : const Icon(Icons.person,
-                                size: 40, color: Colors.grey),
+                                size: 40, color: Colors.grey,),
                       ),
                     ),
                   ],
@@ -504,7 +498,7 @@ class _SpecialistProfileInstagramScreenState
               children: [
                 _buildStatColumn('${_posts.length}', 'Публикаций'),
                 _buildStatColumn(
-                    _specialist!.rating.toStringAsFixed(1), 'Рейтинг'),
+                    _specialist!.rating.toStringAsFixed(1), 'Рейтинг',),
                 _buildStatColumn(_getReviewCount(), 'Отзывов'),
               ],
             ),
@@ -515,7 +509,7 @@ class _SpecialistProfileInstagramScreenState
             if (_specialist!.description != null &&
                 _specialist!.description!.isNotEmpty) ...[
               Text(_specialist!.description!,
-                  style: const TextStyle(fontSize: 14)),
+                  style: const TextStyle(fontSize: 14),),
               const SizedBox(height: 16),
             ],
 
@@ -531,7 +525,7 @@ class _SpecialistProfileInstagramScreenState
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.attach_money,
-                      color: Colors.green.shade700, size: 20),
+                      color: Colors.green.shade700, size: 20,),
                   const SizedBox(width: 4),
                   Text(
                     'от ${_specialist!.price.toInt()}₽/час',
@@ -552,9 +546,9 @@ class _SpecialistProfileInstagramScreenState
         children: [
           Text(value,
               style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
           Text(label,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),),
         ],
       );
 
@@ -577,13 +571,13 @@ class _SpecialistProfileInstagramScreenState
                       _stories.isNotEmpty
                           ? _stories.first
                           : Story.create(
-                              id: '', specialistId: '', mediaUrl: ''),
+                              id: '', specialistId: '', mediaUrl: '',),
                       isAddButton: true,
                     ),
                     const SizedBox(height: 4),
                     const Text('Добавить',
                         style: TextStyle(fontSize: 10),
-                        textAlign: TextAlign.center),
+                        textAlign: TextAlign.center,),
                   ],
                 ),
               );
@@ -653,7 +647,7 @@ class _SpecialistProfileInstagramScreenState
                 onPressed: () async {
                   const chatId = 'temp_chat_id';
                   context.go(
-                      '/chat/$chatId?specialistName=${widget.specialistId}');
+                      '/chat/$chatId?specialistName=${widget.specialistId}',);
                 },
                 icon: const Icon(Icons.chat),
                 label: const Text('Написать'),

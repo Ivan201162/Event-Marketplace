@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_team.dart';
+import 'package:event_marketplace_app/services/team_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist.dart';
-import '../models/specialist_team.dart';
-import '../services/team_service.dart';
-
 /// Экран управления командой специалистов
 class TeamScreen extends ConsumerStatefulWidget {
-  const TeamScreen({super.key, required this.teamId, this.isEditable = true});
+  const TeamScreen({required this.teamId, super.key, this.isEditable = true});
 
   final String teamId;
   final bool isEditable;
@@ -57,13 +56,13 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                        size: 64, color: Colors.red,),
                     const SizedBox(height: 16),
                     Text('Ошибка: ${snapshot.error}'),
                     const SizedBox(height: 16),
                     ElevatedButton(
                         onPressed: () => setState(() {}),
-                        child: const Text('Повторить')),
+                        child: const Text('Повторить'),),
                   ],
                 ),
               );
@@ -117,7 +116,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Информация о команде',
-                  style: Theme.of(context).textTheme.titleLarge),
+                  style: Theme.of(context).textTheme.titleLarge,),
               const SizedBox(height: 16),
 
               // Название команды
@@ -155,7 +154,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
 
               // Заметки
               if (team.notes != null) ...[
-                _buildInfoRow('Заметки:', team.notes!)
+                _buildInfoRow('Заметки:', team.notes!),
               ],
             ],
           ),
@@ -168,7 +167,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
           SizedBox(
             width: 100,
             child: Text(label,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontWeight: FontWeight.w500),),
           ),
           Expanded(child: Text(value)),
         ],
@@ -182,23 +181,18 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
       case TeamStatus.draft:
         statusColor = Colors.orange;
         statusIcon = Icons.edit;
-        break;
       case TeamStatus.confirmed:
         statusColor = Colors.green;
         statusIcon = Icons.check_circle;
-        break;
       case TeamStatus.rejected:
         statusColor = Colors.red;
         statusIcon = Icons.cancel;
-        break;
       case TeamStatus.active:
         statusColor = Colors.blue;
         statusIcon = Icons.play_circle;
-        break;
       case TeamStatus.completed:
         statusColor = Colors.grey;
         statusIcon = Icons.done_all;
-        break;
     }
 
     return Card(
@@ -221,7 +215,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(team.status.description,
-                      style: TextStyle(color: Colors.grey[600])),
+                      style: TextStyle(color: Colors.grey[600]),),
                 ],
               ),
             ),
@@ -265,7 +259,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                 )
               else
                 ...team.specialists.map(
-                    (specialistId) => _buildSpecialistItem(team, specialistId)),
+                    (specialistId) => _buildSpecialistItem(team, specialistId),),
             ],
           ),
         ),
@@ -278,7 +272,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const ListTile(
                 leading: CircularProgressIndicator(),
-                title: Text('Загрузка...'));
+                title: Text('Загрузка...'),);
           }
 
           final specialist = snapshot.data;
@@ -338,17 +332,17 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Информация об оплате',
-                  style: Theme.of(context).textTheme.titleLarge),
+                  style: Theme.of(context).textTheme.titleLarge,),
               const SizedBox(height: 16),
               _buildInfoRow('Общая стоимость:',
-                  '${team.totalPrice!.toStringAsFixed(0)} ₽'),
+                  '${team.totalPrice!.toStringAsFixed(0)} ₽',),
               const SizedBox(height: 8),
               _buildInfoRow('Общая оплата:',
-                  '${team.totalPaymentAmount.toStringAsFixed(0)} ₽'),
+                  '${team.totalPaymentAmount.toStringAsFixed(0)} ₽',),
               if (team.paymentSplit.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 const Text('Распределение оплаты:',
-                    style: TextStyle(fontWeight: FontWeight.w500)),
+                    style: TextStyle(fontWeight: FontWeight.w500),),
                 const SizedBox(height: 8),
                 ...team.paymentSplit.entries.map(
                   (entry) => FutureBuilder<Specialist?>(
@@ -362,7 +356,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(specialistName),
-                            Text('${entry.value.toStringAsFixed(0)} ₽')
+                            Text('${entry.value.toStringAsFixed(0)} ₽'),
                           ],
                         ),
                       );
@@ -439,7 +433,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK')),
+              child: const Text('OK'),),
         ],
       ),
     );
@@ -451,11 +445,11 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Удалить специалиста'),
         content: const Text(
-            'Вы уверены, что хотите удалить этого специалиста из команды?'),
+            'Вы уверены, что хотите удалить этого специалиста из команды?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -468,7 +462,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(const SnackBar(
-                      content: Text('Специалист удален из команды')));
+                      content: Text('Специалист удален из команды'),),);
                 }
               } on Exception catch (e) {
                 if (mounted) {
@@ -485,7 +479,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
   }
 
   void _showSpecialistDetails(
-      Specialist specialist, String? role, double payment) {
+      Specialist specialist, String? role, double payment,) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -504,7 +498,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );
@@ -554,7 +548,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -575,7 +569,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Команда обновлена')));
+                      const SnackBar(content: Text('Команда обновлена')),);
                 }
               } on Exception catch (e) {
                 if (mounted) {
@@ -602,7 +596,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -612,7 +606,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Команда подтверждена')));
+                      const SnackBar(content: Text('Команда подтверждена')),);
                 }
               } on Exception catch (e) {
                 if (mounted) {
@@ -643,7 +637,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
             TextField(
               controller: reasonController,
               decoration: const InputDecoration(
-                  labelText: 'Причина', border: OutlineInputBorder()),
+                  labelText: 'Причина', border: OutlineInputBorder(),),
               maxLines: 3,
             ),
           ],
@@ -651,14 +645,14 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
         actions: [
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           TextButton(
             onPressed: () async {
               if (reasonController.text.trim().isEmpty) {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(const SnackBar(
-                    content: Text('Укажите причину отклонения')));
+                    content: Text('Укажите причину отклонения'),),);
                 return;
               }
 
@@ -672,7 +666,7 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(
-                      const SnackBar(content: Text('Команда отклонена')));
+                      const SnackBar(content: Text('Команда отклонена')),);
                 }
               } on Exception catch (e) {
                 if (mounted) {

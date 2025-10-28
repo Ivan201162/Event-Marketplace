@@ -30,7 +30,7 @@ class SBPPaymentService {
         Uri.parse('$_baseUrl/api/v1/payments'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_apiKey'
+          'Authorization': 'Bearer $_apiKey',
         },
         body: jsonEncode(requestBody),
       );
@@ -40,7 +40,7 @@ class SBPPaymentService {
         return SBPaymentResponse.fromJson(responseData);
       } else {
         throw Exception(
-            'SBP API error: ${response.statusCode} - ${response.body}');
+            'SBP API error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('SBP payment creation error: $e');
@@ -61,7 +61,7 @@ class SBPPaymentService {
         return SBPaymentStatus.fromJson(responseData);
       } else {
         throw Exception(
-            'SBP API error: ${response.statusCode} - ${response.body}');
+            'SBP API error: ${response.statusCode} - ${response.body}',);
       }
     } catch (e) {
       debugPrint('SBP payment status error: $e');

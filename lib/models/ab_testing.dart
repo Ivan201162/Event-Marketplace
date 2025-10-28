@@ -3,18 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum ABTestStatus { draft, active, completed, paused }
 
 class ABTest {
-  final String id;
-  final String name;
-  final String description;
-  final List<ABTestVariant> variants;
-  final ABTestStatus status;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? targetAudience;
-  final Map<String, dynamic>? metadata;
 
   ABTest({
     required this.id,
@@ -24,29 +12,10 @@ class ABTest {
     required this.status,
     required this.startDate,
     required this.endDate,
-    this.isActive = false,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.createdAt, required this.updatedAt, this.isActive = false,
     this.targetAudience,
     this.metadata,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'variants': variants.map((v) => v.toMap()).toList(),
-      'status': status.name,
-      'startDate': Timestamp.fromDate(startDate),
-      'endDate': Timestamp.fromDate(endDate),
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'targetAudience': targetAudience,
-      'metadata': metadata,
-    };
-  }
 
   factory ABTest.fromMap(Map<String, dynamic> map) {
     return ABTest(
@@ -67,13 +36,38 @@ class ABTest {
       metadata: map['metadata'],
     );
   }
+  final String id;
+  final String name;
+  final String description;
+  final List<ABTestVariant> variants;
+  final ABTestStatus status;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? targetAudience;
+  final Map<String, dynamic>? metadata;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'variants': variants.map((v) => v.toMap()).toList(),
+      'status': status.name,
+      'startDate': Timestamp.fromDate(startDate),
+      'endDate': Timestamp.fromDate(endDate),
+      'isActive': isActive,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'targetAudience': targetAudience,
+      'metadata': metadata,
+    };
+  }
 }
 
 class ABTestVariant {
-  final String name;
-  final String description;
-  final int trafficPercentage;
-  final Map<String, dynamic> config;
 
   ABTestVariant({
     required this.name,
@@ -81,15 +75,6 @@ class ABTestVariant {
     required this.trafficPercentage,
     required this.config,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'trafficPercentage': trafficPercentage,
-      'config': config,
-    };
-  }
 
   factory ABTestVariant.fromMap(Map<String, dynamic> map) {
     return ABTestVariant(
@@ -99,15 +84,22 @@ class ABTestVariant {
       config: map['config'] ?? {},
     );
   }
+  final String name;
+  final String description;
+  final int trafficPercentage;
+  final Map<String, dynamic> config;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      'trafficPercentage': trafficPercentage,
+      'config': config,
+    };
+  }
 }
 
 class ABTestAssignment {
-  final String id;
-  final String userId;
-  final String testName;
-  final String variant;
-  final DateTime assignedAt;
-  final bool isActive;
 
   ABTestAssignment({
     required this.id,
@@ -117,17 +109,6 @@ class ABTestAssignment {
     required this.assignedAt,
     this.isActive = true,
   });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'userId': userId,
-      'testName': testName,
-      'variant': variant,
-      'assignedAt': Timestamp.fromDate(assignedAt),
-      'isActive': isActive,
-    };
-  }
 
   factory ABTestAssignment.fromMap(Map<String, dynamic> map) {
     return ABTestAssignment(
@@ -139,26 +120,12 @@ class ABTestAssignment {
       isActive: map['isActive'] ?? true,
     );
   }
-}
-
-class ABTestEvent {
   final String id;
   final String userId;
   final String testName;
   final String variant;
-  final String eventName;
-  final Map<String, dynamic>? eventData;
-  final DateTime timestamp;
-
-  ABTestEvent({
-    required this.id,
-    required this.userId,
-    required this.testName,
-    required this.variant,
-    required this.eventName,
-    this.eventData,
-    required this.timestamp,
-  });
+  final DateTime assignedAt;
+  final bool isActive;
 
   Map<String, dynamic> toMap() {
     return {
@@ -166,11 +133,22 @@ class ABTestEvent {
       'userId': userId,
       'testName': testName,
       'variant': variant,
-      'eventName': eventName,
-      'eventData': eventData,
-      'timestamp': Timestamp.fromDate(timestamp),
+      'assignedAt': Timestamp.fromDate(assignedAt),
+      'isActive': isActive,
     };
   }
+}
+
+class ABTestEvent {
+
+  ABTestEvent({
+    required this.id,
+    required this.userId,
+    required this.testName,
+    required this.variant,
+    required this.eventName,
+    required this.timestamp, this.eventData,
+  });
 
   factory ABTestEvent.fromMap(Map<String, dynamic> map) {
     return ABTestEvent(
@@ -183,13 +161,28 @@ class ABTestEvent {
       timestamp: (map['timestamp'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String userId;
+  final String testName;
+  final String variant;
+  final String eventName;
+  final Map<String, dynamic>? eventData;
+  final DateTime timestamp;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'testName': testName,
+      'variant': variant,
+      'eventName': eventName,
+      'eventData': eventData,
+      'timestamp': Timestamp.fromDate(timestamp),
+    };
+  }
 }
 
 class VariantResult {
-  final String variantName;
-  final int userCount;
-  final Map<String, int> events;
-  final double conversionRate;
 
   VariantResult({
     required this.variantName,
@@ -197,17 +190,13 @@ class VariantResult {
     required this.events,
     required this.conversionRate,
   });
+  final String variantName;
+  final int userCount;
+  final Map<String, int> events;
+  final double conversionRate;
 }
 
 class ABTestResults {
-  final String testId;
-  final String testName;
-  final int totalUsers;
-  final List<VariantResult> variantResults;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool isActive;
-  final DateTime createdAt;
 
   ABTestResults({
     required this.testId,
@@ -219,4 +208,12 @@ class ABTestResults {
     required this.isActive,
     required this.createdAt,
   });
+  final String testId;
+  final String testName;
+  final int totalUsers;
+  final List<VariantResult> variantResults;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isActive;
+  final DateTime createdAt;
 }

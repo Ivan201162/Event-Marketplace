@@ -9,8 +9,7 @@ class Subscription {
     required this.startedAt,
     required this.expiresAt,
     required this.autoRenew,
-    this.isActive = true,
-    required this.monthlyPrice,
+    required this.monthlyPrice, this.isActive = true,
   });
 
   factory Subscription.fromMap(Map<String, dynamic> map) => Subscription(

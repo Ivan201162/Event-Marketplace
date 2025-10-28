@@ -1,13 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../models/idea.dart';
-import '../../providers/auth_providers.dart';
-import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенный экран идей с полным функционалом
 class IdeasScreenEnhanced extends ConsumerStatefulWidget {
@@ -56,12 +52,12 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    ));
+    ),);
 
     _animationController.forward();
   }
@@ -209,7 +205,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                           : null,
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
+                          horizontal: 16, vertical: 12,),
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -221,9 +217,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
               ),
               const SizedBox(width: 12),
               IconButton(
-                onPressed: () {
-                  _showFilterOptions();
-                },
+                onPressed: _showFilterOptions,
                 icon: const Icon(
                   Icons.filter_list,
                   color: Color(0xFF1E3A8A),
@@ -256,7 +250,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                          horizontal: 16, vertical: 8,),
                       decoration: BoxDecoration(
                         color:
                             isSelected ? const Color(0xFF1E3A8A) : Colors.white,
@@ -330,7 +324,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+            final data = doc.data()! as Map<String, dynamic>;
 
             return _buildIdeaCard(doc.id, data);
           },
@@ -352,13 +346,10 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
     switch (_selectedFilter) {
       case 'popular':
         query = query.orderBy('likes', descending: true);
-        break;
       case 'recent':
         query = query.orderBy('createdAt', descending: true);
-        break;
       case 'my':
         query = query.where('authorId', isEqualTo: user.uid);
-        break;
       default:
         query = query.orderBy('createdAt', descending: true);
     }
@@ -367,16 +358,12 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
     switch (_selectedSort) {
       case 'date':
         query = query.orderBy('createdAt', descending: true);
-        break;
       case 'likes':
         query = query.orderBy('likes', descending: true);
-        break;
       case 'comments':
         query = query.orderBy('comments', descending: true);
-        break;
       case 'title':
         query = query.orderBy('title');
-        break;
     }
 
     return query.snapshots();
@@ -808,7 +795,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
             ListTile(
               leading: const Icon(Icons.report, color: Colors.red),
               title: const Text('Пожаловаться',
-                  style: TextStyle(color: Colors.red)),
+                  style: TextStyle(color: Colors.red),),
               onTap: () {
                 Navigator.pop(context);
                 _reportIdea(ideaId, data);

@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/search_providers.dart';
+import 'package:event_marketplace_app/repositories/chats_repository.dart';
+import 'package:event_marketplace_app/widgets/enhanced_filters_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../models/specialist.dart';
-import '../providers/auth_providers.dart';
-import '../providers/search_providers.dart';
-import '../repositories/chats_repository.dart';
-import '../widgets/enhanced_filters_dialog.dart';
 
 class EnhancedHomeScreen extends ConsumerStatefulWidget {
   const EnhancedHomeScreen({super.key});
@@ -46,7 +45,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
     {
       'name': 'Организатор мероприятий',
       'icon': '🎪',
-      'color': Colors.deepOrange
+      'color': Colors.deepOrange,
     },
   ];
 
@@ -59,16 +58,16 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
     );
 
     _profileOpacityAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.0,
+      begin: 1,
+      end: 0,
     ).animate(CurvedAnimation(
-        parent: _profileAnimationController, curve: Curves.easeInOut));
+        parent: _profileAnimationController, curve: Curves.easeInOut,),);
 
     _profileScaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.95,
     ).animate(CurvedAnimation(
-        parent: _profileAnimationController, curve: Curves.easeInOut));
+        parent: _profileAnimationController, curve: Curves.easeInOut,),);
 
     _scrollController.addListener(_onScroll);
   }
@@ -302,7 +301,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                                           strokeWidth: 2,
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
-                                                  Colors.grey),
+                                                  Colors.grey,),
                                         ),
                                       ),
                                     ),
@@ -344,7 +343,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                                 Shadow(
                                     color: Colors.black26,
                                     offset: Offset(0, 1),
-                                    blurRadius: 2),
+                                    blurRadius: 2,),
                               ],
                             ),
                           ),
@@ -359,7 +358,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                                 Shadow(
                                     color: Colors.black26,
                                     offset: Offset(0, 1),
-                                    blurRadius: 1),
+                                    blurRadius: 1,),
                               ],
                             ),
                           ),
@@ -367,7 +366,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                           Row(
                             children: [
                               const Icon(Icons.location_on,
-                                  color: Colors.white, size: 18),
+                                  color: Colors.white, size: 18,),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
@@ -398,13 +397,13 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                               // Статус онлайн/офлайн
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
+                                    horizontal: 8, vertical: 4,),
                                 decoration: BoxDecoration(
                                   color: Colors.green.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                       color:
-                                          Colors.green.withValues(alpha: 0.5)),
+                                          Colors.green.withValues(alpha: 0.5),),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -433,19 +432,19 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                               // Количество подписчиков
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
+                                    horizontal: 8, vertical: 4,),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                       color:
-                                          Colors.white.withValues(alpha: 0.2)),
+                                          Colors.white.withValues(alpha: 0.2),),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     const Icon(Icons.people,
-                                        color: Colors.white, size: 14),
+                                        color: Colors.white, size: 14,),
                                     const SizedBox(width: 4),
                                     Text(
                                       '${_getRandomFollowers()} подписчиков',
@@ -469,12 +468,12 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3)),
+                            color: Colors.white.withValues(alpha: 0.3),),
                       ),
                       child: IconButton(
                         onPressed: () => context.push('/profile/edit'),
                         icon: const Icon(Icons.edit,
-                            color: Colors.white, size: 20),
+                            color: Colors.white, size: 20,),
                         tooltip: 'Редактировать профиль',
                         padding: const EdgeInsets.all(8),
                         constraints:
@@ -512,7 +511,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                       Container(
                         margin: const EdgeInsets.only(right: 8),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(12),
@@ -567,7 +566,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                       onPressed: () {
                         if (_searchController.text.isNotEmpty) {
                           context.push(
-                              '/search?q=${Uri.encodeComponent(_searchController.text)}');
+                              '/search?q=${Uri.encodeComponent(_searchController.text)}',);
                         }
                       },
                       icon: const Icon(Icons.search),
@@ -602,7 +601,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                     return Container(
                       margin: const EdgeInsets.only(right: 8),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                          horizontal: 12, vertical: 6,),
                       decoration: BoxDecoration(
                         color: Theme.of(context)
                             .primaryColor
@@ -630,7 +629,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                             onTap: () => _removeFilter(entry.key),
                             child: Icon(Icons.close,
                                 size: 16,
-                                color: Theme.of(context).primaryColor),
+                                color: Theme.of(context).primaryColor,),
                           ),
                         ],
                       ),
@@ -688,13 +687,13 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                             color: (category['color'] as Color)
-                                .withValues(alpha: 0.3)),
+                                .withValues(alpha: 0.3),),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(category['icon'] as String,
-                              style: const TextStyle(fontSize: 24)),
+                              style: const TextStyle(fontSize: 24),),
                           const SizedBox(height: 4),
                           Text(
                             category['name'] as String,
@@ -748,7 +747,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                   ),
                   TextButton(
                       onPressed: () => context.push('/search'),
-                      child: const Text('Все')),
+                      child: const Text('Все'),),
                 ],
               ),
             ),
@@ -784,11 +783,11 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
         final currentUser = ref.read(currentUserProvider).value;
         final userCity = currentUser?.city?.trim();
 
-        List<Specialist> citySpecialists = specialists;
+        var citySpecialists = specialists;
         if (userCity != null && userCity.isNotEmpty) {
           citySpecialists = specialists
               .where((s) =>
-                  s.city.toLowerCase().contains(userCity.toLowerCase()) == true)
+                  s.city.toLowerCase().contains(userCity.toLowerCase()) == true,)
               .toList();
         }
 
@@ -817,7 +816,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                   ),
                   TextButton(
                     onPressed: () => context.push(
-                        '/search?city=${Uri.encodeComponent(userCity ?? '')}'),
+                        '/search?city=${Uri.encodeComponent(userCity ?? '')}',),
                     child: const Text('Все'),
                   ),
                 ],
@@ -839,7 +838,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.location_city,
-                          size: 48, color: Colors.grey[400]),
+                          size: 48, color: Colors.grey[400],),
                       const SizedBox(height: 12),
                       Text(
                         'Пока нет специалистов\nв вашем городе',
@@ -1010,7 +1009,7 @@ class _SpecialistCard extends StatelessWidget {
                 ),
                 child: specialist.avatar == null
                     ? const Center(
-                        child: Icon(Icons.person, size: 40, color: Colors.grey))
+                        child: Icon(Icons.person, size: 40, color: Colors.grey),)
                     : null,
               ),
               // Информация о специалисте
@@ -1023,7 +1022,7 @@ class _SpecialistCard extends StatelessWidget {
                       Text(
                         specialist.name,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 14),
+                            fontWeight: FontWeight.bold, fontSize: 14,),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -1042,7 +1041,7 @@ class _SpecialistCard extends StatelessWidget {
                           Text(
                             specialist.rating.toString(),
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold,),
                           ),
                           const Spacer(),
                           Text(
@@ -1069,7 +1068,7 @@ class _SpecialistCard extends StatelessWidget {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: const Text('Связаться',
-                                  style: TextStyle(fontSize: 10)),
+                                  style: TextStyle(fontSize: 10),),
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -1083,7 +1082,7 @@ class _SpecialistCard extends StatelessWidget {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: const Text('Забронировать',
-                                  style: TextStyle(fontSize: 10)),
+                                  style: TextStyle(fontSize: 10),),
                             ),
                           ),
                         ],
@@ -1105,13 +1104,13 @@ class _SpecialistCard extends StatelessWidget {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(
-            const SnackBar(content: Text('Необходимо войти в аккаунт')));
+            const SnackBar(content: Text('Необходимо войти в аккаунт')),);
         return;
       }
 
       final chatsRepository = ChatsRepository();
       final chatId = await chatsRepository.findOrCreateChat(
-          currentUser.uid, specialist.id);
+          currentUser.uid, specialist.id,);
 
       if (chatId != null) {
         context.push('/chat/$chatId');
@@ -1164,7 +1163,7 @@ class _InterestingCard extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                    color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                    color: color, fontWeight: FontWeight.w500, fontSize: 12,),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -1175,7 +1174,7 @@ class _InterestingCard extends StatelessWidget {
 
 class _QuickActionCard extends StatelessWidget {
   const _QuickActionCard(
-      {required this.icon, required this.title, required this.onTap});
+      {required this.icon, required this.title, required this.onTap,});
   final IconData icon;
   final String title;
   final VoidCallback onTap;

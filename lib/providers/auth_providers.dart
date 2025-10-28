@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/services/storage_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/app_user.dart';
-import '../services/auth_service.dart';
-import '../services/storage_service.dart';
 
 /// Onboarding state notifier
 class OnboardingNotifier extends Notifier<bool> {
@@ -123,33 +122,33 @@ final isProfileCompleteProvider = Provider<bool>((ref) {
 
 /// User onboarding state provider
 final onboardingStateProvider =
-    NotifierProvider<OnboardingNotifier, bool>(() => OnboardingNotifier());
+    NotifierProvider<OnboardingNotifier, bool>(OnboardingNotifier.new);
 
 /// Auth loading state provider
 final authLoadingProvider =
-    NotifierProvider<AuthLoadingNotifier, bool>(() => AuthLoadingNotifier());
+    NotifierProvider<AuthLoadingNotifier, bool>(AuthLoadingNotifier.new);
 
 /// Phone verification ID provider
 final phoneVerificationIdProvider =
     NotifierProvider<PhoneVerificationIdNotifier, String?>(
-        () => PhoneVerificationIdNotifier());
+        PhoneVerificationIdNotifier.new,);
 
 /// Phone auth state provider
 final phoneAuthStateProvider =
     NotifierProvider<PhoneAuthStateNotifier, PhoneAuthState>(
-        () => PhoneAuthStateNotifier());
+        PhoneAuthStateNotifier.new,);
 
 /// Phone number provider
 final phoneNumberProvider =
-    NotifierProvider<PhoneNumberNotifier, String?>(() => PhoneNumberNotifier());
+    NotifierProvider<PhoneNumberNotifier, String?>(PhoneNumberNotifier.new);
 
 /// Phone auth timer provider
 final phoneAuthTimerProvider = NotifierProvider<PhoneAuthTimerNotifier, int>(
-    () => PhoneAuthTimerNotifier());
+    PhoneAuthTimerNotifier.new,);
 
 /// Can resend code provider
 final canResendCodeProvider = NotifierProvider<CanResendCodeNotifier, bool>(
-    () => CanResendCodeNotifier());
+    CanResendCodeNotifier.new,);
 
 /// Phone auth states
 enum PhoneAuthState {

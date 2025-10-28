@@ -1,13 +1,13 @@
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/screens/create_idea_collection_screen.dart';
+import 'package:event_marketplace_app/services/idea_service.dart';
+import 'package:event_marketplace_app/widgets/idea_collection_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/idea.dart';
-import '../services/idea_service.dart';
-import '../widgets/idea_collection_widget.dart';
-import 'create_idea_collection_screen.dart';
 
 /// Экран коллекций идей
 class IdeaCollectionsScreen extends ConsumerStatefulWidget {
-  const IdeaCollectionsScreen({super.key, required this.userId});
+  const IdeaCollectionsScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -24,7 +24,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
           title: const Text('Мои коллекции'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.add), onPressed: _createCollection)
+                icon: const Icon(Icons.add), onPressed: _createCollection,),
           ],
         ),
         body: StreamBuilder<List<IdeaCollection>>(
@@ -45,7 +45,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                         onPressed: () => setState(() {}),
-                        child: const Text('Повторить')),
+                        child: const Text('Повторить'),),
                   ],
                 ),
               );
@@ -82,10 +82,10 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.collections_bookmark,
-                size: 64, color: Colors.grey),
+                size: 64, color: Colors.grey,),
             const SizedBox(height: 16),
             const Text('Нет коллекций',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             const SizedBox(height: 8),
             const Text(
               'Создайте коллекцию для организации ваших идей',
@@ -110,7 +110,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
       ),
     )
         .then((result) {
-      if (result == true) {
+      if (result ?? false) {
         setState(() {});
       }
     });
@@ -128,7 +128,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        SnackBar(content: Text('Редактирование: ${collection.name}')));
+        SnackBar(content: Text('Редактирование: ${collection.name}')),);
   }
 
   void _deleteCollection(IdeaCollection collection) {
@@ -137,11 +137,11 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Удалить коллекцию'),
         content: Text(
-            'Вы уверены, что хотите удалить коллекцию "${collection.name}"?'),
+            'Вы уверены, что хотите удалить коллекцию "${collection.name}"?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -149,7 +149,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(
-                  content: Text('Коллекция "${collection.name}" удалена')));
+                  content: Text('Коллекция "${collection.name}" удалена'),),);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Удалить'),
@@ -162,7 +162,7 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
 
 /// Экран создания коллекции идей
 class CreateIdeaCollectionScreen extends ConsumerStatefulWidget {
-  const CreateIdeaCollectionScreen({super.key, required this.userId});
+  const CreateIdeaCollectionScreen({required this.userId, super.key});
   final String userId;
 
   @override
@@ -195,7 +195,7 @@ class _CreateIdeaCollectionScreenState
           actions: [
             TextButton(
                 onPressed: _isLoading ? null : _saveCollection,
-                child: const Text('Сохранить')),
+                child: const Text('Сохранить'),),
           ],
         ),
         body: Form(
@@ -215,7 +215,7 @@ class _CreateIdeaCollectionScreenState
                         const Text(
                           'Основная информация',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 16),
 
@@ -264,7 +264,7 @@ class _CreateIdeaCollectionScreenState
                         const Text(
                           'Настройки',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 18, fontWeight: FontWeight.bold,),
                         ),
                         const SizedBox(height: 16),
 
@@ -272,7 +272,7 @@ class _CreateIdeaCollectionScreenState
                         SwitchListTile(
                           title: const Text('Публичная коллекция'),
                           subtitle: const Text(
-                              'Коллекция будет видна всем пользователям'),
+                              'Коллекция будет видна всем пользователям',),
                           value: _isPublic,
                           onChanged: (value) {
                             setState(() {
@@ -322,20 +322,20 @@ class _CreateIdeaCollectionScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Коллекция успешно создана'),
-              backgroundColor: Colors.green),
+              backgroundColor: Colors.green,),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Ошибка создания коллекции'),
-              backgroundColor: Colors.red),
+              backgroundColor: Colors.red,),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),);
     } finally {
       setState(() {
         _isLoading = false;

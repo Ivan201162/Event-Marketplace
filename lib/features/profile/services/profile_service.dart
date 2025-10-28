@@ -1,7 +1,6 @@
+import 'package:event_marketplace_app/data/repositories/user_repository.dart';
+import 'package:event_marketplace_app/models/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../data/repositories/user_repository.dart';
-import '../../../models/user.dart';
 
 /// Сервис для работы с профилем пользователя
 class ProfileService {
@@ -16,7 +15,7 @@ class ProfileService {
   /// Обновить город пользователя
   Future<bool> updateUserCity(String uid, String city) async {
     final updates = <String, dynamic>{
-      'city': city.trim().isEmpty ? null : city.trim()
+      'city': city.trim().isEmpty ? null : city.trim(),
     };
     return _userRepository.updateUser(uid, updates);
   }
@@ -24,7 +23,7 @@ class ProfileService {
   /// Обновить регион пользователя
   Future<bool> updateUserRegion(String uid, String region) async {
     final updates = <String, dynamic>{
-      'region': region.trim().isEmpty ? null : region.trim()
+      'region': region.trim().isEmpty ? null : region.trim(),
     };
     return _userRepository.updateUser(uid, updates);
   }

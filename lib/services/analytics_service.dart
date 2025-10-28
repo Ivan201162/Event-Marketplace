@@ -204,12 +204,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         viewsQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         viewsQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final viewsSnapshot = await viewsQuery.get();
@@ -221,12 +221,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         searchQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         searchQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final searchSnapshot = await searchQuery.get();
@@ -238,12 +238,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         requestsQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         requestsQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final requestsSnapshot = await requestsQuery.get();
@@ -255,12 +255,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         messagesQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         messagesQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final messagesSnapshot = await messagesQuery.get();
@@ -272,12 +272,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         ideasQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         ideasQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final ideasSnapshot = await ideasQuery.get();
@@ -289,12 +289,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         likesQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         likesQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final likesSnapshot = await likesQuery.get();
@@ -306,12 +306,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         commentsQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         commentsQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final commentsSnapshot = await commentsQuery.get();
@@ -323,12 +323,12 @@ class AnalyticsService {
 
       if (startDate != null) {
         subscriptionsQuery.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         subscriptionsQuery.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final subscriptionsSnapshot = await subscriptionsQuery.get();
@@ -360,19 +360,19 @@ class AnalyticsService {
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final querySnapshot = await query.get();
 
-      Map<String, int> searchCounts = {};
+      final searchCounts = <String, int>{};
       for (final doc in querySnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         final query = data['query'] as String;
         searchCounts[query] = (searchCounts[query] ?? 0) + 1;
       }
@@ -385,7 +385,7 @@ class AnalyticsService {
           .map((entry) => {
                 'query': entry.key,
                 'count': entry.value,
-              })
+              },)
           .toList();
     } catch (e) {
       print('Ошибка получения популярных поисков: $e');
@@ -403,19 +403,19 @@ class AnalyticsService {
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final querySnapshot = await query.get();
 
-      Map<String, int> categoryCounts = {};
+      final categoryCounts = <String, int>{};
       for (final doc in querySnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         final category = data['category'] as String?;
         if (category != null) {
           categoryCounts[category] = (categoryCounts[category] ?? 0) + 1;
@@ -442,21 +442,21 @@ class AnalyticsService {
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final querySnapshot = await query.get();
 
-      Map<int, int> hourCounts = {};
-      Map<int, int> dayCounts = {};
+      final hourCounts = <int, int>{};
+      final dayCounts = <int, int>{};
 
       for (final doc in querySnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         final timestamp = (data['timestamp'] as Timestamp).toDate();
 
         final hour = timestamp.hour;
@@ -487,19 +487,19 @@ class AnalyticsService {
 
       if (startDate != null) {
         query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
 
       if (endDate != null) {
         query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
 
       final querySnapshot = await query.get();
 
-      Map<String, int> sourceCounts = {};
+      final sourceCounts = <String, int>{};
       for (final doc in querySnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         final source = data['source'] as String;
         sourceCounts[source] = (sourceCounts[source] ?? 0) + 1;
       }
@@ -528,11 +528,11 @@ class AnalyticsService {
       final requestsQuery = _firestore.collection('requests');
       if (startDate != null) {
         requestsQuery.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         requestsQuery.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       final requestsSnapshot = await requestsQuery.get();
 
@@ -540,11 +540,11 @@ class AnalyticsService {
       final messagesQuery = _firestore.collection('chats');
       if (startDate != null) {
         messagesQuery.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         messagesQuery.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       final messagesSnapshot = await messagesQuery.get();
 
@@ -552,11 +552,11 @@ class AnalyticsService {
       final ideasQuery = _firestore.collection('ideas');
       if (startDate != null) {
         ideasQuery.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),);
       }
       if (endDate != null) {
         ideasQuery.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),);
       }
       final ideasSnapshot = await ideasQuery.get();
 

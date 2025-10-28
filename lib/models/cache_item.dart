@@ -26,7 +26,7 @@ class CacheItem<T> {
           orElse: () => CacheType.memory,
         ),
         metadata: Map<String, dynamic>.from(
-            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+            data['metadata'] as Map<dynamic, dynamic>? ?? {},),
         size: data['size'] as int?,
         etag: data['etag'] as String?,
         lastAccessed: data['lastAccessed'] != null
@@ -143,7 +143,7 @@ class CacheItem<T> {
 
   @override
   int get hashCode => Object.hash(key, data, createdAt, expiresAt, type,
-      metadata, size, etag, lastAccessed);
+      metadata, size, etag, lastAccessed,);
 
   @override
   String toString() =>

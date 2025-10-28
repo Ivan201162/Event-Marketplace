@@ -20,15 +20,10 @@ class SpecialistStory {
     required this.id,
     required this.specialistId,
     required this.specialistName,
-    this.specialistAvatar,
-    required this.contentType,
-    required this.contentUrl,
+    required this.contentType, required this.contentUrl, required this.createdAt, required this.expiresAt, required this.status, this.specialistAvatar,
     this.thumbnailUrl,
     this.text,
     this.caption,
-    required this.createdAt,
-    required this.expiresAt,
-    required this.status,
     this.viewCount = 0,
     this.viewers = const [],
     this.metadata,
@@ -180,15 +175,12 @@ class SpecialistStoryGroup {
   const SpecialistStoryGroup({
     required this.specialistId,
     required this.specialistName,
-    this.specialistAvatar,
-    required this.stories,
-    required this.hasUnviewedStories,
-    required this.lastStoryAt,
+    required this.stories, required this.hasUnviewedStories, required this.lastStoryAt, this.specialistAvatar,
   });
 
   /// Создать из списка сторис
   factory SpecialistStoryGroup.fromStories(
-      List<SpecialistStory> stories, String userId) {
+      List<SpecialistStory> stories, String userId,) {
     if (stories.isEmpty) {
       throw ArgumentError('Список сторис не может быть пустым');
     }

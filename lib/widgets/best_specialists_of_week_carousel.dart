@@ -1,8 +1,7 @@
+import 'package:event_marketplace_app/providers/local_data_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../providers/local_data_providers.dart';
 
 /// Карусель лучших специалистов недели
 class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
@@ -28,7 +27,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
               ),
               TextButton(
                   onPressed: () => context.push('/search'),
-                  child: const Text('Все')),
+                  child: const Text('Все'),),
             ],
           ),
         ),
@@ -64,7 +63,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
   }
 
   Widget _buildSpecialistCard(
-          BuildContext context, Map<String, dynamic> specialist) =>
+          BuildContext context, Map<String, dynamic> specialist,) =>
       Container(
         width: 160,
         margin: const EdgeInsets.only(right: 12),
@@ -96,7 +95,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(Icons.person,
-                                size: 40, color: Colors.grey),
+                                size: 40, color: Colors.grey,),
                       )
                     : const Icon(Icons.person, size: 40, color: Colors.grey),
               ),
@@ -110,7 +109,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                   Text(
                     specialist['name'] as String? ?? 'Специалист',
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14),
+                        fontWeight: FontWeight.bold, fontSize: 14,),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -136,7 +135,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                         (specialist['rating'] as double? ?? 0.0)
                             .toStringAsFixed(1),
                         style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                            fontSize: 12, fontWeight: FontWeight.w500,),
                       ),
                       const Spacer(),
                       Text(

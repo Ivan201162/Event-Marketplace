@@ -12,7 +12,7 @@ class _PromotionWidgetState extends State<PromotionWidget> {
   bool _isVipActive = false;
   bool _isPromotionActive = false;
   int _promotionDays = 7;
-  double _promotionBudget = 1000.0;
+  double _promotionBudget = 1000;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class _PromotionWidgetState extends State<PromotionWidget> {
                 },
                 icon: Icon(_isVipActive ? Icons.cancel : Icons.star),
                 label: Text(
-                    _isVipActive ? 'Деактивировать VIP' : 'Активировать VIP'),
+                    _isVipActive ? 'Деактивировать VIP' : 'Активировать VIP',),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _isVipActive ? Colors.red : Colors.amber,
                   foregroundColor: Colors.white,
@@ -173,9 +173,7 @@ class _PromotionWidgetState extends State<PromotionWidget> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    _showPromotionDialog();
-                  },
+                  onPressed: _showPromotionDialog,
                   icon: const Icon(Icons.rocket_launch),
                   label: const Text('Запустить продвижение'),
                   style: ElevatedButton.styleFrom(
@@ -289,7 +287,7 @@ class _PromotionWidgetState extends State<PromotionWidget> {
   }
 
   Widget _buildStatItem(
-      String title, String value, IconData icon, Color color) {
+      String title, String value, IconData icon, Color color,) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

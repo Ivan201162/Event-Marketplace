@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/services/smart_search_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/smart_search_service.dart';
 
 /// Виджет популярных специалистов недели
 class PopularSpecialistsWidget extends ConsumerStatefulWidget {
@@ -84,7 +84,7 @@ class _PopularSpecialistsWidgetState
   Widget _buildEmptyState() => Container(
         height: 200,
         decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12),),
         child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -92,7 +92,7 @@ class _PopularSpecialistsWidgetState
               Icon(Icons.people_outline, size: 48, color: Colors.grey),
               SizedBox(height: 8),
               Text('Популярные специалисты появятся здесь',
-                  style: TextStyle(color: Colors.grey)),
+                  style: TextStyle(color: Colors.grey),),
             ],
           ),
         ),
@@ -134,19 +134,19 @@ class _PopularSpecialistsWidgetState
                       const BorderRadius.vertical(top: Radius.circular(12)),
                   image: avatarUrl != null
                       ? DecorationImage(
-                          image: NetworkImage(avatarUrl), fit: BoxFit.cover)
+                          image: NetworkImage(avatarUrl), fit: BoxFit.cover,)
                       : null,
                   color: avatarUrl == null ? Colors.grey[300] : null,
                 ),
                 child: avatarUrl == null
                     ? const Center(
-                        child: Icon(Icons.person, size: 40, color: Colors.grey))
+                        child: Icon(Icons.person, size: 40, color: Colors.grey),)
                     : null,
               ),
 
               // Бейджи
               Positioned(
-                  top: 8, left: 8, child: _buildBadges(isVerified, isOnline)),
+                  top: 8, left: 8, child: _buildBadges(isVerified, isOnline),),
 
               // Рейтинг
               Positioned(
@@ -188,7 +188,7 @@ class _PopularSpecialistsWidgetState
                 Text(
                   name,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 14),
+                      fontWeight: FontWeight.bold, fontSize: 14,),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -238,7 +238,7 @@ class _PopularSpecialistsWidgetState
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
-              color: Colors.blue, borderRadius: BorderRadius.circular(8)),
+              color: Colors.blue, borderRadius: BorderRadius.circular(8),),
           child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -249,7 +249,7 @@ class _PopularSpecialistsWidgetState
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 8,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
               ),
             ],
           ),
@@ -259,7 +259,7 @@ class _PopularSpecialistsWidgetState
 
     if (badges.isNotEmpty) {
       return Column(
-          crossAxisAlignment: CrossAxisAlignment.start, children: badges);
+          crossAxisAlignment: CrossAxisAlignment.start, children: badges,);
     }
 
     return const SizedBox.shrink();

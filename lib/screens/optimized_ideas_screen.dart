@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/providers/optimized_data_providers.dart';
+import 'package:event_marketplace_app/services/optimized_ideas_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/idea.dart';
-import '../providers/optimized_data_providers.dart';
-import '../services/optimized_ideas_service.dart';
 
 /// Оптимизированная лента идей с реальными данными и обработкой состояний
 class OptimizedIdeasScreen extends ConsumerStatefulWidget {
@@ -62,7 +61,7 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
     final ideasAsync = ref.watch(ideasProvider({
       'category': _selectedCategory,
       'sortBy': _sortBy,
-    }));
+    }),);
 
     return Scaffold(
       appBar: AppBar(
@@ -91,8 +90,8 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
           // Список идей
           Expanded(
             child: ideasAsync.when(
-              data: (ideasState) => _buildIdeasContent(ideasState),
-              loading: () => _buildLoadingState(),
+              data: _buildIdeasContent,
+              loading: _buildLoadingState,
               error: (error, stack) => _buildErrorState(error.toString()),
             ),
           ),
@@ -296,7 +295,7 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(labelText: 'Категория'),
               items: const [
                 DropdownMenuItem(value: 'all', child: Text('Все')),
@@ -305,7 +304,7 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
                 DropdownMenuItem(value: 'events', child: Text('События')),
                 DropdownMenuItem(value: 'business', child: Text('Бизнес')),
                 DropdownMenuItem(
-                    value: 'technology', child: Text('Технологии')),
+                    value: 'technology', child: Text('Технологии'),),
               ],
               onChanged: (value) {
                 setState(() {
@@ -315,7 +314,7 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _sortBy,
+              initialValue: _sortBy,
               decoration: const InputDecoration(labelText: 'Сортировка'),
               items: const [
                 DropdownMenuItem(value: 'newest', child: Text('Новые')),
@@ -457,7 +456,7 @@ class _IdeaCard extends ConsumerWidget {
                         ),
                       ),
                       Text('${idea.likes}',
-                          style: const TextStyle(fontSize: 12)),
+                          style: const TextStyle(fontSize: 12),),
                       const SizedBox(width: 8),
                       IconButton(
                         onPressed: () => _toggleSave(ideasService),

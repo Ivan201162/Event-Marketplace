@@ -13,13 +13,8 @@ class EventMedia {
     required this.eventId,
     required this.uploadedBy,
     required this.uploadedByName,
-    this.uploadedByPhoto,
-    required this.fileName,
-    required this.fileUrl,
+    required this.fileName, required this.fileUrl, required this.type, required this.status, required this.fileSize, required this.createdAt, required this.updatedAt, this.uploadedByPhoto,
     this.thumbnailUrl,
-    required this.type,
-    required this.status,
-    required this.fileSize,
     this.mimeType,
     this.duration,
     this.metadata,
@@ -28,8 +23,6 @@ class EventMedia {
     this.isFeatured = false,
     this.likesCount = 0,
     this.likedBy = const [],
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   /// Создать из Map
@@ -43,7 +36,7 @@ class EventMedia {
         fileUrl: data['fileUrl'] as String? ?? '',
         thumbnailUrl: data['thumbnailUrl'] as String?,
         type: MediaType.values.firstWhere((e) => e.name == data['type'],
-            orElse: () => MediaType.image),
+            orElse: () => MediaType.image,),
         status: MediaStatus.values.firstWhere(
           (e) => e.name == data['status'],
           orElse: () => MediaStatus.ready,

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../models/search_filters.dart';
-import '../models/specialist.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Сервис расширенного поиска специалистов
 class AdvancedSearchService {
@@ -78,19 +78,14 @@ class AdvancedSearchService {
       switch (filters.sortBy) {
         case SearchSortBy.rating:
           query = query.orderBy('rating', descending: true);
-          break;
         case SearchSortBy.priceAsc:
           query = query.orderBy('priceFrom', descending: false);
-          break;
         case SearchSortBy.priceDesc:
           query = query.orderBy('priceFrom', descending: true);
-          break;
         case SearchSortBy.reviewsCount:
           query = query.orderBy('reviewCount', descending: true);
-          break;
         case SearchSortBy.availability:
           query = query.orderBy('isAvailable', descending: true);
-          break;
         default:
           query = query.orderBy('rating', descending: true);
       }

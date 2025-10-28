@@ -1,12 +1,11 @@
+import 'package:event_marketplace_app/screens/responsive/responsive_chat_screen.dart';
+import 'package:event_marketplace_app/screens/responsive/responsive_feed_screen.dart';
+import 'package:event_marketplace_app/screens/responsive/responsive_home_screen.dart';
+import 'package:event_marketplace_app/screens/responsive/responsive_ideas_screen.dart';
+import 'package:event_marketplace_app/screens/responsive/responsive_requests_screen.dart';
+import 'package:event_marketplace_app/utils/responsive_utils.dart';
+import 'package:event_marketplace_app/widgets/responsive/responsive_widgets.dart';
 import 'package:flutter/material.dart';
-import '../../utils/responsive_utils.dart';
-import '../../widgets/responsive/responsive_widgets.dart';
-import 'responsive_home_screen.dart';
-import 'responsive_feed_screen.dart';
-import 'responsive_requests_screen.dart';
-import 'responsive_chat_screen.dart';
-import 'responsive_ideas_screen.dart';
-import 'responsive_profile_screen.dart';
 
 /// Адаптивный главный экран навигации
 class ResponsiveMainNavigationScreen extends StatefulWidget {
@@ -87,9 +86,9 @@ class _ResponsiveMainNavigationScreenState
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
       body: ResponsiveLayoutBuilder(
-        mobile: (context) => _buildMobileLayout(context),
-        tablet: (context) => _buildTabletLayout(context),
-        desktop: (context) => _buildDesktopLayout(context),
+        mobile: _buildMobileLayout,
+        tablet: _buildTabletLayout,
+        desktop: _buildDesktopLayout,
       ),
     );
   }
@@ -114,7 +113,7 @@ class _ResponsiveMainNavigationScreenState
                       icon: ResponsiveIcon(item.icon),
                       activeIcon: ResponsiveIcon(item.activeIcon),
                       label: item.label,
-                    ))
+                    ),)
                 .toList(),
             currentIndex: _currentIndex,
             onTap: _onItemTapped,
@@ -130,10 +129,10 @@ class _ResponsiveMainNavigationScreenState
         children: [
           ResponsiveContainer(
             width: ResponsiveUtils.getResponsiveWidth(context,
-                mobile: 0.0, tablet: 0.3, desktop: 0.2),
+                mobile: 0, tablet: 0.3, desktop: 0.2,),
             child: ResponsiveList(
               children: [
-                ResponsiveSpacing(height: 16),
+                const ResponsiveSpacing(height: 16),
                 ..._navigationItems.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
@@ -148,11 +147,11 @@ class _ResponsiveMainNavigationScreenState
                       textColor: isActive ? Colors.white : Colors.black,
                     ),
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
-          ResponsiveDivider(),
+          const ResponsiveDivider(),
           Expanded(
             child: PageView.builder(
               controller: _pageController,
@@ -174,10 +173,10 @@ class _ResponsiveMainNavigationScreenState
         children: [
           ResponsiveContainer(
             width: ResponsiveUtils.getResponsiveWidth(context,
-                mobile: 0.0, tablet: 0.0, desktop: 0.15),
+                mobile: 0, tablet: 0, desktop: 0.15,),
             child: ResponsiveList(
               children: [
-                ResponsiveSpacing(height: 16),
+                const ResponsiveSpacing(height: 16),
                 ..._navigationItems.asMap().entries.map((entry) {
                   final index = entry.key;
                   final item = entry.value;
@@ -192,11 +191,11 @@ class _ResponsiveMainNavigationScreenState
                       textColor: isActive ? Colors.white : Colors.black,
                     ),
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
-          ResponsiveDivider(),
+          const ResponsiveDivider(),
           Expanded(
             child: PageView.builder(
               controller: _pageController,
@@ -215,10 +214,6 @@ class _ResponsiveMainNavigationScreenState
 
 /// Элемент навигации
 class NavigationItem {
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  final Widget screen;
 
   const NavigationItem({
     required this.icon,
@@ -226,4 +221,8 @@ class NavigationItem {
     required this.label,
     required this.screen,
   });
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final Widget screen;
 }

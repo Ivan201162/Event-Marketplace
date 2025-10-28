@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/specialist.dart';
-import '../models/specialist_profile_extended.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/specialist_profile_extended.dart';
 
 /// Сервис для работы с расширенным профилем специалиста
 class SpecialistProfileExtendedService {
@@ -9,7 +9,7 @@ class SpecialistProfileExtendedService {
 
   /// Получить расширенный профиль специалиста
   Future<SpecialistProfileExtended?> getExtendedProfile(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       final doc = await _db
           .collection('specialist_profiles_extended')
@@ -31,7 +31,7 @@ class SpecialistProfileExtendedService {
 
   /// Создать расширенный профиль
   Future<SpecialistProfileExtended?> _createExtendedProfile(
-      String specialistId) async {
+      String specialistId,) async {
     try {
       // Получаем базовый профиль
       final baseProfileDoc = await _db
@@ -111,7 +111,7 @@ class SpecialistProfileExtendedService {
 
   /// Обновить FAQ элемент
   Future<void> updateFAQItem(
-      String specialistId, FAQItem updatedFAQItem) async {
+      String specialistId, FAQItem updatedFAQItem,) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -191,7 +191,7 @@ class SpecialistProfileExtendedService {
 
   /// Обновить портфолио видео
   Future<void> updatePortfolioVideo(
-      String specialistId, PortfolioVideo updatedVideo) async {
+      String specialistId, PortfolioVideo updatedVideo,) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -230,7 +230,7 @@ class SpecialistProfileExtendedService {
 
   /// Добавить сертификат
   Future<void> addCertification(
-      String specialistId, String certification) async {
+      String specialistId, String certification,) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -249,7 +249,7 @@ class SpecialistProfileExtendedService {
 
   /// Удалить сертификат
   Future<void> removeCertification(
-      String specialistId, String certification) async {
+      String specialistId, String certification,) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -316,7 +316,7 @@ class SpecialistProfileExtendedService {
 
   /// Удалить отзыв
   Future<void> removeTestimonial(
-      String specialistId, String testimonial) async {
+      String specialistId, String testimonial,) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -334,7 +334,7 @@ class SpecialistProfileExtendedService {
 
   /// Получить FAQ по категории
   Future<List<FAQItem>> getFAQByCategory(
-      String specialistId, String category) async {
+      String specialistId, String category,) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return [];
@@ -386,7 +386,7 @@ class SpecialistProfileExtendedService {
 
   /// Поиск по видео
   Future<List<PortfolioVideo>> searchVideos(
-      String specialistId, String query) async {
+      String specialistId, String query,) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return [];

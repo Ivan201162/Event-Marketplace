@@ -17,7 +17,7 @@ class RecommendationsScreen extends StatelessWidget {
               Icon(Icons.recommend, size: 80, color: Colors.blue),
               SizedBox(height: 16),
               Text('Рекомендации',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
               SizedBox(height: 8),
               Text(
                 'Здесь будут отображаться персональные рекомендации специалистов',

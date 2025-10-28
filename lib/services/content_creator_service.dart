@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/content_creator.dart';
+import 'package:event_marketplace_app/models/content_creator.dart';
 
 /// Сервис для работы с контент-мейкерами
 class ContentCreatorService {
@@ -34,7 +34,7 @@ class ContentCreatorService {
       if (formats != null && formats.isNotEmpty) {
         creators = creators
             .where((creator) =>
-                creator.formats.any((format) => formats.contains(format.name)))
+                creator.formats.any((format) => formats.contains(format.name)),)
             .toList();
       }
 
@@ -94,7 +94,7 @@ class ContentCreatorService {
 
   /// Добавить медиа в портфолио
   Future<void> addMediaToPortfolio(
-      String creatorId, MediaShowcase media) async {
+      String creatorId, MediaShowcase media,) async {
     try {
       await _firestore.collection('contentCreators').doc(creatorId).update({
         'mediaShowcase': FieldValue.arrayUnion([media.toMap()]),
@@ -107,7 +107,7 @@ class ContentCreatorService {
 
   /// Удалить медиа из портфолио
   Future<void> removeMediaFromPortfolio(
-      String creatorId, String mediaId) async {
+      String creatorId, String mediaId,) async {
     try {
       // Получаем текущий контент-мейкер
       final doc =
@@ -171,7 +171,7 @@ class ContentCreatorService {
                   (category) => category.toLowerCase().contains(searchQuery),
                 ) ||
                 creator.formats.any((format) =>
-                    format.name.toLowerCase().contains(searchQuery)),
+                    format.name.toLowerCase().contains(searchQuery),),
           )
           .toList();
 

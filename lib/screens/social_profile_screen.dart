@@ -1,15 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/social_models.dart';
+import 'package:event_marketplace_app/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../models/social_models.dart';
-import '../services/supabase_service.dart';
-
 class SocialProfileScreen extends ConsumerStatefulWidget {
-  final String username;
 
-  const SocialProfileScreen({super.key, required this.username});
+  const SocialProfileScreen({required this.username, super.key});
+  final String username;
 
   @override
   ConsumerState<SocialProfileScreen> createState() =>
@@ -48,9 +47,9 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
       }
 
       final currentUser = SupabaseService.currentUser;
-      bool isFollowing = false;
-      int followersCount = 0;
-      int followingCount = 0;
+      var isFollowing = false;
+      var followersCount = 0;
+      var followingCount = 0;
 
       if (currentUser != null) {
         isFollowing =
@@ -157,7 +156,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                  onPressed: _loadProfile, child: const Text('Повторить')),
+                  onPressed: _loadProfile, child: const Text('Повторить'),),
             ],
           ),
         ),
@@ -176,10 +175,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
               tooltip: 'Редактировать',
             ),
           IconButton(
-            onPressed: () {
-              // Поделиться профилем
-              _shareProfile();
-            },
+            onPressed: _shareProfile,
             icon: const Icon(Icons.share),
             tooltip: 'Поделиться',
           ),
@@ -227,26 +223,26 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                   ? CachedNetworkImage(
                       imageUrl: _profile!.avatarUrl!,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
+                      placeholder: (context, url) => ColoredBox(
                         color: Theme.of(context)
                             .primaryColor
                             .withValues(alpha: 0.1),
                         child: Icon(Icons.person,
-                            color: Theme.of(context).primaryColor, size: 60),
+                            color: Theme.of(context).primaryColor, size: 60,),
                       ),
-                      errorWidget: (context, url, error) => Container(
+                      errorWidget: (context, url, error) => ColoredBox(
                         color: Theme.of(context)
                             .primaryColor
                             .withValues(alpha: 0.1),
                         child: Icon(Icons.person,
-                            color: Theme.of(context).primaryColor, size: 60),
+                            color: Theme.of(context).primaryColor, size: 60,),
                       ),
                     )
-                  : Container(
+                  : ColoredBox(
                       color:
                           Theme.of(context).primaryColor.withValues(alpha: 0.1),
                       child: Icon(Icons.person,
-                          color: Theme.of(context).primaryColor, size: 60),
+                          color: Theme.of(context).primaryColor, size: 60,),
                     ),
             ),
           ),
@@ -286,7 +282,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(_profile!.city!,
-                    style: Theme.of(context).textTheme.bodyMedium),
+                    style: Theme.of(context).textTheme.bodyMedium,),
               ],
             ),
         ],
@@ -306,7 +302,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
             () => context.push('/profile/${_profile!.username}/followers'),
           ),
           Container(
-              width: 1, height: 40, color: Theme.of(context).dividerColor),
+              width: 1, height: 40, color: Theme.of(context).dividerColor,),
           _buildStatItem(
             'Подписки',
             _followStats?.followingCount.toString() ?? '0',
@@ -472,7 +468,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
           ),
           const SizedBox(height: 12),
           _buildInfoItem(Icons.update, 'Последнее обновление',
-              _formatDate(_profile!.updatedAt)),
+              _formatDate(_profile!.updatedAt),),
         ],
       ),
     );
@@ -482,7 +478,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
     return Row(
       children: [
         Icon(icon,
-            size: 20, color: Theme.of(context).textTheme.bodySmall?.color),
+            size: 20, color: Theme.of(context).textTheme.bodySmall?.color,),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -526,7 +522,7 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
+        const SnackBar(content: Text('Функция шаринга будет добавлена позже')),);
   }
 
   bool _isOwnProfile() {

@@ -1,13 +1,11 @@
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/automatic_recommendation_service.dart';
 import 'package:flutter/material.dart';
-import '../models/specialist.dart';
-import '../services/automatic_recommendation_service.dart';
 
 /// Виджет для отображения автоматических рекомендаций
 class AutomaticRecommendationsWidget extends StatefulWidget {
   const AutomaticRecommendationsWidget({
-    super.key,
-    required this.selectedSpecialistIds,
-    required this.userId,
+    required this.selectedSpecialistIds, required this.userId, super.key,
     this.onSpecialistSelected,
   });
 
@@ -121,7 +119,7 @@ class _LoadingWidget extends StatelessWidget {
             SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2)),
+                child: CircularProgressIndicator(strokeWidth: 2),),
             SizedBox(width: 12),
             Text('Загружаем рекомендации...'),
           ],
@@ -212,7 +210,7 @@ class _RecommendationsList extends StatelessWidget {
 /// Карточка рекомендации
 class _RecommendationCard extends StatelessWidget {
   const _RecommendationCard(
-      {required this.recommendation, required this.onTap});
+      {required this.recommendation, required this.onTap,});
 
   final SpecialistRecommendation recommendation;
   final VoidCallback onTap;
@@ -254,7 +252,7 @@ class _RecommendationCard extends StatelessWidget {
                         child: Text(
                           recommendation.specialist.name,
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 12),
+                              fontWeight: FontWeight.bold, fontSize: 12,),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -276,7 +274,7 @@ class _RecommendationCard extends StatelessWidget {
                       Text(
                         recommendation.specialist.rating.toStringAsFixed(1),
                         style: const TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.bold),
+                            fontSize: 11, fontWeight: FontWeight.bold,),
                       ),
                       const Spacer(),
                       Text(

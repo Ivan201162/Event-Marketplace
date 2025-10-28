@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для отображения состояния ошибки
 class ErrorStateWidget extends StatelessWidget {
   const ErrorStateWidget({
-    super.key,
-    required this.error,
+    required this.error, super.key,
     this.onRetry,
     this.title = 'Произошла ошибка',
     this.icon = Icons.error_outline,
@@ -170,7 +169,6 @@ class NetworkErrorWidget extends StatelessWidget {
       onRetry: onRetry,
       title: 'Нет подключения',
       icon: Icons.wifi_off,
-      buttonText: 'Повторить',
     );
   }
 }
@@ -193,7 +191,6 @@ class ServerErrorWidget extends StatelessWidget {
       onRetry: onRetry,
       title: 'Ошибка сервера',
       icon: Icons.cloud_off,
-      buttonText: 'Повторить',
     );
   }
 }
@@ -262,7 +259,6 @@ class TimeoutErrorWidget extends StatelessWidget {
       onRetry: onRetry,
       title: 'Таймаут',
       icon: Icons.timer_off,
-      buttonText: 'Повторить',
     );
   }
 }

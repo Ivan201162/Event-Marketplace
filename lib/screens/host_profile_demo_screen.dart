@@ -1,6 +1,6 @@
+import 'package:event_marketplace_app/models/host_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../models/host_profile.dart';
 
 /// Демо-страница для тестирования профиля ведущего
 class HostProfileDemoScreen extends StatelessWidget {
@@ -45,7 +45,7 @@ class HostProfileDemoScreen extends StatelessWidget {
                 icon: const Icon(Icons.person),
                 label: const Text('Открыть профиль ведущего'),
                 style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16)),
+                    padding: const EdgeInsets.symmetric(vertical: 16),),
               ),
             ),
 
@@ -58,7 +58,7 @@ class HostProfileDemoScreen extends StatelessWidget {
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                    color: theme.colorScheme.outline.withValues(alpha: 0.2),),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,11 +72,11 @@ class HostProfileDemoScreen extends StatelessWidget {
                   _buildMockInfoRow('Имя', MockHostData.sampleHost.fullName),
                   _buildMockInfoRow('Город', MockHostData.sampleHost.city),
                   _buildMockInfoRow(
-                      'Рейтинг', '${MockHostData.sampleHost.rating}/5.0'),
+                      'Рейтинг', '${MockHostData.sampleHost.rating}/5.0',),
                   _buildMockInfoRow(
-                      'Отзывы', '${MockHostData.sampleHost.totalReviews}'),
+                      'Отзывы', '${MockHostData.sampleHost.totalReviews}',),
                   _buildMockInfoRow(
-                      'Цена', MockHostData.sampleHost.priceRangeText),
+                      'Цена', MockHostData.sampleHost.priceRangeText,),
                   _buildMockInfoRow(
                     'Категории',
                     MockHostData.sampleHost.eventCategories.join(', '),
@@ -105,7 +105,7 @@ class HostProfileDemoScreen extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(Icons.info_outline,
-                          color: Colors.orange, size: 20),
+                          color: Colors.orange, size: 20,),
                       const SizedBox(width: 8),
                       Text(
                         'TODO: Интеграция с реальными данными',
@@ -146,12 +146,12 @@ class HostProfileDemoScreen extends StatelessWidget {
               child: Text(
                 '$label:',
                 style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.grey),
+                    fontWeight: FontWeight.w500, color: Colors.grey,),
               ),
             ),
             Expanded(
               child: Text(value,
-                  style: const TextStyle(fontWeight: FontWeight.w400)),
+                  style: const TextStyle(fontWeight: FontWeight.w400),),
             ),
           ],
         ),

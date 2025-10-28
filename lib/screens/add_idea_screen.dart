@@ -1,11 +1,10 @@
 import 'dart:io';
 
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/ideas_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../providers/auth_providers.dart';
-import '../services/ideas_service.dart';
 
 class AddIdeaScreen extends ConsumerStatefulWidget {
   const AddIdeaScreen({super.key});
@@ -77,7 +76,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
         data: (user) {
           if (user == null) {
             return const Center(
-                child: Text('Войдите в аккаунт, чтобы добавить идею'));
+                child: Text('Войдите в аккаунт, чтобы добавить идею'),);
           }
 
           return _buildForm(user);
@@ -143,7 +142,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
                 ),
                 items: _categories
                     .map((category) => DropdownMenuItem(
-                        value: category, child: Text(category)))
+                        value: category, child: Text(category),),)
                     .toList(),
                 onChanged: (value) {
                   setState(() {
@@ -200,7 +199,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
                       ),
                       items: _currencies
                           .map((currency) => DropdownMenuItem(
-                              value: currency, child: Text(currency)))
+                              value: currency, child: Text(currency),),)
                           .toList(),
                       onChanged: (value) {
                         setState(() {
@@ -233,7 +232,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _submitIdea,
                   style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16)),
+                      padding: const EdgeInsets.symmetric(vertical: 16),),
                   child: _isLoading
                       ? const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -267,7 +266,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.add_photo_alternate,
-                      size: 48, color: Colors.grey),
+                      size: 48, color: Colors.grey,),
                   const SizedBox(height: 16),
                   const Text('Выберите фото или видео'),
                   const SizedBox(height: 16),
@@ -293,11 +292,11 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: _isVideo
-                        ? Container(
+                        ? const ColoredBox(
                             color: Colors.black,
-                            child: const Center(
+                            child: Center(
                               child: Icon(Icons.play_circle_fill,
-                                  color: Colors.white, size: 60),
+                                  color: Colors.white, size: 60,),
                             ),
                           )
                         : Image.file(
@@ -312,7 +311,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
                     right: 8,
                     child: Container(
                       decoration: const BoxDecoration(
-                          color: Colors.black54, shape: BoxShape.circle),
+                          color: Colors.black54, shape: BoxShape.circle,),
                       child: IconButton(
                         onPressed: () {
                           setState(() {
@@ -330,7 +329,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
                       left: 8,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                            horizontal: 8, vertical: 4,),
                         decoration: BoxDecoration(
                           color: Colors.black54,
                           borderRadius: BorderRadius.circular(12),
@@ -385,7 +384,7 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(
-          const SnackBar(content: Text('Пользователь не авторизован')));
+          const SnackBar(content: Text('Пользователь не авторизован')),);
       return;
     }
 
@@ -424,18 +423,12 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
             : int.tryParse(_durationController.text.trim()),
       );
 
-      if (ideaId != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(
-            const SnackBar(content: Text('Идея успешно опубликована!')));
-        Navigator.of(context).pop();
-      } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Ошибка публикации идеи')));
-      }
-    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+          const SnackBar(content: Text('Идея успешно опубликована!')),);
+      Navigator.of(context).pop();
+        } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {

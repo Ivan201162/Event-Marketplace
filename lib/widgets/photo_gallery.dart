@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:event_marketplace_app/models/user_profile.dart';
+import 'package:event_marketplace_app/providers/user_profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../models/user_profile.dart';
-import '../providers/user_profile_provider.dart';
-
 /// Виджет для отображения галереи фотографий
 class PhotoGallery extends ConsumerWidget {
-  const PhotoGallery({super.key, required this.userId});
+  const PhotoGallery({required this.userId, super.key});
   final String userId;
 
   @override
@@ -56,16 +55,16 @@ class PhotoGallery extends ConsumerWidget {
         onTap: () => _openPhotoViewer(context, photo),
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.grey[200], borderRadius: BorderRadius.circular(4)),
+              color: Colors.grey[200], borderRadius: BorderRadius.circular(4),),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: CachedNetworkImage(
               imageUrl: photo.imageUrl!,
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
-                  color: Colors.grey[300], child: const Icon(Icons.image)),
+                  color: Colors.grey[300], child: const Icon(Icons.image),),
               errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[300], child: const Icon(Icons.image)),
+                  color: Colors.grey[300], child: const Icon(Icons.image),),
             ),
           ),
         ),
@@ -85,7 +84,7 @@ class PhotoGallery extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(4)),
+                borderRadius: BorderRadius.circular(4),),
           ),
         ),
       );
@@ -146,13 +145,13 @@ class PhotoGallery extends ConsumerWidget {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(
-        builder: (context) => PhotoViewerScreen(photo: photo)));
+        builder: (context) => PhotoViewerScreen(photo: photo),),);
   }
 }
 
 /// Экран просмотра фотографии в полноэкранном режиме
 class PhotoViewerScreen extends StatelessWidget {
-  const PhotoViewerScreen({super.key, required this.photo});
+  const PhotoViewerScreen({required this.photo, super.key});
   final UserPost photo;
 
   @override
@@ -184,12 +183,12 @@ class PhotoViewerScreen extends StatelessWidget {
               placeholder: (context, url) => Container(
                 color: Colors.grey[800],
                 child: const Center(
-                    child: CircularProgressIndicator(color: Colors.white)),
+                    child: CircularProgressIndicator(color: Colors.white),),
               ),
               errorWidget: (context, url, error) => Container(
                 color: Colors.grey[800],
                 child: const Center(
-                    child: Icon(Icons.error, color: Colors.white, size: 64)),
+                    child: Icon(Icons.error, color: Colors.white, size: 64),),
               ),
             ),
           ),

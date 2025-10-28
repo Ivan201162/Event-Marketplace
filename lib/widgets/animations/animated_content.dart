@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 /// Виджет для анимированного появления контента
 class AnimatedContent extends StatefulWidget {
   const AnimatedContent({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 600),
     this.curve = Curves.easeOutCubic,
@@ -37,12 +36,12 @@ class _AnimatedContentState extends State<AnimatedContent>
     );
 
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
-    ));
+    ),);
 
     // Запускаем анимацию с задержкой
     Future.delayed(widget.delay, () {
@@ -119,8 +118,7 @@ enum AnimationType {
 /// Виджет для анимированного появления списка элементов
 class AnimatedList extends StatefulWidget {
   const AnimatedList({
-    super.key,
-    required this.children,
+    required this.children, super.key,
     this.delay = const Duration(milliseconds: 100),
     this.duration = const Duration(milliseconds: 600),
     this.curve = Curves.easeOutCubic,
@@ -156,13 +154,13 @@ class _AnimatedListState extends State<AnimatedList>
     );
 
     _animations = _controllers.map((controller) {
-      return Tween<double>(begin: 0.0, end: 1.0).animate(
+      return Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(parent: controller, curve: widget.curve),
       );
     }).toList();
 
     // Запускаем анимации с задержкой
-    for (int i = 0; i < _controllers.length; i++) {
+    for (var i = 0; i < _controllers.length; i++) {
       Future.delayed(
         widget.delay * i,
         () {
@@ -238,8 +236,7 @@ class _AnimatedListState extends State<AnimatedList>
 /// Виджет для анимированного появления карточек
 class AnimatedCard extends StatefulWidget {
   const AnimatedCard({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 600),
     this.curve = Curves.easeOutCubic,
@@ -272,12 +269,12 @@ class _AnimatedCardState extends State<AnimatedCard>
     );
 
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
-    ));
+    ),);
 
     // Запускаем анимацию с задержкой
     Future.delayed(widget.delay, () {
@@ -316,8 +313,7 @@ class _AnimatedCardState extends State<AnimatedCard>
 /// Виджет для анимированного появления кнопки
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 400),
     this.curve = Curves.elasticOut,
@@ -346,12 +342,12 @@ class _AnimatedButtonState extends State<AnimatedButton>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
-    ));
+    ),);
 
     // Запускаем анимацию с задержкой
     Future.delayed(widget.delay, () {
@@ -384,8 +380,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
 /// Виджет для анимированного появления текста
 class AnimatedText extends StatefulWidget {
   const AnimatedText({
-    super.key,
-    required this.text,
+    required this.text, super.key,
     this.delay = Duration.zero,
     this.duration = const Duration(milliseconds: 800),
     this.curve = Curves.easeOutCubic,
@@ -418,12 +413,12 @@ class _AnimatedTextState extends State<AnimatedText>
     );
 
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
-    ));
+    ),);
 
     // Запускаем анимацию с задержкой
     Future.delayed(widget.delay, () {

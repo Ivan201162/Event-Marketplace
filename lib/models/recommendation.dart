@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'specialist.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
 
 /// Тип рекомендации
 enum RecommendationType {
@@ -476,7 +476,7 @@ class RecommendationStats {
 
   /// Создать из списка рекомендаций
   factory RecommendationStats.fromRecommendations(
-      List<Recommendation> recommendations) {
+      List<Recommendation> recommendations,) {
     if (recommendations.isEmpty) return RecommendationStats.empty();
 
     final total = recommendations.length;

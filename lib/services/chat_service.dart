@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/chat.dart';
-import '../models/chat_message.dart';
+import 'package:event_marketplace_app/models/chat.dart';
+import 'package:event_marketplace_app/models/chat_message.dart';
 
 /// Сервис для работы с чатами
 class ChatService {
@@ -14,7 +14,7 @@ class ChatService {
           .collection('chats')
           .where('members',
               arrayContains:
-                  'current_user_id') // TODO: Получить ID текущего пользователя
+                  'current_user_id',) // TODO: Получить ID текущего пользователя
           .orderBy('lastMessageAt', descending: true)
           .limit(20)
           .get();
@@ -55,7 +55,7 @@ class ChatService {
           .collection('chats')
           .where('members', arrayContains: 'current_user_id')
           .where('lastMessage', isGreaterThanOrEqualTo: query)
-          .where('lastMessage', isLessThan: query + '\uf8ff')
+          .where('lastMessage', isLessThan: '$query\uf8ff')
           .orderBy('lastMessage')
           .orderBy('lastMessageAt', descending: true)
           .limit(20)
@@ -80,10 +80,8 @@ class ChatService {
       switch (filter) {
         case 'unread':
           query = query.where('unreadCount', isGreaterThan: 0);
-          break;
         case 'media':
           query = query.where('hasMedia', isEqualTo: true);
-          break;
         default:
           // Все чаты
           break;
@@ -93,7 +91,7 @@ class ChatService {
       final snapshot = await query.limit(20).get();
 
       return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         return Chat.fromMap(data, doc.id);
       }).toList();
     } catch (e) {
@@ -103,17 +101,17 @@ class ChatService {
 
   /// Создать чат
   Future<String> createChat(
-      String otherUserId, String otherUserName, String? otherUserAvatar) async {
+      String otherUserId, String otherUserName, String? otherUserAvatar,) async {
     try {
       final chatData = {
         'type': 'private',
         'members': [
           'current_user_id',
-          otherUserId
+          otherUserId,
         ], // TODO: Получить ID текущего пользователя
         'memberNames': [
           'Текущий пользователь',
-          otherUserName
+          otherUserName,
         ], // TODO: Получить имя текущего пользователя
         'memberAvatars': [null, otherUserAvatar],
         'lastMessage': '',
@@ -183,7 +181,7 @@ class ChatService {
 
   /// Отправить сообщение
   Future<void> sendMessage(String chatId, String text,
-      {List<String>? attachments}) async {
+      {List<String>? attachments,}) async {
     try {
       final messageData = {
         'text': text,
@@ -218,7 +216,7 @@ class ChatService {
 
   /// Редактировать сообщение
   Future<void> editMessage(
-      String chatId, String messageId, String newText) async {
+      String chatId, String messageId, String newText,) async {
     try {
       await _firestore
           .collection('chats')

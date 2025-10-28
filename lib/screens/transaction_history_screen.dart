@@ -1,11 +1,10 @@
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/financial_report_service.dart';
+import 'package:event_marketplace_app/widgets/empty_state_widget.dart';
+import 'package:event_marketplace_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/payment.dart';
-import '../providers/auth_providers.dart';
-import '../services/financial_report_service.dart';
-import '../widgets/empty_state_widget.dart';
-import '../widgets/loading_widget.dart';
 
 /// Экран истории транзакций
 class TransactionHistoryScreen extends ConsumerStatefulWidget {
@@ -73,7 +72,7 @@ class _TransactionHistoryScreenState
           title: const Text('История транзакций'),
           actions: [
             IconButton(
-                icon: const Icon(Icons.refresh), onPressed: _loadTransactions)
+                icon: const Icon(Icons.refresh), onPressed: _loadTransactions,),
           ],
         ),
         body: _buildBody(),
@@ -94,7 +93,7 @@ class _TransactionHistoryScreenState
             Text('Ошибка: $_error'),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadTransactions, child: const Text('Повторить')),
+                onPressed: _loadTransactions, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -152,7 +151,7 @@ class _TransactionHistoryScreenState
                   Row(
                     children: [
                       Text(transaction.typeIcon,
-                          style: const TextStyle(fontSize: 24)),
+                          style: const TextStyle(fontSize: 24),),
                       const SizedBox(width: 12),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,12 +159,12 @@ class _TransactionHistoryScreenState
                           Text(
                             transaction.typeName,
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.bold,),
                           ),
                           Text(
                             transaction.description,
                             style: TextStyle(
-                                fontSize: 14, color: Colors.grey[600]),
+                                fontSize: 14, color: Colors.grey[600],),
                           ),
                         ],
                       ),
@@ -186,7 +185,7 @@ class _TransactionHistoryScreenState
                         transaction.statusName,
                         style: TextStyle(
                             fontSize: 12,
-                            color: _getStatusColor(transaction.status)),
+                            color: _getStatusColor(transaction.status),),
                       ),
                     ],
                   ),
@@ -206,20 +205,20 @@ class _TransactionHistoryScreenState
                   children: [
                     _buildDetailRow('Метод оплаты', transaction.methodName),
                     _buildDetailRow(
-                        'Дата создания', _formatDate(transaction.createdAt)),
+                        'Дата создания', _formatDate(transaction.createdAt),),
                     if (transaction.completedAt != null)
                       _buildDetailRow('Дата завершения',
-                          _formatDate(transaction.completedAt!)),
+                          _formatDate(transaction.completedAt!),),
                     if (transaction.fee != null && transaction.fee! > 0)
                       _buildDetailRow('Комиссия',
-                          '${transaction.fee!.toStringAsFixed(2)} ₽'),
+                          '${transaction.fee!.toStringAsFixed(2)} ₽',),
                     if (transaction.tax != null && transaction.tax! > 0)
                       _buildDetailRow(
-                          'Налог', '${transaction.tax!.toStringAsFixed(2)} ₽'),
+                          'Налог', '${transaction.tax!.toStringAsFixed(2)} ₽',),
                     if (transaction.totalAmount != null &&
                         transaction.totalAmount != transaction.amount)
                       _buildDetailRow(
-                          'Итого', transaction.formattedTotalAmount),
+                          'Итого', transaction.formattedTotalAmount,),
                   ],
                 ),
               ),
@@ -244,7 +243,7 @@ class _TransactionHistoryScreenState
                         icon: const Icon(Icons.undo, size: 16),
                         label: const Text('Возврат'),
                         style: TextButton.styleFrom(
-                            foregroundColor: Colors.orange),
+                            foregroundColor: Colors.orange,),
                       ),
                   ],
                 ),
@@ -260,10 +259,10 @@ class _TransactionHistoryScreenState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label,
-                style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),),
             Text(value,
                 style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),),
           ],
         ),
       );
@@ -315,7 +314,7 @@ class _TransactionHistoryScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           content: Text(
-              'Повторная попытка платежа будет добавлена в следующей версии')),
+              'Повторная попытка платежа будет добавлена в следующей версии',),),
     );
   }
 
@@ -323,7 +322,7 @@ class _TransactionHistoryScreenState
     // TODO(developer): Реализовать запрос возврата
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Запрос возврата будет добавлен в следующей версии')),
+          content: Text('Запрос возврата будет добавлен в следующей версии'),),
     );
   }
 }

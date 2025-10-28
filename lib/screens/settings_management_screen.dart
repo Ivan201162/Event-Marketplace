@@ -1,12 +1,11 @@
 import 'dart:convert';
 
+import 'package:event_marketplace_app/models/app_settings.dart';
+import 'package:event_marketplace_app/services/settings_service.dart';
+import 'package:event_marketplace_app/ui/ui.dart' hide ResponsiveCard;
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/app_settings.dart';
-import '../services/settings_service.dart';
-import '../ui/ui.dart' hide ResponsiveCard;
-import '../widgets/responsive_layout.dart';
 
 /// Экран управления настройками и конфигурацией
 class SettingsManagementScreen extends ConsumerStatefulWidget {
@@ -58,12 +57,12 @@ class _SettingsManagementScreenState
           children: [
             Expanded(
                 child:
-                    _buildTabButton('settings', 'Настройки', Icons.settings)),
+                    _buildTabButton('settings', 'Настройки', Icons.settings),),
             Expanded(
                 child: _buildTabButton(
-                    'configurations', 'Конфигурации', Icons.tune)),
+                    'configurations', 'Конфигурации', Icons.tune,),),
             Expanded(
-                child: _buildTabButton('history', 'История', Icons.history)),
+                child: _buildTabButton('history', 'История', Icons.history),),
           ],
         ),
       );
@@ -86,7 +85,7 @@ class _SettingsManagementScreenState
           border: Border.all(
               color: isSelected
                   ? Colors.blue
-                  : Colors.grey.withValues(alpha: 0.3)),
+                  : Colors.grey.withValues(alpha: 0.3),),
         ),
         child: Column(
           children: [
@@ -118,10 +117,10 @@ class _SettingsManagementScreenState
                   hint: const Text('Все категории'),
                   items: [
                     const DropdownMenuItem<String?>(
-                        child: Text('Все категории')),
+                        child: Text('Все категории'),),
                     ..._getCategories().map(
                       (category) => DropdownMenuItem<String?>(
-                          value: category, child: Text(category)),
+                          value: category, child: Text(category),),
                     ),
                   ],
                   onChanged: (value) {
@@ -181,11 +180,11 @@ class _SettingsManagementScreenState
                     Text(
                       setting.key,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     if (setting.description != null)
                       Text(setting.description!,
-                          style: const TextStyle(fontSize: 14)),
+                          style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -201,7 +200,7 @@ class _SettingsManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               PopupMenuButton<String>(
@@ -211,22 +210,22 @@ class _SettingsManagementScreenState
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   const PopupMenuItem(
                     value: 'history',
                     child: ListTile(
-                        leading: Icon(Icons.history), title: Text('История')),
+                        leading: Icon(Icons.history), title: Text('История'),),
                   ),
                   const PopupMenuItem(
                     value: 'export',
                     child: ListTile(
-                        leading: Icon(Icons.download), title: Text('Экспорт')),
+                        leading: Icon(Icons.download), title: Text('Экспорт'),),
                   ),
                   const PopupMenuItem(
                     value: 'delete',
                     child: ListTile(
-                        leading: Icon(Icons.delete), title: Text('Удалить')),
+                        leading: Icon(Icons.delete), title: Text('Удалить'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -341,7 +340,7 @@ class _SettingsManagementScreenState
           Row(
             children: [
               Text(configuration.type.icon,
-                  style: const TextStyle(fontSize: 24)),
+                  style: const TextStyle(fontSize: 24),),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -350,10 +349,10 @@ class _SettingsManagementScreenState
                     Text(
                       configuration.name,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                          fontWeight: FontWeight.bold, fontSize: 16,),
                     ),
                     Text(configuration.description,
-                        style: const TextStyle(fontSize: 14)),
+                        style: const TextStyle(fontSize: 14),),
                   ],
                 ),
               ),
@@ -369,7 +368,7 @@ class _SettingsManagementScreenState
                   style: TextStyle(
                       fontSize: 12,
                       color: typeColor,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,),
                 ),
               ),
               if (configuration.isActive)
@@ -399,30 +398,30 @@ class _SettingsManagementScreenState
                     value: 'view',
                     child: ListTile(
                         leading: Icon(Icons.visibility),
-                        title: Text('Просмотр')),
+                        title: Text('Просмотр'),),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
                     child: ListTile(
                         leading: Icon(Icons.edit),
-                        title: Text('Редактировать')),
+                        title: Text('Редактировать'),),
                   ),
                   if (!configuration.isActive)
                     const PopupMenuItem(
                       value: 'activate',
                       child: ListTile(
                           leading: Icon(Icons.play_arrow),
-                          title: Text('Активировать')),
+                          title: Text('Активировать'),),
                     ),
                   const PopupMenuItem(
                     value: 'export',
                     child: ListTile(
-                        leading: Icon(Icons.download), title: Text('Экспорт')),
+                        leading: Icon(Icons.download), title: Text('Экспорт'),),
                   ),
                   const PopupMenuItem(
                     value: 'delete',
                     child: ListTile(
-                        leading: Icon(Icons.delete), title: Text('Удалить')),
+                        leading: Icon(Icons.delete), title: Text('Удалить'),),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -436,11 +435,11 @@ class _SettingsManagementScreenState
           Row(
             children: [
               _buildInfoChip(
-                  'Параметров', '${configuration.config.length}', Colors.blue),
+                  'Параметров', '${configuration.config.length}', Colors.blue,),
               if (configuration.environment != null) ...[
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Окружение', configuration.environment!, Colors.green),
+                    'Окружение', configuration.environment!, Colors.green,),
               ],
             ],
           ),
@@ -488,7 +487,7 @@ class _SettingsManagementScreenState
           // Список истории
           const Expanded(
               child: Center(
-                  child: Text('История изменений будет отображаться здесь'))),
+                  child: Text('История изменений будет отображаться здесь'),),),
         ],
       );
 
@@ -502,7 +501,7 @@ class _SettingsManagementScreenState
         child: Text(
           '$label: $value',
           style: TextStyle(
-              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+              fontSize: 12, color: color, fontWeight: FontWeight.w500,),
         ),
       );
 
@@ -593,7 +592,7 @@ class _SettingsManagementScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red),
+            backgroundColor: Colors.red,),
       );
     } finally {
       setState(() {
@@ -628,23 +627,19 @@ class _SettingsManagementScreenState
     switch (action) {
       case 'edit':
         _editSetting(setting);
-        break;
       case 'history':
         _viewSettingHistory(setting);
-        break;
       case 'export':
         _exportSetting(setting);
-        break;
       case 'delete':
         _deleteSetting(setting);
-        break;
     }
   }
 
   void _editSetting(AppSettings setting) {
     showDialog<void>(
         context: context,
-        builder: (context) => _buildEditSettingDialog(setting));
+        builder: (context) => _buildEditSettingDialog(setting),);
   }
 
   Widget _buildEditSettingDialog(AppSettings setting) {
@@ -661,7 +656,7 @@ class _SettingsManagementScreenState
           TextField(
             controller: valueController,
             decoration: const InputDecoration(
-                labelText: 'Значение', border: OutlineInputBorder()),
+                labelText: 'Значение', border: OutlineInputBorder(),),
             maxLines: 5,
           ),
         ],
@@ -669,7 +664,7 @@ class _SettingsManagementScreenState
       actions: [
         TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена')),
+            child: const Text('Отмена'),),
         ElevatedButton(
           onPressed: () async {
             Navigator.pop(context);
@@ -691,7 +686,7 @@ class _SettingsManagementScreenState
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                     content: Text('Настройка обновлена'),
-                    backgroundColor: Colors.green),
+                    backgroundColor: Colors.green,),
               );
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -713,7 +708,7 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('История настройки "${setting.key}" будет реализована')));
+        content: Text('История настройки "${setting.key}" будет реализована'),),);
   }
 
   void _exportSetting(AppSettings setting) {
@@ -721,7 +716,7 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(
-        content: Text('Экспорт настройки "${setting.key}" будет реализован')));
+        content: Text('Экспорт настройки "${setting.key}" будет реализован'),),);
   }
 
   void _deleteSetting(AppSettings setting) {
@@ -734,7 +729,7 @@ class _SettingsManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -748,7 +743,7 @@ class _SettingsManagementScreenState
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                       content: Text('Настройка удалена'),
-                      backgroundColor: Colors.green),
+                      backgroundColor: Colors.green,),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -771,23 +766,18 @@ class _SettingsManagementScreenState
   }
 
   void _handleConfigurationAction(
-      String action, AppConfiguration configuration) {
+      String action, AppConfiguration configuration,) {
     switch (action) {
       case 'view':
         _viewConfiguration(configuration);
-        break;
       case 'edit':
         _editConfiguration(configuration);
-        break;
       case 'activate':
         _activateConfiguration(configuration);
-        break;
       case 'export':
         _exportConfiguration(configuration);
-        break;
       case 'delete':
         _deleteConfiguration(configuration);
-        break;
     }
   }
 
@@ -796,7 +786,7 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Просмотр конфигурации "${configuration.name}" будет реализован')),
+              'Просмотр конфигурации "${configuration.name}" будет реализован',),),
     );
   }
 
@@ -805,7 +795,7 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование конфигурации "${configuration.name}" будет реализовано'),
+            'Редактирование конфигурации "${configuration.name}" будет реализовано',),
       ),
     );
   }
@@ -819,7 +809,7 @@ class _SettingsManagementScreenState
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -857,7 +847,7 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: Text(
-              'Экспорт конфигурации "${configuration.name}" будет реализован')),
+              'Экспорт конфигурации "${configuration.name}" будет реализован',),),
     );
   }
 
@@ -867,18 +857,18 @@ class _SettingsManagementScreenState
       builder: (context) => AlertDialog(
         title: const Text('Удалить конфигурацию'),
         content: Text(
-            'Вы уверены, что хотите удалить конфигурацию "${configuration.name}"?'),
+            'Вы уверены, что хотите удалить конфигурацию "${configuration.name}"?',),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена')),
+              child: const Text('Отмена'),),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               // TODO(developer): Реализовать удаление конфигурации
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                    content: Text('Удаление конфигурации будет реализовано')),
+                    content: Text('Удаление конфигурации будет реализовано'),),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -897,7 +887,7 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Создание настройки будет реализовано')));
+        const SnackBar(content: Text('Создание настройки будет реализовано')),);
   }
 
   void _showCreateConfigurationDialog() {
@@ -905,6 +895,6 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(
-        content: Text('Создание конфигурации будет реализовано')));
+        content: Text('Создание конфигурации будет реализовано'),),);
   }
 }

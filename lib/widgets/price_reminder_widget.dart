@@ -1,11 +1,11 @@
+import 'package:event_marketplace_app/providers/price_reminder_provider.dart';
+import 'package:event_marketplace_app/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/price_reminder_provider.dart';
-import 'responsive_layout.dart';
 
 /// Виджет для отображения напоминаний об обновлении цен
 class PriceReminderWidget extends ConsumerWidget {
-  const PriceReminderWidget({super.key, required this.specialistId});
+  const PriceReminderWidget({required this.specialistId, super.key});
   final String specialistId;
 
   @override
@@ -94,7 +94,7 @@ class PriceReminderWidget extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(
-        const SnackBar(content: Text('Напоминание скрыто на 7 дней')));
+        const SnackBar(content: Text('Напоминание скрыто на 7 дней')),);
   }
 }
 
@@ -167,9 +167,9 @@ class PriceReminderAdminWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildStatItem('Нужно напомнить', stats['needReminder'] ?? 0,
-                    Colors.orange),
+                    Colors.orange,),
                 _buildStatItem(
-                    'Уже напомнили', stats['reminded'] ?? 0, Colors.green),
+                    'Уже напомнили', stats['reminded'] ?? 0, Colors.green,),
                 _buildStatItem('Всего', stats['total'] ?? 0, Colors.blue),
               ],
             ),
@@ -182,11 +182,11 @@ class PriceReminderAdminWidget extends ConsumerWidget {
           Text(
             value.toString(),
             style: TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: color),
+                fontSize: 24, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(label,
               style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.center),
+              textAlign: TextAlign.center,),
         ],
       );
 
@@ -233,7 +233,7 @@ class PriceReminderAdminWidget extends ConsumerWidget {
                             Text('${specialist['daysSinceUpdate']} дней назад'),
                         trailing: ElevatedButton(
                           onPressed: () => _sendReminderToSpecialist(
-                              context, ref, specialist['id'] as String),
+                              context, ref, specialist['id'] as String,),
                           child: const Text('Напомнить'),
                         ),
                       );
@@ -248,7 +248,7 @@ class PriceReminderAdminWidget extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Закрыть')),
+              child: const Text('Закрыть'),),
         ],
       ),
     );

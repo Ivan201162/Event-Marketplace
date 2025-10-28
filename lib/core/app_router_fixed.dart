@@ -1,13 +1,12 @@
+import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
+import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
+import 'package:event_marketplace_app/screens/auth/login_screen.dart';
+import 'package:event_marketplace_app/screens/auth/onboarding_screen.dart';
+import 'package:event_marketplace_app/screens/auth/register_screen.dart';
+import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../screens/animated_splash_screen.dart';
-import '../screens/auth/auth_check_screen.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/register_screen.dart';
-import '../screens/auth/onboarding_screen.dart';
-import '../screens/main_navigation_screen.dart';
 
 /// Исправленный роутер приложения
 final appRouterProvider = Provider<GoRouter>((ref) {

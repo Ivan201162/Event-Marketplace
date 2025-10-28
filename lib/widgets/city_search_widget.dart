@@ -1,14 +1,12 @@
+import 'package:event_marketplace_app/models/city_region.dart';
+import 'package:event_marketplace_app/providers/city_region_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/city_region.dart';
-import '../providers/city_region_providers.dart';
 
 /// Виджет поиска городов
 class CitySearchWidget extends ConsumerStatefulWidget {
   const CitySearchWidget({
-    super.key,
-    required this.controller,
+    required this.controller, super.key,
     this.onSearchChanged,
     this.onCitySelected,
     this.hintText = 'Поиск города...',

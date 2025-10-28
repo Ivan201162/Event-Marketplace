@@ -1,10 +1,9 @@
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/financial_report_service.dart';
+import 'package:event_marketplace_app/widgets/empty_state_widget.dart';
+import 'package:event_marketplace_app/widgets/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../providers/auth_providers.dart';
-import '../services/financial_report_service.dart';
-import '../widgets/empty_state_widget.dart';
-import '../widgets/loading_widget.dart';
 
 /// Экран отчета по платежам для заказчика
 class CustomerPaymentReportScreen extends ConsumerStatefulWidget {
@@ -75,7 +74,7 @@ class _CustomerPaymentReportScreenState
           actions: [
             IconButton(
                 icon: const Icon(Icons.date_range),
-                onPressed: _selectDateRange),
+                onPressed: _selectDateRange,),
             IconButton(icon: const Icon(Icons.refresh), onPressed: _loadReport),
           ],
           bottom: TabBar(
@@ -105,7 +104,7 @@ class _CustomerPaymentReportScreenState
             Text('Ошибка: $_error'),
             const SizedBox(height: 16),
             ElevatedButton(
-                onPressed: _loadReport, child: const Text('Повторить')),
+                onPressed: _loadReport, child: const Text('Повторить'),),
           ],
         ),
       );
@@ -146,7 +145,7 @@ class _CustomerPaymentReportScreenState
                   ),
                   const SizedBox(height: 8),
                   Text(report.period,
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),),
                 ],
               ),
             ),
@@ -302,7 +301,7 @@ class _CustomerPaymentReportScreenState
                         Text(
                           _formatMonth(entry.key),
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.bold,),
                         ),
                         Text(
                           '${entry.value.toStringAsFixed(2)} ₽',
@@ -366,7 +365,7 @@ class _CustomerPaymentReportScreenState
                       child: Text(
                         entry.key,
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold,),
                       ),
                     ),
                     Expanded(
@@ -416,7 +415,7 @@ class _CustomerPaymentReportScreenState
             Text(
               value,
               style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: color),
+                  fontSize: 20, fontWeight: FontWeight.bold, color: color,),
             ),
             Text(
               title,
@@ -428,7 +427,7 @@ class _CustomerPaymentReportScreenState
       );
 
   Widget _buildStatItem(
-          String title, String value, IconData icon, Color color) =>
+          String title, String value, IconData icon, Color color,) =>
       Column(
         children: [
           Icon(icon, color: color, size: 24),
@@ -436,7 +435,7 @@ class _CustomerPaymentReportScreenState
           Text(
             value,
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+                fontSize: 18, fontWeight: FontWeight.bold, color: color,),
           ),
           Text(
             title,

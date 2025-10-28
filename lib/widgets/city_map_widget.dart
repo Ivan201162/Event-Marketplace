@@ -1,9 +1,8 @@
+import 'package:event_marketplace_app/models/city_region.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../models/city_region.dart';
 
 /// Виджет карты с городами
 class CityMapWidget extends StatefulWidget {
@@ -51,7 +50,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
       _currentZoom = 10.0;
     } else if (widget.currentLocation != null) {
       _currentCenter = LatLng(
-          widget.currentLocation!.latitude, widget.currentLocation!.longitude);
+          widget.currentLocation!.latitude, widget.currentLocation!.longitude,);
       _currentZoom = 8.0;
     } else {
       // Центр России
@@ -79,7 +78,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
       _mapController.move(newCenter, 10);
     } else if (widget.currentLocation != null) {
       final newCenter = LatLng(
-          widget.currentLocation!.latitude, widget.currentLocation!.longitude);
+          widget.currentLocation!.latitude, widget.currentLocation!.longitude,);
       _mapController.move(newCenter, 8);
     }
   }
@@ -138,7 +137,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                         ],
                       ),
                       child: const Icon(Icons.my_location,
-                          color: Colors.white, size: 20),
+                          color: Colors.white, size: 20,),
                     ),
                   ),
                 ],
@@ -186,7 +185,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
               ),
               child: Center(
                   child: Text(city.citySize.icon,
-                      style: const TextStyle(fontSize: 16))),
+                      style: const TextStyle(fontSize: 16),),),
             ),
           ),
         ),
@@ -220,7 +219,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
             ),
             child: const Center(
                 child:
-                    Icon(Icons.location_city, color: Colors.white, size: 24)),
+                    Icon(Icons.location_city, color: Colors.white, size: 24),),
           ),
         ),
       );

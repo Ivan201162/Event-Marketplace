@@ -10,8 +10,7 @@ class CrossSellSuggestion {
     required this.specialistId,
     required this.suggestedItems,
     required this.status,
-    this.message,
-    required this.createdAt,
+    required this.createdAt, this.message,
     this.viewedAt,
     this.respondedAt,
     this.metadata,
@@ -27,7 +26,7 @@ class CrossSellSuggestion {
       specialistId: data['specialistId'] as String? ?? '',
       suggestedItems: (data['suggestedItems'] as List<dynamic>?)
               ?.map(
-                  (item) => CrossSellItem.fromMap(item as Map<String, dynamic>))
+                  (item) => CrossSellItem.fromMap(item as Map<String, dynamic>),)
               .toList() ??
           [],
       status: CrossSellStatus.values.firstWhere(
@@ -57,7 +56,7 @@ class CrossSellSuggestion {
         specialistId: data['specialistId'] as String? ?? '',
         suggestedItems: (data['suggestedItems'] as List<dynamic>?)
                 ?.map((item) =>
-                    CrossSellItem.fromMap(item as Map<String, dynamic>))
+                    CrossSellItem.fromMap(item as Map<String, dynamic>),)
                 .toList() ??
             [],
         status: CrossSellStatus.values.firstWhere(
@@ -74,7 +73,7 @@ class CrossSellSuggestion {
             : null,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,)
             : null,
       );
   final String id;
@@ -209,7 +208,7 @@ class CrossSellItem {
         imageUrl: data['imageUrl'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>)
+                data['metadata'] as Map<dynamic, dynamic>,)
             : null,
       );
   final String id;
