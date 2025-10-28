@@ -116,7 +116,10 @@ final chatNotificationsProvider = StreamProvider<List<Map<String, dynamic>>>(
 final unreadMessagesCountProvider = StreamProvider<int>(
   (ref) async* {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return 0;
+    if (user == null) {
+      yield 0;
+      return;
+    }
 
     yield* FirebaseFirestore.instance
         .collection('chats')

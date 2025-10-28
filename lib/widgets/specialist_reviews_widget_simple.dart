@@ -292,7 +292,7 @@ class _SpecialistReviewsWidgetSimpleState
                                       size: 12, color: Colors.blue.shade600,),
                                   const SizedBox(width: 4),
                                   Text(
-                                    response['authorName'] ?? 'Специалист',
+                                    (response['authorName'] as String?) ?? 'Специалист',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue.shade600,
@@ -303,7 +303,7 @@ class _SpecialistReviewsWidgetSimpleState
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                response['text'] ?? '',
+                                (response['text'] as String?) ?? '',
                                 style: const TextStyle(fontSize: 10),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
