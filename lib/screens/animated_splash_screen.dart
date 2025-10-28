@@ -1,7 +1,8 @@
+import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// Анимированный экран загрузки
+/// Анимированный splash screen
 class AnimatedSplashScreen extends StatefulWidget {
   const AnimatedSplashScreen({super.key});
 
@@ -11,48 +12,98 @@ class AnimatedSplashScreen extends StatefulWidget {
 
 class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
+  late AnimationController _logoController;
+  late AnimationController _textController;
+  late AnimationController _fadeController;
+  
+  late Animation<double> _logoScale;
+  late Animation<double> _logoRotation;
+  late Animation<double> _textSlide;
   late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-
-    _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+    
+    // Контроллер для логотипа
+    _logoController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-
+    
+    // Контроллер для текста
+    _textController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    
+    // Контроллер для fade эффекта
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    
+    // Анимации логотипа
+    _logoScale = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _logoController,
+      curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
+    ));
+    
+    _logoRotation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _logoController,
+      curve: const Interval(0.2, 0.8, curve: Curves.easeInOut),
+    ));
+    
+    // Анимация текста
+    _textSlide = Tween<double>(
+      begin: 50.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _textController,
+      curve: const Interval(0.0, 1.0, curve: Curves.easeOut),
+    ));
+    
+    // Анимация fade
     _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
+      begin: 0.0,
+      end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _controller,
+      parent: _fadeController,
       curve: Curves.easeIn,
-    ),);
+    ));
+    
+    _startAnimations();
+  }
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.5,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ),);
-
-    _controller.forward();
-
-    // Переход к проверке авторизации через 3 секунды
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        context.go('/auth-check');
-      }
-    });
+  void _startAnimations() async {
+    // Запускаем анимацию логотипа
+    await _logoController.forward();
+    
+    // Запускаем анимацию текста
+    await _textController.forward();
+    
+    // Запускаем fade эффект
+    await _fadeController.forward();
+    
+    // Ждем немного и переходим к следующему экрану
+    await Future.delayed(const Duration(milliseconds: 1000));
+    
+    if (mounted) {
+      context.go('/auth-check');
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _logoController.dispose();
+    _textController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -61,80 +112,111 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF6C5CE7), Color(0xFFA29BFE)],
-          ),
+          gradient: AppTheme.primaryGradient,
         ),
         child: Center(
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return FadeTransition(
-                opacity: _fadeAnimation,
-                child: ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Логотип приложения
-                      Container(
-                        width: 120,
-                        height: 120,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Анимированный логотип
+              AnimatedBuilder(
+                animation: _logoController,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _logoScale.value,
+                    child: Transform.rotate(
+                      angle: _logoRotation.value * 0.1,
+                      child: Container(
+                        width: context.isSmallScreen ? 100 : 120,
+                        height: context.isSmallScreen ? 100 : 120,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(30),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
+                              color: Colors.black.withOpacity(0.2),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
                           ],
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.event,
-                          size: 60,
-                          color: Color(0xFF6C5CE7),
+                          size: context.isSmallScreen ? 50 : 60,
+                          color: AppTheme.primaryColor,
                         ),
                       ),
-
-                      const SizedBox(height: 32),
-
-                      // Название приложения
-                      const Text(
-                        'Event Marketplace',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    ),
+                  );
+                },
+              ),
+              
+              const SizedBox(height: 40),
+              
+              // Анимированный текст
+              AnimatedBuilder(
+                animation: _textController,
+                builder: (context, child) {
+                  return Transform.translate(
+                    offset: Offset(0, _textSlide.value),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Event Marketplace',
+                          style: TextStyle(
+                            fontSize: context.isSmallScreen ? 24 : 28,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                          ),
                         ),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      // Подзаголовок
-                      Text(
-                        'Найдите идеального специалиста',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withValues(alpha: 0.9),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Найдите идеального специалиста',
+                          style: TextStyle(
+                            fontSize: context.isSmallScreen ? 14 : 16,
+                            color: Colors.white.withOpacity(0.9),
+                            letterSpacing: 0.5,
+                          ),
                         ),
-                      ),
-
-                      const SizedBox(height: 48),
-
-                      // Индикатор загрузки
-                      const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        strokeWidth: 3,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
+                      ],
+                    ),
+                  );
+                },
+              ),
+              
+              const SizedBox(height: 60),
+              
+              // Анимированный индикатор загрузки
+              AnimatedBuilder(
+                animation: _fadeController,
+                builder: (context, child) {
+                  return FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Загрузка...',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_marketplace_app/core/app_router_minimal_working.dart';
+import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/core/bootstrap.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +55,7 @@ class EventMarketplaceApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Event Marketplace',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

@@ -1,6 +1,6 @@
 import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
-import 'package:event_marketplace_app/screens/auth/login_screen_improved.dart';
+import 'package:event_marketplace_app/screens/auth/login_screen_modern.dart';
 import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_screen_improved.dart';

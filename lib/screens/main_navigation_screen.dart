@@ -1,3 +1,5 @@
+import 'package:event_marketplace_app/core/app_components.dart';
+import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
 import 'package:event_marketplace_app/screens/feed/feed_screen_improved.dart';
 import 'package:event_marketplace_app/screens/home/home_screen_simple.dart';
@@ -93,17 +95,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.white,
-              Colors.grey[50]!,
+              AppTheme.surfaceColor,
+              AppTheme.backgroundColor,
             ],
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withOpacity(0.1),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -141,23 +143,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                           vertical: 8, horizontal: 12,),
                       decoration: BoxDecoration(
                         gradient: isActive
-                            ? LinearGradient(
+                            ? const LinearGradient(
                                 colors: [
-                                  Theme.of(context)
-                                      .primaryColor
-                                      .withValues(alpha: 0.1),
-                                  Theme.of(context)
-                                      .primaryColor
-                                      .withValues(alpha: 0.05),
+                                  AppTheme.primaryColor,
+                                  AppTheme.primaryVariant,
                                 ],
                               )
                             : null,
                         borderRadius: BorderRadius.circular(16),
                         border: isActive
                             ? Border.all(
-                                color: Theme.of(context)
-                                    .primaryColor
-                                    .withValues(alpha: 0.3),
+                                color: AppTheme.primaryColor.withOpacity(0.3),
                               )
                             : null,
                       ),
@@ -172,7 +168,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                                 child: Icon(
                                   isActive ? item.activeIcon : item.icon,
                                   color: isActive
-                                      ? Theme.of(context).primaryColor
+                                      ? Colors.white
                                       : Colors.grey[600],
                                   size: isActive ? 26 : 24,
                                 ),
@@ -187,7 +183,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                               fontWeight:
                                   isActive ? FontWeight.bold : FontWeight.w500,
                               color: isActive
-                                  ? Theme.of(context).primaryColor
+                                  ? Colors.white
                                   : Colors.grey[600],
                             ),
                           ),

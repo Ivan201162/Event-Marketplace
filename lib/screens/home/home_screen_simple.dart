@@ -1,3 +1,6 @@
+import 'package:event_marketplace_app/core/app_components.dart';
+import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/core/micro_animations.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,21 +37,16 @@ class HomeScreenSimple extends ConsumerWidget {
           }
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: context.screenPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Приветствие
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(context.isSmallScreen ? 20 : 24),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Theme.of(context).primaryColor,
-                        Theme.of(context).primaryColor.withValues(alpha: 0.7),
-                      ],
-                    ),
+                    gradient: AppTheme.primaryGradient,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -56,8 +54,8 @@ class HomeScreenSimple extends ConsumerWidget {
                     children: [
                       Text(
                         'Добро пожаловать, ${user.name}!',
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style: TextStyle(
+                          fontSize: context.isSmallScreen ? 20 : 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -66,8 +64,8 @@ class HomeScreenSimple extends ConsumerWidget {
                       Text(
                         'Найдите идеального специалиста для вашего мероприятия',
                         style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: context.isSmallScreen ? 14 : 16,
+                          color: Colors.white.withOpacity(0.9),
                         ),
                       ),
                     ],
@@ -77,22 +75,17 @@ class HomeScreenSimple extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Быстрые действия
-                const Text(
+                Text(
                   'Быстрые действия',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: context.isSmallScreen ? 18 : 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                AppComponents.animatedGrid(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.2,
                   children: [
                     _ActionCard(
                       icon: Icons.assignment_outlined,
@@ -124,33 +117,37 @@ class HomeScreenSimple extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Статистика
-                const Text(
+                Text(
                   'Ваша статистика',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: context.isSmallScreen ? 18 : 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                const Row(
-                  children: [
-                    Expanded(
-                      child: _StatCard(
-                        title: 'Заявки',
-                        value: '0',
-                        icon: Icons.assignment,
-                        subtitle: 'Активных заявок',
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: _StatCard(
-                        title: 'Идеи',
-                        value: '0',
-                        icon: Icons.lightbulb,
-                        subtitle: 'Опубликованных идей',
-                      ),
+                AppComponents.animatedList(
+                  children: const [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _StatCard(
+                            title: 'Заявки',
+                            value: '0',
+                            icon: Icons.assignment,
+                            subtitle: 'Активных заявок',
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: _StatCard(
+                            title: 'Идеи',
+                            value: '0',
+                            icon: Icons.lightbulb,
+                            subtitle: 'Опубликованных идей',
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -158,54 +155,50 @@ class HomeScreenSimple extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Рекомендации
-                const Text(
+                Text(
                   'Рекомендации',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: context.isSmallScreen ? 18 : 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                _RecommendationCard(
-                  title: 'Популярные специалисты',
-                  subtitle: 'Лучшие исполнители в вашем городе',
-                  icon: Icons.star,
-                  onTap: () {
-                    // TODO: Navigate to specialists
-                  },
-                ),
-
-                const SizedBox(height: 12),
-
-                _RecommendationCard(
-                  title: 'Новые идеи',
-                  subtitle: 'Свежие идеи от сообщества',
-                  icon: Icons.lightbulb_outline,
-                  onTap: () {
-                    // TODO: Navigate to ideas
-                  },
+                AppComponents.animatedList(
+                  children: [
+                    _RecommendationCard(
+                      title: 'Популярные специалисты',
+                      subtitle: 'Лучшие исполнители в вашем городе',
+                      icon: Icons.star,
+                      onTap: () {
+                        // TODO: Navigate to specialists
+                      },
+                    ),
+                    _RecommendationCard(
+                      title: 'Новые идеи',
+                      subtitle: 'Свежие идеи от сообщества',
+                      icon: Icons.lightbulb_outline,
+                      onTap: () {
+                        // TODO: Navigate to ideas
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
+        loading: () => AppComponents.loadingIndicator(
+          message: 'Загрузка данных...',
         ),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки: $error'),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => context.go('/login'),
-                child: const Text('Войти'),
-              ),
-            ],
+        error: (error, stack) => AppComponents.emptyState(
+          icon: Icons.error_outline,
+          title: 'Ошибка загрузки',
+          subtitle: error.toString(),
+          action: AppComponents.animatedButton(
+            text: 'Попробовать снова',
+            onPressed: () => context.go('/login'),
+            icon: Icons.refresh,
           ),
         ),
       ),
@@ -228,41 +221,52 @@ class _ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
+    return MicroAnimations.hoverCard(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                gradient: AppTheme.primaryGradient,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primaryColor.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Icon(
                 icon,
-                size: 32,
-                color: Theme.of(context).primaryColor,
+                size: 28,
+                color: Colors.white,
               ),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            MicroAnimations.fadeInText(
+              text: title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            MicroAnimations.fadeInText(
+              text: subtitle,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
               ),
-            ],
-          ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
@@ -284,34 +288,41 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
+    return MicroAnimations.scaleCard(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Icon(
-              icon,
-              size: 24,
-              color: Theme.of(context).primaryColor,
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                size: 24,
+                color: AppTheme.primaryColor,
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              value,
+            const SizedBox(height: 12),
+            MicroAnimations.fadeInText(
+              text: value,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              title,
+            MicroAnimations.fadeInText(
+              text: title,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Text(
-              subtitle,
+            MicroAnimations.fadeInText(
+              text: subtitle,
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey[600],
@@ -339,58 +350,61 @@ class _RecommendationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  icon,
-                  color: Theme.of(context).primaryColor,
-                  size: 24,
-                ),
+    return MicroAnimations.hoverCard(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                gradient: AppTheme.primaryGradient,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primaryColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MicroAnimations.fadeInText(
+                    text: title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                  ),
+                  const SizedBox(height: 4),
+                  MicroAnimations.fadeInText(
+                    text: subtitle,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey[400],
-              ),
-            ],
-          ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey[400],
+            ),
+          ],
         ),
       ),
     );
