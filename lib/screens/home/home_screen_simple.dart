@@ -229,6 +229,85 @@ class HomeScreenSimple extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _buildTopSpecialistsSection({
+    required BuildContext context,
+    required WidgetRef ref,
+    required String title,
+    required bool isRussia,
+    String? userCity,
+  }) {
+    final specialistsAsync = isRussia
+        ? ref.watch(topSpecialistsByRussiaProvider)
+        : ref.watch(topSpecialistsByCityProvider(userCity ?? 'Москва'));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: context.isSmallScreen ? 18 : 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                context.go('/search');
+              },
+              child: const Text('Смотреть все'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        specialistsAsync.when(
+          data: (specialists) {
+            if (specialists.isEmpty) {
+              return AppComponents.emptyState(
+                icon: Icons.star_outline,
+                title: 'Пока нет специалистов',
+                subtitle: 'Специалисты появятся здесь после регистрации',
+              );
+            }
+            return SizedBox(
+              height: 220,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: specialists.length,
+                itemBuilder: (context, index) {
+                  final specialist = specialists[index];
+                  return _SpecialistCard(specialist: specialist);
+                },
+              ),
+            );
+          },
+          loading: () => SizedBox(
+            height: 220,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: 180,
+                  margin: const EdgeInsets.only(right: 16),
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              },
+            ),
+          ),
+          error: (error, stack) => AppComponents.emptyState(
+            icon: Icons.error_outline,
+            title: 'Ошибка загрузки',
+            subtitle: error.toString(),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class _ActionCard extends StatelessWidget {
@@ -364,76 +443,87 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-class _RecommendationCard extends StatelessWidget {
-
-  const _RecommendationCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.onTap,
-  });
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final VoidCallback onTap;
+class _SpecialistCard extends StatelessWidget {
+  const _SpecialistCard({required this.specialist});
+  final SpecialistEnhanced specialist;
 
   @override
   Widget build(BuildContext context) {
-    return MicroAnimations.hoverCard(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                gradient: AppTheme.primaryGradient,
+    return Container(
+      width: 180,
+      margin: const EdgeInsets.only(right: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey[200]!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: () {
+          context.go('/specialist/${specialist.id}');
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primaryColor.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                child: specialist.avatarUrl != null
+                    ? Image.network(
+                        specialist.avatarUrl!,
+                        width: double.infinity,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: double.infinity,
+                            height: 100,
+                            color: Colors.grey[200],
+                            child: const Icon(Icons.person, size: 40),
+                          );
+                        },
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: 100,
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.person, size: 40),
+                      ),
               ),
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 24,
+              const SizedBox(height: 8),
+              Text(
+                specialist.name ?? 'Специалист',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 4),
+              Row(
                 children: [
-                  MicroAnimations.fadeInText(
-                    text: title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  MicroAnimations.fadeInText(
-                    text: subtitle,
+                  const Icon(Icons.star, size: 14, color: Colors.amber),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${specialist.rating ?? 0.0}',
                     style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
+                      fontSize: 12,
+                      color: Colors.grey[700],
                     ),
                   ),
                 ],
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey[400],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

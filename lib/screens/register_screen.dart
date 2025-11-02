@@ -265,14 +265,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 12),
-          custom.RadioGroup<TaxType>(
+          custom.RadioGroup<TaxType?>(
             value: _selectedTaxType,
             onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  _selectedTaxType = value;
-                });
-              }
+              setState(() {
+                _selectedTaxType = value;
+              });
             },
             children: TaxType.values
                 .map(
