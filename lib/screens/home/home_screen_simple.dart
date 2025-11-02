@@ -191,35 +191,23 @@ class HomeScreenSimple extends ConsumerWidget {
 
                 const SizedBox(height: 24),
 
-                // Рекомендации
-                Text(
-                  'Рекомендации',
-                  style: TextStyle(
-                    fontSize: context.isSmallScreen ? 18 : 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                // ТОП специалисты по России
+                _buildTopSpecialistsSection(
+                  context: context,
+                  ref: ref,
+                  title: 'Лучшие специалисты недели (Россия)',
+                  isRussia: true,
                 ),
-                const SizedBox(height: 16),
 
-                AppComponents.animatedList(
-                  children: [
-                    _RecommendationCard(
-                      title: 'Популярные специалисты',
-                      subtitle: 'Лучшие исполнители в вашем городе',
-                      icon: Icons.star,
-                      onTap: () {
-                        // TODO: Navigate to specialists
-                      },
-                    ),
-                    _RecommendationCard(
-                      title: 'Новые идеи',
-                      subtitle: 'Свежие идеи от сообщества',
-                      icon: Icons.lightbulb_outline,
-                      onTap: () {
-                        // TODO: Navigate to ideas
-                      },
-                    ),
-                  ],
+                const SizedBox(height: 24),
+
+                // ТОП специалисты по городу
+                _buildTopSpecialistsSection(
+                  context: context,
+                  ref: ref,
+                  title: 'Лучшие специалисты по вашему городу',
+                  isRussia: false,
+                  userCity: user.city,
                 ),
               ],
             ),
