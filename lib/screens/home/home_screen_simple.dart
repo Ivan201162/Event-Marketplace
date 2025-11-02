@@ -2,6 +2,8 @@ import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/core/micro_animations.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
+import 'package:event_marketplace_app/models/specialist_enhanced.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -49,23 +51,58 @@ class HomeScreenSimple extends ConsumerWidget {
                     gradient: AppTheme.primaryGradient,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Text(
-                        'Добро пожаловать, ${user.name}!',
-                        style: TextStyle(
-                          fontSize: context.isSmallScreen ? 20 : 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      if (user.photoURL != null)
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(user.photoURL!),
+                        )
+                      else
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.white24,
+                          child: Text(
+                            user.name?.substring(0, 1).toUpperCase() ?? 'U',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Найдите идеального специалиста для вашего мероприятия',
-                        style: TextStyle(
-                          fontSize: context.isSmallScreen ? 14 : 16,
-                          color: Colors.white.withOpacity(0.9),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              user.name ?? 'Пользователь',
+                              style: TextStyle(
+                                fontSize: context.isSmallScreen ? 20 : 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            if (user.username != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                '@${user.username}',
+                                style: TextStyle(
+                                  fontSize: context.isSmallScreen ? 14 : 16,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 8),
+                            Text(
+                              'Найдите идеального специалиста для вашего мероприятия',
+                              style: TextStyle(
+                                fontSize: context.isSmallScreen ? 12 : 14,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
