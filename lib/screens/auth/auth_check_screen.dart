@@ -49,7 +49,13 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
         // Если есть сохраненная сессия, проверяем Firebase
         final firebaseUser = FirebaseAuth.instance.currentUser;
         if (firebaseUser != null) {
-          _navigateToMain();
+          // Check user role
+          final user = await authService.currentUser;
+          if (user != null && user.role == null) {
+            _navigateToRoleSelection();
+          } else {
+            _navigateToMain();
+          }
           return;
         }
       }
@@ -64,7 +70,12 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
       next.when(
         data: (user) {
           if (user != null) {
-            _navigateToMain();
+            // Check if role is set, if not show role selection
+            if (user.role == null) {
+              _navigateToRoleSelection();
+            } else {
+              _navigateToMain();
+            }
           } else {
             _navigateToLogin();
           }
@@ -97,6 +108,16 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
 
     if (mounted) {
       context.go('/login');
+    }
+  }
+
+  void _navigateToRoleSelection() {
+    if (_hasNavigated) return;
+    _hasNavigated = true;
+    _timeoutTimer?.cancel();
+
+    if (mounted) {
+      context.go('/role-selection');
     }
   }
 

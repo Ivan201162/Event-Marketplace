@@ -2,6 +2,8 @@ import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
 import 'package:event_marketplace_app/screens/auth/login_screen_modern.dart';
 import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
+import 'package:event_marketplace_app/screens/auth/role_selection_screen.dart';
+import 'package:event_marketplace_app/screens/register_screen.dart';
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_screen_improved.dart';
 import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
@@ -46,6 +48,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/login',
         name: 'login',
         builder: (context, state) => const LoginScreenImproved(),
+      ),
+
+      GoRoute(
+        path: '/register',
+        name: 'register',
+        builder: (context, state) => const RegisterScreen(),
+      ),
+
+      GoRoute(
+        path: '/role-selection',
+        name: 'role-selection',
+        builder: (context, state) => const RoleSelectionScreen(),
       ),
 
       // Аутентификация по телефону

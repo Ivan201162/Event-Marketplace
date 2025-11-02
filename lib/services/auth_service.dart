@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/user.dart' show UserRole;
+import 'package:event_marketplace_app/utils/transliterate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -201,6 +204,83 @@ class AuthService {
     }
   }
 
+  /// Register with email, password, name, and role
+  Future<AppUser?> registerWithEmail({
+    required String email,
+    required String password,
+    required String name,
+    UserRole? role,
+  }) async {
+    try {
+      // Pre-check email existence
+      final signInMethods = await getSignInMethodsForEmail(email);
+
+      if (signInMethods.isNotEmpty) {
+        if (signInMethods.contains('google.com')) {
+          throw FirebaseAuthException(
+            code: 'email-already-in-use-google',
+            message: 'Этот email уже используется с Google. Войти через Google?',
+          );
+        } else if (signInMethods.contains('phone')) {
+          throw FirebaseAuthException(
+            code: 'email-already-in-use-phone',
+            message:
+                'Этот email уже используется с номером телефона. Попробуйте войти или восстановить пароль.',
+          );
+        } else {
+          throw FirebaseAuthException(
+            code: 'email-already-in-use',
+            message:
+                'Этот email уже используется. Попробуйте войти или восстановить пароль.',
+          );
+        }
+      }
+
+      // Validate email format
+      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+        throw FirebaseAuthException(
+            code: 'invalid-email', message: 'Неверный формат email',);
+      }
+
+      // Check password strength
+      if (password.length < 6) {
+        throw FirebaseAuthException(
+          code: 'weak-password',
+          message: 'Пароль должен содержать минимум 6 символов',
+        );
+      }
+
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (credential.user != null) {
+        // Update display name
+        await credential.user!.updateDisplayName(name);
+
+        // Create user document with username autogen and role
+        final user = await _createUserDocument(
+          credential.user!,
+          name: name,
+          role: role ?? UserRole.customer,
+        );
+
+        // Log successful registration
+        await _analytics.logSignUp(signUpMethod: 'email');
+
+        return user;
+      }
+      return null;
+    } on FirebaseAuthException catch (e) {
+      debugPrint('Sign up error: ${e.code} - ${e.message}');
+      rethrow;
+    } catch (e) {
+      debugPrint('Unexpected sign up error: $e');
+      rethrow;
+    }
+  }
+
   /// Sign up with email and password
   Future<AppUser?> signUpWithEmailAndPassword({
     required String email,
@@ -364,6 +444,12 @@ class AuthService {
       final snapshot = await docRef.get();
 
       if (!snapshot.exists) {
+        // Generate unique username for phone auth
+        final username = await _generateUniqueUsername(
+          user.displayName,
+          user.email ?? user.phoneNumber,
+        );
+        
         // Create new user profile
         await docRef.set({
           'uid': user.uid,
@@ -371,7 +457,12 @@ class AuthService {
           'phone': user.phoneNumber ?? '',
           'name': user.displayName ?? 'Пользователь',
           'avatarUrl': user.photoURL,
+          'username': username,
+          'role': UserRole.customer.name,
           'provider': 'phone',
+          'followersCount': 0,
+          'followingCount': 0,
+          'postsCount': 0,
           'createdAt': Timestamp.now(),
           'updatedAt': Timestamp.now(),
         });
@@ -480,6 +571,9 @@ class AuthService {
       }
 
       if (!snapshot.exists) {
+        // Generate unique username for Google sign-in
+        final username = await _generateUniqueUsername(user.displayName, user.email);
+        
         // Create new user profile with Google data
         await docRef.set({
           'uid': user.uid,
@@ -491,6 +585,8 @@ class AuthService {
           'avatarUrl': user.photoURL,
           'displayName': user.displayName,
           'photoURL': user.photoURL,
+          'username': username,
+          'role': UserRole.customer.name,
           'provider': 'google',
           'isProAccount': false,
           'isVerified': false,
@@ -719,35 +815,83 @@ class AuthService {
     }
   }
 
+  /// Generate unique username from display name or email
+  Future<String> _generateUniqueUsername(String? displayName, String? email) async {
+    // Base username generation
+    String baseUsername;
+    if (displayName != null && displayName.isNotEmpty) {
+      baseUsername = TransliterateUtils.transliterateNameToUsername(displayName);
+    } else if (email != null && email.isNotEmpty) {
+      final emailPrefix = email.split('@').first;
+      baseUsername = TransliterateUtils.transliterateNameToUsername(emailPrefix);
+    } else {
+      baseUsername = 'user_${DateTime.now().millisecondsSinceEpoch % 10000}';
+    }
+
+    // Check uniqueness and append suffix if needed
+    var username = baseUsername;
+    var attempts = 0;
+    while (attempts < 10) {
+      final existing = await _firestore
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .limit(1)
+          .get();
+
+      if (existing.docs.isEmpty) {
+        return username; // Unique username found
+      }
+
+      // Append random suffix
+      final randomSuffix = (1000 + Random().nextInt(9000)).toString();
+      final parts = baseUsername.split('_');
+      if (parts.length > 1 && RegExp(r'^\d{4}$').hasMatch(parts.last)) {
+        parts.removeLast();
+      }
+      username = '${parts.join('_')}_$randomSuffix';
+      attempts++;
+    }
+
+    // Fallback: use timestamp-based username
+    return 'user_${DateTime.now().millisecondsSinceEpoch}';
+  }
+
   /// Create user document in Firestore
   Future<AppUser> _createUserDocument(
     User firebaseUser, {
     String? name,
     bool isGuest = false,
+    UserRole? role,
   }) async {
     final now = DateTime.now();
     
     // Parse display name into first and last name
     var firstName = '';
     var lastName = '';
-    if (firebaseUser.displayName != null && firebaseUser.displayName!.isNotEmpty) {
-      final nameParts = firebaseUser.displayName!.split(' ');
+    final displayName = name ?? firebaseUser.displayName;
+    if (displayName != null && displayName.isNotEmpty) {
+      final nameParts = displayName.split(' ');
       firstName = nameParts.first;
       if (nameParts.length > 1) {
         lastName = nameParts.sublist(1).join(' ');
       }
     }
     
+    // Generate unique username
+    final username = await _generateUniqueUsername(displayName, firebaseUser.email);
+    
     final user = AppUser(
       uid: firebaseUser.uid,
-      name: name ?? firebaseUser.displayName ?? 'Пользователь',
-      firstName: firstName,
-      lastName: lastName,
+      name: displayName ?? 'Пользователь',
+      firstName: firstName.isEmpty ? null : firstName,
+      lastName: lastName.isEmpty ? null : lastName,
       email: firebaseUser.email,
       phone: firebaseUser.phoneNumber,
       avatarUrl: firebaseUser.photoURL,
       displayName: firebaseUser.displayName,
       photoURL: firebaseUser.photoURL,
+      username: username,
+      role: role,
       createdAt: now,
       updatedAt: now,
       type: isGuest ? UserType.physical : UserType.physical,

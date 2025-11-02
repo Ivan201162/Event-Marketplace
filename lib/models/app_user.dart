@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:event_marketplace_app/models/user.dart' show UserRole;
 
 /// User type enumeration
 enum UserType {
@@ -58,6 +59,8 @@ class AppUser extends Equatable {
     this.followersCount = 0,
     this.followingCount = 0,
     this.postsCount = 0,
+    this.username,
+    this.role,
   });
 
   /// Helper function to safely parse string lists
@@ -109,7 +112,24 @@ class AppUser extends Equatable {
       followersCount: data['followersCount'] ?? 0,
       followingCount: data['followingCount'] ?? 0,
       postsCount: data['postsCount'] ?? 0,
+      username: data['username'],
+      role: data['role'] != null ? _parseUserRole(data['role']) : null,
     );
+  }
+
+  static UserRole? _parseUserRole(dynamic roleData) {
+    if (roleData == null) return null;
+    if (roleData is String) {
+      try {
+        return UserRole.values.firstWhere(
+          (r) => r.name == roleData,
+          orElse: () => UserRole.customer,
+        );
+      } catch (_) {
+        return UserRole.customer;
+      }
+    }
+    return UserRole.customer;
   }
   final String uid;
   final String name;
@@ -143,6 +163,8 @@ class AppUser extends Equatable {
   final int followersCount;
   final int followingCount;
   final int postsCount;
+  final String? username;
+  final UserRole? role;
 
   /// Get user ID (alias for uid)
   String get id => uid;
@@ -180,6 +202,8 @@ class AppUser extends Equatable {
       'followersCount': followersCount,
       'followingCount': followingCount,
       'postsCount': postsCount,
+      if (username != null) 'username': username,
+      if (role != null) 'role': role!.name,
     };
   }
 
@@ -215,6 +239,8 @@ class AppUser extends Equatable {
     Map<String, String> ctaButtons = const {},
     int followingCount = 0,
     int postsCount = 0,
+    String? username,
+    UserRole? role,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -247,6 +273,8 @@ class AppUser extends Equatable {
       ctaButtons: ctaButtons,
       followingCount: followingCount,
       postsCount: postsCount,
+      username: username ?? this.username,
+      role: role ?? this.role,
     );
   }
 

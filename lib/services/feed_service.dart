@@ -50,11 +50,13 @@ class FeedService {
   /// Получить Stories
   Future<List<Story>> getStories() async {
     try {
+      final now = Timestamp.now();
       final snapshot = await _firestore
           .collection('stories')
-          .where('expiresAt', isGreaterThan: DateTime.now())
+          .where('expiresAt', isGreaterThan: now)
           .orderBy('expiresAt')
           .orderBy('createdAt', descending: true)
+          .limit(50)
           .get();
 
       return snapshot.docs.map((doc) {
