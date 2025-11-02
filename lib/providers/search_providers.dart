@@ -2,7 +2,7 @@ import 'package:event_marketplace_app/models/price_range.dart';
 import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/models/specialist_filters.dart' as filters;
 import 'package:event_marketplace_app/models/specialist_sorting.dart' as sorting_utils;
-import 'package:event_marketplace_app/models/specialist_sorting.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
 import 'package:event_marketplace_app/services/specialist_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,10 +45,14 @@ class SearchFiltersNotifier extends Notifier<filters.SpecialistFilters> {
     // Преобразуем String в SpecialistCategory
     SpecialistCategory? categoryEnum;
     if (category != null && category.isNotEmpty) {
-      categoryEnum = SpecialistCategory.values.firstWhere(
-        (c) => c.name == category || c.displayName == category,
-        orElse: () => SpecialistCategory.other,
-      );
+      try {
+        categoryEnum = SpecialistCategory.values.firstWhere(
+          (c) => c.name == category,
+          orElse: () => SpecialistCategory.other,
+        );
+      } catch (e) {
+        categoryEnum = null;
+      }
     }
     state = state.copyWith(category: categoryEnum);
   }
@@ -146,12 +150,17 @@ List<Specialist> _applyFilters(
     if (searchQuery.isNotEmpty) {
       final query = searchQuery.toLowerCase();
       final matchesName = specialist.name.toLowerCase().contains(query);
-      final matchesCategory =
-          specialist.category.displayName.toLowerCase().contains(query);
+      final matchesSpecialization = specialist.specialization.toLowerCase().contains(query);
+      final matchesCity = specialist.city.toLowerCase().contains(query);
       final matchesDescription =
           specialist.description?.toLowerCase().contains(query) ?? false;
+      final matchesCategory = specialist.category?.name.toLowerCase().contains(query) ?? false;
+      final matchesServices = specialist.services.any(
+        (service) => service.toLowerCase().contains(query),
+      );
 
-      if (!matchesName && !matchesCategory && !matchesDescription) {
+      if (!matchesName && !matchesSpecialization && !matchesCity && 
+          !matchesDescription && !matchesCategory && !matchesServices) {
         return false;
       }
     }
@@ -177,7 +186,7 @@ List<Specialist> _applyFilters(
     }
 
     // Фильтр по категории
-    if (filters.category != null && filters.category!.isNotEmpty) {
+    if (filters.category != null) {
       if (specialist.category != filters.category) {
         return false;
       }
@@ -211,11 +220,15 @@ final searchStatsProvider = Provider<Map<String, int>>((ref) {
     data: (specialists) {
       final filtered = _applyFilters(specialists, filters, searchQuery);
 
+      final categoriesSet = specialists
+          .where((s) => s.category != null)
+          .map((s) => s.category!)
+          .toSet();
       return {
         'total': specialists.length,
         'filtered': filtered.length,
         'available': specialists.where((s) => s.isAvailable).length,
-        'categories': specialists.map((s) => s.category).toSet().length,
+        'categories': categoriesSet.length,
       };
     },
     loading: () =>
@@ -234,8 +247,10 @@ final popularCategoriesProvider = Provider<List<String>>((ref) {
       final categoryCount = <String, int>{};
 
       for (final specialist in specialists) {
-        categoryCount[specialist.category.displayName] =
-            (categoryCount[specialist.category.displayName] ?? 0) + 1;
+        if (specialist.category != null) {
+          final catName = specialist.category!.name;
+          categoryCount[catName] = (categoryCount[catName] ?? 0) + 1;
+        }
       }
 
       final sortedCategories = categoryCount.entries.toList()
@@ -258,10 +273,15 @@ final priceRangeProvider = Provider<PriceRange>((ref) {
         return const PriceRange(min: 0, max: 1000);
       }
 
-      final prices = specialists.map((s) => s.pricePerHour).toList();
+      final prices = specialists
+          .map((s) => s.pricePerHour ?? 0)
+          .where((p) => p > 0)
+          .toList();
       prices.sort();
 
-      return PriceRange(min: prices.first ?? 0.0, max: prices.last ?? 1000.0);
+      final minPrice = prices.isNotEmpty ? prices.first.toDouble() : 0.0;
+      final maxPrice = prices.isNotEmpty ? prices.last.toDouble() : 1000.0;
+      return PriceRange(min: minPrice, max: maxPrice);
     },
     loading: () => const PriceRange(min: 0, max: 1000),
     error: (_, __) => const PriceRange(min: 0, max: 1000),
@@ -292,13 +312,13 @@ final searchSettingsProvider = Provider<Map<String, dynamic>>((ref) {
 });
 
 /// Провайдер для всех опций сортировки
-final sortOptionsProvider = Provider<List<SpecialistSortOption>>(
-  (ref) => SpecialistSortOption.allOptions,
+final sortOptionsProvider = Provider<List<sorting_utils.SpecialistSortOption>>(
+  (ref) => sorting_utils.SpecialistSortOption.allOptions,
 );
 
 /// Провайдер для популярных опций сортировки
-final popularSortOptionsProvider = Provider<List<SpecialistSortOption>>(
-  (ref) => SpecialistSortOption.popularOptions,
+final popularSortOptionsProvider = Provider<List<sorting_utils.SpecialistSortOption>>(
+  (ref) => sorting_utils.SpecialistSortOption.popularOptions,
 );
 
 /// Провайдер для проверки наличия активных фильтров

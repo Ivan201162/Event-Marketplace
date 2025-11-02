@@ -1,4 +1,5 @@
 import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/models/common_types.dart';
 
 /// Фильтры для специалистов
 class SpecialistFilters {

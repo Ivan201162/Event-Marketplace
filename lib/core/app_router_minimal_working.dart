@@ -15,6 +15,8 @@ import 'package:event_marketplace_app/screens/notifications/notifications_screen
 import 'package:event_marketplace_app/screens/profile/edit_profile_advanced.dart';
 import 'package:event_marketplace_app/screens/profile/profile_screen_advanced.dart';
 import 'package:event_marketplace_app/screens/requests/create_request_screen.dart';
+import 'package:event_marketplace_app/screens/search/search_screen.dart';
+import 'package:event_marketplace_app/screens/settings/settings_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -150,8 +150,8 @@ class SpecialistSortingUtils {
 
   /// Сравнение по цене
   static int _comparePrice(Specialist a, Specialist b, bool ascending) {
-    final priceA = a.priceRange?.minPrice ?? 0;
-    final priceB = b.priceRange?.minPrice ?? 0;
+    final priceA = (a.pricePerHour ?? 0).toDouble();
+    final priceB = (b.pricePerHour ?? 0).toDouble();
 
     if (ascending) {
       return priceA.compareTo(priceB);
@@ -182,8 +182,8 @@ class SpecialistSortingUtils {
 
   /// Сравнение по имени
   static int _compareName(Specialist a, Specialist b, bool ascending) {
-    final nameA = '${a.firstName} ${a.lastName}';
-    final nameB = '${b.firstName} ${b.lastName}';
+    final nameA = a.name;
+    final nameB = b.name;
 
     if (ascending) {
       return nameA.compareTo(nameB);
@@ -210,16 +210,16 @@ class SpecialistSortingUtils {
     }
 
     var minPrice = double.infinity;
-    double maxPrice = 0;
+    var maxPrice = 0.0;
     double totalRating = 0;
     var totalReviews = 0;
 
     for (final specialist in specialists) {
       // Ценовой диапазон
-      final priceRange = specialist.priceRange;
-      if (priceRange != null) {
-        if (priceRange.minPrice < minPrice) minPrice = priceRange.minPrice;
-        if (priceRange.maxPrice > maxPrice) maxPrice = priceRange.maxPrice;
+      final price = (specialist.pricePerHour ?? 0).toDouble();
+      if (price > 0) {
+        if (price < minPrice) minPrice = price;
+        if (price > maxPrice) maxPrice = price;
       }
 
       // Рейтинг и отзывы

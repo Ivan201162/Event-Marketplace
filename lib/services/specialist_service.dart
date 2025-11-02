@@ -154,9 +154,10 @@ class SpecialistService {
       if (filters.query != null && filters.query!.isNotEmpty) {
         final searchQuery = filters.query!.toLowerCase();
         specialists = specialists.where((specialist) {
+          final descMatch = specialist.description?.toLowerCase().contains(searchQuery) ?? false;
           return specialist.name.toLowerCase().contains(searchQuery) ||
               specialist.specialization.toLowerCase().contains(searchQuery) ||
-              specialist.description?.toLowerCase().contains(searchQuery) ?? false ||
+              descMatch ||
               specialist.services.any(
                   (service) => service.toLowerCase().contains(searchQuery),);
         }).toList();
@@ -275,6 +276,17 @@ class SpecialistService {
     return _firestore
         .collection(_collection)
         .where('city', isEqualTo: city)
+        .orderBy('rating', descending: true)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map(Specialist.fromFirestore).toList(),);
+  }
+
+  /// Stream of all active specialists
+  Stream<List<Specialist>> getAllSpecialistsStream() {
+    return _firestore
+        .collection(_collection)
+        .where('isActive', isEqualTo: true)
         .orderBy('rating', descending: true)
         .snapshots()
         .map((snapshot) =>
