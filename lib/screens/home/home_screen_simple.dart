@@ -25,8 +25,8 @@ class HomeScreenSimple extends ConsumerWidget {
             onPressed: () => context.go('/notifications'),
           ),
           IconButton(
-            icon: const Icon(Icons.person_outline),
-            onPressed: () => context.go('/profile/edit'),
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.go('/settings'),
           ),
         ],
       ),
@@ -53,24 +53,26 @@ class HomeScreenSimple extends ConsumerWidget {
                   ),
                   child: Row(
                     children: [
-                      if (user.photoURL != null)
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(user.photoURL!),
-                        )
-                      else
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.white24,
-                          child: Text(
-                            user.name?.substring(0, 1).toUpperCase() ?? 'U',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                      GestureDetector(
+                        onTap: () => context.go('/profile/${user.uid}'),
+                        child: user.photoURL != null
+                            ? CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(user.photoURL!),
+                              )
+                            : CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.white24,
+                                child: Text(
+                                  user.name?.substring(0, 1).toUpperCase() ?? 'U',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                      ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -112,41 +114,28 @@ class HomeScreenSimple extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Быстрые действия
-                Text(
-                  'Быстрые действия',
-                  style: TextStyle(
-                    fontSize: context.isSmallScreen ? 18 : 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                AppComponents.animatedGrid(
-                  crossAxisCount: 2,
+                Row(
                   children: [
-                    _ActionCard(
-                      icon: Icons.assignment_outlined,
-                      title: 'Создать заявку',
-                      subtitle: 'Найти специалиста',
-                      onTap: () => context.go('/create-request'),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.assignment_outlined),
+                        label: const Text('Создать заявку'),
+                        onPressed: () => context.go('/create-request'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                      ),
                     ),
-                    _ActionCard(
-                      icon: Icons.lightbulb_outline,
-                      title: 'Поделиться идеей',
-                      subtitle: 'Вдохновить других',
-                      onTap: () => context.go('/create-idea'),
-                    ),
-                    _ActionCard(
-                      icon: Icons.chat_bubble_outline,
-                      title: 'Чаты',
-                      subtitle: 'Общение с заказчиками',
-                      onTap: () => context.go('/chats'),
-                    ),
-                    _ActionCard(
-                      icon: Icons.monetization_on_outlined,
-                      title: 'Монетизация',
-                      subtitle: 'Зарабатывайте больше',
-                      onTap: () => context.go('/monetization'),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.search),
+                        label: const Text('Найти специалиста'),
+                        onPressed: () => context.go('/search'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                      ),
                     ),
                   ],
                 ),

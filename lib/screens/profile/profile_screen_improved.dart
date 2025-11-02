@@ -61,6 +61,47 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
     }
   }
 
+  void _showCreateMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text('Пост'),
+              onTap: () {
+                Navigator.pop(context);
+                context.go('/create-post');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.video_library),
+              title: const Text('Reels'),
+              onTap: () {
+                Navigator.pop(context);
+                context.go('/create-reel');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.lightbulb),
+              title: const Text('Идея'),
+              onTap: () {
+                Navigator.pop(context);
+                context.go('/create-idea');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _handleLogout(BuildContext context) {
     showDialog(
       context: context,

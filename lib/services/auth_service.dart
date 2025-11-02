@@ -259,11 +259,11 @@ class AuthService {
         // Update display name
         await credential.user!.updateDisplayName(name);
 
-        // Create user document with username autogen and role
+        // Create user document with username autogen (role will be set after selection)
         final user = await _createUserDocument(
           credential.user!,
           name: name,
-          role: role ?? UserRole.customer,
+          role: null, // Role will be selected on role-selection screen
         );
 
         // Log successful registration
@@ -586,7 +586,8 @@ class AuthService {
           'displayName': user.displayName,
           'photoURL': user.photoURL,
           'username': username,
-          'role': UserRole.customer.name,
+          'role': null, // Role will be selected on role-selection screen
+          'roleSelected': false,
           'provider': 'google',
           'isProAccount': false,
           'isVerified': false,

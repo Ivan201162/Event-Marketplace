@@ -265,7 +265,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             ),
                             TextButton(
                               onPressed: () {
-                                // TODO: Navigate to registration
+                                context.go('/register');
                               },
                               child: const Text('Регистрация'),
                             ),

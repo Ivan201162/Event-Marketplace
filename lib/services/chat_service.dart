@@ -12,7 +12,7 @@ class ChatService {
     try {
       final snapshot = await _firestore
           .collection('chats')
-          .where('members',
+          .where('participants',
               arrayContains:
                   'current_user_id',) // TODO: Получить ID текущего пользователя
           .orderBy('lastMessageAt', descending: true)
@@ -33,7 +33,7 @@ class ChatService {
     try {
       final snapshot = await _firestore
           .collection('chats')
-          .where('members', arrayContains: 'current_user_id')
+          .where('participants', arrayContains: 'current_user_id')
           .orderBy('lastMessageAt', descending: true)
           .startAfter([offset])
           .limit(10)
@@ -53,7 +53,7 @@ class ChatService {
     try {
       final snapshot = await _firestore
           .collection('chats')
-          .where('members', arrayContains: 'current_user_id')
+          .where('participants', arrayContains: 'current_user_id')
           .where('lastMessage', isGreaterThanOrEqualTo: query)
           .where('lastMessage', isLessThan: '$query\uf8ff')
           .orderBy('lastMessage')
@@ -75,7 +75,7 @@ class ChatService {
     try {
       Query query = _firestore
           .collection('chats')
-          .where('members', arrayContains: 'current_user_id');
+          .where('participants', arrayContains: 'current_user_id');
 
       switch (filter) {
         case 'unread':

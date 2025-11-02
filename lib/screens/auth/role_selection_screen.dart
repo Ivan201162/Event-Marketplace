@@ -42,6 +42,7 @@ class _RoleSelectionScreenState extends ConsumerState<RoleSelectionScreen> {
           .doc(currentUser.uid)
           .update({
         'role': role.name,
+        'roleSelected': true,
         'updatedAt': Timestamp.now(),
       });
 

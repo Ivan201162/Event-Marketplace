@@ -122,6 +122,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CreateRequestScreen(),
       ),
 
+      // Поиск специалистов
+      GoRoute(
+        path: '/search',
+        name: 'search',
+        builder: (context, state) => const SearchScreen(),
+      ),
+
+      // Настройки
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+
       // Создание идеи
       GoRoute(
         path: '/create-idea',
