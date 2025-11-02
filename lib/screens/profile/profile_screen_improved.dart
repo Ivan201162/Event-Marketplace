@@ -425,6 +425,19 @@ class _ProfileHeader extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _showCreateMenu(context),
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('Создать'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1E3A8A),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(Icons.share, color: Colors.white),
