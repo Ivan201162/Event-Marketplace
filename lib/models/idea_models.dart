@@ -333,13 +333,14 @@ class Idea {
       case 'draft':
         return IdeaStatus.draft;
       case 'published':
+      case 'active': // Поддержка 'active' как синоним 'published'
         return IdeaStatus.published;
       case 'archived':
         return IdeaStatus.archived;
       case 'deleted':
         return IdeaStatus.deleted;
       default:
-        return IdeaStatus.draft;
+        return IdeaStatus.published; // По умолчанию published для production
     }
   }
 

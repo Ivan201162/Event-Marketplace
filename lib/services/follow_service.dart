@@ -247,6 +247,47 @@ class FollowService {
       return [];
     }
   }
+
+  /// Получить список ID пользователей, на которых подписан текущий пользователь
+  Future<List<String>> getFollowingIds(String userId) async {
+    try {
+      // Сначала пробуем получить из единой коллекции follows
+      final followsSnapshot = await _firestore
+          .collection('follows')
+          .where('followerId', isEqualTo: userId)
+          .limit(300)
+          .get();
+
+      if (followsSnapshot.docs.isNotEmpty) {
+        return followsSnapshot.docs
+            .map((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              return (data['followingId'] ?? data['followedId'] ?? '') as String;
+            })
+            .where((id) => id.isNotEmpty)
+            .toList();
+      }
+
+      // Fallback: используем subcollection following
+      final followingSnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('following')
+          .limit(300)
+          .get();
+
+      return followingSnapshot.docs
+          .map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return (data['userId'] ?? doc.id) as String;
+          })
+          .where((id) => id.isNotEmpty)
+          .toList();
+    } catch (e) {
+      debugPrint('Error getting following IDs: $e');
+      return [];
+    }
+  }
 }
 
 /// Модель пользователя для подписок
