@@ -2,7 +2,7 @@ import 'package:event_marketplace_app/core/services/error_logger.dart';
 import 'package:event_marketplace_app/models/tax_info.dart';
 import 'package:event_marketplace_app/models/user.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
-import 'package:event_marketplace_app/widgets/radio_group.dart';
+import 'package:event_marketplace_app/widgets/radio_group.dart' as custom;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -223,7 +223,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           const Text('Роль',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
           const SizedBox(height: 8),
-          RadioGroup<UserRole>(
+          custom.RadioGroup<UserRole>(
             value: _selectedRole,
             onChanged: (value) {
               if (value != null) {
@@ -265,7 +265,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 12),
-          RadioGroup<TaxType>(
+          custom.RadioGroup<TaxType>(
             value: _selectedTaxType,
             onChanged: (value) {
               if (value != null) {
