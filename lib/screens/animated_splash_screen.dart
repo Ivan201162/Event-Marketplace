@@ -95,7 +95,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     await Future.delayed(const Duration(milliseconds: 1000));
     
     if (mounted) {
-      context.go('/auth-check');
+      context.go('/login'); // Production: прямой переход на логин
     }
   }
 

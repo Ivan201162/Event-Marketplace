@@ -428,26 +428,7 @@
         }
       ]
     },
-    {
-      "collectionGroup": "specialist_scores",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "scoreFinal",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "specialist_scores",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "scoreWeekly",
-          "order": "DESCENDING"
-        }
-      ]
-    },
+    // Индексы для specialist_scores - single field индексы создаются автоматически
     {
       "collectionGroup": "specialist_scores",
       "queryScope": "COLLECTION",

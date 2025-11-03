@@ -117,6 +117,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           // Монетизация
           _buildSectionHeader('Монетизация'),
           _buildSettingsTile(
+            icon: Icons.monetization_on,
+            title: 'Монетизация',
+            subtitle: 'Настройки монетизации',
+            onTap: () => context.push('/monetization'),
+          ),
+          _buildSettingsTile(
             icon: Icons.payment,
             title: 'Платежи',
             subtitle: 'История и настройки',

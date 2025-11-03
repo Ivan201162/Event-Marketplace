@@ -142,43 +142,7 @@ class HomeScreenSimple extends ConsumerWidget {
 
                 const SizedBox(height: 24),
 
-                // Статистика
-                Text(
-                  'Ваша статистика',
-                  style: TextStyle(
-                    fontSize: context.isSmallScreen ? 18 : 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                AppComponents.animatedList(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _StatCard(
-                            title: 'Заявки',
-                            value: '0',
-                            icon: Icons.assignment,
-                            subtitle: 'Активных заявок',
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _StatCard(
-                            title: 'Идеи',
-                            value: '0',
-                            icon: Icons.lightbulb,
-                            subtitle: 'Опубликованных идей',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
+                // Статистика удалена - не требуется на главной
 
                 // ТОП специалисты по России
                 _buildTopSpecialistsSection(
