@@ -29,7 +29,7 @@ void main() async {
     );
 
     debugPrint('✅ Bootstrap инициализация завершена');
-    debugLog('BUILD OK v4.2');
+    debugLog('BUILD OK v4.3');
 
     runZonedGuarded(() {
       runApp(const ProviderScope(child: EventMarketplaceApp()));

@@ -68,7 +68,16 @@ service firebase.storage {
         && resource.size <= 50 * 1024 * 1024; // 50 MB
     }
     
-    // Вложения заявок
+    // Вложения заявок (uploads/requests/{userId}/{requestId}/{fileName})
+    match /uploads/requests/{userId}/{requestId}/{fileName} {
+      allow write: if request.auth != null && request.auth.uid == userId
+        && request.resource.size < 10 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*') ||
+            request.resource.contentType in ['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','image/webp']);
+      allow read: if request.auth != null;
+    }
+    
+    // Обратная совместимость со старым путём
     match /requests/{userId}/{requestId}/{allPaths=**} {
       allow read: if request.auth != null;
       allow write: if request.auth != null 

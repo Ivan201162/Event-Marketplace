@@ -37,18 +37,29 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
   bool _isSubmitting = false;
 
   final List<String> _eventTypes = [
-    'Свадьба',
-    'День рождения',
-    'Корпоратив',
-    'Бизнес-форум',
-    'Конференция',
-    'Семинар',
-    'Юбилей',
     'Выпускной',
     'Детский праздник',
     'Тимбилдинг',
-    'Частный вечер',
+    'Свадьба',
+    'Юбилей',
+    'Бизнес-ивент',
+    'Конференция',
+    'Выставка',
+    'Концерт',
+    'Мастер-класс',
+    'Фестиваль',
+    'Промо-акция',
+    'Корпоратив',
+    'Новый год',
+    'Выпускной в саду',
+    'Бар-мицва',
+    'Девичник',
+    'Мальчишник',
     'Презентация',
+    'Открытие',
+    'Награждение',
+    'Семейный праздник',
+    'День рождения',
     'Фотосессия',
     'Видеосъемка',
     'DJ',
@@ -151,7 +162,7 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
       for (final file in _selectedFiles) {
         final fileName = file.path.split('/').last;
         final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final ref = storage.ref().child('requests/${user.uid}/$requestId/${timestamp}_$fileName');
+        final ref = storage.ref().child('uploads/requests/${user.uid}/$requestId/${timestamp}_$fileName');
 
         await ref.putFile(file);
         final url = await ref.getDownloadURL();
@@ -221,7 +232,7 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
         'attachments': _attachmentUrls,
         'createdBy': user.uid,
         'createdAt': FieldValue.serverTimestamp(),
-        'status': 'open',
+        'status': 'new',
       });
 
       debugLog("REQUEST_PUBLISHED:$requestId");
@@ -230,7 +241,7 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Заявка опубликована')),
         );
-        context.go('/requests');
+        context.pop(); // Возвращаемся на предыдущий экран
       }
     } catch (e) {
       if (mounted) {
@@ -247,7 +258,13 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        context.pop();
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: const Text('Создать заявку'),
       ),
@@ -518,6 +535,7 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
                 : const Text('Опубликовать заявку', style: TextStyle(fontSize: 16)),
           ),
         ),
+      ),
       ),
     );
   }

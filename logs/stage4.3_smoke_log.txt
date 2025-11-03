@@ -1,0 +1,52 @@
+﻿
+11-04 02:27:26.023  1717  8994 D ActivityManager: cleanUpApplicationRecord app:
+ 6255:com.huawei.gameassistant:brd/u0a144, bad: false, restarting: false, allow
+Restart: true
+11-04 02:27:26.042  1717  8994 D ActivityManager: cleanUpApplicationRecord app:
+ 6309:com.google.android.webview:sandboxed_process0:org.chromium.content.app.Sa
+ndboxedProcessService0:0/u0a144i665, bad: false, restarting: false, allowRestar
+t: true
+11-04 02:27:26.867  1717  2043 D ActivityManager: cleanUpApplicationRecord app:
+ 2669:com.google.android.gms.unstable/u0a167, bad: false, restarting: false, al
+lowRestart: true
+11-04 02:27:26.895  7152  7152 I cr_WebViewApkApp: version=141.0.7390.122 (7390
+12233) minSdkVersion=29 processName=com.google.android.webview:sandboxed_proces
+s0:org.chromium.content.app.SandboxedProcessService0:0 splits=<none>
+11-04 02:27:27.458  7292  7292 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-04 02:27:27.544  7292  7369 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-04 02:27:27.564  7292  7292 W marketplace.app: type=1400 audit(0.0:992990): 
+avc: denied { read } for pid=7292 name="max_map_count" dev="proc" ino=19384597 
+scontext=u:r:untrusted_app:s0:c171,c257,c512,c768 tcontext=u:object_r:proc_max_
+map_count:s0 tclass=file permissive=0
+11-04 02:27:30.727  7292  7292 I flutter : APP: BUILD OK v4.3
+11-04 02:27:30.738  7292  7292 I flutter : APP: AUTH_SCREEN_SHOWN
+11-04 02:27:30.774  7292  7292 I flutter : APP: AUTH_SCREEN_SHOWN
+11-04 02:27:40.669  1717  8994 D ActivityManager: cleanUpApplicationRecord app:
+ 7103:com.huawei.gameassistant:brd/u0a144, bad: false, restarting: false, allow
+Restart: true
+11-04 02:27:40.706  1717  8994 D ActivityManager: cleanUpApplicationRecord app:
+ 7152:com.google.android.webview:sandboxed_process0:org.chromium.content.app.Sa
+ndboxedProcessService0:0/u0a144i666, bad: false, restarting: false, allowRestar
+t: true
+11-04 02:27:41.688  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:993005)
+: avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pat
+h="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=27907 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-04 02:27:41.690  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-04 02:27:47.728  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:993006)
+: avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pat
+h="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=27907 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-04 02:27:47.731  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-04 02:27:53.768  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:993011)
+: avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pat
+h="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=27907 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-04 02:27:53.770  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+
+

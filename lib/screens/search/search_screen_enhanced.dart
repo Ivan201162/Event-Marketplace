@@ -71,13 +71,13 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
     final searchResultsAsync = ref.watch(filteredSpecialistsProvider);
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvoked: (didPop) {
         if (didPop) return;
         if (_showFilters) {
           setState(() => _showFilters = false);
         } else {
-          context.go('/main');
+          context.pop(); // Возвращаемся на предыдущий экран
         }
       },
       child: Scaffold(
