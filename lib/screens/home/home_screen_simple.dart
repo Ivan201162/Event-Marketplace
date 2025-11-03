@@ -105,7 +105,7 @@ class HomeScreenSimple extends ConsumerWidget {
                             Text(
                               user.city != null && user.city!.isNotEmpty
                                   ? user.city!
-                                  : 'Город не выбран',
+                                  : 'Город не указан',
                               style: TextStyle(
                                 fontSize: context.isSmallScreen ? 12 : 14,
                                 color: Colors.white.withOpacity(0.9),

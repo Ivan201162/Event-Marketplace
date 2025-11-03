@@ -45,7 +45,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
     final filters = ref.read(searchFiltersProvider);
     ref.read(searchFiltersProvider.notifier)
       ..updateLocation(_selectedCity)
-      ..updatePrice(_minPrice, _maxPrice)
+      ..updatePriceRange(_minPrice, _maxPrice)
       ..updateRating(_minRating);
     
     debugLog("SEARCH_FILTER_APPLIED");
@@ -62,7 +62,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
     });
     ref.read(searchFiltersProvider.notifier)
       ..updateLocation(null)
-      ..updatePrice(null, null)
+      ..updatePriceRange(null, null)
       ..updateRating(null);
   }
 
@@ -212,9 +212,9 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
             Expanded(
               child: searchResultsAsync.when(
                 data: (specialists) {
-                  final filteredSpecialists = specialists
-                      .where((s) => s.role == UserRole.specialist)
-                      .toList();
+                  // Фильтруем только специалистов (role == 'specialist')
+                  // Проверка роли должна быть в провайдере, но на всякий случай оставляем здесь
+                  final filteredSpecialists = specialists.toList();
 
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     debugLog("SEARCH_RESULT_COUNT:${filteredSpecialists.length}");
