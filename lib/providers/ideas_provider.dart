@@ -3,31 +3,26 @@ import 'package:event_marketplace_app/models/idea.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Провайдер для идей с тестовыми данными
+/// Провайдер для идей (только реальные данные из Firestore)
 final ideasProvider = StreamProvider<List<Idea>>((ref) async* {
-  // Сначала пытаемся загрузить из Firestore
   try {
     await for (final snapshot in FirebaseFirestore.instance
         .collection('ideas')
+        .where('status', isEqualTo: 'active')
         .orderBy('createdAt', descending: true)
         .snapshots()) {
       final ideas = snapshot.docs.map(Idea.fromFirestore).toList();
-
-      // Если нет данных, добавляем тестовые
-      if (ideas.isEmpty) {
-        yield _getTestIdeas();
-      } else {
-        yield ideas;
-      }
+      yield ideas; // Только реальные данные, без fallback на тестовые
     }
   } catch (e) {
-    // В случае ошибки возвращаем тестовые данные
-    yield _getTestIdeas();
+    debugPrint('Error loading ideas: $e');
+    yield []; // Пустой список при ошибке
   }
 });
 
-/// Тестовые данные для идей
-List<Idea> _getTestIdeas() => [
+/// УДАЛЕНО: Тестовые данные для идей (production режим)
+// Следующий код был удалён:
+// List<Idea> _getTestIdeas() => [
       Idea(
         id: 'idea_1',
         title: 'Свадьба в стиле бохо',
