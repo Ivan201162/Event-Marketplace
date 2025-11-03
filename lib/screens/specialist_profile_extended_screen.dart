@@ -1,6 +1,7 @@
 import 'package:event_marketplace_app/models/booking.dart';
 import 'package:event_marketplace_app/models/review.dart';
 import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/services/analytics_service.dart';
 import 'package:event_marketplace_app/services/booking_service.dart';
 import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:event_marketplace_app/services/specialist_service.dart';
@@ -31,6 +32,7 @@ class _SpecialistProfileExtendedScreenState
   final SpecialistService _specialistService = SpecialistService();
   final ReviewService _reviewService = ReviewService();
   final BookingService _bookingService = BookingService();
+  final AnalyticsService _analytics = AnalyticsService();
 
   Specialist? _specialist;
   List<Review> _reviews = [];
@@ -70,6 +72,11 @@ class _SpecialistProfileExtendedScreenState
         _recentBookings = results[2]! as List<Booking>;
         _isLoading = false;
       });
+      
+      // Логируем просмотр профиля
+      if (_specialist != null) {
+        _analytics.logProfileView(_specialist!.id);
+      }
     } on Exception catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {

@@ -188,6 +188,62 @@ service cloud.firestore {
       allow read: if isSignedIn(); 
     }
 
+    // События аналитики — запись только авторизованным с проверкой владельца
+    match /events_profile_views/{eventId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && 
+        request.resource.data.viewerId == request.auth.uid;
+      allow update, delete: if false; // События неизменяемы после создания
+    }
+
+    match /events_post_engagement/{eventId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && 
+        request.resource.data.actorId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /events_follow/{eventId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && 
+        request.resource.data.followerId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    match /events_requests/{eventId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && (
+        request.resource.data.customerId == request.auth.uid ||
+        (request.resource.data.status == 'completed' && 
+         request.resource.data.specId == request.auth.uid)
+      );
+      allow update, delete: if false;
+    }
+
+    // Статистика и рейтинги — только чтение для клиентов, запись только сервисному аккаунту
+    match /specialist_stats/{specId} {
+      allow read: if isSignedIn();
+      allow write: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
+    match /specialist_scores/{specId} {
+      allow read: if isSignedIn();
+      allow write: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
+    // Служебные коллекции для дедупликации и rate limiting — только сервисный аккаунт
+    match /dedup_profile_views/{docId} {
+      allow read, write: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
+    match /rate_limits/{docId} {
+      allow read, write: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
     // Остальное — запрещено
     match /{document=**} {
       allow read, write: if false;

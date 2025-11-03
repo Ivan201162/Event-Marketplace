@@ -4,47 +4,117 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
-/// Провайдер для получения ТОП специалистов по городу
+/// Провайдер для получения ТОП специалистов по городу (по scoreWeekly)
 final topSpecialistsByCityProvider =
     FutureProvider.family<List<SpecialistEnhanced>, String>((ref, city) async {
   try {
-    final query = FirebaseFirestore.instance
-        .collection('specialists')
+    // Сначала получаем рейтинги по городу
+    final scoresQuery = FirebaseFirestore.instance
+        .collection('specialist_scores')
         .where('city', isEqualTo: city)
-        .where('isActive', isEqualTo: true)
-        .orderBy('rating', descending: true)
-        .orderBy('successfulOrders', descending: true)
+        .orderBy('scoreWeekly', descending: true)
         .limit(10);
 
-    final snapshot = await query.get();
-    return snapshot.docs
-        .map(SpecialistEnhanced.fromFirestore)
-        .toList();
+    final scoresSnapshot = await scoresQuery.get();
+    if (scoresSnapshot.docs.isEmpty) {
+      return [];
+    }
+
+    final specIds = scoresSnapshot.docs.map((doc) => doc.id).toList();
+    
+    // Получаем данные специалистов
+    final specialists = <SpecialistEnhanced>[];
+    for (final specId in specIds) {
+      final specDoc = await FirebaseFirestore.instance
+          .collection('specialists')
+          .doc(specId)
+          .get();
+      
+      if (specDoc.exists && (specDoc.data()?['isActive'] == true)) {
+        specialists.add(SpecialistEnhanced.fromFirestore(specDoc));
+      }
+    }
+
+    return specialists;
   } catch (e) {
     debugPrint('❌ Error fetching top specialists by city: $e');
-    return [];
+    // Fallback на старую логику если нет рейтингов
+    try {
+      final query = FirebaseFirestore.instance
+          .collection('specialists')
+          .where('city', isEqualTo: city)
+          .where('isActive', isEqualTo: true)
+          .orderBy('rating', descending: true)
+          .limit(10);
+      final snapshot = await query.get();
+      return snapshot.docs.map(SpecialistEnhanced.fromFirestore).toList();
+    } catch (e2) {
+      return [];
+    }
   }
 });
 
-/// Провайдер для получения ТОП специалистов по России
+/// Провайдер для получения ТОП специалистов по России (по scoreWeekly)
 final topSpecialistsByRussiaProvider =
     FutureProvider<List<SpecialistEnhanced>>((ref) async {
   try {
-    final query = FirebaseFirestore.instance
-        .collection('specialists')
-        .where('region', isEqualTo: 'Россия')
-        .where('isActive', isEqualTo: true)
-        .orderBy('rating', descending: true)
-        .orderBy('successfulOrders', descending: true)
-        .limit(10);
+    // Получаем специалистов с country='RU' и их рейтинги
+    final statsQuery = FirebaseFirestore.instance
+        .collection('specialist_stats')
+        .where('country', isEqualTo: 'RU')
+        .limit(100); // Больше для последующей фильтрации
 
-    final snapshot = await query.get();
-    return snapshot.docs
-        .map(SpecialistEnhanced.fromFirestore)
-        .toList();
+    final statsSnapshot = await statsQuery.get();
+    if (statsSnapshot.docs.isEmpty) {
+      return [];
+    }
+
+    final specIds = statsSnapshot.docs.map((doc) => doc.id).toList();
+    
+    // Получаем рейтинги
+    final scoresMap = <String, double>{};
+    for (final specId in specIds) {
+      final scoreDoc = await FirebaseFirestore.instance
+          .collection('specialist_scores')
+          .doc(specId)
+          .get();
+      if (scoreDoc.exists) {
+        scoresMap[specId] = (scoreDoc.data()?['scoreWeekly'] ?? 0).toDouble();
+      }
+    }
+
+    // Сортируем по scoreWeekly
+    specIds.sort((a, b) => (scoresMap[b] ?? 0).compareTo(scoresMap[a] ?? 0));
+
+    // Получаем топ-10 специалистов
+    final specialists = <SpecialistEnhanced>[];
+    for (final specId in specIds.take(10)) {
+      final specDoc = await FirebaseFirestore.instance
+          .collection('specialists')
+          .doc(specId)
+          .get();
+      
+      if (specDoc.exists && (specDoc.data()?['isActive'] == true)) {
+        specialists.add(SpecialistEnhanced.fromFirestore(specDoc));
+      }
+    }
+
+    return specialists;
   } catch (e) {
     debugPrint('❌ Error fetching top specialists by Russia: $e');
-    return [];
+    // Fallback на старую логику
+    try {
+      final query = FirebaseFirestore.instance
+          .collection('specialists')
+          .where('region', isEqualTo: 'Россия')
+          .where('isActive', isEqualTo: true)
+          .orderBy('rating', descending: true)
+          .limit(10);
+      final snapshot = await query.get();
+      return snapshot.docs.map(SpecialistEnhanced.fromFirestore).toList();
+    } catch (e2) {
+      return [];
+    }
   }
 });
 
