@@ -1,5 +1,6 @@
 import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/providers/requests_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,27 +25,65 @@ class RequestsScreenImproved extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          // TODO: Implement refresh
-          await Future.delayed(const Duration(seconds: 1));
+          ref.invalidate(requestsProvider);
         },
-        child: ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: 10, // Mock data
-          itemBuilder: (context, index) {
-            return _RequestCard(
-              title: 'Заявка ${index + 1}',
-              description:
-                  'Описание заявки номер ${index + 1}. Здесь будет подробное описание того, что нужно сделать.',
-              budget: '${(index + 1) * 10000} ₽',
-              deadline: '${index + 1} дней',
-              category: _getCategory(index),
-              status: _getStatus(index),
-              onTap: () {
-                // TODO: Navigate to request details
+        child: Consumer(
+          builder: (context, ref, child) {
+            final requestsAsync = ref.watch(requestsProvider);
+            return requestsAsync.when(
+              data: (requests) {
+                if (requests.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.assignment_outlined, size: 64, color: Colors.grey),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Нет заявок',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text('Создайте первую заявку'),
+                      ],
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: requests.length,
+                  itemBuilder: (context, index) {
+                    final request = requests[index];
+                    return _RequestCard(
+                      title: request.title ?? 'Заявка',
+                      description: request.description ?? '',
+                      budget: '${request.budget ?? 0} ₽',
+                      deadline: request.deadline != null 
+                          ? '${request.deadline!.difference(DateTime.now()).inDays} дней'
+                          : 'Не указан',
+                      category: request.category ?? 'Другое',
+                      status: request.status?.toString().split('.').last ?? 'pending',
+                      onTap: () {
+                        // TODO: Navigate to request details
+                      },
+                      onApply: () {
+                        // TODO: Apply to request
+                      },
+                    );
+                  },
+                );
               },
-              onApply: () {
-                // TODO: Apply to request
-              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text('Ошибка загрузки: $error'),
+                  ],
+                ),
+              ),
             );
           },
         ),
@@ -54,22 +93,6 @@ class RequestsScreenImproved extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  String _getCategory(int index) {
-    final categories = [
-      'Фотография',
-      'Видеосъемка',
-      'Диджей',
-      'Ведущий',
-      'Декор',
-    ];
-    return categories[index % categories.length];
-  }
-
-  String _getStatus(int index) {
-    final statuses = ['Активна', 'В работе', 'Завершена', 'Отменена'];
-    return statuses[index % statuses.length];
   }
 }
 
