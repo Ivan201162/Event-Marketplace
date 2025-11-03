@@ -1,411 +1,237 @@
-import 'package:event_marketplace_app/models/request_enhanced.dart';
-import 'package:event_marketplace_app/providers/request_providers_enhanced.dart';
-import 'package:event_marketplace_app/services/request_service_enhanced.dart';
-import 'package:event_marketplace_app/widgets/common/enhanced_button.dart';
-import 'package:event_marketplace_app/widgets/common/enhanced_card.dart';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 
-/// Экран создания заявки с полным функционалом
-class CreateRequestScreenEnhanced extends ConsumerStatefulWidget {
+/// Экран создания заявки
+class CreateRequestScreenEnhanced extends StatefulWidget {
   const CreateRequestScreenEnhanced({super.key});
 
   @override
-  ConsumerState<CreateRequestScreenEnhanced> createState() =>
-      _CreateRequestScreenEnhancedState();
+  State<CreateRequestScreenEnhanced> createState() => _CreateRequestScreenEnhancedState();
 }
 
-class _CreateRequestScreenEnhancedState
-    extends ConsumerState<CreateRequestScreenEnhanced>
-    with TickerProviderStateMixin {
+class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhanced> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
+  final _eventTypeController = TextEditingController();
+  final _eventTypeCustomController = TextEditingController();
+  final _timeController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _venueController = TextEditingController();
+  final _budgetMinController = TextEditingController();
+  final _budgetMaxController = TextEditingController();
+  final _guestsCountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _locationController = TextEditingController();
-  final _budgetController = TextEditingController();
-  final _maxApplicantsController = TextEditingController();
 
-  String _selectedCategory = '';
-  String _selectedSubcategory = '';
-  String _selectedCity = '';
-  final String _selectedLanguage = 'ru';
-  RequestPriority _selectedPriority = RequestPriority.medium;
-  DateTime _selectedDate = DateTime.now().add(const Duration(days: 7));
-  TimeOfDay _selectedTime = const TimeOfDay(hour: 18, minute: 0);
-  bool _isRemote = false;
-  List<String> _selectedTags = [];
-  List<String> _selectedSkills = [];
-  List<String> _attachments = [];
-  double? _latitude;
-  double? _longitude;
-  bool _isLoading = false;
+  String? _selectedEventType;
+  DateTime? _selectedDate;
+  List<String> _attachmentUrls = [];
+  List<File> _selectedFiles = [];
+  bool _isUploading = false;
+  bool _isSubmitting = false;
 
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
+  final List<String> _eventTypes = [
+    'Свадьба',
+    'День рождения',
+    'Корпоратив',
+    'Юбилей',
+    'Выпускной',
+    'Детский праздник',
+    'Фотосессия',
+    'Видеосъемка',
+    'DJ',
+    'Ведущий',
+    'Декор',
+    'Кейтеринг',
+    'Другое',
+  ];
 
   @override
   void initState() {
     super.initState();
-    _initializeAnimations();
-    _getCurrentLocation();
-  }
-
-  void _initializeAnimations() {
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ),);
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ),);
-
-    _animationController.forward();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("REQUEST_CREATE_OPENED");
+    });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _titleController.dispose();
+    _eventTypeController.dispose();
+    _eventTypeCustomController.dispose();
+    _timeController.dispose();
+    _cityController.dispose();
+    _venueController.dispose();
+    _budgetMinController.dispose();
+    _budgetMaxController.dispose();
+    _guestsCountController.dispose();
     _descriptionController.dispose();
-    _locationController.dispose();
-    _budgetController.dispose();
-    _maxApplicantsController.dispose();
     super.dispose();
   }
 
-  Future<void> _getCurrentLocation() async {
-    try {
-      final position = await Geolocator.getCurrentPosition();
-      setState(() {
-        _latitude = position.latitude;
-        _longitude = position.longitude;
-      });
-    } catch (e) {
-      print('Ошибка получения геолокации: $e');
-    }
-  }
-
-  Future<void> _selectDate() async {
-    final date = await showDatePicker(
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (date != null) {
-      setState(() {
-        _selectedDate = date;
-      });
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
     }
   }
 
-  Future<void> _selectTime() async {
-    final time = await showTimePicker(
-      context: context,
-      initialTime: _selectedTime,
-    );
-    if (time != null) {
-      setState(() {
-        _selectedTime = time;
-      });
-    }
-  }
+  Future<void> _pickFiles() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx'],
+      );
 
-  Future<void> _selectLocation() async {
-    // Здесь можно интегрировать с картами для выбора локации
-    // Пока используем текстовый ввод
-    final location = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Выбор локации'),
-        content: TextField(
-          controller: _locationController,
-          decoration: const InputDecoration(
-            hintText: 'Введите адрес или название места',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, _locationController.text),
-            child: const Text('Выбрать'),
-          ),
-        ],
-      ),
-    );
+      if (result != null && result.files.isNotEmpty) {
+        final files = result.files
+            .where((f) => f.path != null)
+            .map((f) => File(f.path!))
+            .where((file) {
+          final size = file.lengthSync();
+          if (size > 10 * 1024 * 1024) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Файл ${file.path.split('/').last} превышает 10 МБ')),
+            );
+            return false;
+          }
+          return true;
+        }).toList();
 
-    if (location != null) {
-      setState(() {
-        _locationController.text = location;
-      });
-    }
-  }
-
-  Future<void> _selectAttachments() async {
-    final result = await showModalBottomSheet<List<String>>(
-      context: context,
-      builder: (context) => _buildAttachmentSelector(),
-    );
-
-    if (result != null) {
-      setState(() {
-        _attachments = result;
-      });
-    }
-  }
-
-  Widget _buildAttachmentSelector() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Выберите тип вложения',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          ListTile(
-            leading: const Icon(Icons.photo),
-            title: const Text('Фото'),
-            onTap: () async {
-              final picker = ImagePicker();
-              final images = await picker.pickMultiImage();
-              if (images.isNotEmpty) {
-                Navigator.pop(context, images.map((e) => e.path).toList());
-              }
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.videocam),
-            title: const Text('Видео'),
-            onTap: () async {
-              final picker = ImagePicker();
-              final video = await picker.pickVideo();
-              if (video != null) {
-                Navigator.pop(context, [video.path]);
-              }
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.attach_file),
-            title: const Text('Файлы'),
-            onTap: () async {
-              final result = await FilePicker.platform.pickFiles(
-                allowMultiple: true,
-              );
-              if (result != null) {
-                Navigator.pop(
-                    context, result.files.map((e) => e.path!).toList(),);
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _selectTags() async {
-    final tags = await showDialog<List<String>>(
-      context: context,
-      builder: (context) => _buildTagSelector(),
-    );
-
-    if (tags != null) {
-      setState(() {
-        _selectedTags = tags;
-      });
-    }
-  }
-
-  Widget _buildTagSelector() {
-    return AlertDialog(
-      title: const Text('Выберите теги'),
-      content: Consumer(
-        builder: (context, ref, child) {
-          final tagsAsync = ref.watch(requestTagsProvider);
-          return tagsAsync.when(
-            data: (tags) => Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: tags.map((tag) {
-                final isSelected = _selectedTags.contains(tag);
-                return FilterChip(
-                  label: Text(tag),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      if (selected) {
-                        _selectedTags.add(tag);
-                      } else {
-                        _selectedTags.remove(tag);
-                      }
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-            loading: () => const CircularProgressIndicator(),
-            error: (error, stack) => Text('Ошибка: $error'),
+        if (_selectedFiles.length + files.length > 10) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Максимум 10 файлов')),
           );
-        },
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, _selectedTags),
-          child: const Text('Выбрать'),
-        ),
-      ],
-    );
-  }
+          files.removeRange(10 - _selectedFiles.length, files.length);
+        }
 
-  Future<void> _selectSkills() async {
-    final skills = await showDialog<List<String>>(
-      context: context,
-      builder: (context) => _buildSkillSelector(),
-    );
-
-    if (skills != null) {
-      setState(() {
-        _selectedSkills = skills;
-      });
+        setState(() {
+          _selectedFiles.addAll(files);
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка выбора файлов: $e')),
+      );
     }
   }
 
-  Widget _buildSkillSelector() {
-    return AlertDialog(
-      title: const Text('Выберите навыки'),
-      content: Consumer(
-        builder: (context, ref, child) {
-          final skillsAsync = ref.watch(requestSkillsProvider);
-          return skillsAsync.when(
-            data: (skills) => Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: skills.map((skill) {
-                final isSelected = _selectedSkills.contains(skill);
-                return FilterChip(
-                  label: Text(skill),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      if (selected) {
-                        _selectedSkills.add(skill);
-                      } else {
-                        _selectedSkills.remove(skill);
-                      }
-                    });
-                  },
-                );
-              }).toList(),
-            ),
-            loading: () => const CircularProgressIndicator(),
-            error: (error, stack) => Text('Ошибка: $error'),
-          );
-        },
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, _selectedSkills),
-          child: const Text('Выбрать'),
-        ),
-      ],
-    );
-  }
+  Future<void> _uploadFiles(String requestId) async {
+    if (_selectedFiles.isEmpty) return;
 
-  Future<void> _createRequest() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isUploading = true);
 
     try {
-      final deadline = DateTime(
-        _selectedDate.year,
-        _selectedDate.month,
-        _selectedDate.day,
-        _selectedTime.hour,
-        _selectedTime.minute,
-      );
+      final storage = FirebaseStorage.instance;
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception('User not authenticated');
 
-      final requestId = await RequestServiceEnhanced.createRequest(
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim(),
-        category: _selectedCategory,
-        subcategory: _selectedSubcategory,
-        location: _locationController.text.trim(),
-        city: _selectedCity,
-        latitude: _latitude ?? 0.0,
-        longitude: _longitude ?? 0.0,
-        budget: double.parse(_budgetController.text),
-        deadline: deadline,
-        priority: _selectedPriority,
-        attachments: _attachments,
-        tags: _selectedTags,
-        requiredSkills: _selectedSkills,
-        language: _selectedLanguage,
-        isRemote: _isRemote,
-        maxApplicants: int.parse(_maxApplicantsController.text),
-        metadata: {
-          'createdVia': 'mobile_app',
-          'version': '1.0.0',
-        },
+      final urls = <String>[];
+
+      for (final file in _selectedFiles) {
+        final fileName = file.path.split('/').last;
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final ref = storage.ref().child('requests/${user.uid}/$requestId/${timestamp}_$fileName');
+
+        await ref.putFile(file);
+        final url = await ref.getDownloadURL();
+        urls.add(url);
+      }
+
+      setState(() {
+        _attachmentUrls = urls;
+        _isUploading = false;
+      });
+    } catch (e) {
+      setState(() => _isUploading = false);
+      throw Exception('Ошибка загрузки файлов: $e');
+    }
+  }
+
+  Future<void> _submitRequest() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_selectedEventType == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Выберите тип мероприятия')),
       );
+      return;
+    }
+    if (_selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Выберите дату')),
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception('User not authenticated');
+
+      final requestRef = FirebaseFirestore.instance.collection('requests').doc();
+      final requestId = requestRef.id;
+
+      // Загружаем файлы если есть
+      if (_selectedFiles.isNotEmpty) {
+        await _uploadFiles(requestId);
+      }
+
+      final eventType = _selectedEventType == 'Другое'
+          ? _eventTypeCustomController.text.trim()
+          : _selectedEventType!;
+
+      await requestRef.set({
+        'eventType': eventType,
+        'eventTypeCustom': _selectedEventType == 'Другое' ? eventType : null,
+        'date': Timestamp.fromDate(_selectedDate!),
+        'time': _timeController.text.trim().isEmpty ? null : _timeController.text.trim(),
+        'city': _cityController.text.trim(),
+        'venue': _venueController.text.trim().isEmpty ? null : _venueController.text.trim(),
+        'budgetMin': _budgetMinController.text.trim().isEmpty
+            ? null
+            : double.tryParse(_budgetMinController.text.trim()),
+        'budgetMax': _budgetMaxController.text.trim().isEmpty
+            ? null
+            : double.tryParse(_budgetMaxController.text.trim()),
+        'guestsCount': _guestsCountController.text.trim().isEmpty
+            ? null
+            : int.tryParse(_guestsCountController.text.trim()),
+        'description': _descriptionController.text.trim(),
+        'attachments': _attachmentUrls,
+        'createdBy': user.uid,
+        'createdAt': FieldValue.serverTimestamp(),
+        'status': 'open',
+      });
+
+      debugLog("REQUEST_PUBLISHED:$requestId");
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Заявка успешно создана!'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Заявка опубликована')),
         );
-        context.pop();
+        context.go('/requests');
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка создания заявки: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка: $e')),
         );
       }
     } finally {
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isSubmitting = false);
       }
     }
   }
@@ -415,478 +241,272 @@ class _CreateRequestScreenEnhancedState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Создать заявку'),
-        actions: [
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // Тип мероприятия
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Тип мероприятия *', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: _selectedEventType,
+                      decoration: const InputDecoration(border: OutlineInputBorder()),
+                      items: _eventTypes.map((type) {
+                        return DropdownMenuItem(value: type, child: Text(type));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() => _selectedEventType = value);
+                      },
+                      validator: (v) => v == null ? 'Обязательное поле' : null,
+                    ),
+                    if (_selectedEventType == 'Другое') ...[
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _eventTypeCustomController,
+                        decoration: const InputDecoration(
+                          labelText: 'Введите свой вариант *',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (v) => v?.trim().isEmpty ?? true ? 'Обязательное поле' : null,
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
-        ],
-      ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                // Основная информация
-                EnhancedCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Основная информация',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _titleController,
-                        decoration: const InputDecoration(
-                          labelText: 'Название заявки',
-                          hintText: 'Введите название заявки',
-                          border: OutlineInputBorder(),
+
+            const SizedBox(height: 16),
+
+            // Дата и время
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Дата *', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      onTap: _pickDate,
+                      child: InputDecorator(
+                        decoration: const InputDecoration(border: OutlineInputBorder()),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _selectedDate != null
+                                  ? DateFormat('dd.MM.yyyy').format(_selectedDate!)
+                                  : 'Выберите дату',
+                            ),
+                            const Icon(Icons.calendar_today),
+                          ],
                         ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Введите название заявки';
-                          }
-                          if (value.trim().length < 5) {
-                            return 'Название должно содержать минимум 5 символов';
-                          }
-                          return null;
-                        },
                       ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _descriptionController,
-                        decoration: const InputDecoration(
-                          labelText: 'Описание',
-                          hintText: 'Подробно опишите задачу',
-                          border: OutlineInputBorder(),
-                        ),
-                        maxLines: 4,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Введите описание заявки';
-                          }
-                          if (value.trim().length < 20) {
-                            return 'Описание должно содержать минимум 20 символов';
-                          }
-                          return null;
-                        },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _timeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Время (опционально)',
+                        hintText: 'например, 18:00',
+                        border: OutlineInputBorder(),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
-                const SizedBox(height: 16),
-
-                // Категория и подкатегория
-                EnhancedCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Категория',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,),
-                      ),
-                      const SizedBox(height: 16),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final categoriesAsync =
-                              ref.watch(requestCategoriesProvider);
-                          return categoriesAsync.when(
-                            data: (categories) =>
-                                DropdownButtonFormField<String>(
-                              initialValue: _selectedCategory.isEmpty
-                                  ? null
-                                  : _selectedCategory,
-                              decoration: const InputDecoration(
-                                labelText: 'Выберите категорию',
-                                border: OutlineInputBorder(),
-                              ),
-                              items: categories.map((category) {
-                                return DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedCategory = value ?? '';
-                                  _selectedSubcategory = '';
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Выберите категорию';
-                                }
-                                return null;
-                              },
-                            ),
-                            loading: () => const CircularProgressIndicator(),
-                            error: (error, stack) => Text('Ошибка: $error'),
-                          );
-                        },
-                      ),
-                      if (_selectedCategory.isNotEmpty) ...[
-                        const SizedBox(height: 16),
-                        Consumer(
-                          builder: (context, ref, child) {
-                            final subcategoriesAsync = ref.watch(
-                              requestSubcategoriesProvider(_selectedCategory),
-                            );
-                            return subcategoriesAsync.when(
-                              data: (subcategories) =>
-                                  DropdownButtonFormField<String>(
-                                initialValue: _selectedSubcategory.isEmpty
-                                    ? null
-                                    : _selectedSubcategory,
-                                decoration: const InputDecoration(
-                                  labelText: 'Выберите подкатегорию',
-                                  border: OutlineInputBorder(),
-                                ),
-                                items: subcategories.map((subcategory) {
-                                  return DropdownMenuItem(
-                                    value: subcategory,
-                                    child: Text(subcategory),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedSubcategory = value ?? '';
-                                  });
-                                },
-                              ),
-                              loading: () => const CircularProgressIndicator(),
-                              error: (error, stack) => Text('Ошибка: $error'),
-                            );
-                          },
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Локация и дата
-                EnhancedCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Локация и время',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _locationController,
-                              decoration: const InputDecoration(
-                                labelText: 'Локация',
-                                hintText: 'Введите адрес',
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Введите локацию';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            onPressed: _selectLocation,
-                            icon: const Icon(Icons.location_on),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'Город',
-                                hintText: 'Введите город',
-                                border: OutlineInputBorder(),
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedCity = value;
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Введите город';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'Дата',
-                                border: OutlineInputBorder(),
-                              ),
-                              controller: TextEditingController(
-                                text:
-                                    '${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}',
-                              ),
-                              readOnly: true,
-                              onTap: _selectDate,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: 'Время',
-                                border: OutlineInputBorder(),
-                              ),
-                              controller: TextEditingController(
-                                text: _selectedTime.format(context),
-                              ),
-                              readOnly: true,
-                              onTap: _selectTime,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      SwitchListTile(
-                        title: const Text('Удаленная работа'),
-                        subtitle:
-                            const Text('Заявка может выполняться удаленно'),
-                        value: _isRemote,
-                        onChanged: (value) {
-                          setState(() {
-                            _isRemote = value;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Бюджет и параметры
-                EnhancedCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Бюджет и параметры',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _budgetController,
-                              decoration: const InputDecoration(
-                                labelText: 'Бюджет (руб.)',
-                                hintText: '10000',
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Введите бюджет';
-                                }
-                                final budget = double.tryParse(value);
-                                if (budget == null || budget <= 0) {
-                                  return 'Введите корректный бюджет';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _maxApplicantsController,
-                              decoration: const InputDecoration(
-                                labelText: 'Макс. откликов',
-                                hintText: '10',
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Введите количество откликов';
-                                }
-                                final count = int.tryParse(value);
-                                if (count == null || count <= 0) {
-                                  return 'Введите корректное количество';
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<RequestPriority>(
-                        initialValue: _selectedPriority,
-                        decoration: const InputDecoration(
-                          labelText: 'Приоритет',
-                          border: OutlineInputBorder(),
-                        ),
-                        items: RequestPriority.values.map((priority) {
-                          return DropdownMenuItem(
-                            value: priority,
-                            child: Text(priority.label),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedPriority = value ?? RequestPriority.medium;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Теги и навыки
-                EnhancedCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Теги и навыки',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _selectTags,
-                              icon: const Icon(Icons.tag),
-                              label: Text('Теги (${_selectedTags.length})'),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: _selectSkills,
-                              icon: const Icon(Icons.skills),
-                              label: Text('Навыки (${_selectedSkills.length})'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (_selectedTags.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 4,
-                          runSpacing: 4,
-                          children: _selectedTags.map((tag) {
-                            return Chip(
-                              label: Text(tag),
-                              onDeleted: () {
-                                setState(() {
-                                  _selectedTags.remove(tag);
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                      if (_selectedSkills.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 4,
-                          runSpacing: 4,
-                          children: _selectedSkills.map((skill) {
-                            return Chip(
-                              label: Text(skill),
-                              onDeleted: () {
-                                setState(() {
-                                  _selectedSkills.remove(skill);
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Вложения
-                EnhancedCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Вложения',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,),
-                      ),
-                      const SizedBox(height: 16),
-                      OutlinedButton.icon(
-                        onPressed: _selectAttachments,
-                        icon: const Icon(Icons.attach_file),
-                        label: Text('Добавить файлы (${_attachments.length})'),
-                      ),
-                      if (_attachments.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 4,
-                          runSpacing: 4,
-                          children: _attachments.map((attachment) {
-                            return Chip(
-                              label: Text(attachment.split('/').last),
-                              onDeleted: () {
-                                setState(() {
-                                  _attachments.remove(attachment);
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Кнопка создания
-                EnhancedButton(
-                  onPressed: _isLoading ? null : _createRequest,
-                  text: _isLoading ? 'Создание...' : 'Создать заявку',
-                  isLoading: _isLoading,
-                ),
-              ],
+              ),
             ),
+
+            const SizedBox(height: 16),
+
+            // Город
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _cityController,
+                  decoration: const InputDecoration(
+                    labelText: 'Город *',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (v) => v?.trim().isEmpty ?? true ? 'Обязательное поле' : null,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Место проведения
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _venueController,
+                  decoration: const InputDecoration(
+                    labelText: 'Место проведения (опционально)',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Бюджет
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Бюджет (опционально)', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _budgetMinController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'От',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _budgetMaxController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'До',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Количество гостей
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _guestsCountController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Количество гостей (опционально)',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Описание
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    labelText: 'Описание *',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (v) => v?.trim().isEmpty ?? true ? 'Обязательное поле' : null,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Вложения
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Вложения (опционально)', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('${_selectedFiles.length}/10', style: TextStyle(color: Colors.grey[600])),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.attach_file),
+                      label: const Text('Прикрепить файлы'),
+                      onPressed: _selectedFiles.length >= 10 ? null : _pickFiles,
+                    ),
+                    if (_selectedFiles.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      ...List.generate(_selectedFiles.length, (index) {
+                        final file = _selectedFiles[index];
+                        return ListTile(
+                          leading: const Icon(Icons.insert_drive_file),
+                          title: Text(file.path.split('/').last, maxLines: 1, overflow: TextOverflow.ellipsis),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              setState(() => _selectedFiles.removeAt(index));
+                            },
+                          ),
+                        );
+                      }),
+                    ],
+                    if (_isUploading)
+                      const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 80),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -5)),
+          ],
+        ),
+        child: SafeArea(
+          child: ElevatedButton(
+            onPressed: (_isSubmitting || _isUploading) ? null : _submitRequest,
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            child: _isSubmitting || _isUploading
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Опубликовать заявку', style: TextStyle(fontSize: 16)),
           ),
         ),
       ),

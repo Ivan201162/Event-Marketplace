@@ -159,6 +159,10 @@ List<Specialist> _applyFilters(
         (service) => service.toLowerCase().contains(query),
       );
 
+      // Ищем также по firstName, lastName, username через userId (если доступны данные из users)
+      // Это будет работать если в Specialist есть связь с AppUser
+      // Для полного поиска нужно объединять данные из users и specialists коллекций
+
       if (!matchesName && !matchesSpecialization && !matchesCity && 
           !matchesDescription && !matchesCategory && !matchesServices) {
         return false;

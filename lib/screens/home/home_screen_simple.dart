@@ -60,21 +60,19 @@ class HomeScreenSimple extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () => context.go('/profile/${user.uid}'),
-                        child: user.photoURL != null
+                        child: user.photoURL != null && user.photoURL!.isNotEmpty
                             ? CircleAvatar(
                                 radius: 30,
                                 backgroundImage: NetworkImage(user.photoURL!),
+                                onBackgroundImageError: (_, __) {},
                               )
                             : CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.white24,
-                                child: Text(
-                                  user.name?.substring(0, 1).toUpperCase() ?? 'U',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                  size: 30,
                                 ),
                               ),
                       ),
@@ -83,40 +81,31 @@ class HomeScreenSimple extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (user.username != null && user.username!.isNotEmpty) ...[
-                              Text(
-                                '@${user.username}',
-                                style: TextStyle(
-                                  fontSize: context.isSmallScreen ? 20 : 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                            Text(
+                              '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
+                                  ? (user.name ?? 'Пользователь')
+                                  : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
+                              style: TextStyle(
+                                fontSize: context.isSmallScreen ? 20 : 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
+                            ),
+                            if (user.username != null && user.username!.isNotEmpty) ...[
                               const SizedBox(height: 4),
                               Text(
-                                '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
-                                    ? (user.name ?? 'Пользователь')
-                                    : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
+                                '@${user.username}',
                                 style: TextStyle(
                                   fontSize: context.isSmallScreen ? 14 : 16,
                                   color: Colors.white.withOpacity(0.8),
                                 ),
                               ),
-                            ] else ...[
-                              Text(
-                                '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
-                                    ? (user.name ?? 'Пользователь')
-                                    : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
-                                style: TextStyle(
-                                  fontSize: context.isSmallScreen ? 20 : 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
                             ],
                             const SizedBox(height: 8),
                             Text(
-                              'Найдите идеального специалиста для вашего мероприятия',
+                              user.city != null && user.city!.isNotEmpty
+                                  ? user.city!
+                                  : 'Город не выбран',
                               style: TextStyle(
                                 fontSize: context.isSmallScreen ? 12 : 14,
                                 color: Colors.white.withOpacity(0.9),

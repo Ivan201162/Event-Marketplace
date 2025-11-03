@@ -15,8 +15,8 @@ import 'package:event_marketplace_app/screens/monetization/monetization_screen.d
 import 'package:event_marketplace_app/screens/notifications/notifications_screen.dart';
 import 'package:event_marketplace_app/screens/profile/edit_profile_advanced.dart';
 import 'package:event_marketplace_app/screens/profile/profile_screen_advanced.dart';
-import 'package:event_marketplace_app/screens/requests/create_request_screen.dart';
-import 'package:event_marketplace_app/screens/search/search_screen.dart';
+import 'package:event_marketplace_app/screens/requests/create_request_screen_enhanced.dart';
+import 'package:event_marketplace_app/screens/search/search_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/settings/settings_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -125,16 +125,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Создание заявки
       GoRoute(
-        path: '/create-request',
+        path: '/requests/create',
         name: 'create-request',
-        builder: (context, state) => const CreateRequestScreen(),
+        builder: (context, state) => const CreateRequestScreenEnhanced(),
+      ),
+      GoRoute(
+        path: '/create-request',
+        name: 'create-request-legacy',
+        builder: (context, state) => const CreateRequestScreenEnhanced(),
       ),
 
       // Поиск специалистов
       GoRoute(
         path: '/search',
         name: 'search',
-        builder: (context, state) => const SearchScreen(),
+        builder: (context, state) => const SearchScreenEnhanced(),
       ),
 
       // Настройки
