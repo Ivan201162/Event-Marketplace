@@ -4,6 +4,7 @@ import 'package:event_marketplace_app/core/micro_animations.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/providers/specialist_providers.dart';
 import 'package:event_marketplace_app/models/specialist_enhanced.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +16,10 @@ class HomeScreenSimple extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("HOME_LOADED");
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -78,21 +83,34 @@ class HomeScreenSimple extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              user.name ?? 'Пользователь',
-                              style: TextStyle(
-                                fontSize: context.isSmallScreen ? 20 : 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            if (user.username != null) ...[
-                              const SizedBox(height: 4),
+                            if (user.username != null && user.username!.isNotEmpty) ...[
                               Text(
                                 '@${user.username}',
                                 style: TextStyle(
+                                  fontSize: context.isSmallScreen ? 20 : 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
+                                    ? (user.name ?? 'Пользователь')
+                                    : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
+                                style: TextStyle(
                                   fontSize: context.isSmallScreen ? 14 : 16,
                                   color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                            ] else ...[
+                              Text(
+                                '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
+                                    ? (user.name ?? 'Пользователь')
+                                    : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
+                                style: TextStyle(
+                                  fontSize: context.isSmallScreen ? 20 : 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                             ],
@@ -120,7 +138,10 @@ class HomeScreenSimple extends ConsumerWidget {
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.assignment_outlined),
                         label: const Text('Создать заявку'),
-                        onPressed: () => context.go('/create-request'),
+                        onPressed: () {
+                          debugLog("CREATE_REQUEST_OPENED");
+                          context.go('/requests/create');
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
@@ -131,7 +152,9 @@ class HomeScreenSimple extends ConsumerWidget {
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.search),
                         label: const Text('Найти специалиста'),
-                        onPressed: () => context.go('/search'),
+                        onPressed: () {
+                          context.go('/search');
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),

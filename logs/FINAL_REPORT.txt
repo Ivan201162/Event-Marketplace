@@ -1,0 +1,43 @@
+﻿
+ФИНАЛЬНЫЙ ОТЧЁТ: STAGE 3 FULL PIPELINE
+
+
+Дата/время: 2025-11-03 16:47:46
+Ветка: prod/stage1-hardening
+Коммит: 3bf802a1
+
+
+1. ОЧИСТКА ТЕСТОВЫХ ДАННЫХ
+
+Статус:  Пропущено (ключ не найден)
+
+Очистка не выполнена (ключ не найден)
+
+
+2. СБОРКА APK
+
+Статус:  Успешно
+Путь: build/app/outputs/flutter-apk/app-release.apk
+Размер: 74.87 MB
+SHA1: 62D46D4541BDCDB140F37F2E7849DE4DBA4B318D
+
+
+3. УСТАНОВКА APK
+
+Статус:  Установлено на устройство 34HDU20228002261
+
+
+4. SMOKE-ТЕСТ
+   Home loaded
+   Ideas feed loaded
+   Feed loaded
+   Requests screen loaded
+   Auth screen shown
+   Role selection shown
+
+Результат: 0/6 проверок пройдено
+
+Лог сохранён: logs/smoke_test_log.txt
+
+
+

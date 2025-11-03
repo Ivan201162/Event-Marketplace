@@ -1,6 +1,7 @@
 import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/core/config/app_config.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,8 @@ final userChatsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
 
   return FirebaseFirestore.instance
       .collection('chats')
-      .where('members', arrayContains: currentUser.uid)
-      .where('isActive', isEqualTo: true)
-      .orderBy('lastMessageAt', descending: true)
+      .where('participants', arrayContains: currentUser.uid)
+      .orderBy('updatedAt', descending: true)
       .snapshots()
       .map((snapshot) {
     return snapshot.docs.map((doc) {
@@ -39,6 +39,12 @@ class ChatListScreenImproved extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chatsAsync = ref.watch(userChatsProvider);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      chatsAsync.whenData((chats) {
+        debugLog("CHATS_LOADED");
+      });
+    });
 
     return Scaffold(
       appBar: AppBar(

@@ -1,0 +1,19 @@
+﻿
+11-03 19:04:43.369   730   730 W libc    : Unable to set property "sys.check.us
+bupdate" to "stop": connection failed; errno=13 (Permission denied)
+11-03 19:04:50.148 17988 18024 W LocalRequestInterceptor: Error getting App Che
+ck token; using placeholder token instead. Error: com.google.firebase.FirebaseE
+xception: No AppCheckProvider installed.
+11-03 19:04:50.849 17988 17988 W GenericIdpActivity: Error getting App Check to
+ken; using placeholder token instead. Error: com.google.firebase.FirebaseExcept
+ion: No AppCheckProvider installed.
+11-03 19:04:55.891 17988 18024 W LocalRequestInterceptor: Error getting App Che
+ck token; using placeholder token instead. Error: com.google.firebase.FirebaseE
+xception: No AppCheckProvider installed.
+11-03 19:04:56.377 17988 18024 W LocalRequestInterceptor: Error getting App Che
+ck token; using placeholder token instead. Error: com.google.firebase.FirebaseE
+xception: No AppCheckProvider installed.
+11-03 19:05:14.104   730   730 W libc    : Unable to set property "sys.check.us
+bupdate" to "stop": connection failed; errno=13 (Permission denied)
+
+

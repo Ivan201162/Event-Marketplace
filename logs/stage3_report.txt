@@ -1,0 +1,92 @@
+﻿STAGE 3 FULL PIPELINE REPORT
+============================
+
+Дата/Время: 2025-11-03 19:06:18
+
+1. ОЧИСТКА ТЕСТОВЫХ ДАННЫХ
+----------------------------
+Тестовых пользователей удалено: 0
+Осталось реальных пользователей: 1
+
+Документы удалены по коллекциям:
+  - users: 0
+  - specialists: 0
+  - posts: 0
+  - ideas: 0
+  - stories: 0
+  - requests: 0
+  - chats: 0
+  - messages: 0
+  - follows: 0
+  - notifications: 0
+  - events_profile_views: 0
+  - events_post_engagement: 0
+  - events_follow: 0
+  - events_requests: 0
+  - specialist_stats: 0
+  - specialist_scores: 0
+
+Storage files удалены: 0
+
+Коллекции после очистки:
+  - users: 1 документ
+  - specialists: 1 документ
+  - posts: OK (empty)
+  - ideas: OK (empty)
+  - stories: OK (empty)
+  - requests: OK (empty)
+  - chats: OK (empty)
+  - follows: OK (empty)
+  - notifications: OK (empty)
+  - events_profile_views: OK (empty)
+  - events_post_engagement: OK (empty)
+  - events_follow: OK (empty)
+  - events_requests: OK (empty)
+  - specialist_stats: OK (empty)
+  - specialist_scores: OK (empty)
+
+2. СБОРКА APK
+-------------
+APK размер: 75.51 MB
+SHA1 хэш: FE76D3248CE684AFA9AE67955161C210020EC95B
+Путь: build\app\outputs\flutter-apk\app-release.apk
+
+3. УСТАНОВКА
+------------
+Устройство: 34HDU20228002261
+Статус: Успешно установлен
+
+4. СМОК-ТЕСТ
+------------
+Приложение запущено: Да
+Firebase Auth активен: Да
+Пользователь авторизован: Да (UID: V6DeBns03XbZwoajEKSdWbUs63s2)
+
+Ожидаемые строки в логах:
+  - "Auth screen shown": НЕ НАЙДЕНО
+  - "Role selection shown": НЕ НАЙДЕНО
+  - "Home loaded": НЕ НАЙДЕНО
+  - "Feed loaded": НЕ НАЙДЕНО
+  - "Ideas feed loaded": НЕ НАЙДЕНО
+  - "Requests screen loaded": НЕ НАЙДЕНО
+  - "Chats screen loaded": НЕ НАЙДЕНО
+
+Найдено: 0/7
+Результат:  NEED MANUAL CHECK
+Комментарий: Приложение успешно запустилось и авторизовалось, но явные логи навигации не обнаружены в logcat. Возможно, приложение не логирует эти строки в release-сборке.
+
+5. FIREBASE ОШИБКИ
+------------------
+Критических ошибок permission denied: НЕТ
+Предупреждения: AppCheckProvider не установлен (не критично)
+Firebase Auth работает: Да
+
+6. ИТОГОВЫЙ СТАТУС
+------------------
+Статус:  WARNING
+Причина: Смок-тест требует ручной проверки. Приложение работает, но логи навигации не найдены.
+
+Рекомендации:
+  - Проверить работу приложения вручную
+  - Убедиться, что все экраны открываются корректно
+  - При необходимости добавить логирование в release-сборку для автоматической проверки

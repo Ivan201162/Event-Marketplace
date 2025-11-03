@@ -1,0 +1,233 @@
+﻿--------- beginning of main
+11-03 16:35:52.528    53    53 W migration/7: type=1400 audit(0.0:980265): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:52.528    47    47 W migration/6: type=1400 audit(0.0:980266): avc: granted { setsched } for pid=47 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:52.540  1033  1033 E Thermal-daemon:hw_thermal: [charger_ic] tempNew :37  tempOld :36
+11-03 16:35:52.541  1033  1033 E Thermal-daemon:hw_thermal: Report temperature: [charger_ic] temp :37  reportThreshold:1
+11-03 16:35:52.542  1033  1033 E Thermal-daemon:hw_thermal: [ap] tempNew :40  tempOld :39
+11-03 16:35:52.543  1033  1033 E Thermal-daemon:hw_thermal: Report temperature: [ap] temp :40  reportThreshold:1
+11-03 16:35:52.545  2641  5501 I ThermalTraceService: code:1, appInfo:com.eventmarketplace.app#10000, levelInfo:29,warm_shell_hc,2#0,warm_shell_sysh,1#0,warm_chg_cpu,3#0,warm_bschg_cpu,2#2,warm_charger,1
+--------- beginning of system
+11-03 16:35:52.563  1717  2042 D HwConnectivityServiceEx: set 10423 rmnet0 value false
+11-03 16:35:52.810  2641  3596 I PG_ash  : com.huawei.gameassistant not check download condition with no dl requisites
+11-03 16:35:52.811  2641  3596 I ash_trans: com.huawei.gameassistant { doze duration=6048 Uptime=6048 } transition to: hibernation reason:
+11-03 16:35:52.811  2641  3596 I PG_ash  : H takeover action: 2
+11-03 16:35:52.811  2641  3596 I PG_ash  : perform H actions: com.huawei.gameassistant
+11-03 16:35:52.814  1717  1961 I PowerManagerService: handleSandman: wakefulness: 1,startDreaming: false
+11-03 16:35:52.815  2641  3596 I AppManager: frequent : 5 apps: [com.eventmarketplace.app, com.android.chrome, com.huawei.hicloud, com.google.android.setupwizard, com.google.android.gms]
+11-03 16:35:52.816  2641  3596 I PG_ash  : not perform H_B action:com.huawei.gameassistant
+11-03 16:35:52.816  2641  3596 I PG_ash  : h takeover P_GPS pkg:com.huawei.gameassistant
+11-03 16:35:52.821  1717  2042 I PGManagerService: proxyBroadcast:[com.huawei.gameassistant] proxy:true
+11-03 16:35:52.822  2641  3596 I PG_ash  : P_BC com.huawei.gameassistant OK ! delayMs:0
+11-03 16:35:52.822  2641  3596 I PG_ash  : perform delay action: com.huawei.gameassistant
+11-03 16:35:52.822  1053  3569 I Pged-IPgedBinderService: ****action is 1, pid num is 3***
+11-03 16:35:52.823  1053  3569 I Pged-Freezer: freezePids
+11-03 16:35:52.823  1053  3569 I Pged-Freezer: Freeze process: 3793
+11-03 16:35:52.823  1053  3569 I Pged-Freezer: Freeze process: 3912
+11-03 16:35:52.824  2641  3596 D PgedBinderAdapter: F_Z ok, pid: [3793, 3912]
+11-03 16:35:52.824  2641  3596 I PGServer: report state:6 event type:1 pid:0 uid:10144 pkg:com.huawei.gameassistant to pid: 1717
+11-03 16:35:52.825  2641  3596 I PGServer: report state:100 event type:1 pid:0 uid:10144 pkg:3793:3912 to pid: 1717
+11-03 16:35:52.825  2641  3596 I PG_ash  : F_Z com.huawei.gameassistant OK ! Type: -1
+11-03 16:35:52.826  1717  2042 I PGManagerService: proxyWakeLockByPidUid, pid: 3793, uid: 10144, proxy: true
+11-03 16:35:52.826  2641  3596 I PG_ash  : P_wl uid = 10144 pid = 3793
+11-03 16:35:52.827  1717  2042 I PGManagerService: proxyWakeLockByPidUid, pid: 3912, uid: 99649, proxy: true
+11-03 16:35:52.827  2641  3596 I PG_ash  : P_wl uid = 99649 pid = 3912
+11-03 16:35:52.831  2641  3596 I ActNet  : cSockets for uid : 10144, succ: true spend(ms):2
+11-03 16:35:52.833  2641  3596 I ActNet  : cSockets for uid : 99649, succ: true spend(ms):2
+11-03 16:35:52.834  2641  3596 I PG_ash  : cSockets >> com.huawei.gameassistant, uids : [10144, 99649]
+11-03 16:35:52.834  1717  2042 I HwNetworkPolicy: onTransact, code = 1002
+11-03 16:35:52.835   681 32454 I OemNetd : pgNetFilterSetRule(1)
+11-03 16:35:52.835  2641  3596 I ActNet  : deny network for uid : 10144 succ:true flag:ASH_DENY_FLAG
+11-03 16:35:52.836   681 32454 I OemNetd : pgNetFilterSetRule(1)
+11-03 16:35:52.836  2641  3596 I ActNet  : deny network for uid : 99649 succ:true flag:ASH_DENY_FLAG
+11-03 16:35:52.837  2641  3596 I PG_ash  : NetworkRestrict >> com.huawei.gameassistant, uids : [10144, 99649]
+11-03 16:35:52.835  1717  2042 I HwNetworkPolicy: onTransact, code = 1002
+11-03 16:35:52.838  1717  1961 I PowerManagerService: handleSandman: wakefulness: 1,startDreaming: false
+11-03 16:35:52.848  1053  1089 D         : HibSTrategy::HibStrategySwapCandidateProcessAdd packageName com.huawei.gameassistant
+11-03 16:35:52.850  2641 11018 I PGServer: getTopFrontApp. calling pkg: android
+11-03 16:35:52.852    47    47 W migration/6: type=1400 audit(0.0:980267): avc: granted { setsched } for pid=47 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:52.869  1053  5681 D AwareLog: HiberManagerService::DoReclaim ok, pid=3912, reclaimMode=hiber_anon
+11-03 16:35:52.870  1053  5681 D AwareLog: GetReclaimResult:reclaimKb=3036, swapKb=3036, swapUs=17379
+11-03 16:35:52.868    53    53 W migration/7: type=1400 audit(0.0:980268): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:52.881  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_NETWORK_QOE_EVALUATION_TIMEOUT
+11-03 16:35:52.920  1053  5681 D AwareLog: HiberManagerService::DoReclaim ok, pid=3793, reclaimMode=hiber_anon
+11-03 16:35:52.920  1053  5681 D AwareLog: GetReclaimResult:reclaimKb=12048, swapKb=12048, swapUs=49974
+11-03 16:35:52.920  1053  5681 D         : HibStrategy::HibStrategySwapCandidateProcessRemove packageName is com.huawei.gameassistant
+11-03 16:35:52.920  1053  5681 D AwareLog: HiberManagerService::SendMessageToHiberTask successful
+11-03 16:35:52.954  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:5,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:52.954  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:0,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):5,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:52.955  2606  3045 I NetworkQoeProxy: calcChannelNoRx dnsData is not present
+11-03 16:35:52.956  2606  3045 E Booster_NetworkQoeChr: [startTcpStackInfoStaticForChr]startTcpStackInfoStaticForChr failed, qoeTcpDataOpt is null
+11-03 16:35:52.956  2606  3045 D NpdcpAliveManager: ro.odm.npdcp_alive_cfg_enable is false
+11-03 16:35:52.957  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:52.957  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:52.957  2606  3045 I SmartDualCardSM: isSlaveCardNetworkBad return true,mIsSignalStengthPoors =true,mNetworkType=1,mDownlinkSpeedLimits=1048576,mDataRoaming=false
+11-03 16:35:52.957  2606  3045 E FourNetCombinationChr: getNetworkQoeInfo failed, qoeTcpDataOpt is null
+11-03 16:35:52.958  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. foregroundAppTcpRtt: 0, maxRatioChannelId: 0
+11-03 16:35:52.958  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. qoeString: 10423,4,0,431,1,0,4,0,431,457,2136,10,0,0,0,0,0
+11-03 16:35:53.025  1717  1717 I WindowManager: removeWindowToken: displayid:0 binder:android.os.Binder@a2cd15e token:null
+11-03 16:35:53.025  1717  1717 W WindowManager: removeWindowToken: Attempted to remove non-existing token: android.os.Binder@a2cd15e
+11-03 16:35:53.028    53    53 W migration/7: type=1400 audit(0.0:980269): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:53.542  4240  4240 I AwareBitmapCacher: init lrucache size: 2097152 pid=4240
+11-03 16:35:53.741   762  1580 D AudioPolicyService: getUidState(10172) cacheIter->second.first, return cacheIter->second.second(20)
+11-03 16:35:53.866  2641  3596 I ash_dd  : com.huawei.appmarket not ctrl in charging, delay to D!
+11-03 16:35:53.930  1717  1946 D ZrHung.AppEyeTransparentWindow: handleMessage CHECK_TRANS_WINDOW_ERROR_MSG
+11-03 16:35:53.976  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:5,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:53.976  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:0,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):2,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:53.976  2606  3045 I NetworkQoeProxy: calcChannelNoRx dnsData is not present
+11-03 16:35:53.978  2606  3045 E Booster_NetworkQoeChr: [startTcpStackInfoStaticForChr]startTcpStackInfoStaticForChr failed, qoeTcpDataOpt is null
+11-03 16:35:53.978  2606  3045 D NpdcpAliveManager: ro.odm.npdcp_alive_cfg_enable is false
+11-03 16:35:53.979  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:53.979  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:53.979  2606  3045 I SmartDualCardSM: isSlaveCardNetworkBad return true,mIsSignalStengthPoors =true,mNetworkType=1,mDownlinkSpeedLimits=1048576,mDataRoaming=false
+11-03 16:35:53.979  2606  3045 E FourNetCombinationChr: getNetworkQoeInfo failed, qoeTcpDataOpt is null
+11-03 16:35:53.980  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. foregroundAppTcpRtt: 0, maxRatioChannelId: 0
+11-03 16:35:53.980  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. qoeString: 10423,4,0,431,1,0,4,0,431,457,2136,10,0,0,0,0,0
+11-03 16:35:54.053  3376  3443 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:54.053  3376  3443 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:54.182  3452  3608 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:54.182  3452  3608 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:54.199  3498  3611 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:54.199  3498  3611 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:54.253  3571  3656 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:54.253  3571  3656 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:54.274  3626  3658 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:54.274  3626  3658 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:54.451  3686  3741 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:54.451  3686  3741 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:54.563  1717 11413 D HwConnectivityServiceEx: set 10423 rmnet0 value false
+11-03 16:35:54.648  4240  4559 D ProfileInstaller: Installing profile for com.eventmarketplace.app
+11-03 16:35:54.708    53    53 W migration/7: type=1400 audit(0.0:980270): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:54.769 21018 21018 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.common.telemetry.service.START dat=chimera-action: cmp=com.google.android.gms/.chimera.PersistentApiService }
+11-03 16:35:54.888    53    53 W migration/7: type=1400 audit(0.0:980271): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:54.888    47    47 W migration/6: type=1400 audit(0.0:980272): avc: granted { setsched } for pid=47 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:55.002  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:5,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:55.002  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:0,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:55.003  2606  3045 I NetworkQoeProxy: calcChannelNoRx dnsData is not present
+11-03 16:35:55.004  2606  3045 E Booster_NetworkQoeChr: [startTcpStackInfoStaticForChr]startTcpStackInfoStaticForChr failed, qoeTcpDataOpt is null
+11-03 16:35:55.005  2606  3045 D NpdcpAliveManager: ro.odm.npdcp_alive_cfg_enable is false
+11-03 16:35:55.005  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:55.005  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:55.006  2606  3045 I SmartDualCardSM: isSlaveCardNetworkBad return true,mIsSignalStengthPoors =true,mNetworkType=1,mDownlinkSpeedLimits=1048576,mDataRoaming=false
+11-03 16:35:55.006  2606  3045 E FourNetCombinationChr: getNetworkQoeInfo failed, qoeTcpDataOpt is null
+11-03 16:35:55.006  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. foregroundAppTcpRtt: 0, maxRatioChannelId: 0
+11-03 16:35:55.006  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. qoeString: 10423,4,0,431,1,0,4,0,431,457,2136,10,0,0,0,0,0
+11-03 16:35:55.082  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand subCmd = 357, userId=10423, pid=4240, com.eventmarketplace.app
+11-03 16:35:55.083  1053  1089 D AwareLog: iawared: WorkingsetPauseCollect com.eventmarketplace.app
+11-03 16:35:55.267  3882  3933 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:55.267  3882  3933 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:55.370   681 32454 I netd    : trafficSwapActiveStatsMap() <15.72ms>
+11-03 16:35:55.541  1717  2042 I HwPackageManagerServiceEx: now 3194863156 optNow true upgrade false BootCompleted true UserSwitching 0
+11-03 16:35:55.550  1717  1961 I PowerManagerService: handleSandman: wakefulness: 1,startDreaming: false
+11-03 16:35:55.609  4012  4037 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:55.609  4012  4037 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:55.615  1717  1966 I PackageManager.DexOptimizer: Running dexopt (dexoptNeeded=-3) on: /data/app/com.eventmarketplace.app-JrCWdXV3HL-HEOQgWsK4-Q==/base.apk pkg=com.eventmarketplace.app isa=arm64 dexoptFlags=boot_complete,profile_guided,enable_hidden_api_checks targetFilter=speed-profile oatDir=/data/app/com.eventmarketplace.app-JrCWdXV3HL-HEOQgWsK4-Q==/oat classLoaderContext=PCL[]{PCL[/system/framework/org.apache.http.legacy.jar]}
+11-03 16:35:55.615  1025 10322 D installd: forkNotifyToRMS parcel pid=0, ppid=1025, pkg=com.eventmarketplace.app, status=1, num=5, time=1762095978
+11-03 16:35:55.620  1025 10322 V installd: DexInv: --- BEGIN '/data/app/com.eventmarketplace.app-JrCWdXV3HL-HEOQgWsK4-Q==/base.apk' ---
+11-03 16:35:55.620  1025 10322 D TurboZone: TurboZoneDex compilationReason unknown
+11-03 16:35:55.623  1025 10322 D installd: forkNotifyToRMS parcel pid=4565, ppid=1025, pkg=com.eventmarketplace.app, status=0, num=0, time=0
+11-03 16:35:55.657  4565  4565 W /apex/com.android.runtime/bin/dex2oat: [MemLeak.JavaTrack]: failed to dlopen libmemleak_tracker.so
+11-03 16:35:55.688    47    47 W migration/6: type=1400 audit(0.0:980273): avc: granted { setsched } for pid=47 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:55.688    53    53 W migration/7: type=1400 audit(0.0:980274): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:55.698  2663  2663 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.705  2663  2663 I chatty  : uid=1001(radio) com.android.phone identical 3 lines
+11-03 16:35:55.709  2663  2663 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.709  2663  3869 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.709  2663  3870 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.709  2606  2606 D TelephonyUtil: onSignalStrengthsChanged
+11-03 16:35:55.709  2606  2606 D TelephonyUtil: handleSignalStrengthsChanged slotId:1
+11-03 16:35:55.709  2663  3869 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.710  2663  3870 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.710  1717  1717 I MQoS    : onSignal: mSubId=1,currDataSubID=0
+11-03 16:35:55.710  1717  1717 E MQoS    : invalid signal strength.
+11-03 16:35:55.710  2663  2737 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.710  2663  4290 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.711  2663  5178 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.711  2663  2663 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.711  2663  3870 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.711  2663  2663 D Mapcon  : TelephonyTracker: [onSignalStrengthsChanged]phoneId=1, level=4
+11-03 16:35:55.711  1717  1717 I MQoS    : received cell-signal:5
+11-03 16:35:55.711  2663  2663 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.712  2663  3974 D Mapcon  : VoiceManager-5-PrepareState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:55.712  2663  3974 D Mapcon  : VoiceManager-5-PrepareState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:55.712  2606  3045 I PreDnsQuery: No need to handled!
+11-03 16:35:55.712  2663  3974 D Mapcon  : VoiceManager-5-PrepareState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:55.712  2606  3045 I OllieMsgCenter: publishEvt=2131099740
+11-03 16:35:55.712  2663  3974 D Mapcon  : VoiceManager-5-DefaultState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:55.712  2663  3974 D Mapcon  : VoiceManager-5-DefaultState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:55.712  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:55.712  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_UMTS_RSCP_CHANGED
+11-03 16:35:55.713   681 32454 I OemNetd : setNetBoosterRsrpRsrq(-109, -1)
+11-03 16:35:55.713  1717  2042 I HwNetworkManagementService: setNetBoosterRsrpRsrq succeeded
+11-03 16:35:55.713  2663  2737 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.714  2663  2737 I chatty  : uid=1001(radio) Binder:2663_2 identical 2 lines
+11-03 16:35:55.715  2663  2737 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:55.880  4565  4565 I dex2oat : /apex/com.android.runtime/bin/dex2oat --input-vdex-fd=10 --output-vdex-fd=11 --resolve-startup-const-strings=true --max-image-block-size=1048576 --compiler-filter=speed-profile -j1 --profile-file-fd=14 --classpath-dir=/data/app/com.eventmarketplace.app-JrCWdXV3HL-HEOQgWsK4-Q== --class-loader-context=PCL[]{PCL[/system/framework/org.apache.http.legacy.jar]} --generate-mini-debug-info --compilation-reason=unknown
+11-03 16:35:55.881  4565  4565 I dex2oat : setting boot class path to /apex/com.android.runtime/javalib/core-oj.jar:/apex/com.android.runtime/javalib/core-libart.jar:/apex/com.android.runtime/javalib/okhttp.jar:/apex/com.android.runtime/javalib/bouncycastle.jar:/apex/com.android.runtime/javalib/apache-xml.jar:/system/framework/framework.jar:/system/framework/ext.jar:/system/framework/telephony-common.jar:/system/framework/voip-common.jar:/system/framework/ims-common.jar:/system/framework/android.test.base.jar:/system/framework/featurelayer-widget.jar:/system/framework/hwEmui.jar:/system/framework/hwPartBasicplatform.jar:/system/framework/telephony-separated.jar:/system/framework/hwTelephony-common.jar:/system/framework/hwPartTelephony.jar:/system/framework/hwPartTelephonyVSim.jar:/system/framework/hwPartTelephonyCust.jar:/system/framework/hwPartTelephonyFullnetworkOpt.jar:/system/framework/hwPartTelephonyTimezoneOpt.jar:/system/framework/hwPartTelephonyOpt.jar:/system/framework/hwPartSecurity.jar:/system/framework/hwPartSecurityFaceId.jar:/system/fra
+11-03 16:35:55.881  4565  4565 I         : HwCustType is 0
+11-03 16:35:55.881  4565  4565 E         : open file error
+11-03 16:35:55.881  4565  4565 I         : no cota live update cust policy found
+11-03 16:35:55.881  4565  4565 I         : GetCfgDirRealPolicyValue: custPolicyDirs: /system/emui/base:/system/emui/oversea:/system/emui/oversea_honor:/vendor/etc:/odm/etc:/odm/hw_odm/YAL-L41:/hw_product/etc:/hw_product/region_comm/oversea:/preas/oversea:/hw_product/hw_oem/YAL-L41:/preload/YAL-L41/hw/ru:/cust/global:/cust/hw/ru:/hw_product/special_cust/YAL-L41/hw/ru:/version/special_cust/YAL-L41/hw/ru:/cust/cotalite:/cust/ecota
+11-03 16:35:55.906  4064  4092 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:55.906  4064  4092 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:56.014  1717  1717 I MQoS    : onSignal: mSubId=0,currDataSubID=0
+11-03 16:35:56.014  2663  5178 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.014  2663  3870 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.014  2663  3869 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.014  2606  2606 D TelephonyUtil: onSignalStrengthsChanged
+11-03 16:35:56.015  2606  2606 D TelephonyUtil: handleSignalStrengthsChanged slotId:0
+11-03 16:35:56.015  2663  3870 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.015  2663  5178 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.015  2663  2663 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.015  2663  3870 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.015  2663  2737 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.016  2663  4290 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.016  2663  3870 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.016  2663  3833 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.016  2663  3869 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.017  1717  1717 I MQoS    : received cell-signal:4
+11-03 16:35:56.017  2663  2663 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.017  2663  2663 D Mapcon  : TelephonyTracker: [onSignalStrengthsChanged]phoneId=0, level=3
+11-03 16:35:56.017  2663  3960 D Mapcon  : VoiceManager-0-PrepareState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:56.017  2663  3960 I chatty  : uid=1001(radio) VoiceManager-0 identical 1 line
+11-03 16:35:56.018  2663  3960 D Mapcon  : VoiceManager-0-PrepareState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:56.018  2663  3960 D Mapcon  : VoiceManager-0-DefaultState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:56.017  2663  2663 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.018  2663  3833 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.018  2663  3869 E Telephony-accessory: [HwPhoneAccessoryService]:Failed to get instance of HwPhoneAccessoryService, not init yet.
+11-03 16:35:56.022  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:5,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:56.022  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:0,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:56.022  2606  3045 I NetworkQoeProxy: calcChannelNoRx dnsData is not present
+11-03 16:35:56.018  2663  3960 D Mapcon  : VoiceManager-0-DefaultState: [a]MsgIdEnum=MAPCON_MESSAGE_TM_CMD_SIGNAL_STRENGTH_CHANED_IND
+11-03 16:35:56.023  2606  3045 E Booster_NetworkQoeChr: [startTcpStackInfoStaticForChr]startTcpStackInfoStaticForChr failed, qoeTcpDataOpt is null
+11-03 16:35:56.023  2606  3045 D NpdcpAliveManager: ro.odm.npdcp_alive_cfg_enable is false
+11-03 16:35:56.024  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:56.024  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:56.024  2606  3045 I SmartDualCardSM: isSlaveCardNetworkBad return true,mIsSignalStengthPoors =true,mNetworkType=1,mDownlinkSpeedLimits=1048576,mDataRoaming=false
+11-03 16:35:56.024  2606  3045 E FourNetCombinationChr: getNetworkQoeInfo failed, qoeTcpDataOpt is null
+11-03 16:35:56.025  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. foregroundAppTcpRtt: 0, maxRatioChannelId: 0
+11-03 16:35:56.025  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. qoeString: 10423,4,0,431,1,0,4,0,431,457,2136,10,0,0,0,0,0
+11-03 16:35:56.088    53    53 W migration/7: type=1400 audit(0.0:980275): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:56.088    47    47 W migration/6: type=1400 audit(0.0:980276): avc: granted { setsched } for pid=47 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:56.103  4565  4565 I dex2oat : Large app, accepted running with swap.
+11-03 16:35:56.132    47    47 W migration/6: type=1400 audit(0.0:980277): avc: granted { setsched } for pid=47 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:56.132    53    53 W migration/7: type=1400 audit(0.0:980278): avc: granted { setsched } for pid=53 scontext=u:r:kernel:s0 tcontext=u:r:kernel:s0 tclass=process
+11-03 16:35:56.194  2641  3596 I PG_ash  : has widget app: com.huawei.android.totemweather
+11-03 16:35:56.194  2641  3596 I PG_ash  : Application com.huawei.android.totemweather, oversea just update widget, delay to H!
+11-03 16:35:56.475  4133  4168 D ZrHung.AppEyeUiProbe: stop UiProbe
+11-03 16:35:56.475  4133  4168 D ZrHung.AppEyeUiProbe: not watching, wait.
+11-03 16:35:56.565  1717  2042 D HwConnectivityServiceEx: set 10423 rmnet0 value false
+11-03 16:35:57.047  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:5,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:57.047  2606  3988 I Booster_Qoe: AdaBoostPredict rlt,index:0,NisPsSlow:0,NProba:431,rsrp(rssi):-108,rsrq(noise):-14,rtt(chload):0,buffhigh(uldelay):0,buffcomm(rtt):0
+11-03 16:35:57.047  2606  3045 I NetworkQoeProxy: calcChannelNoRx dnsData is not present
+11-03 16:35:57.048  2606  3045 E Booster_NetworkQoeChr: [startTcpStackInfoStaticForChr]startTcpStackInfoStaticForChr failed, qoeTcpDataOpt is null
+11-03 16:35:57.049  2606  3045 D NpdcpAliveManager: ro.odm.npdcp_alive_cfg_enable is false
+11-03 16:35:57.049  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:57.049  2606  3045 E SmartDualCardSM: isSignalStrengthPoorScreenOn 2/3G or UNKNOWN true slotId:1
+11-03 16:35:57.049  2606  3045 I SmartDualCardSM: isSlaveCardNetworkBad return true,mIsSignalStengthPoors =true,mNetworkType=1,mDownlinkSpeedLimits=1048576,mDataRoaming=false
+11-03 16:35:57.049  2606  3045 E FourNetCombinationChr: getNetworkQoeInfo failed, qoeTcpDataOpt is null
+11-03 16:35:57.050  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. foregroundAppTcpRtt: 0, maxRatioChannelId: 0
+11-03 16:35:57.050  2606  3407 I Hicom_Monitor: handleNetworkQoeReport. qoeString: 10423,4,0,431,1,0,4,0,431,457,2136,10,0,0,0,0,0
+11-03 16:35:57.199  4565  4565 W dex2oat : Accessing hidden method Landroid/view/WindowInsetsAnimationController;->getCurrentInsets()Landroid/graphics/Insets; (blacklist, linking, denied)
+11-03 16:35:57.199  4565  4565 W dex2oat : Accessing hidden method Landroid/view/View;->getWindowInsetsController()Landroid/view/WindowInsetsController; (blacklist, linking, denied)
+11-03 16:35:57.200  4565  4565 W dex2oat : Accessing hidden method Landroid/view/WindowInsetsAnimationController;->getHiddenStateInsets()Landroid/graphics/Insets; (blacklist, linking, denied)
+11-03 16:35:57.200  4565  4565 W dex2oat : Accessing hidden method Landroid/view/WindowInsetsAnimationController;->getShownStateInsets()Landroid/graphics/Insets; (blacklist, linking, denied)

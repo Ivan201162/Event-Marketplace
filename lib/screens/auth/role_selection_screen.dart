@@ -2,6 +2,7 @@ import 'package:event_marketplace_app/models/app_user.dart';
 import 'package:event_marketplace_app/models/user.dart' show UserRole;
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/services/auth_service.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +20,14 @@ class RoleSelectionScreen extends ConsumerStatefulWidget {
 class _RoleSelectionScreenState extends ConsumerState<RoleSelectionScreen> {
   UserRole? _selectedRole;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("ROLE_SELECTION_SHOWN");
+    });
+  }
 
   Future<void> _selectRole(UserRole role) async {
     if (_isLoading) return;

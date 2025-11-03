@@ -3,6 +3,7 @@ import 'package:event_marketplace_app/models/post.dart';
 import 'package:event_marketplace_app/models/story.dart';
 import 'package:event_marketplace_app/services/feed_service.dart';
 import 'package:event_marketplace_app/services/follow_service.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,6 +38,12 @@ class FeedScreenImproved extends ConsumerWidget {
     final asyncStories = AppConfig.kShowFeedStories 
         ? ref.watch(feedStoriesProvider)
         : null;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      asyncPosts.whenData((posts) {
+        debugLog("FEED_LOADED");
+      });
+    });
 
     return Scaffold(
       appBar: AppBar(

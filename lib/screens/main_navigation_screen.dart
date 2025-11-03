@@ -6,6 +6,7 @@ import 'package:event_marketplace_app/screens/home/home_screen_simple.dart';
 import 'package:event_marketplace_app/screens/ideas/ideas_screen.dart';
 import 'package:event_marketplace_app/screens/requests/requests_screen_improved.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Main navigation screen with bottom navigation
@@ -83,8 +84,37 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        if (_currentIndex == 0) {
+          final shouldExit = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Выйти из приложения?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Нет'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Да'),
+                ),
+              ],
+            ),
+          );
+          if (shouldExit == true && mounted) {
+            SystemNavigator.pop();
+          }
+        } else {
+          setState(() => _currentIndex = 0);
+          _pageController.animateToPage(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        }
+      },
+      child: Scaffold(
+        body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -196,6 +226,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
             ),
           ),
         ),
+      ),
       ),
     );
   }

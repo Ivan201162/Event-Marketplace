@@ -1,9 +1,10 @@
+import 'package:event_marketplace_app/core/auth_gate.dart';
 import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
 import 'package:event_marketplace_app/screens/auth/login_screen_modern.dart';
 import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
 import 'package:event_marketplace_app/screens/auth/role_selection_screen.dart';
-import 'package:event_marketplace_app/screens/register_screen.dart';
+import 'package:event_marketplace_app/screens/auth/register_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_screen_improved.dart';
 import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
@@ -25,7 +26,7 @@ import 'package:go_router/go_router.dart';
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/login', // Production: логин всегда первый экран
+    initialLocation: '/auth-gate', // Production: auth gate проверяет сессию
     debugLogDiagnostics: true,
     observers: [
       _AnalyticsRouteObserver(),
@@ -39,6 +40,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // Проверка авторизации
+      GoRoute(
+        path: '/auth-gate',
+        name: 'auth-gate',
+        builder: (context, state) => const AuthGate(),
+      ),
       GoRoute(
         path: '/auth-check',
         name: 'auth-check',
@@ -55,7 +61,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/register',
         name: 'register',
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => const RegisterScreenEnhanced(),
       ),
 
       GoRoute(

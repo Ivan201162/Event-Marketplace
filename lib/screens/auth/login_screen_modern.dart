@@ -2,6 +2,7 @@ import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/core/micro_animations.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -52,6 +53,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved>
     ));
     
     _animationController.forward();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("AUTH_SCREEN_SHOWN");
+    });
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/providers/requests_providers.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,12 @@ class RequestsScreenImproved extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(requestsProvider).whenData((requests) {
+        debugLog("REQUESTS_LOADED");
+      });
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Заявки'),
@@ -57,10 +64,10 @@ class RequestsScreenImproved extends ConsumerWidget {
                     return _RequestCard(
                       title: request.title ?? 'Заявка',
                       description: request.description ?? '',
-                      budget: '${request.budget ?? 0} ₽',
-                      deadline: request.deadline != null 
-                          ? '${request.deadline!.difference(DateTime.now()).inDays} дней'
+                      budget: request.budgetMin > 0 || request.budgetMax > 0
+                          ? '${request.budgetMin.toInt()}-${request.budgetMax.toInt()} ₽'
                           : 'Не указан',
+                      deadline: '${request.dateTime.difference(DateTime.now()).inDays} дней',
                       category: request.category ?? 'Другое',
                       status: request.status?.toString().split('.').last ?? 'pending',
                       onTap: () {

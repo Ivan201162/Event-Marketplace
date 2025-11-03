@@ -16,8 +16,8 @@ class OptimizedChatService {
   Stream<List<EnhancedChat>> getUserChatsStream(String userId) {
     return _firestore
         .collection('chats')
-        .where('members', arrayContains: userId)
-        .orderBy('lastMessageAt', descending: true)
+        .where('participants', arrayContains: userId)
+        .orderBy('updatedAt', descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {
@@ -43,8 +43,8 @@ class OptimizedChatService {
 
       final snapshot = await _firestore
           .collection('chats')
-          .where('members', arrayContains: userId)
-          .orderBy('lastMessageAt', descending: true)
+          .where('participants', arrayContains: userId)
+          .orderBy('updatedAt', descending: true)
           .get();
 
       final chats = snapshot.docs.map((doc) {

@@ -1,0 +1,17 @@
+﻿
+11-03 19:04:20.873  1025 10322 V installd: DexInv: --- END '/data/app/com.event
+marketplace.app-G9OYvEDrifYirJD2bBhjZw==/base.apk' (success) ---
+11-03 19:04:20.873  1025 10322 D installd: forkNotifyToRMS parcel pid=0, ppid=1
+025, pkg=com.eventmarketplace.app, status=2, num=0, time=0
+11-03 19:04:29.042  1717  1717 I JobScheduler: About to run job on context 0, j
+ob: JobStatus{37993fe #u0a423/436220505 com.eventmarketplace.app/com.google.and
+roid.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService u=0
+ s=10423 TIME=-10ms:none NET READY}
+11-03 19:04:29.058  2641  3596 I PG_ash  : pkg android calling: com.eventmarket
+place.app, pid: 17988 ,type: bindservice
+11-03 19:04:31.821  1717  3403 I JobScheduler: APP response end time, Completed
+ JobStatus{37993fe #u0a423/436220505 com.eventmarketplace.app/com.google.androi
+d.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService u=0 s=
+10423 TIME=-2s789ms:none NET READY}, reschedule=false
+
+

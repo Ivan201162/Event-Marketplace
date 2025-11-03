@@ -2,6 +2,7 @@ import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/models/idea.dart';
 import 'package:event_marketplace_app/providers/ideas_provider.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,12 @@ class IdeasScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(ideasProvider).whenData((ideas) {
+        debugLog("IDEAS_LOADED");
+      });
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Идеи'),

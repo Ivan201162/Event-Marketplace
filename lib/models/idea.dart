@@ -15,9 +15,8 @@ class Idea {
     DateTime parseDateTime(dynamic value) {
       if (value == null) return DateTime.now();
       if (value is DateTime) return value;
-      if (value.toString().contains('Timestamp')) {
-        // Это Firestore Timestamp, нужно обработать через toDate()
-        return DateTime.now(); // Временная заглушка, реально нужно использовать cloud_firestore
+      if (value is Timestamp) {
+        return value.toDate();
       }
       try {
         return DateTime.parse(value.toString());

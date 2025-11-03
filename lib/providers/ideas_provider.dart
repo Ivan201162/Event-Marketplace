@@ -35,7 +35,7 @@ class IdeasNotifier extends Notifier<AsyncValue<List<Idea>>> {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .listen((snapshot) {
-      final ideas = snapshot.docs.map(Idea.fromDocument).toList();
+      final ideas = snapshot.docs.map(Idea.fromFirestore).toList();
       state = AsyncValue.data(ideas);
     });
   }

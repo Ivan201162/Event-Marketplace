@@ -20,9 +20,9 @@ final createRequestProvider =
   await requestsService.createRequest(request);
 });
 
-/// Провайдер для обновления заявки
+/// Провайдер для обновления статуса заявки
 final updateRequestProvider =
-    FutureProvider.family<void, Request>((ref, request) async {
+    FutureProvider.family<void, ({String requestId, String status})>((ref, params) async {
   final requestsService = ref.read(requestsServiceProvider);
-  await requestsService.updateRequest(request);
+  await requestsService.updateRequestStatus(params.requestId, params.status);
 });

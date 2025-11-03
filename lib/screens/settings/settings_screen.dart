@@ -1,3 +1,5 @@
+import 'package:event_marketplace_app/core/build_version.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -165,9 +167,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             textColor: Colors.red,
             onTap: _showLogoutDialog,
           ),
+          
+          // Метка версии внизу
+          Padding(
+            padding: const EdgeInsets.only(top: 32, bottom: 16),
+            child: Center(
+              child: Text(
+                'Build: $BUILD_VERSION',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("SETTINGS_OPENED");
+    });
   }
 
   Widget _buildSectionHeader(String title) {
