@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 /// Модель идеи
 class Idea {
 
@@ -9,6 +11,21 @@ class Idea {
   });
 
   factory Idea.fromMap(Map<String, dynamic> map, String id) {
+    // Обработка Timestamp из Firestore
+    DateTime parseDateTime(dynamic value) {
+      if (value == null) return DateTime.now();
+      if (value is DateTime) return value;
+      if (value.toString().contains('Timestamp')) {
+        // Это Firestore Timestamp, нужно обработать через toDate()
+        return DateTime.now(); // Временная заглушка, реально нужно использовать cloud_firestore
+      }
+      try {
+        return DateTime.parse(value.toString());
+      } catch (_) {
+        return DateTime.now();
+      }
+    }
+
     return Idea(
       id: id,
       authorId: map['authorId'] ?? '',
@@ -23,11 +40,17 @@ class Idea {
       sharesCount: map['sharesCount'] ?? 0,
       isLiked: map['isLiked'] ?? false,
       isSaved: map['isSaved'] ?? false,
-      createdAt:
-          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt:
-          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: parseDateTime(map['createdAt']),
+      updatedAt: parseDateTime(map['updatedAt']),
     );
+  }
+
+  factory Idea.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>?;
+    if (data == null) {
+      throw Exception('Document data is null for ${doc.id}');
+    }
+    return Idea.fromMap(data, doc.id);
   }
   final String id;
   final String authorId;

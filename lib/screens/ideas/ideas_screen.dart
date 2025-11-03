@@ -1,5 +1,7 @@
 import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/models/idea.dart';
+import 'package:event_marketplace_app/providers/ideas_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,28 +29,46 @@ class IdeasScreen extends ConsumerWidget {
           // TODO: Implement refresh
           await Future.delayed(const Duration(seconds: 1));
         },
-        child: GridView.builder(
-          padding: const EdgeInsets.all(16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 0.8,
-          ),
-          itemCount: 20, // Mock data
-          itemBuilder: (context, index) {
-            return _IdeaCard(
-              title: 'Идея ${index + 1}',
-              description: 'Описание идеи номер ${index + 1}',
-              likesCount: (index + 1) * 5,
-              author: 'Автор ${index + 1}',
-              category: _getIdeaCategory(index),
-              onTap: () {
-                // TODO: Navigate to idea details
+        child: Consumer(
+          builder: (context, ref, child) {
+            final ideasAsync = ref.watch(ideasProvider);
+            return ideasAsync.when(
+              data: (ideas) {
+                if (ideas.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
+                        const SizedBox(height: 16),
+                        const Text('Нет идей', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        const Text('Создайте первую идею'),
+                      ],
+                    ),
+                  );
+                }
+                // Вертикальный PageView для Shorts формата
+                return PageView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: ideas.length,
+                  itemBuilder: (context, index) {
+                    final idea = ideas[index];
+                    return _IdeaShortsCard(idea: idea);
+                  },
+                );
               },
-              onLike: () {
-                // TODO: Implement like
-              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text('Ошибка загрузки: $error'),
+                  ],
+                ),
+              ),
             );
           },
         ),
@@ -60,127 +80,106 @@ class IdeasScreen extends ConsumerWidget {
     );
   }
 
-  String _getIdeaCategory(int index) {
-    final categories = [
-      'Свадьба',
-      'Корпоратив',
-      'День рождения',
-      'Детский праздник',
-      'Фестиваль',
-    ];
-    return categories[index % categories.length];
-  }
 }
 
-class _IdeaCard extends StatelessWidget {
-
-  const _IdeaCard({
-    required this.title,
-    required this.description,
-    required this.likesCount,
-    required this.author,
-    required this.category,
-    required this.onTap,
-    required this.onLike,
-  });
-  final String title;
-  final String description;
-  final int likesCount;
-  final String author;
-  final String category;
-  final VoidCallback onTap;
-  final VoidCallback onLike;
+/// Карточка идеи в формате Shorts (вертикальная)
+class _IdeaShortsCard extends StatelessWidget {
+  const _IdeaShortsCard({required this.idea});
+  final Idea idea;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
+    // Shorts формат: вертикальное видео или квадратное фото на весь экран
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Медиа (видео или фото) - используем первый элемент из media массива
+          if (idea.media.isNotEmpty)
+            Image.network(
+              idea.media.first,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey[900],
+                child: const Icon(Icons.broken_image, color: Colors.white54),
+              ),
+            )
+          else
+            Container(
+              color: Colors.grey[900],
+              child: const Center(
+                child: Icon(Icons.image, size: 64, color: Colors.white54),
+              ),
+            ),
+          
+          // Градиент снизу для текста
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withOpacity(0.8),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.favorite_border, size: 20),
-                    onPressed: onLike,
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // Category
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  category,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // Description
-              Expanded(
-                child: Text(
-                  description,
-                  style: const TextStyle(fontSize: 12),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              // Footer
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      author,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ),
                   Text(
-                    '$likesCount',
+                    idea.text.isNotEmpty ? idea.text : 'Идея',
                     style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+          
+          // Действия справа
+          Positioned(
+            right: 16,
+            bottom: 80,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.favorite_border, color: Colors.white, size: 32),
+                  onPressed: () {
+                    // TODO: Лайк
+                  },
+                ),
+                const SizedBox(height: 16),
+                IconButton(
+                  icon: const Icon(Icons.comment_outlined, color: Colors.white, size: 32),
+                  onPressed: () {
+                    // TODO: Комментарии
+                  },
+                ),
+                const SizedBox(height: 16),
+                IconButton(
+                  icon: const Icon(Icons.share_outlined, color: Colors.white, size: 32),
+                  onPressed: () {
+                    // TODO: Поделиться
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
