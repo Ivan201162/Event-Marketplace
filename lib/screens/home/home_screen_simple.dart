@@ -24,7 +24,33 @@ class HomeScreenSimple extends ConsumerWidget {
       debugLog("HOME_LOADED");
     });
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          final shouldExit = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Выход'),
+              content: const Text('Вы действительно хотите выйти из приложения?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Отмена'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text('Выход'),
+                ),
+              ],
+            ),
+          );
+          if (shouldExit == true && context.mounted) {
+            // Закрываем приложение
+          }
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         title: const Text('Event'),
         actions: [

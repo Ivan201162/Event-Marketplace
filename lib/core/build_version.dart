@@ -1,3 +1,3 @@
 /// Версия сборки для отображения
-const String BUILD_VERSION = 'v4.5-refresh-stories';
+const String BUILD_VERSION = 'v5.0-full-suite';
 
