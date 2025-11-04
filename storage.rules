@@ -77,6 +77,15 @@ service firebase.storage {
       allow read: if request.auth != null;
     }
     
+    // Stories (uploads/stories/{uid}/{id}.jpg|mp4)
+    match /uploads/stories/{uid}/{allPaths=**} {
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.size <= 20 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*') ||
+            request.resource.contentType.matches('video/.*'));
+      allow read: if request.auth != null;
+    }
+    
     // Обратная совместимость со старым путём
     match /requests/{userId}/{requestId}/{allPaths=**} {
       allow read: if request.auth != null;

@@ -59,9 +59,25 @@ class FeedScreenImproved extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(followingFeedProvider);
-          if (AppConfig.kShowFeedStories) {
-            ref.invalidate(feedStoriesProvider);
+          try {
+            ref.invalidate(followingFeedProvider);
+            if (AppConfig.kShowFeedStories) {
+              ref.invalidate(feedStoriesProvider);
+            }
+            await Future.delayed(const Duration(milliseconds: 500));
+            debugLog("REFRESH_OK:feed");
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Обновлено'), duration: Duration(seconds: 1)),
+              );
+            }
+          } catch (e) {
+            debugLog("REFRESH_ERR:feed:$e");
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Ошибка обновления: $e')),
+              );
+            }
           }
         },
         child: asyncPosts.when(

@@ -32,7 +32,23 @@ class RequestsScreenImproved extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(requestsProvider);
+          try {
+            ref.invalidate(requestsProvider);
+            await Future.delayed(const Duration(milliseconds: 500));
+            debugLog("REFRESH_OK:requests");
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Обновлено'), duration: Duration(seconds: 1)),
+              );
+            }
+          } catch (e) {
+            debugLog("REFRESH_ERR:requests:$e");
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Ошибка обновления: $e')),
+              );
+            }
+          }
         },
         child: Consumer(
           builder: (context, ref, child) {

@@ -1,0 +1,35 @@
+warning: in the working copy of 'firestore.rules', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/firestore.rules b/firestore.rules[m
+[1mindex 7c762ede..78200335 100644[m
+[1m--- a/firestore.rules[m
+[1m+++ b/firestore.rules[m
+[36m@@ -174,7 +174,28 @@[m [mservice cloud.firestore {[m
+     match /requests/{requestId} {[m
+       allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;[m
+       allow read: if isSignedIn();[m
+[31m-      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.createdBy;[m
+[32m+[m[32m      allow update: if isSignedIn() && request.auth.uid == resource.data.createdBy;[m
+[32m+[m[32m      allow delete: if isSignedIn() && request.auth.uid == resource.data.createdBy;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Stories — создаёт только владелец, читают авторизованные[m
+[32m+[m[32m    match /stories/{storyId} {[m
+[32m+[m[32m      allow read: if isSignedIn();[m
+[32m+[m[32m      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;[m
+[32m+[m[32m      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Support tickets — создаёт авторизованный[m
+[32m+[m[32m    match /support_tickets/{ticketId} {[m
+[32m+[m[32m      allow read: if isSignedIn() && request.auth.uid == resource.data.userId;[m
+[32m+[m[32m      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;[m
+[32m+[m[32m      allow update: if isSignedIn() && request.auth.uid == resource.data.userId;[m
+[32m+[m[32m      allow delete: if false;[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+[32m+[m[32m    // Notifications — только владелец[m
+[32m+[m[32m    match /notifications/{notificationId} {[m
+[32m+[m[32m      allow read, write: if isSignedIn() && request.auth.uid == resource.data.userId;[m
+     }[m
+ [m
+     // Подписки — только для авторизованных[m

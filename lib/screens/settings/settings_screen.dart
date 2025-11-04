@@ -22,13 +22,27 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   String _currency = 'RUB';
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("SETTINGS_OPENED");
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Настройки'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: ListView(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        context.pop();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Настройки'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        ),
+        body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // Профиль
@@ -54,7 +68,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: _isDarkMode ? 'Включена' : 'Выключена',
             trailing: Switch(
               value: _isDarkMode,
-              onChanged: (value) => setState(() => _isDarkMode = value),
+              onChanged: (value) {
+                setState(() => _isDarkMode = value);
+                debugLog("SETTINGS_THEME:${value ? 'dark' : 'light'}");
+              },
             ),
           ),
           _buildSettingsTile(
@@ -181,16 +198,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
         ],
+        ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugLog("SETTINGS_OPENED");
-    });
   }
 
   Widget _buildSectionHeader(String title) {

@@ -33,8 +33,23 @@ class IdeasScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          // TODO: Implement refresh
-          await Future.delayed(const Duration(seconds: 1));
+          try {
+            ref.invalidate(ideasProvider);
+            await Future.delayed(const Duration(milliseconds: 500));
+            debugLog("REFRESH_OK:ideas");
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Обновлено'), duration: Duration(seconds: 1)),
+              );
+            }
+          } catch (e) {
+            debugLog("REFRESH_ERR:ideas:$e");
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Ошибка обновления: $e')),
+              );
+            }
+          }
         },
         child: Consumer(
           builder: (context, ref, child) {
