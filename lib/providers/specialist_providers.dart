@@ -45,7 +45,7 @@ final topSpecialistsByCityProvider =
           .where('city', isEqualTo: city)
           .where('isActive', isEqualTo: true)
           .orderBy('rating', descending: true)
-          .limit(10);
+          .limit(20);
       final snapshot = await query.get();
       return snapshot.docs.map(SpecialistEnhanced.fromFirestore).toList();
     } catch (e2) {
@@ -86,9 +86,9 @@ final topSpecialistsByRussiaProvider =
     // Сортируем по scoreWeekly
     specIds.sort((a, b) => (scoresMap[b] ?? 0).compareTo(scoresMap[a] ?? 0));
 
-    // Получаем топ-10 специалистов
+    // Получаем топ-20 специалистов
     final specialists = <SpecialistEnhanced>[];
-    for (final specId in specIds.take(10)) {
+    for (final specId in specIds.take(20)) {
       final specDoc = await FirebaseFirestore.instance
           .collection('specialists')
           .doc(specId)
@@ -109,7 +109,7 @@ final topSpecialistsByRussiaProvider =
           .where('region', isEqualTo: 'Россия')
           .where('isActive', isEqualTo: true)
           .orderBy('rating', descending: true)
-          .limit(10);
+          .limit(20);
       final snapshot = await query.get();
       return snapshot.docs.map(SpecialistEnhanced.fromFirestore).toList();
     } catch (e2) {

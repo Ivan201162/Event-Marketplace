@@ -174,7 +174,28 @@ service cloud.firestore {
     match /requests/{requestId} {
       allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
       allow read: if isSignedIn();
-      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.createdBy;
+      allow update: if isSignedIn() && request.auth.uid == resource.data.createdBy;
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.createdBy;
+    }
+    
+    // Stories — создаёт только владелец, читают авторизованные
+    match /stories/{storyId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
+    }
+    
+    // Support tickets — создаёт авторизованный
+    match /support_tickets/{ticketId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.userId;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && request.auth.uid == resource.data.userId;
+      allow delete: if false;
+    }
+    
+    // Notifications — только владелец
+    match /notifications/{notificationId} {
+      allow read, write: if isSignedIn() && request.auth.uid == resource.data.userId;
     }
 
     // Подписки — только для авторизованных

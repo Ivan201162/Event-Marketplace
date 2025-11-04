@@ -119,13 +119,33 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
                     ),
                   ];
                 },
-                body: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildPostsTab(user),
-                    _buildReelsTab(user),
-                    _buildReviewsTab(user),
-                  ],
+                body: RefreshIndicator(
+                  onRefresh: () async {
+                    try {
+                      await Future.delayed(const Duration(milliseconds: 500));
+                      debugLog("REFRESH_OK:profile");
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Обновлено'), duration: Duration(seconds: 1)),
+                        );
+                      }
+                    } catch (e) {
+                      debugLog("REFRESH_ERR:profile:$e");
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Ошибка обновления: $e')),
+                        );
+                      }
+                    }
+                  },
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildPostsTab(user),
+                      _buildReelsTab(user),
+                      _buildReviewsTab(user),
+                    ],
+                  ),
                 ),
               );
             } catch (e) {

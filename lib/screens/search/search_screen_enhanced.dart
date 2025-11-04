@@ -173,7 +173,14 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                     const Text('Категории', style: TextStyle(fontWeight: FontWeight.w500)),
                     Wrap(
                       spacing: 8,
-                      children: ['Ведущий', 'Фотограф', 'Видеограф', 'Организатор', 'DJ', 'Декор'].map((cat) {
+                      children: const [
+                        'ведущий', 'диджей', 'фотограф', 'видеограф', 'организатор мероприятий',
+                        'аниматор', 'агенство праздников', 'аренда аппаратуры', 'аренда костюмов',
+                        'аренда платьев', 'декоратор', 'флорист', 'пиротехник', 'свет',
+                        'звукорежиссёр', 'кавер-бэнд', 'музыкант', 'вокалист', 'ведущий аукционов',
+                        'тамада', 'сценарист', 'постановщик', 'координатор', 'детский аниматор',
+                        'иллюзионист', 'фокусник', 'хореограф', 'хостес', 'промо-персонал'
+                      ].map((cat) {
                         return FilterChip(
                           label: Text(cat),
                           selected: _selectedCategories.contains(cat),
@@ -292,7 +299,29 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
 
             // Результаты
             Expanded(
-              child: searchResultsAsync.when(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  try {
+                    setState(() => _searchState = SearchState.loading);
+                    ref.invalidate(filteredSpecialistsProvider);
+                    ref.refresh(filteredSpecialistsProvider);
+                    await Future.delayed(const Duration(milliseconds: 500));
+                    debugLog("REFRESH_OK:search");
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Обновлено'), duration: Duration(seconds: 1)),
+                      );
+                    }
+                  } catch (e) {
+                    debugLog("REFRESH_ERR:search:$e");
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Ошибка обновления: $e')),
+                      );
+                    }
+                  }
+                },
+                child: searchResultsAsync.when(
                 data: (specialists) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     if (mounted) {
@@ -418,6 +447,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                     ),
                   );
                 },
+                ),
               ),
             ),
           ],

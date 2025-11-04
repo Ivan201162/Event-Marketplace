@@ -15,6 +15,7 @@ import 'package:event_marketplace_app/screens/legal/terms_of_use_screen.dart';
 import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
 import 'package:event_marketplace_app/screens/monetization/monetization_screen.dart';
 import 'package:event_marketplace_app/screens/notifications/notifications_screen.dart';
+import 'package:event_marketplace_app/screens/notifications/notifications_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/profile/edit_profile_advanced.dart';
 import 'package:event_marketplace_app/screens/profile/profile_edit_screen.dart';
 import 'package:event_marketplace_app/screens/profile/profile_screen_advanced.dart';
@@ -180,7 +181,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/notifications',
         name: 'notifications',
-        builder: (context, state) => const NotificationsScreen(),
+        builder: (context, state) => const NotificationsScreenEnhanced(),
       ),
 
       // Юридические документы
