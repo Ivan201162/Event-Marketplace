@@ -49,9 +49,14 @@ class HomeScreenSimple extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Приветствие
-                GestureDetector(
-                  onTap: () => context.go('/profile/${user.uid}'),
-                  child: Container(
+                Builder(
+                  builder: (context) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      debugLog("HOME_BANNER_RENDERED");
+                    });
+                    return GestureDetector(
+                      onTap: () => context.go('/profile/${user.uid}'),
+                      child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(context.isSmallScreen ? 20 : 24),
                     decoration: BoxDecoration(
@@ -116,6 +121,8 @@ class HomeScreenSimple extends ConsumerWidget {
                       ],
                     ),
                   ),
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 24),

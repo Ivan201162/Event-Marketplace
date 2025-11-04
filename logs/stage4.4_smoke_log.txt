@@ -1,0 +1,44 @@
+﻿
+11-04 11:01:41.293 20058 20058 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-04 11:01:41.375 20058 20133 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-04 11:01:41.392 20058 20058 W marketplace.app: type=1400 audit(0.0:1003257):
+ avc: denied { read } for pid=20058 name="max_map_count" dev="proc" ino=1958562
+5 scontext=u:r:untrusted_app:s0:c172,c257,c512,c768 tcontext=u:object_r:proc_ma
+x_map_count:s0 tclass=file permissive=0
+11-04 11:01:44.980 20058 20058 I flutter : APP: APP: BUILD OK v4.4
+11-04 11:01:44.993 20058 20058 I flutter : APP: AUTH_SCREEN_SHOWN
+11-04 11:01:45.028 20058 20058 I flutter : APP: AUTH_SCREEN_SHOWN
+11-04 11:01:45.434  1717  2337 D ActivityManager: cleanUpApplicationRecord app:
+ 13783:com.google.android.apps.docs/u0a182, bad: false, restarting: false, allo
+wRestart: true
+11-04 11:01:47.935  1717  2741 D ActivityManager: cleanUpApplicationRecord app:
+ 14580:com.google.android.gms.feedback/u0a167, bad: false, restarting: false, a
+llowRestart: true
+11-04 11:01:54.204  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1003278
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=8133 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-04 11:01:54.205  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-04 11:02:00.244  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1003279
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=8133 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-04 11:02:00.245  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-04 11:02:06.284  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1003282
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=8133 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-04 11:02:06.285  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-04 11:02:12.325  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-04 11:02:12.324  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1003287
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=8133 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+
+

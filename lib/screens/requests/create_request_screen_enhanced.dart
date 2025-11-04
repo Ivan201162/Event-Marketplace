@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseException;
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -244,6 +245,8 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
         context.pop(); // Возвращаемся на предыдущий экран
       }
     } catch (e) {
+      final errorCode = e is FirebaseException ? e.code : 'unknown';
+      debugLog("REQUEST_PUBLISH_FAILED:$errorCode");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка: $e')),

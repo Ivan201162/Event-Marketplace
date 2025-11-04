@@ -353,6 +353,56 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "city",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "rating",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "specialists",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "role",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "city",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "scoreWeekly",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "specialists",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "city",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "scoreWeekly",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "specialists",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "role",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "categories",
           "arrayConfig": "CONTAINS"
         },

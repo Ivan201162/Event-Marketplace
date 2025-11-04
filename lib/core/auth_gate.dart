@@ -45,17 +45,34 @@ class _AuthGateState extends State<AuthGate> {
           return;
         }
 
-        final role = userDoc.data()?['role'];
+        final userData = userDoc.data()!;
+        final role = userData['role'];
+        final firstName = userData['firstName'];
+        final lastName = userData['lastName'];
+        
+        // Проверка 1: если нет role → /role-selection
         if (role == null || role.toString().isEmpty) {
           debugLog("ROLE_SELECTION_SHOWN");
           if (mounted) {
             context.go('/role-selection');
           }
-        } else {
-          debugLog("HOME_LOADED");
+          return;
+        }
+        
+        // Проверка 2: если отсутствуют firstName или lastName → /onboarding/complete-profile
+        if (firstName == null || firstName.toString().isEmpty ||
+            lastName == null || lastName.toString().isEmpty) {
+          debugLog("AUTH_ENRICH_PROFILE_OPENED");
           if (mounted) {
-            context.go('/main');
+            context.go('/onboarding/complete-profile');
           }
+          return;
+        }
+        
+        // Всё готово → /main
+        debugLog("HOME_LOADED");
+        if (mounted) {
+          context.go('/main');
         }
       } catch (e) {
         debugLog("ERROR:AUTH_GATE_CHECK:$e");

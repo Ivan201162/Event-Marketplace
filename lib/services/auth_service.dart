@@ -571,21 +571,21 @@ class AuthService {
       }
 
       if (!snapshot.exists) {
-        // Generate unique username for Google sign-in
-        final username = await _generateUniqueUsername(user.displayName, user.email);
-        
         // Create new user profile with Google data
+        // username не генерируем - оставляем пустым (опционально)
         await docRef.set({
           'uid': user.uid,
           'name': user.displayName ?? 'Пользователь',
-          'firstName': firstName,
-          'lastName': lastName,
+          'firstName': firstName.isEmpty ? null : firstName,
+          'lastName': lastName.isEmpty ? null : lastName,
           'email': user.email,
           'phone': user.phoneNumber ?? '',
           'avatarUrl': user.photoURL,
           'displayName': user.displayName,
           'photoURL': user.photoURL,
-          'username': username,
+          'username': null, // Опционально, пользователь дозаполнит
+          'usernameLower': null,
+          'city': null, // Пользователь выберет/определит гео позже
           'role': null, // Role will be selected on role-selection screen
           'roleSelected': false,
           'provider': 'google',
@@ -612,12 +612,14 @@ class AuthService {
           updateData['name'] = user.displayName ?? 'Пользователь';
         }
         if (existingData['firstName'] == null ||
-            existingData['firstName'] == '') {
-          updateData['firstName'] = firstName;
+            existingData['firstName'] == '' ||
+            existingData['firstName'] == null) {
+          updateData['firstName'] = firstName.isEmpty ? null : firstName;
         }
         if (existingData['lastName'] == null ||
-            existingData['lastName'] == '') {
-          updateData['lastName'] = lastName;
+            existingData['lastName'] == '' ||
+            existingData['lastName'] == null) {
+          updateData['lastName'] = lastName.isEmpty ? null : lastName;
         }
         if (existingData['avatarUrl'] == null ||
             existingData['avatarUrl'] == '') {
@@ -630,6 +632,11 @@ class AuthService {
         if (existingData['photoURL'] == null ||
             existingData['photoURL'] == '') {
           updateData['photoURL'] = user.photoURL;
+        }
+        // photoUrl тоже обновляем
+        if (existingData['photoUrl'] == null ||
+            existingData['photoUrl'] == '') {
+          updateData['photoUrl'] = user.photoURL;
         }
 
         await docRef.update(updateData);

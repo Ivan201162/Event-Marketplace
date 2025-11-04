@@ -74,19 +74,22 @@ service cloud.firestore {
     // Пользователи
     match /users/{userId} {
       allow read: if isSignedIn();
-      allow create: if isOwner(userId);
-      allow update: if isOwner(userId);
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && request.auth.uid == userId;
       allow delete: if isOwner(userId);
       match /saved_ideas/{docId} {
         allow read, write: if isOwner(userId);
+      }
+      match /savedFilters/{filterId} {
+        allow read, create, update, delete: if isSignedIn() && request.auth.uid == userId;
       }
     }
 
     // Специалисты — публичное чтение, запись только владельцу
     match /specialists/{specialistId} {
-      allow read: if isSignedIn();
+      allow read: if true;
       allow create: if isOwner(specialistId);
-      allow update: if isOwner(specialistId);
+      allow update: if isSignedIn() && request.auth.uid == resource.data.userId;
       allow delete: if isOwner(specialistId);
       match /cases/{caseId} {
         allow read: if isSignedIn();
@@ -104,8 +107,9 @@ service cloud.firestore {
 
     // Отзывы — публичное чтение, запись только авторизованным
     match /reviews/{reviewId} {
-      allow read: if isSignedIn();
-      allow write: if isSignedIn();
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
     }
 
     // Уведомления — только для владельца
