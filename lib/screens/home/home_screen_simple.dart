@@ -46,9 +46,31 @@ class HomeScreenSimple extends ConsumerWidget {
             );
           }
 
-          return SingleChildScrollView(
-            padding: context.screenPadding,
-            child: Column(
+          return RefreshIndicator(
+            onRefresh: () async {
+              try {
+                ref.invalidate(topSpecialistsByRussiaProvider);
+                ref.invalidate(topSpecialistsByCityProvider(user.city ?? 'Москва'));
+                await Future.delayed(const Duration(milliseconds: 500));
+                debugLog("REFRESH_OK:home");
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Обновлено'), duration: Duration(seconds: 1)),
+                  );
+                }
+              } catch (e) {
+                debugLog("REFRESH_ERR:home:$e");
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Ошибка обновления: $e')),
+                  );
+                }
+              }
+            },
+            child: SingleChildScrollView(
+              padding: context.screenPadding,
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Приветствие
@@ -184,14 +206,8 @@ class HomeScreenSimple extends ConsumerWidget {
                     userCity: user.city,
                   ),
 
-                const SizedBox(height: 24),
-
-                // Карточка "Город не указан" или список специалистов города
-                if (user.city == null || user.city!.isEmpty)
-                  _buildNoCityCard(context)
-                else
-                  _buildCitySpecialistsSection(context, ref, user.city!),
               ],
+            ),
             ),
           );
         },
@@ -286,6 +302,13 @@ class HomeScreenSimple extends ConsumerWidget {
         const SizedBox(height: 16),
         specialistsAsync.when(
           data: (specialists) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (isRussia) {
+                debugLog("HOME_TOP_RU_COUNT:${specialists.length}");
+              } else {
+                debugLog("HOME_TOP_CITY_COUNT:${specialists.length}");
+              }
+            });
             if (specialists.isEmpty) {
               return AppComponents.emptyState(
                 icon: Icons.star_outline,
