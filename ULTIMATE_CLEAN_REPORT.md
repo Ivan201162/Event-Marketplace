@@ -295,5 +295,14 @@ adb shell monkey -p com.eventmarketplace.app -c android.intent.category.LAUNCHER
 
 **Дата завершения:** 2024-11-04  
 **Ветка:** `prod/ultimate-clean-max`  
-**Коммиты:** Готово к коммиту с префиксом `ultimate:`
+**Коммиты:**
+- `fcc2e1bd` - ultimate: A1-A2 - главная плашка и блоки лучших специалистов
+- `1abce1fa` - ultimate: A3 - поиск с расширенными фильтрами и индексами
+- `d43fbde9` - ultimate: A4-A6 - заявки, профиль, back-навигация
+- `6cac9fb0` - ultimate: C - чистка кода и анализ опций
+
+**APK:**
+- Размер: **77.4 MB** (81,189,301 bytes)
+- Путь: `build/app/outputs/flutter-apk/app-release.apk`
+- Дата сборки: 2024-11-04 21:56:36
 
