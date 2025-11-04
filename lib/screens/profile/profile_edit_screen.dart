@@ -1,0 +1,346 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:async';
+
+/// Экран редактирования профиля
+class ProfileEditScreen extends ConsumerStatefulWidget {
+  const ProfileEditScreen({super.key});
+
+  @override
+  ConsumerState<ProfileEditScreen> createState() => _ProfileEditScreenState();
+}
+
+class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _bioController = TextEditingController();
+
+  File? _selectedAvatar;
+  bool _isLoading = false;
+  bool _isSaving = false;
+  String? _usernameError;
+  Timer? _usernameDebounceTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("PROFILE_EDIT_OPENED");
+      _loadProfile();
+    });
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _usernameController.dispose();
+    _cityController.dispose();
+    _bioController.dispose();
+    _usernameDebounceTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadProfile() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data()!;
+        _firstNameController.text = data['firstName'] ?? '';
+        _lastNameController.text = data['lastName'] ?? '';
+        _usernameController.text = data['username'] ?? '';
+        _cityController.text = data['city'] ?? '';
+        _bioController.text = data['bio'] ?? '';
+      }
+    } catch (e) {
+      debugPrint('Error loading profile: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _checkUsername() async {
+    final username = _usernameController.text.trim().toLowerCase();
+    if (username.isEmpty) {
+      setState(() => _usernameError = null);
+      return;
+    }
+
+    _usernameDebounceTimer?.cancel();
+    _usernameDebounceTimer = Timer(const Duration(milliseconds: 400), () async {
+      try {
+        final currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser == null) return;
+
+        final query = await FirebaseFirestore.instance
+            .collection('users')
+            .where('usernameLower', isEqualTo: username)
+            .limit(1)
+            .get();
+
+        if (query.docs.isNotEmpty && query.docs.first.id != currentUser.uid) {
+          setState(() => _usernameError = 'Этот username уже занят');
+        } else {
+          setState(() => _usernameError = null);
+        }
+      } catch (e) {
+        debugPrint('Error checking username: $e');
+      }
+    });
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() => _selectedAvatar = File(image.path));
+    }
+  }
+
+  Future<String?> _uploadAvatar() async {
+    if (_selectedAvatar == null) return null;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+
+    try {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('uploads/avatars/${user.uid}/avatar.jpg');
+
+      await ref.putFile(_selectedAvatar!);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      debugPrint('Error uploading avatar: $e');
+      return null;
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    if (!_formKey.currentState!.validate()) return;
+    if (_usernameError != null) return;
+
+    setState(() => _isSaving = true);
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final avatarUrl = await _uploadAvatar();
+
+      final data = <String, dynamic>{
+        'firstName': _firstNameController.text.trim(),
+        'lastName': _lastNameController.text.trim(),
+        'firstNameLower': _firstNameController.text.trim().toLowerCase(),
+        'lastNameLower': _lastNameController.text.trim().toLowerCase(),
+        'city': _cityController.text.trim(),
+        'cityLower': _cityController.text.trim().toLowerCase(),
+        'bio': _bioController.text.trim(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      if (_usernameController.text.trim().isNotEmpty) {
+        data['username'] = _usernameController.text.trim();
+        data['usernameLower'] = _usernameController.text.trim().toLowerCase();
+      }
+
+      if (avatarUrl != null) {
+        data['photoURL'] = avatarUrl;
+        data['avatarUrl'] = avatarUrl;
+      }
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update(data);
+
+      debugLog("PROFILE_UPDATED");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Профиль обновлён')),
+        );
+        context.pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e')),
+        );
+      }
+    } finally {
+      setState(() => _isSaving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        context.pop();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Редактировать профиль'),
+        ),
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Аватар
+                Center(
+                  child: GestureDetector(
+                    onTap: _pickImage,
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _selectedAvatar != null
+                              ? FileImage(_selectedAvatar!)
+                              : null,
+                          child: _selectedAvatar == null
+                              ? const Icon(Icons.person, size: 50)
+                              : null,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.blue,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.camera_alt, size: 20, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Имя
+                TextFormField(
+                  controller: _firstNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Имя *',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Обязательное поле';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Фамилия
+                TextFormField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Фамилия *',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Обязательное поле';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Username
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    border: const OutlineInputBorder(),
+                    errorText: _usernameError,
+                    prefixText: '@',
+                  ),
+                  onChanged: (_) => _checkUsername(),
+                ),
+                const SizedBox(height: 16),
+
+                // Город
+                TextFormField(
+                  controller: _cityController,
+                  decoration: const InputDecoration(
+                    labelText: 'Город',
+                    border: OutlineInputBorder(),
+                    hintText: 'Москва, Санкт-Петербург...',
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Bio
+                TextFormField(
+                  controller: _bioController,
+                  decoration: const InputDecoration(
+                    labelText: 'О себе',
+                    border: OutlineInputBorder(),
+                    hintText: 'Краткое описание (до 300 символов)',
+                  ),
+                  maxLines: 4,
+                  maxLength: 300,
+                ),
+                const SizedBox(height: 24),
+
+                // Кнопка сохранить
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isSaving ? null : _saveProfile,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: _isSaving
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Сохранить'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+

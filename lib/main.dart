@@ -4,6 +4,7 @@ import 'package:event_marketplace_app/core/app_router_minimal_working.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/core/bootstrap.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:event_marketplace_app/core/build_version.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,8 +30,7 @@ void main() async {
     );
 
     debugPrint('✅ Bootstrap инициализация завершена');
-    debugLog('APP: BUILD OK v4.4');
-    debugLog("APP: REALITY CHECK 444");
+    debugLog('APP: BUILD OK $BUILD_VERSION');
 
     runZonedGuarded(() {
       runApp(const ProviderScope(child: EventMarketplaceApp()));

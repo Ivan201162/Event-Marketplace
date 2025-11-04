@@ -5,7 +5,9 @@ import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/providers/specialist_providers.dart';
 import 'package:event_marketplace_app/models/specialist_enhanced.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
-import 'package:event_marketplace_app/DEBUG_FLAG.dart';
+import 'package:event_marketplace_app/providers/city_specialists_paged_provider.dart';
+import 'package:event_marketplace_app/widgets/user_name_display.dart';
+import 'package:event_marketplace_app/screens/home/city_specialists_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -56,7 +58,7 @@ class HomeScreenSimple extends ConsumerWidget {
                       debugLog("HOME_BANNER_RENDERED");
                     });
                     return GestureDetector(
-                      onTap: () => context.push('/profile/${user.uid}'),
+                      onTap: () => context.push('/profile/me'),
                       child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(context.isSmallScreen ? 20 : 24),
@@ -116,14 +118,6 @@ class HomeScreenSimple extends ConsumerWidget {
                                   color: Colors.white.withOpacity(0.9),
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                debugFlag,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.red,
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -170,26 +164,33 @@ class HomeScreenSimple extends ConsumerWidget {
 
                 const SizedBox(height: 24),
 
-                // Статистика удалена - не требуется на главной
-
-                // ТОП специалисты по России
+                // Карусель "Лучшие специалисты недели — Россия"
                 _buildTopSpecialistsSection(
                   context: context,
                   ref: ref,
-                  title: 'Лучшие специалисты недели (Россия)',
+                  title: 'Лучшие специалисты недели — Россия',
                   isRussia: true,
                 ),
 
                 const SizedBox(height: 24),
 
-                // ТОП специалисты по городу
-                _buildTopSpecialistsSection(
-                  context: context,
-                  ref: ref,
-                  title: 'Лучшие специалисты по вашему городу',
-                  isRussia: false,
-                  userCity: user.city,
-                ),
+                // Карусель "Лучшие специалисты недели — {город}"
+                if (user.city != null && user.city!.isNotEmpty)
+                  _buildTopSpecialistsSection(
+                    context: context,
+                    ref: ref,
+                    title: 'Лучшие специалисты недели — ${user.city}',
+                    isRussia: false,
+                    userCity: user.city,
+                  ),
+
+                const SizedBox(height: 24),
+
+                // Карточка "Город не указан" или список специалистов города
+                if (user.city == null || user.city!.isEmpty)
+                  _buildNoCityCard(context)
+                else
+                  _buildCitySpecialistsSection(context, ref, user.city!),
               ],
             ),
           );
@@ -209,6 +210,44 @@ class HomeScreenSimple extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildNoCityCard(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const Icon(Icons.location_off, size: 48, color: Colors.grey),
+            const SizedBox(height: 12),
+            const Text(
+              'Город не указан',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Укажите город в профиле, чтобы видеть специалистов вашего города',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.edit_location),
+              label: const Text('Указать'),
+              onPressed: () => context.push('/profile/edit#city'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCitySpecialistsSection(BuildContext context, WidgetRef ref, String city) {
+    return CitySpecialistsList(city: city);
   }
 
   Widget _buildTopSpecialistsSection({
@@ -362,6 +401,99 @@ class _ActionCard extends StatelessWidget {
   }
 }
 
+class _ModernSpecialistCard extends StatelessWidget {
+  const _ModernSpecialistCard({
+    required this.specialist,
+    required this.onTap,
+    super.key,
+  });
+  final SpecialistEnhanced specialist;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: specialist.avatarUrl != null
+                    ? NetworkImage(specialist.avatarUrl!)
+                    : null,
+                child: specialist.avatarUrl == null
+                    ? const Icon(Icons.person, size: 30)
+                    : null,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      specialist.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (specialist.categories.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 4,
+                        children: specialist.categories.take(2).map((cat) {
+                          return Chip(
+                            label: Text(
+                              cat,
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                            padding: EdgeInsets.zero,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, size: 16, color: Colors.amber),
+                        const SizedBox(width: 4),
+                        Text(
+                          specialist.rating.toStringAsFixed(1),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '(${specialist.reviews.length} отзывов)',
+                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                    if (specialist.bio != null && specialist.bio!.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        specialist.bio!,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _StatCard extends StatelessWidget {
 
   const _StatCard({
@@ -447,7 +579,7 @@ class _SpecialistCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          context.go('/specialist/${specialist.id}');
+          context.push('/profile/${specialist.id}');
         },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
@@ -481,7 +613,7 @@ class _SpecialistCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                specialist.name ?? 'Специалист',
+                specialist.name,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -489,20 +621,54 @@ class _SpecialistCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
+              if (specialist.categories.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  specialist.categories.first,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey[600],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
               const SizedBox(height: 4),
               Row(
                 children: [
                   const Icon(Icons.star, size: 14, color: Colors.amber),
                   const SizedBox(width: 4),
                   Text(
-                    '${specialist.rating ?? 0.0}',
+                    specialist.rating.toStringAsFixed(1),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 4),
+              Text(
+                specialist.city,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (specialist.minPrice > 0) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'от ${specialist.minPrice.toStringAsFixed(0)} ₽',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
             ],
           ),
         ),

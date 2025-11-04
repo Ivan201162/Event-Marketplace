@@ -1,4 +1,5 @@
 import 'package:event_marketplace_app/core/auth_gate.dart';
+import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
 import 'package:event_marketplace_app/screens/auth/login_screen_modern.dart';
@@ -15,11 +16,14 @@ import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
 import 'package:event_marketplace_app/screens/monetization/monetization_screen.dart';
 import 'package:event_marketplace_app/screens/notifications/notifications_screen.dart';
 import 'package:event_marketplace_app/screens/profile/edit_profile_advanced.dart';
+import 'package:event_marketplace_app/screens/profile/profile_edit_screen.dart';
 import 'package:event_marketplace_app/screens/profile/profile_screen_advanced.dart';
+import 'package:event_marketplace_app/screens/profile/profile_full_screen.dart';
 import 'package:event_marketplace_app/screens/requests/create_request_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/search/search_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/settings/settings_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -96,7 +100,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile/edit',
         name: 'edit-profile',
-        builder: (context, state) => const EditProfileAdvanced(),
+        builder: (context, state) => const ProfileEditScreen(),
       ),
 
       // Чаты
@@ -120,7 +124,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'profile',
         builder: (context, state) {
           final userId = state.pathParameters['userId']!;
-          return ProfileScreenAdvanced(userId: userId);
+          // Если userId == 'me', используем текущего пользователя
+          if (userId == 'me') {
+            final currentUser = FirebaseAuth.instance.currentUser;
+            if (currentUser == null) {
+              return const LoginScreenImproved();
+            }
+            return ProfileFullScreen(userId: currentUser.uid);
+          }
+          return ProfileFullScreen(userId: userId);
         },
       ),
 

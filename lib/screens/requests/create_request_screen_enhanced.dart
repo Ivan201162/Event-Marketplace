@@ -267,7 +267,12 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
         if (didPop) return;
         context.pop();
       },
-      child: Scaffold(
+      child: _buildScaffold(context),
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context) {
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Создать заявку'),
       ),
@@ -538,7 +543,6 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
                 : const Text('Опубликовать заявку', style: TextStyle(fontSize: 16)),
           ),
         ),
-      ),
       ),
     );
   }

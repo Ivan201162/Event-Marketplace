@@ -14,14 +14,20 @@ class SearchScreenEnhanced extends ConsumerStatefulWidget {
   ConsumerState<SearchScreenEnhanced> createState() => _SearchScreenEnhancedState();
 }
 
+enum SearchState { idle, loading, error, results }
+
 class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
   final TextEditingController _searchController = TextEditingController();
   bool _showFilters = false;
   String? _selectedCity;
-  String? _selectedCategory;
+  List<String> _selectedCategories = [];
   double? _minPrice;
   double? _maxPrice;
   double? _minRating;
+  int? _minExperience;
+  DateTime? _availableDate;
+  String? _format; // 'solo' or 'team'
+  SearchState _searchState = SearchState.idle;
 
   @override
   void initState() {
@@ -42,28 +48,38 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
   }
 
   void _applyFilters() {
-    final filters = ref.read(searchFiltersProvider);
     ref.read(searchFiltersProvider.notifier)
       ..updateLocation(_selectedCity)
       ..updatePriceRange(_minPrice, _maxPrice)
       ..updateRating(_minRating);
+    if (_selectedCategories.isNotEmpty) {
+      ref.read(searchFiltersProvider.notifier).updateCategory(_selectedCategories.first);
+    }
     
     debugLog("SEARCH_FILTER_APPLIED");
     setState(() => _showFilters = false);
+    // Перезапускаем поиск
+    ref.invalidate(filteredSpecialistsProvider);
+    ref.refresh(filteredSpecialistsProvider);
   }
 
   void _clearFilters() {
     setState(() {
       _selectedCity = null;
-      _selectedCategory = null;
+      _selectedCategories = [];
       _minPrice = null;
       _maxPrice = null;
       _minRating = null;
+      _minExperience = null;
+      _availableDate = null;
+      _format = null;
     });
     ref.read(searchFiltersProvider.notifier)
       ..updateLocation(null)
       ..updatePriceRange(null, null)
       ..updateRating(null);
+    ref.invalidate(filteredSpecialistsProvider);
+    ref.refresh(filteredSpecialistsProvider);
   }
 
   @override
@@ -128,9 +144,17 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Фильтры', style: TextStyle(fontWeight: FontWeight.bold)),
-                        TextButton(
-                          onPressed: _clearFilters,
-                          child: const Text('Сбросить'),
+                        Row(
+                          children: [
+                            TextButton(
+                              onPressed: _clearFilters,
+                              child: const Text('Сбросить'),
+                            ),
+                            TextButton(
+                              onPressed: _applyFilters,
+                              child: const Text('Сохранить фильтр'),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -145,6 +169,27 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                       onChanged: (v) => setState(() => _selectedCity = v.isEmpty ? null : v),
                     ),
                     const SizedBox(height: 8),
+                    // Категории (multi-select)
+                    const Text('Категории', style: TextStyle(fontWeight: FontWeight.w500)),
+                    Wrap(
+                      spacing: 8,
+                      children: ['Ведущий', 'Фотограф', 'Видеограф', 'Организатор', 'DJ', 'Декор'].map((cat) {
+                        return FilterChip(
+                          label: Text(cat),
+                          selected: _selectedCategories.contains(cat),
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _selectedCategories.add(cat);
+                              } else {
+                                _selectedCategories.remove(cat);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 8),
                     // Рейтинг
                     TextFormField(
                       initialValue: _minRating?.toString(),
@@ -156,6 +201,21 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                       onChanged: (v) {
                         setState(() {
                           _minRating = v.isEmpty ? null : double.tryParse(v);
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    // Опыт (лет)
+                    TextFormField(
+                      initialValue: _minExperience?.toString(),
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Опыт (лет)',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (v) {
+                        setState(() {
+                          _minExperience = v.isEmpty ? null : int.tryParse(v);
                         });
                       },
                     ),
@@ -196,6 +256,28 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 8),
+                    // Формат (соло/команда)
+                    const Text('Формат', style: TextStyle(fontWeight: FontWeight.w500)),
+                    Row(
+                      children: [
+                        ChoiceChip(
+                          label: const Text('Соло'),
+                          selected: _format == 'solo',
+                          onSelected: (selected) {
+                            setState(() => _format = selected ? 'solo' : null);
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        ChoiceChip(
+                          label: const Text('Команда'),
+                          selected: _format == 'team',
+                          onSelected: (selected) {
+                            setState(() => _format = selected ? 'team' : null);
+                          },
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
@@ -212,19 +294,24 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
             Expanded(
               child: searchResultsAsync.when(
                 data: (specialists) {
-                  // Фильтруем только специалистов (role == 'specialist')
-                  // Проверка роли должна быть в провайдере, но на всякий случай оставляем здесь
-                  final filteredSpecialists = specialists.toList();
-
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    debugLog("SEARCH_RESULT_COUNT:${filteredSpecialists.length}");
+                    if (mounted) {
+                      setState(() => _searchState = SearchState.results);
+                      debugLog("SEARCH_RESULT_COUNT:${specialists.length}");
+                    }
                   });
+
+                  // Фильтруем только специалистов (role == 'specialist')
+                  final filteredSpecialists = specialists.toList();
 
                   if (_searchController.text.trim().isEmpty && 
                       _selectedCity == null && 
+                      _selectedCategories.isEmpty &&
                       _minPrice == null && 
                       _maxPrice == null && 
-                      _minRating == null) {
+                      _minRating == null &&
+                      _minExperience == null &&
+                      _format == null) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -277,8 +364,16 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) setState(() => _searchState = SearchState.loading);
+                  });
+                  return const Center(child: CircularProgressIndicator());
+                },
                 error: (error, stack) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) setState(() => _searchState = SearchState.error);
+                  });
                   final isFailedPrecondition = error.toString().contains('failed-precondition') ||
                       error.toString().contains('FAILED_PRECONDITION');
                   return Center(
@@ -297,12 +392,27 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            debugLog("SEARCH_RETRY_CLICKED");
-                            ref.invalidate(filteredSpecialistsProvider);
-                          },
-                          child: const Text('Попробовать снова'),
+                        ElevatedButton.icon(
+                          icon: _searchState == SearchState.loading
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Icon(Icons.refresh),
+                          label: const Text('Попробовать снова'),
+                          onPressed: _searchState == SearchState.loading
+                              ? null
+                              : () {
+                                  debugLog("SEARCH_RETRY");
+                                  setState(() => _searchState = SearchState.loading);
+                                  Future.delayed(const Duration(milliseconds: 100), () {
+                                    if (mounted) {
+                                      ref.invalidate(filteredSpecialistsProvider);
+                                      ref.refresh(filteredSpecialistsProvider);
+                                    }
+                                  });
+                                },
                         ),
                       ],
                     ),
