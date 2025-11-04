@@ -5,6 +5,7 @@ import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/providers/specialist_providers.dart';
 import 'package:event_marketplace_app/models/specialist_enhanced.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:event_marketplace_app/DEBUG_FLAG.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -113,6 +114,14 @@ class HomeScreenSimple extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: context.isSmallScreen ? 12 : 14,
                                   color: Colors.white.withOpacity(0.9),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                debugFlag,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.red,
                                 ),
                               ),
                             ],
