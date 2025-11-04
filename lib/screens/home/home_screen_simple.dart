@@ -56,7 +56,7 @@ class HomeScreenSimple extends ConsumerWidget {
                       debugLog("HOME_BANNER_RENDERED");
                     });
                     return GestureDetector(
-                      onTap: () => context.go('/profile/${user.uid}'),
+                      onTap: () => context.push('/profile/${user.uid}'),
                       child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(context.isSmallScreen ? 20 : 24),
@@ -88,7 +88,7 @@ class HomeScreenSimple extends ConsumerWidget {
                             children: [
                               Text(
                                 '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
-                                    ? (user.name ?? 'Пользователь')
+                                    ? (user.email ?? user.name ?? 'Пользователь')
                                     : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
                                 style: TextStyle(
                                   fontSize: context.isSmallScreen ? 20 : 24,
@@ -144,8 +144,8 @@ class HomeScreenSimple extends ConsumerWidget {
                         icon: const Icon(Icons.assignment_outlined),
                         label: const Text('Создать заявку'),
                         onPressed: () {
-                          debugLog("CREATE_REQUEST_OPENED");
-                          context.go('/requests/create');
+                          debugLog("REQUEST_CREATE_OPENED");
+                          context.push('/requests/create');
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -158,7 +158,7 @@ class HomeScreenSimple extends ConsumerWidget {
                         icon: const Icon(Icons.search),
                         label: const Text('Найти специалиста'),
                         onPressed: () {
-                          context.go('/search');
+                          context.push('/search');
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -238,7 +238,7 @@ class HomeScreenSimple extends ConsumerWidget {
             ),
             TextButton(
               onPressed: () {
-                context.go('/search');
+                context.push('/search');
               },
               child: const Text('Смотреть все'),
             ),

@@ -602,44 +602,42 @@ class AuthService {
       } else {
         // Update existing profile with Google data (only if fields are empty)
         final existingData = snapshot.data()!;
-        final updateData = <String, dynamic>{
-          'updatedAt': Timestamp.now(),
-        };
+        final updateData = <String, dynamic>{};
 
-        // Update name if empty or if Google has better data
-        if (existingData['name'] == null ||
-            existingData['name'] == 'Пользователь') {
-          updateData['name'] = user.displayName ?? 'Пользователь';
+        // Проверяем, что нужно обновить (не перетираем уже заполненные поля)
+        final needFirst = (existingData['firstName'] ?? '').toString().isEmpty;
+        final needLast = (existingData['lastName'] ?? '').toString().isEmpty;
+        final needPhoto = (existingData['photoUrl'] ?? '').toString().isEmpty &&
+                         (existingData['photoURL'] ?? '').toString().isEmpty &&
+                         (existingData['avatarUrl'] ?? '').toString().isEmpty;
+
+        // Парсим displayName
+        final display = user.displayName ?? '';
+        final parts = display.trim().split(RegExp(r'\s+'));
+        final fn = parts.isNotEmpty ? parts.first : '';
+        final ln = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+
+        // Обновляем только пустые поля
+        if (needFirst && fn.isNotEmpty) {
+          updateData['firstName'] = fn;
         }
-        if (existingData['firstName'] == null ||
-            existingData['firstName'] == '' ||
-            existingData['firstName'] == null) {
-          updateData['firstName'] = firstName.isEmpty ? null : firstName;
+        if (needLast && ln.isNotEmpty) {
+          updateData['lastName'] = ln;
         }
-        if (existingData['lastName'] == null ||
-            existingData['lastName'] == '' ||
-            existingData['lastName'] == null) {
-          updateData['lastName'] = lastName.isEmpty ? null : lastName;
-        }
-        if (existingData['avatarUrl'] == null ||
-            existingData['avatarUrl'] == '') {
+        if (needPhoto && (user.photoURL?.isNotEmpty ?? false)) {
+          updateData['photoUrl'] = user.photoURL;
+          updateData['photoURL'] = user.photoURL;
           updateData['avatarUrl'] = user.photoURL;
         }
-        if (existingData['displayName'] == null ||
-            existingData['displayName'] == '') {
-          updateData['displayName'] = user.displayName;
-        }
-        if (existingData['photoURL'] == null ||
-            existingData['photoURL'] == '') {
-          updateData['photoURL'] = user.photoURL;
-        }
-        // photoUrl тоже обновляем
-        if (existingData['photoUrl'] == null ||
-            existingData['photoUrl'] == '') {
-          updateData['photoUrl'] = user.photoURL;
-        }
 
-        await docRef.update(updateData);
+        // Обновляем updatedAt и сохраняем только если есть изменения
+        if (updateData.isNotEmpty) {
+          updateData['updatedAt'] = Timestamp.now();
+          await docRef.set(updateData, SetOptions(merge: true));
+        } else {
+          // Обновляем только updatedAt если нет изменений
+          await docRef.update({'updatedAt': Timestamp.now()});
+        }
       }
 
       // Обновляем FCM токен после успешной авторизации

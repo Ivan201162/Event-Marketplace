@@ -278,29 +278,36 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                      const SizedBox(height: 16),
-                      Text('Ошибка поиска', style: Theme.of(context).textTheme.titleLarge),
-                      const SizedBox(height: 8),
-                      Text(
-                        error.toString(),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          ref.invalidate(filteredSpecialistsProvider);
-                        },
-                        child: const Text('Попробовать снова'),
-                      ),
-                    ],
-                  ),
-                ),
+                error: (error, stack) {
+                  final isFailedPrecondition = error.toString().contains('failed-precondition') ||
+                      error.toString().contains('FAILED_PRECONDITION');
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                        const SizedBox(height: 16),
+                        Text('Ошибка поиска', style: Theme.of(context).textTheme.titleLarge),
+                        const SizedBox(height: 8),
+                        Text(
+                          isFailedPrecondition
+                              ? 'Идёт подготовка индексов, попробуйте через минуту'
+                              : error.toString(),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            debugLog("SEARCH_RETRY_CLICKED");
+                            ref.invalidate(filteredSpecialistsProvider);
+                          },
+                          child: const Text('Попробовать снова'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
