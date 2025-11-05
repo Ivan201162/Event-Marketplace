@@ -419,7 +419,6 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                     final placemarks = await placemarkFromCoordinates(
                                       position.latitude,
                                       position.longitude,
-                                      localeIdentifier: 'ru',
                                     );
 
                                     if (placemarks.isNotEmpty) {
