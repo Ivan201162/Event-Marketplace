@@ -152,50 +152,34 @@ class HomeScreenSimple extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Имя + Фамилия (крупно, жирно)
                             Text(
-                                '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
-                                    ? (user.email ?? user.name ?? 'Пользователь')
-                                    : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
+                              '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
+                                  ? (user.email ?? user.name ?? 'Пользователь')
+                                  : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
                               style: TextStyle(
                                 fontSize: context.isSmallScreen ? 20 : 24,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
                             ),
-                            // Роли специалиста
-                            if (user.isSpecialist == true) ...[
-                              FutureBuilder<List<Map<String, dynamic>>>(
-                                future: _getUserRoles(user.uid),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                    final roles = snapshot.data!;
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 8, bottom: 4),
-                                      child: Wrap(
-                                        spacing: 8,
-                                        children: roles.map((role) {
-                                          final roleId = role['id'] as String? ?? '';
-                                          final roleLabel = role['label'] as String? ?? '';
-                                          return Text(
-                                            '${SpecialistRoles.getIcon(roleId)} $roleLabel',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white.withOpacity(0.9),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    );
-                                  }
-                                  return const SizedBox.shrink();
-                                },
+                            // @username (меньше, если есть)
+                            if (user.username != null && user.username!.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                '@${user.username}',
+                                style: TextStyle(
+                                  fontSize: context.isSmallScreen ? 14 : 16,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
                               ),
                             ],
                             const SizedBox(height: 4),
+                            // Город (или «Город не указан»)
                             Text(
-                                user.city != null && user.city!.isNotEmpty
-                                    ? user.city!
-                                    : 'Город не указан',
+                              user.city != null && user.city!.isNotEmpty
+                                  ? user.city!
+                                  : 'Город не указан',
                               style: TextStyle(
                                 fontSize: context.isSmallScreen ? 12 : 14,
                                 color: Colors.white.withOpacity(0.9),
