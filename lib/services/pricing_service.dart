@@ -190,14 +190,14 @@ class PricingService {
     }
   }
 
-  /// Рассчитать медиану цены по городу и роли
-  Future<double?> calculateMedianForCityRole(String city, String roleId) async {
+  /// Рассчитать медиану и перцентили цены по городу и роли
+  Future<Map<String, double>?> calculatePriceStatsForCityRole(String city, String roleId) async {
     try {
       // Получаем всех специалистов в городе с активной ролью
       final specialistsSnapshot = await _firestore
           .collection('users')
           .where('city', isEqualTo: city)
-          .where('role', isEqualTo: 'specialist')
+          .where('isSpecialist', isEqualTo: true)
           .get();
 
       final prices = <int>[];
@@ -232,16 +232,35 @@ class PricingService {
       }
 
       prices.sort();
-      final middle = prices.length ~/ 2;
-      if (prices.length % 2 == 0) {
-        return (prices[middle - 1] + prices[middle]) / 2.0;
-      } else {
-        return prices[middle].toDouble();
-      }
+      
+      // Медиана (50 перцентиль)
+      final median = _calculatePercentile(prices, 50);
+      
+      // 25 и 75 перцентили
+      final p25 = _calculatePercentile(prices, 25);
+      final p75 = _calculatePercentile(prices, 75);
+
+      return {
+        'median': median,
+        'p25': p25,
+        'p75': p75,
+      };
     } catch (e) {
-      debugPrint('Error calculating median: $e');
+      debugPrint('Error calculating price stats: $e');
       return null;
     }
+  }
+
+  double _calculatePercentile(List<int> sortedPrices, int percentile) {
+    if (sortedPrices.isEmpty) return 0.0;
+    final index = (sortedPrices.length * percentile / 100).ceil() - 1;
+    return sortedPrices[index.clamp(0, sortedPrices.length - 1)].toDouble();
+  }
+
+  /// Рассчитать медиану цены по городу и роли (устаревший метод, используйте calculatePriceStatsForCityRole)
+  Future<double?> calculateMedianForCityRole(String city, String roleId) async {
+    final stats = await calculatePriceStatsForCityRole(city, roleId);
+    return stats?['median'];
   }
 
   /// Обновить базовую цену
@@ -337,7 +356,7 @@ class PricingService {
     }
   }
 
-  /// Рассчитать рыночную оценку цены (используя медиану)
+  /// Рассчитать рыночную оценку цены (используя перцентили)
   /// Возвращает: 'excellent' | 'average' | 'high' | null (если данных недостаточно)
   Future<String?> calculatePriceRating({
     required String specialistId,
@@ -348,21 +367,23 @@ class PricingService {
     try {
       if (city == null || city.isEmpty) return null;
 
-      final median = await calculateMedianForCityRole(city, roleId);
-      if (median == null) return null;
+      final stats = await calculatePriceStatsForCityRole(city, roleId);
+      if (stats == null) return null;
 
-      final threshold15 = median * 0.15;
+      final p25 = stats['p25']!;
+      final p75 = stats['p75']!;
 
-      if (price <= median - threshold15) {
-        debugLog("PRICE_RATING:$specialistId:$roleId:excellent");
-        return 'excellent';
-      } else if (price >= median + threshold15) {
-        debugLog("PRICE_RATING:$specialistId:$roleId:high");
-        return 'high';
+      String rating;
+      if (price <= p25) {
+        rating = 'excellent';
+      } else if (price >= p75) {
+        rating = 'high';
       } else {
-        debugLog("PRICE_RATING:$specialistId:$roleId:average");
-        return 'average';
+        rating = 'average';
       }
+
+      debugLog("PRICE_RATING:$specialistId:$roleId:$rating");
+      return rating;
     } catch (e) {
       debugPrint('Error calculating price rating: $e');
       return null;

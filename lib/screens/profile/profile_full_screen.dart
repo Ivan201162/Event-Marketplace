@@ -312,7 +312,7 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  _getRoleIcon(roleId),
+                                  SpecialistRoles.getIcon(roleId),
                                   style: const TextStyle(fontSize: 14),
                                 ),
                                 const SizedBox(width: 4),
