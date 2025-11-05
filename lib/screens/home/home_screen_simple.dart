@@ -251,6 +251,7 @@ class HomeScreenSimple extends ConsumerWidget {
           ),
         ),
       ),
+      ),
     );
   }
 

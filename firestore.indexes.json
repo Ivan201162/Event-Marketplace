@@ -944,6 +944,30 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "reviews",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "specialistId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "usernameLower",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []

@@ -1,94 +1,68 @@
-import 'package:event_marketplace_app/models/user_profile.dart';
-import 'package:event_marketplace_app/services/profile_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/app_user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Провайдер сервиса профиля
-final profileServiceProvider = Provider<ProfileService>((ref) {
-  return ProfileService();
+/// Провайдер для профиля пользователя
+final userProfileProvider = StreamProvider.family<AppUser?, String>((ref, uid) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .snapshots()
+      .map((doc) {
+    if (!doc.exists) return null;
+    return AppUser.fromFirestore(doc);
+  });
 });
 
-/// Провайдер состояния профиля
-final profileProvider =
-    StateNotifierProvider<ProfileNotifier, AsyncValue<UserProfile>>((ref) {
-  return ProfileNotifier(ref.read(profileServiceProvider));
+/// Провайдер для постов пользователя с пагинацией
+final userPostsProvider = StreamProvider.family<List<DocumentSnapshot>, (String, int)>((ref, params) {
+  final (uid, limit) = params;
+  return FirebaseFirestore.instance
+      .collection('posts')
+      .where('authorId', isEqualTo: uid)
+      .orderBy('createdAt', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map((snapshot) => snapshot.docs);
 });
 
-/// Notifier для управления состоянием профиля
-class ProfileNotifier extends StateNotifier<AsyncValue<UserProfile>> {
+/// Провайдер для рилсов пользователя с пагинацией
+final userReelsProvider = StreamProvider.family<List<DocumentSnapshot>, (String, int)>((ref, params) {
+  final (uid, limit) = params;
+  return FirebaseFirestore.instance
+      .collection('reels')
+      .where('authorId', isEqualTo: uid)
+      .orderBy('createdAt', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map((snapshot) => snapshot.docs);
+});
 
-  ProfileNotifier(this._profileService) : super(const AsyncValue.loading()) {
-    _loadProfile();
-  }
-  final ProfileService _profileService;
+/// Провайдер для отзывов специалиста с пагинацией
+final userReviewsProvider = StreamProvider.family<List<DocumentSnapshot>, (String, int)>((ref, params) {
+  final (specialistId, limit) = params;
+  return FirebaseFirestore.instance
+      .collection('reviews')
+      .where('specialistId', isEqualTo: specialistId)
+      .orderBy('createdAt', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map((snapshot) => snapshot.docs);
+});
 
-  Future<void> _loadProfile() async {
-    try {
-      state = const AsyncValue.loading();
-      final profile = await _profileService.getCurrentUserProfile();
-      state = AsyncValue.data(profile);
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-    }
-  }
-
-  Future<void> refreshProfile() async {
-    await _loadProfile();
-  }
-
-  Future<void> updateProfile(UserProfile profile) async {
-    try {
-      await _profileService.updateProfile(profile);
-      state = AsyncValue.data(profile);
-    } catch (error) {
-      // Обработка ошибки обновления профиля
-      rethrow;
-    }
-  }
-
-  Future<void> toggleFollow() async {
-    try {
-      await _profileService.toggleFollow();
-      // Обновить состояние профиля
-      if (state.hasValue) {
-        final currentProfile = state.value;
-        final updatedProfile = currentProfile.copyWith(
-          isFollowing: !currentProfile.isFollowing,
-          followersCount: currentProfile.isFollowing
-              ? currentProfile.followersCount - 1
-              : currentProfile.followersCount + 1,
-        );
-        state = AsyncValue.data(updatedProfile);
-      }
-    } catch (error) {
-      // Обработка ошибки подписки
-    }
-  }
-
-  Future<void> uploadAvatar(String imagePath) async {
-    try {
-      final avatarUrl = await _profileService.uploadAvatar(imagePath);
-      if (state.hasValue) {
-        final currentProfile = state.value;
-        final updatedProfile = currentProfile.copyWith(avatarUrl: avatarUrl);
-        state = AsyncValue.data(updatedProfile);
-      }
-    } catch (error) {
-      // Обработка ошибки загрузки аватара
-      rethrow;
-    }
-  }
-
-  Future<void> uploadCover(String imagePath) async {
-    try {
-      final coverUrl = await _profileService.uploadCover(imagePath);
-      if (state.hasValue) {
-        final currentProfile = state.value;
-        final updatedProfile = currentProfile.copyWith(coverUrl: coverUrl);
-        state = AsyncValue.data(updatedProfile);
-      }
-    } catch (error) {
-      // Обработка ошибки загрузки обложки
-      rethrow;
-    }
-  }
-}
+/// Провайдер для среднего рейтинга специалиста
+final userRatingProvider = FutureProvider.family<double, String>((ref, specialistId) async {
+  final reviews = await FirebaseFirestore.instance
+      .collection('reviews')
+      .where('specialistId', isEqualTo: specialistId)
+      .get();
+  
+  if (reviews.docs.isEmpty) return 0.0;
+  
+  final sum = reviews.docs.fold<double>(
+    0.0,
+    (sum, doc) => sum + ((doc.data()['rating'] as num? ?? 0).toDouble()),
+  );
+  
+  return sum / reviews.docs.length;
+});

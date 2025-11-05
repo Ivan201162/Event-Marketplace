@@ -173,7 +173,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           .doc(user.uid)
           .update(data);
 
-      debugLog("PROFILE_UPDATED");
+      debugLog("PROFILE_SAVED");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Профиль обновлён')),
@@ -181,6 +181,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         context.pop();
       }
     } catch (e) {
+      debugLog("PROFILE_SAVE_ERR:${e.toString()}");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка: $e')),

@@ -29,6 +29,12 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        final tabNames = ['posts', 'reels', 'reviews'];
+        debugLog("PROFILE_TABS:${tabNames[_tabController.index]}");
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugLog("PROFILE_OPENED:${widget.userId}");
     });
@@ -122,6 +128,8 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
                 body: RefreshIndicator(
                   onRefresh: () async {
                     try {
+                      // Инвалидируем провайдеры через ref (если используется Riverpod)
+                      // Для StreamBuilder - просто перезагружаем данные
                       await Future.delayed(const Duration(milliseconds: 500));
                       debugLog("REFRESH_OK:profile");
                       if (mounted) {
@@ -158,104 +166,133 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
   }
 
   Widget _buildProfileHeader(AppUser user, bool isOwnProfile) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: user.photoURL != null && user.photoURL!.isNotEmpty
-                    ? NetworkImage(user.photoURL!)
-                    : null,
-                child: user.photoURL == null || user.photoURL!.isEmpty
-                    ? const Icon(Icons.person, size: 40)
-                    : null,
+              // Аватар
+              GestureDetector(
+                onTap: isOwnProfile ? () {
+                  // TODO: Редактирование аватара
+                } : null,
+                child: CircleAvatar(
+                  radius: 40,
+                  backgroundImage: user.photoURL != null && user.photoURL!.isNotEmpty
+                      ? NetworkImage(user.photoURL!)
+                      : null,
+                  child: user.photoURL == null || user.photoURL!.isEmpty
+                      ? const Icon(Icons.person, size: 40)
+                      : null,
+                ),
               ),
               const SizedBox(width: 16),
+              // Блок текста
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserNameDisplay(user: user),
-                    const SizedBox(height: 4),
+                    // Имя Фамилия
                     Text(
-                      user.city ?? 'Город не указан',
-                      style: TextStyle(color: Colors.grey[600]),
+                      '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty
+                          ? (user.email ?? user.name ?? 'Пользователь')
+                          : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    if (user.role != null) ...[
+                    // @username
+                    if (user.username != null && user.username!.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      Chip(
-                        label: Text(
-                          user.role == 'specialist' ? 'Специалист' : 'Пользователь',
-                          style: const TextStyle(fontSize: 12),
+                      Text(
+                        '@${user.username}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
                         ),
-                        padding: EdgeInsets.zero,
                       ),
                     ],
+                    // Город
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                        const SizedBox(width: 4),
+                        Text(
+                          user.city ?? 'Город не указан',
+                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
+              // Кнопки действий
+              if (isOwnProfile)
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.edit, size: 18),
+                  label: const Text('Редактировать'),
+                  onPressed: () {
+                    debugLog("PROFILE_EDIT_OPENED");
+                    context.push('/profile/edit');
+                  },
+                )
+              else if (user.role == 'specialist')
+                Column(
+                  children: [
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.person_add, size: 18),
+                      label: const Text('Подписаться'),
+                      onPressed: () => _handleFollow(user),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.message, size: 18),
+                      label: const Text('Написать'),
+                      onPressed: () => _handleMessage(user),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.shopping_cart, size: 18),
+                      label: const Text('Заказать'),
+                      onPressed: () => _handleOrder(user),
+                    ),
+                  ],
+                ),
             ],
           ),
           const SizedBox(height: 16),
-          // Подписчики/Подписки
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatColumn('Подписчики', user.followersCount),
-              _buildStatColumn('Подписки', user.followingCount),
-              // Рейтинг для специалиста загружается из reviews
-            ],
-          ),
-          const SizedBox(height: 16),
+          // Подписчики/Подписки (показываем только владельцу или всем для специалистов)
+          if (isOwnProfile || user.role == 'specialist')
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatColumn('Подписчики', user.followersCount ?? 0),
+                _buildStatColumn('Подписки', user.followingCount ?? 0),
+              ],
+            ),
           // Bio
-          if (user.bio != null && user.bio!.isNotEmpty)
+          if (user.bio != null && user.bio!.isNotEmpty) ...[
+            const SizedBox(height: 16),
             Text(
               user.bio!,
               style: const TextStyle(fontSize: 14),
             ),
-          const SizedBox(height: 16),
-          // Кнопки действий
-          if (isOwnProfile)
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.edit),
-                label: const Text('Редактировать профиль'),
-                onPressed: () => context.push('/profile/edit'),
-              ),
-            )
-          else
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    icon: const Icon(Icons.person_add),
-                    label: const Text('Подписаться'),
-                    onPressed: () => _handleFollow(user),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.message),
-                    label: const Text('Написать'),
-                    onPressed: () => _handleMessage(user),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.shopping_cart),
-                    label: const Text('Заказать'),
-                    onPressed: () => _handleOrder(user),
-                  ),
-                ),
-              ],
-            ),
+          ],
         ],
       ),
     );
@@ -380,6 +417,10 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
   }
 
   Widget _buildReviewsTab(AppUser user) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final isOwnProfile = currentUser?.uid == widget.userId;
+    final canAddReview = !isOwnProfile && user.role == 'specialist' && currentUser != null;
+
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('reviews')
@@ -393,15 +434,7 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
         }
 
         final reviews = snapshot.data!.docs;
-        if (reviews.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Ещё нет отзывов', style: TextStyle(color: Colors.grey)),
-            ),
-          );
-        }
-
+        
         // Вычисляем средний рейтинг
         double avgRating = 0;
         if (reviews.isNotEmpty) {
@@ -431,23 +464,35 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
                   ),
                 ],
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 32),
-                  const SizedBox(width: 8),
-                  Text(
-                    avgRating.toStringAsFixed(1),
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 32),
+                      const SizedBox(width: 8),
+                      Text(
+                        avgRating > 0 ? avgRating.toStringAsFixed(1) : '0.0',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '(${reviews.length} ${_getReviewsWord(reviews.length)})',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  if (canAddReview) ...[
+                    const SizedBox(height: 12),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.add, size: 20),
+                      label: const Text('Оставить отзыв'),
+                      onPressed: () => _showAddReviewDialog(user),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '(${reviews.length} ${_getReviewsWord(reviews.length)})',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                  ),
+                  ],
                 ],
               ),
             ),
@@ -709,4 +754,142 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverTabBarDelegate oldDelegate) => false;
 }
+
+  Future<void> _showAddReviewDialog(AppUser specialist) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    int rating = 0;
+    final textController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Оставить отзыв',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                const Text('Рейтинг:'),
+                const SizedBox(height: 8),
+                Row(
+                  children: List.generate(5, (index) {
+                    return GestureDetector(
+                      onTap: () => setState(() => rating = index + 1),
+                      child: Icon(
+                        index < rating ? Icons.star : Icons.star_border,
+                        color: Colors.amber,
+                        size: 32,
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: textController,
+                  decoration: const InputDecoration(
+                    labelText: 'Текст отзыва',
+                    border: OutlineInputBorder(),
+                    hintText: 'Опишите ваш опыт...',
+                  ),
+                  maxLines: 5,
+                  validator: (value) {
+                    if (value == null || value.trim().length < 5) {
+                      return 'Минимум 5 символов';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (rating == 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Выберите рейтинг')),
+                        );
+                        return;
+                      }
+                      if (!formKey.currentState!.validate()) return;
+
+                      try {
+                        final userDoc = await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(currentUser.uid)
+                            .get();
+                        final userData = userDoc.data();
+                        final authorName = userData?['firstName'] != null && userData?['lastName'] != null
+                            ? '${userData['firstName']} ${userData['lastName']}'
+                            : (userData?['name'] ?? currentUser.displayName ?? 'Пользователь');
+                        final authorPhotoUrl = userData?['photoURL'] ?? currentUser.photoURL;
+
+                        await FirebaseFirestore.instance.collection('reviews').add({
+                          'specialistId': specialist.uid,
+                          'authorId': currentUser.uid,
+                          'authorName': authorName,
+                          'authorPhotoUrl': authorPhotoUrl,
+                          'rating': rating,
+                          'text': textController.text.trim(),
+                          'photos': [],
+                          'createdAt': FieldValue.serverTimestamp(),
+                        });
+
+                        // Пересчитываем средний рейтинг
+                        final reviews = await FirebaseFirestore.instance
+                            .collection('reviews')
+                            .where('specialistId', isEqualTo: specialist.uid)
+                            .get();
+                        final avgRating = reviews.docs.fold<double>(
+                          0.0,
+                          (sum, doc) => sum + ((doc.data()['rating'] as num? ?? 0).toDouble()),
+                        ) / reviews.docs.length;
+
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(specialist.uid)
+                            .update({'rating': avgRating});
+
+                        debugLog("REVIEW_ADDED:${specialist.uid}");
+                        if (mounted) {
+                          Navigator.of(context).pop();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Отзыв добавлен')),
+                          );
+                        }
+                      } catch (e) {
+                        debugLog("REVIEW_ERR:${e.toString()}");
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Ошибка: $e')),
+                          );
+                        }
+                      }
+                    },
+                    child: const Text('Отправить'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
