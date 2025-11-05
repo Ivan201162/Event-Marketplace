@@ -33,7 +33,7 @@ class RequestsScreenImproved extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () async {
           try {
-            ref.invalidate(requestsProvider);
+          ref.invalidate(requestsProvider);
             await Future.delayed(const Duration(milliseconds: 500));
             debugLog("REFRESH_OK:requests");
             if (context.mounted) {

@@ -1,0 +1,17 @@
+REPLACE lines 85-97 with:
+      final eventType = _selectedEventType == 'Другое' 
+          ? _customEventTypeController.text.trim()
+          : (_selectedEventType ?? 'Мероприятие');
+
+      await _bookingService.createBooking(
+        specialistId: widget.specialistId,
+        clientId: currentUser.uid,
+        requestedDate: requestedDate,
+        timeFrom: timeFromStr,
+        timeTo: timeToStr,
+        durationOption: durationOption,
+        eventType: eventType,
+        message: _commentController.text.trim().isNotEmpty ? _commentController.text.trim() : null,
+      );
+
+

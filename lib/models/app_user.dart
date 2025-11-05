@@ -61,6 +61,8 @@ class AppUser extends Equatable {
     this.postsCount = 0,
     this.username,
     this.role,
+    this.isSpecialist = false,
+    this.roles = const [],
   });
 
   /// Helper function to safely parse string lists
@@ -114,6 +116,8 @@ class AppUser extends Equatable {
       postsCount: data['postsCount'] ?? 0,
       username: data['username'],
       role: data['role'] != null ? _parseUserRole(data['role']) : null,
+      isSpecialist: data['isSpecialist'] ?? false,
+      roles: (data['roles'] as List?)?.cast<Map<String, dynamic>>() ?? [],
     );
   }
 
@@ -165,6 +169,8 @@ class AppUser extends Equatable {
   final int postsCount;
   final String? username;
   final UserRole? role;
+  final bool isSpecialist;
+  final List<Map<String, dynamic>> roles;
 
   /// Get user ID (alias for uid)
   String get id => uid;
@@ -204,6 +210,8 @@ class AppUser extends Equatable {
       'postsCount': postsCount,
       if (username != null) 'username': username,
       if (role != null) 'role': role!.name,
+      'isSpecialist': isSpecialist,
+      'roles': roles,
     };
   }
 

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/models/specialist_categories_list.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,6 +33,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   bool _isSaving = false;
   String? _usernameError;
   Timer? _usernameDebounceTimer;
+  
+  // Режим специалиста
+  bool _isSpecialist = false;
+  List<String> _selectedCategories = [];
+  final _experienceController = TextEditingController();
+  final _workCityController = TextEditingController();
 
   @override
   void initState() {
@@ -49,6 +56,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     _usernameController.dispose();
     _cityController.dispose();
     _bioController.dispose();
+    _experienceController.dispose();
+    _workCityController.dispose();
     _usernameDebounceTimer?.cancel();
     super.dispose();
   }
@@ -71,6 +80,18 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         _usernameController.text = data['username'] ?? '';
         _cityController.text = data['city'] ?? '';
         _bioController.text = data['bio'] ?? '';
+        
+        // Загружаем данные специалиста
+        _isSpecialist = (data['isSpecialist'] as bool?) ?? false;
+        if (data['specialist'] != null) {
+          final specialist = data['specialist'] as Map<String, dynamic>;
+          _selectedCategories = List<String>.from((specialist['categories'] as List?)?.cast<String>() ?? []);
+          final experienceYears = specialist['experienceYears'];
+          _experienceController.text = experienceYears != null ? experienceYears.toString() : '';
+          _workCityController.text = (specialist['workCity'] as String?) ?? (data['city'] as String?) ?? '';
+        } else {
+          _workCityController.text = (data['city'] as String?) ?? '';
+        }
       }
     } catch (e) {
       debugPrint('Error loading profile: $e');
@@ -139,6 +160,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
     if (_usernameError != null) return;
+    if (_isSpecialist && _selectedCategories.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Выберите хотя бы одну категорию')),
+      );
+      return;
+    }
 
     setState(() => _isSaving = true);
     try {
@@ -168,10 +195,31 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         data['avatarUrl'] = avatarUrl;
       }
 
+      // Данные специалиста
+      data['isSpecialist'] = _isSpecialist;
+      if (_isSpecialist) {
+        data['specialist'] = {
+          'categories': _selectedCategories,
+          'experienceYears': int.tryParse(_experienceController.text.trim()) ?? 0,
+          'workCity': _workCityController.text.trim().isNotEmpty 
+              ? _workCityController.text.trim() 
+              : _cityController.text.trim(),
+        };
+        data['role'] = 'specialist';
+      } else {
+        data['role'] = 'user';
+      }
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .update(data);
+      
+      if (_isSpecialist) {
+        debugLog("PROFILE_SPECIALIST_MODE_ON");
+      } else {
+        debugLog("PROFILE_SPECIALIST_MODE_OFF");
+      }
 
       debugLog("PROFILE_SAVED");
       if (mounted) {
@@ -316,6 +364,133 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   ),
                   maxLines: 4,
                   maxLength: 300,
+                ),
+                const SizedBox(height: 24),
+
+                // Режим специалиста
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CheckboxListTile(
+                          title: const Text(
+                            'Я предоставляю услуги (стать специалистом)',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          value: _isSpecialist,
+                          onChanged: (value) {
+                            setState(() {
+                              _isSpecialist = value ?? false;
+                            });
+                          },
+                        ),
+                        if (_isSpecialist) ...[
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Данные специалиста',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Категории
+                          const Text(
+                            'Категории *',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: SpecialistCategoriesList.categories.map((category) {
+                              final isSelected = _selectedCategories.contains(category);
+                              return FilterChip(
+                                label: Text(category),
+                                selected: isSelected,
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      _selectedCategories.add(category);
+                                    } else {
+                                      _selectedCategories.remove(category);
+                                    }
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                          if (_selectedCategories.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                'Выберите хотя бы одну категорию',
+                                style: TextStyle(color: Colors.red[700], fontSize: 12),
+                              ),
+                            ),
+                          const SizedBox(height: 16),
+                          
+                          // Стаж
+                          TextFormField(
+                            controller: _experienceController,
+                            decoration: const InputDecoration(
+                              labelText: 'Стаж (лет) *',
+                              border: OutlineInputBorder(),
+                              hintText: 'Например: 5',
+                            ),
+                            keyboardType: TextInputType.number,
+                            validator: _isSpecialist ? (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Обязательное поле';
+                              }
+                              final years = int.tryParse(value.trim());
+                              if (years == null || years < 0) {
+                                return 'Введите корректное число';
+                              }
+                              return null;
+                            } : null,
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Город работы
+                          TextFormField(
+                            controller: _workCityController,
+                            decoration: InputDecoration(
+                              labelText: 'Город работы *',
+                              border: const OutlineInputBorder(),
+                              hintText: _cityController.text.isNotEmpty 
+                                  ? 'По умолчанию: ${_cityController.text}'
+                                  : 'Введите город',
+                            ),
+                            validator: _isSpecialist ? (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Обязательное поле';
+                              }
+                              return null;
+                            } : null,
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Кнопка редактирования прайсов
+                          OutlinedButton.icon(
+                            icon: const Icon(Icons.attach_money),
+                            label: const Text('Управление прайсами'),
+                            onPressed: () {
+                              context.push('/profile/prices');
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 24),
 

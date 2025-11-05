@@ -114,7 +114,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
         }
       },
       child: Scaffold(
-        body: PageView(
+      body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -224,9 +224,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 );
               }).toList(),
             ),
+            ),
           ),
         ),
-      ),
       ),
     );
   }

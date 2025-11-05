@@ -596,6 +596,9 @@ class AuthService {
           'postsCount': 0,
           'socialLinks': [],
           'ctaButtons': {},
+          'onboarded': false, // Онбординг будет пройден в PostGoogleOnboardingScreen
+          'isSpecialist': false,
+          'roles': [],
           'createdAt': Timestamp.now(),
           'updatedAt': Timestamp.now(),
         });

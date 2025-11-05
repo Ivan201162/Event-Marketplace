@@ -36,6 +36,62 @@ service cloud.firestore {
       match /saved_filters/{filterId} {
         allow read, write: if isSignedIn() && uid == request.auth.uid;
       }
+      
+      match /prices/{priceId} {
+        allow read: if isSignedIn();
+        allow create, update, delete: if isSignedIn() && request.auth.uid == uid;
+      }
+    }
+    
+    // Calendar (старая структура - оставляем для совместимости)
+    match /calendar/{specialistId}/{monthId}/{dayId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && (
+        request.resource.data.clientId == request.auth.uid // клиент создаёт pending
+        || request.auth.uid == specialistId // специалист меняет статус
+      );
+      allow delete: if false;
+    }
+    
+    // BOOKINGS (Stage 7+8)
+    match /bookings/{bookingId} {
+      allow read: if isSignedIn();
+      
+      // создаёт только клиент за себя
+      allow create: if isSignedIn()
+        && request.resource.data.clientId == request.auth.uid
+        && request.resource.data.specialistId is string
+        && request.resource.data.status == "pending";
+      
+      // обновлять статус может:
+      // - специалист для своих бронирований (accepted/declined)
+      // - клиент может отменить свою (cancelled)
+      allow update: if isSignedIn() && (
+        // специалист меняет статус своей брони
+        (get(/databases/$(database)/documents/bookings/$(bookingId)).data.specialistId == request.auth.uid
+          && request.resource.data.status in ["accepted","declined","pending"])
+        ||
+        // клиент отменяет свою бронь
+        (get(/databases/$(database)/documents/bookings/$(bookingId)).data.clientId == request.auth.uid
+          && request.resource.data.status in ["cancelled","pending"])
+      );
+      
+      allow delete: if false;
+    }
+    
+    // SPECIALIST CALENDAR (Stage 7+8)
+    match /specialist_calendar/{specialistId}/days/{dayId} {
+      // читать может любой авторизованный (клиенту не раскрываем личности — тут их нет)
+      allow read: if isSignedIn();
+      // обновлять может только сам специалист (через клиентскую транзакцию)
+      allow update, create: if isSignedIn() && request.auth.uid == specialistId;
+      allow delete: if false;
+    }
+    
+    // Calendars (старая структура - оставляем для совместимости)
+    match /calendars/{specialistId}/days/{dayId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == specialistId;
     }
 
     // Specialists (доп. профиль)
@@ -124,13 +180,32 @@ service cloud.firestore {
       }
     }
 
-    // Reviews
+    // Reviews 2.0 - только после confirmed booking
+    // Проверка confirmed booking делается на клиенте через ReviewServiceV2
     match /reviews/{id} {
       allow read: if isSignedIn();
+      
+      // Создать отзыв - базовая валидация (полная проверка на клиенте)
       allow create: if isSignedIn() 
-                && request.resource.data.authorId == request.auth.uid
-                && isNotSelfReview();
-      allow update, delete: if false;
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.specialistId is string
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 5
+        && isNotSelfReview();
+      
+      // Обновить может только автор (для редактирования) или специалист (для ответа)
+      allow update: if isSignedIn() && (
+        (resource.data.authorId == request.auth.uid && 
+         request.resource.data.authorId == resource.data.authorId &&
+         request.resource.data.specialistId == resource.data.specialistId) ||
+        (resource.data.specialistId == request.auth.uid && 
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reply', 'updatedAt']))
+      );
+      
+      allow delete: if false; // Отзывы не удаляются
     }
     
     // Ideas
@@ -140,9 +215,41 @@ service cloud.firestore {
       allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
     }
     
+    // Specialist Pricing
+    match /specialist_pricing/{specialistId} {
+      allow read: if isSignedIn();
+      
+      match /base/{priceId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.auth.uid == specialistId;
+        allow update: if isSignedIn() && request.auth.uid == specialistId;
+        allow delete: if isSignedIn() && request.auth.uid == specialistId;
+      }
+      
+      match /special_dates/{dateId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.auth.uid == specialistId;
+        allow update: if isSignedIn() && request.auth.uid == specialistId;
+        allow delete: if isSignedIn() && request.auth.uid == specialistId;
+      }
+    }
+    
+    // Specialist Calendar
+    match /specialist_calendar/{specialistId}/days/{dayId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isSignedIn() && request.auth.uid == specialistId;
+    }
+    
     // Bookings
     match /bookings/{bookingId} {
-      allow read, write: if isSignedIn();
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && 
+        request.resource.data.clientId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        request.resource.data.specialistId == request.auth.uid ||
+        request.resource.data.clientId == request.auth.uid
+      );
+      allow delete: if false;
     }
     
     // Events

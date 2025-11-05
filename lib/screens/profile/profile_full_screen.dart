@@ -1,14 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/constants/specialist_roles.dart';
 import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/services/booking_service.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
-import 'package:event_marketplace_app/widgets/user_name_display.dart';
+import 'package:event_marketplace_app/widgets/calendar_tab_content.dart';
+import 'package:event_marketplace_app/widgets/pricing_tab_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 /// Полноценный профиль с вкладками
-class ProfileFullScreen extends StatefulWidget {
+class ProfileFullScreen extends ConsumerStatefulWidget {
   const ProfileFullScreen({
     required this.userId,
     super.key,
@@ -16,28 +20,53 @@ class ProfileFullScreen extends StatefulWidget {
   final String userId;
 
   @override
-  State<ProfileFullScreen> createState() => _ProfileFullScreenState();
+  ConsumerState<ProfileFullScreen> createState() => _ProfileFullScreenState();
 }
 
-class _ProfileFullScreenState extends State<ProfileFullScreen>
+class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   DocumentSnapshot? _lastReviewDoc;
   bool _isLoadingMore = false;
 
+  bool _isSpecialist = false;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 5, vsync: this); // posts, reels, reviews, prices, calendar
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        final tabNames = ['posts', 'reels', 'reviews'];
-        debugLog("PROFILE_TABS:${tabNames[_tabController.index]}");
+        final tabNames = ['posts', 'reels', 'reviews', 'prices', 'calendar'];
+        if (_tabController.index < tabNames.length) {
+          debugLog("PROFILE_TABS:${tabNames[_tabController.index]}");
+        }
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugLog("PROFILE_OPENED:${widget.userId}");
+      _loadUserData();
     });
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .get();
+      if (doc.exists && mounted) {
+        final data = doc.data()!;
+        final isSpecialist = data['isSpecialist'] ?? false;
+        if (mounted && isSpecialist != _isSpecialist) {
+          setState(() {
+            _isSpecialist = isSpecialist;
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading user data: $e');
+    }
   }
 
   @override
@@ -74,87 +103,112 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
 
             try {
               final user = AppUser.fromFirestore(snapshot.data!);
-              return NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  return [
-                    SliverAppBar(
-                      expandedHeight: 200,
-                      floating: true,
-                      pinned: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                        title: Text(
-                          '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty
-                              ? (user.email ?? user.name ?? 'Пользователь')
-                              : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
-                          style: const TextStyle(fontSize: 16),
+              
+              // Обновляем статус специалиста
+              final userData = snapshot.data!.data() as Map<String, dynamic>?;
+              final userIsSpecialist = (userData?['isSpecialist'] as bool?) ?? false;
+              if (mounted && userIsSpecialist != _isSpecialist) {
+                setState(() {
+                  _isSpecialist = userIsSpecialist;
+                });
+              }
+              
+              // Проверка статуса подписки (если не свой профиль)
+              return StreamBuilder<DocumentSnapshot?>(
+                stream: !isOwnProfile && currentUser != null
+                    ? FirebaseFirestore.instance
+                        .collection('follows')
+                        .doc('${currentUser.uid}_${widget.userId}')
+                        .snapshots()
+                    : Stream.value(null),
+                builder: (context, followSnapshot) {
+                  final isFollowing = followSnapshot.hasData && followSnapshot.data?.exists == true;
+                  
+                  return NestedScrollView(
+                    headerSliverBuilder: (context, innerBoxIsScrolled) {
+                      return [
+                        // SliverAppBar без заголовка (чтобы не было дублирования имени)
+                        SliverAppBar(
+                          expandedHeight: 0,
+                          floating: false,
+                          pinned: false,
+                          automaticallyImplyLeading: false,
+                          toolbarHeight: 0,
+                          title: null, // Убираем заголовок полностью
                         ),
-                        background: user.photoURL != null && user.photoURL!.isNotEmpty
-                            ? Image.network(
-                                user.photoURL!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
-                                  color: Colors.grey[300],
-                                  child: const Icon(Icons.person, size: 80),
-                                ),
-                              )
-                            : Container(
-                                color: Colors.grey[300],
-                                child: const Icon(Icons.person, size: 80),
+                        SliverToBoxAdapter(
+                          child: _buildProfileHeader(user, isOwnProfile, isFollowing),
+                        ),
+                        SliverPersistentHeader(
+                          pinned: true,
+                          delegate: _SliverTabBarDelegate(
+                            TabBar(
+                              controller: _tabController,
+                              tabs: _isSpecialist
+                                  ? const [
+                                      Tab(icon: Icon(Icons.grid_on)),
+                                      Tab(icon: Icon(Icons.play_circle_outline)),
+                                      Tab(icon: Icon(Icons.star)),
+                                      Tab(icon: Icon(Icons.attach_money)),
+                                      Tab(icon: Icon(Icons.event)),
+                                    ]
+                                  : const [
+                                      Tab(icon: Icon(Icons.grid_on)),
+                                      Tab(icon: Icon(Icons.play_circle_outline)),
+                                      Tab(icon: Icon(Icons.star)),
+                                      Tab(icon: Icon(Icons.event)),
+                                      Tab(icon: Icon(Icons.event)),
+                                    ],
+                            ),
+                          ),
+                        ),
+                        // Отступ для тени
+                        const SliverToBoxAdapter(
+                          child: SizedBox(height: 1),
+                        ),
+                      ];
+                    },
+                    body: RefreshIndicator(
+                      onRefresh: () async {
+                        try {
+                          // Обновляем данные профиля
+                          await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(widget.userId)
+                              .get();
+                          
+                          await Future.delayed(const Duration(milliseconds: 300));
+                          debugLog("REFRESH_OK:profile");
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Обновлено'),
+                                duration: Duration(seconds: 1),
                               ),
+                            );
+                          }
+                        } catch (e) {
+                          debugLog("REFRESH_ERR:profile:$e");
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Ошибка обновления: $e')),
+                            );
+                          }
+                        }
+                      },
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildPostsTab(user),
+                          _buildReelsTab(user),
+                          _buildReviewsTab(user),
+                          if (_isSpecialist) _buildPricesTab(user) else _buildPostsTab(user),
+                          if (_isSpecialist && isOwnProfile) _buildCalendarTab(user) else _buildPostsTab(user),
+                        ],
                       ),
                     ),
-                    SliverToBoxAdapter(
-                      child: _buildProfileHeader(user, isOwnProfile),
-                    ),
-                    SliverPersistentHeader(
-                      pinned: true,
-                      delegate: _SliverTabBarDelegate(
-                        TabBar(
-                          controller: _tabController,
-                          tabs: const [
-                            Tab(icon: Icon(Icons.grid_on)),
-                            Tab(icon: Icon(Icons.play_circle_outline)),
-                            Tab(icon: Icon(Icons.star)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    // Отступ для тени
-                    const SliverToBoxAdapter(
-                      child: SizedBox(height: 1),
-                    ),
-                  ];
+                  );
                 },
-                body: RefreshIndicator(
-                  onRefresh: () async {
-                    try {
-                      // Инвалидируем провайдеры через ref (если используется Riverpod)
-                      // Для StreamBuilder - просто перезагружаем данные
-                      await Future.delayed(const Duration(milliseconds: 500));
-                      debugLog("REFRESH_OK:profile");
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Обновлено'), duration: Duration(seconds: 1)),
-                        );
-                      }
-                    } catch (e) {
-                      debugLog("REFRESH_ERR:profile:$e");
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Ошибка обновления: $e')),
-                        );
-                      }
-                    }
-                  },
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildPostsTab(user),
-                      _buildReelsTab(user),
-                      _buildReviewsTab(user),
-                    ],
-                  ),
-                ),
               );
             } catch (e) {
               return Center(child: Text('Ошибка загрузки: $e'));
@@ -165,7 +219,11 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
     );
   }
 
-  Widget _buildProfileHeader(AppUser user, bool isOwnProfile) {
+  Widget _buildProfileHeader(AppUser user, bool isOwnProfile, bool isFollowing) {
+    final userName = '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty
+        ? (user.email ?? user.name ?? 'Пользователь')
+        : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim();
+    
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -179,120 +237,253 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Аватар слева, имя по центру (стиль ВК)
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Аватар
+              // Аватар слева
               GestureDetector(
                 onTap: isOwnProfile ? () {
                   // TODO: Редактирование аватара
                 } : null,
                 child: CircleAvatar(
-                  radius: 40,
+                  radius: 50,
                   backgroundImage: user.photoURL != null && user.photoURL!.isNotEmpty
                       ? NetworkImage(user.photoURL!)
                       : null,
                   child: user.photoURL == null || user.photoURL!.isEmpty
-                      ? const Icon(Icons.person, size: 40)
+                      ? const Icon(Icons.person, size: 50)
                       : null,
                 ),
               ),
               const SizedBox(width: 16),
-              // Блок текста
+              // Имя и город по центру
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Имя Фамилия
+                    // Имя Фамилия крупно, по центру (VK стиль)
                     Text(
-                      '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty
-                          ? (user.email ?? user.name ?? 'Пользователь')
-                          : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
+                      userName,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                     ),
-                    // @username
-                    if (user.username != null && user.username!.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        '@${user.username}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                    // Город
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
+                    // Город с иконкой 🏙️
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                        const Text('🏙️', style: TextStyle(fontSize: 16)),
                         const SizedBox(width: 4),
                         Text(
                           user.city ?? 'Город не указан',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
+                    // Бейджи ролей
+                    if (user.roles.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        alignment: WrapAlignment.center,
+                        children: user.roles.take(3).map((role) {
+                          final roleId = role['id'] as String? ?? '';
+                          final roleLabel = role['label'] as String? ?? '';
+                          return Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.blue[50],
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.blue[200]!),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  _getRoleIcon(roleId),
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  roleLabel,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue[900],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ],
                 ),
               ),
-              // Кнопки действий
-              if (isOwnProfile)
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.edit, size: 18),
-                  label: const Text('Редактировать'),
-                  onPressed: () {
-                    debugLog("PROFILE_EDIT_OPENED");
-                    context.push('/profile/edit');
+            ],
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // Счётчики
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatColumn('Подписчики', user.followersCount ?? 0),
+              _buildStatColumn('Подписки', user.followingCount ?? 0),
+              if (user.role == 'specialist')
+                FutureBuilder<int>(
+                  future: BookingService().getConfirmedBookingsCount(user.uid),
+                  builder: (context, snapshot) {
+                    return _buildStatColumn('Заказы', snapshot.data ?? 0);
                   },
-                )
-              else if (user.role == 'specialist')
-                Column(
-                  children: [
-                    OutlinedButton.icon(
-                      icon: const Icon(Icons.person_add, size: 18),
-                      label: const Text('Подписаться'),
-                      onPressed: () => _handleFollow(user),
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.message, size: 18),
-                      label: const Text('Написать'),
-                      onPressed: () => _handleMessage(user),
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.shopping_cart, size: 18),
-                      label: const Text('Заказать'),
-                      onPressed: () => _handleOrder(user),
-                    ),
-                  ],
                 ),
             ],
           ),
-          const SizedBox(height: 16),
-          // Подписчики/Подписки (показываем только владельцу или всем для специалистов)
-          if (isOwnProfile || user.role == 'specialist')
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatColumn('Подписчики', user.followersCount ?? 0),
-                _buildStatColumn('Подписки', user.followingCount ?? 0),
-              ],
-            ),
-          // Bio
+          
+          // Bio (если не пусто)
           if (user.bio != null && user.bio!.isNotEmpty) ...[
             const SizedBox(height: 16),
-            Text(
-              user.bio!,
-              style: const TextStyle(fontSize: 14),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                user.bio!,
+                style: const TextStyle(fontSize: 14, height: 1.4),
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
+          
+          const SizedBox(height: 16),
+          
+          // Кнопки действий
+          if (isOwnProfile)
+            // Свой профиль: "Редактировать профиль" + "Настройки бронирований" (если specialist)
+            Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.edit, size: 20),
+                    label: const Text('Редактировать профиль'),
+                    onPressed: () {
+                      debugLog("PROFILE_EDIT_OPENED");
+                      context.push('/profile/edit');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+                if (user.role == 'specialist' || _isSpecialist) ...[
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.settings, size: 20),
+                      label: const Text('Настройки бронирований'),
+                      onPressed: () {
+                        debugLog("BOOKING_SETTINGS_OPENED");
+                        context.push('/profile/booking-settings');
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            )
+          else if (user.role == 'specialist')
+            // Профиль специалиста: 3 кнопки
+            Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: Icon(isFollowing ? Icons.person_remove : Icons.person_add, size: 20),
+                    label: Text(isFollowing ? 'Отписаться' : 'Подписаться'),
+                    onPressed: () => _handleFollow(user),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.message, size: 18),
+                        label: const Text('Написать'),
+                        onPressed: () => _handleMessage(user),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.shopping_cart, size: 18),
+                        label: const Text('Заказать'),
+                        onPressed: () => _handleOrder(user),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          else
+            // Профиль обычного пользователя: 2 кнопки
+            Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: Icon(isFollowing ? Icons.person_remove : Icons.person_add, size: 20),
+                    label: Text(isFollowing ? 'Отписаться' : 'Подписаться'),
+                    onPressed: () => _handleFollow(user),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.message, size: 20),
+                    label: const Text('Написать'),
+                    onPressed: () => _handleMessage(user),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
@@ -514,6 +705,17 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
     );
   }
 
+  Widget _buildPricesTab(AppUser user) {
+    return PricingTabContent(
+      user: user,
+      isOwnProfile: widget.userId == FirebaseAuth.instance.currentUser?.uid,
+    );
+  }
+
+  Widget _buildCalendarTab(AppUser user) {
+    return const CalendarTabContent();
+  }
+
   Widget _buildReviewCard(Map data) {
     final authorName = data['authorName'] ?? 'Аноним';
     final authorAvatar = data['authorAvatar'];
@@ -720,44 +922,15 @@ class _ProfileFullScreenState extends State<ProfileFullScreen>
   }
 
   void _handleOrder(AppUser user) {
-    context.push('/requests/create');
+    final userName = '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty
+        ? (user.email ?? user.name ?? 'Специалист')
+        : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim();
+    context.push('/booking/calendar/${user.uid}?name=$userName');
   }
-}
-
-class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
-  final TabBar tabBar;
-
-  _SliverTabBarDelegate(this.tabBar);
-
-  @override
-  double get minExtent => 48;
-  @override
-  double get maxExtent => 48;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) => false;
-}
 
   Future<void> _showAddReviewDialog(AppUser specialist) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
+    if (currentUser == null || !mounted) return;
 
     int rating = 0;
     final textController = TextEditingController();
@@ -834,9 +1007,11 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
                             .doc(currentUser.uid)
                             .get();
                         final userData = userDoc.data();
-                        final authorName = userData?['firstName'] != null && userData?['lastName'] != null
-                            ? '${userData['firstName']} ${userData['lastName']}'
-                            : (userData?['name'] ?? currentUser.displayName ?? 'Пользователь');
+                        final firstName = userData?['firstName'] as String?;
+                        final lastName = userData?['lastName'] as String?;
+                        final authorName = (firstName != null && lastName != null)
+                            ? '$firstName $lastName'
+                            : (userData?['name'] as String? ?? currentUser.displayName ?? 'Пользователь');
                         final authorPhotoUrl = userData?['photoURL'] ?? currentUser.photoURL;
 
                         await FirebaseFirestore.instance.collection('reviews').add({
@@ -892,4 +1067,36 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
       ),
     );
   }
+}
+
+class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar tabBar;
+
+  _SliverTabBarDelegate(this.tabBar);
+
+  @override
+  double get minExtent => 48;
+  @override
+  double get maxExtent => 48;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) => false;
+}
 

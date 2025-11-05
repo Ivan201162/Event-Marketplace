@@ -1,188 +1,81 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/booking.dart';
 import 'package:event_marketplace_app/services/booking_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Booking service provider
-final bookingServiceProvider = Provider<BookingService>((ref) {
-  return BookingService();
-});
+/// Провайдер для BookingService
+final bookingServiceProvider = Provider((ref) => BookingService());
 
-/// Specialist bookings provider
-final specialistBookingsProvider =
-    FutureProvider.family<List<Booking>, String>((
-  ref,
-  specialistId,
-) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getSpecialistBookings(specialistId);
-});
+/// Провайдер для документа дня календаря специалиста
+final calendarDayDocProvider = StreamProvider.family<DocumentSnapshot?, CalendarDayParams>(
+  (ref, params) {
+    return FirebaseFirestore.instance
+        .collection('specialist_calendar')
+        .doc(params.specialistId)
+        .collection('days')
+        .doc(params.dayId)
+        .snapshots();
+  },
+);
 
-/// Client bookings provider
-final clientBookingsProvider =
-    FutureProvider.family<List<Booking>, String>((ref, clientId) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getClientBookings(clientId);
-});
+class CalendarDayParams {
+  CalendarDayParams({
+    required this.specialistId,
+    required this.dayId,
+  });
 
-/// Bookings by status provider
-final bookingsByStatusProvider =
-    FutureProvider.family<List<Booking>, BookingStatus>((
-  ref,
-  status,
-) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getBookingsByStatus(status);
-});
+  final String specialistId;
+  final String dayId; // YYYY-MM-DD
+}
 
-/// Booking by ID provider
-final bookingByIdProvider =
-    FutureProvider.family<Booking?, String>((ref, bookingId) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getBookingById(bookingId);
-});
+/// Провайдер для заявок на день специалиста
+final bookingsForDayProvider = StreamProvider.family<List<Booking>, BookingsForDayParams>(
+  (ref, params) {
+    final service = ref.watch(bookingServiceProvider);
+    return service.watchBookingsBySpecialistDay(params.specialistId, params.dayId);
+  },
+);
 
-/// Specialist bookings stream provider
-final specialistBookingsStreamProvider =
-    StreamProvider.family<List<Booking>, String>((
-  ref,
-  specialistId,
-) {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getSpecialistBookingsStream(specialistId);
-});
+class BookingsForDayParams {
+  BookingsForDayParams({
+    required this.specialistId,
+    required this.dayId,
+  });
 
-/// Client bookings stream provider
-final clientBookingsStreamProvider =
-    StreamProvider.family<List<Booking>, String>((ref, clientId) {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getClientBookingsStream(clientId);
-});
+  final String specialistId;
+  final String dayId; // YYYY-MM-DD
+}
 
-/// Bookings by status stream provider
-final bookingsByStatusStreamProvider =
-    StreamProvider.family<List<Booking>, BookingStatus>((
-  ref,
-  status,
-) {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getBookingsByStatusStream(status);
-});
+/// Провайдер для заявки по ID
+final bookingByIdProvider = FutureProvider.family<Booking?, String>(
+  (ref, bookingId) async {
+    final service = ref.watch(bookingServiceProvider);
+    return await service.getBookingById(bookingId);
+  },
+);
 
-/// Booking statistics provider
-final bookingStatsProvider = FutureProvider.family<Map<String, int>, String>((
-  ref,
-  specialistId,
-) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getBookingStats(specialistId);
-});
+/// Провайдер для метаданных дня календаря
+final calendarDayMetaProvider = FutureProvider.family<Map<String, dynamic>, CalendarDayMetaParams>(
+  (ref, params) async {
+    final service = ref.watch(bookingServiceProvider);
+    return await service.getCalendarDayMeta(params.specialistId, params.dayId);
+  },
+);
 
-/// Available time slots provider
-final availableTimeSlotsProvider =
-    FutureProvider.family<List<String>, Map<String, dynamic>>((
-  ref,
-  params,
-) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  final specialistId = params['specialistId'] as String;
-  final date = params['date'] as DateTime;
-  return bookingService.getAvailableTimeSlots(specialistId, date);
-});
+class CalendarDayMetaParams {
+  CalendarDayMetaParams({
+    required this.specialistId,
+    required this.dayId,
+  });
 
-/// Time slot availability provider
-final timeSlotAvailabilityProvider =
-    FutureProvider.family<bool, Map<String, dynamic>>((
-  ref,
-  params,
-) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  final specialistId = params['specialistId'] as String;
-  final date = params['date'] as DateTime;
-  final time = params['time'] as String;
-  final duration = params['duration'] as int;
-  return bookingService.isTimeSlotAvailable(specialistId, date, time, duration);
-});
+  final String specialistId;
+  final String dayId; // YYYY-MM-DD
+}
 
-/// Pending bookings count provider
-final pendingBookingsCountProvider =
-    FutureProvider.family<int, String>((ref, specialistId) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  final bookings =
-      await bookingService.getBookingsByStatus(BookingStatus.pending);
-  return bookings.length;
-});
-
-/// Pending bookings count stream provider
-final pendingBookingsCountStreamProvider =
-    StreamProvider.family<int, String>((ref, specialistId) {
-  final bookingService = ref.read(bookingServiceProvider);
-  return bookingService.getBookingsByStatusStream(BookingStatus.pending).map(
-      (bookings) =>
-          bookings.where((b) => b.specialistId == specialistId).length,);
-});
-
-/// Today's bookings provider
-final todaysBookingsProvider = FutureProvider.family<List<Booking>, String>((
-  ref,
-  specialistId,
-) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  final today = DateTime.now();
-  final bookings = await bookingService.getSpecialistBookings(specialistId);
-  return bookings.where((booking) {
-    final bookingDate = booking.date;
-    return bookingDate.year == today.year &&
-        bookingDate.month == today.month &&
-        bookingDate.day == today.day;
-  }).toList();
-});
-
-/// Today's bookings stream provider
-final todaysBookingsStreamProvider =
-    StreamProvider.family<List<Booking>, String>((
-  ref,
-  specialistId,
-) {
-  final bookingService = ref.read(bookingServiceProvider);
-  final today = DateTime.now();
-  return bookingService.getSpecialistBookingsStream(specialistId).map(
-        (bookings) => bookings.where((booking) {
-          final bookingDate = booking.date;
-          return bookingDate.year == today.year &&
-              bookingDate.month == today.month &&
-              bookingDate.day == today.day;
-        }).toList(),
-      );
-});
-
-/// Upcoming bookings provider
-final upcomingBookingsProvider = FutureProvider.family<List<Booking>, String>((
-  ref,
-  specialistId,
-) async {
-  final bookingService = ref.read(bookingServiceProvider);
-  final now = DateTime.now();
-  final bookings = await bookingService.getSpecialistBookings(specialistId);
-  return bookings.where((booking) {
-    return booking.date.isAfter(now) &&
-        (booking.status == BookingStatus.confirmed ||
-            booking.status == BookingStatus.pending);
-  }).toList();
-});
-
-/// Upcoming bookings stream provider
-final upcomingBookingsStreamProvider =
-    StreamProvider.family<List<Booking>, String>((
-  ref,
-  specialistId,
-) {
-  final bookingService = ref.read(bookingServiceProvider);
-  final now = DateTime.now();
-  return bookingService.getSpecialistBookingsStream(specialistId).map(
-        (bookings) => bookings.where((booking) {
-          return booking.date.isAfter(now) &&
-              (booking.status == BookingStatus.confirmed ||
-                  booking.status == BookingStatus.pending);
-        }).toList(),
-      );
-});
+/// Провайдер для autoAcceptBookings
+final autoAcceptBookingsProvider = FutureProvider.family<bool, String>(
+  (ref, specialistId) async {
+    final service = ref.watch(bookingServiceProvider);
+    return await service.getAutoAcceptBookings(specialistId);
+  },
+);

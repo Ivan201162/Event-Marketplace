@@ -258,4 +258,65 @@ class ChatService {
       throw Exception('Ошибка отметки как прочитанное: $e');
     }
   }
+
+  /// Получить или создать приватный чат между двумя пользователями
+  Future<String> getOrCreatePrivateChat(String userId1, String userId2) async {
+    try {
+      // Ищем существующий чат
+      final participants = [userId1, userId2]..sort();
+      
+      final existingChats = await _firestore
+          .collection('chats')
+          .where('participants', isEqualTo: participants)
+          .where('type', isEqualTo: 'private')
+          .limit(1)
+          .get();
+
+      if (existingChats.docs.isNotEmpty) {
+        return existingChats.docs.first.id;
+      }
+
+      // Создаём новый чат
+      final chatData = {
+        'type': 'private',
+        'participants': participants,
+        'lastMessage': '',
+        'lastMessageAt': FieldValue.serverTimestamp(),
+        'unreadCount': 0,
+        'hasMedia': false,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      final docRef = await _firestore.collection('chats').add(chatData);
+      return docRef.id;
+    } catch (e) {
+      throw Exception('Ошибка получения/создания чата: $e');
+    }
+  }
+
+  /// Добавить системное сообщение в чат
+  Future<void> addSystemMessage(String chatId, String text) async {
+    try {
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add({
+        'text': text,
+        'senderId': 'system',
+        'type': 'system',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      // Обновить информацию о чате
+      await _firestore.collection('chats').doc(chatId).update({
+        'lastMessage': text,
+        'lastMessageAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка добавления системного сообщения: $e');
+    }
+  }
 }

@@ -8,6 +8,8 @@ import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/providers/city_specialists_paged_provider.dart';
 import 'package:event_marketplace_app/widgets/user_name_display.dart';
 import 'package:event_marketplace_app/screens/home/city_specialists_list_widget.dart';
+import 'package:event_marketplace_app/constants/specialist_roles.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,10 +18,24 @@ import 'package:go_router/go_router.dart';
 class HomeScreenSimple extends ConsumerWidget {
   const HomeScreenSimple({super.key});
 
+  Future<List<Map<String, dynamic>>> _getUserRoles(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        final roles = (data['roles'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+        return roles;
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugLog("HOME_LOADED");
     });
@@ -94,9 +110,9 @@ class HomeScreenSimple extends ConsumerWidget {
               }
             },
             child: SingleChildScrollView(
-              padding: context.screenPadding,
+            padding: context.screenPadding,
               physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Приветствие
@@ -108,14 +124,14 @@ class HomeScreenSimple extends ConsumerWidget {
                     return GestureDetector(
                       onTap: () => context.push('/profile/me'),
                       child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(context.isSmallScreen ? 20 : 24),
-                    decoration: BoxDecoration(
-                      gradient: AppTheme.primaryGradient,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
+                  width: double.infinity,
+                  padding: EdgeInsets.all(context.isSmallScreen ? 20 : 24),
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.primaryGradient,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
                         user.photoURL != null && user.photoURL!.isNotEmpty
                             ? CircleAvatar(
                                 radius: 30,
@@ -127,50 +143,69 @@ class HomeScreenSimple extends ConsumerWidget {
                                 backgroundColor: Colors.white24,
                                 child: Icon(
                                   Icons.person,
-                                  color: Colors.white,
+                                    color: Colors.white,
                                   size: 30,
-                                ),
                               ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                                 '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim().isEmpty 
                                     ? (user.email ?? user.name ?? 'Пользователь')
                                     : '${user.firstName ?? ""} ${user.lastName ?? ""}'.trim(),
-                                style: TextStyle(
-                                  fontSize: context.isSmallScreen ? 20 : 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                              style: TextStyle(
+                                fontSize: context.isSmallScreen ? 20 : 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
-                              if (user.username != null && user.username!.isNotEmpty) ...[
-                                const SizedBox(height: 4),
-                                Text(
-                                  '@${user.username}',
-                                  style: TextStyle(
-                                    fontSize: context.isSmallScreen ? 14 : 16,
-                                    color: Colors.white.withOpacity(0.8),
-                                  ),
-                                ),
-                              ],
-                              const SizedBox(height: 8),
-                              Text(
+                            ),
+                            // Роли специалиста
+                            if (user.isSpecialist == true) ...[
+                              FutureBuilder<List<Map<String, dynamic>>>(
+                                future: _getUserRoles(user.uid),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                    final roles = snapshot.data!;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8, bottom: 4),
+                                      child: Wrap(
+                                        spacing: 8,
+                                        children: roles.map((role) {
+                                          final roleId = role['id'] as String? ?? '';
+                                          final roleLabel = role['label'] as String? ?? '';
+                                          return Text(
+                                            '${SpecialistRoles.getIcon(roleId)} $roleLabel',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white.withOpacity(0.9),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox.shrink();
+                                },
+                              ),
+                            ],
+                            const SizedBox(height: 4),
+                            Text(
                                 user.city != null && user.city!.isNotEmpty
                                     ? user.city!
                                     : 'Город не указан',
-                                style: TextStyle(
-                                  fontSize: context.isSmallScreen ? 12 : 14,
-                                  color: Colors.white.withOpacity(0.9),
-                                ),
+                              style: TextStyle(
+                                fontSize: context.isSmallScreen ? 12 : 14,
+                                color: Colors.white.withOpacity(0.9),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                   ),
                     );
                   },
@@ -224,13 +259,13 @@ class HomeScreenSimple extends ConsumerWidget {
 
                 // Карусель "Лучшие специалисты недели — {город}"
                 if (user.city != null && user.city!.isNotEmpty)
-                  _buildTopSpecialistsSection(
-                    context: context,
-                    ref: ref,
+                _buildTopSpecialistsSection(
+                  context: context,
+                  ref: ref,
                     title: 'Лучшие специалисты недели — ${user.city}',
-                    isRussia: false,
-                    userCity: user.city,
-                  ),
+                  isRussia: false,
+                  userCity: user.city,
+                ),
 
               ],
             ),

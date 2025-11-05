@@ -7,6 +7,8 @@ import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
 import 'package:event_marketplace_app/screens/auth/role_selection_screen.dart';
 import 'package:event_marketplace_app/screens/auth/register_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/auth/onboarding_complete_profile_screen.dart';
+import 'package:event_marketplace_app/screens/auth/post_google_onboarding.dart';
+import 'package:event_marketplace_app/screens/auth/role_name_city_onboarding.dart';
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_screen_improved.dart';
 import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
@@ -20,6 +22,9 @@ import 'package:event_marketplace_app/screens/profile/edit_profile_advanced.dart
 import 'package:event_marketplace_app/screens/profile/profile_edit_screen.dart';
 import 'package:event_marketplace_app/screens/profile/profile_screen_advanced.dart';
 import 'package:event_marketplace_app/screens/profile/profile_full_screen.dart';
+import 'package:event_marketplace_app/screens/profile/specialist_price_editor.dart';
+import 'package:event_marketplace_app/screens/profile/profile_booking_settings.dart';
+import 'package:event_marketplace_app/screens/booking/specialist_calendar_screen.dart';
 import 'package:event_marketplace_app/screens/requests/create_request_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/search/search_screen_enhanced.dart';
 import 'package:event_marketplace_app/screens/settings/settings_screen.dart';
@@ -76,6 +81,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RoleSelectionScreen(),
       ),
 
+      // Onboarding: после Google Sign-In
+      GoRoute(
+        path: '/onboarding/post-google',
+        name: 'post-google-onboarding',
+        builder: (context, state) => const PostGoogleOnboardingScreen(),
+      ),
+      
+      // Onboarding: роль + ФИО + город
+      GoRoute(
+        path: '/onboarding/role-name-city',
+        name: 'role-name-city-onboarding',
+        builder: (context, state) => const RoleNameCityOnboardingScreen(),
+      ),
+      
       // Onboarding: дозаполнение профиля
       GoRoute(
         path: '/onboarding/complete-profile',
@@ -102,6 +121,32 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/profile/edit',
         name: 'edit-profile',
         builder: (context, state) => const ProfileEditScreen(),
+      ),
+      
+      // Редактор прайсов специалиста
+      GoRoute(
+        path: '/profile/prices',
+        name: 'specialist-prices',
+        builder: (context, state) => const SpecialistPriceEditor(),
+      ),
+      GoRoute(
+        path: '/profile/booking-settings',
+        name: 'booking-settings',
+        builder: (context, state) => const ProfileBookingSettingsScreen(),
+      ),
+      
+      // Календарь бронирования специалиста
+      GoRoute(
+        path: '/booking/calendar/:specialistId',
+        name: 'specialist-calendar',
+        builder: (context, state) {
+          final specialistId = state.pathParameters['specialistId']!;
+          final name = state.uri.queryParameters['name'] ?? 'Специалист';
+          return SpecialistCalendarScreen(
+            specialistId: specialistId,
+            specialistName: name,
+          );
+        },
       ),
 
       // Чаты

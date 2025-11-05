@@ -46,25 +46,27 @@ class _AuthGateState extends State<AuthGate> {
         }
 
         final userData = userDoc.data()!;
-        final role = userData['role'];
-        final firstName = userData['firstName'];
-        final lastName = userData['lastName'];
+        final onboarded = userData['onboarded'] as bool? ?? false;
+        final roles = userData['roles'] as List?;
+        final firstName = userData['firstName'] as String?;
+        final lastName = userData['lastName'] as String?;
+        final city = userData['city'] as String?;
         
-        // Проверка 1: если нет role → /role-selection
-        if (role == null || role.toString().isEmpty) {
-          debugLog("ROLE_SELECTION_SHOWN");
-          if (mounted) {
-            context.go('/role-selection');
-          }
-          return;
-        }
+        // Проверка обязательных полей для онбординга
+        final needsOnboarding = !onboarded ||
+            roles == null ||
+            (roles is List && roles.isEmpty) ||
+            firstName == null ||
+            firstName.isEmpty ||
+            lastName == null ||
+            lastName.isEmpty ||
+            city == null ||
+            city.isEmpty;
         
-        // Проверка 2: если отсутствуют firstName или lastName → /onboarding/complete-profile
-        if (firstName == null || firstName.toString().isEmpty ||
-            lastName == null || lastName.toString().isEmpty) {
-          debugLog("AUTH_ENRICH_PROFILE_OPENED");
+        if (needsOnboarding) {
+          debugLog("ONBOARDING_REQUIRED");
           if (mounted) {
-            context.go('/onboarding/complete-profile');
+            context.go('/onboarding/role-name-city');
           }
           return;
         }
