@@ -34,10 +34,10 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this); // posts, reels, reviews, prices, calendar
+    _tabController = TabController(length: 3, vsync: this); // posts, reels, reviews
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        final tabNames = ['posts', 'reels', 'reviews', 'prices', 'calendar'];
+        final tabNames = ['posts', 'reels', 'reviews'];
         if (_tabController.index < tabNames.length) {
           debugLog("PROFILE_TABS:${tabNames[_tabController.index]}");
         }
@@ -144,21 +144,11 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                           delegate: _SliverTabBarDelegate(
                             TabBar(
                               controller: _tabController,
-                              tabs: _isSpecialist
-                                  ? const [
-                                      Tab(icon: Icon(Icons.grid_on)),
-                                      Tab(icon: Icon(Icons.play_circle_outline)),
-                                      Tab(icon: Icon(Icons.star)),
-                                      Tab(icon: Icon(Icons.attach_money)),
-                                      Tab(icon: Icon(Icons.event)),
-                                    ]
-                                  : const [
-                                      Tab(icon: Icon(Icons.grid_on)),
-                                      Tab(icon: Icon(Icons.play_circle_outline)),
-                                      Tab(icon: Icon(Icons.star)),
-                                      Tab(icon: Icon(Icons.event)),
-                                      Tab(icon: Icon(Icons.event)),
-                                    ],
+                              tabs: const [
+                                Tab(icon: Icon(Icons.grid_on)),
+                                Tab(icon: Icon(Icons.play_circle_outline)),
+                                Tab(icon: Icon(Icons.star)),
+                              ],
                             ),
                           ),
                         ),
@@ -202,8 +192,6 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                           _buildPostsTab(user),
                           _buildReelsTab(user),
                           _buildReviewsTab(user),
-                          if (_isSpecialist) _buildPricesTab(user) else _buildPostsTab(user),
-                          if (_isSpecialist && isOwnProfile) _buildCalendarTab(user) else _buildPostsTab(user),
                         ],
                       ),
                     ),

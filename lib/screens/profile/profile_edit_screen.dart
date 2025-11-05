@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'dart:async';
 
 /// Экран редактирования профиля
@@ -38,6 +40,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   bool _isSpecialist = false;
   List<String> _selectedCategories = [];
   final _experienceController = TextEditingController();
+  final _startYearController = TextEditingController();
   final _workCityController = TextEditingController();
 
   @override
@@ -57,6 +60,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     _cityController.dispose();
     _bioController.dispose();
     _experienceController.dispose();
+    _startYearController.dispose();
     _workCityController.dispose();
     _usernameDebounceTimer?.cancel();
     super.dispose();
@@ -88,8 +92,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           _selectedCategories = List<String>.from((specialist['categories'] as List?)?.cast<String>() ?? []);
           final experienceYears = specialist['experienceYears'];
           _experienceController.text = experienceYears != null ? experienceYears.toString() : '';
+          final startYear = specialist['startYear'];
+          _startYearController.text = startYear != null ? startYear.toString() : '';
           _workCityController.text = (specialist['workCity'] as String?) ?? (data['city'] as String?) ?? '';
         } else {
+          _startYearController.text = '';
           _workCityController.text = (data['city'] as String?) ?? '';
         }
       }
@@ -201,6 +208,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         data['specialist'] = {
           'categories': _selectedCategories,
           'experienceYears': int.tryParse(_experienceController.text.trim()) ?? 0,
+          'startYear': _startYearController.text.trim().isNotEmpty 
+              ? int.tryParse(_startYearController.text.trim()) 
+              : null,
           'workCity': _workCityController.text.trim().isNotEmpty 
               ? _workCityController.text.trim() 
               : _cityController.text.trim(),
@@ -343,14 +353,104 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Город
-                TextFormField(
-                  controller: _cityController,
-                  decoration: const InputDecoration(
-                    labelText: 'Город',
-                    border: OutlineInputBorder(),
-                    hintText: 'Москва, Санкт-Петербург...',
-                  ),
+                // Город (с автодополнением и геолокацией)
+                Row(
+                  children: [
+                    Expanded(
+                      child: Autocomplete<String>(
+                        optionsBuilder: (TextEditingValue textEditingValue) {
+                          if (textEditingValue.text.isEmpty) {
+                            return const <String>[];
+                          }
+                          final russianCities = [
+                            'Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань',
+                            'Нижний Новгород', 'Челябинск', 'Самара', 'Омск', 'Ростов-на-Дону',
+                            'Уфа', 'Красноярск', 'Воронеж', 'Пермь', 'Волгоград', 'Краснодар',
+                            'Саратов', 'Тюмень', 'Тольятти', 'Ижевск', 'Барнаул', 'Ульяновск',
+                            'Иркутск', 'Хабаровск', 'Ярославль', 'Владивосток', 'Махачкала',
+                            'Томск', 'Оренбург', 'Кемерово', 'Новокузнецк', 'Рязань', 'Астрахань',
+                            'Набережные Челны', 'Пенза', 'Липецк', 'Киров', 'Чебоксары', 'Калининград',
+                            'Тула', 'Курск', 'Сочи', 'Ставрополь', 'Улан-Удэ', 'Тверь', 'Магнитогорск',
+                            'Иваново', 'Брянск', 'Белгород', 'Сургут', 'Владимир', 'Нижний Тагил',
+                            'Архангельск', 'Чита', 'Калуга', 'Смоленск', 'Волжский', 'Череповец',
+                            'Курган', 'Орёл', 'Владикавказ', 'Грозный', 'Мурманск', 'Тамбов',
+                            'Петрозаводск', 'Нижневартовск', 'Йошкар-Ола', 'Новороссийск', 'Кострома',
+                          ];
+                          return russianCities.where((city) {
+                            return city.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                          }).toList();
+                        },
+                        onSelected: (String selection) {
+                          _cityController.text = selection;
+                        },
+                        fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                          controller.text = _cityController.text;
+                          return TextFormField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            onFieldSubmitted: (value) => onFieldSubmitted(),
+                            decoration: InputDecoration(
+                              labelText: 'Город',
+                              border: const OutlineInputBorder(),
+                              hintText: 'Москва, Санкт-Петербург...',
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.my_location),
+                                tooltip: 'Определить по геолокации',
+                                onPressed: () async {
+                                  try {
+                                    final permission = await Geolocator.checkPermission();
+                                    if (permission == LocationPermission.denied) {
+                                      final requestPermission = await Geolocator.requestPermission();
+                                      if (requestPermission == LocationPermission.denied ||
+                                          requestPermission == LocationPermission.deniedForever) {
+                                        if (mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Нужен доступ к геолокации')),
+                                          );
+                                        }
+                                        return;
+                                      }
+                                    }
+
+                                    final position = await Geolocator.getCurrentPosition(
+                                      desiredAccuracy: LocationAccuracy.high,
+                                    );
+
+                                    final placemarks = await placemarkFromCoordinates(
+                                      position.latitude,
+                                      position.longitude,
+                                      localeIdentifier: 'ru',
+                                    );
+
+                                    if (placemarks.isNotEmpty) {
+                                      final city = placemarks.first.locality ?? placemarks.first.administrativeArea;
+                                      if (city != null && mounted) {
+                                        setState(() {
+                                          _cityController.text = city;
+                                        });
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Город определён: $city')),
+                                        );
+                                      }
+                                    }
+                                  } catch (e) {
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Ошибка геолокации: $e')),
+                                      );
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                            onChanged: (value) {
+                              _cityController.text = value;
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
 
@@ -451,6 +551,28 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                               final years = int.tryParse(value.trim());
                               if (years == null || years < 0) {
                                 return 'Введите корректное число';
+                              }
+                              return null;
+                            } : null,
+                          ),
+                          const SizedBox(height: 16),
+                          
+                          // Год начала деятельности
+                          TextFormField(
+                            controller: _startYearController,
+                            decoration: const InputDecoration(
+                              labelText: 'Год начала деятельности',
+                              border: OutlineInputBorder(),
+                              hintText: 'Например: 2015',
+                            ),
+                            keyboardType: TextInputType.number,
+                            validator: _isSpecialist ? (value) {
+                              if (value != null && value.trim().isNotEmpty) {
+                                final year = int.tryParse(value.trim());
+                                final currentYear = DateTime.now().year;
+                                if (year == null || year < 1900 || year > currentYear) {
+                                  return 'Введите корректный год';
+                                }
                               }
                               return null;
                             } : null,
