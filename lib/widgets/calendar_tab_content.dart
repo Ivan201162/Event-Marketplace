@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/booking.dart';
 import 'package:event_marketplace_app/models/calendar_day_aggregate.dart';
@@ -558,19 +560,19 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
               );
             },
             loading: () => FutureBuilder<List<Booking>>(
-              future: Future.timeout(
-                const Duration(seconds: 8),
-                onTimeout: () => <Booking>[],
-                onError: (e) => <Booking>[],
-              ).then((_) async {
-                // Пытаемся загрузить cached данные
+              future: () async {
+                // Пытаемся загрузить cached данные с таймаутом
                 try {
                   final service = BookingService();
-                  return await service.getBookingsForDate(specialistId, date);
+                  return await service.getBookingsForDate(specialistId, date)
+                      .timeout(
+                        const Duration(seconds: 8),
+                        onTimeout: () => <Booking>[],
+                      );
                 } catch (e) {
                   return <Booking>[];
                 }
-              }),
+              }(),
               builder: (context, snapshot) {
                 // Показываем cached данные если есть
                 if (snapshot.hasData && snapshot.data!.isNotEmpty) {
