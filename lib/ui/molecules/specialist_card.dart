@@ -111,7 +111,8 @@ class SpecialistCard extends StatelessWidget {
                       child: OutlinedButtonX(
                         text: 'Связаться',
                         onTap: () {
-                          // TODO: Открыть чат
+                          // Открыть чат с специалистом
+                          context.push('/chat/${specialist.id}');
                         },
                         borderRadius: 12,
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -120,9 +121,10 @@ class SpecialistCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: OutlinedButtonX(
-                        text: 'Заказ',
+                        text: 'Заказать',
                         onTap: () {
-                          // TODO: Открыть форму заказа
+                          // Открыть календарь выбора даты для бронирования
+                          context.push('/specialist/${specialist.id}/calendar');
                         },
                         borderRadius: 12,
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

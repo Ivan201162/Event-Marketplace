@@ -35,6 +35,10 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugLog("SEARCH_OPENED");
+      // Firebase Analytics
+      FirebaseAnalytics.instance.logEvent(
+        name: 'search_opened',
+      ).catchError((e) => debugPrint('Analytics error: $e'));
     });
     _searchController.addListener(() {
       final query = _searchController.text.trim();
@@ -337,6 +341,11 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                     if (mounted) {
                       setState(() => _searchState = SearchState.results);
                       debugLog("SEARCH_RESULT_COUNT:${specialists.length}");
+                      // Firebase Analytics
+                      FirebaseAnalytics.instance.logEvent(
+                        name: 'search_result',
+                        parameters: {'result_count': specialists.length},
+                      ).catchError((e) => debugPrint('Analytics error: $e'));
                     }
                   });
 

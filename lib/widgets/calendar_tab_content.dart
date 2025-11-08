@@ -488,6 +488,9 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
           const SizedBox(height: 16),
           bookingsAsync.when(
             data: (bookings) {
+              // Показываем cached данные сразу
+              debugLog("CAL_SHEET_DATA:$dateStr:${bookings.length}");
+              
               if (bookings.isEmpty) {
                 return const Padding(
                   padding: EdgeInsets.all(32),
@@ -554,9 +557,82 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
                 },
               );
             },
-            loading: () => FutureBuilder(
-              future: Future.delayed(const Duration(seconds: 6)),
+            loading: () => FutureBuilder<List<Booking>>(
+              future: Future.timeout(
+                const Duration(seconds: 8),
+                onTimeout: () => <Booking>[],
+                onError: (e) => <Booking>[],
+              ).then((_) async {
+                // Пытаемся загрузить cached данные
+                try {
+                  final service = BookingService();
+                  return await service.getBookingsForDate(specialistId, date);
+                } catch (e) {
+                  return <Booking>[];
+                }
+              }),
               builder: (context, snapshot) {
+                // Показываем cached данные если есть
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final booking = snapshot.data![index];
+                      return _BookingCard(
+                        booking: booking,
+                        onConfirm: () async {
+                          final service = BookingService();
+                          try {
+                            await service.confirmBooking(booking.id);
+                            debugLog("CAL_SHEET_OK:$dateStr");
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Бронирование подтверждено')),
+                              );
+                            }
+                          } catch (e) {
+                            debugLog("CAL_SHEET_ERR:$dateStr:$e");
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Ошибка: $e')),
+                              );
+                            }
+                          }
+                        },
+                        onDecline: () async {
+                          final service = BookingService();
+                          try {
+                            await service.declineBooking(booking.id);
+                            debugLog("CAL_SHEET_OK:$dateStr");
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Бронирование отклонено')),
+                              );
+                            }
+                          } catch (e) {
+                            debugLog("CAL_SHEET_ERR:$dateStr:$e");
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Ошибка: $e')),
+                              );
+                            }
+                          }
+                        },
+                        onOpenChat: () {
+                          if (booking.chatId != null) {
+                            context.push('/chat/${booking.chatId}');
+                          }
+                        },
+                      );
+                    },
+                  );
+                }
+                
+                // Если таймаут прошёл, показываем Retry
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
                     children: [

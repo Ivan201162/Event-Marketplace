@@ -428,7 +428,7 @@ class PricingService {
         rating = 'average';
       }
 
-      debugLog("PRICE_RATING:$roleId:$rating");
+      debugLog("PRICE_RATING:$specialistId:$roleId:$rating");
       return rating;
     } catch (e) {
       debugPrint('Error calculating price rating: $e');

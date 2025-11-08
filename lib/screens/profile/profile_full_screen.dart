@@ -10,6 +10,7 @@ import 'package:event_marketplace_app/theme/colors.dart';
 import 'package:event_marketplace_app/ui/components/outlined_button_x.dart';
 import 'package:event_marketplace_app/ui/components/chip_badge.dart';
 import 'package:event_marketplace_app/ui/components/divider_thin.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,6 +51,11 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugLog("PROFILE_OPENED:${widget.userId}");
+      // Firebase Analytics
+      FirebaseAnalytics.instance.logEvent(
+        name: 'open_profile',
+        parameters: {'profile_id': widget.userId},
+      ).catchError((e) => debugPrint('Analytics error: $e'));
       _loadUserData();
     });
   }

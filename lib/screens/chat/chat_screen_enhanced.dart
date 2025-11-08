@@ -32,6 +32,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
   final MessageReactionService _reactionService = MessageReactionService();
   Timer? _typingTimer;
   bool _isTyping = false;
+  Map<String, dynamic>? _replyTo; // Сообщение, на которое отвечаем
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -171,11 +172,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
       final messageText = _messageController.text.trim();
 
       // Создаем сообщение
-      final messageRef = await firestore
-          .collection('chats')
-          .doc(widget.chatId)
-          .collection('messages')
-          .add({
+      final messageData = <String, dynamic>{
         'senderId': user.uid,
         'text': messageText,
         'type': 'text',
@@ -183,6 +180,27 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
         'isRead': false,
         'deleted': false,
         'attachments': [],
+      };
+      
+      // Добавляем replyTo если есть
+      if (_replyTo != null) {
+        messageData['replyTo'] = {
+          'messageId': _replyTo!['messageId'],
+          'senderId': _replyTo!['senderId'],
+          'text': _replyTo!['text'],
+        };
+        debugLog("CHAT_REPLY_SENT:${widget.chatId}:${_replyTo!['messageId']}");
+      }
+      
+      final messageRef = await firestore
+          .collection('chats')
+          .doc(widget.chatId)
+          .collection('messages')
+          .add(messageData);
+      
+      // Очищаем replyTo после отправки
+      setState(() {
+        _replyTo = null;
       });
 
       debugLog("MSG_SENT:text:${messageRef.id}");
@@ -429,6 +447,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
     final isMe = user?.uid == data['senderId'];
     final isPinned = data['isPinned'] == true;
     final attachments = (data['attachments'] as List?)?.cast<String>() ?? [];
+    final replyTo = data['replyTo'] as Map<String, dynamic>?;
 
     return GestureDetector(
       onLongPress: () => _showMessageOptions(messageId, data, isMe),
@@ -489,6 +508,48 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
                         ],
                       ),
                       const SizedBox(height: 4),
+                    ],
+                    // Reply to сообщение
+                    if (replyTo != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          color: isMe 
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border(
+                            left: BorderSide(
+                              color: isMe ? Colors.white : Colors.blue,
+                              width: 3,
+                            ),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              replyTo['senderId'] == user?.uid ? 'Вы' : 'Сообщение',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: isMe ? Colors.white70 : Colors.grey[700],
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              replyTo['text'] as String? ?? '',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isMe ? Colors.white70 : Colors.grey[600],
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                     if (attachments.isNotEmpty) ...[
                       ...attachments.map((url) => Padding(
@@ -711,11 +772,26 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
               },
             ),
             ListTile(
+              leading: const Icon(Icons.reply),
+              title: const Text('Ответить'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _replyTo = {
+                    'messageId': messageId,
+                    'senderId': data['senderId'],
+                    'text': data['text'] as String? ?? '',
+                  };
+                });
+                debugLog("CHAT_REPLY_START:${widget.chatId}:$messageId");
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.share),
               title: const Text('Переслать'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Пересылка сообщения
+                _forwardMessage(messageId, data);
               },
             ),
           ],
@@ -857,20 +933,99 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
     debugLog("CHAT_MSG_DELETE:${widget.chatId}:$messageId");
   }
 
+  void _forwardMessage(String messageId, Map<String, dynamic> data) {
+    // Показываем диалог выбора чата для пересылки
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Переслать сообщение'),
+        content: const Text('Выберите чат для пересылки'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // TODO: Реализовать выбор чата и пересылку
+              debugLog("CHAT_MSG_FORWARD:${widget.chatId}:$messageId");
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Пересылка будет реализована в следующей версии')),
+              );
+            },
+            child: const Text('Переслать'),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Поле ввода сообщения
   Widget _buildMessageInput() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.grey[200]!),
-        ),
-      ),
-      child: Row(
-        children: [
-          // Кнопка прикрепления
-          IconButton(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Показываем replyTo если есть
+        if (_replyTo != null)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.blue[50],
+              border: Border(
+                left: BorderSide(color: Colors.blue, width: 3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Ответ на сообщение',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _replyTo!['text'] as String? ?? '',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[700],
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 20),
+                  onPressed: () {
+                    setState(() {
+                      _replyTo = null;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: Colors.grey[200]!),
+            ),
+          ),
+          child: Row(
+            children: [
+              // Кнопка прикрепления
+              IconButton(
             onPressed: _showAttachmentOptions,
             icon: const Icon(
               Icons.attach_file,
