@@ -76,3 +76,5 @@ adb logcat | Select-String -Pattern "APP:|HOME_LOADED|SEARCH_OPENED|PROFILE_OPEN
 
 **Приложение готово к тестированию!**
 
+
+

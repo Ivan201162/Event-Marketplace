@@ -1,0 +1,102 @@
+﻿
+11-07 13:36:51.960 19507 19546 E PlayMovies: mbj.a:83 No worker key associated 
+with this task with tags: [google_tv_widget_tag, com.google.android.apps.google
+tv.app.services.workmanager.WorkerWrapper]
+11-07 13:36:57.112  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.112  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.112  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.112  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.112  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.120  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.honor.global (protectionL
+evel=66 flags=0x38d83a45)
+11-07 13:36:57.120  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.huawei.multimedia.audioen
+gine (protectionLevel=66 flags=0x30883e45)
+11-07 13:36:57.122  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.122  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.122  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.122  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.122  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.123  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.123  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.123  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.123  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.123  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-07 13:36:57.127  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.huawei.honorclub.android 
+(protectionLevel=66 flags=0x38483e44)
+11-07 13:36:57.142  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.con
+tacts (protectionLevel=2 flags=0x90c83e45)
+11-07 13:36:57.146  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.google.android.gm (protec
+tionLevel=66 flags=0x38cbbe45)
+11-07 13:36:57.149  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.cal
+endar (protectionLevel=2 flags=0x28c83e45)
+11-07 13:36:57.153  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.huawei.browser (protectio
+nLevel=66 flags=0x30c83e45)
+11-07 13:36:57.155  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.google.android.apps.docs 
+(protectionLevel=66 flags=0x28cbbec5)
+11-07 13:36:57.159  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.android.chrome (protectio
+nLevel=66 flags=0xa0cbbe45)
+11-07 13:36:57.159  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.android.gallery3d (protec
+tionLevel=66 flags=0xa8d83c45)
+11-07 13:36:57.164  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.epicgames.portal (protect
+ionLevel=66 flags=0x38483e44)
+11-07 13:36:57.164  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.v
+ideos (protectionLevel=2 flags=0x30dbbec5)
+11-07 13:36:57.166  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.huawei.meetime (protectio
+nLevel=66 flags=0x38c83e45)
+11-07 13:36:57.171  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.android.email (protection
+Level=66 flags=0x30c83e45)
+11-07 13:36:57.174  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.yandex.browser (protectio
+nLevel=66 flags=0x30d83e44)
+11-07 13:36:57.174  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.huawei.scanner (protectio
+nLevel=66 flags=0x28c83e45)
+11-07 13:37:06.727 19757 19757 I flutter : APP: APP: BUILD OK v5.14-final-fix
+11-07 13:37:07.563 19757 19757 I flutter : APP: GOOGLE_INIT: [DEFAULT]
+11-07 13:37:07.563 19757 19757 I flutter : APP: GOOGLE_SIGNIN_READY:initialized
+
+

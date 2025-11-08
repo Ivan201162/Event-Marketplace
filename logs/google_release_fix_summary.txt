@@ -1,0 +1,93 @@
+=== GOOGLE SIGN-IN RELEASE FIX - COMPLETE SUMMARY ===
+
+Date: 7 November 2025, 10:56 MSK
+Version: 5.12.0 (versionCode: 22)
+Build Marker: v5.12-full-fix
+
+=== ✅ BUILD STATUS ===
+✅ BUILD DONE
+✅ INSTALL DONE
+
+=== CHANGES IMPLEMENTED ===
+
+1. ✅ REMOVED RUNTIME JSON CHECK
+   - Removed all GOOGLE_JSON_NOT_FOUND/GOOGLE_JSON_LOADED checks
+   - Removed file system checks for google-services.json
+   - Firebase reads config from firebase_options.dart at build time
+
+2. ✅ ADDED INITIALIZATION LOGGING
+   - GOOGLE_INIT: [DEFAULT] - Firebase app name
+   - GOOGLE_SIGNIN_READY:initialized - GoogleSignIn ready
+   - WEB_CLIENT_ID:{appId} - Firebase app ID
+   - FIREBASE_API_KEY:{apiKey} - Firebase API key
+
+3. ✅ UPDATED GRADLE CONFIGURATION
+   - google-services: 4.4.0 → 4.4.2
+   - Added Firebase BOM 33.3.0
+   - Added firebase-auth dependency
+   - Added play-services-auth:21.1.1
+   - Updated proguard rules for Firebase
+
+4. ✅ REWRITTEN GOOGLE SIGN-IN FLOW
+   - New method: signInWithGoogleRelease()
+   - Detailed logging at each step:
+     * GOOGLE_LOGIN_START
+     * GOOGLE_LOGIN_STEP:TOKENS:{idToken}:{accessToken}
+     * GOOGLE_LOGIN_SUCCESS:{uid}
+     * GOOGLE_LOGIN_FAIL:{code}:{message}
+     * GOOGLE_LOGIN_STACK:{stackTrace}
+   - Proper error handling with FirebaseAuthException and PlatformException
+   - User-friendly error messages in UI
+
+5. ✅ UI ERROR HANDLING
+   - canceled → "Вход отменён"
+   - network-request-failed → "Проверьте интернет"
+   - invalid-provider-id/invalid-credential/developer-error → "Починили конфиг, обновите приложение"
+   - Other errors → Show error code
+
+=== STARTUP LOGS ===
+11-07 10:56:42.785  9591  9591 I flutter : APP: GOOGLE_INIT: [DEFAULT]
+11-07 10:56:42.785  9591  9591 I flutter : APP: GOOGLE_SIGNIN_READY:initialized
+11-07 10:56:44.825  9591  9591 I flutter : APP: APP: BUILD OK v5.12-full-fix
+11-07 10:56:44.826  9591  9591 I flutter : APP: WEB_CLIENT_ID:1:272201705683:android:0196de78aaeb970ef80c26
+11-07 10:56:44.826  9591  9591 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyCHEJy7WBr5eQrcyuRhh_hSfih4
+
+=== RELEASE KEYSTORE CONFIGURATION ===
+- Keystore: android/app/release.keystore
+- Alias: event_release
+- Signing Config: release
+- Build Type: release (isMinifyEnabled: false)
+
+=== EXPECTED LOG FLOW ON GOOGLE SIGN-IN ===
+
+SUCCESS PATH:
+1. GOOGLE_LOGIN_START
+2. GOOGLE_LOGIN_STEP:TOKENS:true:true
+3. GOOGLE_LOGIN_SUCCESS:{uid}
+
+FAILURE PATH:
+1. GOOGLE_LOGIN_START
+2. GOOGLE_LOGIN_FAIL:{errorCode}:{errorMessage}
+3. GOOGLE_LOGIN_STACK:{stackTrace}
+
+=== NEXT STEPS ===
+1. User should attempt Google Sign-In
+2. Check logs for GOOGLE_LOGIN_START and subsequent markers
+3. If login fails, logs will show detailed error code and message
+4. Stack traces will be logged for debugging
+
+=== FILES MODIFIED ===
+- lib/core/bootstrap.dart - Removed JSON check, added init logging
+- lib/services/auth_service_enhanced.dart - Rewritten signInWithGoogleRelease()
+- lib/screens/auth/login_screen_improved.dart - Added user-friendly error messages
+- lib/main.dart - Added Firebase config logging
+- android/build.gradle.kts - Updated google-services to 4.4.2
+- android/app/build.gradle.kts - Added Firebase BOM and dependencies
+- android/app/proguard-rules.pro - Added Firebase keep rules
+
+=== STATUS ===
+✅ All changes implemented
+✅ APK built and installed
+✅ Logging markers confirmed in startup logs
+✅ Ready for Google Sign-In testing
+

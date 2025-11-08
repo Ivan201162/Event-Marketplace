@@ -5,6 +5,11 @@ import 'package:event_marketplace_app/services/booking_service.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/widgets/calendar_tab_content.dart';
 import 'package:event_marketplace_app/widgets/pricing_tab_content.dart';
+import 'package:event_marketplace_app/theme/typography.dart';
+import 'package:event_marketplace_app/theme/colors.dart';
+import 'package:event_marketplace_app/ui/components/outlined_button_x.dart';
+import 'package:event_marketplace_app/ui/components/chip_badge.dart';
+import 'package:event_marketplace_app/ui/components/divider_thin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,10 +39,10 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this); // posts, reels, reviews
+    _tabController = TabController(length: 5, vsync: this); // posts, reels, reviews, price, calendar
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        final tabNames = ['posts', 'reels', 'reviews'];
+        final tabNames = ['posts', 'reels', 'reviews', 'price', 'calendar'];
         if (_tabController.index < tabNames.length) {
           debugLog("PROFILE_TABS:${tabNames[_tabController.index]}");
         }
@@ -66,6 +71,24 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
       }
     } catch (e) {
       debugPrint('Error loading user data: $e');
+    }
+  }
+
+  Future<double> _getUserRating(String uid) async {
+    try {
+      final reviewsSnapshot = await FirebaseFirestore.instance
+          .collection('reviews')
+          .where('specialistId', isEqualTo: uid)
+          .get();
+      if (reviewsSnapshot.docs.isEmpty) return 0.0;
+      final ratings = reviewsSnapshot.docs
+          .map((doc) => (doc.data()['rating'] as num?)?.toDouble() ?? 0.0)
+          .where((r) => r > 0)
+          .toList();
+      if (ratings.isEmpty) return 0.0;
+      return ratings.reduce((a, b) => a + b) / ratings.length;
+    } catch (e) {
+      return 0.0;
     }
   }
 
@@ -127,14 +150,14 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                   return NestedScrollView(
                     headerSliverBuilder: (context, innerBoxIsScrolled) {
                       return [
-                        // SliverAppBar без заголовка (чтобы не было дублирования имени)
+                        // SliverAppBar без заголовка
                         SliverAppBar(
                           expandedHeight: 0,
                           floating: false,
                           pinned: false,
                           automaticallyImplyLeading: false,
                           toolbarHeight: 0,
-                          title: null, // Убираем заголовок полностью
+                          title: null,
                         ),
                         SliverToBoxAdapter(
                           child: _buildProfileHeader(user, isOwnProfile, isFollowing),
@@ -144,24 +167,25 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                           delegate: _SliverTabBarDelegate(
                             TabBar(
                               controller: _tabController,
+                              indicatorColor: Theme.of(context).colorScheme.primary,
+                              indicatorWeight: 2,
+                              labelColor: Theme.of(context).colorScheme.primary,
+                              unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                               tabs: const [
-                                Tab(icon: Icon(Icons.grid_on)),
-                                Tab(icon: Icon(Icons.play_circle_outline)),
-                                Tab(icon: Icon(Icons.star)),
+                                Tab(icon: Icon(Icons.grid_on)), // posts
+                                Tab(icon: Icon(Icons.play_circle_outline)), // reels
+                                Tab(icon: Icon(Icons.star)), // reviews
+                                Tab(icon: Icon(Icons.attach_money)), // price
+                                Tab(icon: Icon(Icons.event)), // calendar
                               ],
                             ),
                           ),
-                        ),
-                        // Отступ для тени
-                        const SliverToBoxAdapter(
-                          child: SizedBox(height: 1),
                         ),
                       ];
                     },
                     body: RefreshIndicator(
                       onRefresh: () async {
                         try {
-                          // Обновляем данные профиля
                           await FirebaseFirestore.instance
                               .collection('users')
                               .doc(widget.userId)
@@ -192,6 +216,8 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                           _buildPostsTab(user),
                           _buildReelsTab(user),
                           _buildReviewsTab(user),
+                          _buildPricesTab(user),
+                          _buildCalendarTab(user),
                         ],
                       ),
                     ),
@@ -215,109 +241,81 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
-          ),
-        ],
+        color: Theme.of(context).colorScheme.surface,
+        boxShadow: AppColors.lightShadow,
       ),
       child: Column(
         children: [
-          // Аватар слева, имя по центру (стиль ВК)
+          // VK-шапка: аватар слева, имя справа
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Аватар слева
+              // Аватар слева (72-84dp)
               GestureDetector(
                 onTap: isOwnProfile ? () {
                   // TODO: Редактирование аватара
                 } : null,
                 child: CircleAvatar(
-                  radius: 50,
+                  radius: 42, // 84dp диаметр
                   backgroundImage: user.photoURL != null && user.photoURL!.isNotEmpty
                       ? NetworkImage(user.photoURL!)
                       : null,
                   child: user.photoURL == null || user.photoURL!.isEmpty
-                      ? const Icon(Icons.person, size: 50)
+                      ? Icon(Icons.person, size: 42, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))
                       : null,
                 ),
               ),
               const SizedBox(width: 16),
-              // Имя и город по центру
+              // Имя и информация справа
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Имя Фамилия крупно, по центру (VK стиль)
+                    // Имя Фамилия крупно
                     Text(
                       userName,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                      style: AppTypography.titleLg.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
-                      textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      softWrap: false,
                     ),
                     const SizedBox(height: 8),
-                    // Город с иконкой 🏙️
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('🏙️', style: TextStyle(fontSize: 16)),
-                        const SizedBox(width: 4),
-                        Text(
-                          user.city ?? 'Город не указан',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
+                    // Город с иконкой place
+                    if (user.city != null && user.city!.isNotEmpty)
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.place,
+                            size: 14,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    // Бейджи ролей
-                    if (user.roles.isNotEmpty) ...[
-                      const SizedBox(height: 8),
+                          const SizedBox(width: 4),
+                          Text(
+                            user.city!,
+                            style: AppTypography.bodySm.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 8),
+                    // Бейджи ролей (до 3)
+                    if (user.roles.isNotEmpty)
                       Wrap(
-                        spacing: 8,
-                        runSpacing: 4,
-                        alignment: WrapAlignment.center,
+                        spacing: 6,
+                        runSpacing: 6,
                         children: user.roles.take(3).map((role) {
                           final roleId = role['id'] as String? ?? '';
                           final roleLabel = role['label'] as String? ?? '';
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.blue[200]!),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  SpecialistRoles.getIcon(roleId),
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  roleLabel,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.blue[900],
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          return ChipBadge(
+                            label: roleLabel,
+                            icon: SpecialistRoles.getIcon(roleId).isNotEmpty 
+                                ? null 
+                                : Icons.work_outline,
                           );
                         }).toList(),
                       ),
-                    ],
                   ],
                 ),
               ),
@@ -326,7 +324,7 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
           
           const SizedBox(height: 20),
           
-          // Счётчики
+          // Счётчики: Подписчики / Подписки / Заказы
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -342,104 +340,46 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
             ],
           ),
           
-          // Bio (если не пусто)
-          if (user.bio != null && user.bio!.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                user.bio!,
-                style: const TextStyle(fontSize: 14, height: 1.4),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-          
+          // Разделитель
+          const SizedBox(height: 16),
+          const DividerThin(),
           const SizedBox(height: 16),
           
           // Кнопки действий
           if (isOwnProfile)
-            // Свой профиль: "Редактировать профиль" + "Настройки бронирований" (если specialist)
-            Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.edit, size: 20),
-                    label: const Text('Редактировать профиль'),
-                    onPressed: () {
-                      debugLog("PROFILE_EDIT_OPENED");
-                      context.push('/profile/edit');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-                if (user.role == 'specialist' || _isSpecialist) ...[
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      icon: const Icon(Icons.settings, size: 20),
-                      label: const Text('Настройки бронирований'),
-                      onPressed: () {
-                        debugLog("BOOKING_SETTINGS_OPENED");
-                        context.push('/profile/booking-settings');
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                ],
-              ],
+            // Свой профиль: "Создать контент"
+            OutlinedButtonX(
+              text: 'Создать контент',
+              icon: Icons.add_circle_outline,
+              onTap: () => _showCreateContentMenu(context),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
             )
           else if (user.role == 'specialist')
-            // Профиль специалиста: 3 кнопки
-            Column(
+            // Профиль специалиста: кнопки в ряд
+            Row(
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    icon: Icon(isFollowing ? Icons.person_remove : Icons.person_add, size: 20),
-                    label: Text(isFollowing ? 'Отписаться' : 'Подписаться'),
-                    onPressed: () => _handleFollow(user),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
+                Expanded(
+                  child: OutlinedButtonX(
+                    text: 'Подписаться',
+                    onTap: () => _handleFollow(user),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.message, size: 18),
-                        label: const Text('Написать'),
-                        onPressed: () => _handleMessage(user),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.shopping_cart, size: 18),
-                        label: const Text('Заказать'),
-                        onPressed: () => _handleOrder(user),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-                    ),
-                  ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButtonX(
+                    text: 'Связаться',
+                    onTap: () => _handleMessage(user),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButtonX(
+                    text: 'Заказать',
+                    onTap: () => _handleOrder(user),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  ),
                 ),
               ],
             )
@@ -449,25 +389,21 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
               children: [
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton.icon(
-                    icon: Icon(isFollowing ? Icons.person_remove : Icons.person_add, size: 20),
-                    label: Text(isFollowing ? 'Отписаться' : 'Подписаться'),
-                    onPressed: () => _handleFollow(user),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
+                  child: OutlinedButtonX(
+                    text: isFollowing ? 'Отписаться' : 'Подписаться',
+                    icon: isFollowing ? Icons.person_remove : Icons.person_add,
+                    onTap: () => _handleFollow(user),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.message, size: 20),
-                    label: const Text('Написать'),
-                    onPressed: () => _handleMessage(user),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
+                  child: OutlinedButtonX(
+                    text: 'Написать',
+                    icon: Icons.message,
+                    onTap: () => _handleMessage(user),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                   ),
                 ),
               ],
@@ -482,16 +418,15 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
       children: [
         Text(
           value.toString(),
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+          style: AppTypography.titleMd.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
+        const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
+          style: AppTypography.bodySm.copyWith(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           ),
         ),
       ],
@@ -513,10 +448,15 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
 
         final posts = snapshot.data!.docs;
         if (posts.isEmpty) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Пока нет постов', style: TextStyle(color: Colors.grey)),
+              padding: const EdgeInsets.all(32),
+              child: Text(
+                'Пока нет постов',
+                style: AppTypography.bodyMd.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                ),
+              ),
             ),
           );
         }
@@ -534,10 +474,10 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
             final data = post.data() as Map<String, dynamic>?;
             final imageUrl = data?['imageUrl'] ?? (data?['images'] as List?)?.first;
             return Container(
-              color: Colors.grey[200],
+              color: Theme.of(context).colorScheme.surface,
               child: imageUrl != null
                   ? Image.network(imageUrl.toString(), fit: BoxFit.cover)
-                  : const Icon(Icons.image),
+                  : Icon(Icons.image, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
             );
           },
         );
@@ -560,10 +500,15 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
 
         final reels = snapshot.data!.docs;
         if (reels.isEmpty) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(32),
-              child: Text('Пока нет рилсов', style: TextStyle(color: Colors.grey)),
+              padding: const EdgeInsets.all(32),
+              child: Text(
+                'Пока нет рилсов',
+                style: AppTypography.bodyMd.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                ),
+              ),
             ),
           );
         }
@@ -579,15 +524,25 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
               height: 200,
               margin: const EdgeInsets.only(bottom: 8),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline,
+                  width: 1,
+                ),
               ),
               child: thumbnail != null
                   ? ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       child: Image.network(thumbnail.toString(), fit: BoxFit.cover),
                     )
-                  : const Center(child: Icon(Icons.play_circle_outline, size: 48)),
+                  : Center(
+                      child: Icon(
+                        Icons.play_circle_outline,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                      ),
+                    ),
             );
           },
         );
@@ -614,7 +569,6 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
 
         final reviews = snapshot.data!.docs;
         
-        // Вычисляем средний рейтинг
         double avgRating = 0;
         if (reviews.isNotEmpty) {
           final sum = reviews.fold<double>(
@@ -634,42 +588,43 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    blurRadius: 2,
-                    offset: const Offset(0, 1),
+                color: Theme.of(context).colorScheme.surface,
+                border: Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).colorScheme.outline,
+                    width: 1,
                   ),
-                ],
+                ),
               ),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.star, color: Colors.amber, size: 32),
+                      Icon(Icons.star, color: Colors.amber, size: 32),
                       const SizedBox(width: 8),
                       Text(
                         avgRating > 0 ? avgRating.toStringAsFixed(1) : '0.0',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                        style: AppTypography.titleLg.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Text(
                         '(${reviews.length} ${_getReviewsWord(reviews.length)})',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                        style: AppTypography.bodyMd.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        ),
                       ),
                     ],
                   ),
                   if (canAddReview) ...[
                     const SizedBox(height: 12),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.add, size: 20),
-                      label: const Text('Оставить отзыв'),
-                      onPressed: () => _showAddReviewDialog(user),
+                    OutlinedButtonX(
+                      text: 'Оставить отзыв',
+                      icon: Icons.add,
+                      onTap: () => _showAddReviewDialog(user),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
                   ],
                 ],
@@ -694,6 +649,9 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
   }
 
   Widget _buildPricesTab(AppUser user) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("PRICE_CARD_SHOWN:${user.uid}");
+    });
     return PricingTabContent(
       user: user,
       isOwnProfile: widget.userId == FirebaseAuth.instance.currentUser?.uid,
@@ -701,7 +659,10 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
   }
 
   Widget _buildCalendarTab(AppUser user) {
-    return const CalendarTabContent();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("CAL_OPENED:${user.uid}");
+    });
+    return CalendarTabContent(specialistId: user.uid);
   }
 
   Widget _buildReviewCard(Map data) {
@@ -712,99 +673,104 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
     final photos = (data['photos'] as List?)?.cast<String>() ?? [];
     final createdAt = (data['createdAt'] as Timestamp?)?.toDate();
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundImage: authorAvatar != null
-                      ? NetworkImage(authorAvatar)
-                      : null,
-                  child: authorAvatar == null
-                      ? const Icon(Icons.person, size: 24)
-                      : null,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        authorName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: List.generate(
-                          5,
-                          (index) => Icon(
-                            index < rating ? Icons.star : Icons.star_border,
-                            color: Colors.amber,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                      if (createdAt != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          DateFormat('dd.MM.yyyy', 'ru').format(createdAt),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            if (text.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Text(
-                text,
-                style: const TextStyle(fontSize: 14, height: 1.5),
-                maxLines: 10,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-            if (photos.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: photos.length > 4 ? 4 : photos.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 100,
-                      margin: const EdgeInsets.only(right: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(
-                          image: NetworkImage(photos[index]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ],
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline,
+          width: 1,
         ),
+        boxShadow: AppColors.lightShadow,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundImage: authorAvatar != null
+                    ? NetworkImage(authorAvatar)
+                    : null,
+                child: authorAvatar == null
+                    ? Icon(Icons.person, size: 24, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6))
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      authorName,
+                      style: AppTypography.titleMd.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: List.generate(
+                        5,
+                        (index) => Icon(
+                          index < rating ? Icons.star : Icons.star_border,
+                          color: Colors.amber,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                    if (createdAt != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        DateFormat('dd.MM.yyyy', 'ru').format(createdAt),
+                        style: AppTypography.bodySm.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (text.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              text,
+              style: AppTypography.bodyMd.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              maxLines: 10,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+          if (photos.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: photos.length > 4 ? 4 : photos.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 100,
+                    margin: const EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      image: DecorationImage(
+                        image: NetworkImage(photos[index]),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -830,7 +796,6 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
       final batch = FirebaseFirestore.instance.batch();
 
       if (followDoc.exists) {
-        // Отписаться
         batch.delete(followRef);
         batch.update(
           FirebaseFirestore.instance.collection('users').doc(currentUser.uid),
@@ -841,7 +806,6 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
           {'followersCount': FieldValue.increment(-1)},
         );
       } else {
-        // Подписаться
         batch.set(followRef, {
           'followerId': currentUser.uid,
           'followedId': user.uid,
@@ -872,7 +836,6 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
     if (currentUser == null) return;
 
     try {
-      // Ищем существующий чат
       final chatsQuery = await FirebaseFirestore.instance
           .collection('chats')
           .where('participants', arrayContains: currentUser.uid)
@@ -888,7 +851,6 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
       }
 
       if (chatId == null) {
-        // Создаём новый чат
         final newChat = await FirebaseFirestore.instance.collection('chats').add({
           'participants': [currentUser.uid, user.uid],
           'createdAt': FieldValue.serverTimestamp(),
@@ -941,12 +903,19 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Оставить отзыв',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: AppTypography.titleLg.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                const Text('Рейтинг:'),
+                Text(
+                  'Рейтинг:',
+                  style: AppTypography.bodyMd.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Row(
                   children: List.generate(5, (index) {
@@ -963,9 +932,8 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: textController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Текст отзыва',
-                    border: OutlineInputBorder(),
                     hintText: 'Опишите ваш опыт...',
                   ),
                   maxLines: 5,
@@ -979,8 +947,9 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
+                  child: OutlinedButtonX(
+                    text: 'Отправить',
+                    onTap: () async {
                       if (rating == 0) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Выберите рейтинг')),
@@ -1013,7 +982,6 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                           'createdAt': FieldValue.serverTimestamp(),
                         });
 
-                        // Пересчитываем средний рейтинг
                         final reviews = await FirebaseFirestore.instance
                             .collection('reviews')
                             .where('specialistId', isEqualTo: specialist.uid)
@@ -1044,13 +1012,63 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
                         }
                       }
                     },
-                    child: const Text('Отправить'),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                   ),
                 ),
                 const SizedBox(height: 16),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showCreateContentMenu(BuildContext context) {
+    debugLog("CREATE_MENU_OPENED");
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.article),
+              title: const Text('Пост'),
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/create/post');
+                debugLog("CONTENT_CREATE_SELECTED:post");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.video_library),
+              title: const Text('Рилс'),
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/create/reel');
+                debugLog("CONTENT_CREATE_SELECTED:reel");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.auto_stories),
+              title: const Text('Сторис'),
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/create/story');
+                debugLog("CONTENT_CREATE_SELECTED:story");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.lightbulb),
+              title: const Text('Идея'),
+              onTap: () {
+                Navigator.pop(context);
+                context.push('/create/idea');
+                debugLog("CONTENT_CREATE_SELECTED:idea");
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -1071,14 +1089,14 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(context).colorScheme.outline,
+            width: 1,
           ),
-        ],
+        ),
+        boxShadow: AppColors.lightShadow,
       ),
       child: tabBar,
     );
@@ -1087,4 +1105,3 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverTabBarDelegate oldDelegate) => false;
 }
-

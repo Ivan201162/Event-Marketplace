@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/booking.dart';
 import 'package:event_marketplace_app/services/chat_service.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
@@ -58,6 +59,17 @@ class BookingService {
       final bookingId = bookingRef.id;
 
       debugLog("BOOKING_CREATE:$bookingId");
+      debugLog("BOOKING_REQUESTED:$bookingId:$specialistId:$requestedDate");
+      
+      // Firebase Analytics
+      try {
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'booking_requested',
+          parameters: {'booking_id': bookingId, 'specialist_id': specialistId},
+        );
+      } catch (e) {
+        debugPrint('Analytics error: $e');
+      }
 
       // Отправляем стартовое сообщение в чат
       await _sendInitialBookingMessage(chatId, {
@@ -145,7 +157,18 @@ class BookingService {
       await _declineOtherPendingBookings(booking.specialistId, booking.requestedDate, bookingId);
 
       debugLog("BOOKING_ACCEPT:$bookingId");
+      debugLog("BOOKING_CONFIRMED:$bookingId:${booking.specialistId}:${booking.requestedDate}");
       debugLog("PUSH:booking_accepted:${booking.clientId}:{\"bookingId\":\"$bookingId\"}");
+      
+      // Firebase Analytics
+      try {
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'booking_confirmed',
+          parameters: {'booking_id': bookingId, 'specialist_id': booking.specialistId},
+        );
+      } catch (e) {
+        debugPrint('Analytics error: $e');
+      }
     } catch (e) {
       debugPrint('Error accepting booking: $e');
       debugLog("BOOKING_ERR:accept:$e");
@@ -176,7 +199,18 @@ class BookingService {
       }
 
       debugLog("BOOKING_DECLINE:$bookingId");
+      debugLog("BOOKING_DECLINED:$bookingId:${booking.specialistId}:${booking.requestedDate}");
       debugLog("PUSH:booking_declined:${booking.clientId}:{\"bookingId\":\"$bookingId\"}");
+      
+      // Firebase Analytics
+      try {
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'booking_declined',
+          parameters: {'booking_id': bookingId, 'specialist_id': booking.specialistId},
+        );
+      } catch (e) {
+        debugPrint('Analytics error: $e');
+      }
     } catch (e) {
       debugPrint('Error declining booking: $e');
       debugLog("BOOKING_ERR:decline:$e");

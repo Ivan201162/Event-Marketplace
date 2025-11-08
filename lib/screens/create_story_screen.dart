@@ -1,38 +1,34 @@
 import 'dart:io';
 
-import 'package:event_marketplace_app/models/specialist_story.dart';
-import 'package:event_marketplace_app/models/story.dart';
-import 'package:event_marketplace_app/services/story_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CreateStoryScreen extends ConsumerStatefulWidget {
-  const CreateStoryScreen({
-    required this.specialistId, required this.specialistName, super.key,
-    this.specialistAvatar,
-  });
-  final String specialistId;
-  final String specialistName;
-  final String? specialistAvatar;
+class CreateStoryScreen extends StatefulWidget {
+  const CreateStoryScreen({super.key});
 
   @override
-  ConsumerState<CreateStoryScreen> createState() => _CreateStoryScreenState();
+  State<CreateStoryScreen> createState() => _CreateStoryScreenState();
 }
 
-class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
-  final StoryService _storyService = StoryService();
+class _CreateStoryScreenState extends State<CreateStoryScreen> {
+  final _firestore = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
+  final _picker = ImagePicker();
   final TextEditingController _textController = TextEditingController();
-  final TextEditingController _captionController = TextEditingController();
 
   File? _selectedFile;
-  StoryContentType _selectedType = StoryContentType.image;
+  bool _isVideo = false;
   bool _isLoading = false;
 
   @override
   void dispose() {
     _textController.dispose();
-    _captionController.dispose();
     super.dispose();
   }
 
@@ -40,7 +36,10 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: const Text('Создать сторис'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => context.pop(),
+          ),
           actions: [
             if (_selectedFile != null)
               TextButton(
@@ -61,22 +60,13 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Выбор типа контента
-              _buildContentTypeSelector(),
-
-              const SizedBox(height: 24),
-
               // Выбор файла
-              _buildFileSelector(),
+            _buildFileSelector(),
 
               const SizedBox(height: 24),
 
               // Предварительный просмотр
               if (_selectedFile != null) _buildPreview(),
-
-              const SizedBox(height: 24),
-
-              // Текстовые поля
-              _buildTextFields(),
 
               const SizedBox(height: 24),
 
@@ -87,62 +77,6 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
         ),
       );
 
-  Widget _buildContentTypeSelector() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Тип контента',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-          const SizedBox(height: 12),
-          Row(
-            children: StoryContentType.values
-                .map(
-                  (type) => Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedType = type;
-                          _selectedFile =
-                              null; // Сбрасываем файл при смене типа
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: _selectedType == type
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: _selectedType == type
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).dividerColor,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(_getContentTypeIcon(type),
-                                style: const TextStyle(fontSize: 24),),
-                            const SizedBox(height: 8),
-                            Text(
-                              _getContentTypeName(type),
-                              style: TextStyle(
-                                color: _selectedType == type
-                                    ? Theme.of(context).colorScheme.onPrimary
-                                    : Theme.of(context).colorScheme.onSurface,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      );
 
   Widget _buildFileSelector() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,27 +88,21 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
             width: double.infinity,
             height: 200,
             decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).dividerColor),
+              border: Border.all(color: Colors.grey[300]!),
               borderRadius: BorderRadius.circular(12),
             ),
             child: _selectedFile == null
                 ? InkWell(
-                    onTap: _pickFile,
+                    onTap: _pickImage,
                     borderRadius: BorderRadius.circular(12),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          _getContentTypeIcon(_selectedType),
-                          size: 48,
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                        const SizedBox(height: 16),
+                        Icon(Icons.add_photo_alternate, size: 48, color: Colors.grey),
+                        SizedBox(height: 16),
                         Text(
-                          'Нажмите для выбора ${_getContentTypeName(_selectedType).toLowerCase()}',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.outline,
-                              fontSize: 16,),
+                          'Нажмите для выбора фото или видео',
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                       ],
                     ),
@@ -183,7 +111,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: _selectedType == StoryContentType.image
+                        child: !_isVideo
                             ? Image.file(
                                 _selectedFile!,
                                 width: double.infinity,
@@ -195,10 +123,7 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
                                 height: double.infinity,
                                 color: Colors.black,
                                 child: const Center(
-                                  child: Text(
-                                    'Видео файл выбран',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
+                                  child: Icon(Icons.play_circle_outline, size: 64, color: Colors.white),
                                 ),
                               ),
                       ),
@@ -222,11 +147,24 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
                   ),
           ),
           const SizedBox(height: 12),
-          ElevatedButton.icon(
-            onPressed: _pickFile,
-            icon: const Icon(Icons.add_photo_alternate),
-            label: Text(
-                'Выбрать ${_getContentTypeName(_selectedType).toLowerCase()}',),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: _pickImage,
+                  icon: const Icon(Icons.image),
+                  label: const Text('Фото'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: _pickVideo,
+                  icon: const Icon(Icons.video_library),
+                  label: const Text('Видео'),
+                ),
+              ),
+            ],
           ),
         ],
       );
@@ -244,19 +182,16 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
             height: 300,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Theme.of(context).dividerColor),
+              border: Border.all(color: Colors.grey[300]!),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: _selectedType == StoryContentType.image
+              child: !_isVideo
                   ? Image.file(_selectedFile!, fit: BoxFit.cover)
-                  : const ColoredBox(
+                  : Container(
                       color: Colors.black,
-                      child: Center(
-                        child: Text(
-                          'Видео предварительный просмотр',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                      child: const Center(
+                        child: Icon(Icons.play_circle_outline, size: 64, color: Colors.white),
                       ),
                     ),
             ),
@@ -264,118 +199,105 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
         ],
       );
 
-  Widget _buildTextFields() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Текст и подпись',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-          const SizedBox(height: 12),
-
-          // Текст (для текстовых сторис)
-          if (_selectedType == StoryContentType.text) ...[
-            TextField(
-              controller: _textController,
-              decoration: const InputDecoration(
-                labelText: 'Текст сторис',
-                hintText: 'Введите текст для сторис',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 5,
-              maxLength: 200,
-            ),
-            const SizedBox(height: 16),
-          ],
-
-          // Подпись
-          TextField(
-            controller: _captionController,
-            decoration: const InputDecoration(
-              labelText: 'Подпись (необязательно)',
-              hintText: 'Добавьте подпись к сторис',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 2,
-            maxLength: 100,
-          ),
-        ],
-      );
 
   Widget _buildStoryInfo() => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Colors.blue[50],
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).dividerColor),
+          border: Border.all(color: Colors.blue[200]!),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Информация о сторис',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Icon(Icons.info, color: Colors.blue[700]),
+                const SizedBox(width: 8),
+                Text(
+                  'Информация',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[700],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            _buildInfoRow('Тип', _getContentTypeName(_selectedType)),
-            _buildInfoRow('Автор', widget.specialistName),
-            _buildInfoRow('Время жизни', '24 часа'),
-            _buildInfoRow('Статус', 'Будет опубликована'),
+            const SizedBox(height: 8),
+            Text(
+              '• Фото или видео до 15 секунд\n'
+              '• Время жизни: 24 часа\n'
+              '• Сторис будет доступна всем пользователям',
+              style: TextStyle(color: Colors.blue[600], fontSize: 14),
+            ),
           ],
         ),
       );
 
-  Widget _buildInfoRow(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 100,
-              child: Text('$label:',
-                  style: const TextStyle(fontWeight: FontWeight.w500),),
-            ),
-            Expanded(child: Text(value)),
-          ],
-        ),
-      );
 
-  Future<void> _pickFile() async {
-    final picker = ImagePicker();
-
+  Future<void> _pickImage() async {
     try {
-      XFile? file;
-      if (_selectedType == StoryContentType.image) {
-        file = await picker.pickImage(
-          source: ImageSource.gallery,
-          maxWidth: 1080,
-          maxHeight: 1920,
-          imageQuality: 85,
-        );
-      } else if (_selectedType == StoryContentType.video) {
-        file = await picker.pickVideo(
-          source: ImageSource.gallery,
-          maxDuration: const Duration(seconds: 15),
-        );
-      }
+      final image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1080,
+        maxHeight: 1920,
+        imageQuality: 85,
+      );
 
-      if (file != null) {
+      if (image != null) {
         setState(() {
-          _selectedFile = File(file.path);
+          _selectedFile = File(image.path);
+          _isVideo = false;
         });
       }
-    } on Exception catch (e) {
+    } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка выбора файла: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка выбора фото: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _pickVideo() async {
+    try {
+      final video = await _picker.pickVideo(
+        source: ImageSource.gallery,
+        maxDuration: const Duration(seconds: 15),
+      );
+
+      if (video != null) {
+        setState(() {
+          _selectedFile = File(video.path);
+          _isVideo = true;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка выбора видео: $e')),
+        );
       }
     }
   }
 
   Future<void> _createStory() async {
     if (_selectedFile == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Выберите файл для сторис')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Выберите файл для сторис')),
+        );
+      }
+      return;
+    }
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Войдите в аккаунт')),
+        );
+      }
       return;
     }
 
@@ -384,23 +306,53 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
     });
 
     try {
-      await _storyService.createStory(
-        imageFile: _selectedFile,
-        textContent: _textController.text.isEmpty ? null : _textController.text,
-        privacy: StoryPrivacy.public,
-      );
+      // Загружаем файл
+      final storyId = _firestore.collection('stories').doc().id;
+      final fileExtension = _isVideo ? 'mp4' : 'jpg';
+      final filePath = 'uploads/stories/${currentUser.uid}/$storyId/file.$fileExtension';
+      final fileRef = _storage.ref().child(filePath);
+      
+      final uploadTask = fileRef.putFile(_selectedFile!);
+      final snapshot = await uploadTask;
+      final mediaUrl = await snapshot.ref.getDownloadURL();
+
+      // Вычисляем expiresAt (24 часа)
+      final expiresAt = DateTime.now().add(const Duration(hours: 24));
+
+      // Сохраняем в Firestore
+      await _firestore.collection('stories').doc(storyId).set({
+        'authorId': currentUser.uid,
+        'mediaUrl': mediaUrl,
+        'mediaType': _isVideo ? 'video' : 'image',
+        'createdAt': FieldValue.serverTimestamp(),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+      });
+
+      debugLog("STORY_PUBLISHED:$storyId");
+      
+      // Firebase Analytics
+      try {
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'publish_story',
+          parameters: {'story_id': storyId},
+        );
+      } catch (e) {
+        debugPrint('Analytics error: $e');
+      }
 
       if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Сторис успешно создана')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Сторис успешно создана')),
+        );
+        context.pop();
       }
-    } on Exception catch (e) {
+    } catch (e) {
+      final errorCode = e is FirebaseException ? e.code : 'unknown';
+      debugLog("STORY_PUBLISH_ERR:$errorCode:$e");
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка создания сторис: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка создания сторис: $e')),
+        );
       }
     } finally {
       if (mounted) {
@@ -408,28 +360,6 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
           _isLoading = false;
         });
       }
-    }
-  }
-
-  String _getContentTypeIcon(StoryContentType type) {
-    switch (type) {
-      case StoryContentType.image:
-        return '📷';
-      case StoryContentType.video:
-        return '🎥';
-      case StoryContentType.text:
-        return '📝';
-    }
-  }
-
-  String _getContentTypeName(StoryContentType type) {
-    switch (type) {
-      case StoryContentType.image:
-        return 'Фото';
-      case StoryContentType.video:
-        return 'Видео';
-      case StoryContentType.text:
-        return 'Текст';
     }
   }
 }

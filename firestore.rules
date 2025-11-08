@@ -16,18 +16,18 @@ service cloud.firestore {
       return request.resource.data.authorId != request.resource.data.specialistId;
     }
     
-    function isParticipant(chatId) {
-      return isSignedIn() &&
-        exists(/databases/$(database)/documents/chats/$(chatId)) &&
-        (request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants);
-    }
+    // isParticipant удалена - используется напрямую в правилах
     
     // Users
     match /users/{uid} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && uid == request.auth.uid;
-      allow update: if isSignedIn() && uid == request.auth.uid;
-      allow delete: if isOwner(uid);
+      allow create: if isSignedIn() && request.auth.uid == uid
+        && (!request.resource.data.keys().hasAny(['roles']) || 
+            (request.resource.data.roles is list && request.resource.data.roles.size() <= 3));
+      allow update: if isSignedIn() && request.auth.uid == uid
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['roles']) || 
+            (request.resource.data.roles is list && request.resource.data.roles.size() <= 3));
+      allow delete: if false; // удаляем через Cloud Function
       
       match /saved_ideas/{docId} {
         allow read, write: if isOwner(uid);
@@ -113,42 +113,33 @@ service cloud.firestore {
       allow update: if false;
     }
 
-    // Posts / Reels
+    // Posts
     match /posts/{id} {
-      allow read: if isSignedIn();
+      allow read: if true;
       allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
-      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
-      
-      match /post_likes/{likeId} {
-        allow read: if isSignedIn();
-        allow create, delete: if isSignedIn();
-      }
-      
-      match /post_comments/{commentId} {
-        allow read: if isSignedIn();
-        allow create: if isSignedIn();
-        allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
-      }
+      allow update: if isSignedIn() && request.auth.uid == resource.data.authorId;
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
     }
     
+    // Reels
     match /reels/{id} {
-      allow read: if isSignedIn();
+      allow read: if true;
       allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
-      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
     }
 
     // Stories
     match /stories/{id} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn(); // только авторизованные видят сторисы
       allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
-      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
     }
 
     // Requests + Responses
     match /requests/{requestId} {
       allow read: if isSignedIn();
       allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
-      allow update, delete: if isSignedIn() && resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.createdBy;
 
       match /responses/{respId} {
         allow read: if isSignedIn();
@@ -167,16 +158,32 @@ service cloud.firestore {
       allow read, write: if isSignedIn() && uid == request.auth.uid;
     }
 
+    // Функция проверки участия в чате
+    function isChatParticipant(chatId) {
+      return exists(/databases/$(database)/documents/chats/$(chatId)) &&
+             get(/databases/$(database)/documents/chats/$(chatId)).data.participants.hasAny([request.auth.uid]);
+    }
+
     // Chats
     match /chats/{chatId} {
-      allow read, write: if isSignedIn() && request.auth.uid in resource.data.participants;
-      allow create: if isSignedIn() && request.auth.uid in request.resource.data.participants;
+      allow read: if isSignedIn() && isChatParticipant(chatId);
+      allow create: if false; // Создание через Cloud Function
+      allow update: if false; // Обновление через Cloud Function
 
       match /messages/{messageId} {
-        allow read: if isSignedIn() && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
-        allow create: if isSignedIn() && request.resource.data.senderId == request.auth.uid
-            && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
-        allow update, delete: if false;
+        allow read: if isSignedIn() && isChatParticipant(chatId);
+        allow create: if isSignedIn() && isChatParticipant(chatId) && 
+            request.resource.data.senderId == request.auth.uid;
+        // Редактировать/удалять только своё сообщение
+        allow update: if isSignedIn() && isChatParticipant(chatId) &&
+            get(/databases/$(database)/documents/chats/$(chatId)/messages/$(messageId)).data.senderId == request.auth.uid;
+        allow delete: if false; // Удаление через update (deleted=true)
+
+        match /messageReactions/{userId} {
+          allow read: if isSignedIn() && isChatParticipant(chatId);
+          allow create, update, delete: if isSignedIn() && isChatParticipant(chatId) && 
+              request.auth.uid == userId;
+        }
       }
     }
 
@@ -210,9 +217,17 @@ service cloud.firestore {
     
     // Ideas
     match /ideas/{ideaId} {
-      allow read: if isSignedIn();
+      allow read: if true;
       allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
-      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
+    }
+    
+    // Comments
+    match /comments/{contentType}/{contentId}/{commentId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.text is string && request.resource.data.text.size() > 0;
+      allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
     }
     
     // Specialist Pricing
@@ -221,33 +236,42 @@ service cloud.firestore {
       
       match /base/{priceId} {
         allow read: if isSignedIn();
-        allow create: if isSignedIn() && request.auth.uid == specialistId;
-        allow update: if isSignedIn() && request.auth.uid == specialistId;
-        allow delete: if isSignedIn() && request.auth.uid == specialistId;
+        allow create, update: if isSignedIn() && request.auth.uid == specialistId;
+        // При удалении роли - помечаем hidden=true, не удаляем
+        allow delete: if false;
       }
       
       match /special_dates/{dateId} {
         allow read: if isSignedIn();
-        allow create: if isSignedIn() && request.auth.uid == specialistId;
-        allow update: if isSignedIn() && request.auth.uid == specialistId;
-        allow delete: if isSignedIn() && request.auth.uid == specialistId;
+        allow create, update, delete: if isSignedIn() && request.auth.uid == specialistId;
       }
     }
     
-    // Specialist Calendar
+    // Specialist Calendar (v2 - с pending/confirmed статусами)
     match /specialist_calendar/{specialistId}/days/{dayId} {
       allow read: if isSignedIn();
-      allow create, update, delete: if isSignedIn() && request.auth.uid == specialistId;
+      allow create, update: if isSignedIn() && request.auth.uid == specialistId
+        && (request.resource.data.keys().hasAny(['pendingCount', 'acceptedBookingId']) ||
+            request.resource.data.diff(resource.data).affectedKeys().hasAny(['pendingCount', 'acceptedBookingId']));
+      allow delete: if false; // Удаление запрещено
     }
     
-    // Bookings
+    // Bookings (v2 - с autoAccept опцией)
     match /bookings/{bookingId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.clientId ||
+        request.auth.uid == resource.data.specialistId
+      );
       allow create: if isSignedIn() && 
-        request.resource.data.clientId == request.auth.uid;
-      allow update: if isSignedIn() && (
-        request.resource.data.specialistId == request.auth.uid ||
         request.resource.data.clientId == request.auth.uid
+        && request.resource.data.status in ['pending', 'accepted']; // autoAccept может сразу установить accepted
+      // Специалист может подтвердить/отклонить (accepted/declined)
+      // Клиент может отменить (cancelled)
+      allow update: if isSignedIn() && (
+        (request.auth.uid == resource.data.specialistId && 
+         request.resource.data.status in ['accepted', 'declined', 'pending']) ||
+        (request.auth.uid == resource.data.clientId && 
+         request.resource.data.status in ['cancelled', 'pending'])
       );
       allow delete: if false;
     }
@@ -311,6 +335,33 @@ service cloud.firestore {
       allow write: if request.auth != null && request.auth.token.admin == true;
     }
 
+    // Likes
+    match /likes/{userId}/{contentType}/{contentId} {
+      allow read: if isSignedIn();
+      allow create, delete: if isSignedIn() && request.auth.uid == userId;
+      allow update: if false;
+    }
+    
+    // Saves (bookmarks)
+    match /saves/{userId}/{contentType}/{contentId} {
+      allow read: if isSignedIn();
+      allow create, delete: if isSignedIn() && request.auth.uid == userId;
+      allow update: if false;
+    }
+    
+    // User Following/Followers (subcollections)
+    match /users/{userId}/following/{targetId} {
+      allow read: if isSignedIn();
+      allow create, delete: if isSignedIn() && request.auth.uid == userId;
+      allow update: if false;
+    }
+    
+    match /users/{userId}/followers/{targetId} {
+      allow read: if isSignedIn();
+      allow create, delete: if isSignedIn();
+      allow update: if false;
+    }
+    
     // Остальное — запрещено
     match /{document=**} {
       allow read, write: if false;

@@ -2,6 +2,7 @@ import 'package:event_marketplace_app/models/user.dart' show UserRole;
 import 'package:event_marketplace_app/providers/search_providers.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/widgets/specialist_card.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -57,6 +58,15 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
     }
     
     debugLog("SEARCH_FILTER_APPLIED");
+    
+    // Firebase Analytics
+    FirebaseAnalytics.instance.logEvent(
+      name: 'apply_filter',
+      parameters: {
+        'city': _selectedCity ?? '',
+        'categories_count': _selectedCategories.length,
+      },
+    ).catchError((e) => debugPrint('Analytics error: $e'));
     setState(() => _showFilters = false);
     // Перезапускаем поиск
     ref.invalidate(filteredSpecialistsProvider);

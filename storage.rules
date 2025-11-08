@@ -40,14 +40,16 @@ service firebase.storage {
         && isEventOwner(eventId);
     }
     
-    // Вложения чатов (новая структура)
-    match /chat_files/{chatId}/{allPaths=**} {
-      allow read: if request.auth != null
-        && isChatParticipant(chatId);
-      allow write: if request.auth != null
-        && isChatParticipant(chatId)
-        && isValidFileType(resource.contentType)
-        && resource.size <= 25 * 1024 * 1024; // 25 MB
+    // Вложения чатов (uploads/chats/{chatId}/images|videos|docs|voice/...)
+    match /uploads/chats/{chatId}/{type}/{fileName} {
+      allow read: if request.auth != null && isChatParticipant(chatId);
+      allow write: if request.auth != null && isChatParticipant(chatId)
+        && (
+          (type == 'images' && request.resource.contentType.matches('image/.*') && request.resource.size <= 5 * 1024 * 1024) ||
+          (type == 'videos' && request.resource.contentType.matches('video/.*') && request.resource.size <= 50 * 1024 * 1024) ||
+          (type == 'docs' && (request.resource.contentType == 'application/pdf' || request.resource.contentType.matches('application/(msword|vnd.openxmlformats-officedocument.*)')) && request.resource.size <= 20 * 1024 * 1024) ||
+          (type == 'voice' && request.resource.contentType.matches('audio/.*') && request.resource.size <= 2 * 1024 * 1024)
+        );
     }
     
     // Старая структура чатов (для совместимости)
@@ -68,25 +70,43 @@ service firebase.storage {
         && resource.size <= 50 * 1024 * 1024; // 50 MB
     }
     
-    // Вложения заявок (uploads/requests/{userId}/{requestId}/{fileName})
-    match /uploads/requests/{userId}/{requestId}/{fileName} {
-      allow write: if request.auth != null && request.auth.uid == userId
-        && request.resource.size < 10 * 1024 * 1024
-        && (request.resource.contentType.matches('image/.*') ||
-            request.resource.contentType in ['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','image/webp']);
+    // Вложения заявок (image/pdf/doc; ≤ 10MB)
+    match /uploads/requests/{uid}/{requestId}/{fileName} {
       allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid 
+        && request.resource.size <= 10 * 1024 * 1024
+        && (
+          request.resource.contentType.matches('image/.*') ||
+          request.resource.contentType == 'application/pdf' ||
+          request.resource.contentType.matches('application/(msword|vnd.openxmlformats-officedocument.wordprocessingml.document)')
+        );
     }
     
-    // Avatars
-    match /uploads/avatars/{uid}/{all=**} {
-      allow write: if request.auth != null && request.auth.uid == uid;
-      allow read: if request.auth != null;
-    }
-    
-    // Stories (до 20MB)
-    match /uploads/stories/{uid}/{all=**} {
+    // Ideas files (image/video/pdf/doc; ≤ 20MB)
+    match /uploads/ideas/{uid}/{ideaId}/{fileName} {
       allow write: if request.auth != null && request.auth.uid == uid
         && request.resource.size <= 20 * 1024 * 1024
+        && (
+          request.resource.contentType.matches('image/.*') ||
+          request.resource.contentType.matches('video/.*') ||
+          request.resource.contentType == 'application/pdf' ||
+          request.resource.contentType.matches('application/(msword|vnd.openxmlformats-officedocument.wordprocessingml.document)')
+        );
+      allow read: if request.auth != null;
+    }
+    
+    // Avatars (image, ≤ 5MB)
+    match /uploads/avatars/{uid}/{all=**} {
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.contentType.matches('image/.*')
+        && request.resource.size <= 5 * 1024 * 1024; // 5MB
+      allow read: if request.auth != null;
+    }
+    
+    // Stories (image/video; ≤ 20MB)
+    match /uploads/stories/{uid}/{allPaths=**} {
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.size <= 20 * 1024 * 1024 // 20MB story cap
         && (
           request.resource.contentType.matches('image/.*') ||
           request.resource.contentType.matches('video/.*')
@@ -94,10 +114,21 @@ service firebase.storage {
       allow read: if request.auth != null;
     }
 
-    // Reels / Posts media
-    match /uploads/posts/{uid}/{all=**} {
+    // Posts media (image/video; видео ≤ 50MB)
+    match /uploads/posts/{uid}/{allPaths=**} {
       allow write: if request.auth != null && request.auth.uid == uid
-        && request.resource.size <= 50 * 1024 * 1024;
+        && (
+          (request.resource.contentType.matches('image/.*') && request.resource.size <= 5 * 1024 * 1024) ||
+          (request.resource.contentType.matches('video/.*') && request.resource.size <= 50 * 1024 * 1024)
+        );
+      allow read: if request.auth != null;
+    }
+    
+    // Reels media (video ≤ 60MB)
+    match /uploads/reels/{uid}/{allPaths=**} {
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.resource.size <= 60 * 1024 * 1024 // 60MB video cap
+        && request.resource.contentType.matches('video/.*');
       allow read: if request.auth != null;
     }
     

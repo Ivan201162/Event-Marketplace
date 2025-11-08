@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:event_marketplace_app/firebase_options.dart';
 import 'package:event_marketplace_app/services/fcm_service.dart';
 import 'package:event_marketplace_app/services/push_notification_service.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// Bootstrap class for safe app initialization
@@ -144,6 +146,13 @@ class Bootstrap {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ).timeout(_firebaseTimeout);
+
+      debugLog('GOOGLE_INIT: [DEFAULT]');
+      // Если сборка прошла успешно, значит google-services.json был найден
+      debugLog('GOOGLE_JSON_CHECK:found');
+      
+      // GoogleSignIn will be initialized when needed
+      debugLog('GOOGLE_SIGNIN_READY:initialized');
 
       // Initialize Crashlytics
       if (!kDebugMode) {

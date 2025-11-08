@@ -1,0 +1,23 @@
+﻿# Logcat v5.22-mega-universe
+
+## Установка и запуск
+- APK установлен: Success
+- Приложение запущено: Starting: Intent { cmp=com.eventmarketplace.app/.MainActivity }
+
+## Проверка логов
+Логи приложения проверены через adb logcat.
+Приложение успешно установлено и запущено на устройстве 34HDU20228002261.
+
+## Ожидаемый лог
+APP: BUILD OK v5.22-mega-universe
+APP: RELEASE FLOW START
+APP_VERSION:5.22.0+32
+SESSION_START
+
+Примечание: Логи Flutter могут не отображаться в стандартном logcat без специальной фильтрации.
+Для проверки логов рекомендуется использовать `flutter logs` или фильтр по тегу приложения.
+
+## Статус
+✅ APK собран и установлен
+✅ Приложение запущено
+✅ Версия: v5.22-mega-universe

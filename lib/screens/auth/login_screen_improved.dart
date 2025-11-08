@@ -55,8 +55,37 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithGoogle();
 
+      // После успешного входа - auth_gate проверит онбординг автоматически
+      // Не навигируем сразу на /main, пусть auth_gate решает
       if (mounted) {
-        context.go('/main');
+        // Просто ждём, auth_gate обработает через authStateChanges
+      }
+    } on FirebaseAuthException catch (e) {
+      // Логирование уже выполнено в auth_service_enhanced.dart
+      if (mounted) {
+        String errorMessage;
+        switch (e.code) {
+          case 'canceled':
+            errorMessage = 'Вход отменён';
+            break;
+          case 'network-request-failed':
+            errorMessage = 'Проверьте интернет';
+            break;
+          case 'invalid-provider-id':
+          case 'invalid-credential':
+          case 'developer-error':
+          case 'no-id-token':
+            errorMessage = 'Ошибка конфигурации. Проверьте SHA-1/SHA-256 в Firebase Console';
+            break;
+          default:
+            errorMessage = 'Ошибка: ${e.code}';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {

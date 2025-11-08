@@ -1,27 +1,31 @@
 import 'dart:io';
 
-import 'package:event_marketplace_app/models/post.dart';
-import 'package:event_marketplace_app/providers/auth_providers.dart';
-import 'package:event_marketplace_app/providers/feed_providers.dart';
-import 'package:event_marketplace_app/widgets/loading_overlay.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// Screen for creating a new post
-class CreatePostScreen extends ConsumerStatefulWidget {
+class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
 
   @override
-  ConsumerState<CreatePostScreen> createState() => _CreatePostScreenState();
+  State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
-class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
+class _CreatePostScreenState extends State<CreatePostScreen> {
   final _textController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  File? _selectedImage;
+  final _firestore = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
+  final _picker = ImagePicker();
+  
+  List<File> _selectedImages = [];
   bool _isLoading = false;
+  double _uploadProgress = 0.0;
 
   @override
   void dispose() {
@@ -31,7 +35,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider).value;
+    final currentUser = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,12 +58,8 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           ),
         ],
       ),
-      body: LoadingOverlay(
-        isLoading: _isLoading,
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -67,12 +67,28 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 if (currentUser != null) ...[
                   Row(
                     children: [
+                      FutureBuilder(
+                        future: FirebaseFirestore.instance.collection('users').doc(currentUser.uid).get(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const SizedBox.shrink();
+                          }
+                          final userData = snapshot.data!.data() ?? {};
+                          final firstName = userData['firstName'] as String? ?? '';
+                          final lastName = userData['lastName'] as String? ?? '';
+                          final name = '$firstName $lastName'.trim().isEmpty
+                              ? (userData['name'] as String? ?? currentUser.displayName ?? 'Пользователь')
+                              : '$firstName $lastName'.trim();
+                          final photoUrl = userData['photoURL'] as String? ?? currentUser.photoURL;
+                          
+                          return Row(
+                    children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundImage: currentUser.photoURL != null
-                            ? NetworkImage(currentUser.photoURL!)
+                                backgroundImage: photoUrl != null && photoUrl.isNotEmpty
+                                    ? NetworkImage(photoUrl)
                             : null,
-                        child: currentUser.photoURL == null
+                                child: photoUrl == null || photoUrl.isEmpty
                             ? const Icon(Icons.person)
                             : null,
                       ),
@@ -82,7 +98,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              currentUser.displayName ?? 'Пользователь',
+                                      name,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -97,36 +113,43 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                             ),
                           ],
                         ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
                 ],
 
-                // Text input
-                TextFormField(
+                // Text input (optional)
+                TextField(
                   controller: _textController,
                   maxLines: null,
                   decoration: const InputDecoration(
-                    hintText: 'Что у вас на уме?',
+                    hintText: 'Что у вас на уме? (необязательно)',
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
                   ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Введите текст поста';
-                    }
-                    return null;
-                  },
                 ),
 
                 const SizedBox(height: 16),
 
-                // Image preview
-                if (_selectedImage != null) ...[
-                  Container(
-                    width: double.infinity,
+                // Photos preview (до 10)
+                if (_selectedImages.isNotEmpty) ...[
+                  SizedBox(
                     height: 200,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _selectedImages.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Stack(
+                            children: [
+                  Container(
+                                width: 200,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.grey[300]!),
@@ -134,9 +157,30 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.file(
-                        _selectedImage!,
+                                    _selectedImages[index],
                         fit: BoxFit.cover,
                       ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 4,
+                                right: 4,
+                                child: IconButton(
+                                  onPressed: () => _removeImage(index),
+                                  icon: const Icon(Icons.close, size: 20),
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: Colors.black54,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.all(4),
+                                    minimumSize: Size.zero,
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -147,23 +191,24 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: _pickImage,
+                        onPressed: _selectedImages.length >= 10 ? null : _pickImages,
                         icon: const Icon(Icons.image),
-                        label: const Text('Добавить фото'),
+                        label: Text('Добавить фото (${_selectedImages.length}/10)'),
                       ),
                     ),
-                    if (_selectedImage != null) ...[
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: _removeImage,
-                          icon: const Icon(Icons.delete),
-                          label: const Text('Удалить'),
-                        ),
-                      ),
-                    ],
                   ],
                 ),
+                
+                // Upload progress
+                if (_isLoading) ...[
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(value: _uploadProgress),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${(_uploadProgress * 100).toStringAsFixed(0)}%',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                ],
 
                 const SizedBox(height: 24),
 
@@ -195,7 +240,8 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       Text(
                         '• Поделитесь интересными событиями и новостями\n'
                         '• Будьте вежливы и уважайте других пользователей\n'
-                        '• Используйте хештеги для лучшего поиска',
+                        '• Можно добавить до 10 фотографий\n'
+                        '• Текст поста необязателен',
                         style: TextStyle(
                           color: Colors.blue[600],
                           fontSize: 14,
@@ -205,33 +251,31 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   ),
                 ),
               ],
-            ),
-          ),
         ),
       ),
     );
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImages() async {
     try {
-      final picker = ImagePicker();
-      final image = await picker.pickImage(
-        source: ImageSource.gallery,
+      final remaining = 10 - _selectedImages.length;
+      final images = await _picker.pickMultiImage(
         maxWidth: 1920,
         maxHeight: 1080,
         imageQuality: 85,
       );
 
-      if (image != null) {
+      if (images.isNotEmpty) {
         setState(() {
-          _selectedImage = File(image.path);
+          final newImages = images.take(remaining).map((img) => File(img.path)).toList();
+          _selectedImages.addAll(newImages);
         });
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Ошибка выбора изображения: $e'),
+            content: Text('Ошибка выбора изображений: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -239,52 +283,107 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     }
   }
 
-  void _removeImage() {
+  void _removeImage(int index) {
     setState(() {
-      _selectedImage = null;
+      _selectedImages.removeAt(index);
     });
   }
 
   Future<void> _publishPost() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_isLoading) return;
 
-    final currentUser = ref.read(currentUserProvider).value;
+    final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
+      if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Войдите в аккаунт для публикации постов'),
           backgroundColor: Colors.red,
         ),
       );
+      }
+      return;
+    }
+
+    if (_selectedImages.isEmpty && _textController.text.trim().isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Добавьте текст или фото'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       return;
     }
 
     setState(() {
       _isLoading = true;
+      _uploadProgress = 0.0;
     });
 
     try {
-      final postService = ref.read(postServiceProvider);
-      String? imageUrl;
+      // Получаем данные пользователя
+      final userDoc = await _firestore.collection('users').doc(currentUser.uid).get();
+      final userData = userDoc.data() ?? {};
+      final city = (userData['city'] as String?) ?? '';
+      final cityLower = city.toLowerCase();
+      final roles = (userData['roles'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      final rolesLower = roles.map((r) => (r['id'] as String? ?? '').toLowerCase()).where((r) => r.isNotEmpty).toList();
 
-      // Upload image if selected
-      if (_selectedImage != null) {
-        // In a real app, you would upload to Firebase Storage here
-        // For now, we'll just use a placeholder
-        imageUrl = 'https://via.placeholder.com/400x300?text=Image';
+      // Загружаем фото
+      final postId = _firestore.collection('posts').doc().id;
+      final photoUrls = <String>[];
+      
+      for (int i = 0; i < _selectedImages.length; i++) {
+        final photoPath = 'uploads/posts/${currentUser.uid}/$postId/photo_$i.jpg';
+        final photoRef = _storage.ref().child(photoPath);
+        final uploadTask = photoRef.putFile(_selectedImages[i]);
+        
+        uploadTask.snapshotEvents.listen((snapshot) {
+          if (mounted) {
+            setState(() {
+              _uploadProgress = ((i + snapshot.bytesTransferred / snapshot.totalBytes) / _selectedImages.length);
+            });
+          }
+        });
+
+        final snapshot = await uploadTask;
+        final url = await snapshot.ref.getDownloadURL();
+        photoUrls.add(url);
       }
 
-      // Create post
-      final postId = await postService.createPost(
-        authorId: currentUser.uid,
-        text: _textController.text.trim(),
-        mediaUrl: imageUrl,
-        mediaType: imageUrl != null ? MediaType.image : MediaType.text,
-        authorName: currentUser.displayName,
-        authorAvatarUrl: currentUser.photoURL,
-      );
+      // Получаем имя и фото автора
+      final authorName = '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'.trim();
+      final authorPhotoUrl = userData['photoURL'] as String? ?? currentUser.photoURL ?? '';
 
-      if (postId != null) {
+      // Сохраняем в Firestore
+      await _firestore.collection('posts').doc(postId).set({
+        'id': postId,
+        'authorId': currentUser.uid,
+        'authorName': authorName.isNotEmpty ? authorName : (currentUser.displayName ?? 'Пользователь'),
+        'authorPhotoUrl': authorPhotoUrl,
+        'text': _textController.text.trim(),
+        'photos': photoUrls,
+        'cityLower': cityLower,
+        'rolesLower': rolesLower,
+        'visibility': 'public',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugLog("POST_PUBLISHED:$postId");
+      
+      // Firebase Analytics
+      try {
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'publish_post',
+          parameters: {'post_id': postId, 'photos_count': photoUrls.length},
+        );
+      } catch (e) {
+        debugPrint('Analytics error: $e');
+      }
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -293,11 +392,10 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             ),
           );
           context.pop();
-        }
-      } else {
-        throw Exception('Не удалось создать пост');
       }
     } catch (e) {
+      final errorCode = e is FirebaseException ? e.code : 'unknown';
+      debugLog("POST_PUBLISH_ERR:$errorCode:$e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -310,6 +408,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
+          _uploadProgress = 0.0;
         });
       }
     }

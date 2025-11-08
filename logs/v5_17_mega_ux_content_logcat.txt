@@ -1,0 +1,426 @@
+﻿
+11-08 11:16:18.883  2207  2207 V ActivityThread: callActivityOnCreate
+11-08 11:16:19.341  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:17:19.342  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:18:19.343  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:19:19.344  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:20:19.346  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:21:19.347  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:22:19.348  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:23:19.349  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:24:19.350  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:25:19.351  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:26:19.353  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:27:19.354  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:28:19.355  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:29:19.356  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:30:19.357  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:31:19.359  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:32:19.397  1032  1115 I storaged: uid_monitor::add_records_locked: io_
+history_ size is 2856, new record size is 72
+11-08 11:32:19.397  1032  1115 I storaged: uid_monitor::update_uid_io_proto: io
+_history_ size is 2872
+11-08 11:32:19.401  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:33:19.421  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:34:19.423  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:35:19.424  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:36:19.425  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:37:19.426  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:37:30.453  4628  4628 V ActivityThread: callActivityOnCreate
+11-08 11:38:19.427  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:39:19.429  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:40:19.430  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:41:19.431  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:42:19.432  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:43:19.433  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:44:19.434  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:45:19.435  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:46:19.436  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:47:19.437  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:48:19.438  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:49:19.440  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:49:36.993  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.securitycentersdk.Securit
+yCenterContext.startHwSecService:3 com.huawei.securitycentersdk.SecurityCenterC
+ontext.inject:4 com.huawei.systemmanager.SystemManagerApplication.onCreate:43 
+11-08 11:49:37.012  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:92 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.017  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:93 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.020  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:98 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.021  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:99 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.022  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:100 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.023  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:101 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.024  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:102 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.025  6084  6084 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:107 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:49:37.269  6161  6161 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.securitycentersdk.Securit
+yCenterContext.startHwSecService:3 com.huawei.securitycentersdk.SecurityCenterC
+ontext.inject:4 com.huawei.systemmanager.SystemManagerApplication.onCreate:43 
+11-08 11:49:47.045  1717  1968 W PackageManager: Cannot whitelist unknown permi
+ssion: android.permission.POST_NOTIFICATIONS
+11-08 11:49:47.048  1717  1968 V HwPackageManagerServiceEx: POST_INSTALL: pkgNa
+me = com.eventmarketplace.app, pkgUri = /data/app/vmdl2136260593.tmp;, pkgInsta
+lledPath = /data/app/vmdl2136260593.tmp, pkgInstallerPackageName = , pkgVerName
+ = 5.17.0, pkgVerCode = 28, resultCode = 1, pkgUpdate = false
+11-08 11:49:47.230  1147  1147 W BlockListService: settings app is pulled up, o
+nCreate is called
+11-08 11:49:47.310  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_49_47.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:49:47.310  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_49_47.log
+11-08 11:49:47.313  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_49_47.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:49:47.313  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_49_47.log
+11-08 11:49:47.313  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_49_47.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:49:47.313  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_49_47.log
+11-08 11:49:47.314  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_49_47.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:49:47.314  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_49_47.log
+11-08 11:49:47.314  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_49_47.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:49:47.314  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_49_47.log
+11-08 11:49:47.314  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_49_47.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:49:47.314  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_49_47.log
+11-08 11:49:47.315  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_49_47.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:49:47.315  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_49_47.log
+11-08 11:49:47.499  6809  6809 D ApplicationLoaders: createClassLoader zip: /sy
+stem/product/priv-app/GooglePackageInstaller/GooglePackageInstaller.apk library
+SearchPath: /system/product/priv-app/GooglePackageInstaller/lib/arm64:/system/l
+ib64:/hw_product/lib64:/system/product/lib64:/prets/lib64 libraryPermittedPath:
+ /data/user_de/0/com.google.android.packageinstaller:/system/product/priv-app/G
+ooglePackageInstaller:/system/lib64:/hw_product/lib64:/system/product/lib64:/pr
+ets/lib64 parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 29 isBund
+led: true classLoaderName: null sharedLibraries: null
+11-08 11:49:47.585  6838  6838 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /system/app/HwSecu
+rityPluginBase/lib/arm64:/system/app/HwSecurityPluginBase/HwSecurityPluginBase.
+apk!/lib/arm64-v8a:/system/app/HwSecurityPluginBase/AntivirusAvastPlugin.apk!/l
+ib/arm64-v8a:/system/app/HwSecurityPluginBase/AntivirusQihooPlugin.apk!/lib/arm
+64-v8a:/system/lib64:/hw_product/lib64:/system/product/lib64:/prets/lib64 libra
+ryPermittedPath: /data/user/0/com.huawei.securitypluginbase:/system/app/HwSecur
+ityPluginBase:/system/lib64:/hw_product/lib64:/system/product/lib64:/prets/lib6
+4 parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 29 isBundled: tru
+e classLoaderName: null sharedLibraries: null
+11-08 11:49:47.591  6838  6838 D ApplicationLoaders: createClassLoader zip: /sy
+stem/app/HwSecurityPluginBase/HwSecurityPluginBase.apk:/system/app/HwSecurityPl
+uginBase/AntivirusAvastPlugin.apk:/system/app/HwSecurityPluginBase/AntivirusQih
+ooPlugin.apk librarySearchPath: /system/app/HwSecurityPluginBase/lib/arm64:/sys
+tem/app/HwSecurityPluginBase/HwSecurityPluginBase.apk!/lib/arm64-v8a:/system/ap
+p/HwSecurityPluginBase/AntivirusAvastPlugin.apk!/lib/arm64-v8a:/system/app/HwSe
+curityPluginBase/AntivirusQihooPlugin.apk!/lib/arm64-v8a:/system/lib64:/hw_prod
+uct/lib64:/system/product/lib64:/prets/lib64 libraryPermittedPath: /data/user/0
+/com.huawei.securitypluginbase:/system/app/HwSecurityPluginBase:/system/lib64:/
+hw_product/lib64:/system/product/lib64:/prets/lib64 parent: java.lang.BootClass
+Loader@d46cbfc targetSdkVersion: 29 isBundled: true classLoaderName: null share
+dLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file "/system/frame
+work/org.apache.http.legacy.jar"],nativeLibraryDirectories=[/system/app/HwSecur
+ityPluginBase/lib/arm64, /system/app/HwSecurityPluginBase/HwSecurityPluginBase.
+apk!/lib/arm64-v8a, /system/app/HwSecurityPluginBase/AntivirusAvastPlugin.apk!/
+lib/arm64-v8a, /system/app/HwSecurityPluginBase/AntivirusQihooPlugin.apk!/lib/a
+rm64-v8a, /system/lib64, /hw_product/lib64, /system/product/lib64, /prets/lib64
+, /system/lib64, /hw_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 11:49:47.662  6838  6862 I PluginLoader: createPluginInfo pluginName: ava
+stplugin
+11-08 11:49:47.662  6838  6862 I PluginLoader: createPluginInfo pluginContext: 
+android.app.ContextImpl@5f29f32
+11-08 11:49:48.015  7488 26773 W PhBaseOp: dntr: 29514: Storage info not create
+d for Play Store.
+11-08 11:49:48.015  7488 26773 W AsyncOperation: OperationException[Status{stat
+usCode=Storage info not created for Play Store., resolution=null}]
+11-08 11:49:48.540  1717  1860 I ActivityTaskManager: setAppStartingWindow: tok
+en=Token{c48b180 ActivityRecord{71f8eb2 u0 com.eventmarketplace.app/.MainActivi
+ty t909}} pkg=com.eventmarketplace.app transferFrom=null newTask=true taskSwitc
+h=true processRunning=false allowTaskSnapshot=true activityCreated=false LowRam
+TaskSnapshots=false
+11-08 11:49:48.609  6896  6896 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /data/app/com.even
+tmarketplace.app-zRW8ue7wHyRZqn35wdd56w==/lib/arm64:/data/app/com.eventmarketpl
+ace.app-zRW8ue7wHyRZqn35wdd56w==/base.apk!/lib/arm64-v8a libraryPermittedPath: 
+/data/user/0/com.eventmarketplace.app parent: java.lang.BootClassLoader@d46cbfc
+ targetSdkVersion: 36 isBundled: false classLoaderName: null sharedLibraries: n
+ull
+11-08 11:49:48.611  6896  6896 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.eventmarketplace.app-zRW8ue7wHyRZqn35wdd56w==/base.apk librarySearch
+Path: /data/app/com.eventmarketplace.app-zRW8ue7wHyRZqn35wdd56w==/lib/arm64:/da
+ta/app/com.eventmarketplace.app-zRW8ue7wHyRZqn35wdd56w==/base.apk!/lib/arm64-v8
+a libraryPermittedPath: /data/user/0/com.eventmarketplace.app parent: java.lang
+.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false classLoaderName:
+ null sharedLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file "/s
+ystem/framework/org.apache.http.legacy.jar"],nativeLibraryDirectories=[/data/ap
+p/com.eventmarketplace.app-zRW8ue7wHyRZqn35wdd56w==/lib/arm64, /data/app/com.ev
+entmarketplace.app-zRW8ue7wHyRZqn35wdd56w==/base.apk!/lib/arm64-v8a, /system/li
+b64, /hw_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 11:49:48.722  6896  6896 V ActivityThread: callActivityOnCreate
+11-08 11:49:49.173  7035  7035 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /data/app/com.goog
+le.android.gms-Hste5537kmVxRu1wGD42ig==/lib/arm64:/data/app/com.google.android.
+gms-Hste5537kmVxRu1wGD42ig==/base.apk!/lib/arm64-v8a:/data/app/com.google.andro
+id.gms-Hste5537kmVxRu1wGD42ig==/split_config.ru.apk!/lib/arm64-v8a:/data/app/co
+m.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.xxhdpi.apk!/lib/arm6
+4-v8a libraryPermittedPath: /data/user/0/com.google.android.gms parent: java.la
+ng.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false classLoaderNam
+e: null sharedLibraries: null
+11-08 11:49:49.176  7035  7035 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/com.android.media.remotedisplay.jar librarySearchPath: /data/app
+/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/lib/arm64:/data/app/com.google
+.android.gms-Hste5537kmVxRu1wGD42ig==/base.apk!/lib/arm64-v8a:/data/app/com.goo
+gle.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.ru.apk!/lib/arm64-v8a:/da
+ta/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.xxhdpi.apk!
+/lib/arm64-v8a libraryPermittedPath: /data/user/0/com.google.android.gms parent
+: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false class
+LoaderName: null sharedLibraries: null
+11-08 11:49:49.177  7035  7035 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/com.android.location.provider.jar librarySearchPath: /data/app/c
+om.google.android.gms-Hste5537kmVxRu1wGD42ig==/lib/arm64:/data/app/com.google.a
+ndroid.gms-Hste5537kmVxRu1wGD42ig==/base.apk!/lib/arm64-v8a:/data/app/com.googl
+e.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.ru.apk!/lib/arm64-v8a:/data
+/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.xxhdpi.apk!/l
+ib/arm64-v8a libraryPermittedPath: /data/user/0/com.google.android.gms parent: 
+java.lang.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false classLo
+aderName: null sharedLibraries: null
+11-08 11:49:49.180  7035  7035 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/base.apk:/data/app/com.g
+oogle.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.ru.apk:/data/app/com.go
+ogle.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.xxhdpi.apk librarySearch
+Path: /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/lib/arm64:/data
+/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/base.apk!/lib/arm64-v8a:/d
+ata/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_config.ru.apk!/li
+b/arm64-v8a:/data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_con
+fig.xxhdpi.apk!/lib/arm64-v8a libraryPermittedPath: /data/user/0/com.google.and
+roid.gms parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundl
+ed: false classLoaderName: null sharedLibraries: [dalvik.system.PathClassLoader
+[DexPathList[[zip file "/system/framework/org.apache.http.legacy.jar"],nativeLi
+braryDirectories=[/data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/lib
+/arm64, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/base.apk!/lib
+/arm64-v8a, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_con
+fig.ru.apk!/lib/arm64-v8a, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD4
+2ig==/split_config.xxhdpi.apk!/lib/arm64-v8a, /system/lib64, /hw_product/lib64,
+ /system/product/lib64, /prets/lib64]]], dalvik.system.PathClassLoader[DexPathL
+ist[[zip file "/system/framework/com.android.media.remotedisplay.jar"],nativeLi
+braryDirectories=[/data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/lib
+/arm64, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/base.apk!/lib
+/arm64-v8a, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_con
+fig.ru.apk!/lib/arm64-v8a, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD4
+2ig==/split_config.xxhdpi.apk!/lib/arm64-v8a, /system/lib64, /hw_product/lib64,
+ /system/product/lib64, /prets/lib64]]], dalvik.system.PathClassLoader[DexPathL
+ist[[zip file "/system/framework/com.android.location.provider.jar"],nativeLibr
+aryDirectories=[/data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/lib/a
+rm64, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/base.apk!/lib/a
+rm64-v8a, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42ig==/split_confi
+g.ru.apk!/lib/arm64-v8a, /data/app/com.google.android.gms-Hste5537kmVxRu1wGD42i
+g==/split_config.xxhdpi.apk!/lib/arm64-v8a, /system/lib64, /hw_product/lib64, /
+system/product/lib64, /prets/lib64]]]]
+11-08 11:49:49.247  6896  6896 I flutter : APP: APP: BUILD OK v5.17-mega-ux-con
+tent
+11-08 11:49:50.229 11238  5471 D AdvertisingIdClient: AdvertisingIdClient alrea
+dy created.
+11-08 11:49:51.106  1055  1095 I Sensors@1.2-impl: IsConfigParamNeedUpdate: ser
+vice: 1717, sensor: 8, first set config, create it
+11-08 11:49:51.106  1055  1095 I Sensors@1.2-impl: SetReportConfig: the sensor 
+not find, create it
+11-08 11:49:51.106  1055  1095 I Sensors@1.2-impl: SetOptimizeConfig: sensor: 8
+ first setconfig, create it
+11-08 11:49:51.746  5327  7321 I SecurityComp10105310: SecureSSLSocketFactory: 
+createSocket s host port autoClose
+11-08 11:49:52.001  2680  2958 E AbilityFormViewRefreshUtils: stopListening [0m
+s]
+11-08 11:49:55.501  7488 19686 W PhBaseOp: dntr: 29514: Storage info not create
+d for Play Store.
+11-08 11:49:55.501  7488 19686 W AsyncOperation: OperationException[Status{stat
+usCode=Storage info not created for Play Store., resolution=null}]
+11-08 11:49:56.712  7398  7398 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /system/product/pr
+iv-app/SetupWizard/lib/arm64:/system/product/priv-app/SetupWizard/SetupWizard.a
+pk!/lib/arm64-v8a:/system/lib64:/hw_product/lib64:/system/product/lib64:/prets/
+lib64 libraryPermittedPath: /data/user/0/com.google.android.setupwizard:/system
+/product/priv-app/SetupWizard:/system/lib64:/hw_product/lib64:/system/product/l
+ib64:/prets/lib64 parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 2
+9 isBundled: true classLoaderName: null sharedLibraries: null
+11-08 11:49:56.716  7398  7398 D ApplicationLoaders: createClassLoader zip: /sy
+stem/product/priv-app/SetupWizard/SetupWizard.apk librarySearchPath: /system/pr
+oduct/priv-app/SetupWizard/lib/arm64:/system/product/priv-app/SetupWizard/Setup
+Wizard.apk!/lib/arm64-v8a:/system/lib64:/hw_product/lib64:/system/product/lib64
+:/prets/lib64 libraryPermittedPath: /data/user/0/com.google.android.setupwizard
+:/system/product/priv-app/SetupWizard:/system/lib64:/hw_product/lib64:/system/p
+roduct/lib64:/prets/lib64 parent: java.lang.BootClassLoader@d46cbfc targetSdkVe
+rsion: 29 isBundled: true classLoaderName: null sharedLibraries: [dalvik.system
+.PathClassLoader[DexPathList[[zip file "/system/framework/org.apache.http.legac
+y.jar"],nativeLibraryDirectories=[/system/product/priv-app/SetupWizard/lib/arm6
+4, /system/product/priv-app/SetupWizard/SetupWizard.apk!/lib/arm64-v8a, /system
+/lib64, /hw_product/lib64, /system/product/lib64, /prets/lib64, /system/lib64, 
+/hw_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 11:49:57.292 11238 15584 W GetGamesServiceReqFacto: Parsing request with 
+ignored arguments. signInOptionsBundle [Bundle[{com.google.android.gms.signin.i
+nternal.serverClientId=null, com.google.android.gms.signin.internal.usePromptMo
+deForAuthCode=true, com.google.android.gms.signin.internal.logSessionId=null, c
+om.google.android.gms.signin.internal.hostedDomain=null, com.google.android.gms
+.signin.internal.offlineAccessRequested=false, com.google.android.gms.signin.in
+ternal.waitForAccessTokenRefresh=false, com.google.android.gms.signin.internal.
+clientRequestedAccount=Account {name=XXXXXXXXX, type=com.google}, com.google.an
+droid.gms.signin.internal.idTokenRequested=false, com.google.android.gms.signin
+.internal.forceCodeForRefreshToken=false}]], isRetryingSignIn [false], skipWelc
+omePopup [false], requireGooglePlus [false]
+11-08 11:49:57.750  1717  2042 I SensorService: createSensorEventConnection beg
+in
+11-08 11:49:57.750  1717  2042 I SensorService: createSensorEventConnection end
+11-08 11:49:57.751  1055  1055 I Sensors@1.2-impl: IsConfigParamNeedUpdate: ser
+vice: 1717, sensor: 7, first set config, create it
+11-08 11:49:57.751  1055  1055 I Sensors@1.2-impl: SetReportConfig: the sensor 
+not find, create it
+11-08 11:49:57.751  1055  1055 I Sensors@1.2-impl: SetOptimizeConfig: sensor: 7
+ first setconfig, create it
+11-08 11:49:57.752  1717  8994 I SensorService: createSensorEventConnection beg
+in
+11-08 11:49:57.752  1717  8994 I SensorService: createSensorEventConnection end
+11-08 11:49:57.753  1055  1055 I Sensors@1.2-impl: IsConfigParamNeedUpdate: ser
+vice: 1717, sensor: 8, first set config, create it
+11-08 11:49:57.753  1055  1055 I Sensors@1.2-impl: SetReportConfig: the sensor 
+not find, create it
+11-08 11:49:57.753  1055  1055 I Sensors@1.2-impl: SetOptimizeConfig: sensor: 8
+ first setconfig, create it
+11-08 11:49:57.948  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:57.956  6254  6298 I Finsky  : [83011] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.016  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.056  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.182  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.195  6254  6298 I Finsky  : [83011] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.229  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.243  6254  6294 I Finsky  : [83007] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.251  6254  6304 I Finsky  : [83017] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.328  6254  6294 I Finsky  : [83007] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.343  6254  6304 I Finsky  : [83017] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.352  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.423  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.465  6254  6254 W Finsky  : [1] OnDeviceSearchSuggestionModelPre
+fetchDelegator created!
+11-08 11:49:58.468  6254  6304 I Finsky  : [83017] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.606  6254  6298 I Finsky  : [83011] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.652  6254  6298 I Finsky  : [83011] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.798  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.815  6254  6304 I Finsky  : [83017] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.845  6254  6298 I Finsky  : [83011] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.847  6254  6298 I Finsky  : [83011] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.893  6254  6303 I Finsky  : [83016] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.911  6254  6294 I Finsky  : [83007] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.912  6254  6298 I Finsky  : [83011] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:58.963  6356  6416 I Finsky:background: [83017] IQ: Bulk scheduling
+ created jobs
+11-08 11:49:59.099  6254  6294 I Finsky  : [83007] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+11-08 11:49:59.100  6254  6294 I Finsky  : [83007] AIM: AppInfoManager-Perf > I
+temModel > ItemStore Called 1 apps cacheOptions = REFRESH_LOCAL_CACHE
+
+

@@ -34,7 +34,7 @@ class _SpecialistCalendarScreenState extends State<SpecialistCalendarScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugLog("ORDER_CALENDAR_OPENED:${widget.specialistId}");
+      debugLog("CAL_OPENED:${widget.specialistId}");
     });
   }
 
@@ -65,7 +65,7 @@ class _SpecialistCalendarScreenState extends State<SpecialistCalendarScreen> {
     final aggregate = daysMap[dateStr];
     final status = aggregate?.status ?? CalendarDayStatus.free;
     
-    debugLog("ORDER_DAY_SELECTED:$dateStr:${status.value}:${aggregate?.pendingCount ?? 0}");
+    debugLog("CAL_DAY_TAP:$dateStr:${status.value}:${aggregate?.pendingCount ?? 0}");
 
     // Policy B: если дата занята (confirmed), показываем диалог
     if (status == CalendarDayStatus.confirmed) {
@@ -217,7 +217,7 @@ class _SpecialistCalendarScreenState extends State<SpecialistCalendarScreen> {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('calendars')
+                  .collection('specialist_calendar')
                   .doc(widget.specialistId)
                   .collection('days')
                   .where('date', isGreaterThanOrEqualTo: '${_currentMonth.year}-${_currentMonth.month.toString().padLeft(2, '0')}-01')

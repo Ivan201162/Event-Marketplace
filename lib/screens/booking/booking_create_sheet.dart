@@ -279,6 +279,10 @@ class _BookingCreateSheetState extends State<BookingCreateSheet> {
                                 _customEventTypeController.clear();
                               }
                             });
+                            // Загружаем цену при изменении типа мероприятия
+                            if (value != null && value.isNotEmpty) {
+                              _loadPriceForDate();
+                            }
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {

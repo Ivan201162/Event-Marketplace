@@ -1,6 +1,7 @@
 import 'package:event_marketplace_app/core/auth_gate.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
+import 'package:event_marketplace_app/screens/splash/splash_event_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
 import 'package:event_marketplace_app/screens/auth/login_screen_modern.dart';
 import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
@@ -12,6 +13,10 @@ import 'package:event_marketplace_app/screens/auth/role_name_city_onboarding.dar
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
 import 'package:event_marketplace_app/screens/chat/chat_screen_improved.dart';
 import 'package:event_marketplace_app/screens/ideas/create_idea_screen.dart';
+import 'package:event_marketplace_app/screens/feed/feed_screen_full.dart';
+import 'package:event_marketplace_app/screens/posts/create_post_screen.dart';
+import 'package:event_marketplace_app/screens/reels/create_reel_screen.dart';
+import 'package:event_marketplace_app/screens/create_story_screen.dart';
 import 'package:event_marketplace_app/screens/legal/privacy_policy_screen.dart';
 import 'package:event_marketplace_app/screens/legal/terms_of_use_screen.dart';
 import 'package:event_marketplace_app/screens/main_navigation_screen.dart';
@@ -37,13 +42,19 @@ import 'package:go_router/go_router.dart';
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/auth-gate', // Production: auth gate проверяет сессию
+    initialLocation: '/splash-event', // Start with new splash screen
     debugLogDiagnostics: true,
     observers: [
       _AnalyticsRouteObserver(),
     ],
     routes: [
-      // Splash экран
+      // Splash экран (новый с EVENT)
+      GoRoute(
+        path: '/splash-event',
+        name: 'splash-event',
+        builder: (context, state) => const SplashEventScreen(),
+      ),
+      // Старый splash (для совместимости)
       GoRoute(
         path: '/splash',
         name: 'splash',
@@ -220,6 +231,30 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/create-idea',
         name: 'create-idea',
         builder: (context, state) => const CreateIdeaScreen(),
+      ),
+
+      // Лента
+      GoRoute(
+        path: '/feed',
+        name: 'feed',
+        builder: (context, state) => const FeedScreenFull(),
+      ),
+
+      // Создание контента
+      GoRoute(
+        path: '/create/post',
+        name: 'create-post',
+        builder: (context, state) => const CreatePostScreen(),
+      ),
+      GoRoute(
+        path: '/create/reel',
+        name: 'create-reel',
+        builder: (context, state) => const CreateReelScreen(),
+      ),
+      GoRoute(
+        path: '/create/story',
+        name: 'create-story',
+        builder: (context, state) => const CreateStoryScreen(),
       ),
 
       // Уведомления

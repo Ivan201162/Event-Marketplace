@@ -6,13 +6,13 @@ class CalendarDayAggregate {
     required this.date,
     required this.status,
     this.pendingCount = 0,
-    this.confirmedBookingId,
+    this.acceptedBookingId,
   });
 
   final String date; // YYYY-MM-DD
   CalendarDayStatus status;
   int pendingCount;
-  String? confirmedBookingId;
+  String? acceptedBookingId; // Используем acceptedBookingId как в Firestore
 
   factory CalendarDayAggregate.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>? ?? {};
@@ -29,7 +29,7 @@ class CalendarDayAggregate {
       date: dateStr,
       status: status,
       pendingCount: pendingCount,
-      confirmedBookingId: acceptedBookingId,
+      acceptedBookingId: acceptedBookingId,
     );
   }
 
@@ -38,7 +38,7 @@ class CalendarDayAggregate {
       'date': date,
       'status': status.value,
       'pendingCount': pendingCount,
-      'confirmedBookingId': confirmedBookingId,
+      'acceptedBookingId': acceptedBookingId,
     };
   }
 }

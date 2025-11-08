@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/app_user.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 /// Улучшенный сервис авторизации с исправленными ошибками
@@ -61,17 +63,24 @@ class AuthServiceEnhanced {
     required String password,
   }) async {
     try {
+      debugLog('EMAIL_LOGIN_START:$email');
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       if (credential.user != null) {
+        final uid = credential.user!.uid;
+        debugLog('EMAIL_LOGIN_OK:$uid');
         return await _getOrCreateUser(credential.user!);
       }
+      debugLog('EMAIL_LOGIN_ERR:no_user');
       return null;
+    } on FirebaseAuthException catch (e) {
+      debugLog('EMAIL_LOGIN_ERR:${e.code}:${e.message}');
+      rethrow;
     } catch (e) {
-      debugPrint('Error signing in with email: $e');
+      debugLog('EMAIL_LOGIN_ERR:unknown:$e');
       rethrow;
     }
   }
@@ -84,49 +93,185 @@ class AuthServiceEnhanced {
     String? city,
   }) async {
     try {
+      debugLog('EMAIL_SIGNUP_START:$email');
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       if (credential.user != null) {
+        final uid = credential.user!.uid;
         // Обновляем отображаемое имя
         if (name != null) {
           await credential.user!.updateDisplayName(name);
         }
 
-        return await _createUserDocument(credential.user!,
+        final user = await _createUserDocument(credential.user!,
             name: name, city: city,);
+        debugLog('EMAIL_SIGNUP_OK:$uid');
+        return user;
       }
+      debugLog('EMAIL_SIGNUP_ERR:no_user');
       return null;
+    } on FirebaseAuthException catch (e) {
+      debugLog('EMAIL_SIGNUP_ERR:${e.code}:${e.message}');
+      rethrow;
     } catch (e) {
-      debugPrint('Error creating user with email: $e');
+      debugLog('EMAIL_SIGNUP_ERR:unknown:$e');
       rethrow;
     }
   }
 
-  /// Вход через Google
-  Future<AppUser?> signInWithGoogle() async {
+  /// Вход через Google (release-ready with detailed logging + auto-retry)
+  Future<UserCredential> signInWithGoogleRelease({int retryCount = 0}) async {
+    debugLog('GOOGLE_LOGIN_START:attempt=${retryCount + 1}');
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
+      // Проверка инициализации Firebase
+      try {
+        Firebase.app();
+        debugLog('GOOGLE_INIT:[DEFAULT]');
+      } catch (_) {
+        debugLog('GOOGLE_INIT:REINIT');
+        await Firebase.initializeApp();
+        debugLog('GOOGLE_INIT:[DEFAULT]');
+      }
 
-      final googleAuth =
-          googleUser.authentication;
+      debugLog('GOOGLE_LOGIN_STEP:signIn');
+      final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
+      if (googleUser == null) {
+        debugLog('GOOGLE_LOGIN_FAIL:CANCELED:User canceled');
+        throw FirebaseAuthException(code: 'canceled', message: 'Пользователь отменил вход');
+      }
 
+      debugLog('GOOGLE_LOGIN_STEP:getTokens');
+      final googleAuth = await googleUser.authentication;
+      debugLog('GOOGLE_LOGIN_STEP:TOKENS:${googleAuth.idToken != null}:${googleAuth.accessToken != null}');
+
+      if (googleAuth.idToken == null) {
+        debugLog('GOOGLE_LOGIN_FAIL:NO_ID_TOKEN:Missing ID token');
+        throw FirebaseAuthException(code: 'no-id-token', message: 'ID token отсутствует');
+      }
+
+      debugLog('GOOGLE_LOGIN_STEP:firebaseCredential');
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
       );
 
-      final userCredential = await _auth.signInWithCredential(credential);
+      debugLog('GOOGLE_LOGIN_STEP:signInWithCredential');
+      final cred = await FirebaseAuth.instance.signInWithCredential(credential);
+      
+      if (cred.user != null) {
+        debugLog('GOOGLE_LOGIN_SUCCESS:${cred.user!.uid}');
+        debugLog('GOOGLE_SIGNIN_READY:initialized');
+      } else {
+        debugLog('GOOGLE_LOGIN_FAIL:NO_USER:User is null after sign in');
+        throw FirebaseAuthException(code: 'no-user', message: 'Пользователь не создан');
+      }
+      
+      return cred;
+    } on FirebaseAuthException catch (e, st) {
+      String readableCode = _mapAuthErrorCode(e.code);
+      debugLog('GOOGLE_LOGIN_FAIL:${e.code}:${e.message}');
+      debugLog('GOOGLE_LOGIN_FAIL_READABLE:$readableCode');
+      debugLog('GOOGLE_LOGIN_STACK:$st');
+      
+      // Авто-ретрай для определенных ошибок
+      if (retryCount < 2 && (e.code == 'unknown' || e.code == 'internal-error' || e.code == 'network-request-failed')) {
+        final delay = Duration(milliseconds: 500 * (1 << retryCount)); // Экспоненциальная задержка
+        debugLog('GOOGLE_LOGIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
+        await Future.delayed(delay);
+        
+        // Повторная инициализация Firebase перед ретраем
+        try {
+          await Firebase.initializeApp();
+          debugLog('GOOGLE_INIT:RETRY:[DEFAULT]');
+        } catch (_) {
+          // Уже инициализирован
+        }
+        
+        return signInWithGoogleRelease(retryCount: retryCount + 1);
+      }
+      
+      rethrow;
+    } on PlatformException catch (e, st) {
+      String readableCode = _mapPlatformErrorCode(e.code);
+      debugLog('GOOGLE_LOGIN_FAIL:PLATFORM:${e.code}:${e.message}');
+      debugLog('GOOGLE_LOGIN_FAIL_READABLE:$readableCode');
+      debugLog('GOOGLE_LOGIN_STACK:$st');
+      
+      // Авто-ретрай для платформенных ошибок
+      if (retryCount < 2 && (e.code == 'sign_in_failed' || e.code == 'network_error')) {
+        final delay = Duration(milliseconds: 500 * (1 << retryCount));
+        debugLog('GOOGLE_LOGIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
+        await Future.delayed(delay);
+        
+        try {
+          await Firebase.initializeApp();
+          debugLog('GOOGLE_INIT:RETRY:[DEFAULT]');
+        } catch (_) {}
+        
+        return signInWithGoogleRelease(retryCount: retryCount + 1);
+      }
+      
+      rethrow;
+    } catch (e, st) {
+      debugLog('GOOGLE_LOGIN_FAIL:UNKNOWN:$e');
+      debugLog('GOOGLE_LOGIN_STACK:$st');
+      
+      // Авто-ретрай для неизвестных ошибок
+      if (retryCount < 2) {
+        final delay = Duration(milliseconds: 500 * (1 << retryCount));
+        debugLog('GOOGLE_LOGIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
+        await Future.delayed(delay);
+        
+        try {
+          await Firebase.initializeApp();
+          debugLog('GOOGLE_INIT:RETRY:[DEFAULT]');
+        } catch (_) {}
+        
+        return signInWithGoogleRelease(retryCount: retryCount + 1);
+      }
+      
+      rethrow;
+    }
+  }
 
-      if (userCredential.user != null) {
-        return await _getOrCreateUser(userCredential.user!);
+  String _mapAuthErrorCode(String code) {
+    switch (code) {
+      case '12500':
+        return 'SIGN_IN_CANCELLED';
+      case '12501':
+        return 'SIGN_IN_CURRENTLY_IN_PROGRESS';
+      case '10':
+        return 'DEVELOPER_ERROR';
+      case 'unknown':
+        return 'UNKNOWN_ERROR_CHECK_SHA_OAUTH';
+      default:
+        return code;
+    }
+  }
+
+  String _mapPlatformErrorCode(String code) {
+    switch (code) {
+      case 'sign_in_failed':
+        return 'SIGN_IN_FAILED_CHECK_SHA';
+      case 'network_error':
+        return 'NETWORK_ERROR';
+      default:
+        return code;
+    }
+  }
+
+  /// Вход через Google (legacy method, calls release version)
+  Future<AppUser?> signInWithGoogle() async {
+    try {
+      final cred = await signInWithGoogleRelease();
+      if (cred.user != null) {
+        return await _getOrCreateUser(cred.user!);
       }
       return null;
     } catch (e) {
-      debugPrint('Error signing in with Google: $e');
       rethrow;
     }
   }

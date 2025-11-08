@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseException;
@@ -181,75 +182,154 @@ class _CreateRequestScreenEnhancedState extends State<CreateRequestScreenEnhance
   }
 
   Future<void> _submitRequest() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_selectedEventType == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Выберите тип мероприятия')),
-      );
-      return;
-    }
-    if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Выберите дату')),
-      );
-      return;
-    }
-
-    setState(() => _isSubmitting = true);
-
     try {
+      // Валидация обязательных полей
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+
+      if (_selectedEventType == null || _selectedEventType!.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Выберите тип мероприятия')),
+          );
+        }
+        return;
+      }
+
+      if (_selectedDate == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Выберите дату')),
+          );
+        }
+        return;
+      }
+
+      final city = _cityController.text.trim();
+      if (city.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Укажите город')),
+          );
+        }
+        return;
+      }
+
+      final description = _descriptionController.text.trim();
+      if (description.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Укажите описание')),
+          );
+        }
+        return;
+      }
+
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) throw Exception('User not authenticated');
+      if (user == null) {
+        debugLog("REQUEST_ERR:auth_required");
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Войдите в аккаунт')),
+          );
+        }
+        return;
+      }
+
+      setState(() => _isSubmitting = true);
 
       final requestRef = FirebaseFirestore.instance.collection('requests').doc();
       final requestId = requestRef.id;
 
-      // Загружаем файлы если есть
+      // Загружаем файлы если есть (с таймаутом)
       if (_selectedFiles.isNotEmpty) {
-        await _uploadFiles(requestId);
+        await _uploadFiles(requestId).timeout(
+          const Duration(seconds: 20),
+          onTimeout: () {
+            throw TimeoutException('Загрузка файлов превысила таймаут');
+          },
+        );
       }
 
       final eventType = _selectedEventType == 'Другое'
           ? _eventTypeCustomController.text.trim()
           : _selectedEventType!;
 
+      if (eventType.isEmpty) {
+        debugLog("REQUEST_ERR:event_type_empty");
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Укажите тип мероприятия')),
+          );
+          setState(() => _isSubmitting = false);
+        }
+        return;
+      }
+
+      // Парсим время из строки (формат HH:mm или HH:mm-HH:mm)
+      String? timeFrom;
+      String? timeTo;
+      final timeStr = _timeController.text.trim();
+      if (timeStr.isNotEmpty) {
+        if (timeStr.contains('-')) {
+          final parts = timeStr.split('-');
+          if (parts.length == 2) {
+            timeFrom = parts[0].trim();
+            timeTo = parts[1].trim();
+          }
+        } else {
+          timeFrom = timeStr;
+        }
+      }
+
+      final cityLower = city.toLowerCase();
+      
+      // Запись в Firestore с таймаутом
       await requestRef.set({
+        'createdBy': user.uid,
+        'status': 'new',
         'eventType': eventType,
         'eventTypeCustom': _selectedEventType == 'Другое' ? eventType : null,
         'date': Timestamp.fromDate(_selectedDate!),
-        'time': _timeController.text.trim().isEmpty ? null : _timeController.text.trim(),
-        'city': _cityController.text.trim(),
+        'timeFrom': timeFrom,
+        'timeTo': timeTo,
+        'city': city,
+        'cityLower': cityLower,
         'venue': _venueController.text.trim().isEmpty ? null : _venueController.text.trim(),
         'budgetMin': _budgetMinController.text.trim().isEmpty
-            ? null
-            : double.tryParse(_budgetMinController.text.trim()),
+            ? 0
+            : (double.tryParse(_budgetMinController.text.trim()) ?? 0),
         'budgetMax': _budgetMaxController.text.trim().isEmpty
-            ? null
-            : double.tryParse(_budgetMaxController.text.trim()),
+            ? 0
+            : (double.tryParse(_budgetMaxController.text.trim()) ?? 0),
         'guestsCount': _guestsCountController.text.trim().isEmpty
-            ? null
-            : int.tryParse(_guestsCountController.text.trim()),
-        'description': _descriptionController.text.trim(),
+            ? 0
+            : (int.tryParse(_guestsCountController.text.trim()) ?? 0),
+        'description': description,
         'attachments': _attachmentUrls,
-        'createdBy': user.uid,
         'createdAt': FieldValue.serverTimestamp(),
-        'status': 'new',
-      });
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('Сохранение заявки превысило таймаут');
+        },
+      );
 
       debugLog("REQUEST_PUBLISHED:$requestId");
 
       if (mounted) {
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Заявка опубликована')),
         );
-        context.pop(); // Возвращаемся на предыдущий экран
       }
     } catch (e) {
       final errorCode = e is FirebaseException ? e.code : 'unknown';
-      debugLog("REQUEST_PUBLISH_FAILED:$errorCode");
+      debugLog("REQUEST_ERR:$errorCode");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e')),
+          SnackBar(content: Text('Ошибка публикации: $e')),
         );
       }
     } finally {

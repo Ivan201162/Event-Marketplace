@@ -43,10 +43,12 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { rootProject.file(it) }
-            storePassword = keystoreProperties["storePassword"] as String
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties["keyAlias"] as String?
+                keyPassword = keystoreProperties["keyPassword"] as String?
+                storeFile = keystoreProperties["storeFile"]?.let { rootProject.file(it) }
+                storePassword = keystoreProperties["storePassword"] as String?
+            }
         }
     }
 
@@ -67,6 +69,25 @@ flutter {
     source = "../.."
 }
 
+// Проверка наличия google-services.json перед сборкой
+tasks.register("verifyGoogleServicesJson") {
+    doLast {
+        val f = file("$projectDir/google-services.json")
+        if (!f.exists()) {
+            throw GradleException("google-services.json not found at app module. Put it at android/app/google-services.json")
+        }
+    }
+}
+
+tasks.matching { it.name == "preBuild" || it.name.startsWith("preReleaseBuild") }.configureEach {
+    dependsOn(tasks.named("verifyGoogleServicesJson"))
+}
+
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    
+    // Firebase BOM for version management
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
 }

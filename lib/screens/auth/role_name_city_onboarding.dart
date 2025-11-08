@@ -3,6 +3,8 @@ import 'package:event_marketplace_app/constants/specialist_roles.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 /// Экран онбординга: роль + ФИО + город
@@ -21,6 +23,7 @@ class _RoleNameCityOnboardingScreenState extends State<RoleNameCityOnboardingScr
   final List<String> _selectedRoleIds = [];
   bool _isSaving = false;
   bool _isLoadingLocation = false;
+  bool _agreedToTerms = false;
 
   @override
   void initState() {
@@ -39,16 +42,61 @@ class _RoleNameCityOnboardingScreenState extends State<RoleNameCityOnboardingScr
   Future<void> _detectCity() async {
     setState(() => _isLoadingLocation = true);
     try {
+      // Проверка разрешений
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Включите геолокацию в настройках')),
+          );
+        }
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Разрешение на геолокацию отклонено')),
+            );
+          }
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Разрешение на геолокацию отклонено навсегда. Введите город вручную')),
+          );
+        }
+        return;
+      }
+
       final position = await Geolocator.getCurrentPosition();
-      // Здесь можно использовать геокодинг для получения города
-      // Пока просто устанавливаем заглушку
-      setState(() {
-        _cityController.text = 'Москва'; // TODO: Реализовать геокодинг
-      });
+      final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+      
+      if (placemarks.isNotEmpty) {
+        final city = placemarks.first.locality ?? placemarks.first.subAdministrativeArea ?? 'Неизвестно';
+        if (mounted) {
+          setState(() {
+            _cityController.text = city;
+          });
+        }
+      }
     } catch (e) {
       debugPrint('Error detecting location: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Не удалось определить город: $e. Введите вручную')),
+        );
+      }
     } finally {
-      setState(() => _isLoadingLocation = false);
+      if (mounted) {
+        setState(() => _isLoadingLocation = false);
+      }
     }
   }
 
@@ -76,6 +124,12 @@ class _RoleNameCityOnboardingScreenState extends State<RoleNameCityOnboardingScr
       );
       return;
     }
+    if (!_agreedToTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Необходимо согласиться с правилами')),
+      );
+      return;
+    }
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -91,25 +145,36 @@ class _RoleNameCityOnboardingScreenState extends State<RoleNameCityOnboardingScr
         };
       }).toList();
 
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
-        'firstName': _firstNameController.text.trim(),
-        'lastName': _lastNameController.text.trim(),
-        'city': _cityController.text.trim(),
+      final firstName = _firstNameController.text.trim();
+      final lastName = _lastNameController.text.trim();
+      final city = _cityController.text.trim();
+      final rolesLower = _selectedRoleIds.map((id) => id.toLowerCase()).toList();
+      final cityLower = city.toLowerCase();
+
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'firstName': firstName,
+        'lastName': lastName,
+        'city': city,
+        'cityLower': cityLower,
         'roles': roles,
+        'rolesLower': rolesLower,
         'roleMain': roles.isNotEmpty ? roles.first['id'] : null,
         'isSpecialist': roles.isNotEmpty,
         'role': roles.isNotEmpty ? 'specialist' : 'user',
         'onboarded': true,
         'updatedAt': FieldValue.serverTimestamp(),
-      });
+        'createdAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
       debugLog("ONBOARDING_SAVED:${user.uid}");
 
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/main');
+        // Используем go_router для навигации
+        context.go('/main');
       }
     } catch (e) {
-      debugLog("ONBOARDING_ERR:$e");
+      final errorCode = e is FirebaseException ? e.code : 'unknown';
+      debugLog("ONBOARDING_ERR:$errorCode:$e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка сохранения: $e')),
@@ -240,11 +305,42 @@ class _RoleNameCityOnboardingScreenState extends State<RoleNameCityOnboardingScr
                   ],
                   const SizedBox(height: 24),
                   
+                  // Согласие с правилами
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _agreedToTerms,
+                        onChanged: (value) {
+                          setState(() {
+                            _agreedToTerms = value ?? false;
+                          });
+                        },
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            // TODO: Открыть правила
+                            Navigator.of(context).pushNamed('/terms');
+                          },
+                          child: Text(
+                            'Я согласен с правилами использования',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: _agreedToTerms ? Colors.blue : Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
                   // Кнопка сохранения
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _isSaving ? null : _save,
+                      onPressed: (_isSaving || !_agreedToTerms) ? null : _save,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),

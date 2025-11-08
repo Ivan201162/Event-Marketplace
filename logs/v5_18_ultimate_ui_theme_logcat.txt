@@ -1,0 +1,1462 @@
+﻿
+11-08 12:55:14.591  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 18 lines
+11-08 12:55:19.584  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 12:56:19.585  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 12:56:46.762  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 12:57:19.586  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 12:57:48.191  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 12:58:19.587  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 12:58:49.631  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 12:59:19.589  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 12:59:51.063  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:00:19.590  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:00:52.516  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 18 lines
+11-08 13:01:19.591  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:02:19.592  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:02:24.667  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:03:05.026  1717  2430 D ActivityManager: cleanUpApplicationRecord app:
+ 9746:com.huawei.profile/1000, bad: false, restarting: false, allowRestart: tru
+e
+11-08 13:03:07.650  1717  2430 D HwNetworkManagementService: onEvent receive We
+b Stat Report:661 ReportType 0 907 0 0 0 0 0 23 0 0 0 0 0 0 21 2 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 78 29 59 0 0 0 0 
+0 0 0 0 0 0 620 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ReportTyp
+e 0 530 0 0 0 0 0 3 0 0 0 0 0 0 0 0 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 248 132 150 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+11-08 13:03:07.669  1717  2430 D HwNetworkManagementService: onEvent receive We
+b Stat Report:661 ReportType 20 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ReportType 20 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0
+11-08 13:03:19.593  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:03:26.116  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:04:19.594  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:04:27.547  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:05:19.595  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:05:28.991  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:06:19.597  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:06:30.432  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:07:19.598  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:07:31.863  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:08:19.599  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:08:33.308  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:09:04.031  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 11 lines
+11-08 13:09:19.600  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:09:34.743  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 1 line
+11-08 13:10:05.463  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:10:19.601  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:10:36.232  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:11:06.911  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 18 lines
+11-08 13:11:19.602  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:12:19.603  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:12:39.071  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:12:48.686  2550  2550 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 com.
+huawei.android.chr.ChrCore.report:5584 com.huawei.android.chr.ChrCore.report:46
+9 com.huawei.android.chr.dataservice.ChrDataService.saveToChrModel:979 com.huaw
+ei.android.chr.dataservice.PsQoeManager.saveQoeEvent:101 
+11-08 13:12:48.688  2550  2550 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 com.
+huawei.android.chr.ProtocolLogManager.setChrInfo2DbEx:1017 com.huawei.android.c
+hr.ProtocolLogManager.setChrInfo2Db:962 com.huawei.android.chr.dataservice.PsQo
+eManager.saveQoeEvent:114 com.huawei.android.chr.dataservice.ChrDataService.han
+dleMessage:13681 
+11-08 13:13:19.604  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:13:40.512  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:14:19.606  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:14:41.943  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 10 lines
+11-08 13:15:12.668  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 8 lines
+11-08 13:15:19.607  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:16:14.103  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 18 lines
+11-08 13:16:19.608  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:17:19.609  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:17:46.263  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:18:19.610  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:18:47.704  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:19:19.611  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:19:49.147  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:20:19.612  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:20:50.600  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:21:19.614  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:21:21.307  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:21:52.027  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:22:19.615  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:22:22.747  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:23:19.616  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:23:24.195  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:23:50.658  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:23:54.666  2606  3045 I DeepNoDisturbSM: IdleState processMessage msg.
+what=EVENT_NETWORK_TYPE_CHANGE
+11-08 13:23:54.670  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+NETWORK_TYPE_CHANGE
+11-08 13:23:59.670  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-08 13:24:01.907  2606  3045 I DeepNoDisturbSM: IdleState processMessage msg.
+what=EVENT_NETWORK_TYPE_CHANGE
+11-08 13:24:01.911  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+NETWORK_TYPE_CHANGE
+11-08 13:24:02.201  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:06.911  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-08 13:24:07.294  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:13.298  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:19.302  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:19.618  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:24:22.652  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:25.631  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:24:27.769  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:32.888  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:38.012  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:43.771  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:49.772  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:55.775  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:24:56.399  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 6 lines
+11-08 13:25:01.780  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:04.250  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:05.853  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+MOVEMENT_STATE_CHANGED
+11-08 13:25:06.960  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+HARD_SWITCH_CONDITION_CHECK
+11-08 13:25:10.254  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:14.495  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:16.668  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 9 lines
+11-08 13:25:16.677  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 9 lines
+11-08 13:25:19.611  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:19.619  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:25:20.853  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+MOVEMENT_STATE_CHANGED
+11-08 13:25:25.615  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:25.757  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 34 lines
+11-08 13:25:27.952 12945 12945 I RtgSchedEvent: current pid:12945 AppType:255
+11-08 13:25:29.628  9456  9456 I RtgSchedEvent: current pid:9456 AppType:-1
+11-08 13:25:29.857  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:34.488  2606  3045 I DeepNoDisturbSM: IdleState processMessage msg.
+what=EVENT_NETWORK_TYPE_CHANGE
+11-08 13:25:34.495  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+NETWORK_TYPE_CHANGE
+11-08 13:25:35.853  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+MOVEMENT_STATE_CHANGED
+11-08 13:25:39.495  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-08 13:25:41.340  2606  3045 I DeepNoDisturbSM: IdleState processMessage msg.
+what=EVENT_NETWORK_TYPE_CHANGE
+11-08 13:25:41.343  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+NETWORK_TYPE_CHANGE
+11-08 13:25:41.583  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:46.343  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-08 13:25:46.493  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:52.494  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:56.737  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:25:57.748  1717  2046 I chatty  : uid=1000(system) UEventObserver expi
+re 12 lines
+11-08 13:26:00.849  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+MOVEMENT_STATE_CHANGED
+11-08 13:26:01.851  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:26:02.160  2680  2680 I ActivityThread: Handle window ActivityRecord{3
+8cafba token=android.os.BinderProxy@2412bae {com.huawei.android.launcher/com.hu
+awei.android.launcher.unihome.UniHomeLauncher}} visibility: true
+11-08 13:26:02.175  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SLAVE_TRAFFIC_FREE_APP_BACKGROUND
+11-08 13:26:02.190  2606  3045 I SmartDualCardSM: onUidStateUpdate isSkip,uid=1
+0467,pkgName=null,pkgNameByComponentName=com.eventmarketplace.app
+11-08 13:26:02.214  2680  2680 I RtgSchedEvent: current pid:2680 AppType:28
+11-08 13:26:02.430  2606  2606 D DEF_PackageChangedBroadcastReceiver: onReceive
+ com.eventmarketplace.app android.intent.action.PACKAGE_REMOVED replacing: fals
+e
+11-08 13:26:02.430  2606  3358 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.bindService:1777 androi
+d.content.ContextWrapper.bindService:705 com.huawei.profile.client.connect.Remo
+teServiceConnection.bindService:128 com.huawei.profile.client.connect.RemoteSer
+viceConnection.open:99 com.huawei.profile.client.profile.ProfileClient.connect:
+265 
+11-08 13:26:02.435  2606  3045 I SmartDualCardConfig: onPackageInstallStateUpda
+te uid=10467,appName=com.eventmarketplace.app,packageAddFlag=0
+11-08 13:26:02.700 13560 13560 I LoadedApk: makePaths: outLibPaths=[/system/pri
+v-app/HwProfileService/lib/arm64, /system/lib64:/hw_product/lib64:/system/produ
+ct/lib64:/prets/lib64]
+11-08 13:26:02.969 13560 13690 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.bindService:1777 androi
+d.content.ContextWrapper.bindService:705 com.huawei.hwddmp.client.DeviceManager
+.bindDevMonitor:409 com.huawei.profile.devicesmanager.dependencies.SoftBusManag
+er.bindDeviceManager:8 com.huawei.profile.HwProfileService.a:5 
+11-08 13:26:07.854  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:26:13.856  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:26:16.496  1025 28265 V installd: DexInv: --- END '/data/app/com.event
+marketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk' (success) ---
+11-08 13:26:16.530  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_SIGNAL_ICON
+11-08 13:26:16.530  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.FALSING_PLUGIN
+11-08 13:26:16.531  2606  3045 I SmartDualCardConfig: onPackageInstallStateUpda
+te uid=10468,appName=com.eventmarketplace.app,packageAddFlag=1
+11-08 13:26:16.531  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_ASSISTANT
+11-08 13:26:16.534  3103  3103 I HiAdKit.AppDownloadDelegate:  installReceiver.
+onReceive, action:android.intent.action.PACKAGE_ADDED, pkg: com.eventmarketplac
+e.app
+11-08 13:26:16.536  2606  2606 D DEF_PackageChangedBroadcastReceiver: onReceive
+ com.eventmarketplace.app android.intent.action.PACKAGE_ADDED replacing: false
+11-08 13:26:16.536  2606  3358 I DEF_ProfileControl_Loader: handle Message: wha
+t: 2
+11-08 13:26:16.537  2606  3358 I DEF_ProfileControl_Loader: the package does no
+t have ability.
+11-08 13:26:16.543  2606  2606 I HwEasyGoService: on call to scan the new insta
+lled package com.eventmarketplace.app
+11-08 13:26:16.543 22613 22613 I HiDecision: PackageRecevier: PackageReceiver: 
+action is: android.intent.action.PACKAGE_ADDED, pkgя╝Ъcom.eventmarketplace.app
+11-08 13:26:16.543  2606  3407 I Hicom_Monitor: notifyPackageChanged: pkgName:c
+om.eventmarketplace.app, uid: 10468, actionId: 1
+11-08 13:26:16.543  2606  3407 I Hicom_XEngineProc: handlePackageChanged  type 
+= 1 packageName = com.eventmarketplace.app uid = 10468
+11-08 13:26:16.544  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_CONTROL_CENTER
+11-08 13:26:16.544  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_SIGNAL_ICON
+11-08 13:26:16.544  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_SIGNAL_ICON
+11-08 13:26:16.544  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.551  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_QS_SIMPLE
+11-08 13:26:16.552 27583 27583 I PackageChangeReceiver: [I/HMSCore/PackageChang
+eReceiver 27583:1 SourceFile:3] oripackageName = package:com.eventmarketplace.a
+pp
+11-08 13:26:16.552 27583 27583 I PackageChangeReceiver: [I/HMSCore/PackageChang
+eReceiver 27583:1 SourceFile:5] packageName = com.eventmarketplace.app
+11-08 13:26:16.553  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_VOLUME
+11-08 13:26:16.553  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.553  1053 14452 D AwareLog: ProcessMsgFn msg 601,fd 29,package n
+ame com.eventmarketplace.app
+11-08 13:26:16.553  1053 14452 D         : gmr: ProcessGameMsg fd 29,com.eventm
+arketplace.app,27
+11-08 13:26:16.553  1053 14452 D         : gmr: GetPackagePath Successfully pat
+h,com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==
+11-08 13:26:16.557 13018 13018 D AGCLinkKit: [D/AGCLinkKit/AGCLinkKit 13018:1 K
+itReceiverUtils.java:172] ACTION_PACKAGE_ADDED :com.eventmarketplace.app
+11-08 13:26:16.558  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_QS
+11-08 13:26:16.559 12894 12894 I PackageReceiver: [2025-11-08 13:26:16.559 I/LI
+TE_SDK-PackageReceiver] package_add:com.eventmarketplace.app
+11-08 13:26:16.563  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_OVERLAY
+11-08 13:26:16.565 27583 27583 I PackageReceiver: [2025-11-08 13:26:16.564 I/LI
+TE_SDK-PackageReceiver] package_add:com.eventmarketplace.app
+11-08 13:26:16.567  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.568  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.569  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.570  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_SIGNAL_ICON
+11-08 13:26:16.570  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.571  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.571  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.572 13018 13018 D AGCLinkKit: [D/AGCLinkKit/AGCLinkKit 13018:1 n
+ull:54] get arrive link:com.eventmarketplace.app
+11-08 13:26:16.574  2295  2660 D PluginInstanceManager: queryPkg com.eventmarke
+tplace.app com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW
+11-08 13:26:16.582  2606  3580 D HwEasyGoService: doOrderScan package com.event
+marketplace.app
+11-08 13:26:16.583  2606  3580 D EasyGoDataManager: finish not client or server
+ com.eventmarketplace.app
+11-08 13:26:16.583  2606  3580 D EasyGoDataManager: not recorded easygo party c
+om.eventmarketplace.app
+11-08 13:26:16.593 27583 14454 I fwkit_kmds_preinstall: [I/fwkit/fwkit_kmds_pre
+install 27583:75674 AppInstallReceiver.java:70] Package:com.eventmarketplace.ap
+p added or updated
+11-08 13:26:16.598 27583 28569 W fwkit_HmsProfiler: [W/fwkit/fwkit_HmsProfiler 
+27583:68472 HmsProfiler.java:773] deny upload, user not allowed to upload.
+11-08 13:26:16.600 27583 28569 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:HmsProfiler, TYPE:0, eventId:kitloadinfo
+11-08 13:26:16.602 27583 14466 I fwkit_kitstore_PackageAdde: Package:com.eventm
+arketplace.app added or updated
+11-08 13:26:16.603 13018 13018 I HiAnalyticsKit: HiAnalyticsSysEvtReceiver=> in
+tent.getData().getSchemeSpecificPart(): com.eventmarketplace.app
+11-08 13:26:16.603 13018 13018 I HiAnalyticsKit: EventReportTask=> readConfigFo
+rmCache is run
+11-08 13:26:16.611 13018 14467 I HiAnalyticsKit: SystemEvtRecordTask=> system e
+vent cache sp
+11-08 13:26:16.614 27583 14453 I ScopeUtil: [I/HMSCore/ScopeUtil 27583:75673 So
+urceFile:1] load AppPermission for app packageName = com.eventmarketplace.app
+11-08 13:26:16.635  1053 14471 D AwareLog: ProcessMsgFn msg 601,fd 29,package n
+ame com.eventmarketplace.app
+11-08 13:26:16.635  1053 14471 D         : gmr: ProcessGameMsg fd 29,com.eventm
+arketplace.app,27
+11-08 13:26:16.635  1053 14471 D         : gmr: GetPackagePath Successfully pat
+h,com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==
+11-08 13:26:16.638 14123 14170 I Finsky  : [83313] AIM: AppInfoManager-Perf > O
+nDeviceAppInfo > cacheHitCount=0, cacheMissCount=1. Missed  in cache (limit 10)
+ : [com.eventmarketplace.app]
+11-08 13:26:16.640 14123 14169 I Icon_Cache: add:2131755008#com.eventmarketplac
+e.app
+11-08 13:26:16.643  7488 14475 W GCM     : Unexpected forwarded intent: Intent 
+{ act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketplace.app 
+flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.Pe
+rsistentIntentOperationService (has extras) }
+11-08 13:26:16.645  7488 14469 W NetworkScheduler: Unexpected forwarded intent:
+ Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketpl
+ace.app flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.ch
+imera.PersistentIntentOperationService (has extras) }
+11-08 13:26:16.654 27583 17250 W fwkit_kims: [W/fwkit/fwkit_kims 27583:70916 KI
+MSServiceController.java:273] getApplicationInfo: com.eventmarketplace.app null
+.
+11-08 13:26:16.658 27583 17250 W fwkit_kims: [W/fwkit/fwkit_kims 27583:70916 KI
+MSServiceController.java:615] no KitInfoEntity by package name: com.eventmarket
+place.app
+11-08 13:26:16.660 13018 13018 I MLKitBroadcastReceiver: packageName = com.even
+tmarketplace.app, dependency = 
+11-08 13:26:16.662 14123 14123 I Finsky  : [1] AIM: AppInfoCacheUpdater -> inva
+lidating apps: [com.eventmarketplace.app]
+11-08 13:26:16.665 14123 14177 I Finsky  : [83319] AIM: AppInfoManager-Perf > O
+nDeviceAppInfo > cacheHitCount=0, cacheMissCount=1. Missed  in cache (limit 10)
+ : [com.eventmarketplace.app]
+11-08 13:26:16.758  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 355, userId=10468, pid=0, com.eventmarketplace.app
+11-08 13:26:16.758  1053  1089 D AwareLog: iawared: WorkingsetSendClearMsg com.
+eventmarketplace.app
+11-08 13:26:16.759  1053  1140 E AwareLog: iawared: WorkingsetPathCheckInternal
+ Failed to lstat(/data/system/iaware/workingset/com.eventmarketplace.app/): 2
+11-08 13:26:16.759  1053  1140 E AwareLog: iawared: WorkingsetPathCheck Failed 
+to delete directory(/data/system/iaware/workingset/com.eventmarketplace.app/): 
+2
+11-08 13:26:16.808  7488 14475 W GCM     : Unexpected forwarded intent: Intent 
+{ act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketplace.app 
+flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.Pe
+rsistentIntentOperationService (has extras) }
+11-08 13:26:16.808  7488 14480 W NetworkScheduler: Unexpected forwarded intent:
+ Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketpl
+ace.app flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.ch
+imera.PersistentIntentOperationService (has extras) }
+11-08 13:26:16.847  2680  2680 I HwLauncher: Model onPackageAdded userAppPackag
+e:Package:com.eventmarketplace.app,User:UserHandle{0},IsClone:false
+11-08 13:26:16.851  2680  2680 I HwLauncher: Model findCloudAppInfoInDB : found
+ 0 shortcutInfo for package[com.eventmarketplace.app] in db
+11-08 13:26:16.851  2680  2680 I HwLauncher: PowerSaveLauncherModel onPackageAd
+ded:Package:com.eventmarketplace.app,User:UserHandle{0},IsClone:false
+11-08 13:26:16.851  2680  2680 I HwLauncher: StreetModeLauncherModel onPackageA
+dded:Package:com.eventmarketplace.app,User:UserHandle{0},IsClone:false
+11-08 13:26:16.865  2680  2894 I HwLauncher: AllIdleAppsList addPackage: add ne
+w shortcut is {ShortcutInfo: title: Event, component: ComponentInfo{com.eventma
+rketplace.app/com.eventmarketplace.app.MainActivity}}
+11-08 13:26:16.930 12962 13211 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:url_request
+11-08 13:26:16.950 12962 14494 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:907112013
+11-08 13:26:16.972 12962 12962 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:907112061
+11-08 13:26:17.206  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:26:17.260 12962 13211 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:url_request
+11-08 13:26:17.324 12962 14543 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:907112013
+11-08 13:26:17.397 14509 14509 I HwGameAssistant-11.3.2.300-InstallPackageInten
+tReceiver: packagename=com.eventmarketplace.app
+11-08 13:26:17.401 14509 14540 W HwGameAssistant-11.3.2.300-HomeCountryHelper: 
+use Locale default country
+11-08 13:26:17.402 14509 14539 W HwGameAssistant-11.3.2.300-HomeCountryHelper: 
+use Locale default country
+11-08 13:26:17.850 12962 13077 W PackageParser: Unknown element under <manifest
+>: queries at /data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.
+apk Binary XML file line #20
+11-08 13:26:18.047 12962 13449 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:2010100701
+11-08 13:26:18.292 12962 13449 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:907112013
+11-08 13:26:18.294 12962 13449 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:0, eventId:120108
+11-08 13:26:18.300 12962 13211 I FormalHASDK: HiAnalyticsInstance==> onEvent. T
+AG:_default_config_tag, TYPE:1, eventId:url_request
+11-08 13:26:18.398 14681 14681 W Monkey  : args: [-p, com.eventmarketplace.app,
+ -c, android.intent.category.LAUNCHER, 1]
+11-08 13:26:18.399 14681 14681 W Monkey  :  arg: "com.eventmarketplace.app"
+11-08 13:26:18.400 14681 14681 W Monkey  : data="com.eventmarketplace.app"
+11-08 13:26:18.424  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 354, userId=10468, pid=0, com.eventmarketplace.app
+11-08 13:26:18.425  1053  1089 D AwareLog: iawared: WorkingsetSendPrereadMsg co
+m.eventmarketplace.app
+11-08 13:26:18.425  1053  1089 D AwareLog: iawared: WorkingsetStart com.eventma
+rketplace.app in monitor0
+11-08 13:26:18.436 27583 13430 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:18.437 14681 14681 I Monkey  : Events injected: 1
+11-08 13:26:18.442 27583 13420 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:18.445  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 354, userId=10468, pid=0, com.eventmarketplace.app
+11-08 13:26:18.446  1053  1089 D AwareLog: iawared: WorkingsetStart com.eventma
+rketplace.app in monitor0
+11-08 13:26:18.463  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 350, userId=10468, pid=14701, com.eventmarketplace.app
+11-08 13:26:18.466  1053  1089 D AwareLog: iawared: WorkingsetStart com.eventma
+rketplace.app in monitor0
+11-08 13:26:18.494 14701 14701 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /data/app/com.even
+tmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/lib/arm64:/data/app/com.eventmarketpl
+ace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!/lib/arm64-v8a libraryPermittedPath: 
+/data/user/0/com.eventmarketplace.app parent: java.lang.BootClassLoader@d46cbfc
+ targetSdkVersion: 36 isBundled: false classLoaderName: null sharedLibraries: n
+ull
+11-08 13:26:18.502   773  1047 W BufferQueueProducer: [com.huawei.android.launc
+her/com.huawei.android.launcher.unihome.UniHomeLauncher#0]:1390: disconnect: no
+t connected (req=1)
+11-08 13:26:18.505 14701 14701 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk librarySearch
+Path: /data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/lib/arm64:/da
+ta/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!/lib/arm64-v8
+a libraryPermittedPath: /data/user/0/com.eventmarketplace.app parent: java.lang
+.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false classLoaderName:
+ null sharedLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file "/s
+ystem/framework/org.apache.http.legacy.jar"],nativeLibraryDirectories=[/data/ap
+p/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/lib/arm64, /data/app/com.ev
+entmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!/lib/arm64-v8a, /system/li
+b64, /hw_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 13:26:18.512 14701 14719 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.eventmarketplace.app#10468#256
+11-08 13:26:18.513 14701 14719 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.eventmarketplace.app#10468#0
+11-08 13:26:18.517 14701 14719 I AwareBitmapCacher: init processName:com.eventm
+arketplace.app pid=14701 uid=10468
+11-08 13:26:18.517   773  1047 W BufferQueueProducer: [com.huawei.android.launc
+her/com.huawei.android.launcher.unihome.UniHomeLauncher#1]:1390: disconnect: no
+t connected (req=1)
+11-08 13:26:18.519  1016  1016 D ITouchService: itouch getCurrentParmID tempPkg
+=com.eventmarketplace.xxx
+11-08 13:26:18.519  1016  1016 D ITouchService: itouch:app com.eventmarketplace
+.app is  not game app
+11-08 13:26:18.519  1016  1016 D ITouchService: itouch:app com.eventmarketplace
+.app is  not in StylusPenList
+11-08 13:26:18.547 14701 14701 I FirebaseCrashlytics: Initializing Firebase Cra
+shlytics 20.0.3 for com.eventmarketplace.app
+11-08 13:26:18.600   763   795 D ACCKIT_ : pack:"com.eventmarketplace.app"
+11-08 13:26:18.601 14701 14701 I RtgSchedEvent: current pid:14701 AppType:-1
+11-08 13:26:18.609 14701 14766 I OpenGLRenderer: RenderThread: progress name = 
+[com.eventmarketplace.app], viewCornerType = 0
+11-08 13:26:18.611 14701 14768 I iGraphics: [0020080c] pn: com.eventmarketplace
+.app, p: 14701
+11-08 13:26:18.611 14701 14768 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-08 13:26:18.612 14701 14737 W marketplace.ap: ClassLoaderContext type mismat
+ch. expected=PCL, found=DLC (PCL[] | DLC[];PCL[/data/app/com.eventmarketplace.a
+pp-3EbspRhhsS2KVccDNAbCgQ==/base.apk*4294104142:/data/app/com.eventmarketplace.
+app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes2.dex*4058574641:/data/app/com.eve
+ntmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes3.dex*2202636624:/da
+ta/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes4.dex*
+1275683855:/data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk
+!classes5.dex*132056317:/data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbC
+gQ==/base.apk!classes6.dex*1477928350:/data/app/com.eventmarketplace.app-3EbspR
+hhsS2KVccDNAbCgQ==/base.apk!classes7.dex*773864432:/data/app/com.eventmarketpla
+ce.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes8.dex*462866192:/data/app/com.e
+ventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes9.dex*1232794202]{
+PCL[/system/framework/org.apache.http.legacy.jar*4017483120]})
+11-08 13:26:18.613 14701 14737 W marketplace.ap: Found duplicated class when ch
+ecking oat files: 'Landroid/app/AppComponentFactory;' in /data/app/com.eventmar
+ketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes2.dex and /data/user_de/0
+/com.google.android.gms/app_chimera/m/0000003e/MeasurementDynamite.uncompressed
+.apk
+11-08 13:26:18.659 14701 14701 D com.llfbandit.app_links: Intent { act=android.
+intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=co
+m.eventmarketplace.app/.MainActivity }
+11-08 13:26:18.674  7488 11301 I PhenotypeResourceReader: unable to find any Ph
+enotype resource metadata for com.eventmarketplace.app
+11-08 13:26:18.699 14701 14797 I FA      : To enable faster debug mode event lo
+gging run:
+11-08 13:26:18.699 14701 14797 I FA      :   adb shell setprop debug.firebase.a
+nalytics.app com.eventmarketplace.app
+11-08 13:26:18.780  1026  1026 I keystore: del USRPKEY_com.eventmarketplace.app
+.FlutterSecureStoragePluginKey 10468
+11-08 13:26:18.781  1026  1026 I keystore: del USRSKEY_com.eventmarketplace.app
+.FlutterSecureStoragePluginKey 10468
+11-08 13:26:18.781  1026  1026 I keystore: del USRCERT_com.eventmarketplace.app
+.FlutterSecureStoragePluginKey 10468
+11-08 13:26:18.781  1026  1026 I keystore: del CACERT_com.eventmarketplace.app.
+FlutterSecureStoragePluginKey 10468
+11-08 13:26:19.012 14701 14701 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:0 new windoMode:1, isFixedSize:false
+11-08 13:26:19.014 14701 14701 D ActivityThread: add activity client record, r=
+ ActivityRecord{1779b70 token=android.os.BinderProxy@6334d8b {com.eventmarketpl
+ace.app/com.eventmarketplace.app.MainActivity}} token= android.os.BinderProxy@6
+334d8b
+11-08 13:26:19.023 14701 14701 D FirebaseSessions: App foregrounded on com.even
+tmarketplace.app
+11-08 13:26:19.023 14701 14701 D FirebaseSessions: No process data for com.even
+tmarketplace.app
+11-08 13:26:19.024 14701 14733 D FirebaseSessions: No process data for com.even
+tmarketplace.app
+11-08 13:26:19.032 14701 14701 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:19.035 14701 14701 D InputEventReceiver: dispatchInputInterval 1000
+000
+11-08 13:26:19.036 14701 14701 I RtgSchedEvent: current pid:14701 AppType:-1
+11-08 13:26:19.038 14701 14701 I flutter : APP: APP: BUILD OK v5.18-ultimate-ui
+-theme
+11-08 13:26:19.038  4659 31771 I CAWARENESS_AppUsageManager: onEvent, packageNa
+me=com.eventmarketplace.app, activityName=com.eventmarketplace.app.MainActivity
+11-08 13:26:19.040 14701 14842 D HiTouch_PressGestureDetector: onAttached, pack
+age=com.eventmarketplace.app, windowType=1, mIsHiTouchRestricted=true
+11-08 13:26:19.041 27583 13420 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:19.049  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:19.049  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:19.049  2606  3045 I SmartDualCardSM: onUidStateUpdate,uid=10468,ap
+pName=com.eventmarketplace.app,state=FOREGROUND
+11-08 13:26:19.050  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:19.100  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+APP_MOVE_FOREGROUND
+11-08 13:26:19.100  1016  1016 I AGPService: aps-info: focus pkgName - com.even
+tmarketplace.app, with 0 more apps
+11-08 13:26:19.101  1016  1016 I AGPService: FrameRateManager: aps-info: new pk
+gName - com.eventmarketplace.app, type - -1
+11-08 13:26:19.101  1016  1016 I AGPService: GpuPolicyManager: m_currentPkgName
+ - com.eventmarketplace.app
+11-08 13:26:19.102  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:19.103  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SLAVE_TRAFFIC_FREE_APP_BACKGROUND
+11-08 13:26:19.619  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 13:26:19.856   773  1714 W BufferQueueProducer: [SurfaceView - com.eventm
+arketplace.app/com.eventmarketplace.app.MainActivity#0]:1390: disconnect: not c
+onnected (req=1)
+11-08 13:26:19.869  7239  7239 D InputEventReceiver: dispatchInputInterval 1000
+000
+11-08 13:26:19.899 14701 14701 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:20.686   755  2117 I motion@1.0-service: motion-hal Motion::readEve
+nts motionType: 11
+11-08 13:26:20.686  1055  1085 D SensorHub: huawei Hal get step event
+11-08 13:26:20.762 11238 13569 W FA-SVC  : Config not found. Using empty config
+. appId: com.eventmarketplace.app
+11-08 13:26:20.777 11238 13569 W FA-SVC  : Did not find measurement config or m
+issing version info. appId: com.eventmarketplace.app
+11-08 13:26:20.788 11238 13569 W FA-SVC  : Did not find measurement config or m
+issing version info. appId: com.eventmarketplace.app
+11-08 13:26:20.848  4659 31771 I CAWARENESS_MsdpMotionParser: parseMsdpEvent co
+unt: 1 state: MsdpMotionTransportState{abilityType=still, eventType=exit, times
+tampNs=3615486141681714, confidence=0, extra=}
+11-08 13:26:20.849 14701 14743 D FirebaseSessions: Fetched settings: {"settings
+_version":3,"cache_duration":154678,"features":{"collect_logged_exceptions":tru
+e,"collect_reports":true,"collect_analytics":false,"prompt_enabled":false,"push
+_enabled":false,"firebase_crashlytics_enabled":false,"collect_anrs":true,"colle
+ct_metric_kit":false,"collect_build_ids":true},"app":{"status":"activated","upd
+ate_required":false,"report_upload_variant":2,"native_report_upload_variant":2}
+,"fabric":{"org_id":"68f7a883b19d6de9f6f19c63","bundle_id":"com.eventmarketplac
+e.app"},"on_demand_upload_rate_per_minute":10,"on_demand_backoff_base":1.2,"on_
+demand_backoff_step_duration_seconds":60,"app_quality":{"sessions_enabled":true
+,"sampling_rate":1,"session_timeout_seconds":1800},"on_demand_thread_recording_
+suspension_enabled":true}
+11-08 13:26:20.857  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+MOVEMENT_STATE_CHANGED
+11-08 13:26:20.865 14701 14745 D FirebaseSessions: Session Event Type: SESSION_
+START
+11-08 13:26:20.865 14701 14745 D FirebaseSessions: Successfully logged Session 
+Start event.
+11-08 13:26:21.283 14701 14701 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:21.379  1082  1302 W ScreemCommon: CLICK_START_APP: JL_APP_LAUNCHIN
+G_END and JL_EVENT_CLICK_UP too long| span:51749 > A(10000), A
+11-08 13:26:21.782  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 351, userId=10468, pid=14701, com.eventmarketplace.app
+11-08 13:26:21.782  1053  1089 D AwareLog: iawared: WorkingsetPause com.eventma
+rketplace.app
+11-08 13:26:22.245 14701 14701 I flutter : APP: HOME_LOADED
+11-08 13:26:22.251 14701 14701 I flutter : APP: HOME_LOADED
+11-08 13:26:22.326  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:26:22.452  7488  7488 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.auth.aang.events.services.START dat=chimera-action: cmp=com.goo
+gle.android.gms/.chimera.PersistentApiService }
+11-08 13:26:22.549 14701 14701 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:24.226 14701 14993 D ProfileInstaller: Installing profile for com.e
+ventmarketplace.app
+11-08 13:26:25.598  1025 28265 D installd: forkNotifyToRMS parcel pid=0, ppid=1
+025, pkg=com.eventmarketplace.app, status=1, num=5, time=1762503416
+11-08 13:26:25.600  1025 28265 V installd: DexInv: --- BEGIN '/data/app/com.eve
+ntmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk' ---
+11-08 13:26:25.602  1025 28265 D installd: forkNotifyToRMS parcel pid=14997, pp
+id=1025, pkg=com.eventmarketplace.app, status=0, num=0, time=0
+11-08 13:26:25.821  2573  2573 I ChannelQualityMonitor: eventReceiver ACTION_BA
+TTERY_CHANGED
+11-08 13:26:25.821  2573  2573 I ChannelQualityMonitor: eventReceiver handleBat
+teryEvent charg status = 4
+11-08 13:26:25.821  2573  2573 I ChannelQualityMonitor: eventReceiver handleBat
+teryEvent mPercentBattery = 82
+11-08 13:26:25.842 14997 14997 I dex2oat : /apex/com.android.runtime/bin/dex2oa
+t --input-vdex-fd=10 --output-vdex-fd=11 --resolve-startup-const-strings=true -
+-max-image-block-size=1048576 --compiler-filter=speed-profile -j1 --profile-fil
+e-fd=14 --classpath-dir=/data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbC
+gQ== --class-loader-context=PCL[]{PCL[/system/framework/org.apache.http.legacy.
+jar]} --generate-mini-debug-info --compilation-reason=unknown
+11-08 13:26:26.282  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 357, userId=10468, pid=14701, com.eventmarketplace.app
+11-08 13:26:26.282  1053  1089 D AwareLog: iawared: WorkingsetPauseCollect com.
+eventmarketplace.app
+11-08 13:26:27.447  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:26:28.251  2550  2841 I NcDftChip: NcChipDftEvent receive:NcChipDftEve
+nt{Id=909009521, Length=464, Flag=0}
+11-08 13:26:28.251  2550  2830 I HotspotComponent: handleChipEvent
+11-08 13:26:28.315  2295  2295 I HwCtrlCtr:SlipSplashController: viewIsAdded:fa
+lse
+11-08 13:26:28.315  2295  2295 I vol.Events: writeEvent dismiss_dialog volume_c
+ontroller
+11-08 13:26:28.317  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 352, userId=10468, pid=14701, com.eventmarketplace.app
+11-08 13:26:28.318  1053  1089 D AwareLog: iawared: WorkingsetStop com.eventmar
+ketplace.app
+11-08 13:26:28.321  4659 31771 I CAWARENESS_AppUsageManager: onEvent, packageNa
+me=com.huawei.android.launcher, activityName=com.huawei.android.launcher.unihom
+e.UniHomeLauncher
+11-08 13:26:28.324  1717  1895 I ActivityTaskManager: Making visible and schedu
+ling visibility: ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome
+.UniHomeLauncher t1}
+11-08 13:26:28.326  1717  1895 V WindowManager: notifyAppResumed: wasStopped=tr
+ue AppWindowToken{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.hua
+wei.android.launcher/.unihome.UniHomeLauncher t1}}}
+11-08 13:26:28.328  1717  1895 I ActivityTaskManager: setAppStartingWindow: tok
+en=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome
+.UniHomeLauncher t1}} pkg=com.huawei.android.launcher transferFrom=null newTask
+=false taskSwitch=true processRunning=true allowTaskSnapshot=true activityCreat
+ed=true LowRamTaskSnapshots=false
+11-08 13:26:28.330  1717  1895 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.330  1717  1895 E ActivityTaskManager: START {act=android.intent
+.action.MAIN cat=[android.intent.category.HOME] flg=0x10400300 hwFlg=0x400010 c
+mp=com.huawei.android.launcher/.unihome.UniHomeLauncher (has extras)} result: 2
+11-08 13:26:28.332 14701 14701 D FirebaseSessions: App backgrounded on com.even
+tmarketplace.app
+11-08 13:26:28.336  1717  3402 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.337  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.eventmarketplace.app.MainActivity, flag = onPause, isHomeActivity = , isTop
+ = false
+11-08 13:26:28.338  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.339 27583 13423 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:28.341  1717  2441 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.347  1717  2337 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.351  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.353  2680  2680 I ActivityThread: Handle window ActivityRecord{3
+8cafba token=android.os.BinderProxy@2412bae {com.huawei.android.launcher/com.hu
+awei.android.launcher.unihome.UniHomeLauncher}} visibility: true
+11-08 13:26:28.358  1717  1897 V ActivityTaskManager: Stopping ActivityRecord{8
+3dc9c u0 com.eventmarketplace.app/.MainActivity t913}: nowVisible=false animati
+ng=true finishing=false
+11-08 13:26:28.364  1717  2337 I ActivityTaskManager: Stop interception for rec
+ently back-home app when launcher resumed
+11-08 13:26:28.364  2680  2680 I RtgSchedEvent: current pid:2680 AppType:28
+11-08 13:26:28.365  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.huawei.android.launcher.unihome.UniHomeLauncher, flag = onResume, isHomeAct
+ivity = , isTop = true
+11-08 13:26:28.366  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.369  1717  3088 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.371  1717  3088 I WindowManager: Changing focus from null to Win
+dow{f310e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.
+UniHomeLauncher} displayId=0 Callers=com.android.server.wm.RootWindowContainer.
+updateFocusedWindowLocked:209 com.android.server.wm.WindowManagerService.update
+FocusedWindowLocked:6517 com.android.server.wm.WindowManagerService.relayoutWin
+dow:2813 com.android.server.wm.Session.relayout:197 
+11-08 13:26:28.372  1717  3088 V HwPhoneWindowManager: updateSystemUiColorLw wi
+ndow=Window{f310e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.
+unihome.UniHomeLauncher},EmuiStyle=-1,StatusBarColor=0x0,NavigationBarColor=0x0
+, mForceNotchStatusBar=false
+11-08 13:26:28.380 27583 13430 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:28.382  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=false startingDisplayed=false sta
+rtingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.383  1717  1897 V ActivityTaskManager: Stopping ActivityRecord{8
+3dc9c u0 com.eventmarketplace.app/.MainActivity t913}: nowVisible=false animati
+ng=true finishing=false
+11-08 13:26:28.384  1717  1897 D WindowManager: setLauncherVisibleInFingerBoost
+ record=ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeL
+auncher t1}
+11-08 13:26:28.387  1717  1898 I WindowManager: New wallpaper target: Window{f3
+10e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHom
+eLauncher} prevTarget: null
+11-08 13:26:28.389  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: allDrawn=true startingDisplayed=false star
+tingMoved=false isRelaunching()=false startingWindow=null
+11-08 13:26:28.389  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SLAVE_TRAFFIC_FREE_APP_BACKGROUND
+11-08 13:26:28.389  1717  1898 D WindowManager: setActivityVisibleInFingerBoost
+Inner fit:true record:ActivityRecord{57f1789 u0 com.huawei.android.launcher/.un
+ihome.UniHomeLauncher t1} isInWallpaperEffect:false, callingPid: 1717
+11-08 13:26:28.390  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 13, app = AppWindowToken{26db22b token=Token{f5f6a7a Activi
+tyRecord{83dc9c u0 com.eventmarketplace.app/.MainActivity t913}}}, window = Win
+dow{b7d434d u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity},
+ mClosingApps = {AppWindowToken{26db22b token=Token{f5f6a7a ActivityRecord{83dc
+9c u0 com.eventmarketplace.app/.MainActivity t913}}}}, topOpeningApp = AppWindo
+wToken{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android
+.launcher/.unihome.UniHomeLauncher t1}}}, mExitIconBitmap = android.graphics.Bi
+tmap@e40f9d, mExitIconHeight = 180, mExitIconWidth = 180
+11-08 13:26:28.393  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{26db22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app
+/.MainActivity t913}}}: hidden=true hiddenRequested=true
+11-08 13:26:28.394  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 13, app = AppWindowToken{bb8a345 token=Token{d0d67bc Activi
+tyRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}}},
+ window = Window{f310e81 u0 com.huawei.android.launcher/com.huawei.android.laun
+cher.unihome.UniHomeLauncher}, mClosingApps = {AppWindowToken{26db22b token=Tok
+en{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app/.MainActivity t913
+}}}}, topOpeningApp = AppWindowToken{bb8a345 token=Token{d0d67bc ActivityRecord
+{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}}}, mExitIc
+onBitmap = android.graphics.Bitmap@e40f9d, mExitIconHeight = 180, mExitIconWidt
+h = 180
+11-08 13:26:28.394  1717  1898 I HwWindowManagerServiceEx: {AppWindowToken{26db
+22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app/.Main
+Activity t913}}}} is closing and {AppWindowToken{bb8a345 token=Token{d0d67bc Ac
+tivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1
+}}}}is opening
+11-08 13:26:28.394  1717  1898 I HwWindowManagerServiceEx: {AppWindowToken{26db
+22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app/.Main
+Activity t913}}}} is closing and {AppWindowToken{bb8a345 token=Token{d0d67bc Ac
+tivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1
+}}}}is opening
+11-08 13:26:28.396  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: hidden=false hiddenRequested=false
+11-08 13:26:28.408  1717  3402 V ActivityTaskManager: Activity idle: Token{d0d6
+7bc ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLaunc
+her t1}}
+11-08 13:26:28.409  1717  3402 V ActivityTaskManager: Stopping ActivityRecord{8
+3dc9c u0 com.eventmarketplace.app/.MainActivity t913}: nowVisible=false animati
+ng=true finishing=false
+11-08 13:26:28.417  1717  1897 D WindowManager: setLauncherVisibleInFingerBoost
+ record=ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeL
+auncher t1}
+11-08 13:26:28.418  1717  1897 I HwWindowManagerServiceEx: com.eventmarketplace
+.app/com.eventmarketplace.app.MainActivity blur level: -1
+11-08 13:26:28.418  1717  1897 I HwWindowManagerServiceEx: com.eventmarketplace
+.app blur level: -1
+11-08 13:26:28.472  1717  1895 D StatusBarManagerService: win:Window{f310e81 u0
+ com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLaunche
+r}mIsColorEnable:truelight:false
+11-08 13:26:28.473  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{f310e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.uniho
+me.UniHomeLauncher}
+11-08 13:26:28.504  2295  2295 I HwCtrlCtr:SlipSplashController: viewIsAdded:fa
+lse
+11-08 13:26:28.506  2295  2295 I vol.Events: writeEvent dismiss_dialog volume_c
+ontroller
+11-08 13:26:28.521  2573  2573 I ChannelQualityMonitor: eventReceiver ACTION_BA
+TTERY_CHANGED
+11-08 13:26:28.521  2573  2573 I ChannelQualityMonitor: eventReceiver handleBat
+teryEvent charg status = 4
+11-08 13:26:28.521  2573  2573 I ChannelQualityMonitor: eventReceiver handleBat
+teryEvent mPercentBattery = 82
+11-08 13:26:28.762  1717  1898 I WindowManager: Animation done in AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}} isHidden:false hiddenRequested:false
+11-08 13:26:28.784  1717  1898 I WindowManager: Animation done in AppWindowToke
+n{26db22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app
+/.MainActivity t913}}} isHidden:true hiddenRequested:true
+11-08 13:26:28.794  2606  3045 I HidataAppQoeP: foregroundUidRemove uid: 10468 
+name: com.eventmarketplace.app
+11-08 13:26:28.796  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:28.797  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:28.797  2606  3045 I SmartDualCardSM: onUidStateUpdate,uid=10468,ap
+pName=com.eventmarketplace.app,state=BACKGROUND
+11-08 13:26:28.801   773  1047 W BufferQueueProducer: [SurfaceView - com.eventm
+arketplace.app/com.eventmarketplace.app.MainActivity#0]:1390: disconnect: not c
+onnected (req=1)
+11-08 13:26:28.801  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:28.805   773  1047 W BufferQueueProducer: [com.eventmarketplace.app
+/com.eventmarketplace.app.MainActivity#0]:1390: disconnect: not connected (req=
+1)
+11-08 13:26:28.829  1717  3403 I WindowManager: notifyAppStopped: AppWindowToke
+n{26db22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app
+/.MainActivity t913}}}
+11-08 13:26:28.829  1717  3403 E WindowManager: win=Window{b7d434d u0 com.event
+marketplace.app/com.eventmarketplace.app.MainActivity} destroySurfaces: appStop
+ped=true win.mWindowRemovalAllowed=false win.mRemoveOnExit=false
+11-08 13:26:28.836  1016  1016 D ITouchService: itouch stylusCurrentPkgName = c
+om.eventmarketplace.app lastOneFramePkgName = 
+11-08 13:26:28.836  1016  1016 D ITouchService: itouch currentPackageName = com
+.eventmarketplace.app
+11-08 13:26:28.836  1016  1016 D ITouchService: itouch getCurrentParmID tempPkg
+=com.eventmarketplace.xxx
+11-08 13:26:28.836  1016  1016 D ITouchService: itouch:app com.eventmarketplace
+.app is  not game app
+11-08 13:26:28.836  1016  1016 D ITouchService: itouch:app com.eventmarketplace
+.app is  not in StylusPenList
+11-08 13:26:29.058  2680  2680 I InputTransport: Fun_filterMotionEvent reportMo
+veEvent!
+11-08 13:26:29.058  2404  2404 I InputTransport: Fun_filterMotionEvent reportMo
+veEvent!
+11-08 13:26:29.198  1717  1898 I WindowManager: dispatchResized : win = Window{
+f310e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniH
+omeLauncher} drawState = HAS_DRAWN
+11-08 13:26:29.198  1717  1898 I WindowManager: dispatchResized : win = Window{
+c57efe6 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniH
+omeLauncher} drawState = HAS_DRAWN
+11-08 13:26:29.616  2404  2404 I InputTransport: Fun_filterMotionEvent reportMo
+veEvent!
+11-08 13:26:29.616  2680  2680 I InputTransport: Fun_filterMotionEvent reportMo
+veEvent!
+11-08 13:26:29.917  1717  1897 I ActivityManager: Killing 14701:com.eventmarket
+place.app/u0a468 (adj 905): remove task
+11-08 13:26:29.958  1717  2121 I WindowManager: WINDOW DIED Window{b7d434d u0 c
+om.eventmarketplace.app/com.eventmarketplace.app.MainActivity}
+11-08 13:26:29.959  1717  2121 I WindowManager: removeIfPossible: Window{b7d434
+d u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity} callers=co
+m.android.server.wm.WindowState.removeIfPossible:2611 com.android.server.wm.Inp
+utManagerCallback.notifyInputChannelBroken:73 com.android.server.input.InputMan
+agerService.notifyInputChannelBroken:2107 <bottom of call stack> <bottom of cal
+l stack> 
+11-08 13:26:29.959  1717  2121 I WindowManager: postWindowRemoveCleanupLocked: 
+Window{b7d434d u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-08 13:26:29.959  1717  2121 I WindowManager: Removing Window{b7d434d u0 com.
+eventmarketplace.app/com.eventmarketplace.app.MainActivity} from AppWindowToken
+{26db22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app/
+.MainActivity t913}}}
+11-08 13:26:29.971  1717  2043 D ActivityManager: cleanUpApplicationRecord app:
+ 14701:com.eventmarketplace.app/u0a468, bad: false, restarting: false, allowRes
+tart: true
+11-08 13:26:29.974  1717  2043 I WindowManager: removeWindowToken: displayid:0 
+binder:Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app/.MainAct
+ivity t913 f}} token:AppWindowToken{26db22b token=Token{f5f6a7a ActivityRecord{
+83dc9c u0 com.eventmarketplace.app/.MainActivity t913}}}
+11-08 13:26:29.974  1717  2043 I WindowManager: Animation done in AppWindowToke
+n{26db22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app
+/.MainActivity t913}}} isHidden:true hiddenRequested:true
+11-08 13:26:29.975  1717  2043 V WindowManager: removeAppToken: AppWindowToken{
+26db22b token=Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app/.
+MainActivity t913}}} delayed=false Callers=com.android.server.wm.DisplayContent
+.removeAppToken:1334 com.android.server.wm.ActivityRecord.removeWindowContainer
+:1446 com.android.server.wm.ActivityStack.removeActivityFromHistoryLocked:5596 
+com.android.server.wm.ActivityStack.removeHistoryRecordsForAppLocked:6030 com.a
+ndroid.server.wm.ActivityStack.handleAppDiedLocked:6593 com.android.server.wm.R
+ootActivityContainer.handleAppDied:2300 com.android.server.wm.ActivityTaskManag
+erService$LocalService.handleAppDied:7954 com.android.server.am.ActivityManager
+Service.handleAppDiedLocked:3967 com.android.server.am.ActivityManagerService.a
+ppDiedLocked:4106 
+11-08 13:26:29.975  1717  2043 I WindowManager: removeWindowToken: displayid:0 
+binder:Token{f5f6a7a ActivityRecord{83dc9c u0 com.eventmarketplace.app/.MainAct
+ivity t913 f}} token:null
+11-08 13:26:30.167  1717 13459 I WindowManager: dispatchResized : win = Window{
+f310e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniH
+omeLauncher} drawState = HAS_DRAWN
+11-08 13:26:30.167  1717 13459 I WindowManager: dispatchResized : win = Window{
+c57efe6 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniH
+omeLauncher} drawState = HAS_DRAWN
+11-08 13:26:30.377  2680  2680 I RMS.HwSysResManager: preloadAppForLauncher pac
+kageName com.eventmarketplace.app preloadType 101
+11-08 13:26:30.377  1717  2082 I BigFontUtils: adjustAppProcessConfiguration ap
+pInfo:com.eventmarketplace.app
+11-08 13:26:30.393  1717  1950 I ActivityManager: Start proc 15031:com.eventmar
+ketplace.app/u0a468 for start application com.eventmarketplace.app
+11-08 13:26:30.431 15031 15031 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /data/app/com.even
+tmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/lib/arm64:/data/app/com.eventmarketpl
+ace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!/lib/arm64-v8a libraryPermittedPath: 
+/data/user/0/com.eventmarketplace.app parent: java.lang.BootClassLoader@d46cbfc
+ targetSdkVersion: 36 isBundled: false classLoaderName: null sharedLibraries: n
+ull
+11-08 13:26:30.435  1717 13459 I HwWindowManagerServiceEx: set launch origin an
+d target for: com.eventmarketplace.app with delay 3000
+11-08 13:26:30.435 15031 15031 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk librarySearch
+Path: /data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/lib/arm64:/da
+ta/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!/lib/arm64-v8
+a libraryPermittedPath: /data/user/0/com.eventmarketplace.app parent: java.lang
+.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false classLoaderName:
+ null sharedLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file "/s
+ystem/framework/org.apache.http.legacy.jar"],nativeLibraryDirectories=[/data/ap
+p/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/lib/arm64, /data/app/com.ev
+entmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!/lib/arm64-v8a, /system/li
+b64, /hw_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 13:26:30.437  1717  3309 I ActivityTaskManager: START u0 {act=android.int
+ent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 hwFlg=0x1
+0 cmp=com.eventmarketplace.app/.MainActivity bnds=[544,739][796,1034] (has extr
+as)} from uid 10092
+11-08 13:26:30.438  1717  3309 I ActivityTaskManager: ActivityRecord info: Acti
+vityInfo{3580e9 com.eventmarketplace.app.MainActivity}
+11-08 13:26:30.438  1717  3309 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=null activity=ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActi
+vity t-1} display-from-source=0 display-id=0 display-windowing-mode=1
+11-08 13:26:30.439  1717  3309 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=null activity=ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActi
+vity t-1} display-from-source=0 display-id=0 display-windowing-mode=1 activity-
+options-fullscreen=Rect(0, 0 - 0, 0) inherit-fullscreen non-freeform-display
+11-08 13:26:30.441  1717  3309 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=TaskRecord{ecc200f #914 I=com.eventmarketplace.app/.MainActivity U=0 Stack
+Id=894 sz=0} activity=ActivityRecord{145116e u0 com.eventmarketplace.app/.MainA
+ctivity t-1} display-from-task=0 display-id=0 display-windowing-mode=1 activity
+-options-fullscreen=Rect(0, 0 - 0, 0) inherit-fullscreen non-freeform-display
+11-08 13:26:30.443  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 350, userId=10468, pid=15031, com.eventmarketplace.app/.MainActivity
+11-08 13:26:30.444  1053  1089 D AwareLog: iawared: WorkingsetSendPrereadMsg co
+m.eventmarketplace.app/.MainActivity
+11-08 13:26:30.444  1717  3309 I WindowManager: addWindowToken: displayid:0 bin
+der:Token{948689c ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActiv
+ity t914}} token:AppWindowToken{85c42a5 token=Token{948689c ActivityRecord{1451
+16e u0 com.eventmarketplace.app/.MainActivity t914}}}
+11-08 13:26:30.444  1717  3309 V ActivityTaskManager: addAppToken: AppWindowTok
+en{85c42a5 token=Token{948689c ActivityRecord{145116e u0 com.eventmarketplace.a
+pp/.MainActivity t914}}} task={taskId=914 appTokens=[] mdr=false} at 2147483647
+11-08 13:26:30.445  1053  1089 D AwareLog: iawared: WorkingsetStart com.eventma
+rketplace.app/.MainActivity in monitor0
+11-08 13:26:30.445  1717  3309 I ActivityTaskManager: setAppStartingWindow: tok
+en=Token{948689c ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActivi
+ty t914}} pkg=com.eventmarketplace.app transferFrom=null newTask=true taskSwitc
+h=true processRunning=true allowTaskSnapshot=true activityCreated=false LowRamT
+askSnapshots=false
+11-08 13:26:30.446  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.eventmarketplace.app.MainActivity, flag = showStartingWindow, isHomeActivit
+y = , isTop = false
+11-08 13:26:30.449 27583 13420 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:30.452  1717  1898 I WindowManager: addWindow: Window{53f2f34 u0 Sp
+lash Screen com.eventmarketplace.app} client:android.view.ViewRootImpl$W@34e020
+7 currentDisplayId:0 requestDisplayId:0 token:Token{948689c ActivityRecord{1451
+16e u0 com.eventmarketplace.app/.MainActivity t914}}
+11-08 13:26:30.454  1717  2336 I ActivityTaskManager: Making visible and schedu
+ling visibility: ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActivi
+ty t914}
+11-08 13:26:30.456  1717  2336 W HwActivityTaskManagerServiceEx: appSwitch from
+: com.huawei.android.launcher to: com.eventmarketplace.app
+11-08 13:26:30.456  1717  2336 I WindowManager: Changing focus from Window{f310
+e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeL
+auncher} to null displayId=0 Callers=com.android.server.wm.RootWindowContainer.
+updateFocusedWindowLocked:209 com.android.server.wm.WindowManagerService.update
+FocusedWindowLocked:6517 com.android.server.wm.ActivityDisplay.setFocusedApp:16
+06 com.android.server.wm.ActivityTaskManagerService.setResumedActivityUncheckLo
+cked:6590 
+11-08 13:26:30.459 15031 15052 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.eventmarketplace.app#10468#256
+11-08 13:26:30.459  1717  1931 D HwGameAssistantController: UPDATE: mCurFgPkg=c
+om.eventmarketplace.app, mCurFgPid=15031, mIsCurGame=false
+11-08 13:26:30.459  1717  2336 I WindowManager: Check opening app=AppWindowToke
+n{85c42a5 token=Token{948689c ActivityRecord{145116e u0 com.eventmarketplace.ap
+p/.MainActivity t914}}}: allDrawn=false startingDisplayed=false startingMoved=f
+alse isRelaunching()=false startingWindow=Window{53f2f34 u0 Splash Screen com.e
+ventmarketplace.app}
+11-08 13:26:30.459 15031 15052 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.eventmarketplace.app#10468#0
+11-08 13:26:30.460  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.huawei.android.launcher.unihome.UniHomeLauncher, flag = onPause, isHomeActi
+vity = , isTop = false
+11-08 13:26:30.463 27583 13420 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:30.464  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{85c42a5 token=Token{948689c ActivityRecord{145116e u0 com.eventmarketplace.ap
+p/.MainActivity t914}}}: allDrawn=false startingDisplayed=false startingMoved=f
+alse isRelaunching()=false startingWindow=Window{53f2f34 u0 Splash Screen com.e
+ventmarketplace.app}
+11-08 13:26:30.467  1717  2336 I DE J DES: [effect] Pg pkg:com.eventmarketplace
+.app
+11-08 13:26:30.467  1717  1897 V ActivityTaskManager: Stopping ActivityRecord{5
+7f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}: nowVisible=
+false animating=true finishing=false
+11-08 13:26:30.472  1016  1016 D ITouchService: itouch stylusCurrentPkgName = c
+om.eventmarketplace.app lastOneFramePkgName = 
+11-08 13:26:30.472  1016  1016 D ITouchService: itouch currentPackageName = com
+.eventmarketplace.app
+11-08 13:26:30.472  1016  1016 D ITouchService: itouch getCurrentParmID tempPkg
+=com.eventmarketplace.xxx
+11-08 13:26:30.472  1016  1016 D ITouchService: itouch:app com.eventmarketplace
+.app is  not game app
+11-08 13:26:30.472  1016  1016 D ITouchService: itouch:app com.eventmarketplace
+.app is  not in StylusPenList
+11-08 13:26:30.474 15031 15052 I AwareBitmapCacher: init processName:com.eventm
+arketplace.app pid=15031 uid=10468
+11-08 13:26:30.475  1717  1898 I WindowManager: performshow Window{53f2f34 u0 S
+plash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=t
+rue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true des
+troying=false animating=true
+11-08 13:26:30.476  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{85c42a5 token=Token{948689c ActivityRecord{145116e u0 com.eventmarketplace.ap
+p/.MainActivity t914}}}: allDrawn=false startingDisplayed=true startingMoved=fa
+lse isRelaunching()=false startingWindow=Window{53f2f34 u0 Splash Screen com.ev
+entmarketplace.app}
+11-08 13:26:30.476  1717  1898 D RemoteAnimationController: createAnimationAdap
+ter(): token=AppWindowToken{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 
+u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}}}
+11-08 13:26:30.477  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: hidden=true hiddenRequested=true
+11-08 13:26:30.477  1717  1898 D RemoteAnimationController: createAnimationAdap
+ter(): token=AppWindowToken{85c42a5 token=Token{948689c ActivityRecord{145116e 
+u0 com.eventmarketplace.app/.MainActivity t914}}}
+11-08 13:26:30.478  1717  1898 D HwWindowManagerServiceEx: AnimationTurbo wms e
+nter setIconToLayer AppWindowToken{85c42a5 token=Token{948689c ActivityRecord{1
+45116e u0 com.eventmarketplace.app/.MainActivity t914}}} front:null back:null m
+EnterIconBitmap android.graphics.Bitmap@eb37659
+11-08 13:26:30.478  1717  1898 D HwWindowManagerServiceEx: AnimationTurbo wms t
+ok appComponentName: com.eventmarketplace.app/.MainActivity, appPackageName: co
+m.eventmarketplace.app, appProcessName: com.eventmarketplace.app
+11-08 13:26:30.479  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{85c42a5 token=Token{948689c ActivityRecord{145116e u0 com.eventmarketplace.ap
+p/.MainActivity t914}}}: hidden=false hiddenRequested=false
+11-08 13:26:30.480  1717  1898 I WindowManager: dispatchResized : win = Window{
+53f2f34 u0 Splash Screen com.eventmarketplace.app} drawState = HAS_DRAWN
+11-08 13:26:30.483  7239  7239 W DisplayEventDispatcher: dispatcher 0x7d7df686c
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.483 16628 16628 W DisplayEventDispatcher: dispatcher 0x7d7df6854
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.483 27583 27583 W DisplayEventDispatcher: dispatcher 0x7d66661fc
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.484   671   671 W DisplayEventDispatcher: dispatcher 0x7d7df684e
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.484 13901 13901 W DisplayEventDispatcher: dispatcher 0x7d7df6920
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.484  2404  2404 W DisplayEventDispatcher: dispatcher 0x7d7df697a
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.484 12114 12114 W DisplayEventDispatcher: dispatcher 0x7d7df68d2
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.484 12945 12945 W DisplayEventDispatcher: dispatcher 0x7d7df68c6
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.484  2663  8197 W DisplayEventDispatcher: dispatcher 0x7d7df6866
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.484  2295  2295 W DisplayEventDispatcher: dispatcher 0x7d7df68a8
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.486  2680  2680 W DisplayEventDispatcher: dispatcher 0x7d7df6b9c
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:30.488  1717  1897 I WindowManager: Set home app runningRemoteAnima
+tion state: true
+11-08 13:26:30.490  1717  1895 D StatusBarManagerService: win:Window{53f2f34 u0
+ Splash Screen com.eventmarketplace.app}mIsColorEnable:truelight:false
+11-08 13:26:30.490  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{53f2f34 u0 Splash Screen com.eventmarketplace.app}
+11-08 13:26:30.505 15031 15031 I FirebaseCrashlytics: Initializing Firebase Cra
+shlytics 20.0.3 for com.eventmarketplace.app
+11-08 13:26:30.549  1717 13459 D ActivityManager: finishBindApplication preload
+Status: 0 app: ProcessRecord{8bc522 15031:com.eventmarketplace.app/u0a468} uidR
+ec.isPreload: false
+11-08 13:26:30.550 15031 15031 I RtgSchedEvent: current pid:15031 AppType:-1
+11-08 13:26:30.558 15031 15091 I OpenGLRenderer: RenderThread: progress name = 
+[com.eventmarketplace.app], viewCornerType = 0
+11-08 13:26:30.562 15031 15095 I iGraphics: [0020080c] pn: com.eventmarketplace
+.app, p: 15031
+11-08 13:26:30.562 15031 15095 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-08 13:26:30.570   763   795 D ACCKIT_ : pack:"com.eventmarketplace.app"
+11-08 13:26:30.584 15031 15070 W marketplace.ap: ClassLoaderContext type mismat
+ch. expected=PCL, found=DLC (PCL[] | DLC[];PCL[/data/app/com.eventmarketplace.a
+pp-3EbspRhhsS2KVccDNAbCgQ==/base.apk*4294104142:/data/app/com.eventmarketplace.
+app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes2.dex*4058574641:/data/app/com.eve
+ntmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes3.dex*2202636624:/da
+ta/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes4.dex*
+1275683855:/data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk
+!classes5.dex*132056317:/data/app/com.eventmarketplace.app-3EbspRhhsS2KVccDNAbC
+gQ==/base.apk!classes6.dex*1477928350:/data/app/com.eventmarketplace.app-3EbspR
+hhsS2KVccDNAbCgQ==/base.apk!classes7.dex*773864432:/data/app/com.eventmarketpla
+ce.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes8.dex*462866192:/data/app/com.e
+ventmarketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes9.dex*1232794202]{
+PCL[/system/framework/org.apache.http.legacy.jar*4017483120]})
+11-08 13:26:30.585 15031 15070 W marketplace.ap: Found duplicated class when ch
+ecking oat files: 'Landroid/app/AppComponentFactory;' in /data/app/com.eventmar
+ketplace.app-3EbspRhhsS2KVccDNAbCgQ==/base.apk!classes2.dex and /data/user_de/0
+/com.google.android.gms/app_chimera/m/0000003e/MeasurementDynamite.uncompressed
+.apk
+11-08 13:26:30.609 15031 15031 D com.llfbandit.app_links: Intent { act=android.
+intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=co
+m.eventmarketplace.app/.MainActivity bnds=[544,739][796,1034] (has extras) }
+11-08 13:26:30.653  7488 26773 I PhenotypeResourceReader: unable to find any Ph
+enotype resource metadata for com.eventmarketplace.app
+11-08 13:26:30.692 15031 15123 I FA      : To enable faster debug mode event lo
+gging run:
+11-08 13:26:30.692 15031 15123 I FA      :   adb shell setprop debug.firebase.a
+nalytics.app com.eventmarketplace.app
+11-08 13:26:30.791 15031 15031 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:0 new windoMode:1, isFixedSize:false
+11-08 13:26:30.793 15031 15031 D ActivityThread: add activity client record, r=
+ ActivityRecord{786b757 token=android.os.BinderProxy@9fa8e68 {com.eventmarketpl
+ace.app/com.eventmarketplace.app.MainActivity}} token= android.os.BinderProxy@9
+fa8e68
+11-08 13:26:30.803 15031 15031 D FirebaseSessions: App foregrounded on com.even
+tmarketplace.app
+11-08 13:26:30.803 15031 15031 D FirebaseSessions: Process com.eventmarketplace
+.app is stale
+11-08 13:26:30.806 15031 15083 D FirebaseSessions: Process com.eventmarketplace
+.app is stale
+11-08 13:26:30.810 15031 15031 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:30.811 15031 15081 D FirebaseSessions: Session Event Type: SESSION_
+START
+11-08 13:26:30.811 15031 15081 D FirebaseSessions: Successfully logged Session 
+Start event.
+11-08 13:26:30.812  1717  2042 I WindowManager: addWindow: Window{d42b625 u0 co
+m.eventmarketplace.app/com.eventmarketplace.app.MainActivity} client:android.os
+.BinderProxy@bba7a1c currentDisplayId:0 requestDisplayId:0 token:Token{948689c 
+ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActivity t914}}
+11-08 13:26:30.813 15031 15031 D InputEventReceiver: dispatchInputInterval 1000
+000
+11-08 13:26:30.816  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.eventmarketplace.app.MainActivity, flag = onResume, isHomeActivity = , isTo
+p = true
+11-08 13:26:30.816 15031 15031 I RtgSchedEvent: current pid:15031 AppType:-1
+11-08 13:26:30.818 15031 15031 I flutter : APP: APP: BUILD OK v5.18-ultimate-ui
+-theme
+11-08 13:26:30.818  4659 31771 I CAWARENESS_AppUsageManager: onEvent, packageNa
+me=com.eventmarketplace.app, activityName=com.eventmarketplace.app.MainActivity
+11-08 13:26:30.820 27583 13423 I HiAdKit.DC.PageSwitchEvent:  switch is off
+11-08 13:26:30.830 15031 15162 D HiTouch_PressGestureDetector: onAttached, pack
+age=com.eventmarketplace.app, windowType=1, mIsHiTouchRestricted=true
+11-08 13:26:30.832  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:30.833  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:30.833  2606  3045 I SmartDualCardSM: onUidStateUpdate,uid=10468,ap
+pName=com.eventmarketplace.app,state=FOREGROUND
+11-08 13:26:30.834  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:30.836  1717  2042 I WindowManager: Changing focus from null to Win
+dow{d42b625 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity} 
+displayId=0 Callers=com.android.server.wm.RootWindowContainer.updateFocusedWind
+owLocked:209 com.android.server.wm.WindowManagerService.updateFocusedWindowLock
+ed:6517 com.android.server.wm.WindowManagerService.relayoutWindow:2813 com.andr
+oid.server.wm.Session.relayout:197 
+11-08 13:26:30.837  1717  2042 V HwPhoneWindowManager: updateSystemUiColorLw wi
+ndow=Window{d42b625 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainAc
+tivity},EmuiStyle=0,StatusBarColor=0x40000000,NavigationBarColor=0xfffcfcfc, mF
+orceNotchStatusBar=false
+11-08 13:26:30.838  1717  1895 D StatusBarManagerService: win:Window{d42b625 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:false
+11-08 13:26:30.838  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{d42b625 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-08 13:26:30.855  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+APP_MOVE_FOREGROUND
+11-08 13:26:30.856  2606  3045 I SmartDualCardConfig: getAppType,pkgName=com.ev
+entmarketplace.app,appType=-1
+11-08 13:26:30.858  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SLAVE_TRAFFIC_FREE_APP_BACKGROUND
+11-08 13:26:30.870   773  1714 W BufferQueueProducer: [SurfaceView - com.eventm
+arketplace.app/com.eventmarketplace.app.MainActivity#0]:1390: disconnect: not c
+onnected (req=1)
+11-08 13:26:30.876  1717 13459 I WindowManager: dispatchResized : win = Window{
+d42b625 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity} draw
+State = DRAW_PENDING
+11-08 13:26:30.881  7239  7239 D InputEventReceiver: dispatchInputInterval 1000
+000
+11-08 13:26:30.883  1717  2042 I WindowManager: Animation done in AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}} isHidden:true hiddenRequested:true
+11-08 13:26:30.884  1717  2042 V ActivityTaskManager: Stopping ActivityRecord{5
+7f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}: nowVisible=
+false animating=true finishing=false
+11-08 13:26:30.884  1717  1898 I WindowManager: New wallpaper target: null prev
+Target: Window{f310e81 u0 com.huawei.android.launcher/com.huawei.android.launch
+er.unihome.UniHomeLauncher}
+11-08 13:26:30.889  1717  1897 D WindowManager: setLauncherVisibleInFingerBoost
+ record=ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeL
+auncher t1}
+11-08 13:26:30.891  1717  1897 I WindowManager: Set home app runningRemoteAnima
+tion state: false
+11-08 13:26:30.891  1717  1897 I WindowManager: Animation done in AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}} isHidden:true hiddenRequested:true
+11-08 13:26:30.897   773  1571 W BufferQueueProducer: [com.huawei.android.launc
+her/com.huawei.android.launcher.unihome.UniHomeLauncher#0]:1390: disconnect: no
+t connected (req=1)
+11-08 13:26:30.913 15031 15031 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:30.915  1717  1895 D StatusBarManagerService: win:Window{d42b625 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:false
+11-08 13:26:30.915  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{d42b625 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-08 13:26:30.916   773  3693 W BufferQueueProducer: [com.huawei.android.launc
+her/com.huawei.android.launcher.unihome.UniHomeLauncher#1]:1390: disconnect: no
+t connected (req=1)
+11-08 13:26:31.066 15031 15031 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:31.070  1016  1016 I AGPService: aps-info: focus pkgName - com.even
+tmarketplace.app, with 0 more apps
+11-08 13:26:31.071  1016  1016 I AGPService: FrameRateManager: aps-info: new pk
+gName - com.eventmarketplace.app, type - -1
+11-08 13:26:31.071  1016  1016 I AGPService: GpuPolicyManager: m_currentPkgName
+ - com.eventmarketplace.app
+11-08 13:26:31.094  1717  3309 V ActivityTaskManager: Activity idle: Token{9486
+89c ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActivity t914}}
+11-08 13:26:31.096  1717  1898 I WindowManager: removeIfPossible: Window{53f2f3
+4 u0 Splash Screen com.eventmarketplace.app} callers=com.android.server.wm.Wind
+owState.removeIfPossible:2611 com.android.server.wm.WindowManagerService.remove
+Window:2282 com.android.server.wm.Session.remove:179 android.view.ViewRootImpl.
+dispatchDetachedFromWindow:4929 android.view.ViewRootImpl.doDie:8273 
+11-08 13:26:31.097  1717  1898 I WindowManager: Not removing Window{53f2f34 u0 
+Splash Screen com.eventmarketplace.app EXITING} due to exit animation 
+11-08 13:26:31.112  1717  3309 I WindowManager: notifyAppStopped: AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}
+11-08 13:26:31.112  1717  3309 E WindowManager: win=Window{c57efe6 u0 com.huawe
+i.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher} destroy
+Surfaces: appStopped=true win.mWindowRemovalAllowed=false win.mRemoveOnExit=fal
+se
+11-08 13:26:31.112  1717  3309 E WindowManager: win=Window{f310e81 u0 com.huawe
+i.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher} destroy
+Surfaces: appStopped=true win.mWindowRemovalAllowed=false win.mRemoveOnExit=fal
+se
+11-08 13:26:31.211  1717  1898 I WindowManager: Exit animation finished in Wind
+ow{53f2f34 u0 Splash Screen com.eventmarketplace.app EXITING}: remove=true
+11-08 13:26:31.211  1717  1898 E WindowManager: win=Window{53f2f34 u0 Splash Sc
+reen com.eventmarketplace.app EXITING} destroySurfaces: appStopped=false win.mW
+indowRemovalAllowed=true win.mRemoveOnExit=true
+11-08 13:26:31.212  1717  1898 I WindowManager: postWindowRemoveCleanupLocked: 
+Window{53f2f34 u0 Splash Screen com.eventmarketplace.app}
+11-08 13:26:31.212  1717  1898 I WindowManager: Removing Window{53f2f34 u0 Spla
+sh Screen com.eventmarketplace.app} from AppWindowToken{85c42a5 token=Token{948
+689c ActivityRecord{145116e u0 com.eventmarketplace.app/.MainActivity t914}}}
+11-08 13:26:31.212  1717  1895 D StatusBarManagerService: win:Window{d42b625 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:true
+11-08 13:26:31.212  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{d42b625 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-08 13:26:31.570  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 351, userId=10468, pid=15031, com.eventmarketplace.app/.MainActivity
+11-08 13:26:31.571  1053  1089 D AwareLog: iawared: WorkingsetPause com.eventma
+rketplace.app/.MainActivity
+11-08 13:26:31.791 11238 11238 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.feedback.internal.IFeedbackService dat=chimera-action: cmp=com.
+google.android.gms/.chimera.GmsBoundBrokerService }
+11-08 13:26:32.016 15031 15031 I flutter : APP: HOME_LOADED
+11-08 13:26:32.030 15031 15031 I flutter : APP: HOME_LOADED
+11-08 13:26:32.328 15031 15031 I DecorView[]: pkgName:com.eventmarketplace.app 
+old windowMode:1 new windoMode:1, isFixedSize:false
+11-08 13:26:32.330  1717  1895 D StatusBarManagerService: win:Window{d42b625 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:false
+11-08 13:26:32.330  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{d42b625 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-08 13:26:32.576  1717  2142 I QosMonitor: postEventFromNative: msg=100,arg1=
+4,arg2=10
+11-08 13:26:32.576  1717  2142 I QosMonitor: postEventFromNative: msg=100,arg1=
+0,arg2=10
+11-08 13:26:32.823  2606  3045 D ConnCureConfigUtil: isCaredApp: input = com.ev
+entmarketplace.app
+11-08 13:26:33.126  2641  3596 I PGServer: report state:6 event type:1 pid:0 ui
+d:10190 pkg:com.google.android.videos to pid: 1717
+11-08 13:26:33.126  2641  3596 I PGServer: report state:100 event type:1 pid:0 
+uid:10190 pkg:14329 to pid: 1717
+11-08 13:26:33.136  2641  3596 I PGServer: report state:6 event type:1 pid:0 ui
+d:10181 pkg:com.google.android.gm to pid: 1717
+11-08 13:26:33.136  2641  3596 I PGServer: report state:100 event type:1 pid:0 
+uid:10181 pkg:12568 to pid: 1717
+11-08 13:26:33.146  2641  3596 I PGServer: report state:6 event type:1 pid:0 ui
+d:10182 pkg:com.google.android.apps.docs to pid: 1717
+11-08 13:26:33.146  2641  3596 I PGServer: report state:100 event type:1 pid:0 
+uid:10182 pkg:12545 to pid: 1717
+11-08 13:26:33.449  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+UMTS_RSCP_CHANGED
+11-08 13:26:33.484  1717  1897 W DisplayEventDispatcher: dispatcher 0x7d710b860
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  1717  1961 W DisplayEventDispatcher: dispatcher 0x7d710ba34
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  1717  2114 W DisplayEventDispatcher: dispatcher 0x7d710b9fe
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  1717  1897 W DisplayEventDispatcher: dispatcher 0x7d710b866
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  2295  2295 W DisplayEventDispatcher: dispatcher 0x7d7df68a8
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  2404  2404 W DisplayEventDispatcher: dispatcher 0x7d7df697a
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  2680  2680 W DisplayEventDispatcher: dispatcher 0x7d7df6b9c
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  1717  1895 W DisplayEventDispatcher: dispatcher 0x7d710bae8
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  1717  1968 W DisplayEventDispatcher: dispatcher 0x7cecf8080
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  2663  8197 W DisplayEventDispatcher: dispatcher 0x7d7df6866
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484  1717  1898 W DisplayEventDispatcher: dispatcher 0x7cdbe81b2
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.484 16628 16628 W DisplayEventDispatcher: dispatcher 0x7d7df6854
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.485  7239  7239 W DisplayEventDispatcher: dispatcher 0x7d7df686c
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.485 15031 15031 W DisplayEventDispatcher: dispatcher 0x7d7df6878
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.485 15031 15031 W DisplayEventDispatcher: dispatcher 0x7ce0bd084
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.485 27583 27583 W DisplayEventDispatcher: dispatcher 0x7d66661fc
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.485   671   671 W DisplayEventDispatcher: dispatcher 0x7d7df684e
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.485 12114 12114 W DisplayEventDispatcher: dispatcher 0x7d7df68d2
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.485 12945 12945 W DisplayEventDispatcher: dispatcher 0x7d7df68c6
+0 ~ ignoring unknown event type 0x736f6674
+11-08 13:26:33.499  1717  2121 W ServiceManager: Permission failure: com.huawei
+.permission.MONITOR_POINTER_EVENT from uid=10468 pid=15031
+11-08 13:26:33.499  1717  2121 D PermissionCache: checking com.huawei.permissio
+n.MONITOR_POINTER_EVENT for uid=10468 => denied (260 us)
+11-08 13:26:33.499  1717  2121 I InputDispatcher: stylus touch down, set lcd ev
+ent 1
+11-08 13:26:33.499  1717  2121 I InputDispatcher: stylus touch down, set lcd ev
+ent 1
+11-08 13:26:33.501 15031 15031 I Hwaps   : APS: EventAnalyzed: initAPS: version
+ is 11.0.0.4
+11-08 13:26:33.506 15031 15031 D Hwaps   : APS: EventAnalyzed: reInitFpsPara :m
+BaseFps = 60; mMaxFps = 60
+11-08 13:26:33.548  1717  2121 I InputDispatcher: stylus touch up, set lcd even
+t 0
+11-08 13:26:33.548  1717  2121 I InputDispatcher: stylus touch up, set lcd even
+t 0
+11-08 13:26:33.551  1717  3309 I HwApsManagerConfig: registerCallbackLocked suc
+cess, pkgName:com.eventmarketplace.app, callback_count:27
+11-08 13:26:33.551  1717  3309 I HwApsManagerConfig: doCallbackAtFirstRegisterL
+ocked, start ! pkgName:com.eventmarketplace.app
+11-08 13:26:33.551 15031 15031 D Hwaps   : APS: EventAnalyzed: registerCallback
+InApsManagerService, mPkgName:com.eventmarketplace.app; result = true
+11-08 13:26:34.466  1717  2121 I InputDispatcher: stylus touch down, set lcd ev
+ent 1
+11-08 13:26:34.466  1717  2121 I InputDispatcher: stylus touch down, set lcd ev
+ent 1
+11-08 13:26:34.531  1717  2121 I InputDispatcher: stylus touch up, set lcd even
+t 0
+11-08 13:26:34.532  1717  2121 I InputDispatcher: stylus touch up, set lcd even
+t 0
+11-08 13:26:34.533 15031 15031 I flutter : APP: NAVBAR_TAP:feed
+
+

@@ -1,0 +1,10 @@
+﻿
+11-06 23:50:47.761 31997 31997 I flutter : APP: APP: GOOGLE FIX FLOW STARTED
+11-06 23:50:47.762 31997 31997 I flutter : APP: GOOGLE_JSON_NOT_FOUND:checked:a
+ndroid/app/google-services.json,../android/app/google-services.json,../../andro
+id/app/google-services.json
+11-06 23:50:52.661 31997 31997 I flutter : APP: APP: BUILD OK v5.12-full-fix
+11-06 23:50:52.662 31997 31997 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+
+

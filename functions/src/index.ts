@@ -13,3 +13,9 @@ export {
 
 // Экспорт cron функции
 export { recomputeScores } from './computeScores';
+
+// Экспорт wipe функции
+export { wipeTestUser } from './wipeTestUser';
+
+// Экспорт cleanup stories
+export { cleanupExpiredStories } from './cleanupStories';

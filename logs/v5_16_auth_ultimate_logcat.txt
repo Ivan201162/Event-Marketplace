@@ -1,0 +1,260 @@
+﻿
+11-08 01:34:41.979  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:35:41.980  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:36:41.981  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:37:41.983  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:38:41.984  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:39:41.985  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:40:18.505 25613 25613 V ActivityThread: callActivityOnCreate
+11-08 01:40:41.986  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:41:41.987  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:42:41.988  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:43:41.990  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:44:41.991  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:45:41.992  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:46:41.993  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:46:51.713 25613 25613 V ActivityThread: callActivityOnCreate
+11-08 01:47:41.994  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:48:41.995  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:49:41.997  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:50:41.998  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:51:41.999  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:52:42.000  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:53:08.888 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.securitycentersdk.Securit
+yCenterContext.startHwSecService:3 com.huawei.securitycentersdk.SecurityCenterC
+ontext.inject:4 com.huawei.systemmanager.SystemManagerApplication.onCreate:43 
+11-08 01:53:08.936 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:92 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:08.938 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:93 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:08.940 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:98 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:08.941 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:99 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:08.942 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:100 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:08.943 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:101 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:08.944 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:102 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:08.945 18533 18533 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:107 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 01:53:09.215 18601 18601 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.securitycentersdk.Securit
+yCenterContext.startHwSecService:3 com.huawei.securitycentersdk.SecurityCenterC
+ontext.inject:4 com.huawei.systemmanager.SystemManagerApplication.onCreate:43 
+11-08 01:53:20.623 18963 18963 V ActivityThread: callActivityOnCreate
+11-08 01:53:20.870 18469 18489 I HwGameAssistant-11.3.2.300-GameDataUtil: getIn
+stallAppList of white app:com.epicgames.portal
+11-08 01:53:21.059 18963 19016 E FirebaseInstanceId: 	at com.google.firebase.in
+stallations.remote.FirebaseInstallationServiceClient.createFirebaseInstallation
+(FirebaseInstallationServiceClient.java:208)
+11-08 01:53:21.059 18963 19016 E FirebaseInstanceId: 	at com.google.firebase.in
+stallations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-f
+irebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-08 01:53:21.059 18963 19023 W FirebaseSessions: 	at com.google.firebase.inst
+allations.remote.FirebaseInstallationServiceClient.createFirebaseInstallation(F
+irebaseInstallationServiceClient.java:208)
+11-08 01:53:21.059 18963 19023 W FirebaseSessions: 	at com.google.firebase.inst
+allations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fir
+ebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-08 01:53:21.149 18963 18963 I flutter : APP: APP: BUILD OK v5.16-auth-ultima
+te
+11-08 01:53:21.315 18963 19023 W FirebaseSessions: 	at com.google.firebase.inst
+allations.remote.FirebaseInstallationServiceClient.createFirebaseInstallation(F
+irebaseInstallationServiceClient.java:208)
+11-08 01:53:21.315 18963 19023 W FirebaseSessions: 	at com.google.firebase.inst
+allations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fir
+ebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-08 01:53:21.587 18963 19004 W FirebaseSessions: 	at com.google.firebase.inst
+allations.remote.FirebaseInstallationServiceClient.createFirebaseInstallation(F
+irebaseInstallationServiceClient.java:208)
+11-08 01:53:21.587 18963 19004 W FirebaseSessions: 	at com.google.firebase.inst
+allations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fir
+ebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-08 01:53:22.022 18963 18963 I flutter : APP: GOOGLE_JSON_CHECK:not_found
+11-08 01:53:22.052 11238 17766 D AdvertisingIdClient: AdvertisingIdClient alrea
+dy created.
+11-08 01:53:22.062 18963 18963 I flutter : APP: GOOGLE_INIT: [DEFAULT]
+11-08 01:53:22.062 18963 18963 I flutter : APP: GOOGLE_SIGNIN_READY:initialized
+11-08 01:53:23.741 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:24.055 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:24.317 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:24.633 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:24.905 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:25.168 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:25.438 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:25.743 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:25.994 17643 18942 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:26.257 18963 18963 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+11-08 01:53:26.257 18963 18963 I flutter : APP: WEB_CLIENT_ID:1:272201705683:an
+droid:0196de78aaeb970ef80c26
+11-08 01:53:26.257 18963 18963 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyC
+HEJy7WBr5eQrcyuRhh_hSfih4
+11-08 01:53:26.296 18963 18963 I flutter : APP: AUTH_SCREEN_SHOWN
+11-08 01:53:26.312 18963 18963 I flutter : APP: AUTH_SCREEN_SHOWN
+11-08 01:53:26.380  2680  2958 E AbilityFormViewRefreshUtils: stopListening [0m
+s]
+11-08 01:53:26.417  1082  1302 W ScreemCommon: START_APP: JL_APP_LAUNCHING_END 
+and JL_APP_LAUNCHING_BEGIN too long| span:5929 > C(5000), C
+11-08 01:53:26.418  1082  1302 D iMonitor: create: 902000003
+11-08 01:53:26.422 17643 18849 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:26.439  1717  2042 I HwPackageManagerService: app:system_server, ge
+tApplicationInfo or source return null
+11-08 01:53:26.440  1717  2042 I HwPackageManagerService: app:surfaceflinger, g
+etApplicationInfo or source return null
+11-08 01:53:26.639 11238 18520 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mu: Exception in CronetUrlRequest: net:
+:ERR_QUIC_PROTOCOL_ERROR, ErrorCode=10, InternalErrorCode=-356, Retryable=false
+, QuicDetailedErrorCode=25, Source=2
+11-08 01:53:26.726 17643 18849 I SecurityComp10105310: SecureSSLSocketFactoryNe
+w: createSocket s host port autoClose
+11-08 01:53:28.959 11238 15584 W GetGamesServiceReqFacto: Parsing request with 
+ignored arguments. signInOptionsBundle [Bundle[{com.google.android.gms.signin.i
+nternal.serverClientId=null, com.google.android.gms.signin.internal.usePromptMo
+deForAuthCode=true, com.google.android.gms.signin.internal.logSessionId=null, c
+om.google.android.gms.signin.internal.hostedDomain=null, com.google.android.gms
+.signin.internal.offlineAccessRequested=false, com.google.android.gms.signin.in
+ternal.waitForAccessTokenRefresh=false, com.google.android.gms.signin.internal.
+clientRequestedAccount=Account {name=XXXXXXXXX, type=com.google}, com.google.an
+droid.gms.signin.internal.idTokenRequested=false, com.google.android.gms.signin
+.internal.forceCodeForRefreshToken=false}]], isRetryingSignIn [false], skipWelc
+omePopup [false], requireGooglePlus [false]
+11-08 01:53:36.644 11238 18520 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mu: Exception in CronetUrlRequest: net:
+:ERR_QUIC_PROTOCOL_ERROR, ErrorCode=10, InternalErrorCode=-356, Retryable=false
+, QuicDetailedErrorCode=25, Source=2
+11-08 01:53:42.001  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 01:53:46.295  7488  7952 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.android.vending, Service: oauth2:https://www.googleapis
+.com/auth/googleplay
+11-08 01:53:51.263  7488  7447 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.android.vending, Service: oauth2:https://www.googleapis
+.com/auth/googleplay
+11-08 01:53:52.606  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-08 01:53:56.556 18963 19398 E FirebaseInstanceId: 	at com.google.firebase.in
+stallations.remote.FirebaseInstallationServiceClient.createFirebaseInstallation
+(FirebaseInstallationServiceClient.java:208)
+11-08 01:53:56.556 18963 19398 E FirebaseInstanceId: 	at com.google.firebase.in
+stallations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-f
+irebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-08 01:53:58.644  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1105099
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22917 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-08 01:53:58.647  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-08 01:54:04.672  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1105100
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22917 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-08 01:54:04.676  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-08 01:54:10.240 27583 19416 I NetworkKit_DNResolverManager: RemoteCfg -->Net
+workKit_restclient_request_57|DNResolverManager.java|com.huawei.hms.framework.n
+etwork.restclient.hwhttp.dns.dnresolver.DNResolverManager|queryHostSync|99|conf
+igserver-drru.platform.dbankcloud.ru result is: DnsResult{type='A', addressList
+=[Address{type='A', value='159.138.204.237', ttl=600000}, Address{type='A', val
+ue='159.138.203.169', ttl=600000}, Address{type='A', value='159.138.200.171', t
+tl=600000}], createTime=1762541650226, source=4}
+11-08 01:54:10.415 27583 19416 I SecurityComp10105308: b: createSocket s host p
+ort autoClose
+11-08 01:54:10.476 27583 19416 I NetworkKit_DNResolverManager: RemoteCfg -->Net
+workKit_restclient_request_57|DNResolverManager.java|com.huawei.hms.framework.n
+etwork.restclient.hwhttp.dns.dnresolver.DNResolverManager|queryHostSync|99|conf
+igserver-drru.platform.dbankcloud.ru result is: DnsResult{type='A', addressList
+=[Address{type='A', value='159.138.204.237', ttl=600000}, Address{type='A', val
+ue='159.138.203.169', ttl=600000}, Address{type='A', value='159.138.200.171', t
+tl=600000}], createTime=1762541650474, source=4}
+11-08 01:54:10.543 27583 19416 I SecurityComp10105308: b: createSocket s host p
+ort autoClose
+11-08 01:54:10.602 27583 19416 I NetworkKit_DNResolverManager: RemoteCfg -->Net
+workKit_restclient_request_57|DNResolverManager.java|com.huawei.hms.framework.n
+etwork.restclient.hwhttp.dns.dnresolver.DNResolverManager|queryHostSync|99|conf
+igserver-drru.platform.dbankcloud.ru result is: DnsResult{type='A', addressList
+=[Address{type='A', value='159.138.204.237', ttl=600000}, Address{type='A', val
+ue='159.138.203.169', ttl=600000}, Address{type='A', value='159.138.200.171', t
+tl=600000}], createTime=1762541650595, source=4}
+11-08 01:54:10.668 27583 19416 I SecurityComp10105308: b: createSocket s host p
+ort autoClose
+11-08 01:54:10.712  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1105103
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22917 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-08 01:54:10.714  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-08 01:54:16.752  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1105104
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22917 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-08 01:54:16.754  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-08 01:54:16.853  2550  2830 D iMonitor: create: 909003002
+11-08 01:54:16.854  2550  2830 D iMonitor: create: 909003002
+11-08 01:54:22.768  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1105105
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22917 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-08 01:54:22.773  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+
+

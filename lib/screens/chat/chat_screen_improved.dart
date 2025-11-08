@@ -1,19 +1,30 @@
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Упрощенный экран чата
-class ChatScreenImproved extends ConsumerWidget {
-
+class ChatScreenImproved extends ConsumerStatefulWidget {
   const ChatScreenImproved({
     required this.chatId, super.key,
   });
   final String chatId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChatScreenImproved> createState() => _ChatScreenImprovedState();
+}
+
+class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
+  @override
+  void initState() {
+    super.initState();
+    debugLog("CHAT_OPENED:${widget.chatId}");
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Чат $chatId'),
+        title: Text('Чат ${widget.chatId}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert),

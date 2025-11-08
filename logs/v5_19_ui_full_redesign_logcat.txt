@@ -1,0 +1,29 @@
+﻿
+11-08 15:50:32.453 21825 21825 I flutter : APP: APP: BUILD OK v5.19-ui-full-red
+esign
+11-08 15:50:34.729 21825 21825 I flutter : APP: SPLASH: Firebase init start
+11-08 15:50:34.729 21825 21825 I flutter : APP: SPLASH: Firebase already initia
+lized
+11-08 15:50:34.730 21825 21825 I flutter : APP: SPLASH: Auth state resolved
+11-08 15:50:34.813  1717  1898 I WindowManager: removeIfPossible: Window{840ac3
+c u0 Splash Screen com.eventmarketplace.app} callers=com.android.server.wm.Wind
+owState.removeIfPossible:2611 com.android.server.wm.WindowManagerService.remove
+Window:2282 com.android.server.wm.Session.remove:179 android.view.ViewRootImpl.
+dispatchDetachedFromWindow:4929 android.view.ViewRootImpl.doDie:8273 
+11-08 15:50:34.816  1717  1898 I WindowManager: Not removing Window{840ac3c u0 
+Splash Screen com.eventmarketplace.app EXITING} due to exit animation 
+11-08 15:50:34.930  1717  1898 I WindowManager: Exit animation finished in Wind
+ow{840ac3c u0 Splash Screen com.eventmarketplace.app EXITING}: remove=true
+11-08 15:50:34.930  1717  1898 E WindowManager: win=Window{840ac3c u0 Splash Sc
+reen com.eventmarketplace.app EXITING} destroySurfaces: appStopped=false win.mW
+indowRemovalAllowed=true win.mRemoveOnExit=true
+11-08 15:50:34.931  1717  1898 I WindowManager: postWindowRemoveCleanupLocked: 
+Window{840ac3c u0 Splash Screen com.eventmarketplace.app}
+11-08 15:50:34.931  1717  1898 I WindowManager: Removing Window{840ac3c u0 Spla
+sh Screen com.eventmarketplace.app} from AppWindowToken{867773f token=Token{647
+875e ActivityRecord{4450de0 u0 com.eventmarketplace.app/.MainActivity t919}}}
+11-08 15:50:35.263 21825 21825 I flutter : APP: SPLASH_COMPLETE
+11-08 15:50:35.514 21825 21825 I flutter : APP: AUTH_GATE: user=null тЖТ show l
+ogin
+
+

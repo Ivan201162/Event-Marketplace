@@ -250,6 +250,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               title: const Text('Русский'),
               onTap: () {
                 setState(() => _language = 'ru');
+                debugLog("LANG_UPDATED:ru");
                 Navigator.pop(context);
               },
             ),
@@ -257,6 +258,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               title: const Text('English'),
               onTap: () {
                 setState(() => _language = 'en');
+                debugLog("LANG_UPDATED:en");
                 Navigator.pop(context);
               },
             ),

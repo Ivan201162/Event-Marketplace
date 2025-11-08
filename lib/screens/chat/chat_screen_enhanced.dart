@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/services/message_reaction_service.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
 
 /// Улучшенный экран чата с полным функционалом
 class ChatScreenEnhanced extends ConsumerStatefulWidget {
@@ -25,6 +29,9 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
     with TickerProviderStateMixin {
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
+  final MessageReactionService _reactionService = MessageReactionService();
+  Timer? _typingTimer;
+  bool _isTyping = false;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -35,8 +42,78 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
   @override
   void initState() {
     super.initState();
+    debugLog("CHAT_OPENED:${widget.chatId}");
+    
+    // Firebase Analytics
+    FirebaseAnalytics.instance.logEvent(
+      name: 'open_chat',
+      parameters: {'chat_id': widget.chatId},
+    ).catchError((e) => debugPrint('Analytics error: $e'));
+    
     _initializeAnimations();
     _scrollToBottom();
+    _markMessagesAsRead();
+    _setupTypingIndicator();
+  }
+
+  void _setupTypingIndicator() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    _messageController.addListener(() {
+      if (_messageController.text.isNotEmpty && !_isTyping) {
+        _isTyping = true;
+        _updateTypingStatus(true);
+      }
+      
+      _typingTimer?.cancel();
+      _typingTimer = Timer(const Duration(seconds: 2), () {
+        if (_isTyping) {
+          _isTyping = false;
+          _updateTypingStatus(false);
+        }
+      });
+    });
+  }
+
+  void _updateTypingStatus(bool isTyping) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .update({
+      'typing': {
+        user.uid: isTyping ? FieldValue.serverTimestamp() : FieldValue.delete(),
+      },
+    });
+  }
+
+  void _markMessagesAsRead() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .collection('messages')
+        .where('senderId', isNotEqualTo: user.uid)
+        .where('isRead', isEqualTo: false)
+        .get()
+        .then((snapshot) {
+      final batch = FirebaseFirestore.instance.batch();
+      for (final doc in snapshot.docs) {
+        batch.update(doc.reference, {'isRead': true});
+      }
+      batch.commit();
+      
+      // Обновляем счётчик непрочитанных
+      FirebaseFirestore.instance
+          .collection('chats')
+          .doc(widget.chatId)
+          .update({'unreadCount': 0});
+    });
   }
 
   void _initializeAnimations() {
@@ -58,6 +135,8 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
 
   @override
   void dispose() {
+    _typingTimer?.cancel();
+    _updateTypingStatus(false);
     _messageController.dispose();
     _scrollController.dispose();
     _animationController.dispose();
@@ -89,22 +168,42 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
       }
 
       final firestore = FirebaseFirestore.instance;
+      final messageText = _messageController.text.trim();
 
       // Создаем сообщение
-      await firestore
+      final messageRef = await firestore
           .collection('chats')
           .doc(widget.chatId)
           .collection('messages')
           .add({
         'senderId': user.uid,
-        'text': _messageController.text.trim(),
+        'text': messageText,
+        'type': 'text',
         'createdAt': Timestamp.now(),
         'isRead': false,
+        'deleted': false,
+        'attachments': [],
       });
+
+      debugLog("MSG_SENT:text:${messageRef.id}");
+      
+      // Firebase Analytics
+      try {
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'send_message',
+          parameters: {'chat_id': widget.chatId, 'message_id': messageRef.id},
+        );
+      } catch (e) {
+        debugPrint('Analytics error: $e');
+      }
+      
+      // Обновляем статус печатания
+      _isTyping = false;
+      _updateTypingStatus(false);
 
       // Обновляем время последнего сообщения в чате
       await firestore.collection('chats').doc(widget.chatId).update({
-        'lastMessage': _messageController.text.trim(),
+        'lastMessage': messageText,
         'lastMessageAt': Timestamp.now(),
         'updatedAt': Timestamp.now(),
       });
@@ -112,6 +211,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
       _messageController.clear();
       _scrollToBottom();
     } catch (e) {
+      debugLog("MSG_SEND_ERR:$e");
       _showError('Ошибка отправки: $e');
     } finally {
       setState(() => _isSending = false);
@@ -265,6 +365,9 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
         Expanded(
           child: _buildMessagesList(),
         ),
+        
+        // Индикатор "печатает..."
+        _buildTypingIndicator(),
 
         // Поле ввода сообщения
         _buildMessageInput(),
@@ -324,81 +427,434 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
   Widget _buildMessageBubble(String messageId, Map<String, dynamic> data) {
     final user = FirebaseAuth.instance.currentUser;
     final isMe = user?.uid == data['senderId'];
+    final isPinned = data['isPinned'] == true;
+    final attachments = (data['attachments'] as List?)?.cast<String>() ?? [];
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment:
-            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (!isMe) ...[
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.grey[300],
-              child: const Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 16,
-              ),
-            ),
-            const SizedBox(width: 8),
-          ],
-          Flexible(
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isMe ? const Color(0xFF1E3A8A) : Colors.grey[100],
-                borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isMe
-                      ? const Radius.circular(20)
-                      : const Radius.circular(4),
-                  bottomRight: isMe
-                      ? const Radius.circular(4)
-                      : const Radius.circular(20),
+    return GestureDetector(
+      onLongPress: () => _showMessageOptions(messageId, data, isMe),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          mainAxisAlignment:
+              isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+          children: [
+            if (!isMe) ...[
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Colors.grey[300],
+                child: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 16,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data['text'] ?? '',
-                    style: TextStyle(
-                      color: isMe ? Colors.white : Colors.black87,
-                      fontSize: 16,
-                    ),
+              const SizedBox(width: 8),
+            ],
+            Flexible(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: isMe ? const Color(0xFF1E3A8A) : Colors.grey[100],
+                  borderRadius: BorderRadius.circular(20).copyWith(
+                    bottomLeft: isMe
+                        ? const Radius.circular(20)
+                        : const Radius.circular(4),
+                    bottomRight: isMe
+                        ? const Radius.circular(4)
+                        : const Radius.circular(20),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _formatMessageTime(data['createdAt']),
-                    style: TextStyle(
-                      color: isMe
-                          ? Colors.white.withOpacity(0.7)
-                          : Colors.grey[600],
-                      fontSize: 12,
+                  border: isPinned
+                      ? Border.all(color: Colors.amber, width: 2)
+                      : null,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isPinned) ...[
+                      Row(
+                        children: const [
+                          Icon(Icons.push_pin, size: 12, color: Colors.amber),
+                          SizedBox(width: 4),
+                          Text(
+                            'Закреплено',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.amber,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                    ],
+                    if (attachments.isNotEmpty) ...[
+                      ...attachments.map((url) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Image.network(url, fit: BoxFit.cover),
+                      )),
+                    ],
+                    if (data['deleted'] == true)
+                      Text(
+                        'Сообщение удалено',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      )
+                    else if (data['text'] != null && (data['text'] as String).isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            data['text'] ?? '',
+                            style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black87,
+                              fontSize: 16,
+                            ),
+                          ),
+                          if (data['editedAt'] != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                '(изменено)',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 11,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    // Реакции из подколлекции
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('chats')
+                          .doc(widget.chatId)
+                          .collection('messages')
+                          .doc(messageId)
+                          .collection('messageReactions')
+                          .snapshots(),
+                      builder: (context, reactionSnapshot) {
+                        if (!reactionSnapshot.hasData || reactionSnapshot.data!.docs.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        
+                        // Группируем реакции по эмодзи
+                        final reactionsByEmoji = <String, int>{};
+                        for (final doc in reactionSnapshot.data!.docs) {
+                          final emoji = doc.data()['emoji'] as String? ?? '';
+                          reactionsByEmoji[emoji] = (reactionsByEmoji[emoji] ?? 0) + 1;
+                        }
+                        
+                        if (reactionsByEmoji.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Wrap(
+                            spacing: 4,
+                            children: reactionsByEmoji.entries.map((entry) {
+                              return GestureDetector(
+                                onTap: () => _toggleReaction(messageId, entry.key),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(entry.key, style: const TextStyle(fontSize: 14)),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '${entry.value}',
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _formatMessageTime(data['createdAt']),
+                          style: TextStyle(
+                            color: isMe
+                                ? Colors.white.withOpacity(0.7)
+                                : Colors.grey[600],
+                            fontSize: 12,
+                          ),
+                        ),
+                        if (isMe && data['isRead'] == true) ...[
+                          const SizedBox(width: 4),
+                          const Icon(Icons.done_all, size: 14, color: Colors.blue),
+                        ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          if (isMe) ...[
-            const SizedBox(width: 8),
-            const CircleAvatar(
-              radius: 16,
-              backgroundColor: Color(0xFF1E3A8A),
-              child: Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 16,
+            if (isMe) ...[
+              const SizedBox(width: 8),
+              const CircleAvatar(
+                radius: 16,
+                backgroundColor: Color(0xFF1E3A8A),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 16,
+                ),
               ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypingIndicator() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('chats')
+          .doc(widget.chatId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox.shrink();
+        
+        final typing = snapshot.data!.data()?['typing'] as Map<String, dynamic>?;
+        if (typing == null || typing.isEmpty) return const SizedBox.shrink();
+        
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) return const SizedBox.shrink();
+        
+        // Проверяем, печатает ли другой пользователь
+        final otherUserTyping = typing.entries
+            .where((entry) => entry.key != user.uid)
+            .isNotEmpty;
+        
+        if (!otherUserTyping) return const SizedBox.shrink();
+        
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              const SizedBox(width: 48),
+              Text(
+                '${widget.recipientName ?? "Пользователь"} печатает...',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMessageOptions(String messageId, Map<String, dynamic> data, bool isMe) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isMe) ...[
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Редактировать'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _editMessage(messageId, data['text'] as String? ?? '');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: const Text('Удалить'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _deleteMessage(messageId);
+                },
+              ),
+            ],
+            ListTile(
+              leading: const Icon(Icons.push_pin),
+              title: Text(data['isPinned'] == true ? 'Открепить' : 'Закрепить'),
+              onTap: () {
+                Navigator.pop(context);
+                _togglePinMessage(messageId, data['isPinned'] != true);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_reaction),
+              title: const Text('Добавить реакцию'),
+              onTap: () {
+                Navigator.pop(context);
+                _showReactionPicker(messageId);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('Переслать'),
+              onTap: () {
+                Navigator.pop(context);
+                // TODO: Пересылка сообщения
+              },
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _toggleReaction(String messageId, String emoji) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    
+    try {
+      // Проверяем, есть ли уже реакция от этого пользователя
+      final reactionRef = FirebaseFirestore.instance
+          .collection('chats')
+          .doc(widget.chatId)
+          .collection('messages')
+          .doc(messageId)
+          .collection('messageReactions')
+          .doc(user.uid);
+      
+      final reactionDoc = await reactionRef.get();
+      
+      if (reactionDoc.exists && reactionDoc.data()?['emoji'] == emoji) {
+        // Удаляем реакцию
+        await reactionRef.delete();
+        debugLog("CHAT_REACT_REMOVE:${widget.chatId}:$messageId:$emoji");
+      } else {
+        // Добавляем/обновляем реакцию
+        await reactionRef.set({
+          'emoji': emoji,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+        debugLog("CHAT_REACT_ADD:${widget.chatId}:$messageId:$emoji");
+      }
+    } catch (e) {
+      debugPrint('Error toggling reaction: $e');
+    }
+  }
+
+  void _showReactionPicker(String messageId) {
+    final emojis = ['👍', '❤️', '😂', '😮', '😢', '👎', '⭐', '🔥'];
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: emojis.map((emoji) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  _toggleReaction(messageId, emoji);
+                },
+                child: Text(emoji, style: const TextStyle(fontSize: 32)),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _togglePinMessage(String messageId, bool pin) async {
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .collection('messages')
+        .doc(messageId)
+        .update({'isPinned': pin});
+  }
+
+  void _editMessage(String messageId, String currentText) {
+    final controller = TextEditingController(text: currentText);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Редактировать сообщение'),
+        content: TextField(
+          controller: controller,
+          maxLines: 5,
+          decoration: const InputDecoration(
+            hintText: 'Введите новый текст',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final newText = controller.text.trim();
+              if (newText.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Текст не может быть пустым')),
+                );
+                return;
+              }
+              
+              await FirebaseFirestore.instance
+                  .collection('chats')
+                  .doc(widget.chatId)
+                  .collection('messages')
+                  .doc(messageId)
+                  .update({
+                'text': newText,
+                'editedAt': FieldValue.serverTimestamp(),
+              });
+              
+              debugLog("CHAT_MSG_EDIT:${widget.chatId}:$messageId");
+              
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Сохранить'),
+          ),
         ],
       ),
     );
+  }
+
+  void _deleteMessage(String messageId) async {
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .collection('messages')
+        .doc(messageId)
+        .update({
+      'deleted': true,
+      'text': '', // Очищаем текст
+    });
+    
+    debugLog("CHAT_MSG_DELETE:${widget.chatId}:$messageId");
   }
 
   /// Поле ввода сообщения

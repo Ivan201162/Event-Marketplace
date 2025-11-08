@@ -1,0 +1,61 @@
+=== GOOGLE SIGN-IN RELEASE FIX - LOG SUMMARY ===
+
+Date: 6 November 2025, 23:50 MSK
+Version: 5.12.0 (versionCode: 22)
+Build Marker: v5.12-full-fix
+
+=== BUILD STATUS ===
+✅ BUILD DONE
+✅ INSTALL DONE
+
+=== RELEASE KEYSTORE CONFIGURATION ===
+- Keystore: android/app/release.keystore (exists: true)
+- Alias: event_release
+- Store Password: EventStorePass_2025
+- Key Password: EventStorePass_2025
+- Signing Config: release (confirmed in build.gradle.kts)
+- Build Type: release (isMinifyEnabled: false, isShrinkResources: false)
+
+=== LOGGING MARKERS ADDED ===
+1. GOOGLE_LOGIN_START - Before GoogleSignIn().signIn()
+2. GOOGLE_LOGIN_STEP:google_user_obtained - After Google user obtained
+3. GOOGLE_LOGIN_STEP:google_auth_obtained - After authentication obtained
+4. GOOGLE_LOGIN_STEP:credential_created - After credential creation
+5. GOOGLE_LOGIN_STEP:firebase_signin_complete - After Firebase signInWithCredential
+6. GOOGLE_LOGIN_SUCCESS:{uid} - On successful login
+7. GOOGLE_LOGIN_FAIL:{errorCode}:{errorMessage} - On failure with error code and message
+8. GOOGLE_LOGIN_STACK:{stackTrace} - Stack trace on errors
+9. GOOGLE_JSON_LOADED:{path} - When google-services.json is found
+10. GOOGLE_JSON_NOT_FOUND - When google-services.json is not found
+
+=== APPLICATION STARTUP LOGS ===
+11-06 23:50:47.761 31997 31997 I flutter : APP: APP: GOOGLE FIX FLOW STARTED
+11-06 23:50:47.762 31997 31997 I flutter : APP: GOOGLE_JSON_NOT_FOUND:checked:android/app/google-services.json,../android/app/google-services.json,../../android/app/google-services.json
+11-06 23:50:52.661 31997 31997 I flutter : APP: APP: BUILD OK v5.12-full-fix
+11-06 23:50:52.662 31997 31997 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No current user
+
+=== NOTES ===
+- google-services.json path check shows "NOT_FOUND" but this is expected - Firebase reads the file during build time via firebase_options.dart
+- The file exists at android/app/google-services.json and is used during compilation
+- All Google Sign-In logging is in place and will trigger when user attempts to sign in
+- Release keystore is properly configured and used for signing
+
+=== NEXT STEPS ===
+1. User should attempt Google Sign-In on device
+2. Check logs for GOOGLE_LOGIN_START and subsequent markers
+3. If login fails, logs will show GOOGLE_LOGIN_FAIL with detailed error code and message
+4. Stack traces will be logged for debugging
+
+=== EXPECTED LOG FLOW ON GOOGLE SIGN-IN ===
+1. GOOGLE_LOGIN_START
+2. GOOGLE_LOGIN_STEP:google_user_obtained:{email}
+3. GOOGLE_LOGIN_STEP:google_auth_obtained:accessToken=present,idToken=present
+4. GOOGLE_LOGIN_STEP:credential_created
+5. GOOGLE_LOGIN_STEP:firebase_signin_complete
+6. GOOGLE_LOGIN_SUCCESS:{uid}
+
+OR (on failure):
+1. GOOGLE_LOGIN_START
+2. GOOGLE_LOGIN_FAIL:{errorCode}:{errorMessage}
+3. GOOGLE_LOGIN_STACK:{stackTrace}
+

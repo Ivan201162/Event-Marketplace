@@ -12,7 +12,9 @@ import 'package:intl/intl.dart';
 
 /// Контент вкладки календаря в профиле специалиста
 class CalendarTabContent extends ConsumerStatefulWidget {
-  const CalendarTabContent({super.key});
+  final String? specialistId;
+  
+  const CalendarTabContent({this.specialistId, super.key});
 
   @override
   ConsumerState<CalendarTabContent> createState() => _CalendarTabContentState();
@@ -25,11 +27,11 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
   @override
   void initState() {
     super.initState();
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
+    final specialistId = widget.specialistId ?? FirebaseAuth.instance.currentUser?.uid;
+    if (specialistId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        debugLog("CAL_OPENED:${currentUser.uid}");
-        _loadCalendarPolicy(currentUser.uid);
+        debugLog("CAL_OPENED:$specialistId");
+        _loadCalendarPolicy(specialistId);
       });
     }
   }
@@ -93,24 +95,26 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
   }
 
   void _showDayBookings(DateTime day) {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
+    final specialistId = widget.specialistId ?? FirebaseAuth.instance.currentUser?.uid;
+    if (specialistId == null) return;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => _DayBookingsBottomSheet(
-        specialistId: currentUser.uid,
+        specialistId: specialistId,
         date: day,
       ),
     );
   }
 
+  String? _selectedTimeFilter; // 'morning', 'day', 'evening', null
+
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
+    final specialistId = widget.specialistId ?? FirebaseAuth.instance.currentUser?.uid;
+    if (specialistId == null) {
       return const Center(child: Text('Необходима авторизация'));
     }
 
@@ -125,19 +129,63 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
         // Переключатель политики
         Container(
           padding: const EdgeInsets.all(16),
-          color: Colors.grey[100],
+          color: Theme.of(context).colorScheme.surfaceVariant,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Политика бронирования:',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               Switch(
                 value: _calendarPolicy == 'auto',
                 onChanged: (_) => _togglePolicy(),
               ),
-              Text(_calendarPolicy == 'auto' ? 'Бронировать сразу' : 'Требуется подтверждение'),
+              Text(
+                _calendarPolicy == 'auto' ? 'Бронировать сразу' : 'Требуется подтверждение',
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
+            ],
+          ),
+        ),
+
+        // Фильтр по времени
+        Container(
+          padding: const EdgeInsets.all(16),
+          color: Theme.of(context).colorScheme.surface,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Фильтр по времени:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  _buildTimeFilterChip('Утро', 'morning', Icons.wb_sunny),
+                  const SizedBox(width: 8),
+                  _buildTimeFilterChip('День', 'day', Icons.wb_twilight),
+                  const SizedBox(width: 8),
+                  _buildTimeFilterChip('Вечер', 'evening', Icons.nightlight),
+                  const Spacer(),
+                  if (_selectedTimeFilter != null)
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedTimeFilter = null;
+                        });
+                      },
+                      child: const Text('Сбросить'),
+                    ),
+                ],
+              ),
             ],
           ),
         ),
@@ -145,7 +193,7 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
         // Легенда
         Container(
           padding: const EdgeInsets.all(16),
-          color: Colors.grey[50],
+          color: Theme.of(context).colorScheme.surface,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -170,9 +218,10 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
                 children: [
                   Text(
                     DateFormat('MMMM yyyy').format(_currentMonth),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   TextButton(
@@ -194,7 +243,7 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('specialist_calendar')
-                .doc(currentUser.uid)
+                .doc(specialistId)
                 .collection('days')
                 .where('date', isGreaterThanOrEqualTo: '${_currentMonth.year}-${_currentMonth.month.toString().padLeft(2, '0')}-01')
                 .where('date', isLessThan: '${_currentMonth.year}-${(_currentMonth.month + 1).toString().padLeft(2, '0')}-01')
@@ -251,7 +300,7 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
                         final aggregate = daysMap[dateStr];
                         
                         // Определяем статус по acceptedBookingId и pendingCount
-                        final hasAccepted = aggregate?.confirmedBookingId != null;
+                        final hasAccepted = aggregate?.acceptedBookingId != null;
                         final pendingCount = aggregate?.pendingCount ?? 0;
                         final status = hasAccepted 
                             ? CalendarDayStatus.confirmed 
@@ -327,6 +376,26 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
     );
   }
 
+  Widget _buildTimeFilterChip(String label, String value, IconData icon) {
+    final isSelected = _selectedTimeFilter == value;
+    return FilterChip(
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16),
+          const SizedBox(width: 4),
+          Text(label),
+        ],
+      ),
+      selected: isSelected,
+      onSelected: (selected) {
+        setState(() {
+          _selectedTimeFilter = selected ? value : null;
+        });
+      },
+    );
+  }
+
   Widget _buildLegendItem(Color color, String label) {
     return Row(
       children: [
@@ -342,6 +411,24 @@ class _CalendarTabContentState extends ConsumerState<CalendarTabContent> {
         Text(label, style: const TextStyle(fontSize: 12)),
       ],
     );
+  }
+  
+  bool _matchesTimeFilter(String? timeFrom, String? timeTo) {
+    if (_selectedTimeFilter == null) return true;
+    if (timeFrom == null) return false;
+    
+    final hour = int.tryParse(timeFrom.split(':').first) ?? 0;
+    
+    switch (_selectedTimeFilter) {
+      case 'morning':
+        return hour >= 6 && hour < 12;
+      case 'day':
+        return hour >= 12 && hour < 18;
+      case 'evening':
+        return hour >= 18 || hour < 6;
+      default:
+        return true;
+    }
   }
 }
 
@@ -412,6 +499,7 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
 
               return ListView.builder(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: bookings.length,
                 itemBuilder: (context, index) {
                   final booking = bookings[index];
@@ -421,6 +509,7 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
                       final service = BookingService();
                       try {
                         await service.confirmBooking(booking.id);
+                        debugLog("CAL_SHEET_OK:$dateStr");
                         if (context.mounted) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -428,6 +517,7 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
                           );
                         }
                       } catch (e) {
+                        debugLog("CAL_SHEET_ERR:$dateStr:$e");
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Ошибка: $e')),
@@ -439,6 +529,7 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
                       final service = BookingService();
                       try {
                         await service.declineBooking(booking.id);
+                        debugLog("CAL_SHEET_OK:$dateStr");
                         if (context.mounted) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -446,6 +537,7 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
                           );
                         }
                       } catch (e) {
+                        debugLog("CAL_SHEET_ERR:$dateStr:$e");
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Ошибка: $e')),
@@ -462,8 +554,44 @@ class _DayBookingsBottomSheet extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(child: Text('Ошибка: $error')),
+            loading: () => FutureBuilder(
+              future: Future.delayed(const Duration(seconds: 6)),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: [
+                      const Text('Загрузка занимает больше времени...'),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref.invalidate(bookingsByDayProvider(BookingsByDayParams(
+                            specialistId: specialistId,
+                            date: date,
+                          )));
+                        },
+                        child: const Text('Повторить'),
+                      ),
+                    ],
+                  );
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+            error: (error, stack) => Column(
+              children: [
+                Center(child: Text('Ошибка: $error')),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.invalidate(bookingsByDayProvider(BookingsByDayParams(
+                      specialistId: specialistId,
+                      date: date,
+                    )));
+                  },
+                  child: const Text('Повторить'),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
         ],

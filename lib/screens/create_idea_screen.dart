@@ -1,6 +1,11 @@
 import 'dart:io';
 
-import 'package:event_marketplace_app/services/supabase_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseException;
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,12 +23,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
   final _formKey = GlobalKey<FormState>();
   final _contentController = TextEditingController();
 
-  String _selectedType = 'text';
   String? _selectedCategory;
   List<File> _selectedImages = [];
   bool _isLoading = false;
-
-  final List<String> _types = ['text', 'photo', 'video', 'reel'];
 
   final List<String> _categories = [
     'Фотография',
@@ -43,78 +45,133 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
   Future<void> _pickImages() async {
     try {
-      final picker = ImagePicker();
-      final images = await picker.pickMultiImage();
-
-      setState(() {
-        _selectedImages = images.map((image) => File(image.path)).toList();
-        _selectedType = 'photo';
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Ошибка выбора изображений: $e'),
-            backgroundColor: Colors.red,),
+      final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'doc', 'docx', 'mp4', 'mov'],
       );
+
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          final newFiles = result.files
+              .where((f) => f.path != null)
+              .map((f) => File(f.path!))
+              .where((file) {
+            final size = file.lengthSync();
+            if (size > 30 * 1024 * 1024) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Файл ${file.path.split('/').last} превышает 30 МБ')),
+              );
+              return false;
+            }
+            return true;
+          }).take(10 - _selectedImages.length).toList();
+          
+          _selectedImages.addAll(newFiles);
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка выбора файлов: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
   Future<void> _pickVideo() async {
-    try {
-      final picker = ImagePicker();
-      final video = await picker.pickVideo(source: ImageSource.gallery);
-
-      if (video != null) {
-        setState(() {
-          _selectedImages = [File(video.path)];
-          _selectedType = 'video';
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Ошибка выбора видео: $e'),
-            backgroundColor: Colors.red,),
-      );
-    }
+    await _pickImages(); // Используем общий метод
   }
 
   Future<void> _createIdea() async {
     if (!_formKey.currentState!.validate()) return;
+    
+    final text = _contentController.text.trim();
+    if (text.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Введите описание идеи')),
+        );
+      }
+      return;
+    }
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Войдите в аккаунт')),
+        );
+      }
+      return;
+    }
 
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // TODO: Загрузить медиа файлы в Supabase Storage
-      final mediaUrls = <String>[];
+      final firestore = FirebaseFirestore.instance;
+      final storage = FirebaseStorage.instance;
+      final ideaId = firestore.collection('ideas').doc().id;
+      
+      // Загружаем файлы
+      final files = <Map<String, String>>[];
+      for (int i = 0; i < _selectedImages.length; i++) {
+        final file = _selectedImages[i];
+        final fileName = file.path.split('/').last;
+        final filePath = 'uploads/ideas/${currentUser.uid}/$ideaId/$fileName';
+        final fileRef = storage.ref().child(filePath);
+        
+        await fileRef.putFile(file);
+        final url = await fileRef.getDownloadURL();
+        
+        // Определяем тип файла
+        String fileType = 'image';
+        if (fileName.toLowerCase().endsWith('.mp4') || fileName.toLowerCase().endsWith('.mov')) {
+          fileType = 'video';
+        } else if (fileName.toLowerCase().endsWith('.pdf')) {
+          fileType = 'pdf';
+        } else if (fileName.toLowerCase().endsWith('.doc') || fileName.toLowerCase().endsWith('.docx')) {
+          fileType = 'doc';
+        }
+        
+        files.add({'url': url, 'type': fileType});
+      }
 
-      final idea = await SupabaseService.createIdea(
-        type: _selectedType,
-        content: _contentController.text.trim().isEmpty
-            ? null
-            : _contentController.text.trim(),
-        mediaUrls: mediaUrls,
-        category: _selectedCategory,
-      );
+      // Сохраняем в Firestore
+      await firestore.collection('ideas').doc(ideaId).set({
+        'id': ideaId,
+        'authorId': currentUser.uid,
+        'text': text,
+        'files': files,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
 
-      if (idea != null && mounted) {
+      debugLog("IDEA_PUBLISHED:$ideaId");
+
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Идея создана успешно!'),
-              backgroundColor: Colors.green,),
+            content: Text('Идея создана успешно!'),
+            backgroundColor: Colors.green,
+          ),
         );
         context.pop();
-      } else {
-        throw Exception('Не удалось создать идею');
       }
     } catch (e) {
+      final errorCode = e is FirebaseException ? e.code : 'unknown';
+      debugLog("IDEA_PUBLISH_ERR:$errorCode:$e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Ошибка создания идеи: $e'),
-              backgroundColor: Colors.red,),
+            content: Text('Ошибка создания идеи: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {

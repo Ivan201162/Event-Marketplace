@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:flutter/foundation.dart';
@@ -79,6 +80,7 @@ class PricingService {
   }
 
   /// Получить цену для конкретной даты и типа мероприятия
+  /// Возвращает цену с пометкой "estimated" (все цены являются ориентировочными)
   Future<Map<String, dynamic>?> getPriceForDate(
     String specialistId,
     String date, // YYYY-MM-DD
@@ -101,6 +103,7 @@ class PricingService {
             'priceFrom': data['priceFrom'] as num?,
             'hours': data['hours'] as num?,
             'isSpecial': true,
+            'isEstimated': true, // Все цены являются ориентировочными
             'date': date,
           };
         }
@@ -114,6 +117,8 @@ class PricingService {
             'priceFrom': price['priceFrom'] as num?,
             'hours': price['hours'] as num?,
             'isSpecial': false,
+            'isEstimated': true, // Все цены являются ориентировочными
+            'roleId': price['roleId'] as String?, // Добавляем roleId для расчета рейтинга
           };
         }
       }
@@ -137,28 +142,38 @@ class PricingService {
     String currency = 'RUB',
   }) async {
     try {
-      final docRef = await _firestore
+      final priceId = _firestore
           .collection('specialist_pricing')
           .doc(specialistId)
           .collection('base')
-          .add({
-        'roleId': roleId,
-        'roleLabel': roleLabel,
-        'title': eventType,
-        'eventType': eventType, // Для обратной совместимости
-        'priceFrom': priceFrom,
-        'hours': hours,
-        'currency': currency,
-        'archived': false,
-        'notes': description,
-        'description': description, // Для обратной совместимости
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+          .doc()
+          .id;
 
-      debugLog("PRICE_ADDED:${docRef.id}");
-      return docRef.id;
+      await _firestore
+          .collection('specialist_pricing')
+          .doc(specialistId)
+          .collection('base')
+          .doc(priceId)
+          .set({
+        'roleId': roleId,
+        'title': eventType,
+        'baseHours': hours,
+        'priceFrom': priceFrom,
+        'hidden': false,
+        'updatedAt': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('Сохранение услуги превысило таймаут');
+        },
+      );
+
+      debugLog("PRICE_ADDED:$priceId");
+      return priceId;
     } catch (e) {
+      final errorCode = e is TimeoutException ? 'timeout' : (e is Exception ? e.toString() : 'unknown');
+      debugLog("PRICE_ERR:$errorCode");
       debugPrint('Error adding base price: $e');
       rethrow;
     }
@@ -178,14 +193,43 @@ class PricingService {
       for (final doc in snapshot.docs) {
         batch.update(doc.reference, {
           'archived': archived,
+          'hidden': archived, // Помечаем как скрытые при архивации
           'updatedAt': FieldValue.serverTimestamp(),
         });
       }
 
       await batch.commit();
       debugLog("PRICE_ARCHIVE:$roleId:$archived");
+      debugLog("PRICE_HIDDEN_TOGGLED:$roleId:$archived");
     } catch (e) {
       debugPrint('Error archiving prices by role: $e');
+      rethrow;
+    }
+  }
+
+  /// Скрыть/показать прайсы по роли (v2: используем hidden вместо удаления)
+  Future<void> togglePricesHiddenByRole(String specialistId, String roleId, bool hidden) async {
+    try {
+      final snapshot = await _firestore
+          .collection('specialist_pricing')
+          .doc(specialistId)
+          .collection('base')
+          .where('roleId', isEqualTo: roleId)
+          .get();
+
+      final batch = _firestore.batch();
+      for (final doc in snapshot.docs) {
+        batch.update(doc.reference, {
+          'hidden': hidden,
+          'archived': hidden, // Также архивируем при скрытии
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      await batch.commit();
+      debugLog("PRICE_HIDDEN_TOGGLED:$roleId:$hidden");
+    } catch (e) {
+      debugPrint('Error toggling prices hidden: $e');
       rethrow;
     }
   }
@@ -279,15 +323,17 @@ class PricingService {
           .collection('base')
           .doc(priceId)
           .update({
-        'eventType': eventType,
+        'roleId': FieldValue.delete(), // Сохраняем существующий roleId
+        'title': eventType,
+        'baseHours': hours,
         'priceFrom': priceFrom,
-        'hours': hours,
-        'description': description,
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
       debugLog("PRICE_UPDATED:$priceId");
     } catch (e) {
+      final errorCode = e is Exception ? e.toString() : 'unknown';
+      debugLog("PRICE_ERR:$errorCode");
       debugPrint('Error updating base price: $e');
       rethrow;
     }
@@ -382,7 +428,7 @@ class PricingService {
         rating = 'average';
       }
 
-      debugLog("PRICE_RATING:$specialistId:$roleId:$rating");
+      debugLog("PRICE_RATING:$roleId:$rating");
       return rating;
     } catch (e) {
       debugPrint('Error calculating price rating: $e');

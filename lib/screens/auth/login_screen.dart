@@ -1,4 +1,5 @@
 import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,8 +81,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         context.go('/main');
       }
     } on FirebaseAuthException catch (e) {
+      debugLog('AUTH_ERR:${e.code}:${e.message}');
       _showError(_getErrorMessage(e.code));
     } catch (e) {
+      debugLog('AUTH_ERR:unknown:$e');
       _showError('Произошла ошибка: $e');
     } finally {
       setState(() => _isLoading = false);

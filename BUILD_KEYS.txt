@@ -1,0 +1,10 @@
+=== ADD THESE TO FIREBASE ANDROID APP (SHA KEYS) ===
+SHA1: A2:17:9A:E3:C5:22:26:D7:2E:DB:F1:94:E5:F9:E2:80:B8:E3:B9:FD
+SHA-256: F0:FD:C2:E0:86:37:6C:5F:64:D4:92:0F:1F:63:50:36:D8:4F:E9:9D:34:2D:5D:46:1C:14:9D:D8:DF:6F:F1:2A
+==============================================
+
+Keystore: android/app/release.keystore
+Alias: event_release
+Valid until: Sat Oct 13 22:56:23 KRAT 2125
+Store Password: EventStorePass_2025
+Key Password: EventStorePass_2025

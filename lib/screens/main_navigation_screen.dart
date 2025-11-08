@@ -1,13 +1,15 @@
 import 'package:event_marketplace_app/core/app_components.dart';
-import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/screens/chat/chat_list_screen_improved.dart';
-import 'package:event_marketplace_app/screens/feed/feed_screen_improved.dart';
+import 'package:event_marketplace_app/screens/feed/feed_screen_full.dart';
 import 'package:event_marketplace_app/screens/home/home_screen_simple.dart';
 import 'package:event_marketplace_app/screens/ideas/ideas_screen.dart';
 import 'package:event_marketplace_app/screens/requests/requests_screen_improved.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Main navigation screen with bottom navigation
 class MainNavigationScreen extends ConsumerStatefulWidget {
@@ -29,31 +31,31 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
     const NavigationItem(
       icon: Icons.home_outlined,
       activeIcon: Icons.home,
-      label: 'Главная',
+      label: '', // Без подписи
       screen: HomeScreenSimple(),
     ),
     const NavigationItem(
-      icon: Icons.dynamic_feed_outlined,
-      activeIcon: Icons.dynamic_feed,
-      label: 'Лента',
-      screen: FeedScreenImproved(),
+      icon: Icons.grid_3x3_outlined,
+      activeIcon: Icons.grid_3x3,
+      label: '', // Без подписи
+      screen: FeedScreenFull(),
     ),
     const NavigationItem(
-      icon: Icons.assignment_outlined,
-      activeIcon: Icons.assignment,
-      label: 'Заявки',
+      icon: Icons.work_outline,
+      activeIcon: Icons.work,
+      label: '', // Без подписи
       screen: RequestsScreenImproved(),
     ),
     const NavigationItem(
       icon: Icons.chat_bubble_outline,
-      activeIcon: Icons.chat_bubble,
-      label: 'Чаты',
+      activeIcon: Icons.chat_bubble_outline,
+      label: '', // Без подписи
       screen: ChatListScreenImproved(),
     ),
     const NavigationItem(
       icon: Icons.lightbulb_outline,
-      activeIcon: Icons.lightbulb,
-      label: 'Идеи',
+      activeIcon: Icons.lightbulb_outline,
+      label: '', // Без подписи
       screen: IdeasScreen(),
     ),
   ];
@@ -84,6 +86,20 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Проверка авторизации - не показываем MainScreen без пользователя
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      // Перенаправляем на auth-gate
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.go('/auth-gate');
+        }
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -125,26 +141,18 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppTheme.surfaceColor,
-              AppTheme.backgroundColor,
-            ],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
+          color: Theme.of(context).colorScheme.surface,
+          border: Border(
+            top: BorderSide(
+              color: Theme.of(context).colorScheme.outline,
+              width: 1,
             ),
-          ],
+          ),
         ),
         child: SafeArea(
           child: Container(
-            height: 80,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            height: 56, // Фиксированная высота 56dp
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: _navigationItems.asMap().entries.map((entry) {
@@ -156,6 +164,10 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                   child: GestureDetector(
                     onTap: () {
                       if (index != _currentIndex) {
+                        final tabNames = ['home', 'feed', 'requests', 'chats', 'ideas'];
+                        if (index < tabNames.length) {
+                          debugLog("NAVBAR_TAP:${tabNames[index]}");
+                        }
                         _animationController.forward().then((_) {
                           _animationController.reverse();
                         });
@@ -169,64 +181,24 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       curve: Curves.easeInOut,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 12,),
-                      decoration: BoxDecoration(
-                        gradient: isActive
-                            ? const LinearGradient(
-                                colors: [
-                                  AppTheme.primaryColor,
-                                  AppTheme.primaryVariant,
-                                ],
-                              )
-                            : null,
-                        borderRadius: BorderRadius.circular(16),
-                        border: isActive
-                            ? Border.all(
-                                color: AppTheme.primaryColor.withOpacity(0.3),
-                              )
-                            : null,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AnimatedBuilder(
-                            animation: _scaleAnimation,
-                            builder: (context, child) {
-                              return Transform.scale(
-                                scale: isActive ? _scaleAnimation.value : 1.0,
-                                child: Icon(
-                                  isActive ? item.activeIcon : item.icon,
-                                  color: isActive
-                                      ? Colors.white
-                                      : Colors.grey[600],
-                                  size: isActive ? 26 : 24,
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            item.label,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight:
-                                  isActive ? FontWeight.bold : FontWeight.w500,
-                              color: isActive
-                                  ? Colors.white
-                                  : Colors.grey[600],
-                            ),
-                          ),
-                        ],
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Center(
+                        child: Icon(
+                          isActive ? item.activeIcon : item.icon,
+                          color: isActive
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                          size: 24, // Минималистичные иконки, без подписей
+                        ),
                       ),
                     ),
                   ),
                 );
               }).toList(),
             ),
-            ),
           ),
         ),
+      ),
       ),
     );
   }

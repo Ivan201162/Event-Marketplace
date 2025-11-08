@@ -1,0 +1,448 @@
+﻿
+11-08 10:08:03.175  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:13:14.317  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:23:26.475 30899 30899 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.lbs.HwLBSService.onCrea
+te:88 android.app.ActivityThread.handleCreateService:4809 android.app.ActivityT
+hread.access$3000:260 
+11-08 10:23:36.943  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:42:19.301  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:42:30.691 31694 31694 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.securitycentersdk.Securit
+yCenterContext.startHwSecService:3 com.huawei.securitycentersdk.SecurityCenterC
+ontext.inject:4 com.huawei.systemmanager.SystemManagerApplication.onCreate:43 
+11-08 10:43:19.302  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:44:19.303  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:45:19.305  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:45:32.321 31941 31941 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.lbs.HwLBSService.onCrea
+te:88 android.app.ActivityThread.handleCreateService:4809 android.app.ActivityT
+hread.access$3000:260 
+11-08 10:46:19.306  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:47:19.307  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:48:19.308  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:49:19.309  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:50:19.310  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:51:19.311  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:52:19.312  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:53:19.313  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:54:19.314  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:55:19.315  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:56:19.316  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:57:19.318  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:58:19.319  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 10:59:19.320  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:00:19.322  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:01:19.323  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:02:19.324  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:03:19.326  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:04:19.327  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:05:19.328  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:06:19.329  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:07:19.330  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-08 11:07:41.923 32681 32759 I FeedbackNode: HMS log-dir is: /storage/emulate
+d/0/Android/data/com.huawei.hwid/files/com.huawei.hms.agclink/Log
+11-08 11:07:42.063  1357  1357 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.google.android.trichromelibrary_739012233-XV5sGvubfYRVzHprvLolVQ==/b
+ase.apk librarySearchPath: /data/app/com.google.android.webview-IiQskePC1_vG3qR
+T3Ow3mw==/lib/arm64:/data/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw
+==/base.apk!/lib/arm64-v8a:/data/app/com.google.android.trichromelibrary_739012
+233-XV5sGvubfYRVzHprvLolVQ==/base.apk!/lib/arm64-v8a libraryPermittedPath:  par
+ent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false cl
+assLoaderName: null sharedLibraries: null
+11-08 11:07:42.076  1357  1357 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/base.apk librarySear
+chPath: /data/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/lib/arm64
+:/data/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/base.apk!/lib/ar
+m64-v8a:/data/app/com.google.android.trichromelibrary_739012233-XV5sGvubfYRVzHp
+rvLolVQ==/base.apk!/lib/arm64-v8a libraryPermittedPath:  parent: java.lang.Boot
+ClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false classLoaderName: null
+ sharedLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file "/data/a
+pp/com.google.android.trichromelibrary_739012233-XV5sGvubfYRVzHprvLolVQ==/base.
+apk"],nativeLibraryDirectories=[/data/app/com.google.android.webview-IiQskePC1_
+vG3qRT3Ow3mw==/lib/arm64, /data/app/com.google.android.webview-IiQskePC1_vG3qRT
+3Ow3mw==/base.apk!/lib/arm64-v8a, /data/app/com.google.android.trichromelibrary
+_739012233-XV5sGvubfYRVzHprvLolVQ==/base.apk!/lib/arm64-v8a, /system/lib64, /hw
+_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 11:07:42.252  1458  1458 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.google.android.trichromelibrary_739012233-XV5sGvubfYRVzHprvLolVQ==/b
+ase.apk librarySearchPath: /data/app/com.google.android.webview-IiQskePC1_vG3qR
+T3Ow3mw==/lib/arm64:/data/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw
+==/base.apk!/lib/arm64-v8a:/data/app/com.google.android.trichromelibrary_739012
+233-XV5sGvubfYRVzHprvLolVQ==/base.apk!/lib/arm64-v8a libraryPermittedPath: /dat
+a/user/0/com.google.android.webview parent: java.lang.BootClassLoader@d46cbfc t
+argetSdkVersion: 36 isBundled: false classLoaderName: null sharedLibraries: nul
+l
+11-08 11:07:42.255  1458  1458 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/base.apk librarySear
+chPath: /data/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/lib/arm64
+:/data/app/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/base.apk!/lib/ar
+m64-v8a:/data/app/com.google.android.trichromelibrary_739012233-XV5sGvubfYRVzHp
+rvLolVQ==/base.apk!/lib/arm64-v8a libraryPermittedPath: /data/user/0/com.google
+.android.webview parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 36
+ isBundled: false classLoaderName: null sharedLibraries: [dalvik.system.PathCla
+ssLoader[DexPathList[[zip file "/data/app/com.google.android.trichromelibrary_7
+39012233-XV5sGvubfYRVzHprvLolVQ==/base.apk"],nativeLibraryDirectories=[/data/ap
+p/com.google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/lib/arm64, /data/app/com.
+google.android.webview-IiQskePC1_vG3qRT3Ow3mw==/base.apk!/lib/arm64-v8a, /data/
+app/com.google.android.trichromelibrary_739012233-XV5sGvubfYRVzHprvLolVQ==/base
+.apk!/lib/arm64-v8a, /system/lib64, /hw_product/lib64, /system/product/lib64, /
+prets/lib64]]]]
+11-08 11:07:42.495  1405  1405 I PluginLoader: createPluginInfo pluginName: aip
+rotection
+11-08 11:07:42.495  1405  1405 I PluginLoader: createPluginInfo pluginContext: 
+android.app.ContextImpl@3361d7
+11-08 11:07:42.555  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.securitycentersdk.Securit
+yCenterContext.startHwSecService:3 com.huawei.securitycentersdk.SecurityCenterC
+ontext.inject:4 com.huawei.systemmanager.SystemManagerApplication.onCreate:43 
+11-08 11:07:42.574  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:92 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.590  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:93 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.611  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:98 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.617  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:99 android.app.Instrumentation.callApplicationOnCreate:1
+202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.623  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:100 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.624  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:101 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.627  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:102 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.628  1405  1405 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.startService:1698 andro
+id.content.ContextWrapper.startService:669 com.huawei.systemmanager.SystemManag
+erApplication.onCreate:107 android.app.Instrumentation.callApplicationOnCreate:
+1202 android.app.ActivityThread.handleBindApplication:7596 
+11-08 11:07:42.646  1405  1511 I PluginLoader: createPluginInfo pluginName: wif
+isecure
+11-08 11:07:42.646  1405  1511 I PluginLoader: createPluginInfo pluginContext: 
+android.app.ContextImpl@3361d7
+11-08 11:07:42.647  1405  1511 W PluginLoader: createPluginInfo pluginEntry is 
+null
+11-08 11:07:42.647  1405  1511 W PluginLoader: loadPlugin createPluginInfo Plug
+inInfo fail: wifisecure
+11-08 11:07:42.647  1405  1511 I PluginLoader: createPluginInfo pluginName: wif
+isecure
+11-08 11:07:42.647  1405  1511 I PluginLoader: createPluginInfo pluginContext: 
+android.app.ContextImpl@3361d7
+11-08 11:07:42.648  1405  1511 W PluginLoader: createPluginInfo pluginEntry is 
+null
+11-08 11:07:42.649  1405  1511 W PluginLoader: loadPlugin createPluginInfo Plug
+inInfo fail: wifisecure
+11-08 11:07:42.904  1357  1357 I LanguagePlugin_LanguagePlugin: onCreate instal
+l end
+11-08 11:07:42.917  1579  1579 D ApplicationLoaders: createClassLoader zip: /sy
+stem/priv-app/DocumentsUI/DocumentsUI.apk librarySearchPath: /system/priv-app/D
+ocumentsUI/lib/arm64:/system/lib64:/hw_product/lib64:/system/product/lib64:/pre
+ts/lib64 libraryPermittedPath: /data/user/0/com.android.documentsui:/system/pri
+v-app/DocumentsUI:/system/lib64:/hw_product/lib64:/system/product/lib64:/prets/
+lib64 parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 28 isBundled:
+ true classLoaderName: null sharedLibraries: [dalvik.system.PathClassLoader[Dex
+PathList[[zip file "/system/framework/android.hidl.manager-V1.0-java.jar"],nati
+veLibraryDirectories=[/system/lib64, /hw_product/lib64, /system/product/lib64, 
+/prets/lib64]]], dalvik.system.PathClassLoader[DexPathList[[zip file "/system/f
+ramework/android.hidl.base-V1.0-java.jar"],nativeLibraryDirectories=[/system/li
+b64, /hw_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 11:07:43.199 31133 31133 I MediaService: onCreate
+11-08 11:07:43.467  1647  1647 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /data/app/com.goog
+le.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/lib/arm64:/data/app/com.google.andro
+id.videos-Fez3UV-Xg5V96zQfFF6LgQ==/base.apk!/lib/arm64-v8a:/data/app/com.google
+.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.arm64_v8a.apk!/lib/arm64-
+v8a:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.r
+u.apk!/lib/arm64-v8a:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ
+==/split_config.xxhdpi.apk!/lib/arm64-v8a libraryPermittedPath: /data/user/0/co
+m.google.android.videos parent: java.lang.BootClassLoader@d46cbfc targetSdkVers
+ion: 35 isBundled: false classLoaderName: null sharedLibraries: null
+11-08 11:07:43.473  1647  1647 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/base.apk:/data/app/co
+m.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.arm64_v8a.apk:/da
+ta/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.ru.apk:/
+data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.xxhdpi
+.apk librarySearchPath: /data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6
+LgQ==/lib/arm64:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/ba
+se.apk!/lib/arm64-v8a:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6Lg
+Q==/split_config.arm64_v8a.apk!/lib/arm64-v8a:/data/app/com.google.android.vide
+os-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.ru.apk!/lib/arm64-v8a:/data/app/com.go
+ogle.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.xxhdpi.apk!/lib/arm64
+-v8a libraryPermittedPath: /data/user/0/com.google.android.videos parent: java.
+lang.BootClassLoader@d46cbfc targetSdkVersion: 35 isBundled: false classLoaderN
+ame: null sharedLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file
+ "/system/framework/org.apache.http.legacy.jar"],nativeLibraryDirectories=[/dat
+a/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/lib/arm64, /data/app/c
+om.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/base.apk!/lib/arm64-v8a, /dat
+a/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.arm64_v8a
+.apk!/lib/arm64-v8a, /data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ
+==/split_config.ru.apk!/lib/arm64-v8a, /data/app/com.google.android.videos-Fez3
+UV-Xg5V96zQfFF6LgQ==/split_config.xxhdpi.apk!/lib/arm64-v8a, /system/lib64, /hw
+_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 11:07:43.924  1647  1647 W PlayMovies: kuj.onCreate:496 Installer Package
+: com.android.vending
+11-08 11:07:44.271  1647  1865 E PlayMovies: mbj.a:83 No worker key associated 
+with this task with tags: [google_tv_widget_tag, com.google.android.apps.google
+tv.app.services.workmanager.WorkerWrapper]
+11-08 11:07:46.795  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.795  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.795  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.795  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.795  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.804  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.804  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.804  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.804  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.804  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.805  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.805  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.805  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.805  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.805  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-08 11:07:46.817  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.con
+tacts (protectionLevel=2 flags=0x90c83e45)
+11-08 11:07:46.823  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.cal
+endar (protectionLevel=2 flags=0x28c83e45)
+11-08 11:07:46.841  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.v
+ideos (protectionLevel=2 flags=0x30dbbec5)
+11-08 11:07:46.948  1025 24649 E cutils  : Go to create: /data/data/com.eventma
+rketplace.app
+11-08 11:07:46.950  1025 24649 E cutils  : Go to create: /data/user_de/0/com.ev
+entmarketplace.app
+11-08 11:07:51.624   671  1062 E eeyt    : 	at tk_trace.ChimeNotificationEventH
+andler#onNotificationCreated(Started After:0)
+11-08 11:07:52.742  1717  1968 W PackageManager: Cannot whitelist unknown permi
+ssion: android.permission.POST_NOTIFICATIONS
+11-08 11:07:52.745  1717  1968 V HwPackageManagerServiceEx: POST_INSTALL: pkgNa
+me = com.eventmarketplace.app, pkgUri = /data/app/vmdl336924641.tmp;, pkgInstal
+ledPath = /data/app/vmdl336924641.tmp, pkgInstallerPackageName = , pkgVerName =
+ 5.16.1, pkgVerCode = 27, resultCode = 1, pkgUpdate = false
+11-08 11:07:52.954  1147  1147 W BlockListService: settings app is pulled up, o
+nCreate is called
+11-08 11:07:53.028  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_53.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:53.028  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_53.log
+11-08 11:07:53.029  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_53.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:53.029  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_53.log
+11-08 11:07:53.031  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_53.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:53.031  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_53.log
+11-08 11:07:53.032  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_53.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:53.032  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_53.log
+11-08 11:07:53.032  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_53.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:53.032  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_53.log
+11-08 11:07:53.033  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_53.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:53.033  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_53.log
+11-08 11:07:53.033  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_53.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:53.033  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_53.log
+11-08 11:07:53.180  2035  2035 D ApplicationLoaders: createClassLoader zip: /sy
+stem/product/priv-app/GooglePackageInstaller/GooglePackageInstaller.apk library
+SearchPath: /system/product/priv-app/GooglePackageInstaller/lib/arm64:/system/l
+ib64:/hw_product/lib64:/system/product/lib64:/prets/lib64 libraryPermittedPath:
+ /data/user_de/0/com.google.android.packageinstaller:/system/product/priv-app/G
+ooglePackageInstaller:/system/lib64:/hw_product/lib64:/system/product/lib64:/pr
+ets/lib64 parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 29 isBund
+led: true classLoaderName: null sharedLibraries: null
+11-08 11:07:54.394  1717  2742 I ActivityTaskManager: setAppStartingWindow: tok
+en=Token{962b0f4 ActivityRecord{8c79c06 u0 com.eventmarketplace.app/.MainActivi
+ty t905}} pkg=com.eventmarketplace.app transferFrom=null newTask=true taskSwitc
+h=true processRunning=false allowTaskSnapshot=true activityCreated=false LowRam
+TaskSnapshots=false
+11-08 11:07:54.466  2207  2207 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /data/app/com.even
+tmarketplace.app-4Y6YLyCz2yEOcRYqvRWbvw==/lib/arm64:/data/app/com.eventmarketpl
+ace.app-4Y6YLyCz2yEOcRYqvRWbvw==/base.apk!/lib/arm64-v8a libraryPermittedPath: 
+/data/user/0/com.eventmarketplace.app parent: java.lang.BootClassLoader@d46cbfc
+ targetSdkVersion: 36 isBundled: false classLoaderName: null sharedLibraries: n
+ull
+11-08 11:07:54.469  2207  2207 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.eventmarketplace.app-4Y6YLyCz2yEOcRYqvRWbvw==/base.apk librarySearch
+Path: /data/app/com.eventmarketplace.app-4Y6YLyCz2yEOcRYqvRWbvw==/lib/arm64:/da
+ta/app/com.eventmarketplace.app-4Y6YLyCz2yEOcRYqvRWbvw==/base.apk!/lib/arm64-v8
+a libraryPermittedPath: /data/user/0/com.eventmarketplace.app parent: java.lang
+.BootClassLoader@d46cbfc targetSdkVersion: 36 isBundled: false classLoaderName:
+ null sharedLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file "/s
+ystem/framework/org.apache.http.legacy.jar"],nativeLibraryDirectories=[/data/ap
+p/com.eventmarketplace.app-4Y6YLyCz2yEOcRYqvRWbvw==/lib/arm64, /data/app/com.ev
+entmarketplace.app-4Y6YLyCz2yEOcRYqvRWbvw==/base.apk!/lib/arm64-v8a, /system/li
+b64, /hw_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-08 11:07:54.576  2207  2207 V ActivityThread: callActivityOnCreate
+11-08 11:07:54.936  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_54.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:54.936  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_54.log
+11-08 11:07:54.937  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_54.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:54.937  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_54.log
+11-08 11:07:54.939  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_54.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:54.939  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_54.log
+11-08 11:07:54.941  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_54.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:54.941  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_54.log
+11-08 11:07:54.941  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_54.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:54.941  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_54.log
+11-08 11:07:54.942  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_54.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:54.942  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_54.log
+11-08 11:07:54.942  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_08_11_07_54.log: open failed: ENOENT (No 
+such file or directory)
+11-08 11:07:54.942  3103  5603 W LogWrite: create new log file failed, fileName
+ is HMSLog_com.huawei.hwid.persistent_2025_11_08_11_07_54.log
+11-08 11:07:55.262  2207  2207 I flutter : APP: APP: BUILD OK v5.16.1-google-js
+on-fix
+11-08 11:07:56.171  2207  2207 I flutter : APP: GOOGLE_INIT: [DEFAULT]
+11-08 11:07:56.171  2207  2207 I flutter : APP: GOOGLE_JSON_CHECK:found
+11-08 11:07:56.174 11238 32550 D AdvertisingIdClient: AdvertisingIdClient alrea
+dy created.
+11-08 11:07:57.960  2680  2958 E AbilityFormViewRefreshUtils: stopListening [0m
+s]
+11-08 11:07:57.997  1082  1302 D iMonitor: create: 902000004
+11-08 11:08:03.052 11238 15584 W GetGamesServiceReqFacto: Parsing request with 
+ignored arguments. signInOptionsBundle [Bundle[{com.google.android.gms.signin.i
+nternal.serverClientId=null, com.google.android.gms.signin.internal.usePromptMo
+deForAuthCode=true, com.google.android.gms.signin.internal.logSessionId=null, c
+om.google.android.gms.signin.internal.hostedDomain=null, com.google.android.gms
+.signin.internal.offlineAccessRequested=false, com.google.android.gms.signin.in
+ternal.waitForAccessTokenRefresh=false, com.google.android.gms.signin.internal.
+clientRequestedAccount=Account {name=XXXXXXXXX, type=com.google}, com.google.an
+droid.gms.signin.internal.idTokenRequested=false, com.google.android.gms.signin
+.internal.forceCodeForRefreshToken=false}]], isRetryingSignIn [false], skipWelc
+omePopup [false], requireGooglePlus [false]
+11-08 11:08:08.055 11238 11238 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.feedback.internal.IFeedbackService dat=chimera-action: cmp=com.
+google.android.gms/.chimera.GmsBoundBrokerService }
+
+

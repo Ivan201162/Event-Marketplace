@@ -1,5 +1,11 @@
 import 'package:event_marketplace_app/core/app_components.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
+import 'package:event_marketplace_app/ui/molecules/specialist_card.dart';
+import 'package:event_marketplace_app/ui/components/app_card.dart';
+import 'package:event_marketplace_app/ui/components/chip_badge.dart';
+import 'package:event_marketplace_app/ui/components/section_title.dart';
+import 'package:event_marketplace_app/theme/typography.dart';
+import 'package:event_marketplace_app/theme/colors.dart';
 import 'package:event_marketplace_app/core/micro_animations.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/providers/specialist_providers.dart';
@@ -84,7 +90,7 @@ class HomeScreenSimple extends ConsumerWidget {
         data: (user) {
           if (user == null) {
             return const Center(
-              child: Text('Пользователь не авторизован'),
+              child: CircularProgressIndicator(),
             );
           }
 
@@ -163,27 +169,67 @@ class HomeScreenSimple extends ConsumerWidget {
                                 color: Colors.white,
                               ),
                             ),
-                            // @username (меньше, если есть)
-                            if (user.username != null && user.username!.isNotEmpty) ...[
-                              const SizedBox(height: 4),
-                              Text(
-                                '@${user.username}',
-                                style: TextStyle(
-                                  fontSize: context.isSmallScreen ? 14 : 16,
-                                  color: Colors.white.withOpacity(0.8),
-                                ),
-                              ),
-                            ],
-                            const SizedBox(height: 4),
-                            // Город (или «Город не указан»)
-                            Text(
-                              user.city != null && user.city!.isNotEmpty
-                                  ? user.city!
-                                  : 'Город не указан',
-                              style: TextStyle(
-                                fontSize: context.isSmallScreen ? 12 : 14,
-                                color: Colors.white.withOpacity(0.9),
-                              ),
+                            const SizedBox(height: 6),
+                            // Город и бейджи ролей
+                            Row(
+                              children: [
+                                if (user.city != null && user.city!.isNotEmpty) ...[
+                                  Icon(Icons.location_on, size: 14, color: Colors.white.withOpacity(0.9)),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    user.city!,
+                                    style: TextStyle(
+                                      fontSize: context.isSmallScreen ? 12 : 14,
+                                      color: Colors.white.withOpacity(0.9),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                            // Бейджи ролей
+                            FutureBuilder<List<Map<String, dynamic>>>(
+                              future: _getUserRoles(user.uid),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                  final roles = snapshot.data!.take(3).toList();
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Wrap(
+                                      spacing: 6,
+                                      runSpacing: 6,
+                                      children: roles.map((role) {
+                                        final roleId = role['id'] as String? ?? '';
+                                        final roleLabel = role['label'] as String? ?? roleId;
+                                        final icon = SpecialistRoles.getIcon(roleId);
+                                        return Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withOpacity(0.2),
+                                            borderRadius: BorderRadius.circular(12),
+                                            border: Border.all(color: Colors.white.withOpacity(0.3)),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(icon, style: const TextStyle(fontSize: 12)),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                roleLabel,
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
                             ),
                           ],
                         ),
@@ -331,9 +377,8 @@ class HomeScreenSimple extends ConsumerWidget {
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: context.isSmallScreen ? 18 : 20,
-                  fontWeight: FontWeight.bold,
+                style: AppTypography.titleLg.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -369,7 +414,7 @@ class HomeScreenSimple extends ConsumerWidget {
                 itemCount: specialists.length,
                 itemBuilder: (context, index) {
                   final specialist = specialists[index];
-                  return _SpecialistCard(specialist: specialist);
+                  return SpecialistCard(specialist: specialist);
                 },
               ),
             );

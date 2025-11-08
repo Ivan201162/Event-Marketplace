@@ -1,0 +1,8 @@
+﻿
+11-06 23:34:59.964 29529 29529 I flutter : APP: APP: GOOGLE FIX FLOW STARTED
+11-06 23:35:04.925 29529 29529 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+11-06 23:35:08.987 29529 29529 I flutter : Google sign-in error: unknown - An i
+nternal error has occurred.
+
+

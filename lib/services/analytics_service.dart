@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
@@ -120,6 +121,96 @@ class AnalyticsService {
     }
   }
 
+  /// Логировать открытие ленты
+  Future<void> logFeedOpened() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'feed_opened',
+        parameters: {'user_id': user.uid},
+      );
+    } catch (e) {
+      debugPrint('Analytics error: $e');
+    }
+  }
+
+  /// Логировать просмотр сторис
+  Future<void> logStoryView(String storyId, String authorId) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'story_view',
+        parameters: {
+          'story_id': storyId,
+          'author_id': authorId,
+          'viewer_id': user.uid,
+        },
+      );
+    } catch (e) {
+      debugPrint('Analytics error: $e');
+    }
+  }
+
+  /// Логировать лайк поста
+  Future<void> logPostLike(String postId, String authorId) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'post_like',
+        parameters: {
+          'post_id': postId,
+          'author_id': authorId,
+          'user_id': user.uid,
+        },
+      );
+    } catch (e) {
+      debugPrint('Analytics error: $e');
+    }
+  }
+
+  /// Логировать подписку на пользователя
+  Future<void> logFollowUser(String targetUserId) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'follow_user',
+        parameters: {
+          'target_user_id': targetUserId,
+          'user_id': user.uid,
+        },
+      );
+    } catch (e) {
+      debugPrint('Analytics error: $e');
+    }
+  }
+
+  /// Логировать отправку бронирования
+  Future<void> logBookingSent(String bookingId, String specialistId) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'booking_sent',
+        parameters: {
+          'booking_id': bookingId,
+          'specialist_id': specialistId,
+          'user_id': user.uid,
+        },
+      );
+    } catch (e) {
+      debugPrint('Analytics error: $e');
+    }
+  }
+
   /// Логировать событие заявки
   Future<void> logRequestEvent({
     required String specId,
@@ -157,6 +248,4 @@ class AnalyticsService {
       debugPrint('❌ AnalyticsService: Error logging request event: $e');
     }
   }
-}
-
 }

@@ -258,6 +258,55 @@ class _PricingTabContentState extends State<PricingTabContent> {
     );
   }
 
+  Widget _buildPercentiles(Map<String, double> stats) {
+    final p25 = stats['p25']?.toInt();
+    final p50 = stats['median']?.toInt();
+    final p75 = stats['p75']?.toInt();
+    
+    if (p25 == null || p50 == null || p75 == null) {
+      return const SizedBox.shrink();
+    }
+    
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          Text(
+            'По рынку: ',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[600],
+            ),
+          ),
+          Text(
+            'p25: $p25₽',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'p50: $p50₽',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'p75: $p75₽',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -288,67 +337,88 @@ class _PricingTabContentState extends State<PricingTabContent> {
               ),
             )
           else
-            ..._basePrices.map((price) => FutureBuilder<String?>(
+            ..._basePrices.map((price) => FutureBuilder<Map<String, dynamic>>(
                   future: widget.isOwnProfile
-                      ? Future.value(null)
+                      ? Future.value({})
                       : () async {
                           final roleId = price['roleId'] as String?;
-                          if (roleId == null) return null;
-                          return await _pricingService.calculatePriceRating(
+                          if (roleId == null) return <String, dynamic>{};
+                          
+                          final priceValue = (price['priceFrom'] as num?)?.toInt() ?? 0;
+                          final rating = await _pricingService.calculatePriceRating(
                             specialistId: widget.user.uid,
                             roleId: roleId,
-                            price: (price['priceFrom'] as num?)?.toInt() ?? 0,
+                            price: priceValue,
                             city: widget.user.city,
                           );
+                          
+                          // Получаем статистику перцентилей
+                          final stats = await _pricingService.calculatePriceStatsForCityRole(
+                            widget.user.city ?? '',
+                            roleId,
+                          );
+                          
+                          return {
+                            'rating': rating,
+                            'stats': stats,
+                          };
                         }(),
-                  builder: (context, ratingSnapshot) => Card(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      leading: const Icon(Icons.push_pin, color: Colors.blue),
-                      title: Text(
-                        price['eventType'] as String,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text(
-                                'от ${NumberFormat('#,###', 'ru').format(price['priceFrom'])} ₽',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                  builder: (context, snapshot) {
+                    final rating = snapshot.data?['rating'] as String?;
+                    final stats = snapshot.data?['stats'] as Map<String, double>?;
+                    
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        leading: const Icon(Icons.push_pin, color: Colors.blue),
+                        title: Text(
+                          price['eventType'] as String,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text(
+                                  'от ${NumberFormat('#,###', 'ru').format(price['priceFrom'])} ₽',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                if (!widget.isOwnProfile && rating != null)
+                                  _buildPriceRating(rating),
+                              ],
+                            ),
+                            if (stats != null && stats.isNotEmpty)
+                              _buildPercentiles(stats),
+                            Text('${price['hours']} часов'),
+                            if (price['description'] != null &&
+                                (price['description'] as String).isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(
+                                  price['description'] as String,
+                                  style: TextStyle(color: Colors.grey[600]),
                                 ),
                               ),
-                              if (!widget.isOwnProfile)
-                                _buildPriceRating(ratingSnapshot.data),
-                            ],
-                          ),
-                          Text('${price['hours']} часов'),
-                          if (price['description'] != null &&
-                              (price['description'] as String).isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(
-                                price['description'] as String,
-                                style: TextStyle(color: Colors.grey[600]),
-                              ),
-                            ),
-                        ],
+                          ],
+                        ),
+                        trailing: widget.isOwnProfile
+                            ? IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  // TODO: Редактирование
+                                },
+                              )
+                            : null,
                       ),
-                      trailing: widget.isOwnProfile
-                          ? IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                // TODO: Редактирование
-                              },
-                            )
-                          : null,
-                    ),
-                  ),
-                )),
+                    );
+                  },
+                ),
+              ).toList(),
 
           // Кнопка добавления (только для специалиста)
           if (widget.isOwnProfile && _basePrices.isNotEmpty) ...[
@@ -376,7 +446,7 @@ class _PricingTabContentState extends State<PricingTabContent> {
                     leading: const Icon(Icons.calendar_today, color: Colors.red),
                     title: Text(
                       DateFormat('d MMMM yyyy', 'ru')
-                          .format(DateFormat('yyyy-MM-dd').parse(specialDate['date'])),
+                          .format(DateFormat('yyyy-MM-dd').parse(specialDate['date'] as String)),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,7 +471,8 @@ class _PricingTabContentState extends State<PricingTabContent> {
                       },
                     ),
                   ),
-                )),
+                ),
+              ).toList(),
           ],
         ],
       ),
