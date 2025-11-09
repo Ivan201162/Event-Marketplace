@@ -82,7 +82,8 @@ final topSpecialistsByRussiaProvider =
           .doc(specId)
           .get();
       if (scoreDoc.exists) {
-        scoresMap[specId] = (scoreDoc.data()?['scoreWeekly'] ?? 0).toDouble();
+        final scoreValue = scoreDoc.data()?['scoreWeekly'] ?? 0;
+        scoresMap[specId] = (scoreValue is num) ? scoreValue.toDouble() : (scoreValue is double) ? scoreValue : 0.0;
       }
     }
 
