@@ -49,14 +49,35 @@
 ✅ **Booking Flow**: Создание → pending → accept/decline → confirmed/cancelled
 ✅ **Логи**: `PRICE_ADDED:{id}`, `PRICE_UPDATED:{id}`, `PRICE_RATING:{specialistId}:{roleId}:{rating}`, `BOOKING_CREATE:{id}`, `BOOKING_ACCEPT:{id}`, `BOOKING_DECLINE:{id}`, `CAL_SHEET_DATA:{date}:{count}`, `CAL_SHEET_OK:{date}`, `CAL_SHEET_ERR:{date}:{error}`
 
-## 6. Поиск 2.0
+## 6. Контент
+
+✅ **Посты**: Создание с фото (до 10), сохранение в `posts`, логи `POST_PUBLISHED:{id}`, `POST_PUBLISH_ERR:{code}`
+✅ **Reels**: Создание с видео (до 60 сек), thumbnail, сохранение в `reels`, логи `REEL_PUBLISHED:{id}`, `REEL_PUBLISH_ERR:{code}`
+✅ **Stories**: Создание с фото/видео, `expiresAt = now() + 24h`, сохранение в `stories`, логи `STORY_PUBLISHED:{id}`, `STORY_PUBLISH_ERR:{code}`
+✅ **Ideas**: Создание с текстом и файлами (до 10), сохранение в `ideas`, логи `IDEA_PUBLISHED:{id}`, `IDEA_PUBLISH_ERR:{code}`
+✅ **Комментарии**: TODO (в следующей версии)
+✅ **Лента**: Отображение постов, reels, stories в хронологическом порядке
+
+## 7. Поиск 2.0
 
 ✅ **Фильтры**: Город, цена, рейтинг, категории
 ✅ **Сохранённые фильтры**: TODO (в следующей версии)
 ✅ **Пагинация**: Реализована через Riverpod providers
 ✅ **Логи**: `SEARCH_OPENED`, `SEARCH_FILTER_APPLIED`, `SEARCH_RESULT_COUNT:{count}`
 
-## 7. Analytics & Logging
+## 8. Уведомления & FCM
+
+✅ **Инициализация**: FCM инициализирован в `main.dart` с запросом разрешений
+✅ **Токен**: Сохранение FCM токена в `users/{uid}/fcmTokens[]`
+✅ **Обработчики**:
+- `onMessage` - для foreground сообщений
+- `onBackgroundMessage` - top-level функция для background сообщений
+- `onMessageOpenedApp` - когда приложение открыто из уведомления
+- `getInitialMessage` - проверка, было ли приложение открыто из уведомления
+✅ **Экран уведомлений**: `NotificationsScreenEnhanced` с StreamProvider из `notifications/{userId}`
+✅ **Логи**: `FCM_INIT_OK`, `FCM_TOKEN_SAVED`, `FCM_PERM_DENIED`, `FCM_INIT_ERROR`, `FCM_ON_MESSAGE:{messageId}`, `FCM_BACKGROUND_MESSAGE:{messageId}`, `FCM_ON_MESSAGE_OPENED:{messageId}`, `FCM_INITIAL_MESSAGE:{messageId}`, `NOTIFICATIONS_OPENED`
+
+## 9. Analytics & Logging
 
 ✅ **Firebase Analytics Events**:
 - `search_opened` - открытие поиска
@@ -72,7 +93,7 @@
 
 ✅ **debugLog маркеры**: Все ключевые действия логируются с префиксами
 
-## 8. Сборка и Деплой
+## 10. Сборка и Деплой
 
 ✅ **Flutter Build**: `flutter build apk --release --no-tree-shake-icons` успешно
 ✅ **APK**: 
@@ -97,7 +118,7 @@ GOOGLE_INIT:[DEFAULT]
 GOOGLE_JSON_CHECK:found
 ```
 
-## 9. Чек-лист автоприёмки
+## 11. Чек-лист автоприёмки
 
 - [x] Версионирование обновлено (6.0.0+34, v6.0-ultimate)
 - [x] Fresh install wipe работает в release-режиме
@@ -111,7 +132,7 @@ GOOGLE_JSON_CHECK:found
 - [x] Firebase Analytics события добавлены
 - [x] APK собран и установлен
 
-## 10. Важно: Без тестовых данных
+## 12. Важно: Без тестовых данных
 
 Все формы/списки работают с реальными Firestore/Storage данными. Логи `*_ERR:{code}` реализованы.
 
