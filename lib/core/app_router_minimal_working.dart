@@ -3,7 +3,7 @@ import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
 import 'package:event_marketplace_app/screens/splash/splash_event_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
-import 'package:event_marketplace_app/screens/auth/login_screen_modern.dart';
+import 'package:event_marketplace_app/screens/auth/login_screen_improved.dart';
 import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
 import 'package:event_marketplace_app/screens/auth/role_selection_screen.dart';
 import 'package:event_marketplace_app/screens/auth/register_screen_enhanced.dart';
@@ -42,7 +42,7 @@ import 'package:go_router/go_router.dart';
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/splash-event', // Start with new splash screen
+    initialLocation: '/auth-gate', // Start with auth gate
     debugLogDiagnostics: true,
     observers: [
       _AnalyticsRouteObserver(),

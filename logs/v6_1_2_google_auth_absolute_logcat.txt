@@ -1,0 +1,114 @@
+﻿
+11-09 22:22:47.971  2573  2573 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.iconnect.app.NearbyAppC
+onnect.notifyHilinkApp:404 com.huawei.iconnect.notify.Dialog.DialogBroadcast$Di
+alogBroadcastReceiver.onReceive:122 androidx.localbroadcastmanager.content.Loca
+lBroadcastManager.executePendingBroadcasts:313 
+11-09 22:22:52.970  2573  2573 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.iconnect.app.NearbyAppC
+onnect.notifyHilinkApp:404 com.huawei.iconnect.notify.Dialog.DialogBroadcast$Di
+alogBroadcastReceiver.onReceive:122 androidx.localbroadcastmanager.content.Loca
+lBroadcastManager.executePendingBroadcasts:313 
+11-09 22:23:01.922  2573  2573 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.iconnect.app.NearbyAppC
+onnect.notifyHilinkApp:404 com.huawei.iconnect.notify.Dialog.DialogBroadcast$Di
+alogBroadcastReceiver.onReceive:122 androidx.localbroadcastmanager.content.Loca
+lBroadcastManager.executePendingBroadcasts:313 
+11-09 22:23:13.053  2573  2573 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.iconnect.app.NearbyAppC
+onnect.notifyHilinkApp:404 com.huawei.iconnect.notify.Dialog.DialogBroadcast$Di
+alogBroadcastReceiver.onReceive:122 androidx.localbroadcastmanager.content.Loca
+lBroadcastManager.executePendingBroadcasts:313 
+11-09 22:23:13.442  2573  2573 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.iconnect.app.NearbyAppC
+onnect.notifyHilinkApp:404 com.huawei.iconnect.notify.Dialog.DialogBroadcast$Di
+alogBroadcastReceiver.onReceive:122 androidx.localbroadcastmanager.content.Loca
+lBroadcastManager.executePendingBroadcasts:313 
+11-09 22:23:28.930  2573  2573 W ContextImpl: Calling a method in the system pr
+ocess without a qualified user: android.app.ContextImpl.sendBroadcast:1183 andr
+oid.content.ContextWrapper.sendBroadcast:453 com.huawei.iconnect.app.NearbyAppC
+onnect.notifyHilinkApp:404 com.huawei.iconnect.notify.Dialog.DialogBroadcast$Di
+alogBroadcastReceiver.onReceive:122 androidx.localbroadcastmanager.content.Loca
+lBroadcastManager.executePendingBroadcasts:313 
+11-09 22:32:44.604  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.v
+ideos (protectionLevel=2 flags=0x30dbbec5)
+11-09 22:32:50.933   596   612 E /system/bin/tee_auth_daemon: Failed to get IAs
+hmemDeviceService.
+11-09 22:32:50.965   596   612 E /system/bin/tee_auth_daemon: Failed to get IAs
+hmemDeviceService.
+11-09 22:32:51.101  2641  3596 I AbnormalCtrlPolicy: Request interaction app: c
+om.huawei.appmarket
+11-09 22:32:52.264 17325 17325 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-09 22:32:52.343 17325 17388 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-09 22:32:52.364 17325 17325 W marketplace.app: type=1400 audit(0.0:1148457):
+ avc: denied { read } for pid=17325 name="max_map_count" dev="proc" ino=2408149
+5 scontext=u:r:untrusted_app:s0:c222,c257,c512,c768 tcontext=u:object_r:proc_ma
+x_map_count:s0 tclass=file permissive=0
+11-09 22:32:52.875  9881 18221 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.google.android.videos, Service: oauth2:https://www.goog
+leapis.com/auth/android_video https://www.googleapis.com/auth/userinfo.email ht
+tps://www.googleapis.com/auth/google_tv
+11-09 22:32:52.876  9881 18221 W Auth    : [ChimeraGetToken] exception while tr
+ying to fetch auth tokens for app=com.google.android.videos, scope=oauth2:https
+://www.googleapis.com/auth/android_video https://www.googleapis.com/auth/userin
+fo.email https://www.googleapis.com/auth/google_tv [CONTEXT service_id=153 ]
+11-09 22:32:53.775 17325 17325 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-09 22:32:53.775 17325 17325 I flutter : APP: APP: RELEASE FLOW START
+11-09 22:32:53.775 17325 17325 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-09 22:32:53.775 17325 17325 I flutter : APP: APP: BUILD OK v6.1.2-google-aut
+h-ABSOLUTE
+11-09 22:32:53.775 17325 17325 I flutter : APP: APP_VERSION:6.1.2+37
+11-09 22:32:53.775 17325 17325 I flutter : APP: SESSION_START
+11-09 22:32:53.775 17325 17325 I flutter : APP: INDEXES_READY
+11-09 22:32:53.775 17325 17325 I flutter : APP: FIREBASE_DEPLOY_START
+11-09 22:32:53.823 17325 17325 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
+11-09 22:32:53.823 17325 17325 I flutter : APP: GOOGLE_INIT:[DEFAULT]
+11-09 22:32:53.823 17325 17325 I flutter : APP: GOOGLE_JSON_CHECK:found
+11-09 22:32:54.231 17325 17325 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+11-09 22:32:54.490 17325 17325 I flutter : APP: FCM_INIT_ERROR:[firebase_messag
+ing/unknown] java.io.IOException: SERVICE_NOT_AVAILABLE
+11-09 22:32:54.490 17325 17325 I flutter : APP: WEB_CLIENT_ID:1:272201705683:an
+droid:0196de78aaeb970ef80c26
+11-09 22:32:54.490 17325 17325 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyC
+HEJy7WBr5eQrcyuRhh_hSfih4
+11-09 22:32:54.490 17325 17325 I flutter : APP: APP: BUILD OK v6.1.2-google-aut
+h-ABSOLUTE
+11-09 22:32:54.534 17325 17325 I flutter : APP: AUTH_GATE:USER:null
+11-09 22:32:54.534 17325 17325 I flutter : APP: AUTH_SCREEN_SHOWN
+11-09 22:32:54.643  1082  1302 W ScreemCommon: CLICK_START_APP: JL_APP_LAUNCHIN
+G_END and JL_EVENT_CLICK_UP too long| span:447551 > A(10000), A
+11-09 22:32:54.669  1717  3404 I HwPackageManagerService: app:surfaceflinger, g
+etApplicationInfo or source return null
+11-09 22:32:54.670  1717  3404 I HwPackageManagerService: app:system_server, ge
+tApplicationInfo or source return null
+11-09 22:32:58.468 18357 17145 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mu: Exception in CronetUrlRequest: net:
+:ERR_QUIC_PROTOCOL_ERROR, ErrorCode=10, InternalErrorCode=-356, Retryable=false
+, QuicDetailedErrorCode=25, Source=2
+11-09 22:33:08.465 18357 17145 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mu: Exception in CronetUrlRequest: net:
+:ERR_QUIC_PROTOCOL_ERROR, ErrorCode=10, InternalErrorCode=-356, Retryable=false
+, QuicDetailedErrorCode=25, Source=2
+11-09 22:33:15.668  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1148483
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-09 22:33:15.670  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-09 22:33:21.708  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1148484
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-09 22:33:21.710  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+
+

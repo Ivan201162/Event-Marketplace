@@ -87,7 +87,7 @@ class _AuthGateState extends State<AuthGate> {
 
         // IF user == null → show LoginScreen
         if (user == null) {
-          debugLog("AUTH_GATE: user=null → show login");
+          debugLog("AUTH_GATE:USER:null");
           debugLog("AUTH_SCREEN_SHOWN");
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -100,7 +100,7 @@ class _AuthGateState extends State<AuthGate> {
         }
 
         // IF user != null → check profile
-        debugLog("AUTH_GATE: user exists → checking profile");
+        debugLog("AUTH_GATE:USER:uid=${user.uid}");
         return _ProfileCheckWidget(user: user);
       },
     );
@@ -131,7 +131,7 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
           .get();
 
       if (!userDoc.exists) {
-        debugLog("AUTH_GATE: profile incomplete → onboarding");
+        debugLog("AUTH_GATE:PROFILE_CHECK:missing_fields=[doc_not_exists]");
         debugLog("ONBOARDING_OPENED");
         if (mounted) {
           context.go('/onboarding/role-name-city');
@@ -147,40 +147,37 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
       final city = userData['city'] as String?;
       
       // Проверка обязательных полей для онбординга (жёсткая проверка)
-      // Роли: 1-3 элемента, не пустые
+      final missingFields = <String>[];
+      
       final hasValidRoles = roles != null &&
           roles is List &&
           roles.isNotEmpty &&
           roles.length >= 1 &&
           roles.length <= 3;
+      if (!hasValidRoles) missingFields.add('roles');
       
       final hasValidRolesLower = rolesLower != null &&
           rolesLower is List &&
           rolesLower.isNotEmpty &&
           rolesLower.length >= 1 &&
           rolesLower.length <= 3;
+      if (!hasValidRolesLower) missingFields.add('rolesLower');
       
-      final needsOnboarding = !hasValidRoles ||
-          !hasValidRolesLower ||
-          firstName == null ||
-          firstName.trim().isEmpty ||
-          lastName == null ||
-          lastName.trim().isEmpty ||
-          city == null ||
-          city.trim().isEmpty;
+      if (firstName == null || firstName.trim().isEmpty) missingFields.add('firstName');
+      if (lastName == null || lastName.trim().isEmpty) missingFields.add('lastName');
+      if (city == null || city.trim().isEmpty) missingFields.add('city');
       
-      if (needsOnboarding) {
-        debugLog("AUTH_GATE: profile incomplete → onboarding");
+      if (missingFields.isNotEmpty) {
+        debugLog("AUTH_GATE:PROFILE_CHECK:missing_fields=[${missingFields.join(',')}]");
         debugLog("ONBOARDING_OPENED");
         if (mounted) {
-          // Жёсткая навигация на онбординг, без возможности вернуться
           context.go('/onboarding/role-name-city');
         }
         return;
       }
       
       // Всё готово → /main
-      debugLog("AUTH_GATE: profile OK → main");
+      debugLog("AUTH_GATE:PROFILE_CHECK:ok");
       debugLog("HOME_LOADED");
       if (mounted) {
         context.go('/main');

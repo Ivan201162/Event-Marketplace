@@ -74,7 +74,14 @@ tasks.register("verifyGoogleServicesJson") {
     doLast {
         val f = file("$projectDir/google-services.json")
         if (!f.exists()) {
-            throw GradleException("google-services.json not found at app module. Put it at android/app/google-services.json")
+            throw GradleException("google-services.json NOT FOUND at android/app/. Aborting.")
+        }
+        val text = f.readText()
+        if (!text.contains("\"package_name\"")) {
+            throw GradleException("google-services.json missing package_name")
+        }
+        if (!text.contains("client_info")) {
+            throw GradleException("google-services.json missing client_info")
         }
     }
 }

@@ -34,9 +34,11 @@ void main() async {
   final googleServicesExists = await File(googleServicesPath).exists();
   debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
 
+  debugLog('APP: RELEASE FLOW START');
+  debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
+  
   debugLog('APP: BUILD OK $BUILD_VERSION');
-  debugLog('APP: RELEASE FLOW STARTED');
-  debugLog('APP_VERSION:6.1.1+36');
+  debugLog('APP_VERSION:6.1.2+37');
   debugLog('SESSION_START');
   debugLog('INDEXES_READY');
   
@@ -181,6 +183,7 @@ void main() async {
 
     runZonedGuarded(() {
       runApp(const ProviderScope(child: EventMarketplaceApp()));
+      debugLog('APP: BUILD OK v6.1.2-google-auth-ABSOLUTE');
     }, (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack);
     });
@@ -193,6 +196,7 @@ void main() async {
 
     // Запускаем приложение даже при ошибке инициализации
     runApp(const ProviderScope(child: EventMarketplaceApp()));
+    debugLog('APP: BUILD OK v6.1.2-google-auth-ABSOLUTE');
   }
 }
 
