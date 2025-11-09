@@ -44,13 +44,6 @@ class _NotificationsScreenEnhancedState extends ConsumerState<NotificationsScree
       debugLog("NOTIFICATIONS_OPENED");
     });
   }
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugLog("NOTIF_OPENED");
-    });
-  }
 
   void _handleNotificationTap(Map<String, dynamic> notification) {
     final type = notification['type'] as String?;
