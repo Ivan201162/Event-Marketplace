@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/core/build_version.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,9 +69,27 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             subtitle: _isDarkMode ? 'Включена' : 'Выключена',
             trailing: Switch(
               value: _isDarkMode,
-              onChanged: (value) {
+              onChanged: (value) async {
                 setState(() => _isDarkMode = value);
-                debugLog("SETTINGS_THEME:${value ? 'dark' : 'light'}");
+                debugLog("SETTINGS_THEME_UPDATE:${value ? 'dark' : 'light'}");
+                
+                // Сохраняем в Firestore
+                final user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.uid)
+                      .update({
+                    'themeMode': value ? 'dark' : 'light',
+                    'prefsUpdatedAt': FieldValue.serverTimestamp(),
+                  });
+                }
+                
+                // Применяем тему немедленно
+                if (mounted) {
+                  // Перезагружаем MaterialApp через изменение ThemeMode
+                  // Это будет обработано через themeProvider
+                }
               },
             ),
           ),

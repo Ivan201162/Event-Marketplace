@@ -335,6 +335,7 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
   }
 
   Future<void> _refresh() async {
+    debugLog("FEED_OPENED");
     try {
       _lastPostDoc = null;
       _lastReelDoc = null;
