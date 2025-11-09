@@ -183,10 +183,12 @@ void main() async {
 
     runZonedGuarded(() {
       runApp(const ProviderScope(child: EventMarketplaceApp()));
-      debugLog('APP: BUILD OK v6.1.2-google-auth-ABSOLUTE');
     }, (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack);
     });
+    
+    // Лог после runApp
+    debugLog('APP: BUILD OK v6.1.2-google-auth-ABSOLUTE');
   } catch (e, stackTrace) {
     debugPrint('❌ Критическая ошибка инициализации: $e');
     debugPrint('Stack trace: $stackTrace');

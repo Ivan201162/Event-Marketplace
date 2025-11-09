@@ -9,7 +9,9 @@
 # Firebase rules
 -keep class com.google.firebase.** { *; }
 -keep class com.google.android.gms.** { *; }
+-keep class com.google.android.gms.common.api.** { *; }
 -dontwarn com.google.firebase.**
+-dontwarn com.google.**
 
 # Google Play Core rules
 -keep class com.google.android.play.core.** { *; }

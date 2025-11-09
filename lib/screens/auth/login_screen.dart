@@ -1,9 +1,12 @@
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
 
 /// Экран входа и регистрации
 class LoginScreen extends ConsumerStatefulWidget {
@@ -31,7 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _signInWithEmail() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      _showError('Заполните все поля');
+      _showSnack('Заполните все поля');
       return;
     }
 
@@ -46,12 +49,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
 
       if (mounted) {
-        context.go('/main');
+        context.go('/auth-gate');
       }
     } on FirebaseAuthException catch (e) {
-      _showError(_getErrorMessage(e.code));
+      _showSnack(_getErrorMessage(e.code));
     } catch (e) {
-      _showError('Произошла ошибка: $e');
+      _showSnack('Произошла ошибка: $e');
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
@@ -62,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (_emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _nameController.text.isEmpty) {
-      _showError('Заполните все поля');
+      _showSnack('Заполните все поля');
       return;
     }
 
@@ -78,14 +81,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
 
       if (mounted) {
-        context.go('/main');
+        context.go('/auth-gate');
       }
     } on FirebaseAuthException catch (e) {
       debugLog('AUTH_ERR:${e.code}:${e.message}');
-      _showError(_getErrorMessage(e.code));
+      _showSnack(_getErrorMessage(e.code));
     } catch (e) {
       debugLog('AUTH_ERR:unknown:$e');
-      _showError('Произошла ошибка: $e');
+      _showSnack('Произошла ошибка: $e');
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
@@ -97,62 +100,252 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     await context.push('/phone-auth');
   }
 
+  /// Жёсткий Google Sign-In с диагностикой
   Future<void> _signInWithGoogle() async {
+    debugLog('GOOGLE_BTN_TAP');
+    
     setState(() => _isLoading = true);
     ref.read(authLoadingProvider.notifier).setLoading(true);
 
     try {
-      final authService = ref.read(authServiceProvider);
-      await authService.signInWithGoogle();
+      debugLog('GOOGLE_SIGNIN_START');
 
+      // 1) Проверка Google Play Services (через попытку инициализации)
+      int googlePlayServicesStatus = -1;
+      try {
+        // На Android проверяем через попытку signInSilently
+        if (Platform.isAndroid) {
+          final googleSignIn = GoogleSignIn();
+          try {
+            await googleSignIn.signInSilently();
+            googlePlayServicesStatus = 0; // SUCCESS
+          } catch (e) {
+            // Если ошибка не связана с Play Services, считаем что они доступны
+            if (!e.toString().contains('SERVICE_MISSING') && 
+                !e.toString().contains('SERVICE_VERSION_UPDATE_REQUIRED')) {
+              googlePlayServicesStatus = 0;
+            } else {
+              googlePlayServicesStatus = 1; // ERROR
+            }
+          }
+        } else {
+          googlePlayServicesStatus = 0; // На других платформах считаем доступным
+        }
+      } catch (e) {
+        debugLog('GOOGLE_PLAY_SERVICES_CHECK_ERROR:$e');
+        googlePlayServicesStatus = -1;
+      }
+      debugLog('GOOGLE_PLAY_SERVICES:$googlePlayServicesStatus');
+
+      // 2) Сброс предыдущих сессий
+      try {
+        await GoogleSignIn().signOut();
+        debugLog('GOOGLE_SIGNIN_PREVIOUS_SESSION_CLEARED');
+      } catch (e) {
+        debugLog('GOOGLE_SIGNIN_CLEAR_ERROR:$e');
+      }
+
+      // 3) Старт браузерного флоу
+      final googleUser = await GoogleSignIn(
+        scopes: <String>['email', 'profile', 'openid'],
+      ).signIn();
+
+      if (googleUser == null) {
+        debugLog('GOOGLE_SIGNIN_ERROR:user_cancelled');
+        _showSnack('Вы отменили вход');
+        return;
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final idTokenPreview = googleAuth.idToken?.substring(0, 20) ?? 'null';
+      final accessTokenPreview = googleAuth.accessToken?.substring(0, 10) ?? 'null';
+      debugLog('GOOGLE_OAUTH_TOKENS: idToken=$idTokenPreview..., access=$accessTokenPreview...');
+
+      debugLog('GOOGLE_FIREBASE_AUTH_START');
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      
+      final res = await FirebaseAuth.instance.signInWithCredential(credential);
+      debugLog('GOOGLE_FIREBASE_AUTH_SUCCESS: uid=${res.user?.uid}');
+
+      // Жёсткий редирект в AuthGate
       if (mounted) {
-        context.go('/main');
+        context.go('/auth-gate');
       }
-    } on FirebaseAuthException catch (e) {
-      var errorMessage = 'Ошибка входа через Google';
 
-      if (e.code == 'account-exists-with-different-credential') {
-        errorMessage =
-            'Аккаунт с таким email уже существует с другим способом входа';
-      } else if (e.code == 'invalid-credential') {
-        errorMessage = 'Неверные учетные данные Google';
-      } else if (e.code == 'operation-not-allowed') {
-        errorMessage = 'Вход через Google не разрешен';
-      } else if (e.code == 'user-disabled') {
-        errorMessage = 'Аккаунт заблокирован';
-      } else if (e.code == 'user-not-found') {
-        errorMessage = 'Пользователь не найден';
-      } else if (e.code == 'network-request-failed') {
-        errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
+    } on FirebaseAuthException catch (e, st) {
+      debugLog('GOOGLE_FIREBASE_AUTH_ERROR:${e.code}:${e.message}');
+      debugLog('STACK:${st.toString().substring(0, st.toString().length > 800 ? 800 : st.toString().length)}');
+      
+      if (_shouldRetry(e.code)) {
+        debugLog('GOOGLE_AUTH_RETRY');
+        await Future.delayed(const Duration(seconds: 2));
+        
+        // ОДИН повтор
+        try {
+          // Сброс перед повторной попыткой
+          await FirebaseAuth.instance.signOut();
+          await GoogleSignIn().disconnect();
+          await GoogleSignIn().signOut();
+          
+          // Повтор того же флоу
+          final googleUser = await GoogleSignIn(
+            scopes: <String>['email', 'profile', 'openid'],
+          ).signIn();
+          
+          if (googleUser == null) {
+            debugLog('GOOGLE_AUTH_RETRY:user_cancelled');
+            _showSnack('Вы отменили вход');
+            return;
+          }
+          
+          final googleAuth = await googleUser.authentication;
+          final credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+          
+          final res = await FirebaseAuth.instance.signInWithCredential(credential);
+          debugLog('GOOGLE_FIREBASE_AUTH_RETRY_SUCCESS: uid=${res.user?.uid}');
+          
+          if (mounted) {
+            context.go('/auth-gate');
+          }
+        } catch (e2, st2) {
+          debugLog('GOOGLE_AUTH_RETRY_FAIL:$e2');
+          debugLog('STACK_RETRY:${st2.toString().substring(0, st2.toString().length > 800 ? 800 : st2.toString().length)}');
+          _showSnack('Не удалось войти через Google. Попробуйте позже.');
+        }
       } else {
-        errorMessage = 'Ошибка Google Sign-In: ${e.message ?? e.code}';
+        _showSnack(_mapAuthError(e));
       }
-
-      _showError(errorMessage);
-    } catch (e) {
-      var errorMessage = 'Ошибка входа через Google';
-
-      if (e.toString().contains('ApiException: 10')) {
-        errorMessage =
-            'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
-      } else {
-        errorMessage = 'Ошибка входа через Google: $e';
-      }
-
-      _showError(errorMessage);
+    } catch (e, st) {
+      debugLog('GOOGLE_SIGNIN_ERROR:$e');
+      debugLog('STACK:${st.toString().substring(0, st.toString().length > 800 ? 800 : st.toString().length)}');
+      _showSnack('Ошибка входа через Google.');
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
     }
   }
 
-  void _showError(String message) {
-    if (!mounted) return;
+  /// Проверка, нужно ли повторить попытку
+  bool _shouldRetry(String code) {
+    return code == 'network-request-failed' || code == 'unknown';
+  }
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red),);
+  /// Маппинг ошибок авторизации на дружелюбные сообщения
+  String _mapAuthError(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'account-exists-with-different-credential':
+        return 'Аккаунт с таким email уже существует с другим способом входа';
+      case 'invalid-credential':
+        return 'Неверные учетные данные Google';
+      case 'user-disabled':
+        return 'Аккаунт заблокирован';
+      case 'operation-not-allowed':
+        return 'Вход через Google не разрешен';
+      case 'invalid-verification-code':
+        return 'Неверный код верификации';
+      case 'invalid-verification-id':
+        return 'Неверный ID верификации';
+      case 'network-request-failed':
+        return 'Ошибка сети. Проверьте подключение к интернету';
+      case 'unknown':
+        return 'Неизвестная ошибка. Попробуйте позже';
+      default:
+        return 'Ошибка входа: ${e.message ?? e.code}';
+    }
+  }
+
+  /// Диагностика конфигурации
+  Future<void> _runDiagnostics() async {
+    debugLog('AUTH_DIAG:START');
+    
+    try {
+      // applicationId
+      debugLog('AUTH_DIAG:applicationId=com.eventmarketplace.app');
+      
+      // Google Play Services
+      int gpsStatus = -1;
+      try {
+        if (Platform.isAndroid) {
+          final googleSignIn = GoogleSignIn();
+          try {
+            await googleSignIn.signInSilently();
+            gpsStatus = 0;
+          } catch (e) {
+            if (!e.toString().contains('SERVICE_MISSING') && 
+                !e.toString().contains('SERVICE_VERSION_UPDATE_REQUIRED')) {
+              gpsStatus = 0;
+            } else {
+              gpsStatus = 1;
+            }
+          }
+        } else {
+          gpsStatus = 0;
+        }
+      } catch (e) {
+        debugLog('AUTH_DIAG:GPS_CHECK_ERROR:$e');
+      }
+      debugLog('AUTH_DIAG:GOOGLE_PLAY_SERVICES:$gpsStatus');
+      
+      // Firebase конфигурация
+      try {
+        final app = Firebase.app();
+        debugLog('AUTH_DIAG:PROJECT_ID=${app.options.projectId}');
+        debugLog('AUTH_DIAG:API_KEY=${app.options.apiKey?.substring(0, 10)}...');
+        debugLog('AUTH_DIAG:APP_ID=${app.options.appId}');
+      } catch (e) {
+        debugLog('AUTH_DIAG:FIREBASE_CONFIG_ERROR:$e');
+      }
+      
+      // Проверка провайдера Google
+      try {
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail('test@example.com');
+        debugLog('AUTH_DIAG:GOOGLE_PROVIDER_CHECK:ok');
+      } catch (e) {
+        debugLog('AUTH_DIAG:GOOGLE_PROVIDER_CHECK_ERROR:$e');
+      }
+      
+      // Проверка Google Sign-In состояния
+      try {
+        final googleSignIn = GoogleSignIn();
+        final isSignedIn = await googleSignIn.isSignedIn();
+        debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST:isSignedIn=$isSignedIn');
+        
+        if (isSignedIn) {
+          try {
+            final account = await googleSignIn.signInSilently();
+            debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST:account=${account?.email ?? "null"}');
+          } catch (e) {
+            debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST:silent_error=$e');
+          }
+        }
+      } catch (e) {
+        debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST_ERROR:$e');
+      }
+      
+      debugLog('AUTH_DIAG:END');
+      
+      if (mounted) {
+        _showSnack('Диагностика завершена. Проверьте логи.');
+      }
+    } catch (e) {
+      debugLog('AUTH_DIAG:ERROR:$e');
+      if (mounted) {
+        _showSnack('Ошибка диагностики: $e');
+      }
+    }
+  }
+
+  void _showSnack(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
   String _getErrorMessage(String errorCode) {
@@ -198,7 +391,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 padding: const EdgeInsets.all(24),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight - 48, // 48 = padding * 2
+                    minHeight: constraints.maxHeight - 48,
                   ),
                   child: IntrinsicHeight(
                     child: Column(
@@ -379,6 +572,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       _isLoading ? null : _signInWithGoogle,
                                   icon: const Icon(Icons.account_circle),
                                   label: const Text('Войти через Google'),
+                                ),
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              // Диагностика кнопка
+                              SizedBox(
+                                width: double.infinity,
+                                child: TextButton.icon(
+                                  onPressed: _isLoading ? null : _runDiagnostics,
+                                  icon: const Icon(Icons.bug_report, size: 18),
+                                  label: const Text('Проверка конфигурации'),
                                 ),
                               ),
                             ],
