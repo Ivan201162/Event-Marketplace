@@ -90,6 +90,8 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
         await _loadRecommendations();
       }
       
+      debugLog("FEED_PAGE_LOADED:${_posts.length + _reels.length}");
+      
       debugLog("FEED_LOADED:${_posts.length + _reels.length}");
       
       if (_posts.isEmpty && _reels.isEmpty) {
@@ -273,6 +275,7 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
         _posts.addAll(morePosts);
         _isLoadingMore = false;
       });
+      debugLog("FEED_PAGE_LOADED:${_posts.length + _reels.length}");
     } catch (e) {
       setState(() => _isLoadingMore = false);
       debugPrint('Error loading more posts: $e');

@@ -44,6 +44,7 @@ class _BookingCreateSheetState extends State<BookingCreateSheet> {
   @override
   void initState() {
     super.initState();
+    debugLog("BOOKING_UI_OPENED");
     debugLog("SHEET_OPENED:booking_create");
   }
 
@@ -138,18 +139,21 @@ class _BookingCreateSheetState extends State<BookingCreateSheet> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedEventType == null || _selectedEventType!.isEmpty) {
+      debugLog("BOOKING_VALIDATION_ERR:missing_event_type");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Выберите тип мероприятия')),
       );
       return;
     }
     if (_selectedEventType == 'Другое' && _customEventTypeController.text.trim().isEmpty) {
+      debugLog("BOOKING_VALIDATION_ERR:missing_custom_event_type");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Введите название мероприятия')),
       );
       return;
     }
     if (_timeType == 'custom_time' && (_timeFrom == null || _timeTo == null)) {
+      debugLog("BOOKING_VALIDATION_ERR:missing_time_range");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Укажите время начала и окончания')),
       );

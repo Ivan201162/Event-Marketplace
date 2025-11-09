@@ -214,6 +214,7 @@ final searchSpecialistsProvider =
 
     // Фильтр по доступным датам
     if (filters.availableDates.isNotEmpty) {
+      debugLog("SEARCH_DATE_FILTER_APPLIED:${filters.availableDates.join(',')}");
       specialists = specialists.where((specialist) {
         return filters.availableDates
             .any((date) => specialist.availableDates.contains(date));
