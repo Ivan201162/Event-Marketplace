@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/specialist_enhanced.dart';
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
@@ -392,24 +395,98 @@ double _calculateDistance(Position position, Map<String, dynamic> location) {
 /// Нотификатор для сохраненных фильтров
 class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
   @override
-  List<SearchFilters> build() => [];
-
-  void addFilter(SearchFilters filter) {
-    state = [...state, filter];
+  List<SearchFilters> build() {
+    _loadSavedFilters();
+    return [];
   }
 
-  void removeFilter(int index) {
-    final newList = <SearchFilters>[];
-    for (var i = 0; i < state.length; i++) {
-      if (i != index) {
-        newList.add(state[i]);
-      }
+  Future<void> _loadSavedFilters() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final snapshot = await FirebaseFirestore.instance
+          .collection('saved_search_filters')
+          .where('userId', isEqualTo: user.uid)
+          .orderBy('createdAt', descending: true)
+          .limit(10)
+          .get();
+
+      final filters = snapshot.docs
+          .map((doc) => SearchFilters.fromMap(doc.data()))
+          .toList();
+
+      state = filters;
+    } catch (e) {
+      debugPrint('Error loading saved filters: $e');
     }
-    state = newList;
   }
 
-  void clearAll() {
-    state = [];
+  Future<void> addFilter(SearchFilters filter, String? name) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      await FirebaseFirestore.instance
+          .collection('saved_search_filters')
+          .add({
+        'userId': user.uid,
+        'name': name ?? 'Фильтр ${DateTime.now().toString().substring(0, 10)}',
+        ...filter.toMap(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      await _loadSavedFilters();
+      debugLog("SEARCH_FILTER_SAVED:${name ?? 'unnamed'}");
+    } catch (e) {
+      debugPrint('Error saving filter: $e');
+      debugLog("SEARCH_FILTER_SAVE_ERR:$e");
+    }
+  }
+
+  Future<void> removeFilter(String filterId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('saved_search_filters')
+          .doc(filterId)
+          .delete();
+
+      await _loadSavedFilters();
+      debugLog("SEARCH_FILTER_DELETED:$filterId");
+    } catch (e) {
+      debugPrint('Error deleting filter: $e');
+      debugLog("SEARCH_FILTER_DELETE_ERR:$e");
+    }
+  }
+
+  Future<void> clearAll() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final snapshot = await FirebaseFirestore.instance
+          .collection('saved_search_filters')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+
+      final batch = FirebaseFirestore.instance.batch();
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+
+      state = [];
+      debugLog("SEARCH_FILTERS_CLEARED");
+    } catch (e) {
+      debugPrint('Error clearing filters: $e');
+      debugLog("SEARCH_FILTERS_CLEAR_ERR:$e");
+    }
+  }
+
+  Future<void> loadFilter(SearchFilters filter) async {
+    // Применяем фильтр к текущему поиску
+    // Это будет использоваться через searchFiltersProvider
+    debugLog("SEARCH_FILTER_LOADED");
   }
 }
 

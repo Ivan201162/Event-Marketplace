@@ -1,5 +1,7 @@
+import 'package:event_marketplace_app/models/search_filters.dart';
 import 'package:event_marketplace_app/models/user.dart' show UserRole;
 import 'package:event_marketplace_app/providers/search_providers.dart';
+import 'package:event_marketplace_app/providers/specialist_providers.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -96,6 +98,134 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
     ref.refresh(filteredSpecialistsProvider);
   }
 
+  void _showSaveFilterDialog() {
+    final nameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Сохранить фильтр'),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(
+            labelText: 'Название фильтра',
+            hintText: 'Например: Фотографы в Москве',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              final name = nameController.text.trim();
+              if (name.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Введите название фильтра')),
+                );
+                return;
+              }
+              _saveCurrentFilter(name);
+              Navigator.pop(context);
+            },
+            child: const Text('Сохранить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _saveCurrentFilter(String name) {
+    final filter = SearchFilters(
+      city: _selectedCity,
+      specialization: _selectedCategories.isNotEmpty ? _selectedCategories.first : null,
+      minRating: _minRating,
+      minPrice: _minPrice?.toInt(),
+      maxPrice: _maxPrice?.toInt(),
+    );
+    
+    ref.read(savedFiltersProvider.notifier).addFilter(filter, name);
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Фильтр "$name" сохранён')),
+    );
+  }
+
+  void _showSavedFilters() {
+    final savedFilters = ref.read(savedFiltersProvider);
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Сохранённые фильтры',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            if (savedFilters.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(32),
+                child: Text('Нет сохранённых фильтров'),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: savedFilters.length,
+                itemBuilder: (context, index) {
+                  final filter = savedFilters[index];
+                  return ListTile(
+                    title: Text('Фильтр ${index + 1}'),
+                    subtitle: Text(
+                      '${filter.city ?? ''} ${filter.specialization ?? ''}'.trim(),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        // TODO: Удалить фильтр (нужен filterId)
+                        Navigator.pop(context);
+                      },
+                    ),
+                    onTap: () {
+                      _loadFilter(filter);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _loadFilter(SearchFilters filter) {
+    setState(() {
+      _selectedCity = filter.city;
+      _selectedCategories = filter.specialization != null ? [filter.specialization!] : [];
+      _minPrice = filter.minPrice?.toDouble();
+      _maxPrice = filter.maxPrice?.toDouble();
+      _minRating = filter.minRating;
+    });
+    
+    ref.read(searchFiltersProvider.notifier)
+      ..updateLocation(filter.city)
+      ..updatePriceRange(filter.minPrice?.toDouble(), filter.maxPrice?.toDouble())
+      ..updateRating(filter.minRating);
+    
+    ref.invalidate(filteredSpecialistsProvider);
+    ref.refresh(filteredSpecialistsProvider);
+    
+    debugLog("SEARCH_FILTER_LOADED");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Фильтр загружен')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final searchResultsAsync = ref.watch(filteredSpecialistsProvider);
@@ -165,8 +295,13 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                               child: const Text('Сбросить'),
                             ),
                             TextButton(
-                              onPressed: _applyFilters,
+                              onPressed: _showSaveFilterDialog,
                               child: const Text('Сохранить фильтр'),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.bookmark),
+                              onPressed: _showSavedFilters,
+                              tooltip: 'Сохранённые фильтры',
                             ),
                           ],
                         ),
