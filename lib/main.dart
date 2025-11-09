@@ -195,12 +195,13 @@ class EventMarketplaceApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return MaterialApp.router(
       title: 'Event Marketplace',
       theme: appLightTheme(),
       darkTheme: appDarkTheme(),
-      themeMode: ThemeMode.system, // Автопереключение по системной теме
+      themeMode: themeMode, // Используем themeProvider для немедленного применения
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

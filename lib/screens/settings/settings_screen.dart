@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/core/build_version.dart';
+import 'package:event_marketplace_app/providers/theme_provider.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  bool _isDarkMode = false;
   bool _notificationsEnabled = true;
   bool _pushNotifications = true;
   final bool _emailNotifications = true;
@@ -63,35 +63,41 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
           // Внешний вид
           _buildSectionHeader('Внешний вид'),
-          _buildSettingsTile(
-            icon: Icons.dark_mode,
-            title: 'Тёмная тема',
-            subtitle: _isDarkMode ? 'Включена' : 'Выключена',
-            trailing: Switch(
-              value: _isDarkMode,
-              onChanged: (value) async {
-                setState(() => _isDarkMode = value);
-                debugLog("SETTINGS_THEME_UPDATE:${value ? 'dark' : 'light'}");
-                
-                // Сохраняем в Firestore
-                final user = FirebaseAuth.instance.currentUser;
-                if (user != null) {
-                  await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(user.uid)
-                      .update({
-                    'themeMode': value ? 'dark' : 'light',
-                    'prefsUpdatedAt': FieldValue.serverTimestamp(),
-                  });
-                }
-                
-                // Применяем тему немедленно
-                if (mounted) {
-                  // Перезагружаем MaterialApp через изменение ThemeMode
-                  // Это будет обработано через themeProvider
-                }
-              },
-            ),
+          Consumer(
+            builder: (context, ref, child) {
+              final themeMode = ref.watch(themeProvider);
+              final isDarkMode = themeMode == ThemeMode.dark;
+              
+              return _buildSettingsTile(
+                icon: Icons.dark_mode,
+                title: 'Тёмная тема',
+                subtitle: isDarkMode ? 'Включена' : 'Выключена',
+                trailing: Switch(
+                  value: isDarkMode,
+                  onChanged: (value) async {
+                    final notifier = ref.read(themeProvider.notifier);
+                    if (value) {
+                      await notifier.setDarkTheme();
+                    } else {
+                      await notifier.setLightTheme();
+                    }
+                    debugLog("SETTINGS_THEME_UPDATE:${value ? 'dark' : 'light'}");
+                    
+                    // Сохраняем в Firestore
+                    final user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user.uid)
+                          .update({
+                        'themeMode': value ? 'dark' : 'light',
+                        'prefsUpdatedAt': FieldValue.serverTimestamp(),
+                      });
+                    }
+                  },
+                ),
+              );
+            },
           ),
           _buildSettingsTile(
             icon: Icons.language,
