@@ -25,37 +25,14 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _checkFreshInstall() async {
-    // Проверка fresh-install в release режиме
+    // Wipe перемещён после успешной авторизации - не выполняем до входа
+    // Просто отмечаем, что проверка завершена
     if (!kDebugMode) {
       final isFirstRun = await FirstRunHelper.isFirstRun();
       if (isFirstRun) {
-        final currentUser = FirebaseAuth.instance.currentUser;
-        if (currentUser != null) {
-          debugLog("FRESH_INSTALL_DETECTED:uid=${currentUser.uid}");
-          debugLog("WIPE_CALL:${currentUser.uid}");
-          // Вызываем wipe для очистки данных
-          final wipeResult = await WipeService.wipeTestUser(uid: currentUser.uid, hard: true);
-          if (wipeResult) {
-            debugLog("FRESH_WIPE_DONE:${currentUser.uid}");
-            debugLog("WIPE_DONE:${currentUser.uid}");
-          } else {
-            debugLog("FRESH_WIPE_ERR:failed");
-            debugLog("WIPE_ERR:failed");
-          }
-          // Выходим из аккаунта (wipe уже делает signOut, но на всякий случай)
-          try {
-          await FirebaseAuth.instance.signOut();
-          debugLog("LOGOUT:OK");
-          debugLog("FRESH_INSTALL_WIPE_COMPLETE:logged_out");
-          } catch (e) {
-            debugLog("LOGOUT:ERR:$e");
-            debugLog("FRESH_INSTALL_LOGOUT_ERR:$e");
-          }
-          // Отмечаем первую установку как выполненную
-          await FirstRunHelper.markFirstRunDone();
-        } else {
-          await FirstRunHelper.markFirstRunDone();
-        }
+        // Не выполняем wipe до входа - только после успешной авторизации
+        debugLog("FRESH_INSTALL_DETECTED:wipe_will_run_after_auth");
+        // Не отмечаем firstRun как выполненный - это будет сделано после wipe
       }
     }
     if (mounted) {
@@ -125,6 +102,40 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
 
   Future<void> _checkProfile() async {
     try {
+      // Wipe после успешной авторизации (только для fresh-install)
+      if (!kDebugMode) {
+        final isFirstRun = await FirstRunHelper.isFirstRun();
+        if (isFirstRun) {
+          debugLog("FRESH_INSTALL_DETECTED:uid=${widget.user.uid}");
+          debugLog("WIPE_CALL:${widget.user.uid}");
+          // Вызываем wipe для очистки данных
+          final wipeResult = await WipeService.wipeTestUser(uid: widget.user.uid, hard: true);
+          if (wipeResult) {
+            debugLog("FRESH_WIPE_DONE:${widget.user.uid}");
+            debugLog("WIPE_DONE:${widget.user.uid}");
+          } else {
+            debugLog("FRESH_WIPE_ERR:failed");
+            debugLog("WIPE_ERR:failed");
+          }
+          // Выходим из аккаунта (wipe уже делает signOut, но на всякий случай)
+          try {
+            await FirebaseAuth.instance.signOut();
+            debugLog("LOGOUT:OK");
+            debugLog("FRESH_INSTALL_WIPE_COMPLETE:logged_out");
+          } catch (e) {
+            debugLog("LOGOUT:ERR:$e");
+            debugLog("FRESH_INSTALL_LOGOUT_ERR:$e");
+          }
+          // Отмечаем первую установку как выполненную
+          await FirstRunHelper.markFirstRunDone();
+          // После wipe редирект на логин
+          if (mounted) {
+            context.go('/login');
+          }
+          return;
+        }
+      }
+      
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(widget.user.uid)

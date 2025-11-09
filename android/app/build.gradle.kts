@@ -39,6 +39,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // Web Client ID для Google Sign-In (из google-services.json)
+        manifestPlaceholders["appAuthRedirectScheme"] = applicationId.toString()
+        // default_web_client_id уже создаётся Google Services plugin из google-services.json
     }
 
     signingConfigs {

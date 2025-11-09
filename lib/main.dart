@@ -38,7 +38,15 @@ void main() async {
   debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
   
   debugLog('APP: BUILD OK $BUILD_VERSION');
-  debugLog('APP_VERSION:6.1.2+37');
+  debugLog('APP_VERSION:6.1.3+38');
+  
+  // Проверка Firebase options
+  try {
+    final options = DefaultFirebaseOptions.currentPlatform;
+    debugLog('FIREBASE_OPTIONS_OK:${options.projectId}');
+  } catch (e) {
+    debugLog('FIREBASE_OPTIONS_ERROR:$e');
+  }
   debugLog('SESSION_START');
   debugLog('INDEXES_READY');
   
@@ -188,7 +196,7 @@ void main() async {
     });
     
     // Лог после runApp
-    debugLog('APP: BUILD OK v6.1.2-google-auth-ABSOLUTE');
+    debugLog('APP: BUILD OK v6.1.3-google-fix-absolute-force');
   } catch (e, stackTrace) {
     debugPrint('❌ Критическая ошибка инициализации: $e');
     debugPrint('Stack trace: $stackTrace');

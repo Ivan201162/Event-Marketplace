@@ -1,0 +1,59 @@
+﻿
+11-10 00:42:58.612  1717  1860 D ActivityManager: cleanUpApplicationRecord app:
+ 30867:com.huawei.lbs/1000, bad: false, restarting: false, allowRestart: true
+11-10 00:59:35.760  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.v
+ideos (protectionLevel=2 flags=0x30dbbec5)
+11-10 00:59:43.179  2606 10603 I Hicom_Monitor: mAppSwitchNotifierEx. uid: 1048
+0, foreground app: com.eventmarketplace.app, foreground activity: com.eventmark
+etplace.app.MainActivity
+11-10 00:59:43.236  4332  4332 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-10 00:59:43.321  4332  4428 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-10 00:59:43.344  4332  4332 W marketplace.app: type=1400 audit(0.0:1152089):
+ avc: denied { read } for pid=4332 name="max_map_count" dev="proc" ino=24210265
+ scontext=u:r:untrusted_app:s0:c224,c257,c512,c768 tcontext=u:object_r:proc_max
+_map_count:s0 tclass=file permissive=0
+11-10 00:59:45.284  9881  9991 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.google.android.videos, Service: oauth2:https://www.goog
+leapis.com/auth/android_video https://www.googleapis.com/auth/userinfo.email ht
+tps://www.googleapis.com/auth/google_tv
+11-10 00:59:45.284  9881  9991 W Auth    : [ChimeraGetToken] exception while tr
+ying to fetch auth tokens for app=com.google.android.videos, scope=oauth2:https
+://www.googleapis.com/auth/android_video https://www.googleapis.com/auth/userin
+fo.email https://www.googleapis.com/auth/google_tv [CONTEXT service_id=153 ]
+11-10 00:59:45.428  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1152090
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 00:59:45.432  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-10 00:59:45.549  4332  4332 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 00:59:45.549  4332  4332 I flutter : APP: APP: RELEASE FLOW START
+11-10 00:59:45.549  4332  4332 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 00:59:45.549  4332  4332 I flutter : APP: APP: BUILD OK v6.1.3-google-fix
+-absolute-force
+11-10 00:59:45.549  4332  4332 I flutter : APP: APP_VERSION:6.1.3+38
+11-10 00:59:45.549  4332  4332 I flutter : APP: FIREBASE_OPTIONS_OK:event-marke
+tplace-mvp
+11-10 00:59:45.549  4332  4332 I flutter : APP: SESSION_START
+11-10 00:59:45.549  4332  4332 I flutter : APP: INDEXES_READY
+11-10 00:59:45.549  4332  4332 I flutter : APP: FIREBASE_DEPLOY_START
+11-10 00:59:45.596  4332  4332 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
+11-10 00:59:45.596  4332  4332 I flutter : APP: GOOGLE_INIT:[DEFAULT]
+11-10 00:59:45.596  4332  4332 I flutter : APP: GOOGLE_JSON_CHECK:found
+11-10 00:59:46.664  2606  3045 D ConnCureConfigUtil: isCaredApp: input = com.ev
+entmarketplace.app
+11-10 00:59:46.664  2606  3045 I ConnCureStateMonitor: isCaredApp:false,isAllow
+ed:true,isDataEnabled:true
+11-10 00:59:46.767  9881  9925 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.android.vending, Service: oauth2:https://www.googleapis
+.com/auth/googleplay
+11-10 00:59:49.680  4332  4332 I flutter : ╨Ю╤И╨╕╨▒╨║╨░ ╨┐╨╛╨╗╤Г╤З╨╡╨╜╨╕╤П FCM 
+╤В╨╛╨║╨╡╨╜╨░: [firebase_messaging/unknown] java.io.IOException: SERVICE_NOT_AVA
+ILABLE
+11-10 00:59:49.703  4332  4332 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+
+

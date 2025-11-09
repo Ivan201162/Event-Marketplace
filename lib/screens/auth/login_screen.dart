@@ -1,3 +1,4 @@
+import 'package:event_marketplace_app/core/config/app_config.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +24,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   bool _isLoading = false;
   bool _isSignUp = false;
+  String? _googleError;
 
   @override
   void dispose() {
@@ -100,145 +102,87 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     await context.push('/phone-auth');
   }
 
-  /// Жёсткий Google Sign-In с диагностикой
+  /// Полный фикс Google Sign-In с webClientId
   Future<void> _signInWithGoogle() async {
     debugLog('GOOGLE_BTN_TAP');
     
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _googleError = null;
+    });
     ref.read(authLoadingProvider.notifier).setLoading(true);
 
     try {
       debugLog('GOOGLE_SIGNIN_START');
 
-      // 1) Проверка Google Play Services (через попытку инициализации)
-      int googlePlayServicesStatus = -1;
-      try {
-        // На Android проверяем через попытку signInSilently
-        if (Platform.isAndroid) {
-          final googleSignIn = GoogleSignIn();
-          try {
-            await googleSignIn.signInSilently();
-            googlePlayServicesStatus = 0; // SUCCESS
-          } catch (e) {
-            // Если ошибка не связана с Play Services, считаем что они доступны
-            if (!e.toString().contains('SERVICE_MISSING') && 
-                !e.toString().contains('SERVICE_VERSION_UPDATE_REQUIRED')) {
-              googlePlayServicesStatus = 0;
-            } else {
-              googlePlayServicesStatus = 1; // ERROR
-            }
-          }
-        } else {
-          googlePlayServicesStatus = 0; // На других платформах считаем доступным
-        }
-      } catch (e) {
-        debugLog('GOOGLE_PLAY_SERVICES_CHECK_ERROR:$e');
-        googlePlayServicesStatus = -1;
+      // Проверка webClientId
+      final webClientId = AppConfig.webClientId;
+      if (webClientId.isEmpty || webClientId.contains('REPLACE')) {
+        debugLog('GOOGLE_CONFIG_ERROR:missing_web_client_id');
+        setState(() {
+          _googleError = 'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику.';
+        });
+        return;
       }
-      debugLog('GOOGLE_PLAY_SERVICES:$googlePlayServicesStatus');
+      debugLog('GOOGLE_WEB_CLIENT_ID:${webClientId.substring(0, 20)}...');
 
-      // 2) Сброс предыдущих сессий
-      try {
-        await GoogleSignIn().signOut();
-        debugLog('GOOGLE_SIGNIN_PREVIOUS_SESSION_CLEARED');
-      } catch (e) {
-        debugLog('GOOGLE_SIGNIN_CLEAR_ERROR:$e');
-      }
+      // Сброс предыдущих сессий
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+      debugLog('GOOGLE_SIGNIN_SESSIONS_CLEARED');
 
-      // 3) Старт браузерного флоу
-      final googleUser = await GoogleSignIn(
-        scopes: <String>['email', 'profile', 'openid'],
+      // Старт браузерного флоу с webClientId
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(
+        scopes: ['email', 'profile', 'openid'],
+        serverClientId: webClientId,
       ).signIn();
 
       if (googleUser == null) {
-        debugLog('GOOGLE_SIGNIN_ERROR:user_cancelled');
-        _showSnack('Вы отменили вход');
+        debugLog('GOOGLE_SIGNIN_CANCEL');
+        _showSnack('Вход отменён');
         return;
       }
 
-      final googleAuth = await googleUser.authentication;
-      final idTokenPreview = googleAuth.idToken?.substring(0, 20) ?? 'null';
-      final accessTokenPreview = googleAuth.accessToken?.substring(0, 10) ?? 'null';
-      debugLog('GOOGLE_OAUTH_TOKENS: idToken=$idTokenPreview..., access=$accessTokenPreview...');
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      debugLog('GOOGLE_TOKEN_OK');
 
-      debugLog('GOOGLE_FIREBASE_AUTH_START');
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      
-      final res = await FirebaseAuth.instance.signInWithCredential(credential);
-      debugLog('GOOGLE_FIREBASE_AUTH_SUCCESS: uid=${res.user?.uid}');
 
-      // Жёсткий редирект в AuthGate
+      debugLog('FIREBASE_AUTH_START');
+      final userCred = await FirebaseAuth.instance.signInWithCredential(credential);
+      debugLog('FIREBASE_AUTH_OK: uid=${userCred.user?.uid}');
+
+      // Редирект в AuthGate
       if (mounted) {
         context.go('/auth-gate');
       }
 
     } on FirebaseAuthException catch (e, st) {
       debugLog('GOOGLE_FIREBASE_AUTH_ERROR:${e.code}:${e.message}');
-      debugLog('STACK:${st.toString().substring(0, st.toString().length > 800 ? 800 : st.toString().length)}');
-      
-      if (_shouldRetry(e.code)) {
-        debugLog('GOOGLE_AUTH_RETRY');
-        await Future.delayed(const Duration(seconds: 2));
-        
-        // ОДИН повтор
-        try {
-          // Сброс перед повторной попыткой
-          await FirebaseAuth.instance.signOut();
-          await GoogleSignIn().disconnect();
-          await GoogleSignIn().signOut();
-          
-          // Повтор того же флоу
-          final googleUser = await GoogleSignIn(
-            scopes: <String>['email', 'profile', 'openid'],
-          ).signIn();
-          
-          if (googleUser == null) {
-            debugLog('GOOGLE_AUTH_RETRY:user_cancelled');
-            _showSnack('Вы отменили вход');
-            return;
-          }
-          
-          final googleAuth = await googleUser.authentication;
-          final credential = GoogleAuthProvider.credential(
-            accessToken: googleAuth.accessToken,
-            idToken: googleAuth.idToken,
-          );
-          
-          final res = await FirebaseAuth.instance.signInWithCredential(credential);
-          debugLog('GOOGLE_FIREBASE_AUTH_RETRY_SUCCESS: uid=${res.user?.uid}');
-          
-          if (mounted) {
-            context.go('/auth-gate');
-          }
-        } catch (e2, st2) {
-          debugLog('GOOGLE_AUTH_RETRY_FAIL:$e2');
-          debugLog('STACK_RETRY:${st2.toString().substring(0, st2.toString().length > 800 ? 800 : st2.toString().length)}');
-          _showSnack('Не удалось войти через Google. Попробуйте позже.');
-        }
-      } else {
-        _showSnack(_mapAuthError(e));
-      }
+      final errorMsg = _mappedError(e.code);
+      setState(() {
+        _googleError = errorMsg;
+      });
+      _showSnack(errorMsg);
     } catch (e, st) {
-      debugLog('GOOGLE_SIGNIN_ERROR:$e');
-      debugLog('STACK:${st.toString().substring(0, st.toString().length > 800 ? 800 : st.toString().length)}');
-      _showSnack('Ошибка входа через Google.');
+      debugLog('GOOGLE_FATAL:$e');
+      final errorMsg = 'Ошибка Google Sign-In. Проверьте подключение.';
+      setState(() {
+        _googleError = errorMsg;
+      });
+      _showSnack(errorMsg);
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
     }
   }
 
-  /// Проверка, нужно ли повторить попытку
-  bool _shouldRetry(String code) {
-    return code == 'network-request-failed' || code == 'unknown';
-  }
-
   /// Маппинг ошибок авторизации на дружелюбные сообщения
-  String _mapAuthError(FirebaseAuthException e) {
-    switch (e.code) {
+  String _mappedError(String code) {
+    switch (code) {
       case 'account-exists-with-different-credential':
         return 'Аккаунт с таким email уже существует с другим способом входа';
       case 'invalid-credential':
@@ -260,81 +204,82 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  /// Диагностика конфигурации
-  Future<void> _runDiagnostics() async {
-    debugLog('AUTH_DIAG:START');
+  /// Полная диагностика Google Sign-In
+  Future<void> _runGoogleDiagnostics() async {
+    debugLog('GOOGLE_DIAG:START');
     
     try {
-      // applicationId
-      debugLog('AUTH_DIAG:applicationId=com.eventmarketplace.app');
+      // packageName
+      debugLog('GOOGLE_DIAG:packageName=com.eventmarketplace.app');
       
-      // Google Play Services
-      int gpsStatus = -1;
+      // google-services.json
+      final googleServicesPath = 'android/app/google-services.json';
+      final googleServicesExists = await File(googleServicesPath).exists();
+      debugLog('GOOGLE_DIAG:google_services_json:${googleServicesExists ? "found" : "not_found"}');
+      
+      // web client id
+      final webClientId = AppConfig.webClientId;
+      if (webClientId.isEmpty || webClientId.contains('REPLACE')) {
+        debugLog('GOOGLE_DIAG:web_client_id:missing');
+      } else {
+        debugLog('GOOGLE_DIAG:web_client_id:found=${webClientId.substring(0, 30)}...');
+      }
+      
+      // firebase options
       try {
-        if (Platform.isAndroid) {
-          final googleSignIn = GoogleSignIn();
-          try {
-            await googleSignIn.signInSilently();
-            gpsStatus = 0;
-          } catch (e) {
-            if (!e.toString().contains('SERVICE_MISSING') && 
-                !e.toString().contains('SERVICE_VERSION_UPDATE_REQUIRED')) {
-              gpsStatus = 0;
-            } else {
-              gpsStatus = 1;
-            }
+        final options = DefaultFirebaseOptions.currentPlatform;
+        debugLog('GOOGLE_DIAG:firebase_options:ok:projectId=${options.projectId}');
+      } catch (e) {
+        debugLog('GOOGLE_DIAG:firebase_options:error:$e');
+      }
+      
+      // SHA1 / SHA256 (из google-services.json)
+      try {
+        final googleServicesFile = File(googleServicesPath);
+        if (await googleServicesFile.exists()) {
+          final content = await googleServicesFile.readAsString();
+          if (content.contains('certificate_hash')) {
+            debugLog('GOOGLE_DIAG:sha1:found_in_json');
+          } else {
+            debugLog('GOOGLE_DIAG:sha1:not_found_in_json');
           }
-        } else {
-          gpsStatus = 0;
         }
       } catch (e) {
-        debugLog('AUTH_DIAG:GPS_CHECK_ERROR:$e');
-      }
-      debugLog('AUTH_DIAG:GOOGLE_PLAY_SERVICES:$gpsStatus');
-      
-      // Firebase конфигурация
-      try {
-        final app = Firebase.app();
-        debugLog('AUTH_DIAG:PROJECT_ID=${app.options.projectId}');
-        debugLog('AUTH_DIAG:API_KEY=${app.options.apiKey?.substring(0, 10)}...');
-        debugLog('AUTH_DIAG:APP_ID=${app.options.appId}');
-      } catch (e) {
-        debugLog('AUTH_DIAG:FIREBASE_CONFIG_ERROR:$e');
+        debugLog('GOOGLE_DIAG:sha_check:error:$e');
       }
       
-      // Проверка провайдера Google
-      try {
-        await FirebaseAuth.instance.fetchSignInMethodsForEmail('test@example.com');
-        debugLog('AUTH_DIAG:GOOGLE_PROVIDER_CHECK:ok');
-      } catch (e) {
-        debugLog('AUTH_DIAG:GOOGLE_PROVIDER_CHECK_ERROR:$e');
-      }
-      
-      // Проверка Google Sign-In состояния
+      // Google аккаунты в системе
       try {
         final googleSignIn = GoogleSignIn();
         final isSignedIn = await googleSignIn.isSignedIn();
-        debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST:isSignedIn=$isSignedIn');
-        
-        if (isSignedIn) {
-          try {
-            final account = await googleSignIn.signInSilently();
-            debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST:account=${account?.email ?? "null"}');
-          } catch (e) {
-            debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST:silent_error=$e');
-          }
-        }
+        debugLog('GOOGLE_DIAG:google_accounts:isSignedIn=$isSignedIn');
+        // signInSilently удалён - только ручной вход
       } catch (e) {
-        debugLog('AUTH_DIAG:GOOGLE_ACCOUNT_LIST_ERROR:$e');
+        debugLog('GOOGLE_DIAG:google_accounts:error:$e');
       }
       
-      debugLog('AUTH_DIAG:END');
+      // Google Play Services (без signInSilently)
+      if (Platform.isAndroid) {
+        debugLog('GOOGLE_DIAG:google_play_services:android_detected');
+        // Проверка через доступность пакета
+        try {
+          final googleSignIn = GoogleSignIn();
+          final isSignedIn = await googleSignIn.isSignedIn();
+          debugLog('GOOGLE_DIAG:google_play_services:available=${isSignedIn != null}');
+        } catch (e) {
+          debugLog('GOOGLE_DIAG:google_play_services:check_error:$e');
+        }
+      } else {
+        debugLog('GOOGLE_DIAG:google_play_services:not_android');
+      }
+      
+      debugLog('GOOGLE_DIAG:END');
       
       if (mounted) {
-        _showSnack('Диагностика завершена. Проверьте логи.');
+        _showSnack('Диагностика Google завершена. Проверьте логи.');
       }
     } catch (e) {
-      debugLog('AUTH_DIAG:ERROR:$e');
+      debugLog('GOOGLE_DIAG:ERROR:$e');
       if (mounted) {
         _showSnack('Ошибка диагностики: $e');
       }
@@ -575,15 +520,59 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                               ),
 
+                              // Debug Panic UI - красная плашка при ошибке
+                              if (_googleError != null) ...[
+                                const SizedBox(height: 12),
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.shade50,
+                                    border: Border.all(color: Colors.red.shade300),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(Icons.error_outline, 
+                                            color: Colors.red.shade700, 
+                                            size: 20),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              _googleError!,
+                                              style: TextStyle(
+                                                color: Colors.red.shade700,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Нажмите "Диагностика Google"',
+                                        style: TextStyle(
+                                          color: Colors.red.shade600,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+
                               const SizedBox(height: 12),
 
-                              // Диагностика кнопка
+                              // Диагностика Google кнопка (скрытая)
                               SizedBox(
                                 width: double.infinity,
                                 child: TextButton.icon(
-                                  onPressed: _isLoading ? null : _runDiagnostics,
+                                  onPressed: _isLoading ? null : _runGoogleDiagnostics,
                                   icon: const Icon(Icons.bug_report, size: 18),
-                                  label: const Text('Проверка конфигурации'),
+                                  label: const Text('Диагностика Google'),
                                 ),
                               ),
                             ],
