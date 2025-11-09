@@ -167,3 +167,5 @@ GOOGLE_JSON_CHECK:found
 - `e76c16fc` - UI/UX improvements, calendar with timeout, chats reply/forward, analytics events
 - `3aecfe7e` - FCM message handlers and notifications screen logging
 - `d630d17f` - fix duplicate initState in notifications screen
+- `e474f3ae` - add saved search filters functionality with Firestore storage
+- `df332168` - add basic unit test structure for PricingService
