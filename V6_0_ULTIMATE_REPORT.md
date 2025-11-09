@@ -146,10 +146,25 @@ GOOGLE_JSON_CHECK:found
 4. ✅ Профиль 2.0 с вкладками, редактором, календарём
 5. ✅ Чаты 3.0 с полным функционалом (edit, delete, reactions, reply, forward)
 6. ✅ Прайсы & Бронирования с перцентилями и календарём
-7. ✅ Поиск 2.0 с фильтрами и пагинацией
-8. ✅ Firebase Analytics события добавлены
-9. ✅ Release-сборка выполнена, APK установлен на устройство
+7. ✅ Контент: посты, reels, stories, ideas с полным функционалом публикации
+8. ✅ Поиск 2.0 с фильтрами и пагинацией
+9. ✅ Уведомления & FCM с обработчиками сообщений
+10. ✅ Firebase Analytics события добавлены
+11. ✅ Release-сборка выполнена, APK установлен на устройство
 
 **Версия**: v6.0-ultimate
 **Дата**: 2024-12-19
 **Статус**: ✅ ОСНОВНЫЕ ЗАДАЧИ ВЫПОЛНЕНЫ
+
+### Оставшиеся задачи (для следующих версий):
+- Сохранённые фильтры поиска
+- Комментарии к контенту
+- Полный deploy Storage и Functions (требует Blaze-план)
+- Unit и integration тесты
+
+### Коммиты:
+Все изменения закоммичены в ветку `prod/v6.0-ultimate` с префиксом `ultimate:`:
+- `fdc839ae` - initial version update, auth improvements, logging
+- `e76c16fc` - UI/UX improvements, calendar with timeout, chats reply/forward, analytics events
+- `3aecfe7e` - FCM message handlers and notifications screen logging
+- `d630d17f` - fix duplicate initState in notifications screen
