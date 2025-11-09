@@ -32,6 +32,7 @@ void main() async {
   debugLog('APP: RELEASE FLOW STARTED');
   debugLog('APP_VERSION:6.1.0+35');
   debugLog('SESSION_START');
+  debugLog('INDEXES_READY');
   
   // Логирование Firebase deploy статуса
   try {
