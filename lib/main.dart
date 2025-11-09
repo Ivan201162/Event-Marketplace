@@ -107,15 +107,27 @@ void main() async {
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         final token = await messaging.getToken();
         if (token != null && currentUser != null) {
-          await FirebaseFirestore.instance
+          // Проверяем, изменился ли токен
+          final userDoc = await FirebaseFirestore.instance
               .collection('users')
               .doc(currentUser.uid)
-              .update({
-            'fcmTokens': FieldValue.arrayUnion([token]),
-            'lastTokenUpdate': FieldValue.serverTimestamp(),
-          });
+              .get();
+          final userData = userDoc.data();
+          final existingTokens = List<String>.from(userData?['fcmTokens'] ?? []);
+          
+          if (!existingTokens.contains(token)) {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(currentUser.uid)
+                .update({
+              'fcmTokens': FieldValue.arrayUnion([token]),
+              'lastTokenUpdate': FieldValue.serverTimestamp(),
+            });
+            debugLog('FCM_TOKEN_SAVED');
+          } else {
+            debugLog('FCM_TOKEN_EXISTS');
+          }
           debugLog('FCM_INIT_OK');
-          debugLog('FCM_TOKEN_SAVED');
         } else {
           debugLog('FCM_INIT_OK');
         }

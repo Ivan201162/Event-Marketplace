@@ -406,8 +406,9 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
       if (user == null) return;
 
       final snapshot = await FirebaseFirestore.instance
-          .collection('saved_search_filters')
-          .where('userId', isEqualTo: user.uid)
+          .collection('users')
+          .doc(user.uid)
+          .collection('saved_filters')
           .orderBy('createdAt', descending: true)
           .limit(10)
           .get();
@@ -428,9 +429,10 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
       if (user == null) return;
 
       await FirebaseFirestore.instance
-          .collection('saved_search_filters')
+          .collection('users')
+          .doc(user.uid)
+          .collection('saved_filters')
           .add({
-        'userId': user.uid,
         'name': name ?? 'Фильтр ${DateTime.now().toString().substring(0, 10)}',
         ...filter.toMap(),
         'createdAt': FieldValue.serverTimestamp(),
@@ -446,8 +448,13 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
 
   Future<void> removeFilter(String filterId) async {
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      
       await FirebaseFirestore.instance
-          .collection('saved_search_filters')
+          .collection('users')
+          .doc(user.uid)
+          .collection('saved_filters')
           .doc(filterId)
           .delete();
 
@@ -465,8 +472,9 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
       if (user == null) return;
 
       final snapshot = await FirebaseFirestore.instance
-          .collection('saved_search_filters')
-          .where('userId', isEqualTo: user.uid)
+          .collection('users')
+          .doc(user.uid)
+          .collection('saved_filters')
           .get();
 
       final batch = FirebaseFirestore.instance.batch();

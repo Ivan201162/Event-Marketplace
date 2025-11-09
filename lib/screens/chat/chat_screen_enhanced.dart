@@ -65,13 +65,15 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
       if (_messageController.text.isNotEmpty && !_isTyping) {
         _isTyping = true;
         _updateTypingStatus(true);
+        debugLog("CHAT_TYPING_ON:${widget.chatId}");
       }
       
       _typingTimer?.cancel();
-      _typingTimer = Timer(const Duration(seconds: 2), () {
+      _typingTimer = Timer(const Duration(seconds: 5), () {
         if (_isTyping) {
           _isTyping = false;
           _updateTypingStatus(false);
+          debugLog("CHAT_TYPING_OFF:${widget.chatId}");
         }
       });
     });
