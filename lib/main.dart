@@ -16,6 +16,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Top-level функция для обработки background сообщений FCM
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  debugLog('FCM_BACKGROUND_MESSAGE:${message.messageId}');
+  debugLog('FCM_BACKGROUND_TITLE:${message.notification?.title}');
+  debugLog('FCM_BACKGROUND_BODY:${message.notification?.body}');
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -108,6 +117,31 @@ void main() async {
           debugLog('FCM_TOKEN_SAVED');
         } else {
           debugLog('FCM_INIT_OK');
+        }
+        
+        // Настройка обработчиков сообщений
+        // Foreground messages
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          debugLog('FCM_ON_MESSAGE:${message.messageId}');
+          debugLog('FCM_TITLE:${message.notification?.title}');
+          debugLog('FCM_BODY:${message.notification?.body}');
+          // TODO: Показать локальное уведомление
+        });
+        
+        // Background messages (обрабатываются через top-level функцию)
+        FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+        
+        // Когда приложение открыто из уведомления
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          debugLog('FCM_ON_MESSAGE_OPENED:${message.messageId}');
+          // TODO: Навигация на соответствующий экран
+        });
+        
+        // Проверка, было ли приложение открыто из уведомления
+        final initialMessage = await messaging.getInitialMessage();
+        if (initialMessage != null) {
+          debugLog('FCM_INITIAL_MESSAGE:${initialMessage.messageId}');
+          // TODO: Навигация на соответствующий экран
         }
       } else {
         debugLog('FCM_PERM_DENIED');

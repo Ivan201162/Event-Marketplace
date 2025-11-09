@@ -41,6 +41,13 @@ class _NotificationsScreenEnhancedState extends ConsumerState<NotificationsScree
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugLog("NOTIFICATIONS_OPENED");
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       debugLog("NOTIF_OPENED");
     });
   }
