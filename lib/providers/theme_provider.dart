@@ -1,4 +1,4 @@
-import 'package:event_marketplace_app/theme/app_theme.dart';
+import 'package:event_marketplace_app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,14 +68,14 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   ThemeData getCurrentTheme(BuildContext context) {
     switch (state) {
       case ThemeMode.light:
-        return AppTheme.lightTheme;
+        return appLightTheme();
       case ThemeMode.dark:
-        return AppTheme.darkTheme;
+        return appDarkTheme();
       case ThemeMode.system:
         final brightness = MediaQuery.of(context).platformBrightness;
         return brightness == Brightness.light
-            ? AppTheme.lightTheme
-            : AppTheme.darkTheme;
+            ? appLightTheme()
+            : appDarkTheme();
     }
   }
 

@@ -36,7 +36,7 @@ void main() async {
 
   debugLog('APP: BUILD OK $BUILD_VERSION');
   debugLog('APP: RELEASE FLOW STARTED');
-  debugLog('APP_VERSION:6.1.0+35');
+  debugLog('APP_VERSION:6.1.1+36');
   debugLog('SESSION_START');
   debugLog('INDEXES_READY');
   
@@ -119,7 +119,8 @@ void main() async {
               .doc(currentUser.uid)
               .get();
           final userData = userDoc.data();
-          final existingTokens = List<String>.from(userData?['fcmTokens'] ?? []);
+          final fcmTokensData = userData?['fcmTokens'];
+          final existingTokens = fcmTokensData is List ? List<String>.from(fcmTokensData.map((e) => e.toString())) : <String>[];
           
           if (!existingTokens.contains(token)) {
           await FirebaseFirestore.instance

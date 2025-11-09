@@ -138,7 +138,7 @@ class AuthServiceEnhanced {
       }
 
       debugLog('GOOGLE_SIGNIN_STEP:signIn');
-      final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
+      final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         debugLog('GOOGLE_SIGNIN_ERROR:canceled:User canceled');
         throw FirebaseAuthException(code: 'canceled', message: 'Пользователь отменил вход');
