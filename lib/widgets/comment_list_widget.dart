@@ -19,9 +19,10 @@ class CommentListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
+          .collection(parentType) // posts, reels, stories, ideas
+          .doc(parentId)
           .collection('comments')
-          .doc(parentType)
-          .collection(parentId)
+          .where('parentId', isNull: true) // только корневые комментарии
           .orderBy('createdAt', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
@@ -72,7 +73,7 @@ class CommentListWidget extends StatelessWidget {
   }
 }
 
-class _CommentItem extends StatelessWidget {
+class _CommentItem extends StatefulWidget {
   const _CommentItem({
     required this.commentId,
     required this.authorId,
@@ -80,6 +81,8 @@ class _CommentItem extends StatelessWidget {
     this.authorPhotoUrl,
     required this.text,
     required this.createdAt,
+    required this.likesCount,
+    required this.isLiked,
     required this.parentType,
     required this.parentId,
   });
@@ -90,12 +93,29 @@ class _CommentItem extends StatelessWidget {
   final String? authorPhotoUrl;
   final String text;
   final DateTime createdAt;
+  final int likesCount;
+  final bool isLiked;
   final String parentType;
   final String parentId;
 
+  @override
+  State<_CommentItem> createState() => _CommentItemState();
+}
+
+class _CommentItemState extends State<_CommentItem> {
+  bool _isLiked = false;
+  int _likesCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLiked = widget.isLiked;
+    _likesCount = widget.likesCount;
+  }
+
   Future<void> _deleteComment(BuildContext context) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null || currentUser.uid != authorId) return;
+    if (currentUser == null) return;
 
     final confirmed = await showDialog<bool>(
       context: context,
@@ -117,14 +137,14 @@ class _CommentItem extends StatelessWidget {
     if (confirmed == true) {
       try {
         await FirebaseFirestore.instance
+            .collection(widget.parentType)
+            .doc(widget.parentId)
             .collection('comments')
-            .doc(parentType)
-            .collection(parentId)
-            .doc(commentId)
+            .doc(widget.commentId)
             .delete();
-        debugLog('COMMENT_DELETED:$parentType:$parentId:$commentId');
+        debugLog('COMMENT_DELETE:${widget.commentId}');
       } catch (e) {
-        debugLog('COMMENT_ERR:delete:$e');
+        debugLog('COMMENT_DELETE_ERR:${widget.commentId}:$e');
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Ошибка удаления: $e')),
@@ -134,10 +154,51 @@ class _CommentItem extends StatelessWidget {
     }
   }
 
+  Future<void> _toggleLike() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    try {
+      final commentRef = FirebaseFirestore.instance
+          .collection(widget.parentType)
+          .doc(widget.parentId)
+          .collection('comments')
+          .doc(widget.commentId);
+
+      final commentDoc = await commentRef.get();
+      if (!commentDoc.exists) return;
+
+      final data = commentDoc.data()!;
+      final likes = List<String>.from(data['likes'] ?? []);
+      final isLiked = likes.contains(currentUser.uid);
+
+      if (isLiked) {
+        likes.remove(currentUser.uid);
+        debugLog('COMMENT_UNLIKE:${widget.commentId}');
+      } else {
+        likes.add(currentUser.uid);
+        debugLog('COMMENT_LIKE:${widget.commentId}');
+      }
+
+      await commentRef.update({
+        'likes': likes,
+        'likesCount': likes.length,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      setState(() {
+        _isLiked = !isLiked;
+        _likesCount = likes.length;
+      });
+    } catch (e) {
+      debugLog('COMMENT_LIKE_ERR:${widget.commentId}:$e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
-    final isOwnComment = currentUser?.uid == authorId;
+    final isOwnComment = currentUser?.uid == widget.authorId;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -146,11 +207,11 @@ class _CommentItem extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 16,
-            backgroundImage: authorPhotoUrl != null
-                ? NetworkImage(authorPhotoUrl!)
+            backgroundImage: widget.authorPhotoUrl != null
+                ? NetworkImage(widget.authorPhotoUrl!)
                 : null,
-            child: authorPhotoUrl == null
-                ? Text(authorName.isNotEmpty ? authorName[0].toUpperCase() : '?')
+            child: widget.authorPhotoUrl == null
+                ? Text(widget.authorName.isNotEmpty ? widget.authorName[0].toUpperCase() : '?')
                 : null,
           ),
           const SizedBox(width: 12),
@@ -161,7 +222,7 @@ class _CommentItem extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      authorName,
+                      widget.authorName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -169,7 +230,7 @@ class _CommentItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      DateFormat('dd.MM.yyyy HH:mm').format(createdAt),
+                      DateFormat('dd.MM.yyyy HH:mm').format(widget.createdAt),
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
@@ -178,17 +239,38 @@ class _CommentItem extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                _buildCommentText(text),
+                _buildCommentText(widget.text),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        _isLiked ? Icons.favorite : Icons.favorite_border,
+                        size: 16,
+                        color: _isLiked ? Colors.red : Colors.grey,
+                      ),
+                      onPressed: _toggleLike,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    if (_likesCount > 0)
+                      Text(
+                        '$_likesCount',
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    const Spacer(),
+                    if (isOwnComment)
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, size: 18),
+                        onPressed: () => _deleteComment(context),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                  ],
+                ),
               ],
             ),
           ),
-          if (isOwnComment)
-            IconButton(
-              icon: const Icon(Icons.delete_outline, size: 18),
-              onPressed: () => _deleteComment(context),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
         ],
       ),
     );
@@ -196,6 +278,7 @@ class _CommentItem extends StatelessWidget {
 
   /// Построить текст комментария с поддержкой @упоминаний
   Widget _buildCommentText(String text) {
+    if (text.isEmpty) return const SizedBox.shrink();
     final regex = RegExp(r'@(\w+)');
     final matches = regex.allMatches(text);
     

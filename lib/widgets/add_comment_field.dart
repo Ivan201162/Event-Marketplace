@@ -74,11 +74,11 @@ class _AddCommentFieldState extends State<AddCommentField> {
       // Парсим @упоминания
       final mentions = _parseMentions(text);
       
-      // Создаём комментарий
+      // Используем подколлекцию: {contentType}/{contentId}/comments
       final commentRef = FirebaseFirestore.instance
+          .collection(widget.parentType) // posts, reels, stories, ideas
+          .doc(widget.parentId)
           .collection('comments')
-          .doc(widget.parentType)
-          .collection(widget.parentId)
           .doc();
 
       await commentRef.set({
@@ -88,6 +88,9 @@ class _AddCommentFieldState extends State<AddCommentField> {
         'authorPhotoUrl': authorPhotoUrl,
         'text': text,
         'mentions': mentions,
+        'parentId': null, // корневой комментарий
+        'likesCount': 0,
+        'likes': [],
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
