@@ -1,0 +1,48 @@
+﻿
+11-09 15:51:52.206  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-09 15:52:19.161  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-09 16:32:27.314  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-09 16:32:54.346  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-09 18:34:14.819  1717 13565 D ActivityManager: cleanUpApplicationRecord app:
+ 18456:com.google.android.webview:sandboxed_process0:org.chromium.content.app.S
+andboxedProcessService0:0/u0a173i782, bad: false, restarting: false, allowResta
+rt: true
+11-09 18:37:00.555  2295  3867 I DeviceSettingsManager: getStateTypePolicyActiv
+eStatus() raw policyName: settings_policy_forbidden_network_share
+11-09 18:37:00.627  2295  2295 I ScrollLayout2: addContainerView StatusBarNotif
+ication(pkg=com.android.settings user=UserHandle{0} id=1000002 tag=null key=0|c
+om.android.settings|1000002|null|1000: Notification(channel=SETTINGS_USB pri=1 
+contentView=null vibrate=null sound=null tick defaults=0x0 flags=0x2 color=0x00
+000000 groupKey=ranker_group1000002 vis=PRIVATE))
+11-09 18:37:01.207  2606  3045 I SmartDualCardSM: IdleState:got msg.what=EVENT_
+SEARCH_NETWORK_TIMEOUT
+11-09 18:37:02.435  1717  3402 I WindowManager: Changing focus from Window{b1c0
+42e u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity} to null 
+displayId=0 Callers=com.android.server.wm.RootWindowContainer.updateFocusedWind
+owLocked:209 com.android.server.wm.WindowManagerService.updateFocusedWindowLock
+ed:6517 com.android.server.wm.ActivityDisplay.setFocusedApp:1606 com.android.se
+rver.wm.ActivityTaskManagerService.setResumedActivityUncheckLocked:6590 
+11-09 18:37:02.583  2606  3045 D ConnCureConfigUtil: isCaredApp: input = com.ev
+entmarketplace.app
+11-09 18:37:02.583  2606  3045 I ConnCureStateMonitor: isCaredApp:false,isAllow
+ed:true,isDataEnabled:true
+11-09 18:37:03.024 21560 21560 I adbd    : Calling send_auth_request...
+11-09 18:37:03.164  1717  2336 I NotificationService: enqueueNotificationIntern
+al: pkg=com.android.settings id=1000002 notification=Notification(channel=SETTI
+NGS_USB pri=1 contentView=null vibrate=null sound=null tick defaults=0x0 flags=
+0x2 color=0x00000000 vis=PRIVATE)
+11-09 18:37:03.270  2641  3419 I AppManager: app:com.android.settings Notificat
+ion update time:3720528726
+11-09 18:37:03.271  2295  2295 I NotificationListener: onNotificationPosted: St
+atusBarNotification(pkg=com.android.settings user=UserHandle{0} id=1000002 tag=
+null key=0|com.android.settings|1000002|null|1000: Notification(channel=SETTING
+S_USB pri=1 contentView=null vibrate=null sound=null tick defaults=0x0 flags=0x
+2 color=0x00000000 groupKey=ranker_group1000002 vis=PRIVATE)) important=1, post
+=1762688223165, when=1762669729127,showWhen=true, vis=0, userid=0, hasFullScree
+nIntent=false,style=null
+
+

@@ -1,4 +1,4 @@
-import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/models/search_filters.dart' as search_filters;
 import 'package:event_marketplace_app/models/user.dart' show UserRole;
 import 'package:event_marketplace_app/providers/search_providers.dart';
 import 'package:event_marketplace_app/providers/specialist_providers.dart';
@@ -137,7 +137,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
   }
 
   void _saveCurrentFilter(String name) {
-    final filter = SearchFilters(
+    final filter = search_filters.SearchFilters(
       city: _selectedCity,
       specialization: _selectedCategories.isNotEmpty ? _selectedCategories.first : null,
       minRating: _minRating,
@@ -191,7 +191,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
                       },
                     ),
                     onTap: () {
-                      _loadFilter(filter);
+                      _loadFilter(filter as search_filters.SearchFilters);
                       Navigator.pop(context);
                     },
                   );
@@ -203,7 +203,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced> {
     );
   }
 
-  void _loadFilter(SearchFilters filter) {
+  void _loadFilter(search_filters.SearchFilters filter) {
     setState(() {
       _selectedCity = filter.city;
       _selectedCategories = filter.specialization != null ? [filter.specialization!] : [];

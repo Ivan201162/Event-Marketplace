@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/specialist_enhanced.dart';
-import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/models/search_filters.dart' as search_filters;
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -319,13 +319,13 @@ final popularSearchQueriesProvider = FutureProvider<List<String>>((ref) async {
 
 /// Провайдер для получения сохраненных фильтров пользователя
 final savedFiltersProvider =
-    NotifierProvider<SavedFiltersNotifier, List<SearchFilters>>(() {
+    NotifierProvider<SavedFiltersNotifier, List<search_filters.SearchFilters>>(() {
   return SavedFiltersNotifier();
 });
 
 /// Провайдер для текущих фильтров поиска
 final currentSearchFiltersProvider =
-    NotifierProvider<SearchFiltersNotifier, SearchFilters>(() {
+    NotifierProvider<SearchFiltersNotifier, search_filters.SearchFilters>(() {
   return SearchFiltersNotifier();
 });
 
@@ -393,9 +393,9 @@ double _calculateDistance(Position position, Map<String, dynamic> location) {
 }
 
 /// Нотификатор для сохраненных фильтров
-class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
+class SavedFiltersNotifier extends Notifier<List<search_filters.SearchFilters>> {
   @override
-  List<SearchFilters> build() {
+  List<search_filters.SearchFilters> build() {
     _loadSavedFilters();
     return [];
   }
@@ -414,7 +414,7 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
           .get();
 
       final filters = snapshot.docs
-          .map((doc) => SearchFilters.fromMap(doc.data()))
+          .map((doc) => search_filters.SearchFilters.fromMap(doc.data()))
           .toList();
 
       state = filters;
@@ -423,7 +423,7 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
     }
   }
 
-  Future<void> addFilter(SearchFilters filter, String? name) async {
+  Future<void> addFilter(search_filters.SearchFilters filter, String? name) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
@@ -488,10 +488,10 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
     } catch (e) {
       debugPrint('Error clearing filters: $e');
       debugLog("SEARCH_FILTERS_CLEAR_ERR:$e");
-    }
+  }
   }
 
-  Future<void> loadFilter(SearchFilters filter) async {
+  Future<void> loadFilter(search_filters.SearchFilters filter) async {
     // Применяем фильтр к текущему поиску
     // Это будет использоваться через searchFiltersProvider
     debugLog("SEARCH_FILTER_LOADED");
@@ -499,16 +499,16 @@ class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
 }
 
 /// Нотификатор для текущих фильтров поиска
-class SearchFiltersNotifier extends Notifier<SearchFilters> {
+class SearchFiltersNotifier extends Notifier<search_filters.SearchFilters> {
   @override
-  SearchFilters build() => const SearchFilters();
+  search_filters.SearchFilters build() => const search_filters.SearchFilters();
 
-  void updateFilters(SearchFilters newFilters) {
+  void updateFilters(search_filters.SearchFilters newFilters) {
     state = newFilters;
   }
 
   void clearFilters() {
-    state = const SearchFilters();
+    state = const search_filters.SearchFilters();
   }
 
   void setCity(String? city) {
@@ -516,15 +516,18 @@ class SearchFiltersNotifier extends Notifier<SearchFilters> {
   }
 
   void setCategories(List<String> categories) {
-    state = state.copyWith(categories: categories);
+    state = state.copyWith(services: categories);
   }
 
   void setRatingRange(double? minRating, double? maxRating) {
-    state = state.copyWith(minRating: minRating, maxRating: maxRating);
+    state = state.copyWith(minRating: minRating);
   }
 
   void setPriceRange(double? minPrice, double? maxPrice) {
-    state = state.copyWith(minPrice: minPrice, maxPrice: maxPrice);
+    state = state.copyWith(
+      minPrice: minPrice?.toInt(),
+      maxPrice: maxPrice?.toInt(),
+    );
   }
 }
 

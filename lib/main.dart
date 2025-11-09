@@ -116,13 +116,13 @@ void main() async {
           final existingTokens = List<String>.from(userData?['fcmTokens'] ?? []);
           
           if (!existingTokens.contains(token)) {
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(currentUser.uid)
-                .update({
-              'fcmTokens': FieldValue.arrayUnion([token]),
-              'lastTokenUpdate': FieldValue.serverTimestamp(),
-            });
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUser.uid)
+              .update({
+            'fcmTokens': FieldValue.arrayUnion([token]),
+            'lastTokenUpdate': FieldValue.serverTimestamp(),
+          });
             debugLog('FCM_TOKEN_SAVED');
           } else {
             debugLog('FCM_TOKEN_EXISTS');

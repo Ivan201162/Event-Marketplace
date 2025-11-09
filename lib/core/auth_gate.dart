@@ -42,8 +42,8 @@ class _AuthGateState extends State<AuthGate> {
           }
           // Выходим из аккаунта (wipe уже делает signOut, но на всякий случай)
           try {
-            await FirebaseAuth.instance.signOut();
-            debugLog("FRESH_INSTALL_WIPE_COMPLETE:logged_out");
+          await FirebaseAuth.instance.signOut();
+          debugLog("FRESH_INSTALL_WIPE_COMPLETE:logged_out");
           } catch (e) {
             debugLog("FRESH_INSTALL_LOGOUT_ERR:$e");
           }

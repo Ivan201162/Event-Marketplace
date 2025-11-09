@@ -297,26 +297,26 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
       // Fallback на старый метод
       if (_currentUserCity != null) {
         try {
-          final popularSnapshot = await _firestore
-              .collection('users')
-              .where('role', isEqualTo: 'specialist')
-              .where('cityLower', isEqualTo: _currentUserCity)
-              .orderBy('rating', descending: true)
+      final popularSnapshot = await _firestore
+          .collection('users')
+          .where('role', isEqualTo: 'specialist')
+          .where('cityLower', isEqualTo: _currentUserCity)
+          .orderBy('rating', descending: true)
               .limit(10)
-              .get();
-          
-          final recommendations = <AppUser>[];
-          for (final doc in popularSnapshot.docs) {
-            try {
-              final user = AppUser.fromFirestore(doc);
-              if (!_followingIds.contains(user.uid)) {
-                recommendations.add(user);
-              }
-            } catch (e) {
-              debugPrint('Error parsing user ${doc.id}: $e');
-            }
+          .get();
+      
+      final recommendations = <AppUser>[];
+      for (final doc in popularSnapshot.docs) {
+        try {
+          final user = AppUser.fromFirestore(doc);
+          if (!_followingIds.contains(user.uid)) {
+            recommendations.add(user);
           }
-          
+        } catch (e) {
+          debugPrint('Error parsing user ${doc.id}: $e');
+        }
+      }
+      
           setState(() {
             _recommendations = recommendations.take(10).toList();
           });
@@ -673,12 +673,12 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
                       builder: (context, countSnapshot) {
                         final likesCount = countSnapshot.data ?? post.likesCount;
                         return Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(
+              children: [
+                IconButton(
+                  icon: Icon(
                                 isLiked ? Icons.favorite : Icons.favorite_border,
                                 color: isLiked ? Colors.red : null,
-                              ),
+                  ),
                               onPressed: () async {
                                 final success = await _likeService.toggleLike(
                                   contentType: 'posts',
@@ -687,8 +687,8 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
                                 if (success) {
                                   _analyticsService.logPostLike(post.id, post.authorId);
                                 }
-                              },
-                            ),
+                  },
+                ),
                             Text('$likesCount'),
                           ],
                         );
@@ -994,10 +994,10 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
                               await _followService.followUser(user.uid);
                               _analyticsService.logFollowUser(user.uid);
                             }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          ),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      ),
                           child: Text(isFollowing ? 'Отписаться' : 'Подписаться'),
                         );
                       },

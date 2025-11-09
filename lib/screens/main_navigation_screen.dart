@@ -183,11 +183,11 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                       curve: Curves.easeInOut,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Center(
-                        child: Icon(
-                          isActive ? item.activeIcon : item.icon,
-                          color: isActive
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                          child: Icon(
+                            isActive ? item.activeIcon : item.icon,
+                            color: isActive
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                           size: 24, // Минималистичные иконки, без подписей
                         ),
                       ),

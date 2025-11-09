@@ -91,7 +91,7 @@ class RecommendationService {
         if (userDoc.exists) {
           try {
             recommendations.add(AppUser.fromFirestore(userDoc));
-          } catch (e) {
+    } catch (e) {
             debugPrint('Error parsing user ${entry.key}: $e');
           }
         }
