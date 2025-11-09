@@ -171,18 +171,33 @@ adb -s 34HDU20228002261 shell monkey -p com.eventmarketplace.app -c android.inte
 
 ### Logcat маркеры
 
-Собран logcat с ключевыми маркерами в файле `logs/v6_1_1_google_fix_logcat.txt`.
+Собран logcat с ключевыми маркерами в файле `logs/v6_1_1_google_fix_logcat.txt` (141 строка).
 
-**Ожидаемые маркеры при тестировании:**
-- `GOOGLE_JSON_CHECK:found`
-- `APP: BUILD OK v6.1.1-google-fix`
-- `APP_VERSION:6.1.1+36`
-- `GOOGLE_BTN_TAP`
-- `GOOGLE_SIGNIN_START:attempt=1`
-- `GOOGLE_SIGNIN_SUCCESS:{uid}`
-- `GOOGLE_FIREBASE_AUTH_SUCCESS:{uid}`
-- `AUTH_GATE:PROFILE_CHECK:uid={uid}`
-- `ONBOARDING_OPENED` (если профиль неполный)
+**Собранные маркеры при запуске:**
+```
+11-09 21:20:52.086  8261  8261 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-09 21:20:52.086  8261  8261 I flutter : APP: APP: BUILD OK v6.1.1-google-fix
+11-09 21:20:52.086  8261  8261 I flutter : APP: APP: RELEASE FLOW STARTED
+11-09 21:20:52.086  8261  8261 I flutter : APP: APP_VERSION:6.1.1+36
+11-09 21:20:52.086  8261  8261 I flutter : APP: SESSION_START
+11-09 21:20:52.086  8261  8261 I flutter : APP: INDEXES_READY
+11-09 21:20:52.086  8261  8261 I flutter : APP: FIREBASE_DEPLOY_START
+11-09 21:20:52.121  8261  8261 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
+11-09 21:20:52.121  8261  8261 I flutter : APP: GOOGLE_INIT:[DEFAULT]
+11-09 21:20:52.121  8261  8261 I flutter : APP: GOOGLE_JSON_CHECK:found
+```
+
+**Ожидаемые маркеры при входе через Google:**
+- `GOOGLE_BTN_TAP` - при нажатии на кнопку
+- `GOOGLE_SIGNIN_START:attempt=1` - начало процесса входа
+- `GOOGLE_SIGNIN_STEP:signIn` - шаг выбора аккаунта
+- `GOOGLE_SIGNIN_STEP:getTokens` - получение токенов
+- `GOOGLE_FIREBASE_AUTH_START` - начало аутентификации в Firebase
+- `GOOGLE_SIGNIN_SUCCESS:{uid}` - успешный вход
+- `GOOGLE_FIREBASE_AUTH_SUCCESS:{uid}` - успешная аутентификация
+- `AUTH_GATE:PROFILE_CHECK:uid={uid}` - проверка профиля
+- `AUTH_GATE:PROFILE_CHECK:incomplete:missing_fields` - профиль неполный
+- `ONBOARDING_OPENED` - открыт онбординг (если профиль неполный)
 
 ## Чек-лист для ручной проверки
 
