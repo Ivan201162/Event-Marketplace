@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/app_user.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +14,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthServiceEnhanced {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   /// Поток текущего пользователя
   Stream<AppUser?> get currentUserStream {
@@ -124,7 +125,7 @@ class AuthServiceEnhanced {
 
   /// Вход через Google (release-ready with detailed logging + auto-retry)
   Future<UserCredential> signInWithGoogleRelease({int retryCount = 0}) async {
-    debugLog('GOOGLE_LOGIN_START:attempt=${retryCount + 1}');
+    debugLog('GOOGLE_SIGNIN_START:attempt=${retryCount + 1}');
     try {
       // Проверка инициализации Firebase
       try {
@@ -136,50 +137,51 @@ class AuthServiceEnhanced {
         debugLog('GOOGLE_INIT:[DEFAULT]');
       }
 
-      debugLog('GOOGLE_LOGIN_STEP:signIn');
+      debugLog('GOOGLE_SIGNIN_STEP:signIn');
       final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
       if (googleUser == null) {
-        debugLog('GOOGLE_LOGIN_FAIL:CANCELED:User canceled');
+        debugLog('GOOGLE_SIGNIN_ERROR:canceled:User canceled');
         throw FirebaseAuthException(code: 'canceled', message: 'Пользователь отменил вход');
       }
 
-      debugLog('GOOGLE_LOGIN_STEP:getTokens');
+      debugLog('GOOGLE_SIGNIN_STEP:getTokens');
       final googleAuth = await googleUser.authentication;
-      debugLog('GOOGLE_LOGIN_STEP:TOKENS:${googleAuth.idToken != null}:${googleAuth.accessToken != null}');
+      debugLog('GOOGLE_SIGNIN_STEP:TOKENS:${googleAuth.idToken != null}:${googleAuth.accessToken != null}');
 
       if (googleAuth.idToken == null) {
-        debugLog('GOOGLE_LOGIN_FAIL:NO_ID_TOKEN:Missing ID token');
+        debugLog('GOOGLE_SIGNIN_ERROR:no-id-token:Missing ID token');
         throw FirebaseAuthException(code: 'no-id-token', message: 'ID token отсутствует');
       }
 
-      debugLog('GOOGLE_LOGIN_STEP:firebaseCredential');
+      debugLog('GOOGLE_FIREBASE_AUTH_START');
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
         accessToken: googleAuth.accessToken,
       );
 
-      debugLog('GOOGLE_LOGIN_STEP:signInWithCredential');
+      debugLog('GOOGLE_FIREBASE_AUTH_STEP:signInWithCredential');
       final cred = await FirebaseAuth.instance.signInWithCredential(credential);
       
       if (cred.user != null) {
-        debugLog('GOOGLE_LOGIN_SUCCESS:${cred.user!.uid}');
-        debugLog('GOOGLE_SIGNIN_READY:initialized');
+        debugLog('GOOGLE_SIGNIN_SUCCESS:${cred.user!.uid}');
+        debugLog('GOOGLE_FIREBASE_AUTH_SUCCESS:${cred.user!.uid}');
       } else {
-        debugLog('GOOGLE_LOGIN_FAIL:NO_USER:User is null after sign in');
+        debugLog('GOOGLE_SIGNIN_ERROR:no-user:User is null after sign in');
+        debugLog('GOOGLE_FIREBASE_AUTH_ERROR:no-user:User is null after sign in');
         throw FirebaseAuthException(code: 'no-user', message: 'Пользователь не создан');
       }
       
       return cred;
     } on FirebaseAuthException catch (e, st) {
       String readableCode = _mapAuthErrorCode(e.code);
-      debugLog('GOOGLE_LOGIN_FAIL:${e.code}:${e.message}');
-      debugLog('GOOGLE_LOGIN_FAIL_READABLE:$readableCode');
-      debugLog('GOOGLE_LOGIN_STACK:$st');
+      debugLog('GOOGLE_SIGNIN_ERROR:${e.code}:${e.message}');
+      debugLog('GOOGLE_FIREBASE_AUTH_ERROR:${e.code}:${e.message}');
+      debugLog('GOOGLE_SIGNIN_STACK:$st');
       
-      // Авто-ретрай для определенных ошибок
-      if (retryCount < 2 && (e.code == 'unknown' || e.code == 'internal-error' || e.code == 'network-request-failed')) {
+      // Авто-ретрай для определенных ошибок (1 раз)
+      if (retryCount < 1 && (e.code == 'unknown' || e.code == 'internal-error' || e.code == 'network-request-failed')) {
         final delay = Duration(milliseconds: 500 * (1 << retryCount)); // Экспоненциальная задержка
-        debugLog('GOOGLE_LOGIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
+        debugLog('GOOGLE_SIGNIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
         await Future.delayed(delay);
         
         // Повторная инициализация Firebase перед ретраем
@@ -196,14 +198,14 @@ class AuthServiceEnhanced {
       rethrow;
     } on PlatformException catch (e, st) {
       String readableCode = _mapPlatformErrorCode(e.code);
-      debugLog('GOOGLE_LOGIN_FAIL:PLATFORM:${e.code}:${e.message}');
-      debugLog('GOOGLE_LOGIN_FAIL_READABLE:$readableCode');
-      debugLog('GOOGLE_LOGIN_STACK:$st');
+      debugLog('GOOGLE_SIGNIN_ERROR:PLATFORM:${e.code}:${e.message}');
+      debugLog('GOOGLE_FIREBASE_AUTH_ERROR:PLATFORM:${e.code}:${e.message}');
+      debugLog('GOOGLE_SIGNIN_STACK:$st');
       
-      // Авто-ретрай для платформенных ошибок
-      if (retryCount < 2 && (e.code == 'sign_in_failed' || e.code == 'network_error')) {
+      // Авто-ретрай для платформенных ошибок (1 раз)
+      if (retryCount < 1 && (e.code == 'sign_in_failed' || e.code == 'network_error')) {
         final delay = Duration(milliseconds: 500 * (1 << retryCount));
-        debugLog('GOOGLE_LOGIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
+        debugLog('GOOGLE_SIGNIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
         await Future.delayed(delay);
         
         try {
@@ -216,13 +218,14 @@ class AuthServiceEnhanced {
       
       rethrow;
     } catch (e, st) {
-      debugLog('GOOGLE_LOGIN_FAIL:UNKNOWN:$e');
-      debugLog('GOOGLE_LOGIN_STACK:$st');
+      debugLog('GOOGLE_SIGNIN_ERROR:unknown:$e');
+      debugLog('GOOGLE_FIREBASE_AUTH_ERROR:unknown:$e');
+      debugLog('GOOGLE_SIGNIN_STACK:$st');
       
-      // Авто-ретрай для неизвестных ошибок
-      if (retryCount < 2) {
+      // Авто-ретрай для неизвестных ошибок (1 раз)
+      if (retryCount < 1) {
         final delay = Duration(milliseconds: 500 * (1 << retryCount));
-        debugLog('GOOGLE_LOGIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
+        debugLog('GOOGLE_SIGNIN_RETRY:${retryCount + 1}:delay=${delay.inMilliseconds}ms');
         await Future.delayed(delay);
         
         try {

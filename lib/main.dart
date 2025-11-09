@@ -28,6 +28,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Проверка google-services.json
+  final googleServicesPath = 'android/app/google-services.json';
+  final googleServicesExists = await File(googleServicesPath).exists();
+  debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
 
   debugLog('APP: BUILD OK $BUILD_VERSION');
   debugLog('APP: RELEASE FLOW STARTED');

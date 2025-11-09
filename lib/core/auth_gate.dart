@@ -36,15 +36,19 @@ class _AuthGateState extends State<AuthGate> {
           // Вызываем wipe для очистки данных
           final wipeResult = await WipeService.wipeTestUser(uid: currentUser.uid, hard: true);
           if (wipeResult) {
+            debugLog("FRESH_WIPE_DONE:${currentUser.uid}");
             debugLog("WIPE_DONE:${currentUser.uid}");
           } else {
+            debugLog("FRESH_WIPE_ERR:failed");
             debugLog("WIPE_ERR:failed");
           }
           // Выходим из аккаунта (wipe уже делает signOut, но на всякий случай)
           try {
           await FirebaseAuth.instance.signOut();
+          debugLog("LOGOUT:OK");
           debugLog("FRESH_INSTALL_WIPE_COMPLETE:logged_out");
           } catch (e) {
+            debugLog("LOGOUT:ERR:$e");
             debugLog("FRESH_INSTALL_LOGOUT_ERR:$e");
           }
           // Отмечаем первую установку как выполненную

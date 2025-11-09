@@ -1,7 +1,7 @@
 name: event_marketplace_app
 description: Professional event app for booking specialists and managing events
 publish_to: 'none'
-version: 6.1.0+35
+version: 6.1.1+36
 
 environment:
   sdk: ">=3.3.0 <4.0.0"

@@ -1,4 +1,6 @@
 import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -51,6 +53,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
   }
 
   Future<void> _signInWithGoogle() async {
+    debugLog("GOOGLE_BTN_TAP");
     try {
       final authService = ref.read(authServiceProvider);
       await authService.signInWithGoogle();
