@@ -60,10 +60,10 @@
 
 ## 7. Поиск 2.0
 
-✅ **Фильтры**: Город, цена, рейтинг, категории
-✅ **Сохранённые фильтры**: TODO (в следующей версии)
-✅ **Пагинация**: Реализована через Riverpod providers
-✅ **Логи**: `SEARCH_OPENED`, `SEARCH_FILTER_APPLIED`, `SEARCH_RESULT_COUNT:{count}`
+✅ **Фильтры**: Город, цена, рейтинг, категории, опыт, формат (solo/team), дата доступности
+✅ **Сохранённые фильтры**: Сохранение в Firestore `saved_search_filters/{userId}`, загрузка и применение сохранённых фильтров
+✅ **Пагинация**: Реализована через Riverpod providers (limit=20)
+✅ **Логи**: `SEARCH_OPENED`, `SEARCH_FILTER_APPLIED`, `SEARCH_RESULT_COUNT:{count}`, `SEARCH_FILTER_SAVED:{name}`, `SEARCH_FILTER_LOADED`, `SEARCH_FILTER_DELETED:{id}`, `SEARCH_FILTERS_CLEARED`
 
 ## 8. Уведомления & FCM
 
