@@ -51,7 +51,31 @@ class _SplashEventScreenState extends State<SplashEventScreen>
   }
 
   Future<void> _initializeFirebase() async {
-    debugLog("SPLASH: Firebase init start");
+    debugLog("SPLASH_START");
+    try {
+      // Таймер fallback 6 сек
+      final timeout = Future.delayed(const Duration(seconds: 6));
+      final init = _doInit();
+      
+      await Future.any([init, timeout]);
+      
+      if (!_firebaseReady || !_authStateReady) {
+        debugLog("SPLASH_TIMEOUT:firebaseInit=$_firebaseReady:authResolved=$_authStateReady");
+        // Повторяем init
+        debugLog("SPLASH_INIT_TIMEOUT_RETRY");
+        await _doInit();
+      }
+    } catch (e) {
+      debugLog("SPLASH: Firebase init error: $e");
+      setState(() {
+        _firebaseReady = true;
+        _authStateReady = true;
+      });
+      _navigateToAuthGate();
+    }
+  }
+  
+  Future<void> _doInit() async {
     try {
       try {
         Firebase.app();
@@ -86,6 +110,7 @@ class _SplashEventScreenState extends State<SplashEventScreen>
       setState(() {
         _authStateReady = true;
       });
+      debugLog("SPLASH_READY");
       _navigateToAuthGate();
     });
   }
@@ -126,6 +151,57 @@ class _SplashEventScreenState extends State<SplashEventScreen>
     final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final mutedColor = isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted;
 
+    // Если init завис → показываем экран ошибки вместо чёрного экрана
+    if (!_firebaseReady || !_authStateReady) {
+      // Показываем splash с индикатором загрузки
+      return Scaffold(
+        backgroundColor: bgColor,
+        body: Center(
+          child: SlideTransition(
+            position: _slideAnimation,
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // EVENT крупно
+                  Text(
+                    'EVENT',
+                    style: AppTypography.displayLg.copyWith(
+                      color: textColor,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Тонкая черта
+                  Container(
+                    width: 140,
+                    height: 1,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(height: 16),
+                  // Слоган
+                  Text(
+                    'Найдите своего идеального специалиста для мероприятий',
+                    style: AppTypography.bodyMd.copyWith(
+                      color: mutedColor,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: bgColor,
       body: Center(
@@ -160,14 +236,6 @@ class _SplashEventScreenState extends State<SplashEventScreen>
                   ),
                   textAlign: TextAlign.center,
                 ),
-                if (!_firebaseReady || !_authStateReady) ...[
-                  const SizedBox(height: 32),
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),

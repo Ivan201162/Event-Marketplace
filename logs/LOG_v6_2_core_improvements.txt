@@ -1,0 +1,88 @@
+﻿
+11-10 01:29:51.995  1717  2042 D ActivityManager: cleanUpApplicationRecord app:
+ 3390:com.huawei.systemmanager/1000, bad: false, restarting: false, allowRestar
+t: true
+11-10 01:29:52.001  1717 13565 D ActivityManager: cleanUpApplicationRecord app:
+ 4241:com.google.android.packageinstaller/u0a164, bad: false, restarting: false
+, allowRestart: true
+11-10 01:29:52.007  1717  2743 D ActivityManager: cleanUpApplicationRecord app:
+ 4268:com.huawei.securitypluginbase:service/u0a99, bad: false, restarting: fals
+e, allowRestart: true
+11-10 01:29:52.015  1717  2430 D ActivityManager: cleanUpApplicationRecord app:
+ 3456:com.huawei.systemmanager:security_scan/1000, bad: false, restarting: fals
+e, allowRestart: true
+11-10 01:29:52.025  1717  2448 D ActivityManager: cleanUpApplicationRecord app:
+ 1703:com.huawei.appmarket/u0a31, bad: false, restarting: false, allowRestart: 
+true
+11-10 01:41:50.691 18357  9961 W FA-SVC  : Failed to get uid, app: com.eventmar
+ketplace.app
+11-10 01:41:51.955 10419 10448 E PlayMovies: mbj.a:83 No worker key associated 
+with this task with tags: [google_tv_widget_tag, com.google.android.apps.google
+tv.app.services.workmanager.WorkerWrapper]
+11-10 01:41:57.202  9458  9489 I Finsky  : [87648] VerifyApps: Installer app: c
+om.android.shell
+11-10 01:42:04.139  9881  9989 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.android.vending, Service: oauth2:https://www.googleapis
+.com/auth/googleplay
+11-10 01:42:20.794 18357 10623 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mr: Exception in CronetUrlRequest: net:
+:ERR_TIMED_OUT, ErrorCode=4, InternalErrorCode=-7, Retryable=true
+11-10 01:42:21.120 18357 10623 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mr: Exception in CronetUrlRequest: net:
+:ERR_TIMED_OUT, ErrorCode=4, InternalErrorCode=-7, Retryable=true
+11-10 01:42:21.917  9881 17926 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.google.android.videos, Service: oauth2:https://www.goog
+leapis.com/auth/android_video https://www.googleapis.com/auth/userinfo.email ht
+tps://www.googleapis.com/auth/google_tv
+11-10 01:42:21.917  9881 17926 W Auth    : [ChimeraGetToken] exception while tr
+ying to fetch auth tokens for app=com.google.android.videos, scope=oauth2:https
+://www.googleapis.com/auth/android_video https://www.googleapis.com/auth/userin
+fo.email https://www.googleapis.com/auth/google_tv [CONTEXT service_id=153 ]
+11-10 01:42:24.099  1717  1898 I WindowManager: addWindow: Window{b48cbbf u0 Sp
+lash Screen com.eventmarketplace.app} client:android.view.ViewRootImpl$W@23f5dd
+e currentDisplayId:0 requestDisplayId:0 token:Token{94f4d2e ActivityRecord{fbdc
+b30 u0 com.eventmarketplace.app/.MainActivity t970}}
+11-10 01:42:24.118  1717  1898 I WindowManager: performshow Window{b48cbbf u0 S
+plash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=t
+rue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true des
+troying=false animating=true
+11-10 01:42:24.119  1717  1898 I WindowManager: dispatchResized : win = Window{
+b48cbbf u0 Splash Screen com.eventmarketplace.app} drawState = READY_TO_SHOW
+11-10 01:42:24.134  1717  2743 I WindowManager: performshow Window{b48cbbf u0 S
+plash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=t
+rue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true des
+troying=false animating=true
+11-10 01:42:24.137  2641  3419 I AppsUsage: scnOff:false FgAPP:com.eventmarketp
+lace.app BgAPP:com.huawei.android.launcher
+11-10 01:42:24.138  2606 10603 I Hicom_Monitor: mAppSwitchNotifierEx. uid: 1048
+1, foreground app: com.eventmarketplace.app, foreground activity: com.eventmark
+etplace.app.MainActivity
+11-10 01:42:24.143  1717  1898 I WindowManager: performshow Window{b48cbbf u0 S
+plash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=t
+rue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true des
+troying=false animating=true
+11-10 01:42:24.144  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{fdc10cf token=Token{94f4d2e ActivityRecord{fbdcb30 u0 com.eventmarketplace.ap
+p/.MainActivity t970}}}: allDrawn=false startingDisplayed=true startingMoved=fa
+lse isRelaunching()=false startingWindow=Window{b48cbbf u0 Splash Screen com.ev
+entmarketplace.app}
+11-10 01:42:24.147  1717  1895 D StatusBarManagerService: win:Window{b48cbbf u0
+ Splash Screen com.eventmarketplace.app}mIsColorEnable:truelight:false
+11-10 01:42:24.147  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{b48cbbf u0 Splash Screen com.eventmarketplace.app}
+11-10 01:42:24.150  2641  3419 I ScenarioService: add focus on app:com.eventmar
+ketplace.app to visiblePkgs
+11-10 01:42:24.184 10725 10725 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-10 01:42:24.251  2641  3419 I ScenarioService: refresh visibleApp:[com.event
+marketplace.app]
+11-10 01:42:24.267 10725 10812 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-10 01:42:25.540  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1153205
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 01:42:25.542  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+
+

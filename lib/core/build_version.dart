@@ -1,3 +1,3 @@
 /// Версия сборки для отображения
-const String BUILD_VERSION = 'v6.1.3-google-fix-absolute-force';
+const String BUILD_VERSION = 'v6.2-core-improvements';
 

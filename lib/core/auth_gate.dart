@@ -3,6 +3,8 @@ import 'package:event_marketplace_app/services/wipe_service.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/utils/first_run.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,35 +18,51 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
-  bool _wipeChecked = false;
+  bool _firebaseReady = false;
+  bool _authStateReady = false;
 
   @override
   void initState() {
     super.initState();
-    _checkFreshInstall();
+    _initializeFirebase();
   }
 
-  Future<void> _checkFreshInstall() async {
-    // Wipe перемещён после успешной авторизации - не выполняем до входа
-    // Просто отмечаем, что проверка завершена
-    if (!kDebugMode) {
-      final isFirstRun = await FirstRunHelper.isFirstRun();
-      if (isFirstRun) {
-        // Не выполняем wipe до входа - только после успешной авторизации
-        debugLog("FRESH_INSTALL_DETECTED:wipe_will_run_after_auth");
-        // Не отмечаем firstRun как выполненный - это будет сделано после wipe
+  Future<void> _initializeFirebase() async {
+    try {
+      // Проверяем, инициализирован ли Firebase
+      try {
+        Firebase.app();
+        debugLog("AUTH_GATE:FIREBASE_ALREADY_INIT");
+        _firebaseReady = true;
+      } catch (_) {
+        // Инициализируем Firebase
+        await Firebase.initializeApp();
+        debugLog("AUTH_GATE:FIREBASE_INIT_OK");
+        _firebaseReady = true;
       }
-    }
-    if (mounted) {
-      setState(() {
-        _wipeChecked = true;
-      });
+      
+      // Ждём первое событие authStateChanges
+      await FirebaseAuth.instance.authStateChanges().first;
+      debugLog("AUTH_GATE_READY");
+      _authStateReady = true;
+      
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      debugLog("AUTH_GATE:INIT_ERROR:$e");
+      _firebaseReady = true;
+      _authStateReady = true;
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_wipeChecked) {
+    // Ждём Firebase init и первое authStateChanges
+    if (!_firebaseReady || !_authStateReady) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -102,32 +120,74 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
 
   Future<void> _checkProfile() async {
     try {
-      // Wipe после успешной авторизации (только для fresh-install)
+      // Полный fresh install wipe после успешной авторизации
       if (!kDebugMode) {
         final isFirstRun = await FirstRunHelper.isFirstRun();
         if (isFirstRun) {
           debugLog("FRESH_INSTALL_DETECTED:uid=${widget.user.uid}");
-          debugLog("WIPE_CALL:${widget.user.uid}");
-          // Вызываем wipe для очистки данных
-          final wipeResult = await WipeService.wipeTestUser(uid: widget.user.uid, hard: true);
-          if (wipeResult) {
-            debugLog("FRESH_WIPE_DONE:${widget.user.uid}");
-            debugLog("WIPE_DONE:${widget.user.uid}");
-          } else {
-            debugLog("FRESH_WIPE_ERR:failed");
-            debugLog("WIPE_ERR:failed");
+          debugLog("FRESH_WIPE_START:uid=${widget.user.uid}");
+          
+          // 1) Удалить пользователя из Firebase Auth
+          try {
+            await widget.user.delete();
+            debugLog("FRESH_WIPE:AUTH_USER_DELETED");
+          } catch (e) {
+            debugLog("FRESH_WIPE:AUTH_DELETE_ERR:$e");
+            // Если не удалось удалить auth user, выходим
+            await FirebaseAuth.instance.signOut();
           }
-          // Выходим из аккаунта (wipe уже делает signOut, но на всякий случай)
+          
+          // 2) Удалить user doc из Firestore
+          try {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(widget.user.uid)
+                .delete();
+            debugLog("FRESH_WIPE:FIRESTORE_USER_DELETED");
+          } catch (e) {
+            debugLog("FRESH_WIPE:FIRESTORE_DELETE_ERR:$e");
+          }
+          
+          // 3) Удалить Storage uploads (если есть)
+          try {
+            final storageRef = FirebaseStorage.instance.ref('uploads/${widget.user.uid}');
+            final listResult = await storageRef.listAll();
+            for (var item in listResult.items) {
+              try {
+                await item.delete();
+              } catch (e) {
+                debugLog("FRESH_WIPE:STORAGE_DELETE_ITEM_ERR:$e");
+              }
+            }
+            debugLog("FRESH_WIPE:STORAGE_DELETED");
+          } catch (e) {
+            debugLog("FRESH_WIPE:STORAGE_DELETE_ERR:$e");
+          }
+          
+          // 4) Вызываем Cloud Function wipe для полной очистки
+          try {
+            final wipeResult = await WipeService.wipeTestUser(uid: widget.user.uid, hard: true);
+            if (wipeResult) {
+              debugLog("FRESH_WIPE_DONE:${widget.user.uid}");
+            } else {
+              debugLog("FRESH_WIPE_ERR:cloud_function_failed");
+            }
+          } catch (e) {
+            debugLog("FRESH_WIPE_ERR:cloud_function:$e");
+          }
+          
+          // Выходим из аккаунта
           try {
             await FirebaseAuth.instance.signOut();
             debugLog("LOGOUT:OK");
             debugLog("FRESH_INSTALL_WIPE_COMPLETE:logged_out");
           } catch (e) {
             debugLog("LOGOUT:ERR:$e");
-            debugLog("FRESH_INSTALL_LOGOUT_ERR:$e");
           }
+          
           // Отмечаем первую установку как выполненную
           await FirstRunHelper.markFirstRunDone();
+          
           // После wipe редирект на логин
           if (mounted) {
             context.go('/login');
@@ -180,7 +240,9 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
       
       if (missingFields.isNotEmpty) {
         debugLog("AUTH_GATE:PROFILE_CHECK:missing_fields=[${missingFields.join(',')}]");
+        debugLog("ONBOARDING_REQUIRED:uid=${widget.user.uid}");
         debugLog("ONBOARDING_OPENED");
+        // Жёсткий редирект на онбординг - вход блокируется
         if (mounted) {
           context.go('/onboarding/role-name-city');
         }

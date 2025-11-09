@@ -1,12 +1,17 @@
 import 'package:event_marketplace_app/models/user_profile_enhanced.dart';
 import 'package:event_marketplace_app/services/auth_service.dart';
 import 'package:event_marketplace_app/services/user_profile_service.dart';
+import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/widgets/common/custom_app_bar.dart';
 import 'package:event_marketplace_app/widgets/common/loading_overlay.dart';
 import 'package:event_marketplace_app/widgets/security/login_history_widget.dart';
 import 'package:event_marketplace_app/widgets/security/sessions_list_widget.dart';
 import 'package:event_marketplace_app/widgets/security/two_factor_setup_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Экран настроек безопасности
 class SecuritySettingsScreen extends StatefulWidget {
@@ -55,12 +60,37 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     if (result != null) {
       try {
         setState(() => _isLoading = true);
+        debugLog('PASSWORD_CHANGE_START');
 
-        // TODO: Реализовать смену пароля через Firebase Auth
-        await Future.delayed(const Duration(seconds: 1)); // Заглушка
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          throw Exception('Пользователь не авторизован');
+        }
+
+        // Проверяем текущий пароль (переавторизация)
+        final credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: result['currentPassword']!,
+        );
+        await user.reauthenticateWithCredential(credential);
+        debugLog('PASSWORD_CHANGE_REAUTH_OK');
+
+        // Меняем пароль
+        await user.updatePassword(result['newPassword']!);
+        debugLog('PASSWORD_CHANGE_OK');
 
         _showSuccessSnackBar('Пароль успешно изменен');
+      } on FirebaseAuthException catch (e) {
+        debugLog('PASSWORD_CHANGE_ERR:${e.code}');
+        String errorMsg = 'Ошибка смены пароля';
+        if (e.code == 'wrong-password') {
+          errorMsg = 'Неверный текущий пароль';
+        } else if (e.code == 'weak-password') {
+          errorMsg = 'Пароль слишком слабый';
+        }
+        _showErrorSnackBar(errorMsg);
       } catch (e) {
+        debugLog('PASSWORD_CHANGE_ERR:unknown:$e');
         _showErrorSnackBar('Ошибка смены пароля: $e');
       } finally {
         setState(() => _isLoading = false);
@@ -238,13 +268,82 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     if (confirmed ?? false) {
       try {
         setState(() => _isLoading = true);
+        debugLog('ACCOUNT_DELETE_START');
 
-        // TODO: Реализовать удаление аккаунта
-        await Future.delayed(const Duration(seconds: 1)); // Заглушка
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          throw Exception('Пользователь не авторизован');
+        }
+        final uid = user.uid;
+
+        // 1) Удалить Firebase Auth user
+        await user.delete();
+        debugLog('ACCOUNT_DELETE:AUTH_USER_DELETED');
+
+        // 2) Удалить Firestore user doc
+        try {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .delete();
+          debugLog('ACCOUNT_DELETE:FIRESTORE_USER_DELETED');
+        } catch (e) {
+          debugLog('ACCOUNT_DELETE:FIRESTORE_DELETE_ERR:$e');
+        }
+
+        // 3) Удалить Storage uploads
+        try {
+          final storageRef = FirebaseStorage.instance.ref('uploads/$uid');
+          final listResult = await storageRef.listAll();
+          for (var item in listResult.items) {
+            try {
+              await item.delete();
+            } catch (e) {
+              debugLog('ACCOUNT_DELETE:STORAGE_DELETE_ITEM_ERR:$e');
+            }
+          }
+          debugLog('ACCOUNT_DELETE:STORAGE_DELETED');
+        } catch (e) {
+          debugLog('ACCOUNT_DELETE:STORAGE_DELETE_ERR:$e');
+        }
+
+        // 4) Удалить все user subcollections (messages, prices, bookings, content)
+        try {
+          final batch = FirebaseFirestore.instance.batch();
+          
+          // Удаляем подколлекции
+          final subcollections = [
+            'messages',
+            'prices',
+            'bookings',
+            'content',
+          ];
+          
+          for (final subcol in subcollections) {
+            final snapshot = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(uid)
+                .collection(subcol)
+                .get();
+            for (var doc in snapshot.docs) {
+              batch.delete(doc.reference);
+            }
+          }
+          
+          await batch.commit();
+          debugLog('ACCOUNT_DELETE:SUBCOLLECTIONS_DELETED');
+        } catch (e) {
+          debugLog('ACCOUNT_DELETE:SUBCOLLECTIONS_DELETE_ERR:$e');
+        }
+
+        debugLog('ACCOUNT_DELETE_OK:$uid');
 
         _showSuccessSnackBar('Аккаунт удален');
-        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+        if (mounted) {
+          context.go('/login');
+        }
       } catch (e) {
+        debugLog('ACCOUNT_DELETE_ERR:$e');
         _showErrorSnackBar('Ошибка удаления аккаунта: $e');
       } finally {
         setState(() => _isLoading = false);
