@@ -1,0 +1,144 @@
+﻿
+11-09 21:06:31.319  1717  2743 D ActivityManager: cleanUpApplicationRecord app:
+ 660:com.google.android.webview:webview_service/u0a188, bad: false, restarting:
+ false, allowRestart: true
+11-09 21:06:31.332  1717  2337 D ActivityManager: cleanUpApplicationRecord app:
+ 563:com.huawei.android.ds/5513, bad: false, restarting: false, allowRestart: t
+rue
+11-09 21:06:40.688  1717 14537 D ActivityManager: cleanUpApplicationRecord app:
+ 2060:com.huawei.controlcenter:collaboration/u0a34, bad: false, restarting: fal
+se, allowRestart: true
+11-09 21:06:40.700  1717  3088 D ActivityManager: cleanUpApplicationRecord app:
+ 1870:com.android.gallery3d/u0a135, bad: false, restarting: false, allowRestart
+: true
+11-09 21:06:51.282  1717  3404 D ActivityManager: cleanUpApplicationRecord app:
+ 32036:com.google.android.googlequicksearchbox:search/u0a173, bad: false, resta
+rting: false, allowRestart: true
+11-09 21:06:55.603  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:07:55.604  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:08:55.606  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:09:55.607  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:10:55.609  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:11:55.610  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:12:55.611  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:13:55.612  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:14:55.613  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:15:55.615  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:16:55.616  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:17:55.618  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:18:55.619  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:19:55.620  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:20:46.054  7968  7968 W dex2oat : Accessing hidden method Landroid/vie
+w/WindowInsets$Builder;->setInsets(ILandroid/graphics/Insets;)Landroid/view/Win
+dowInsets$Builder; (blacklist, linking, denied)
+11-09 21:20:46.054  7968  7968 W dex2oat : Accessing hidden method Landroid/vie
+w/WindowInsets$Builder;->setVisible(IZ)Landroid/view/WindowInsets$Builder; (bla
+cklist, linking, denied)
+11-09 21:20:47.533  9881 11526 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.google.android.videos, Service: oauth2:https://www.goog
+leapis.com/auth/android_video https://www.googleapis.com/auth/userinfo.email ht
+tps://www.googleapis.com/auth/google_tv
+11-09 21:20:47.534  9881 11526 W Auth    : [ChimeraGetToken] exception while tr
+ying to fetch auth tokens for app=com.google.android.videos, scope=oauth2:https
+://www.googleapis.com/auth/android_video https://www.googleapis.com/auth/userin
+fo.email https://www.googleapis.com/auth/google_tv [CONTEXT service_id=153 ]
+11-09 21:20:49.341  3103  7085 I HiAdKit.AccessMethod.Builder:  countryCode:RU
+11-09 21:20:50.115  8261  8261 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-09 21:20:50.193  8261  8330 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-09 21:20:50.212  8261  8261 W marketplace.app: type=1400 audit(0.0:1146619):
+ avc: denied { read } for pid=8261 name="max_map_count" dev="proc" ino=24009421
+ scontext=u:r:untrusted_app:s0:c221,c257,c512,c768 tcontext=u:object_r:proc_max
+_map_count:s0 tclass=file permissive=0
+11-09 21:20:50.227  8261  8261 W marketplace.ap: Accessing hidden method Landro
+id/view/WindowInsets$Builder;->setInsets(ILandroid/graphics/Insets;)Landroid/vi
+ew/WindowInsets$Builder; (blacklist, linking, denied)
+11-09 21:20:50.227  8261  8261 W marketplace.ap: Accessing hidden method Landro
+id/view/WindowInsets$Builder;->setVisible(IZ)Landroid/view/WindowInsets$Builder
+; (blacklist, linking, denied)
+11-09 21:20:50.493  8261  8295 W FirebaseSessions: 	at com.google.firebase.inst
+allations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fir
+ebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-09 21:20:50.493  8261  8329 E FirebaseInstanceId: 	at com.google.firebase.in
+stallations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-f
+irebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-09 21:20:51.259  8261  8314 W FirebaseSessions: 	at com.google.firebase.inst
+allations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fir
+ebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-09 21:20:51.519  8261  8295 W FirebaseSessions: 	at com.google.firebase.inst
+allations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fir
+ebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-09 21:20:52.086  8261  8261 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-09 21:20:52.086  8261  8261 I flutter : APP: APP: BUILD OK v6.1.1-google-fix
+11-09 21:20:52.086  8261  8261 I flutter : APP: APP: RELEASE FLOW STARTED
+11-09 21:20:52.086  8261  8261 I flutter : APP: APP_VERSION:6.1.1+36
+11-09 21:20:52.086  8261  8261 I flutter : APP: SESSION_START
+11-09 21:20:52.086  8261  8261 I flutter : APP: INDEXES_READY
+11-09 21:20:52.086  8261  8261 I flutter : APP: FIREBASE_DEPLOY_START
+11-09 21:20:52.121  8261  8261 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
+11-09 21:20:52.121  8261  8261 I flutter : APP: GOOGLE_INIT:[DEFAULT]
+11-09 21:20:52.121  8261  8261 I flutter : APP: GOOGLE_JSON_CHECK:found
+11-09 21:20:52.689  9881 11526 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.google.android.videos, Service: oauth2:https://www.goog
+leapis.com/auth/android_video https://www.googleapis.com/auth/userinfo.email ht
+tps://www.googleapis.com/auth/google_tv
+11-09 21:20:52.689  9881 11526 W Auth    : [ChimeraGetToken] exception while tr
+ying to fetch auth tokens for app=com.google.android.videos, scope=oauth2:https
+://www.googleapis.com/auth/android_video https://www.googleapis.com/auth/userin
+fo.email https://www.googleapis.com/auth/google_tv [CONTEXT service_id=153 ]
+11-09 21:20:53.129  2606  3045 D ConnCureConfigUtil: isCaredApp: input = com.ev
+entmarketplace.app
+11-09 21:20:53.129  2606  3045 I ConnCureStateMonitor: isCaredApp:false,isAllow
+ed:true,isDataEnabled:true
+11-09 21:20:54.860  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1146624
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-09 21:20:54.892  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-09 21:20:55.621  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-09 21:20:56.242  8261  8261 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+11-09 21:20:56.278 18357  7882 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mu: Exception in CronetUrlRequest: net:
+:ERR_QUIC_PROTOCOL_ERROR, ErrorCode=10, InternalErrorCode=-356, Retryable=false
+, QuicDetailedErrorCode=25, Source=2
+11-09 21:20:56.564  8261  8329 E FirebaseInstanceId: 	at com.google.firebase.in
+stallations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-f
+irebase-installations-FirebaseInstallations(FirebaseInstallations.java:373)
+11-09 21:20:56.652  8261  8261 I flutter : APP: FCM_INIT_ERROR:[firebase_messag
+ing/unknown] java.io.IOException: SERVICE_NOT_AVAILABLE
+11-09 21:20:56.652  8261  8261 I flutter : APP: WEB_CLIENT_ID:1:272201705683:an
+droid:0196de78aaeb970ef80c26
+11-09 21:20:56.652  8261  8261 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyC
+HEJy7WBr5eQrcyuRhh_hSfih4
+11-09 21:20:56.665  8261  8261 I flutter : APP: SPLASH: Firebase init start
+11-09 21:20:56.665  8261  8261 I flutter : APP: SPLASH: Firebase init ok
+11-09 21:20:56.668  8261  8261 I flutter : APP: SPLASH: Auth state resolved
+11-09 21:20:56.752  2680  2958 E AbilityFormViewRefreshUtils: stopListening [0m
+s]
+11-09 21:20:56.784  1082  1302 W ScreemCommon: START_APP: JL_APP_LAUNCHING_END 
+and JL_APP_LAUNCHING_BEGIN too long| span:6722 > C(5000), C
+11-09 21:20:56.808  1717  2042 I HwPackageManagerService: app:system_server, ge
+tApplicationInfo or source return null
+11-09 21:20:56.810  1717  2042 I HwPackageManagerService: app:surfaceflinger, g
+etApplicationInfo or source return null
+11-09 21:20:57.185  8261  8261 I flutter : APP: SPLASH_COMPLETE
+
+
