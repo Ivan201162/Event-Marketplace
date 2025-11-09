@@ -7,6 +7,7 @@ import 'package:event_marketplace_app/theme/theme.dart';
 import 'package:event_marketplace_app/core/bootstrap.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/core/build_version.dart';
+import 'package:event_marketplace_app/providers/theme_provider.dart';
 import 'package:event_marketplace_app/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
