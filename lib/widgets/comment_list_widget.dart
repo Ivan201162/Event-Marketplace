@@ -63,6 +63,8 @@ class CommentListWidget extends StatelessWidget {
               authorPhotoUrl: data['authorPhotoUrl'],
               text: data['text'] ?? '',
               createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+              likesCount: (data['likesCount'] as int?) ?? 0,
+              isLiked: (data['likes'] as List<dynamic>?)?.contains(FirebaseAuth.instance.currentUser?.uid) ?? false,
               parentType: parentType,
               parentId: parentId,
             );

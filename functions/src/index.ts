@@ -19,3 +19,6 @@ export { wipeTestUser } from './wipeTestUser';
 
 // Экспорт cleanup stories
 export { cleanupExpiredStories } from './cleanupStories';
+
+// Экспорт push notifications
+export { sendPushOnBooking, sendPushOnMessage } from './pushNotifications';

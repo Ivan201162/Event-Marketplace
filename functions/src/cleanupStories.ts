@@ -7,7 +7,7 @@ if (!admin.apps.length) admin.initializeApp();
  * Автоматическое удаление истёкших сторис (каждые 10 минут)
  */
 export const cleanupExpiredStories = functions.pubsub
-  .schedule("every 10 minutes")
+  .schedule("every 15 minutes")
   .onRun(async (context) => {
     const db = admin.firestore();
     const storage = admin.storage();
