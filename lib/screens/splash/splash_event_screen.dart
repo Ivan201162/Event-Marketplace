@@ -111,7 +111,7 @@ class _SplashEventScreenState extends State<SplashEventScreen>
           }
         } catch (e) {
           debugLog("SPLASH_INIT_FAILED:$e");
-          setState(() {
+        setState(() {
             _state = SplashState.error;
             _error = e.toString();
           });
@@ -137,15 +137,15 @@ class _SplashEventScreenState extends State<SplashEventScreen>
           });
           
           _navigateToAuthGate();
-        } catch (e) {
+    } catch (e) {
           debugLog("SPLASH_AUTH_STATE_ERROR:$e");
           // Продолжаем даже при ошибке auth state
-          setState(() {
+      setState(() {
             _state = SplashState.ready;
-          });
-          _navigateToAuthGate();
-        }
-      }
+      });
+      _navigateToAuthGate();
+    }
+  }
     } catch (e) {
       debugLog("SPLASH_INIT_FAILED:$e");
       setState(() {
@@ -158,12 +158,12 @@ class _SplashEventScreenState extends State<SplashEventScreen>
   void _navigateToAuthGate() {
     if (_state == SplashState.ready && mounted) {
       Future.delayed(const Duration(milliseconds: 300), () {
-        if (mounted) {
-          context.go('/auth-gate');
-        }
-      });
+          if (mounted) {
+            context.go('/auth-gate');
+          }
+        });
+      }
     }
-  }
   
   void _handleRetry() {
     debugLog("SPLASH:RETRY");
@@ -240,11 +240,11 @@ class _SplashEventScreenState extends State<SplashEventScreen>
                       child: Opacity(
                         opacity: _fadeAnimation.value,
                         child: Text(
-                          'EVENT',
-                          style: AppTypography.displayLg.copyWith(
-                            color: textColor,
-                            fontWeight: FontWeight.w800,
-                          ),
+                  'EVENT',
+                  style: AppTypography.displayLg.copyWith(
+                    color: textColor,
+                    fontWeight: FontWeight.w800,
+                  ),
                         ),
                       ),
                     );

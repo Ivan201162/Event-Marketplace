@@ -1,0 +1,8 @@
+﻿
+11-10 13:51:20.474  9460  9460 I flutter : APP: APP: BUILD OK v6.3-auth-hard-re
+set
+11-10 13:51:21.277  9460  9460 I flutter : SPLASH_FIREBASE_INIT_OK
+11-10 13:51:21.284  9460  9460 I flutter : #5      AppRoot.build (package:event
+_marketplace_app/main.dart:83)
+
+

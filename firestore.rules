@@ -21,13 +21,9 @@ service cloud.firestore {
     // Users
     match /users/{uid} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && request.auth.uid == uid
-        && (!request.resource.data.keys().hasAny(['roles']) || 
-            (request.resource.data.roles is list && request.resource.data.roles.size() <= 3));
-      allow update: if isSignedIn() && request.auth.uid == uid
-        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['roles']) || 
-            (request.resource.data.roles is list && request.resource.data.roles.size() <= 3));
-      allow delete: if false; // удаляем через Cloud Function
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid);
+      allow delete: if isOwner(uid);
       
       match /saved_ideas/{docId} {
         allow read, write: if isOwner(uid);
@@ -150,7 +146,7 @@ service cloud.firestore {
 
     // Notifications
     match /notifications/{id} {
-      allow read, write: if isSignedIn() && request.auth.uid == resource.data.userId;
+      allow read, write: if isSignedIn() && request.resource.data.userId == request.auth.uid;
     }
 
     // Saved Filters
