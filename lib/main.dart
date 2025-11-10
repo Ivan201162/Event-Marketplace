@@ -4,16 +4,13 @@ import 'dart:io';
 import 'package:event_marketplace_app/core/app_router_minimal_working.dart';
 import 'package:event_marketplace_app/core/app_theme.dart';
 import 'package:event_marketplace_app/theme/theme.dart';
-import 'package:event_marketplace_app/core/bootstrap.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/core/build_version.dart';
 import 'package:event_marketplace_app/providers/theme_provider.dart';
 import 'package:event_marketplace_app/firebase_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:event_marketplace_app/services/wipe_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,242 +25,57 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Проверка google-services.json
-  final googleServicesPath = 'android/app/google-services.json';
-  final googleServicesExists = await File(googleServicesPath).exists();
-  debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
-
-  debugLog('APP: RELEASE FLOW START');
-  debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
-  
-  debugLog('APP: BUILD OK $BUILD_VERSION');
-  debugLog('APP_VERSION:6.3.0+38');
-  
-  // Проверка Firebase options
-  try {
-    final options = DefaultFirebaseOptions.currentPlatform;
-    debugLog('FIREBASE_OPTIONS_OK:${options.projectId}');
-  } catch (e) {
-    debugLog('FIREBASE_OPTIONS_ERROR:$e');
-  }
-  debugLog('SESSION_START');
-  debugLog('INDEXES_READY');
-  
-  // Логирование Firebase deploy статуса
-  try {
-    debugLog('FIREBASE_DEPLOY_START');
-  } catch (e) {
-    debugLog('FIREBASE_DEPLOY_FAIL:$e');
-  }
 
   // Настройка Crashlytics
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
+  debugLog('APP: BUILD OK $BUILD_VERSION');
+  debugLog('APP_VERSION:6.3.0+38');
+
+  // Жёсткий таймаут инициализации Firebase
+  bool firebaseReady = false;
   try {
-    final startupStartTime = DateTime.now().millisecondsSinceEpoch;
-    debugPrint('🚀 Запуск приложения...');
-
-    // Безопасная инициализация Firebase с таймаутом
+    await Future.any([
+      Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ),
+      Future.delayed(const Duration(seconds: 8)),
+    ]);
+    // Проверяем, что Firebase действительно инициализирован
     try {
-      debugLog('SPLASH_INIT_START');
-      
-      // Проверяем, инициализирован ли Firebase
-      bool firebaseInitialized = false;
-      try {
-        Firebase.app();
-        firebaseInitialized = true;
-        debugLog('SPLASH_FIREBASE_ALREADY_INIT');
-      } catch (_) {
-        // Не инициализирован, инициализируем с таймаутом
-        try {
-          // Инициализация Firebase с таймаутом
-          await Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ).timeout(
-            const Duration(seconds: 6),
-            onTimeout: () {
-              debugLog('SPLASH_TIMEOUT_RETRY');
-              throw TimeoutException('Firebase init timeout', const Duration(seconds: 6));
-            },
-          );
-          firebaseInitialized = true;
-          debugLog('SPLASH_FIREBASE_INIT_OK');
-        } on TimeoutException {
-          debugLog('SPLASH_TIMEOUT_RETRY');
-          // Повторная попытка
-          try {
-            await Firebase.initializeApp(
-              options: DefaultFirebaseOptions.currentPlatform,
-            ).timeout(const Duration(seconds: 4));
-            firebaseInitialized = true;
-            debugLog('SPLASH_FIREBASE_INIT_OK');
-          } catch (e) {
-            debugLog('SPLASH_INIT_FAILED:$e');
-            firebaseInitialized = false;
-          }
-        } catch (e) {
-          debugLog('SPLASH_INIT_FAILED:$e');
-          // Fallback: оффлайн режим
-          debugLog('SPLASH_OFFLINE_MODE_ENABLED');
-          firebaseInitialized = false;
-        }
-      }
-      
-      if (firebaseInitialized) {
-        // Включаем offline persistence для Firestore
-        try {
-          FirebaseFirestore.instance.settings = const Settings(
-            persistenceEnabled: true,
-            cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-          );
-          debugLog('FIRESTORE_PERSISTENCE:enabled');
-        } catch (e) {
-          debugLog('FIRESTORE_PERSISTENCE:error:$e');
-        }
-        
-        // Ждём первое событие authStateChanges с таймаутом
-        try {
-          await FirebaseAuth.instance.authStateChanges().timeout(
-            const Duration(seconds: 6),
-            onTimeout: (sink) {
-              debugLog('SPLASH_AUTH_STATE_TIMEOUT');
-              sink.add(null);
-            },
-          ).first;
-          debugLog('SPLASH_AUTH_STATE_OK');
-        } catch (e) {
-          debugLog('SPLASH_AUTH_STATE_ERROR:$e');
-        }
-      }
-    } catch (e) {
-      debugLog('SPLASH_INIT_FAILED:$e');
-      debugLog('SPLASH_OFFLINE_MODE_ENABLED');
+      Firebase.app();
+      firebaseReady = true;
+      debugPrint('SPLASH_FIREBASE_INIT_OK');
+    } catch (_) {
+      debugPrint('SPLASH_INIT_ERR:Firebase not initialized after timeout');
     }
-
-    // Инициализация Bootstrap с таймаутом
-    await Bootstrap.initialize().timeout(
-      const Duration(seconds: 10),
-      onTimeout: () {
-        debugPrint(
-            '⚠️ Bootstrap инициализация превысила таймаут, продолжаем...',);
-      },
-    );
-
-    debugPrint('✅ Bootstrap инициализация завершена');
-
-    // Проверяем текущего пользователя после инициализации Firebase
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      debugLog('APP: GOOGLE FIX CONFIRMED: User exists: ${currentUser.uid}');
-    } else {
-      debugLog('APP: GOOGLE FIX CONFIRMED: No current user');
-    }
-    
-    // Инициализация FCM
-    try {
-      final messaging = FirebaseMessaging.instance;
-      final settings = await messaging.requestPermission();
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        final token = await messaging.getToken();
-        if (token != null && currentUser != null) {
-          // Проверяем, изменился ли токен
-          final userDoc = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(currentUser.uid)
-              .get();
-          final userData = userDoc.data();
-          final fcmTokensData = userData?['fcmTokens'];
-          final existingTokens = fcmTokensData is List ? List<String>.from(fcmTokensData.map((e) => e.toString())) : <String>[];
-          
-          if (!existingTokens.contains(token)) {
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(currentUser.uid)
-              .update({
-            'fcmTokens': FieldValue.arrayUnion([token]),
-            'lastTokenUpdate': FieldValue.serverTimestamp(),
-          });
-            debugLog('FCM_TOKEN_SAVED:uid=${currentUser.uid}');
-            debugLog('FCM_MESSAGE_RECEIVED:token_saved');
-          } else {
-            debugLog('FCM_TOKEN_EXISTS:uid=${currentUser.uid}');
-          }
-          debugLog('FCM_INIT_OK');
-        } else {
-          debugLog('FCM_INIT_OK');
-        }
-        
-        // Настройка обработчиков сообщений
-        // Foreground messages
-        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-          debugLog('FCM_MESSAGE_RECEIVED:type=${message.data['type'] ?? 'unknown'}');
-          debugLog('FCM_ON_MESSAGE:${message.messageId}');
-          debugLog('FCM_TITLE:${message.notification?.title}');
-          debugLog('FCM_BODY:${message.notification?.body}');
-          // TODO: Показать локальное уведомление
-        });
-        
-        // Background messages (обрабатываются через top-level функцию)
-        FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-        
-        // Когда приложение открыто из уведомления
-        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-          debugLog('FCM_OPENED:id=${message.messageId}');
-          debugLog('FCM_ON_MESSAGE_OPENED:${message.messageId}');
-          // TODO: Навигация на соответствующий экран
-        });
-        
-        // Проверка, было ли приложение открыто из уведомления
-        final initialMessage = await messaging.getInitialMessage();
-        if (initialMessage != null) {
-          debugLog('FCM_OPENED:id=${initialMessage.messageId}');
-          debugLog('FCM_INITIAL_MESSAGE:${initialMessage.messageId}');
-          // TODO: Навигация на соответствующий экран
-        }
-      } else {
-        debugLog('FCM_PERM_DENIED');
-      }
-    } catch (e) {
-      debugLog('FCM_INIT_ERROR:$e');
-    }
-    
-    // Log Firebase app configuration
-    try {
-      final app = Firebase.app();
-      debugLog('WEB_CLIENT_ID:${app.options.appId}');
-      debugLog('FIREBASE_API_KEY:${app.options.apiKey}');
-    } catch (e) {
-      debugLog('FIREBASE_CONFIG_ERROR:$e');
-    }
-
-    runZonedGuarded(() {
-      runApp(const ProviderScope(child: EventMarketplaceApp()));
-    }, (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack);
-    });
-    
-    // Лог после runApp
-    final startupTime = DateTime.now().millisecondsSinceEpoch - startupStartTime;
-    debugLog('APP: BUILD OK v6.3-quantum-evolution');
-    debugLog('PERF_STARTUP_TIME:$startupTime');
-  } catch (e, stackTrace) {
-    debugPrint('❌ Критическая ошибка инициализации: $e');
-    debugPrint('Stack trace: $stackTrace');
-
-    // Отправляем ошибку в Crashlytics
-    FirebaseCrashlytics.instance.recordError(e, stackTrace);
-
-    // Запускаем приложение даже при ошибке инициализации
-    runApp(const ProviderScope(child: EventMarketplaceApp()));
-    debugLog('APP: BUILD OK v6.1.2-google-auth-ABSOLUTE');
+  } catch (e, st) {
+    debugPrint('SPLASH_INIT_ERR:$e\n$st');
   }
+
+  // Fresh-install wipe (только для тест-устройства в release)
+  if (firebaseReady) {
+    try {
+      await WipeService.maybeWipeOnFirstRun();
+    } catch (e) {
+      debugPrint('WIPE_SERVICE_ERROR:$e');
+    }
+  }
+
+  runZonedGuarded(() {
+    runApp(AppRoot(firebaseReady: firebaseReady));
+  }, (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack);
+  });
 }
 
-class EventMarketplaceApp extends ConsumerWidget {
-  const EventMarketplaceApp({super.key});
+/// Корневой виджет приложения
+class AppRoot extends ConsumerWidget {
+  final bool firebaseReady;
+
+  const AppRoot({super.key, required this.firebaseReady});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -274,7 +86,7 @@ class EventMarketplaceApp extends ConsumerWidget {
       title: 'Event Marketplace',
       theme: appLightTheme(),
       darkTheme: appDarkTheme(),
-      themeMode: themeMode, // Используем themeProvider для немедленного применения
+      themeMode: themeMode,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

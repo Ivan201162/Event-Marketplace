@@ -10,118 +10,80 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// Экран-ворота для проверки авторизации
-class AuthGate extends StatefulWidget {
+class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
   @override
-  State<AuthGate> createState() => _AuthGateState();
-}
-
-class _AuthGateState extends State<AuthGate> {
-  bool _firebaseReady = false;
-  bool _authStateReady = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeFirebase();
-  }
-
-  Future<void> _initializeFirebase() async {
-    try {
-      // Проверяем, инициализирован ли Firebase
-      try {
-        Firebase.app();
-        debugLog("AUTH_GATE:FIREBASE_ALREADY_INIT");
-        _firebaseReady = true;
-      } catch (_) {
-        // Инициализируем Firebase с таймаутом
-        try {
-          await Firebase.initializeApp().timeout(const Duration(seconds: 6));
-          debugLog("AUTH_GATE:FIREBASE_INIT_OK");
-          _firebaseReady = true;
-        } catch (e) {
-          debugLog("AUTH_GATE:FIREBASE_INIT_ERROR:$e");
-          _firebaseReady = true; // Продолжаем даже при ошибке
-        }
-      }
-      
-      // Ждём первое событие authStateChanges с таймаутом
-      try {
-        await FirebaseAuth.instance.authStateChanges().timeout(
-          const Duration(seconds: 6),
-          onTimeout: (sink) {
-            debugLog("AUTH_GATE:AUTH_STATE_TIMEOUT");
-            sink.add(null);
-          },
-        ).first;
-        debugLog("AUTH_GATE_READY");
-        _authStateReady = true;
-      } catch (e) {
-        debugLog("AUTH_GATE:AUTH_STATE_ERROR:$e");
-        _authStateReady = true; // Продолжаем даже при ошибке
-      }
-      
-      if (mounted) {
-        setState(() {});
-      }
-    } catch (e) {
-      debugLog("AUTH_GATE:INIT_ERROR:$e");
-      _firebaseReady = true;
-      _authStateReady = true;
-      if (mounted) {
-        setState(() {});
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // Ждём Firebase init и первое authStateChanges
-    if (!_firebaseReady || !_authStateReady) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges().timeout(
-        const Duration(seconds: 6),
-        onTimeout: (sink) {
-          debugLog("AUTH_GATE:STREAM_TIMEOUT");
-          sink.add(null);
-        },
-      ),
-      builder: (context, snapshot) {
-        // Пока загружается состояние авторизации
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (ctx, snap) {
+        if (snap.connectionState == ConnectionState.waiting) {
+          return const SplashScreen(); // тот же Splash
         }
 
-        final user = snapshot.data;
+        final user = snap.data;
 
-        // IF user == null → show LoginScreen (без двойного срабатывания)
         if (user == null) {
-          debugLog("AUTH_GATE:USER:null");
-          debugLog("AUTH_SCREEN_SHOWN");
-          // Используем Future.microtask для исключения двойного срабатывания
-          Future.microtask(() {
-            if (mounted) {
-              context.go('/login');
-            }
-          });
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const LoginScreen(); // экран входа
         }
 
-        // IF user != null → check profile
-        debugLog("AUTH_GATE:USER:uid=${user.uid}");
-        return _ProfileCheckWidget(user: user);
+        return FutureBuilder<bool>(
+          future: _ensureProfileAndRoute(), // см. ниже
+          builder: (c, s) {
+            if (!s.hasData) return const SplashScreen();
+
+            // true → профиль ок, идём в main
+            if (s.data!) {
+              // Используем GoRouter для навигации
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (ctx.mounted) {
+                  ctx.go('/main');
+                }
+              });
+              return const SplashScreen();
+            } else {
+              // Используем GoRouter для навигации
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (ctx.mounted) {
+                  ctx.go('/onboarding');
+                }
+              });
+              return const SplashScreen();
+            }
+          },
+        );
       },
     );
+  }
+
+  Future<bool> _ensureProfileAndRoute() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    debugLog('AUTH_GATE:PROFILE_CHECK:uid=$uid');
+    
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+      
+      if (!doc.exists) {
+        debugLog('AUTH_GATE:PROFILE_CHECK:not_exists');
+        return false;
+      }
+
+      final d = doc.data()!;
+      final ok = (d['firstName']?.toString().isNotEmpty ?? false) &&
+          (d['lastName']?.toString().isNotEmpty ?? false) &&
+          (d['city']?.toString().isNotEmpty ?? false) &&
+          ((d['roles'] is List) && (d['roles'] as List).isNotEmpty);
+
+      debugLog('AUTH_GATE:PROFILE_CHECK:ok=$ok');
+      return ok;
+    } catch (e) {
+      debugLog('AUTH_GATE:PROFILE_CHECK:error=$e');
+      return false;
+    }
   }
 }
 

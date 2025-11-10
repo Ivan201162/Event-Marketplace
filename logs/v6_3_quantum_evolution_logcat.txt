@@ -1,244 +1,71 @@
 ﻿
-11-10 11:25:10.456 32011 32011 D BoundBrokerSvc: onRebind: Intent { act=com.goo
-gle.android.gms.common.telemetry.service.START dat=chimera-action: cmp=com.goog
-le.android.gms/.chimera.PersistentApiService }
-11-10 11:25:10.461 28964 28964 I flutter : APP: SPLASH_FIREBASE_INIT_OK
-11-10 11:25:10.462 28964 28964 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
-11-10 11:25:10.462 28964 28964 I flutter : APP: SPLASH_AUTH_STATE_OK
-11-10 11:25:10.462 28964 28964 I flutter : ЁЯФД Bootstrap: ╨Э╨░╤З╨╕╨╜╨░╨╡╨╝ ╨╕╨
-╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░╤Ж╨╕╤О...
-11-10 11:25:10.462 28964 28964 I flutter : ЁЯФД Bootstrap: ╨Э╨░╤Б╤В╤А╨╛╨╣╨║╨░ ╨
-╛╨▒╤А╨░╨▒╨╛╤В╨║╨╕ ╨╛╤И╨╕╨▒╨╛╨║...
-11-10 11:25:10.462 28964 28964 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
+11-10 12:35:20.581  1072  1072 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 12:35:20.581  1072  1072 I flutter : APP: APP: RELEASE FLOW START
+11-10 12:35:20.581  1072  1072 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 12:35:20.581  1072  1072 I flutter : APP: APP: BUILD OK v6.3-quantum-evol
+ution
+11-10 12:35:20.581  1072  1072 I flutter : APP: APP_VERSION:6.3.0+38
+11-10 12:35:20.581  1072  1072 I flutter : APP: FIREBASE_OPTIONS_OK:event-marke
+tplace-mvp
+11-10 12:35:20.581  1072  1072 I flutter : APP: SESSION_START
+11-10 12:35:20.581  1072  1072 I flutter : APP: INDEXES_READY
+11-10 12:35:20.581  1072  1072 I flutter : APP: FIREBASE_DEPLOY_START
+11-10 12:35:20.581  1072  1072 I flutter : APP: SPLASH_INIT_START
+11-10 12:35:20.674  1072  1072 I flutter : APP: SPLASH_FIREBASE_INIT_OK
+11-10 12:35:20.674  1072  1072 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
+11-10 12:35:20.675  1072  1072 I flutter : APP: SPLASH_AUTH_STATE_OK
+11-10 12:35:20.676  1072  1072 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
 ╤Ж╨╕╤П Firebase...
-11-10 11:25:10.462 28964 28964 I flutter : тЬЕ Firebase already initialized
-11-10 11:25:10.462 28964 28964 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
-╤Ж╨╕╤П ╤Б╨╡╤А╨▓╨╕╤Б╨╛╨▓...
-11-10 11:25:10.466  1717  2337 V ActivityManager: Successfully start provider C
-ontentProviderRecord{6c218b1 u0 com.google.android.gms/.chimera.container.GmsMo
-duleProvider} launchingApp=null caller pid= 28964
-11-10 11:25:10.467 28964 28964 I flutter : ЁЯУ▒ App version: 6.3.0 (38)
-11-10 11:25:10.470 28964 28964 I flutter : тЬЕ Services initialized successfull
-y
-11-10 11:25:10.470 28964 28964 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
+11-10 12:35:20.676  1072  1072 I flutter : тЬЕ Firebase already initialized
+11-10 12:35:20.685  1072  1072 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
 ╤Ж╨╕╤П FCM...
-11-10 11:25:10.479  1717  1895 D StatusBarManagerService: win:Window{593cc69 u0
- com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
-truelight:false
-11-10 11:25:10.479  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
-Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
-y}
-11-10 11:25:10.482 28964 28964 I flutter : ╨а╨░╨╖╤А╨╡╤И╨╡╨╜╨╕╤П ╨╜╨░ ╤Г╨▓╨╡╨┤╨╛
-╨╝╨╗╨╡╨╜╨╕╤П: AuthorizationStatus.authorized
-11-10 11:25:10.501 28422 28459 I Finsky  : [88856] Package com.google.android.g
-ms is verified.
-11-10 11:25:10.511 28964 28964 I FLTFireBGExecutor: Creating background Flutter
-Engine instance, with args: []
-11-10 11:25:10.527 28964 29234 I flutter : [IMPORTANT:flutter/shell/platform/an
-droid/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend
- (OpenGLES).
-11-10 11:25:10.662 28964 28964 D FlutterGeolocator: Flutter engine connected. C
-onnected engine count 2
-11-10 11:25:10.663 28964 28964 I FLTFireMsgService: FlutterFirebaseMessagingBac
-kgroundService started!
-11-10 11:25:11.535  2606  3045 D ConnCureConfigUtil: isCaredApp: input = com.ev
-entmarketplace.app
-11-10 11:25:11.535  2606  3045 I ConnCureStateMonitor: isCaredApp:false,isAllow
-ed:true,isDataEnabled:true
-11-10 11:25:11.847 28964 28964 I flutter : FCM Token: fvlwYPL3TNSF8HNQ8qUulE:AP
+11-10 12:35:20.707  1072  1072 I flutter : FCM Token: fvlwYPL3TNSF8HNQ8qUulE:AP
 A91bEyKrIR33Zu9eULGb_LGAwQVc7JdGswBj8CnIG3ifboguRtePEr_lMRehy4s8XX7l6UIRAmzf39U
 0wlX-mJaFaqwUkxkdDgU_OrKlpplFO-jSr-iGA
-11-10 11:25:11.847 28964 28964 I flutter : тЬЕ FCM initialized successfully
-11-10 11:25:11.847 28964 28964 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
-╤Ж╨╕╤П Push Notifications...
-11-10 11:25:11.861 28964 28964 I flutter : тЬЕ Push notification permission sta
-tus: AuthorizationStatus.authorized
-11-10 11:25:11.867 28964 28964 I flutter : тЬЕ Push notification service initia
-lized successfully
-11-10 11:25:11.867 28964 28964 I flutter : тЬЕ Push Notifications initialized s
-uccessfully
-11-10 11:25:11.867 28964 28964 I flutter : тЬЕ Bootstrap: App initialized succe
-ssfully
-11-10 11:25:11.867 28964 28964 I flutter : тЬЕ Bootstrap ╨╕╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░╤Ж
-╨╕╤П ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░
-11-10 11:25:11.867 28964 28964 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
-urrent user
-11-10 11:25:11.895 28964 28964 I flutter : APP: FCM_INIT_OK
-11-10 11:25:11.911 28964 28964 I flutter : APP: WEB_CLIENT_ID:1:272201705683:an
+11-10 12:35:20.707  1072  1072 I flutter : тЬЕ FCM initialized successfully
+11-10 12:35:20.902  1072  1072 I FLTFireMsgService: FlutterFirebaseMessagingBac
+kgroundService started!
+11-10 12:35:20.904  1072  1072 I flutter : APP: APP: GOOGLE FIX CONFIRMED: User
+ exists: 5cI0yvhJ9qaLCRnWaP13uHvUbH22
+11-10 12:35:22.497  1072  1072 I flutter : APP: FCM_TOKEN_SAVED:uid=5cI0yvhJ9qa
+LCRnWaP13uHvUbH22
+11-10 12:35:22.497  1072  1072 I flutter : APP: FCM_MESSAGE_RECEIVED:token_save
+d
+11-10 12:35:22.497  1072  1072 I flutter : APP: FCM_INIT_OK
+11-10 12:35:22.505  1072  1072 I flutter : APP: WEB_CLIENT_ID:1:272201705683:an
 droid:0196de78aaeb970ef80c26
-11-10 11:25:11.911 28964 28964 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyC
+11-10 12:35:22.505  1072  1072 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyC
 HEJy7WBr5eQrcyuRhh_hSfih4
-11-10 11:25:11.911 28964 28964 I flutter : APP: APP: BUILD OK v6.3-quantum-evol
+11-10 12:35:22.506  1072  1072 I flutter : APP: APP: BUILD OK v6.3-quantum-evol
 ution
-11-10 11:25:11.920 28964 28964 I flutter : APP: SPLASH_INIT_START
-11-10 11:25:11.920 28964 28964 I flutter : APP: SPLASH_FIREBASE_ALREADY_INIT
-11-10 11:25:11.922 28964 28964 I flutter : APP: SPLASH_AUTH_STATE_OK
-11-10 11:25:11.922 28964 28964 I flutter : APP: SPLASH_READY
-11-10 11:25:11.942  1717  1895 D StatusBarManagerService: win:Window{593cc69 u0
- com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
-truelight:false
-11-10 11:25:11.942  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
-Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
-y}
-11-10 11:25:12.000  1717  2042 V ActivityTaskManager: Activity idle: Token{3dcd
-e0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivity t984}}
-11-10 11:25:12.007  1717  1898 I WindowManager: removeIfPossible: Window{f65a09
- u0 Splash Screen com.eventmarketplace.app} callers=com.android.server.wm.Windo
-wState.removeIfPossible:2611 com.android.server.wm.WindowManagerService.removeW
-indow:2282 com.android.server.wm.Session.remove:179 android.view.ViewRootImpl.d
-ispatchDetachedFromWindow:4929 android.view.ViewRootImpl.doDie:8273 
-11-10 11:25:12.011  1717  1898 I WindowManager: Not removing Window{f65a09 u0 S
-plash Screen com.eventmarketplace.app EXITING} due to exit animation 
-11-10 11:25:12.042  1082  1302 W ScreemCommon: CLICK_START_APP: JL_APP_LAUNCHIN
-G_END and JL_EVENT_CLICK_UP too long| span:417319 > A(10000), A
-11-10 11:25:12.063  1717  2337 I HwPackageManagerService: app:system_server, ge
-tApplicationInfo or source return null
-11-10 11:25:12.064  1717  2337 I HwPackageManagerService: app:surfaceflinger, g
-etApplicationInfo or source return null
-11-10 11:25:12.128  1717  1898 I WindowManager: Exit animation finished in Wind
-ow{f65a09 u0 Splash Screen com.eventmarketplace.app EXITING}: remove=true
-11-10 11:25:12.128  1717  1898 E WindowManager: win=Window{f65a09 u0 Splash Scr
-een com.eventmarketplace.app EXITING} destroySurfaces: appStopped=false win.mWi
-ndowRemovalAllowed=true win.mRemoveOnExit=true
-11-10 11:25:12.130  1717  1898 I WindowManager: postWindowRemoveCleanupLocked: 
-Window{f65a09 u0 Splash Screen com.eventmarketplace.app}
-11-10 11:25:12.130  1717  1898 I WindowManager: Removing Window{f65a09 u0 Splas
-h Screen com.eventmarketplace.app} from AppWindowToken{a4b1899 token=Token{3dcd
-e0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivity t984}}}
-11-10 11:25:12.131  1717  1895 D StatusBarManagerService: win:Window{593cc69 u0
- com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
-truelight:false
-11-10 11:25:12.132  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
-Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
-y}
-11-10 11:25:12.229 28964 28964 I flutter : APP: AUTH_GATE:FIREBASE_ALREADY_INIT
-11-10 11:25:12.231 28964 28964 I flutter : APP: AUTH_GATE_READY
-11-10 11:25:12.261 28964 28964 I flutter : APP: AUTH_GATE:USER:null
-11-10 11:25:12.261 28964 28964 I flutter : APP: AUTH_SCREEN_SHOWN
-11-10 11:25:12.482  1717  2076 I ActivityManager: sendIntentSender target:Pendi
-ngIntentRecord{fccd02e com.google.android.gms broadcastIntent}, intent:flg=0x4 
-hwFlg=0x810
-11-10 11:25:12.494  1717 14545 V BroadcastQueue: Finished with ordered broadcas
-t BroadcastRecord{2b23fd7 u0 com.google.android.gms.gcm.ACTION_CHECK_QUEUE}
-11-10 11:25:14.457 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
-gle.android.gms.safetynet.service.START pkg=com.google.android.gms }
-11-10 11:25:15.505 32011 32011 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
-gle.android.gms.common.telemetry.service.START dat=chimera-action: cmp=com.goog
-le.android.gms/.chimera.PersistentApiService }
-11-10 11:25:17.060  1717  2076 I ActivityManager: sendIntentSender target:Pendi
-ngIntentRecord{fccd02e com.google.android.gms broadcastIntent}, intent:flg=0x4 
-hwFlg=0x810
-11-10 11:25:17.078  1717 14545 V BroadcastQueue: Finished with ordered broadcas
-t BroadcastRecord{f2cccc7 u0 com.google.android.gms.gcm.ACTION_CHECK_QUEUE}
-11-10 11:25:17.080  1717  1717 I JobScheduler: About to run job on context 0, j
-ob: JobStatus{6e6664c #u0a172/9242 com.android.vending/com.google.android.finsk
-y.scheduler.process.mainimpl.PhoneskyJobServiceMain u=0 s=10172 TIME=-3s913ms:+
-22h30m19s922ms NET READY}
-11-10 11:25:17.131 18357  7185 W GetGamesServiceReqFacto: Parsing request with 
-ignored arguments. signInOptionsBundle [Bundle[{com.google.android.gms.signin.i
-nternal.serverClientId=null, com.google.android.gms.signin.internal.usePromptMo
-deForAuthCode=true, com.google.android.gms.signin.internal.logSessionId=null, c
-om.google.android.gms.signin.internal.hostedDomain=null, com.google.android.gms
-.signin.internal.offlineAccessRequested=false, com.google.android.gms.signin.in
-ternal.waitForAccessTokenRefresh=false, com.google.android.gms.signin.internal.
-clientRequestedAccount=Account {name=XXXXXXXXX, type=com.google}, com.google.an
-droid.gms.signin.internal.idTokenRequested=false, com.google.android.gms.signin
-.internal.forceCodeForRefreshToken=false}]], isRetryingSignIn [false], skipWelc
-omePopup [false], requireGooglePlus [false]
-11-10 11:25:17.148 18357  8723 W Binder  : 	at m26.den.d(:com.google.android.gm
-s.optional_games@254232017@25.42.32 (100000-0):3)
-11-10 11:25:17.148 18357  8723 W Binder  : 	at m26.den.dX(:com.google.android.g
-ms.optional_games@254232017@25.42.32 (100000-0):34)
-11-10 11:25:17.148 18357  8723 W Binder  : 	at m26.cqk.onTransact(:com.google.a
-ndroid.gms.optional_games@254232017@25.42.32 (100000-0):75)
-11-10 11:25:17.174  5683  5708 W chbox:googleap: Reducing the number of conside
-red missed Gc histogram windows from 314 to 100
-11-10 11:25:17.182 28422 29307 W Finsky  : [88940] SLM: no metadata property co
-m.android.vending.derived.apk.id found for shared library com.google.android.tr
-ichromelibrary_398709933:
-11-10 11:25:17.183 28422 29307 W Finsky  : [88940] SLM: no metadata property co
-m.android.vending.sdk.version.patch found for shared library com.google.android
-.trichromelibrary_398709933:
-11-10 11:25:17.183 28422 29307 W Finsky  : [88940] SLM: no metadata property co
-m.android.vending.derived.apk.id found for shared library com.google.android.tr
-ichromelibrary_739012233:
-11-10 11:25:17.183 28422 29307 W Finsky  : [88940] SLM: no metadata property co
-m.android.vending.sdk.version.patch found for shared library com.google.android
-.trichromelibrary_739012233:
-11-10 11:25:18.906  1717 14545 I JobScheduler.Time: Add job to TimeTracking: be
-00781 #u0a172/9257 com.android.vending/com.google.android.finsky.scheduler.proc
-ess.mainimpl.PhoneskyJobServiceMain, delayTime:3818842454, deadlineTime:3862042
-454
-11-10 11:25:18.916  1717 14545 I JobScheduler: APP response end time, Completed
- JobStatus{6e6664c #u0a172/9242 com.android.vending/com.google.android.finsky.s
-cheduler.process.mainimpl.PhoneskyJobServiceMain u=0 s=10172 TIME=-5s748ms:+22h
-30m18s87ms NET READY}, reschedule=false
-11-10 11:25:22.124 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
-gle.android.gms.feedback.internal.IFeedbackService dat=chimera-action: cmp=com.
-google.android.gms/.chimera.GmsBoundBrokerService }
-11-10 11:25:22.343 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
-gle.android.gms.measurement.START pkg=com.google.android.gms }
-11-10 11:25:22.457  3103  3103 I HiAdKit.ExSplashManager:  do not request exspl
-ash config
-11-10 11:25:22.616 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
-gle.android.gms.potokens.service.START dat=chimera-action: cmp=com.google.andro
-id.gms/.chimera.GmsApiService }
-11-10 11:25:23.453 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
-gle.android.gms.inappreach.service.START dat=chimera-action: cmp=com.google.and
-roid.gms/.chimera.GmsApiService }
-11-10 11:25:25.774  1717  2046 D HwBatteryService: setHwChargeTimeRemaining, ti
-me = -1 String time: -1
-11-10 11:25:39.535  1717  1717 I JobScheduler: About to run job on context 0, j
-ob: JobStatus{a6c36ee #u0a484/436220505 com.eventmarketplace.app/com.google.and
-roid.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService u=0
- s=10484 TIME=-9ms:none NET READY}
-11-10 11:25:39.576 28964 29043 I TRuntime.CctTransportBackend: Making request t
-o: https://firebaselogging-pa.googleapis.com/v1/firelog/legacy/batchlog
-11-10 11:25:42.432  1717  2042 I JobScheduler: APP response end time, Completed
- JobStatus{a6c36ee #u0a484/436220505 com.eventmarketplace.app/com.google.androi
-d.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService u=0 s=
-10484 TIME=-2s906ms:none NET READY}, reschedule=false
-11-10 11:25:47.036  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1164762
-): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
-th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
-tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
-11-10 11:25:47.038  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
-otemweather
-11-10 11:25:53.076  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1164763
-): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
-th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
-tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
-11-10 11:25:53.078  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
-otemweather
-11-10 11:25:56.496  1717  2046 D HwBatteryService: setHwChargeTimeRemaining, ti
-me = -1 String time: -1
-11-10 11:25:59.116  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1164766
-): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
-th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
-tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
-11-10 11:25:59.118  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
-otemweather
-11-10 11:26:05.156  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1164767
-): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
-th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
-tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
-11-10 11:26:05.158  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
-otemweather
-11-10 11:26:05.580  1717  8994 V ActivityManager: Successfully start provider C
-ontentProviderRecord{b659a98 u0 com.google.android.gsf/.gservices.GservicesProv
-ider} launchingApp=ProcessRecord{84f2c7b 16860:com.google.process.gservices/u0a
-167} caller pid= 28575
-11-10 11:26:05.592 28575 28770 I PlayCommon: [88914] Connecting to server for t
-imestamp: https://play.googleapis.com/play/log/timestamp
-11-10 11:26:06.104 28575 28770 I PlayCommon: [88914] Connecting to server: http
-s://play.googleapis.com/play/log?format=raw&proto_v2=true
-11-10 11:26:07.144 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
-gle.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
-11-10 11:26:11.196  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1164776
-): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
-th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
-tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
-11-10 11:26:11.197  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
-otemweather
+11-10 12:35:22.506  1072  1072 I flutter : APP: PERF_STARTUP_TIME:1925
+11-10 12:35:22.518  1072  1072 I flutter : APP: SPLASH_INIT_START
+11-10 12:35:22.518  1072  1072 I flutter : APP: SPLASH_FIREBASE_ALREADY_INIT
+11-10 12:35:22.520  1072  1072 I flutter : APP: SPLASH_AUTH_STATE_OK
+11-10 12:35:22.520  1072  1072 I flutter : APP: SPLASH_READY
+11-10 12:35:22.841  1072  1072 I flutter : APP: AUTH_GATE:FIREBASE_ALREADY_INIT
+11-10 12:35:22.845  1072  1072 I flutter : APP: AUTH_GATE_READY
+11-10 12:35:22.871  1072  1072 I flutter : APP: AUTH_GATE:USER:uid=5cI0yvhJ9qaL
+CRnWaP13uHvUbH22
+11-10 12:35:22.872  1072  1072 I flutter : APP: FRESH_INSTALL_DETECTED:uid=5cI0
+yvhJ9qaLCRnWaP13uHvUbH22
+11-10 12:35:22.872  1072  1072 I flutter : APP: FRESH_WIPE_START:uid=5cI0yvhJ9q
+aLCRnWaP13uHvUbH22
+11-10 12:35:23.851  1072  1072 I flutter : APP: FRESH_WIPE:AUTH_USER_DELETED
+11-10 12:35:23.854  1072  1072 I flutter : APP: AUTH_GATE:USER:null
+11-10 12:35:23.855  1072  1072 I flutter : APP: AUTH_SCREEN_SHOWN
+11-10 12:35:24.481  1072  1072 I flutter : APP: FRESH_WIPE:FIRESTORE_DELETE_ERR
+:[cloud_firestore/permission-denied] The caller does not have permission to exe
+cute the specified operation.
+11-10 12:35:25.489  1072  1072 I flutter : APP: FRESH_WIPE:STORAGE_DELETE_ERR:[
+firebase_storage/object-not-found] No object exists at the desired reference.
+11-10 12:35:25.489  1072  1072 I flutter : APP: WIPE_CALL:5cI0yvhJ9qaLCRnWaP13u
+HvUbH22:hard=true
+11-10 12:35:26.288  1072  1072 I flutter : APP: WIPE_ERR:not-found:NOT_FOUND
+11-10 12:35:26.288  1072  1072 I flutter : APP: FRESH_WIPE_ERR:cloud_function_f
+ailed
+11-10 12:35:26.291  1072  1072 I flutter : APP: LOGOUT_OK
+11-10 12:35:26.291  1072  1072 I flutter : APP: FRESH_INSTALL_WIPE_COMPLETE:log
+ged_out
 
 

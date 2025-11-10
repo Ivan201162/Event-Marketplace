@@ -35,10 +35,11 @@ android {
         applicationId = "com.eventmarketplace.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
         
         // Web Client ID для Google Sign-In (из google-services.json)
         manifestPlaceholders["appAuthRedirectScheme"] = applicationId.toString()
@@ -97,8 +98,11 @@ tasks.matching { it.name == "preBuild" || it.name.startsWith("preReleaseBuild") 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     
+    // MultiDex
+    implementation("androidx.multidex:multidex:2.0.1")
+    
     // Firebase BOM for version management
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 }

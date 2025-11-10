@@ -1,5 +1,6 @@
 import 'package:event_marketplace_app/core/config/app_config.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
+import 'package:event_marketplace_app/services/auth_repository.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/utils/first_run.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
 /// Экран входа и регистрации
@@ -79,10 +79,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.read(authLoadingProvider.notifier).setLoading(true);
 
     try {
-      final authService = ref.read(authServiceProvider);
-      await authService.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      await AuthRepository().signInWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
       );
 
       debugLog('EMAIL_SIGNIN_SUCCESS');
@@ -91,14 +90,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } on FirebaseAuthException catch (e) {
       debugLog('AUTH_ERR:${e.code}');
-      
-      // Обработка двойной регистрации
-      if (e.code == 'account-exists-with-different-credential') {
-        debugLog('MERGE_ACCOUNT_DETECTED:email=${_emailController.text.trim()}');
-        _showSnack('Аккаунт с таким email уже существует. Войдите через Google или используйте пароль.');
-        return;
-      }
-      
       _showSnack(_getErrorMessage(e.code));
     } catch (e) {
       debugLog('AUTH_ERR:unknown:$e');
@@ -121,9 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
     
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-        email: _emailController.text.trim(),
-      );
+      await AuthRepository().sendReset(_emailController.text.trim());
       debugLog('PASSWORD_RESET_SENT:email=${_emailController.text.trim()}');
       _showSnack('Письмо для восстановления пароля отправлено на ${_emailController.text.trim()}');
     } catch (e) {
@@ -144,24 +133,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.read(authLoadingProvider.notifier).setLoading(true);
 
     try {
-      final authService = ref.read(authServiceProvider);
-      await authService.signUpWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-        name: _nameController.text.trim(),
+      await AuthRepository().signUpWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
       );
 
-      debugLog('AUTH_EMAIL_LOGIN:success');
+      debugLog('AUTH_EMAIL_SIGNUP:success');
       if (mounted) {
         context.go('/auth-gate');
       }
     } on FirebaseAuthException catch (e) {
       debugLog('AUTH_ERR:${e.code}');
-      debugLog('AUTH_EMAIL_LOGIN:error:${e.code}');
       _showSnack(_getErrorMessage(e.code));
     } catch (e) {
       debugLog('AUTH_ERR:unknown:$e');
-      debugLog('AUTH_EMAIL_LOGIN:error:unknown');
       _showSnack('Произошла ошибка. Попробуйте ещё раз');
     } finally {
       setState(() => _isLoading = false);
@@ -174,83 +159,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     await context.push('/phone-auth');
   }
 
-  /// Полный фикс Google Sign-In с webClientId и авто-повтором
+  /// Полный фикс Google Sign-In с AuthRepository и авто-повтором
   Future<void> _signInWithGoogle() async {
-    debugLog('GOOGLE_BTN_TAP');
-    
     setState(() {
       _isLoading = true;
       _googleError = null;
     });
     ref.read(authLoadingProvider.notifier).setLoading(true);
 
-    // Попытка входа (с авто-повтором)
-    bool retryAttempted = false;
-    
     try {
-      while (true) {
+      await AuthRepository().signInWithGoogle();
+      // дальше AuthGate отрулит
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'network_request_failed' || e.code == 'unknown') {
+        // один автоповтор
         try {
-        debugLog('GOOGLE_SIGNIN_START');
-
-        // Проверка webClientId
-        final webClientId = AppConfig.webClientId;
-        if (webClientId.isEmpty || webClientId.contains('REPLACE')) {
-          debugLog('GOOGLE_CONFIG_ERROR:missing_web_client_id');
-          setState(() {
-            _googleError = 'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику.';
-          });
-          return;
+          await AuthRepository().signInWithGoogle();
+        } catch (e2) {
+          _showSnack('Ошибка входа через Google. Повторите.');
         }
-        debugLog('GOOGLE_WEB_CLIENT_ID:${webClientId.substring(0, 20)}...');
-
-        // Сброс предыдущих сессий
-        await GoogleSignIn().signOut();
-        await FirebaseAuth.instance.signOut();
-        debugLog('GOOGLE_SIGNIN_SESSIONS_CLEARED');
-
-        // Старт браузерного флоу с webClientId (НЕ silentSignIn - реальный выбор аккаунта)
-        final GoogleSignInAccount? googleUser = await GoogleSignIn(
-          scopes: ['email', 'profile', 'openid'],
-          serverClientId: webClientId,
-        ).signIn();
-
-        if (googleUser == null) {
-          debugLog('GOOGLE_SIGNIN_CANCEL');
-          _showSnack('Вход отменён');
-          return;
-        }
-
-        debugLog('GOOGLE_SIGNIN_SUCCESS:email=${googleUser.email}');
-
-        // Получение GoogleSignInAccount.authentication
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        debugLog('GOOGLE_TOKEN_OK');
-
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        // FirebaseAuth: signInWithCredential
-        debugLog('GOOGLE_FIREBASE_AUTH_START');
-        final userCred = await FirebaseAuth.instance.signInWithCredential(credential);
-        debugLog('GOOGLE_SIGNIN_SUCCESS:uid=${userCred.user?.uid}');
-        debugLog('GOOGLE_FIREBASE_AUTH_SUCCESS');
-
-        // Редирект в AuthGate (он проверит онбординг)
-        if (mounted) {
-          context.go('/auth-gate');
-        }
-        return; // Успешный вход
-
-      } on FirebaseAuthException catch (e, st) {
-        debugLog('GOOGLE_FIREBASE_AUTH_ERROR:${e.code}:${e.message}');
-        debugLog('STACK:${st.toString().substring(0, st.toString().length > 500 ? 500 : st.toString().length)}');
-        
-        // Обработка ошибок: network_request_failed, popup_closed_by_user, unauthorized_domain, unknown
-        final shouldRetry = !retryAttempted && 
-            (e.code == 'network-request-failed' || 
-             e.code == 'unknown');
+      } else {
+        _showSnack('Ошибка: ${e.message ?? e.code}');
+      }
+    } catch (e) {
+      _showSnack('Не удалось войти. ${e.toString()}');
+    } finally {
+      setState(() => _isLoading = false);
+      ref.read(authLoadingProvider.notifier).setLoading(false);
+    }
+  }
         
         if (shouldRetry) {
           debugLog('GOOGLE_AUTH_RETRY:code=${e.code}');

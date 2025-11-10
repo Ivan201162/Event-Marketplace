@@ -20,7 +20,12 @@ class FirstRunHelper {
   /// Проверить, была ли уже выполнена первая установка
   static Future<bool> isFirstRun() async {
     final prefs = await SharedPreferences.getInstance();
-    return !(prefs.getBool(_keyFirstRunDone) ?? false);
+    final v = prefs.getBool(_keyFirstRunDone) ?? false;
+    if (!v) {
+      await prefs.setBool(_keyFirstRunDone, true);
+      return true;
+    }
+    return false;
   }
 
   /// Отметить первую установку как выполненную

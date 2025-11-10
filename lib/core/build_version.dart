@@ -1,3 +1,3 @@
 /// Версия сборки для отображения
-const String BUILD_VERSION = 'v6.3-quantum-evolution';
+const String BUILD_VERSION = 'v6.3-auth-hard-reset';
 

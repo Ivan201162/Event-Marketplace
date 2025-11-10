@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_performance/firebase_performance.dart';
+// import 'package:firebase_performance/firebase_performance.dart'; // Removed due to version conflicts
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,11 +45,11 @@ class LoggingService {
         };
       }
 
-      // Инициализируем Firebase Performance
-      if (_enablePerformance) {
-        await FirebasePerformance.instance
-            .setPerformanceCollectionEnabled(true);
-      }
+      // Инициализируем Firebase Performance (отключено из-за конфликтов версий)
+      // if (_enablePerformance) {
+      //   await FirebasePerformance.instance
+      //       .setPerformanceCollectionEnabled(true);
+      // }
 
       debugPrint('LoggingService initialized successfully');
     } catch (e) {
@@ -282,13 +282,13 @@ class LoggingService {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(enabled);
   }
 
-  /// Включить/выключить Performance Monitoring
+  /// Включить/выключить Performance Monitoring (отключено из-за конфликтов версий)
   static Future<void> setPerformanceEnabled(bool enabled) async {
     _enablePerformance = enabled;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_enablePerformanceKey, enabled);
 
-    await FirebasePerformance.instance.setPerformanceCollectionEnabled(enabled);
+    // await FirebasePerformance.instance.setPerformanceCollectionEnabled(enabled);
   }
 
   /// Установить пользовательский идентификатор для Crashlytics
@@ -326,20 +326,20 @@ class LoggingService {
     }
   }
 
-  /// Создать трейс для отслеживания производительности
-  static Future<Trace> startTrace(String name) async {
-    if (_enablePerformance) {
-      return FirebasePerformance.instance.newTrace(name);
-    }
+  /// Создать трейс для отслеживания производительности (отключено из-за конфликтов версий)
+  static Future<_DummyTrace> startTrace(String name) async {
+    // if (_enablePerformance) {
+    //   return FirebasePerformance.instance.newTrace(name);
+    // }
     return _DummyTrace();
   }
 
-  /// Создать HTTP метрику
-  static Future<HttpMetric> startHttpMetric(
-      String url, HttpMethod method,) async {
-    if (_enablePerformance) {
-      return FirebasePerformance.instance.newHttpMetric(url, method);
-    }
+  /// Создать HTTP метрику (отключено из-за конфликтов версий)
+  static Future<_DummyHttpMetric> startHttpMetric(
+      String url, String method,) async {
+    // if (_enablePerformance) {
+    //   return FirebasePerformance.instance.newHttpMetric(url, method);
+    // }
     return _DummyHttpMetric();
   }
 
@@ -373,7 +373,7 @@ class LoggingService {
 }
 
 /// Заглушка для трейса когда Performance отключен
-class _DummyTrace implements Trace {
+class _DummyTrace {
   @override
   String get name => 'dummy';
 
@@ -403,37 +403,24 @@ class _DummyTrace implements Trace {
 }
 
 /// Заглушка для HTTP метрики когда Performance отключен
-class _DummyHttpMetric implements HttpMetric {
-  @override
+class _DummyHttpMetric {
   String get url => 'dummy';
 
-  @override
-  HttpMethod get httpMethod => HttpMethod.Get;
-
-  @override
   Future<void> start() async {}
 
-  @override
   Future<void> stop() async {}
 
-  @override
   Future<void> setHttpResponseCode(int code) async {}
 
-  @override
   Future<void> setRequestPayloadSize(int bytes) async {}
 
-  @override
   Future<void> setResponsePayloadSize(int bytes) async {}
 
-  @override
   Future<void> setResponseContentType(String contentType) async {}
 
-  @override
   Future<void> putAttribute(String name, String value) async {}
 
-  @override
   Future<void> removeAttribute(String name) async {}
 
-  @override
   Future<Map<String, String>> getAttributes() async => {};
 }
