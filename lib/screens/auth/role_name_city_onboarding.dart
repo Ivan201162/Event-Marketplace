@@ -167,6 +167,7 @@ class _RoleNameCityOnboardingScreenState extends State<RoleNameCityOnboardingScr
       }, SetOptions(merge: true));
 
       debugLog("ONBOARDING_SAVED:${user.uid}");
+      debugLog("ONBOARDING_COMPLETED:${user.uid}");
 
       if (mounted) {
         // Используем go_router для навигации
@@ -188,6 +189,11 @@ class _RoleNameCityOnboardingScreenState extends State<RoleNameCityOnboardingScr
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          debugLog("ONBOARDING_ABORTED");
+        }
+      },
       child: Scaffold(
         body: SafeArea(
           child: Padding(

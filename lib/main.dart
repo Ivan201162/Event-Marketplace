@@ -185,9 +185,10 @@ void main() async {
             'fcmTokens': FieldValue.arrayUnion([token]),
             'lastTokenUpdate': FieldValue.serverTimestamp(),
           });
-            debugLog('FCM_TOKEN_SAVED');
+            debugLog('FCM_TOKEN_SAVED:uid=${currentUser.uid}');
+            debugLog('FCM_MESSAGE_RECEIVED:token_saved');
           } else {
-            debugLog('FCM_TOKEN_EXISTS');
+            debugLog('FCM_TOKEN_EXISTS:uid=${currentUser.uid}');
           }
           debugLog('FCM_INIT_OK');
         } else {
@@ -197,6 +198,7 @@ void main() async {
         // Настройка обработчиков сообщений
         // Foreground messages
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          debugLog('FCM_MESSAGE_RECEIVED:type=${message.data['type'] ?? 'unknown'}');
           debugLog('FCM_ON_MESSAGE:${message.messageId}');
           debugLog('FCM_TITLE:${message.notification?.title}');
           debugLog('FCM_BODY:${message.notification?.body}');
@@ -208,6 +210,7 @@ void main() async {
         
         // Когда приложение открыто из уведомления
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          debugLog('FCM_OPENED:id=${message.messageId}');
           debugLog('FCM_ON_MESSAGE_OPENED:${message.messageId}');
           // TODO: Навигация на соответствующий экран
         });
@@ -215,6 +218,7 @@ void main() async {
         // Проверка, было ли приложение открыто из уведомления
         final initialMessage = await messaging.getInitialMessage();
         if (initialMessage != null) {
+          debugLog('FCM_OPENED:id=${initialMessage.messageId}');
           debugLog('FCM_INITIAL_MESSAGE:${initialMessage.messageId}');
           // TODO: Навигация на соответствующий экран
         }

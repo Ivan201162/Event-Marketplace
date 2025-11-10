@@ -53,7 +53,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/splash-event',
         name: 'splash-event',
-        builder: (context, state) => const SplashEventScreen(),
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const SplashEventScreen(),
+        ),
       ),
       // Экран ошибки инициализации
       GoRoute(
