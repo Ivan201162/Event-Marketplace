@@ -38,7 +38,7 @@ void main() async {
   debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
   
   debugLog('APP: BUILD OK $BUILD_VERSION');
-  debugLog('APP_VERSION:6.2.0+37');
+  debugLog('APP_VERSION:6.2.0+38');
   
   // Проверка Firebase options
   try {
@@ -196,7 +196,7 @@ void main() async {
     });
     
     // Лог после runApp
-    debugLog('APP: BUILD OK v6.2-core-improvements');
+    debugLog('APP: BUILD OK v6.2-core-improvements-black-screen-fix');
   } catch (e, stackTrace) {
     debugPrint('❌ Критическая ошибка инициализации: $e');
     debugPrint('Stack trace: $stackTrace');

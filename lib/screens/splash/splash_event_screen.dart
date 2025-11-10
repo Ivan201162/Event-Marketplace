@@ -47,6 +47,9 @@ class _SplashEventScreenState extends State<SplashEventScreen>
       ),
     );
 
+    // Запускаем анимацию сразу, чтобы не было чёрного экрана
+    _controller.forward();
+    
     _initializeFirebase();
   }
 
@@ -64,6 +67,16 @@ class _SplashEventScreenState extends State<SplashEventScreen>
         // Повторяем init
         debugLog("SPLASH_INIT_TIMEOUT_RETRY");
         await _doInit();
+      }
+      
+      // Если всё ещё не готово после повтора, продолжаем с ошибкой
+      if (!_firebaseReady || !_authStateReady) {
+        debugLog("SPLASH_HANG_FIX_APPLIED");
+        setState(() {
+          _firebaseReady = true;
+          _authStateReady = true;
+        });
+        _navigateToAuthGate();
       }
     } catch (e) {
       debugLog("SPLASH: Firebase init error: $e");
@@ -151,8 +164,9 @@ class _SplashEventScreenState extends State<SplashEventScreen>
     final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final mutedColor = isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted;
 
-    // Если init завис → показываем экран ошибки вместо чёрного экрана
-    if (!_firebaseReady || !_authStateReady) {
+    // Всегда показываем splash screen, даже если init не готов
+    // Если init завис → показываем индикатор загрузки
+    final showLoading = !_firebaseReady || !_authStateReady;
       // Показываем splash с индикатором загрузки
       return Scaffold(
         backgroundColor: bgColor,
@@ -188,59 +202,19 @@ class _SplashEventScreenState extends State<SplashEventScreen>
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 32),
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).colorScheme.primary,
+                  if (showLoading) ...[
+                    const SizedBox(height: 32),
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary,
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
           ),
         ),
       );
-    }
-
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: Center(
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // EVENT крупно
-                Text(
-                  'EVENT',
-                  style: AppTypography.displayLg.copyWith(
-                    color: textColor,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Тонкая черта
-                Container(
-                  width: 140,
-                  height: 1,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 16),
-                // Слоган
-                Text(
-                  'Найдите своего идеального специалиста для мероприятий',
-                  style: AppTypography.bodyMd.copyWith(
-                    color: mutedColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

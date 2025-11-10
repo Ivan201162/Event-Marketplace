@@ -1,0 +1,290 @@
+﻿
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at com.google.firebase.c
+rashlytics.internal.settings.SettingsController$1.lambda$then$0$com-google-fire
+base-crashlytics-internal-settings-SettingsController$1(SettingsController.java
+:204)
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at com.google.firebase.c
+rashlytics.internal.settings.SettingsController$1$$ExternalSyntheticLambda0.cal
+l(D8$$SyntheticClass:0)
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at java.util.concurrent.
+FutureTask.run(FutureTask.java:266)
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at java.util.concurrent.
+ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at java.util.concurrent.
+ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at com.google.firebase.c
+oncurrent.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent
+-CustomThreadFactory(CustomThreadFactory.java:47)
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at com.google.firebase.c
+oncurrent.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:
+0)
+11-10 01:53:50.019 12624 12666 E FirebaseCrashlytics: 	at java.lang.Thread.run(
+Thread.java:929)
+11-10 01:53:50.266  8909  8931 E HiApp.HttpUtil: RepTaskHandler{87708} <<< ERRO
+R >>> doRealPost other exception, throw out...class java.net.SocketTimeoutExcep
+tion
+11-10 01:53:50.371  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: RepTaskHan
+dler{87708} <<< WARN >>> doPostWithDnsParse() error, method:client.installResul
+tRep, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, curr
+entTime:1762714430370, SocketTimeoutException
+11-10 01:53:50.907  8909 12921 W NetworkKit_DNKeeperManager: java.util.concurre
+nt.TimeoutException
+11-10 01:53:50.910  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-2{87823} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExce
+ption, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, met
+hod:client.installResultRep, retryTimes:0
+11-10 01:53:50.922  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-2{87823} <<< WARN >>> call store error! method:client.installResultRep, re
+sponseCode:1, retryTimes:1
+11-10 01:53:51.161 12624 12624 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+11-10 01:53:51.167  8909 12922 W NetworkKit_DNKeeperManager: java.util.concurre
+nt.TimeoutException
+11-10 01:53:51.170  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: pool-18-th
+read-1{87815} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExce
+ption, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, met
+hod:client.diffUpgrade2, retryTimes:0
+11-10 01:53:51.203  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: pool-18-th
+read-1{87815} <<< WARN >>> call store error! method:client.diffUpgrade2, respon
+seCode:1, retryTimes:1
+11-10 01:53:51.298  8909 12923 W NetworkKit_DNKeeperManager: java.util.concurre
+nt.TimeoutException
+11-10 01:53:51.302  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-1{87719} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExce
+ption, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, met
+hod:client.batchAppDetail, retryTimes:0
+11-10 01:53:51.342  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-1{87719} <<< WARN >>> call store error! method:client.batchAppDetail, resp
+onseCode:1, retryTimes:1
+11-10 01:53:52.358 18357  9789 W Conscrypt: Could not set socket write timeout:
+ java.net.SocketException: Socket closed
+11-10 01:53:53.365  8909  9071 W FormalHASDK: GetPublicKey==> get pubKey respon
+se Exception :SSL handshake timed out
+11-10 01:53:53.366  8909  9071 W FormalHASDK: WorkKeyHandler==> get rsa pubkey 
+config error
+11-10 01:53:53.375  8909 12924 W NetworkKit_DNKeeperManager: java.util.concurre
+nt.TimeoutException
+11-10 01:53:53.379  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: RepTaskHan
+dler{87708} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExcept
+ion, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, metho
+d:client.installResultRep, retryTimes:0
+11-10 01:53:53.390  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: RepTaskHan
+dler{87708} <<< WARN >>> call store error! method:client.installResultRep, resp
+onseCode:1, retryTimes:1
+11-10 01:53:53.884  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1153568
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 01:53:53.886  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-10 01:53:54.615  8909  9667 W NetworkKit_RetryInterceptor: pool-103-thread-1
+ -->NetworkKit_DNKeeper_DNKeeperManager_5|null|com.huawei.hms.network.embedded.
+f2|intercept|211|intercept IOException end
+11-10 01:53:54.618  8909  9667 W NetworkKit_DNKeeperCallable: pool-103-thread-1
+ -->NetworkKit_DNKeeper_DNKeeperManager_5|null|com.huawei.hms.framework.network
+.restclient.dnkeeper.c|call|344|IOException: 
+11-10 01:53:54.618  8909  9667 W NetworkKit_DNKeeperCallable: java.net.SocketTi
+meoutException: S*L*h*n*s*a*e*t*m*d*o*t
+11-10 01:53:54.799  2641  2734 I LocationDetection: leaveHomeFence: RequestResu
+lt{6, 2, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,2,3, 1, null, 4, 20000
+7, error_unknown}
+11-10 01:53:54.801  2641  2734 I LocationDetection: arriveHomeFence: RequestRes
+ult{6, 1, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,1,3, 1, null, 4, 2000
+07, error_unknown}
+11-10 01:53:54.802  2641  2734 I LocationDetection: leaveCompanyFence: RequestR
+esult{6, 8, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,8,3, 1, null, 4, 20
+0007, error_unknown}
+11-10 01:53:54.803  2641  2734 I LocationDetection: arriveCompanyFence: Request
+Result{6, 4, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,4,3, 1, null, 4, 2
+00007, error_unknown}
+11-10 01:53:56.122  3103 12497 W NetworkSdk_g: [W/HMSCore/NetworkSdk_g 3103:158
+82 SourceFile:2] NetworkKit_GRS_RequestController-Task_90 -->NetworkKit_GRS_Req
+uestController-Task_91|null|e.b.i.o.b.b.c.h|call|220|RequestCallableV2 run task
+ catch IOException
+11-10 01:53:56.122  3103 12497 W NetworkSdk_g: java.net.SocketTimeoutException:
+ S*L*h*n*s*a*e*t*m*d*o*t
+11-10 01:53:56.123  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_10_01_53_56.log: open failed: ENOENT (No 
+such file or directory)
+11-10 01:53:56.829  9881 17926 E AuthPII : [RequestTokenManager] getToken() -> 
+NETWORK_ERROR. App: com.android.vending, Service: oauth2:https://www.googleapis
+.com/auth/googleplay
+11-10 01:53:56.829  9881 17926 E AuthPII : banz: Error when calling server usin
+g GmsNetworkStack.
+11-10 01:53:56.829  9881 17926 E AuthPII : Caused by: banz: Error requesting to
+ken.
+11-10 01:53:56.829  9881 17926 E AuthPII : Caused by: java.util.concurrent.Time
+outException: Waited 30 seconds (plus 40345308 nanoseconds delay) for fnfe@336f
+03[status=PENDING, info=[inputFuture=[fnfe@10b5e80[status=PENDING, info=[inputF
+uture=[jyz@fa26cb9[status=PENDING, info=[tag=[GmsUrlRequestImpl.startWithFuture
+()]]]], function=[acdy@55ed8fe]]]], function=[acyn@1f3f85f]]]
+11-10 01:53:56.829  9881 17926 E AuthPII : Message is Error when calling server
+ using GmsNetworkStack.
+11-10 01:53:56.829  9881 17926 E AuthPII : banz: Error when calling server usin
+g GmsNetworkStack.
+11-10 01:53:56.829  9881 17926 E AuthPII : Caused by: banz: Error requesting to
+ken.
+11-10 01:53:56.829  9881 17926 E AuthPII : Caused by: java.util.concurrent.Time
+outException: Waited 30 seconds (plus 40345308 nanoseconds delay) for fnfe@336f
+03[status=PENDING, info=[inputFuture=[fnfe@10b5e80[status=PENDING, info=[inputF
+uture=[jyz@fa26cb9[status=PENDING, info=[tag=[GmsUrlRequestImpl.startWithFuture
+()]]]], function=[acdy@55ed8fe]]]], function=[acyn@1f3f85f]]]
+11-10 01:53:56.830  9881 17926 W Auth    : [ChimeraGetToken] exception while tr
+ying to fetch auth tokens for app=com.google.android.gsf, scope=oauth2:https://
+www.googleapis.com/auth/googleplay [CONTEXT service_id=153 ]
+11-10 01:53:56.830  9881 17926 W Auth    : acyh: GetToken failed with status co
+de: NetworkError
+11-10 01:53:56.830  9881 17926 W GLSActivity: [GmsAccountAuthenticatorImpl] err
+or status while fetching token:NetworkError
+11-10 01:53:56.841  9573  9691 E PlayCommon: [87691] Failed to get auth token: 
+java.io.IOException: NetworkError
+11-10 01:53:56.932  9881 24756 W Auth    : [TokenResponseCallback] TokenRespons
+e failed with exception [CONTEXT service_id=343 ]
+11-10 01:53:56.932  9881 24756 W Auth    : Caused by: m1.mr: Exception in Crone
+tUrlRequest: net::ERR_TIMED_OUT, ErrorCode=4, InternalErrorCode=-7, Retryable=t
+rue
+11-10 01:53:56.932  9881 24756 W Auth    : 	at org.chromium.net.impl.CronetUrlR
+equest.onError(:com.google.android.gms.dynamite_cronetdynamite@254232013@25.42.
+32 (100400-0):3)
+11-10 01:53:59.149  3103 12508 W NetworkSdk_g: [W/HMSCore/NetworkSdk_g 3103:158
+86 SourceFile:2] NetworkKit_GRS_RequestController-Task_90 -->NetworkKit_GRS_Req
+uestController-Task_93|null|e.b.i.o.b.b.c.h|call|220|RequestCallableV2 run task
+ catch IOException
+11-10 01:53:59.149  3103 12508 W NetworkSdk_g: java.net.SocketTimeoutException:
+ S*L*h*n*s*a*e*t*m*d*o*t
+11-10 01:53:59.151  3103  5603 E LogWrite: createNewLogFile Exception: /storage
+/emulated/0/Android/data/com.huawei.hwid/files/com.huawei.hms.hihealth/Log/HMSL
+og_com.huawei.hwid.persistent_2025_11_10_01_53_59.log: open failed: ENOENT (No 
+such file or directory)
+11-10 01:53:59.807  3103  3103 I HiAdKit.ExSplashManager:  do not request exspl
+ash config
+11-10 01:53:59.908  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1153571
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 01:53:59.910  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-10 01:54:02.821  2606  3045 E NrSmartCure: qoeSlowExceptionProcess, qoe is n
+ot continuously report, duration: 9221
+11-10 01:54:05.807  2641  2734 I LocationDetection: leaveHomeFence: RequestResu
+lt{6, 2, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,2,3, 1, null, 4, 20000
+7, error_unknown}
+11-10 01:54:05.809  2641  2734 I LocationDetection: arriveHomeFence: RequestRes
+ult{6, 1, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,1,3, 1, null, 4, 2000
+07, error_unknown}
+11-10 01:54:05.810  2641  2734 I LocationDetection: leaveCompanyFence: RequestR
+esult{6, 8, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,8,3, 1, null, 4, 20
+0007, error_unknown}
+11-10 01:54:05.812  2641  2734 I LocationDetection: arriveCompanyFence: Request
+Result{6, 4, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,4,3, 1, null, 4, 2
+00007, error_unknown}
+11-10 01:54:05.944  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1153576
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 01:54:05.946  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-10 01:54:08.457  8909  9071 W FormalHASDK: GetPublicKey==> get pubKey respon
+se Exception :SSL handshake timed out
+11-10 01:54:08.457  8909  9071 W FormalHASDK: WorkKeyHandler==> get rsa pubkey 
+config error
+11-10 01:54:08.859 27583 12155 W NetworkKit_RetryInterceptor: RemoteCfg -->Netw
+orkKit_restclient_request_168|RetryInterceptor.java|com.huawei.hms.framework.ne
+twork.restclient.hwhttp.RetryInterceptor|intercept|73|intercept IOException, re
+try 2code = 10000803
+11-10 01:54:08.859 27583 12155 W NetworkKit_RetryInterceptor: java.net.SocketTi
+meoutException: S*L*h*n*s*a*e*t*m*d*o*t
+11-10 01:54:08.860 27583 12155 E fwkit_RemoteConfigManager: [E/fwkit/fwkit_Remo
+teConfigManager 27583:78052 RemoteConfigManager.java:663] get config from serve
+r error:null
+11-10 01:54:09.857 12624 12659 W FirebaseInstanceId: Token retrieval failed: SE
+RVICE_NOT_AVAILABLE. Will retry token retrieval
+11-10 01:54:10.386 12624 12674 I TRuntime.CctTransportBackend: Making request t
+o: https://firebaselogging-pa.googleapis.com/v1/firelog/legacy/batchlog
+11-10 01:54:11.213  8909  8931 E HiApp.HttpUtil: pool-19-thread-2{87823} <<< ER
+ROR >>> doRealPost other exception, throw out...class java.net.SocketTimeoutExc
+eption
+11-10 01:54:11.314  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-2{87823} <<< WARN >>> doPostWithDnsParse() error, method:client.installRes
+ultRep, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, cu
+rrentTime:1762714451314, SocketTimeoutException
+11-10 01:54:11.319  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-2{87823} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExce
+ption, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, met
+hod:client.installResultRep, retryTimes:1
+11-10 01:54:11.464  8909  8931 E HiApp.HttpUtil: pool-18-thread-1{87815} <<< ER
+ROR >>> doRealPost other exception, throw out...class java.net.SocketTimeoutExc
+eption
+11-10 01:54:11.569  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: pool-18-th
+read-1{87815} <<< WARN >>> doPostWithDnsParse() error, method:client.diffUpgrad
+e2, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, curren
+tTime:1762714451569, SocketTimeoutException
+11-10 01:54:11.575  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: pool-18-th
+read-1{87815} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExce
+ption, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, met
+hod:client.diffUpgrade2, retryTimes:1
+11-10 01:54:11.589  8909  8931 E HiApp.UpdateManager/UpdateCheckImpl: pool-18-t
+hread-1{87815} <<< ERROR >>> get app update msg failed,responseCode is 1
+11-10 01:54:11.612  8909  8931 E HiApp.HttpUtil: pool-19-thread-1{87719} <<< ER
+ROR >>> doRealPost other exception, throw out...class java.net.SocketTimeoutExc
+eption
+11-10 01:54:11.714  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-1{87719} <<< WARN >>> doPostWithDnsParse() error, method:client.batchAppDe
+tail, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, curr
+entTime:1762714451713, SocketTimeoutException
+11-10 01:54:11.718  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: pool-19-th
+read-1{87719} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExce
+ption, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, met
+hod:client.batchAppDetail, retryTimes:1
+11-10 01:54:11.909 18357 12958 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mr: Exception in CronetUrlRequest: net:
+:ERR_TIMED_OUT, ErrorCode=4, InternalErrorCode=-7, Retryable=true
+11-10 01:54:11.910 18357 12959 W FA-SVC  : Network upload failed. Will retry la
+ter. code, error: 0, m1.mr: Exception in CronetUrlRequest: net::ERR_TIMED_OUT, 
+ErrorCode=4, InternalErrorCode=-7, Retryable=true
+11-10 01:54:11.948  9881 11345 I NetworkScheduler: (REDACTED) Error inserting %
+s
+11-10 01:54:11.984  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1153577
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 01:54:11.986  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-10 01:54:13.056  2606  3045 E NrSmartCure: qoeSlowExceptionProcess, qoe is n
+ot continuously report, duration: 9216
+11-10 01:54:13.600  8909  8931 E HiApp.HttpUtil: RepTaskHandler{87708} <<< ERRO
+R >>> doRealPost other exception, throw out...class java.net.SocketTimeoutExcep
+tion
+11-10 01:54:13.711  8909  8931 W HiApp.ServerReqKit/ServerAgentImpl: RepTaskHan
+dler{87708} <<< WARN >>> doPostWithDnsParse() error, method:client.installResul
+tRep, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, curr
+entTime:1762714453710, SocketTimeoutException
+11-10 01:54:13.716  8909  8931 E HiApp.ServerReqKit/ServerAgentImpl: RepTaskHan
+dler{87708} <<< ERROR >>> invoke store error, exceptionType:SocketTimeoutExcept
+ion, url:https://store-drru.hispace.dbankcloud.ru/hwmarket/api/clientApi, metho
+d:client.installResultRep, retryTimes:1
+11-10 01:54:14.788  1717 12963 I Resource: printErrorResource, maybe not an err
+or because module has entative action to load resource.
+11-10 01:54:14.788  1717 12964 I Resource: printErrorResource, maybe not an err
+or because module has entative action to load resource.
+11-10 01:54:16.817  2641  2734 I LocationDetection: leaveHomeFence: RequestResu
+lt{6, 2, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,2,3, 1, null, 4, 20000
+7, error_unknown}
+11-10 01:54:16.819  2641  2734 I LocationDetection: arriveHomeFence: RequestRes
+ult{6, 1, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,1,3, 1, null, 4, 2000
+07, error_unknown}
+11-10 01:54:16.821  2641  2734 I LocationDetection: leaveCompanyFence: RequestR
+esult{6, 8, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,8,3, 1, null, 4, 20
+0007, error_unknown}
+11-10 01:54:16.824  2641  2734 I LocationDetection: arriveCompanyFence: Request
+Result{6, 4, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,4,3, 1, null, 4, 2
+00007, error_unknown}
+11-10 01:54:18.024  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1153578
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26687 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 01:54:18.026  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+
+

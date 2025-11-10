@@ -42,7 +42,7 @@ import 'package:go_router/go_router.dart';
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/auth-gate', // Start with auth gate
+    initialLocation: '/splash-event', // Start with splash screen
     debugLogDiagnostics: true,
     observers: [
       _AnalyticsRouteObserver(),
