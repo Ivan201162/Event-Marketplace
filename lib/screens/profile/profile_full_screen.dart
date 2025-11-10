@@ -50,13 +50,17 @@ class _ProfileFullScreenState extends ConsumerState<ProfileFullScreen>
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final profileStartTime = DateTime.now().millisecondsSinceEpoch;
       debugLog("PROFILE_OPENED:${widget.userId}");
       // Firebase Analytics
       FirebaseAnalytics.instance.logEvent(
         name: 'open_profile',
         parameters: {'profile_id': widget.userId},
       ).catchError((e) => debugPrint('Analytics error: $e'));
-      _loadUserData();
+      _loadUserData().then((_) {
+        final profileLoadTime = DateTime.now().millisecondsSinceEpoch - profileStartTime;
+        debugLog("PERF_PROFILE_LOAD:$profileLoadTime");
+      });
     });
   }
 
