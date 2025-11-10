@@ -374,31 +374,22 @@ class LoggingService {
 
 /// Заглушка для трейса когда Performance отключен
 class _DummyTrace {
-  @override
   String get name => 'dummy';
 
-  @override
   Future<void> start() async {}
 
-  @override
   Future<void> stop() async {}
 
-  @override
   Future<void> incrementMetric(String name, int value) async {}
 
-  @override
   Future<void> putMetric(String name, int value) async {}
 
-  @override
   Future<void> putAttribute(String name, String value) async {}
 
-  @override
   Future<void> removeAttribute(String name) async {}
 
-  @override
   Future<Map<String, String>> getAttributes() async => {};
 
-  @override
   Future<int> getMetric(String name) async => 0;
 }
 

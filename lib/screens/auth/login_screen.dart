@@ -188,46 +188,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ref.read(authLoadingProvider.notifier).setLoading(false);
     }
   }
-        
-        if (shouldRetry) {
-          debugLog('GOOGLE_AUTH_RETRY:code=${e.code}');
-          retryAttempted = true;
-          await Future.delayed(const Duration(seconds: 2));
-          continue;
-        } else {
-          // Повторная неудача или ошибка, которая не требует повтора
-          final errorMsg = retryAttempted 
-              ? 'Ошибка входа. Повторите попытку.'
-              : _mappedGoogleError(e.code);
-          setState(() {
-            _googleError = errorMsg;
-          });
-          _showSnack(errorMsg);
-          return;
-        }
-      } catch (e, st) {
-        debugLog('GOOGLE_SIGNIN_ERROR:$e');
-        
-        // Авто-повтор для общих ошибок (один раз)
-        if (!retryAttempted) {
-          debugLog('GOOGLE_AUTH_RETRY:unknown_error');
-          retryAttempted = true;
-          await Future.delayed(const Duration(seconds: 2));
-          continue;
-        } else {
-          final errorMsg = 'Ошибка входа. Повторите попытку.';
-          setState(() {
-            _googleError = errorMsg;
-          });
-          _showSnack(errorMsg);
-          return;
-        }
-      }
-    } finally {
-      setState(() => _isLoading = false);
-      ref.read(authLoadingProvider.notifier).setLoading(false);
-    }
-  }
 
   /// Маппинг ошибок Google Sign-In
   String _mappedGoogleError(String code) {
