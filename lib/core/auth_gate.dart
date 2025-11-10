@@ -144,6 +144,7 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
   Future<void> _checkProfile() async {
     try {
       // Полный fresh install wipe после успешной авторизации
+      // ⚠️ Активно только в release-сборке
       if (!kDebugMode) {
         final isFirstRun = await FirstRunHelper.isFirstRun();
         if (!isFirstRun) {
@@ -152,6 +153,8 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
         if (isFirstRun) {
           debugLog("FRESH_INSTALL_DETECTED:uid=${widget.user.uid}");
           debugLog("FRESH_WIPE_START:uid=${widget.user.uid}");
+          
+          final uid = widget.user.uid;
           
           // 1) Удалить пользователя из Firebase Auth
           try {
@@ -163,20 +166,82 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
             await FirebaseAuth.instance.signOut();
           }
           
-          // 2) Удалить user doc из Firestore
+          // 2) Удалить user doc и связанные коллекции из Firestore
           try {
+            // /users/{uid}
             await FirebaseFirestore.instance
                 .collection('users')
-                .doc(widget.user.uid)
+                .doc(uid)
                 .delete();
             debugLog("FRESH_WIPE:FIRESTORE_USER_DELETED");
+            
+            // /specialist_pricing/{uid}
+            try {
+              await FirebaseFirestore.instance
+                  .collection('specialist_pricing')
+                  .doc(uid)
+                  .delete();
+              debugLog("FRESH_WIPE:SPECIALIST_PRICING_DELETED");
+            } catch (e) {
+              debugLog("FRESH_WIPE:SPECIALIST_PRICING_ERR:$e");
+            }
+            
+            // /bookings (где clientId или specialistId = uid)
+            try {
+              final bookingsSnapshot = await FirebaseFirestore.instance
+                  .collection('bookings')
+                  .where('clientId', isEqualTo: uid)
+                  .get();
+              for (var doc in bookingsSnapshot.docs) {
+                await doc.reference.delete();
+              }
+              final bookingsSnapshot2 = await FirebaseFirestore.instance
+                  .collection('bookings')
+                  .where('specialistId', isEqualTo: uid)
+                  .get();
+              for (var doc in bookingsSnapshot2.docs) {
+                await doc.reference.delete();
+              }
+              debugLog("FRESH_WIPE:BOOKINGS_DELETED");
+            } catch (e) {
+              debugLog("FRESH_WIPE:BOOKINGS_ERR:$e");
+            }
+            
+            // /notifications (где userId = uid)
+            try {
+              final notificationsSnapshot = await FirebaseFirestore.instance
+                  .collection('notifications')
+                  .where('userId', isEqualTo: uid)
+                  .get();
+              for (var doc in notificationsSnapshot.docs) {
+                await doc.reference.delete();
+              }
+              debugLog("FRESH_WIPE:NOTIFICATIONS_DELETED");
+            } catch (e) {
+              debugLog("FRESH_WIPE:NOTIFICATIONS_ERR:$e");
+            }
+            
+            // Очистить FCM токены
+            try {
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(uid)
+                  .update({
+                'fcmTokens': FieldValue.delete(),
+              });
+              debugLog("FCM_TOKENS_CLEARED");
+            } catch (e) {
+              debugLog("FCM_TOKENS_CLEAR_ERR:$e");
+            }
+            
+            debugLog("USER_WIPE_DONE");
           } catch (e) {
             debugLog("FRESH_WIPE:FIRESTORE_DELETE_ERR:$e");
           }
           
           // 3) Удалить Storage uploads (если есть)
           try {
-            final storageRef = FirebaseStorage.instance.ref('uploads/${widget.user.uid}');
+            final storageRef = FirebaseStorage.instance.ref('uploads/$uid');
             final listResult = await storageRef.listAll();
             for (var item in listResult.items) {
               try {
@@ -185,16 +250,31 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
                 debugLog("FRESH_WIPE:STORAGE_DELETE_ITEM_ERR:$e");
               }
             }
-            debugLog("FRESH_WIPE:STORAGE_DELETED");
+            // Также удаляем все подпапки
+            for (var prefix in listResult.prefixes) {
+              try {
+                final prefixList = await prefix.listAll();
+                for (var item in prefixList.items) {
+                  try {
+                    await item.delete();
+                  } catch (e) {
+                    debugLog("FRESH_WIPE:STORAGE_DELETE_PREFIX_ITEM_ERR:$e");
+                  }
+                }
+              } catch (e) {
+                debugLog("FRESH_WIPE:STORAGE_PREFIX_ERR:$e");
+              }
+            }
+            debugLog("STORAGE_CLEANUP_DONE");
           } catch (e) {
             debugLog("FRESH_WIPE:STORAGE_DELETE_ERR:$e");
           }
           
           // 4) Вызываем Cloud Function wipe для полной очистки
           try {
-            final wipeResult = await WipeService.wipeTestUser(uid: widget.user.uid, hard: true);
+            final wipeResult = await WipeService.wipeTestUser(uid: uid, hard: true);
             if (wipeResult) {
-              debugLog("FRESH_WIPE_DONE:${widget.user.uid}");
+              debugLog("FRESH_WIPE_DONE:$uid");
             } else {
               debugLog("FRESH_WIPE_ERR:cloud_function_failed");
             }
@@ -205,7 +285,7 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
           // Выходим из аккаунта
           try {
             await FirebaseAuth.instance.signOut();
-            debugLog("LOGOUT:OK");
+            debugLog("LOGOUT_OK");
             debugLog("FRESH_INSTALL_WIPE_COMPLETE:logged_out");
           } catch (e) {
             debugLog("LOGOUT:ERR:$e");
@@ -226,6 +306,8 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
           .collection('users')
           .doc(widget.user.uid)
           .get();
+
+      debugLog("AUTH_GATE:PROFILE_CHECK:uid=${widget.user.uid}");
 
       if (!userDoc.exists) {
         debugLog("AUTH_GATE:PROFILE_CHECK:missing_fields=[doc_not_exists]");
@@ -279,6 +361,7 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
       
       // Всё готово → /main (без двойного срабатывания)
       debugLog("AUTH_GATE:PROFILE_CHECK:ok");
+      debugLog("AUTH_GATE_OK");
       debugLog("HOME_LOADED");
       Future.microtask(() {
         if (mounted) {

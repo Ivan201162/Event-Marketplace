@@ -63,11 +63,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _signInWithEmail() async {
+    // Live-валидация email
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text.trim())) {
+      _showSnack('Неверный формат email');
+      return;
+    }
+    
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       _showSnack('Заполните все поля');
       return;
     }
 
+    debugLog('EMAIL_SIGNIN_START');
     setState(() => _isLoading = true);
     ref.read(authLoadingProvider.notifier).setLoading(true);
 
@@ -78,6 +85,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         password: _passwordController.text.trim(),
       );
 
+      debugLog('EMAIL_SIGNIN_SUCCESS');
       if (mounted) {
         context.go('/auth-gate');
       }
@@ -98,6 +106,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
+    }
+  }
+  
+  Future<void> _sendPasswordReset() async {
+    if (_emailController.text.isEmpty) {
+      _showSnack('Введите email');
+      return;
+    }
+    
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text.trim())) {
+      _showSnack('Неверный формат email');
+      return;
+    }
+    
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: _emailController.text.trim(),
+      );
+      debugLog('PASSWORD_RESET_SENT:email=${_emailController.text.trim()}');
+      _showSnack('Письмо для восстановления пароля отправлено на ${_emailController.text.trim()}');
+    } catch (e) {
+      debugLog('PASSWORD_RESET_ERROR:$e');
+      _showSnack('Ошибка отправки письма. Проверьте email.');
     }
   }
 
@@ -191,6 +222,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         debugLog('GOOGLE_SIGNIN_SUCCESS:email=${googleUser.email}');
 
+        // Получение GoogleSignInAccount.authentication
         final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
         debugLog('GOOGLE_TOKEN_OK');
 
@@ -199,9 +231,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           idToken: googleAuth.idToken,
         );
 
+        // FirebaseAuth: signInWithCredential
         debugLog('GOOGLE_FIREBASE_AUTH_START');
         final userCred = await FirebaseAuth.instance.signInWithCredential(credential);
-        debugLog('GOOGLE_FIREBASE_AUTH_SUCCESS:uid=${userCred.user?.uid}');
+        debugLog('GOOGLE_SIGNIN_SUCCESS:uid=${userCred.user?.uid}');
+        debugLog('GOOGLE_FIREBASE_AUTH_SUCCESS');
 
         // Редирект в AuthGate (он проверит онбординг)
         if (mounted) {
@@ -213,23 +247,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         debugLog('GOOGLE_FIREBASE_AUTH_ERROR:${e.code}:${e.message}');
         debugLog('STACK:${st.toString().substring(0, st.toString().length > 500 ? 500 : st.toString().length)}');
         
-        // Авто-повтор для network-request-failed, internal, unknown
+        // Обработка ошибок: network_request_failed, popup_closed_by_user, unauthorized_domain, unknown
         final shouldRetry = !retryAttempted && 
             (e.code == 'network-request-failed' || 
-             e.code == 'internal-error' || 
              e.code == 'unknown');
         
         if (shouldRetry) {
           debugLog('GOOGLE_AUTH_RETRY:code=${e.code}');
           retryAttempted = true;
           await Future.delayed(const Duration(seconds: 2));
-          // Повторяем попытку
           continue;
         } else {
           // Повторная неудача или ошибка, которая не требует повтора
           final errorMsg = retryAttempted 
-              ? 'Ошибка входа. Попробуйте снова.'
-              : _mappedError(e.code);
+              ? 'Ошибка входа. Повторите попытку.'
+              : _mappedGoogleError(e.code);
           setState(() {
             _googleError = errorMsg;
           });
@@ -238,16 +270,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
       } catch (e, st) {
         debugLog('GOOGLE_SIGNIN_ERROR:$e');
-        debugLog('STACK:${st.toString().substring(0, st.toString().length > 500 ? 500 : st.toString().length)}');
         
-        // Авто-повтор для общих ошибок
+        // Авто-повтор для общих ошибок (один раз)
         if (!retryAttempted) {
           debugLog('GOOGLE_AUTH_RETRY:unknown_error');
           retryAttempted = true;
           await Future.delayed(const Duration(seconds: 2));
           continue;
         } else {
-          final errorMsg = 'Ошибка входа. Попробуйте снова.';
+          final errorMsg = 'Ошибка входа. Повторите попытку.';
           setState(() {
             _googleError = errorMsg;
           });
@@ -258,6 +289,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } finally {
       setState(() => _isLoading = false);
       ref.read(authLoadingProvider.notifier).setLoading(false);
+    }
+  }
+
+  /// Маппинг ошибок Google Sign-In
+  String _mappedGoogleError(String code) {
+    switch (code) {
+      case 'network-request-failed':
+        return 'Ошибка сети. Проверьте подключение';
+      case 'popup-closed-by-user':
+        return 'Вход отменён';
+      case 'unauthorized-domain':
+        return 'Неавторизованный домен';
+      case 'unknown':
+        return 'Неизвестная ошибка. Попробуйте снова';
+      default:
+        return 'Ошибка входа. Повторите попытку.';
     }
   }
 
@@ -578,9 +625,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       : null,
                                 ),
                               ),
+                              const SizedBox(height: 16),
+                              
+                              // Кнопка "Забыли пароль?" (только для входа)
+                              if (!_isSignUp)
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    onPressed: _isLoading ? null : _sendPasswordReset,
+                                    child: const Text('Забыли пароль?'),
+                                  ),
+                                ),
+
                               const SizedBox(height: 24),
 
-                              // Email auth button
+                              // Email auth button с прогресс-индикатором
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(

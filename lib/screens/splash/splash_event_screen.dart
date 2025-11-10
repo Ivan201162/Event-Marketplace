@@ -87,29 +87,26 @@ class _SplashEventScreenState extends State<SplashEventScreen>
         firebaseInitialized = true;
       } catch (_) {
         try {
-          // Инициализация Firebase с таймаутом
-          await Firebase.initializeApp().timeout(
-            const Duration(seconds: 6),
-            onTimeout: () {
-              debugLog("SPLASH_TIMEOUT_RETRY");
-              throw TimeoutException('Firebase init timeout', const Duration(seconds: 6));
-            },
-          );
-          firebaseInitialized = true;
-          debugLog("SPLASH_FIREBASE_INIT_OK");
-        } on TimeoutException {
-          debugLog("SPLASH_TIMEOUT_RETRY");
-          // Повторная попытка
+          // Безопасная инициализация Firebase с Future.any
+          final initFuture = Firebase.initializeApp();
+          final timeoutFuture = Future.delayed(const Duration(seconds: 6));
+          
+          await Future.any([initFuture, timeoutFuture]);
+          
+          // Проверяем, завершилась ли инициализация
           try {
-            await Firebase.initializeApp().timeout(const Duration(seconds: 4));
+            Firebase.app(); // Проверяем, что Firebase инициализирован
             firebaseInitialized = true;
             debugLog("SPLASH_FIREBASE_INIT_OK");
-          } catch (e) {
-            debugLog("SPLASH_INIT_FAILED:$e");
-            setState(() {
-              _state = SplashState.error;
-              _error = e.toString();
-            });
+          } catch (_) {
+            // Таймаут - показываем кнопку повтора
+            debugLog("SPLASH_INIT_TIMEOUT");
+            if (mounted) {
+              setState(() {
+                _state = SplashState.error;
+                _error = 'Инициализация превысила таймаут';
+              });
+            }
             return;
           }
         } catch (e) {
@@ -234,17 +231,24 @@ class _SplashEventScreenState extends State<SplashEventScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // EVENT крупно (анимированный логотип)
-                AnimatedOpacity(
-                  opacity: _state == SplashState.loading ? 0.7 : 1.0,
-                  duration: const Duration(milliseconds: 500),
-                  child: Text(
-                    'EVENT',
-                    style: AppTypography.displayLg.copyWith(
-                      color: textColor,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                // EVENT крупно (анимированный логотип с fade + translateY)
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(0, 30 * (1 - _fadeAnimation.value)),
+                      child: Opacity(
+                        opacity: _fadeAnimation.value,
+                        child: Text(
+                          'EVENT',
+                          style: AppTypography.displayLg.copyWith(
+                            color: textColor,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
                 // Тонкая черта

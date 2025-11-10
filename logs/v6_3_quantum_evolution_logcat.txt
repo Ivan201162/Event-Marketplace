@@ -1,0 +1,852 @@
+﻿
+11-08 22:28:22.785 19754 19754 E AndroidRuntime: FATAL EXCEPTION: main
+11-08 22:28:22.785 19754 19754 E AndroidRuntime: Process: com.google.android.ap
+ps.messaging, PID: 19754
+11-08 22:28:22.785 19754 19754 E AndroidRuntime: 	at android.app.ActivityThread
+.main(ActivityThread.java:8676)
+11-08 22:28:22.785 19754 19754 E AndroidRuntime: 	at com.android.internal.os.Zy
+goteInit.main(ZygoteInit.java:1109)
+11-09 04:46:12.385 18353 18353 E AndroidRuntime: FATAL EXCEPTION: main
+11-09 04:46:12.385 18353 18353 E AndroidRuntime: Process: com.google.android.ap
+ps.messaging, PID: 18353
+11-09 04:46:12.385 18353 18353 E AndroidRuntime: 	at android.app.ActivityThread
+.main(ActivityThread.java:8676)
+11-09 04:46:12.385 18353 18353 E AndroidRuntime: 	at com.android.internal.os.Zy
+goteInit.main(ZygoteInit.java:1109)
+11-09 21:59:09.500 12175 12175 E AndroidRuntime: FATAL EXCEPTION: main
+11-09 21:59:09.500 12175 12175 E AndroidRuntime: Process: com.google.android.ap
+ps.messaging, PID: 12175
+11-09 21:59:09.500 12175 12175 E AndroidRuntime: 	at android.app.ActivityThread
+.main(ActivityThread.java:8676)
+11-09 21:59:09.500 12175 12175 E AndroidRuntime: 	at com.android.internal.os.Zy
+goteInit.main(ZygoteInit.java:1109)
+11-09 21:59:13.700 12765 12765 E AndroidRuntime: FATAL EXCEPTION: main
+11-09 21:59:13.700 12765 12765 E AndroidRuntime: Process: com.google.android.ap
+ps.messaging, PID: 12765
+11-09 21:59:13.700 12765 12765 E AndroidRuntime: 	at android.app.ActivityThread
+.main(ActivityThread.java:8676)
+11-09 21:59:13.700 12765 12765 E AndroidRuntime: 	at com.android.internal.os.Zy
+goteInit.main(ZygoteInit.java:1109)
+11-09 21:59:14.328 12864 12864 E AndroidRuntime: FATAL EXCEPTION: main
+11-09 21:59:14.328 12864 12864 E AndroidRuntime: Process: com.google.android.ap
+ps.messaging, PID: 12864
+11-09 21:59:14.328 12864 12864 E AndroidRuntime: 	at android.app.ActivityThread
+.main(ActivityThread.java:8676)
+11-09 21:59:14.328 12864 12864 E AndroidRuntime: 	at com.android.internal.os.Zy
+goteInit.main(ZygoteInit.java:1109)
+11-10 11:24:57.682 28494 28494 I LoadedApk: makePaths: outLibPaths=[/system/pro
+duct/priv-app/GoogleServicesFramework/lib/arm64, /system/lib64:/hw_product/lib6
+4:/system/product/lib64:/prets/lib64]
+--------- beginning of main
+11-10 11:24:58.566 18357 18357 D BoundBrokerSvc: onBind: Intent { act=com.googl
+e.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
+11-10 11:24:58.566 18357 18357 D BoundBrokerSvc: Loading bound service for inte
+nt: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google
+.android.gms }
+11-10 11:24:58.580 18357 18357 I LoadedApk: We unbound before receiving the con
+nection,name:ComponentInfo{com.android.vending/com.google.android.finsky.develo
+pergroupidinfo.DeveloperGroupIdInfoService}
+11-10 11:24:58.628 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.kernel.android.tracing>
+11-10 11:24:58.631 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.config.hw_log>
+11-10 11:24:58.631 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.config.hw_module_log>
+11-10 11:24:58.631 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.debuggable>
+11-10 11:24:58.633 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.logsystem.usertype>
+11-10 11:24:58.633 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.config.jank_skipped_threshold>
+11-10 11:24:58.635 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.config.hw_getservice_stat>
+11-10 11:24:58.646 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.config.hw_getservice_stat>
+11-10 11:24:58.649 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.sf.lcd_density>
+11-10 11:24:58.649 28655 28655 I libc    : [hwfix]gms proc <com.google.android.
+videos>, getprop <ro.sf.real_lcd_density>
+11-10 11:24:58.664 28655 28655 D ApplicationLoaders: createClassLoader zip: /sy
+stem/framework/org.apache.http.legacy.jar librarySearchPath: /data/app/com.goog
+le.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/lib/arm64:/data/app/com.google.andro
+id.videos-Fez3UV-Xg5V96zQfFF6LgQ==/base.apk!/lib/arm64-v8a:/data/app/com.google
+.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.arm64_v8a.apk!/lib/arm64-
+v8a:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.r
+u.apk!/lib/arm64-v8a:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ
+==/split_config.xxhdpi.apk!/lib/arm64-v8a libraryPermittedPath: /data/user/0/co
+m.google.android.videos parent: java.lang.BootClassLoader@d46cbfc targetSdkVers
+ion: 35 isBundled: false classLoaderName: null sharedLibraries: null
+11-10 11:24:58.677 28655 28655 D ApplicationLoaders: createClassLoader zip: /da
+ta/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/base.apk:/data/app/co
+m.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.arm64_v8a.apk:/da
+ta/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.ru.apk:/
+data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.xxhdpi
+.apk librarySearchPath: /data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6
+LgQ==/lib/arm64:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/ba
+se.apk!/lib/arm64-v8a:/data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6Lg
+Q==/split_config.arm64_v8a.apk!/lib/arm64-v8a:/data/app/com.google.android.vide
+os-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.ru.apk!/lib/arm64-v8a:/data/app/com.go
+ogle.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.xxhdpi.apk!/lib/arm64
+-v8a libraryPermittedPath: /data/user/0/com.google.android.videos parent: java.
+lang.BootClassLoader@d46cbfc targetSdkVersion: 35 isBundled: false classLoaderN
+ame: null sharedLibraries: [dalvik.system.PathClassLoader[DexPathList[[zip file
+ "/system/framework/org.apache.http.legacy.jar"],nativeLibraryDirectories=[/dat
+a/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/lib/arm64, /data/app/c
+om.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/base.apk!/lib/arm64-v8a, /dat
+a/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ==/split_config.arm64_v8a
+.apk!/lib/arm64-v8a, /data/app/com.google.android.videos-Fez3UV-Xg5V96zQfFF6LgQ
+==/split_config.ru.apk!/lib/arm64-v8a, /data/app/com.google.android.videos-Fez3
+UV-Xg5V96zQfFF6LgQ==/split_config.xxhdpi.apk!/lib/arm64-v8a, /system/lib64, /hw
+_product/lib64, /system/product/lib64, /prets/lib64]]]]
+11-10 11:24:58.715 28655 28655 I chatty  : uid=10190(com.google.android.videos)
+ identical 1 line
+11-10 11:24:58.734 28655 28673 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.google.android.videos#10190#256
+11-10 11:24:58.737 28655 28673 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.google.android.videos#10190#0
+11-10 11:24:58.742 28655 28673 I AwareBitmapCacher: init processName:com.google
+.android.videos pid=28655 uid=10190
+11-10 11:24:58.836 32011 32011 D BoundBrokerSvc: onRebind: Intent { act=com.goo
+gle.android.gms.auth.aang.events.services.START dat=chimera-action: cmp=com.goo
+gle.android.gms/.chimera.PersistentApiService }
+11-10 11:24:58.921 28655 28655 I ConnectivityManager: requestNetwork and the ca
+lling app is: com.google.android.videos
+11-10 11:24:58.928 28655 28698 W SQLiteConnection: Could not change the databas
+e journal mode of '/data/user/0/com.google.android.videos/databases/purchase_st
+ore.db' from 'wal' to 'TRUNCATE' because the database is locked.  This usually 
+means that there are other open connections to the database which prevents the 
+database from enabling or disabling write-ahead logging mode.  Proceeding witho
+ut changing the journal mode.
+11-10 11:24:59.091 28655 28724 I chatty  : uid=10190(com.google.android.videos)
+ identical 2 lines
+11-10 11:24:59.091 28422 28422 I Finsky  : [1] playLoggingServerUrl: https://pl
+ay.googleapis.com/play/log
+11-10 11:24:59.091 28422 28422 I Finsky  : [1] playLoggingServerTimestampUrl: h
+ttps://play.googleapis.com/play/log/timestamp
+11-10 11:24:59.110 28655 28701 I ConnectivityManager: requestNetwork and the ca
+lling app is: com.google.android.videos
+11-10 11:24:59.190  1717 14536 I ActivityManager: App 10190/com.google.android.
+videos targets O+, restricted
+11-10 11:24:59.219  1717 14536 I JobScheduler: CANCEL: f6458c5 #u0a190/759 com.
+google.android.videos/androidx.work.impl.background.systemjob.SystemJobService,
+ reason:cancel() called by app, callingUid=10190 uid=10190 jobId=759
+11-10 11:24:59.242 28655 28688 E PlayMovies: mbj.a:83 No worker key associated 
+with this task with tags: [google_tv_widget_tag, com.google.android.apps.google
+tv.app.services.workmanager.WorkerWrapper]
+11-10 11:24:59.263  1717 14536 I JobScheduler: CANCEL: e24021a #u0a190/760 com.
+google.android.videos/androidx.work.impl.background.systemjob.SystemJobService,
+ reason:cancel() called by app, callingUid=10190 uid=10190 jobId=760
+11-10 11:24:59.472  1717 14536 V ActivityManager: Successfully start provider C
+ontentProviderRecord{5f0126d u0 com.google.android.gms/.phenotype.provider.Conf
+igurationProvider} launchingApp=null caller pid= 28422
+11-10 11:24:59.492  1717  8994 V ActivityManager: Successfully start provider C
+ontentProviderRecord{b659a98 u0 com.google.android.gsf/.gservices.GservicesProv
+ider} launchingApp=ProcessRecord{84f2c7b 16860:com.google.process.gservices/u0a
+167} caller pid= 28422
+11-10 11:24:59.648 28422 28465 I Finsky  : [88862] VerifyApps: Installer app: c
+om.android.shell
+11-10 11:24:59.961  6637  6637 I PushLog110105309: [main-1]action is com.huawei
+.android.APPSTARTUP_CHANGED
+11-10 11:24:59.964  6637  6637 I PushLog110105309: [main-1]dispatchIntent over
+11-10 11:25:00.583  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_DOCUMENTS from package com.google.android.youtube (protectio
+nLevel=262146 flags=0x20dbbec5)
+11-10 11:25:00.590  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_SOUND_TRIGGER from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-10 11:25:00.590  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_AUDIO_OUTPUT from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-10 11:25:00.591  1717  1968 I PackageManager: Un-granting permission android
+.permission.CONTROL_INCALL_EXPERIENCE from package com.google.android.googlequi
+cksearchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-10 11:25:00.591  1717  1968 I PackageManager: Un-granting permission android
+.permission.WRITE_APN_SETTINGS from package com.google.android.googlequicksearc
+hbox (protectionLevel=18 flags=0xa0d8bec5)
+11-10 11:25:00.591  1717  1968 I PackageManager: Un-granting permission android
+.permission.SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON from package com.google.a
+ndroid.googlequicksearchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-10 11:25:00.591  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_MEDIA_OUTPUT from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-10 11:25:00.591  1717  1968 I PackageManager: Un-granting permission android
+.permission.MODIFY_AUDIO_ROUTING from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-10 11:25:00.600  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.google.android.apps.docs.
+editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.600  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.600  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.600  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.600  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.600  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.610  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.google.android.apps.docs.
+editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.google.android.apps.docs.
+editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.611  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.612  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-10 11:25:00.613  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.setupwizard.READ_DEVICE_ORIGIN from package com.google.android.apps
+.messaging (protectionLevel=18 flags=0x38cbbe45)
+11-10 11:25:00.613  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.READ_SETTINGS from package com.google.android.a
+pps.messaging (protectionLevel=18 flags=0x38cbbe45)
+11-10 11:25:00.613  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.WRITE_SETTINGS from package com.google.android.
+apps.messaging (protectionLevel=18 flags=0x38cbbe45)
+11-10 11:25:00.625  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.android.contacts (protect
+ionLevel=2 flags=0x90c83e45)
+11-10 11:25:00.625  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.WRITE_GMAIL from package com.android.contacts (protec
+tionLevel=2 flags=0x90c83e45)
+11-10 11:25:00.625  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.con
+tacts (protectionLevel=2 flags=0x90c83e45)
+11-10 11:25:00.630  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.google.android.gm (protec
+tionLevel=66 flags=0x38cbbe45)
+11-10 11:25:00.631  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.READ_SETTINGS from package com.google.android.a
+pps.tachyon (protectionLevel=18 flags=0x30c83e45)
+11-10 11:25:00.631  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.WRITE_SETTINGS from package com.google.android.
+apps.tachyon (protectionLevel=18 flags=0x30c83e45)
+11-10 11:25:00.633  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.cal
+endar (protectionLevel=2 flags=0x28c83e45)
+11-10 11:25:00.633  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.android.calendar (protect
+ionLevel=2 flags=0x28c83e45)
+11-10 11:25:00.633  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.WRITE_GMAIL from package com.android.calendar (protec
+tionLevel=2 flags=0x28c83e45)
+11-10 11:25:00.640  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.google.android.apps.docs 
+(protectionLevel=66 flags=0x28cbbec5)
+11-10 11:25:00.643  1717  1968 I PackageManager: Un-granting permission android
+.permission.INTERACT_ACROSS_USERS from package com.google.android.syncadapters.
+contacts (protectionLevel=50 flags=0x20883e45)
+11-10 11:25:00.646  1717  1968 I PackageManager: Un-granting permission android
+.permission.WRITE_EMBEDDED_SUBSCRIPTIONS from package com.google.android.gms (p
+rotectionLevel=50 flags=0xa0cabec5)
+11-10 11:25:00.646  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_VIDEO_OUTPUT from package com.google.android.gms (protectio
+nLevel=2 flags=0xa0cabec5)
+11-10 11:25:00.646  1717  1968 I PackageManager: Un-granting permission android
+.permission.FORCE_STOP_PACKAGES from package com.google.android.gms (protection
+Level=18 flags=0xa0cabec5)
+11-10 11:25:00.646  1717  1968 I PackageManager: Un-granting permission android
+.permission.OBSERVE_ROLE_HOLDERS from package com.google.android.gms (protectio
+nLevel=258 flags=0xa0cabec5)
+11-10 11:25:00.647  1717  1968 I PackageManager: Un-granting permission android
+.permission.MODIFY_DEFAULT_AUDIO_EFFECTS from package com.google.android.gms (p
+rotectionLevel=18 flags=0xa0cabec5)
+11-10 11:25:00.647  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_DEVICE_ADMINS from package com.google.android.gms (protectio
+nLevel=2 flags=0xa0cabec5)
+11-10 11:25:00.647  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_ACTIVITY_STACKS from package com.google.android.gms (protect
+ionLevel=2 flags=0xa0cabec5)
+11-10 11:25:00.647  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_SECURE_VIDEO_OUTPUT from package com.google.android.gms (pr
+otectionLevel=2 flags=0xa0cabec5)
+11-10 11:25:00.648  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_ROLLBACKS from package com.google.android.gms (protectionLev
+el=514 flags=0xa0cabec5)
+11-10 11:25:00.648  1717  1968 I PackageManager: Un-granting permission android
+.permission.MEDIA_CONTENT_CONTROL from package com.google.android.gms (protecti
+onLevel=18 flags=0xa0cabec5)
+11-10 11:25:00.649  1717  1968 I PackageManager: Un-granting permission android
+.permission.UPDATE_APP_OPS_STATS from package com.google.android.tts (protectio
+nLevel=274 flags=0x34cbbec5)
+11-10 11:25:00.649  1717  1968 I PackageManager: Un-granting permission android
+.permission.START_ACTIVITIES_FROM_BACKGROUND from package com.google.android.tt
+s (protectionLevel=49682 flags=0x34cbbec5)
+11-10 11:25:00.651  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.v
+ideos (protectionLevel=2 flags=0x30dbbec5)
+11-10 11:25:00.651  1717  1968 I PackageManager: Un-granting permission android
+.permission.WRITE_MEDIA_STORAGE from package com.google.android.apps.photos (pr
+otectionLevel=18 flags=0x38d9be45)
+11-10 11:25:00.660  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_DOCUMENTS from package com.android.email (protectionLevel=26
+2146 flags=0x30c83e45)
+11-10 11:25:00.660  1717  1968 I PackageManager: Un-granting permission android
+.permission.INTERACT_ACROSS_USERS_FULL from package com.android.email (protecti
+onLevel=258 flags=0x30c83e45)
+11-10 11:25:00.660  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.android.email (protection
+Level=66 flags=0x30c83e45)
+11-10 11:25:05.458 28575 28765 I Finsky:background: [88909] playLoggingServerUr
+l: https://play.googleapis.com/play/log
+11-10 11:25:05.458 28575 28765 I Finsky:background: [88909] playLoggingServerTi
+mestampUrl: https://play.googleapis.com/play/log/timestamp
+11-10 11:25:05.461  1717 14536 V ActivityManager: Successfully start provider C
+ontentProviderRecord{b659a98 u0 com.google.android.gsf/.gservices.GservicesProv
+ider} launchingApp=ProcessRecord{84f2c7b 16860:com.google.process.gservices/u0a
+167} caller pid= 28575
+11-10 11:25:05.735  1053  1089 D         : HibSTrategy::HibStrategySwapCandidat
+eProcessAdd packageName com.google.android.videos
+11-10 11:25:05.827  1053  5681 D         : HibStrategy::HibStrategySwapCandidat
+eProcessRemove packageName is com.google.android.videos
+11-10 11:25:06.941 27750 28776 D BundleMgrProxy: getServiceBundleNames bundleNa
+me:com.android.email, isEntryInstallationFree:false
+11-10 11:25:06.971  1717  1946 I AccessibilityShortcutController: checkPackageI
+nstalled packageName:com.google.android.marvin.talkback,isInstalled:true
+11-10 11:25:06.989 32011 28785 W GCM     : Unexpected forwarded intent: Intent 
+{ act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketplace.app 
+flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.Pe
+rsistentIntentOperationService (has extras) }
+11-10 11:25:06.991 32011 28785 W NetworkScheduler: Unexpected forwarded intent:
+ Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketpl
+ace.app flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.ch
+imera.PersistentIntentOperationService (has extras) }
+11-10 11:25:07.002  1717  1949 I ActivityManager: App 10164/com.google.android.
+packageinstaller targets O+, restricted
+11-10 11:25:07.002  1717  1949 W BroadcastQueue: Background execution not allow
+ed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.
+eventmarketplace.app flg=0x4000010 (has extras) } to com.google.android.package
+installer/com.android.packageinstaller.PackageInstalledReceiver
+11-10 11:25:07.036 27750 27890 W HiApp.PermissionControllerService/AuthorityUti
+ls: main{1} <<< WARN >>> not find Permission provider.
+11-10 11:25:07.037 27750 27890 W HiApp.PermissionControllerService/AppPermissio
+nConfigProcess: main{1} <<< WARN >>> Not support
+11-10 11:25:07.063 18357 18593 I Icing   : IndexChimeraService.getServiceInterf
+ace callingPackage=com.google.android.gms componentName=AppsCorpus serviceId=36
+11-10 11:25:07.077 18357 18591 I Icing   : IndexChimeraService.getServiceInterf
+ace callingPackage=com.google.android.gms componentName=null serviceId=30
+11-10 11:25:07.115 18357 27674 I Icing   : Indexing com.google.android.gms-apps
+ from com.google.android.gms
+11-10 11:25:07.123 27750 27890 E HiApp.InstalledAppDataMgr: main{1} <<< ERROR >
+>> the installed app list is not initial yet. it's useless to update!
+11-10 11:25:07.135 32011 28795 W GCM     : Unexpected forwarded intent: Intent 
+{ act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketplace.app 
+flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.Pe
+rsistentIntentOperationService (has extras) }
+11-10 11:25:07.135 32011 28795 W NetworkScheduler: Unexpected forwarded intent:
+ Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketpl
+ace.app flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.ch
+imera.PersistentIntentOperationService (has extras) }
+11-10 11:25:07.137 18357 27674 I Icing   : Indexing done com.google.android.gms
+-apps
+11-10 11:25:07.204  2680  2894 I HwLauncher: AllIdleAppsList addPackage: add ne
+w shortcut is {ShortcutInfo: title: Event, component: ComponentInfo{com.eventma
+rketplace.app/com.eventmarketplace.app.MainActivity}}
+11-10 11:25:07.221 18357 27864 I Icing   : Indexing com.google.android.gms-apps
+ from com.google.android.gms
+11-10 11:25:07.234 18357 27864 I Icing   : Indexing done com.google.android.gms
+-apps
+11-10 11:25:07.237  1717  2337 I ActivityManager: App 10164/com.google.android.
+packageinstaller targets O+, restricted
+11-10 11:25:07.237  1717  2337 V ActivityManager: startProcess: name=com.google
+.android.packageinstaller app=null knownToBeDead=true thread=null pid=-1 preloa
+dStatus=-1
+11-10 11:25:07.250  1717  1950 I ActivityManager: Start proc 28840:com.google.a
+ndroid.packageinstaller/u0a164 for broadcast {com.google.android.packageinstall
+er/com.android.packageinstaller.PackageInstalledReceiver}
+11-10 11:25:07.259 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.kernel.android.tracing>
+11-10 11:25:07.261 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.config.hw_log>
+11-10 11:25:07.262 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.config.hw_module_log>
+11-10 11:25:07.262 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.debuggable>
+11-10 11:25:07.263 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.logsystem.usertype>
+11-10 11:25:07.263 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.config.jank_skipped_threshold>
+11-10 11:25:07.264 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.config.hw_getservice_stat>
+11-10 11:25:07.271 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.config.hw_getservice_stat>
+11-10 11:25:07.277 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.sf.lcd_density>
+11-10 11:25:07.277 28840 28840 I libc    : [hwfix]gms proc <com.google.android.
+packageinstaller>, getprop <ro.sf.real_lcd_density>
+11-10 11:25:07.304 28840 28840 D ApplicationLoaders: createClassLoader zip: /sy
+stem/product/priv-app/GooglePackageInstaller/GooglePackageInstaller.apk library
+SearchPath: /system/product/priv-app/GooglePackageInstaller/lib/arm64:/system/l
+ib64:/hw_product/lib64:/system/product/lib64:/prets/lib64 libraryPermittedPath:
+ /data/user_de/0/com.google.android.packageinstaller:/system/product/priv-app/G
+ooglePackageInstaller:/system/lib64:/hw_product/lib64:/system/product/lib64:/pr
+ets/lib64 parent: java.lang.BootClassLoader@d46cbfc targetSdkVersion: 29 isBund
+led: true classLoaderName: null sharedLibraries: null
+11-10 11:25:07.401 28840 28859 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.google.android.packageinstaller#10164#256
+11-10 11:25:07.402 28840 28859 I HwApiCacheMangerEx: apicache path=/storage/emu
+lated/0 state=mounted key=com.google.android.packageinstaller#10164#0
+11-10 11:25:07.425 28840 28859 I AwareBitmapCacher: init processName:com.google
+.android.packageinstaller pid=28840 uid=10164
+11-10 11:25:07.546  1717  2336 V ActivityManager: Successfully start provider C
+ontentProviderRecord{6c218b1 u0 com.google.android.gms/.chimera.container.GmsMo
+duleProvider} launchingApp=null caller pid= 28422
+11-10 11:25:07.562 18357 18357 D BoundBrokerSvc: onBind: Intent { act=com.googl
+e.android.gms.potokens.service.START dat=chimera-action: cmp=com.google.android
+.gms/.chimera.GmsApiService }
+11-10 11:25:07.562 18357 18357 D BoundBrokerSvc: Loading bound service for inte
+nt: Intent { act=com.google.android.gms.potokens.service.START dat=chimera-acti
+on: cmp=com.google.android.gms/.chimera.GmsApiService }
+11-10 11:25:07.564  1717  8994 V ActivityManager: Successfully start provider C
+ontentProviderRecord{5f0126d u0 com.google.android.gms/.phenotype.provider.Conf
+igurationProvider} launchingApp=null caller pid= 28422
+11-10 11:25:07.582  1717  2336 V ActivityManager: Successfully start provider C
+ontentProviderRecord{b659a98 u0 com.google.android.gsf/.gservices.GservicesProv
+ider} launchingApp=ProcessRecord{84f2c7b 16860:com.google.process.gservices/u0a
+167} caller pid= 28422
+11-10 11:25:07.613 28422 28465 I Finsky  : [88862] Triggered update for experim
+ent package com.google.android.finsky.stable.
+11-10 11:25:07.649 27750 27890 W HiApp.ChannelManager/ReferrerImpl: main{1} <<<
+ WARN >>> saveAttribution: attribution or packageName is empty.
+11-10 11:25:07.713 28422 28465 I Finsky  : [88862] Already at the latest config
+urations for experiment package com.google.android.finsky.stable.
+11-10 11:25:07.713 28422 28465 I Finsky  : [88862] Triggered update for experim
+ent package com.google.android.finsky.regular.
+11-10 11:25:07.766 28422 28465 I Finsky  : [88862] Already at the latest config
+urations for experiment package com.google.android.finsky.regular.
+11-10 11:25:07.766 28422 28465 I Finsky  : [88862] Triggered update for experim
+ent package com.google.android.finsky.regular.
+11-10 11:25:07.767 28422 28482 I Finsky  : [88875] Component class com.google.a
+ndroid.finsky.wearsupport.WearSupportService disabled via PackageManager.
+11-10 11:25:07.768 28422 28482 I Finsky  : [88875] Component class com.google.a
+ndroid.finsky.wearsupport.WearChangeListenerService disabled via PackageManager
+.
+11-10 11:25:07.806 28422 28465 I Finsky  : [88862] Already at the latest config
+urations for experiment package com.google.android.finsky.regular.
+11-10 11:25:08.358 28944 28944 D AndroidRuntime: Calling main entry com.android
+.commands.monkey.Monkey
+11-10 11:25:08.380  1717  2336 I ActivityTaskManager: START u0 {act=android.int
+ent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 hwFlg=0x1
+0 cmp=com.eventmarketplace.app/.MainActivity} from uid 2000
+11-10 11:25:08.381  1717  2336 I ActivityTaskManager: ActivityRecord info: Acti
+vityInfo{6171f9d com.eventmarketplace.app.MainActivity}
+11-10 11:25:08.384  1717  2336 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=null activity=ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActi
+vity t-1} display-id=0 display-windowing-mode=1
+11-10 11:25:08.384  1717  2336 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=null activity=ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActi
+vity t-1} display-id=0 display-windowing-mode=1 non-freeform-display maximized-
+bounds
+11-10 11:25:08.387  1717  2336 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=TaskRecord{7b67fe3 #984 I=com.eventmarketplace.app/.MainActivity U=0 Stack
+Id=964 sz=0} activity=ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainA
+ctivity t-1} display-from-task=0 display-id=0 display-windowing-mode=1 non-free
+form-display maximized-bounds
+11-10 11:25:08.389  1717  2336 I WindowManager: addWindowToken: displayid:0 bin
+der:Token{3dcde0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivi
+ty t984}} token:AppWindowToken{a4b1899 token=Token{3dcde0 ActivityRecord{3e87c1
+2 u0 com.eventmarketplace.app/.MainActivity t984}}}
+11-10 11:25:08.389  1717  2336 V ActivityTaskManager: addAppToken: AppWindowTok
+en{a4b1899 token=Token{3dcde0 ActivityRecord{3e87c12 u0 com.eventmarketplace.ap
+p/.MainActivity t984}}} task={taskId=984 appTokens=[] mdr=false} at 2147483647
+11-10 11:25:08.390  1717  2336 I ActivityTaskManager: setAppStartingWindow: tok
+en=Token{3dcde0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivit
+y t984}} pkg=com.eventmarketplace.app transferFrom=null newTask=true taskSwitch
+=true processRunning=false allowTaskSnapshot=true activityCreated=false LowRamT
+askSnapshots=false
+11-10 11:25:08.390  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.eventmarketplace.app.MainActivity, flag = showStartingWindow, isHomeActivit
+y = , isTop = false
+11-10 11:25:08.404  1717  1898 I WindowManager: addWindow: Window{f65a09 u0 Spl
+ash Screen com.eventmarketplace.app} client:android.view.ViewRootImpl$W@d06f10 
+currentDisplayId:0 requestDisplayId:0 token:Token{3dcde0 ActivityRecord{3e87c12
+ u0 com.eventmarketplace.app/.MainActivity t984}}
+11-10 11:25:08.412  1717  1950 I ActivityManager: Start proc 28964:com.eventmar
+ketplace.app/u0a484 for activity {com.eventmarketplace.app/com.eventmarketplace
+.app.MainActivity}
+11-10 11:25:08.417  1717  1897 I WindowManager: dispatchResized : win = Window{
+f65a09 u0 Splash Screen com.eventmarketplace.app} drawState = DRAW_PENDING
+11-10 11:25:08.427  1717  1898 I WindowManager: performshow Window{f65a09 u0 Sp
+lash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=tr
+ue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true dest
+roying=false animating=true
+11-10 11:25:08.439  1717  2337 I WindowManager: performshow Window{f65a09 u0 Sp
+lash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=tr
+ue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true dest
+roying=false animating=true
+11-10 11:25:08.444  1717  1898 I WindowManager: performshow Window{f65a09 u0 Sp
+lash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=tr
+ue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true dest
+roying=false animating=true
+11-10 11:25:08.445  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{a4b1899 token=Token{3dcde0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app
+/.MainActivity t984}}}: allDrawn=false startingDisplayed=true startingMoved=fal
+se isRelaunching()=false startingWindow=Window{f65a09 u0 Splash Screen com.even
+tmarketplace.app}
+11-10 11:25:08.446  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 12, app = AppWindowToken{bb8a345 token=Token{d0d67bc Activi
+tyRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}}},
+ window = Window{f310e81 u0 com.huawei.android.launcher/com.huawei.android.laun
+cher.unihome.UniHomeLauncher}, mClosingApps = {AppWindowToken{bb8a345 token=Tok
+en{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHo
+meLauncher t1}}}}, topOpeningApp = AppWindowToken{a4b1899 token=Token{3dcde0 Ac
+tivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivity t984}}}, mExitIc
+onBitmap = null, mExitIconHeight = -1, mExitIconWidth = -1
+11-10 11:25:08.446  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 12, app = AppWindowToken{a4b1899 token=Token{3dcde0 Activit
+yRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivity t984}}}, window = nul
+l, mClosingApps = {AppWindowToken{bb8a345 token=Token{d0d67bc ActivityRecord{57
+f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}}}}, topOpenin
+gApp = AppWindowToken{a4b1899 token=Token{3dcde0 ActivityRecord{3e87c12 u0 com.
+eventmarketplace.app/.MainActivity t984}}}, mExitIconBitmap = null, mExitIconHe
+ight = -1, mExitIconWidth = -1
+11-10 11:25:08.446  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{a4b1899 token=Token{3dcde0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app
+/.MainActivity t984}}}: hidden=false hiddenRequested=false
+11-10 11:25:08.446  1717  1898 I WindowManager: Animation done in AppWindowToke
+n{a4b1899 token=Token{3dcde0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app
+/.MainActivity t984}}} isHidden:false hiddenRequested:false
+11-10 11:25:08.449  1717  1895 D StatusBarManagerService: win:Window{f65a09 u0 
+Splash Screen com.eventmarketplace.app}mIsColorEnable:truelight:false
+11-10 11:25:08.450  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{f65a09 u0 Splash Screen com.eventmarketplace.app}
+11-10 11:25:08.478 28964 28964 D FirebaseSessions: Dependency to CRASHLYTICS ad
+ded.
+11-10 11:25:08.482 28964 28964 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-10 11:25:08.500 28964 28964 I FirebaseCrashlytics: Initializing Firebase Cra
+shlytics 20.0.3 for com.eventmarketplace.app
+11-10 11:25:08.507 28964 28964 D FirebaseSessions: Subscriber CRASHLYTICS regis
+tered.
+11-10 11:25:08.524  1717 14545 V ActivityManager: Successfully start provider C
+ontentProviderRecord{6c218b1 u0 com.google.android.gms/.chimera.container.GmsMo
+duleProvider} launchingApp=null caller pid= 28964
+11-10 11:25:08.539 28964 28964 D FirebaseSessions: Initializing Firebase Sessio
+ns 3.0.3.
+11-10 11:25:08.540 28964 29019 I DynamiteModule: Considering local module com.g
+oogle.android.gms.measurement.dynamite:155 and remote module com.google.android
+.gms.measurement.dynamite:165
+11-10 11:25:08.540 28964 29019 I DynamiteModule: Selected remote version of com
+.google.android.gms.measurement.dynamite, version >= 165
+11-10 11:25:08.545 28964 28964 I FirebaseInitProvider: FirebaseApp initializati
+on successful
+11-10 11:25:08.564 28964 29019 W marketplace.ap: Found duplicate classes, falli
+ng back to extracting from APK : /data/user_de/0/com.google.android.gms/app_chi
+mera/m/0000003e/MeasurementDynamite.uncompressed.apk
+11-10 11:25:08.564 28964 29019 W marketplace.ap: Found duplicated class when ch
+ecking oat files: 'Landroid/app/AppComponentFactory;' in /data/user_de/0/com.go
+ogle.android.gms/app_chimera/m/0000003e/MeasurementDynamite.uncompressed.apk an
+d /data/app/com.eventmarketplace.app-2VjPSYYSf3oK2lF2Hjk4lg==/base.apk!classes2
+.dex
+11-10 11:25:08.565 28964 29015 I FirebaseCrashlytics: Saved version control inf
+o
+11-10 11:25:08.570 28964 29060 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-10 11:25:08.571 28964 29015 D FirebaseSessions: Notified CRASHLYTICS of new 
+session a4b8907ef58f4c5d8590d374ac5fee7f
+11-10 11:25:08.613 28964 28964 D com.llfbandit.app_links: Intent { act=android.
+intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=co
+m.eventmarketplace.app/.MainActivity }
+11-10 11:25:08.651 28964 29090 I FA      :   adb shell setprop debug.firebase.a
+nalytics.app com.eventmarketplace.app
+11-10 11:25:08.678 18357 18357 D BoundBrokerSvc: onBind: Intent { act=com.googl
+e.android.gms.measurement.START pkg=com.google.android.gms }
+11-10 11:25:08.678 18357 18357 D BoundBrokerSvc: Loading bound service for inte
+nt: Intent { act=com.google.android.gms.measurement.START pkg=com.google.androi
+d.gms }
+11-10 11:25:09.502 28964 29045 D FirebaseSessions: Fetching settings from serve
+r.
+11-10 11:25:09.505 28964 28964 D ActivityThread: add activity client record, r=
+ ActivityRecord{be146cc token=android.os.BinderProxy@12b0f13 {com.eventmarketpl
+ace.app/com.eventmarketplace.app.MainActivity}} token= android.os.BinderProxy@1
+2b0f13
+11-10 11:25:09.514 28964 28964 D FirebaseSessions: App foregrounded on com.even
+tmarketplace.app
+11-10 11:25:09.514 28964 28964 D FirebaseSessions: Session a4b8907ef58f4c5d8590
+d374ac5fee7f has not backgrounded yet
+11-10 11:25:09.514 28964 28964 D FirebaseSessions: No process data for com.even
+tmarketplace.app
+11-10 11:25:09.515 28964 29024 D FirebaseSessions: Session 4b830e3f29f64bfeb6a7
+c2ca24fd7b25 has not backgrounded yet
+11-10 11:25:09.515 28964 29024 D FirebaseSessions: No process data map
+11-10 11:25:09.515 28964 29024 D FirebaseSessions: No process data for com.even
+tmarketplace.app
+11-10 11:25:09.524  1717  8994 I WindowManager: addWindow: Window{593cc69 u0 co
+m.eventmarketplace.app/com.eventmarketplace.app.MainActivity} client:android.os
+.BinderProxy@24caef0 currentDisplayId:0 requestDisplayId:0 token:Token{3dcde0 A
+ctivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivity t984}}
+11-10 11:25:09.525 28964 29028 D FirebaseSessions: Notified CRASHLYTICS of new 
+session 9f18987b7c534314b0fa758ccbfae9f6
+11-10 11:25:09.526  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.eventmarketplace.app.MainActivity, flag = onResume, isHomeActivity = , isTo
+p = true
+11-10 11:25:09.526  1717  8994 I JobScheduler.Time: Add job to TimeTracking: a6
+c36ee #u0a484/436220505 com.eventmarketplace.app/com.google.android.datatranspo
+rt.runtime.scheduling.jobscheduling.JobInfoSchedulerService, delayTime:37810449
+82, deadlineTime:9223372036854775807
+11-10 11:25:09.528 28964 28964 I Choreographer: Skipped 58 frames!  The applica
+tion may be doing too much work on its main thread.
+11-10 11:25:09.530  4659 31772 I CAWARENESS_AppUsageManager: onEvent, packageNa
+me=com.eventmarketplace.app, activityName=com.eventmarketplace.app.MainActivity
+11-10 11:25:09.542  1717  2337 I WindowManager: Changing focus from null to Win
+dow{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity} 
+displayId=0 Callers=com.android.server.wm.RootWindowContainer.updateFocusedWind
+owLocked:209 com.android.server.wm.WindowManagerService.updateFocusedWindowLock
+ed:6517 com.android.server.wm.WindowManagerService.relayoutWindow:2813 com.andr
+oid.server.wm.Session.relayout:197 
+11-10 11:25:09.543  1717  2337 V HwPhoneWindowManager: updateSystemUiColorLw wi
+ndow=Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainAc
+tivity},EmuiStyle=0,StatusBarColor=0x40000000,NavigationBarColor=0xfffcfcfc, mF
+orceNotchStatusBar=false
+11-10 11:25:09.544  1717  1895 D StatusBarManagerService: win:Window{593cc69 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:false
+11-10 11:25:09.544  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-10 11:25:09.942 28964 29025 D FirebaseSessions: Fetched settings: {"settings
+_version":3,"cache_duration":185315,"features":{"collect_logged_exceptions":tru
+e,"collect_reports":true,"collect_analytics":false,"prompt_enabled":false,"push
+_enabled":false,"firebase_crashlytics_enabled":false,"collect_anrs":true,"colle
+ct_metric_kit":false,"collect_build_ids":true},"app":{"status":"activated","upd
+ate_required":false,"report_upload_variant":2,"native_report_upload_variant":2}
+,"fabric":{"org_id":"68f7a883b19d6de9f6f19c63","bundle_id":"com.eventmarketplac
+e.app"},"on_demand_upload_rate_per_minute":10,"on_demand_backoff_base":1.2,"on_
+demand_backoff_step_duration_seconds":60,"app_quality":{"sessions_enabled":true
+,"sampling_rate":1,"session_timeout_seconds":1800},"on_demand_thread_recording_
+suspension_enabled":true}
+11-10 11:25:09.951 28964 29045 D FirebaseSessions: Remote settings cache not ex
+pired. Using cached values.
+11-10 11:25:09.957 28964 29028 D FirebaseSessions: Session Event Type: SESSION_
+START
+11-10 11:25:09.957 28964 29028 D FirebaseSessions: Successfully logged Session 
+Start event.
+11-10 11:25:10.163 32011 32011 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.presencemanager.service.START dat=chimera-action: cmp=com.googl
+e.android.gms/.chimera.PersistentApiService }
+11-10 11:25:10.172 32011 32011 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.presencemanager.service.INTERNAL_IDENTITY dat=chimera-action: c
+mp=com.google.android.gms/.chimera.PersistentApiService }
+11-10 11:25:10.411   773  1047 W BufferQueueProducer: [SurfaceView - com.eventm
+arketplace.app/com.eventmarketplace.app.MainActivity#0]:1390: disconnect: not c
+onnected (req=1)
+11-10 11:25:10.413 28964 28964 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 11:25:10.413 28964 28964 I flutter : APP: APP: RELEASE FLOW START
+11-10 11:25:10.413 28964 28964 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 11:25:10.413 28964 28964 I flutter : APP: APP: BUILD OK v6.3-quantum-evol
+ution
+11-10 11:25:10.413 28964 28964 I flutter : APP: APP_VERSION:6.3.0+38
+11-10 11:25:10.413 28964 28964 I flutter : APP: FIREBASE_OPTIONS_OK:event-marke
+tplace-mvp
+11-10 11:25:10.413 28964 28964 I flutter : APP: SESSION_START
+11-10 11:25:10.413 28964 28964 I flutter : APP: INDEXES_READY
+11-10 11:25:10.413 28964 28964 I flutter : APP: FIREBASE_DEPLOY_START
+11-10 11:25:10.413 28964 28964 I flutter : APP: SPLASH_INIT_START
+11-10 11:25:10.416 28964 28964 I Choreographer: Skipped 52 frames!  The applica
+tion may be doing too much work on its main thread.
+11-10 11:25:10.419  1717  2042 I WindowManager: dispatchResized : win = Window{
+593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity} draw
+State = DRAW_PENDING
+11-10 11:25:10.437  1717  2337 V ActivityManager: Successfully start provider C
+ontentProviderRecord{697d7e6 u0 com.google.android.gms/.fonts.provider.FontsPro
+vider} launchingApp=null caller pid= 28964
+11-10 11:25:10.456 32011 32011 D BoundBrokerSvc: onRebind: Intent { act=com.goo
+gle.android.gms.common.telemetry.service.START dat=chimera-action: cmp=com.goog
+le.android.gms/.chimera.PersistentApiService }
+11-10 11:25:10.461 28964 28964 I flutter : APP: SPLASH_FIREBASE_INIT_OK
+11-10 11:25:10.462 28964 28964 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
+11-10 11:25:10.462 28964 28964 I flutter : APP: SPLASH_AUTH_STATE_OK
+11-10 11:25:10.462 28964 28964 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
+╤Ж╨╕╤П Firebase...
+11-10 11:25:10.462 28964 28964 I flutter : тЬЕ Firebase already initialized
+11-10 11:25:10.466  1717  2337 V ActivityManager: Successfully start provider C
+ontentProviderRecord{6c218b1 u0 com.google.android.gms/.chimera.container.GmsMo
+duleProvider} launchingApp=null caller pid= 28964
+11-10 11:25:10.479  1717  1895 D StatusBarManagerService: win:Window{593cc69 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:false
+11-10 11:25:10.479  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-10 11:25:10.501 28422 28459 I Finsky  : [88856] Package com.google.android.g
+ms is verified.
+11-10 11:25:10.663 28964 28964 I FLTFireMsgService: FlutterFirebaseMessagingBac
+kgroundService started!
+11-10 11:25:11.535  2606  3045 D ConnCureConfigUtil: isCaredApp: input = com.ev
+entmarketplace.app
+11-10 11:25:11.535  2606  3045 I ConnCureStateMonitor: isCaredApp:false,isAllow
+ed:true,isDataEnabled:true
+11-10 11:25:11.867 28964 28964 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+11-10 11:25:11.895 28964 28964 I flutter : APP: FCM_INIT_OK
+11-10 11:25:11.911 28964 28964 I flutter : APP: WEB_CLIENT_ID:1:272201705683:an
+droid:0196de78aaeb970ef80c26
+11-10 11:25:11.911 28964 28964 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyC
+HEJy7WBr5eQrcyuRhh_hSfih4
+11-10 11:25:11.911 28964 28964 I flutter : APP: APP: BUILD OK v6.3-quantum-evol
+ution
+11-10 11:25:11.920 28964 28964 I flutter : APP: SPLASH_INIT_START
+11-10 11:25:11.920 28964 28964 I flutter : APP: SPLASH_FIREBASE_ALREADY_INIT
+11-10 11:25:11.922 28964 28964 I flutter : APP: SPLASH_AUTH_STATE_OK
+11-10 11:25:11.922 28964 28964 I flutter : APP: SPLASH_READY
+11-10 11:25:11.942  1717  1895 D StatusBarManagerService: win:Window{593cc69 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:false
+11-10 11:25:11.942  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-10 11:25:11.985  6637  6637 I PushLog110105309: [main-1]action is com.huawei
+.android.APPSTARTUP_CHANGED
+11-10 11:25:11.989  6637  6637 I PushLog110105309: [main-1]dispatchIntent over
+11-10 11:25:12.000  1717  2042 V ActivityTaskManager: Activity idle: Token{3dcd
+e0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivity t984}}
+11-10 11:25:12.007  1717  1898 I WindowManager: removeIfPossible: Window{f65a09
+ u0 Splash Screen com.eventmarketplace.app} callers=com.android.server.wm.Windo
+wState.removeIfPossible:2611 com.android.server.wm.WindowManagerService.removeW
+indow:2282 com.android.server.wm.Session.remove:179 android.view.ViewRootImpl.d
+ispatchDetachedFromWindow:4929 android.view.ViewRootImpl.doDie:8273 
+11-10 11:25:12.011  1717  1898 I WindowManager: Not removing Window{f65a09 u0 S
+plash Screen com.eventmarketplace.app EXITING} due to exit animation 
+11-10 11:25:12.042  1082  1302 W ScreemCommon: CLICK_START_APP: JL_APP_LAUNCHIN
+G_END and JL_EVENT_CLICK_UP too long| span:417319 > A(10000), A
+11-10 11:25:12.063  1717  2337 I HwPackageManagerService: app:system_server, ge
+tApplicationInfo or source return null
+11-10 11:25:12.064  1717  2337 I HwPackageManagerService: app:surfaceflinger, g
+etApplicationInfo or source return null
+11-10 11:25:12.128  1717  1898 I WindowManager: Exit animation finished in Wind
+ow{f65a09 u0 Splash Screen com.eventmarketplace.app EXITING}: remove=true
+11-10 11:25:12.128  1717  1898 E WindowManager: win=Window{f65a09 u0 Splash Scr
+een com.eventmarketplace.app EXITING} destroySurfaces: appStopped=false win.mWi
+ndowRemovalAllowed=true win.mRemoveOnExit=true
+11-10 11:25:12.130  1717  1898 I WindowManager: postWindowRemoveCleanupLocked: 
+Window{f65a09 u0 Splash Screen com.eventmarketplace.app}
+11-10 11:25:12.130  1717  1898 I WindowManager: Removing Window{f65a09 u0 Splas
+h Screen com.eventmarketplace.app} from AppWindowToken{a4b1899 token=Token{3dcd
+e0 ActivityRecord{3e87c12 u0 com.eventmarketplace.app/.MainActivity t984}}}
+11-10 11:25:12.131  1717  1895 D StatusBarManagerService: win:Window{593cc69 u0
+ com.eventmarketplace.app/com.eventmarketplace.app.MainActivity}mIsColorEnable:
+truelight:false
+11-10 11:25:12.132  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{593cc69 u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivit
+y}
+11-10 11:25:12.229 28964 28964 I flutter : APP: AUTH_GATE:FIREBASE_ALREADY_INIT
+11-10 11:25:12.231 28964 28964 I flutter : APP: AUTH_GATE_READY
+11-10 11:25:12.261 28964 28964 I flutter : APP: AUTH_GATE:USER:null
+11-10 11:25:12.261 28964 28964 I flutter : APP: AUTH_SCREEN_SHOWN
+11-10 11:25:12.482  1717  2076 I ActivityManager: sendIntentSender target:Pendi
+ngIntentRecord{fccd02e com.google.android.gms broadcastIntent}, intent:flg=0x4 
+hwFlg=0x810
+11-10 11:25:12.494  1717 14545 V BroadcastQueue: Finished with ordered broadcas
+t BroadcastRecord{2b23fd7 u0 com.google.android.gms.gcm.ACTION_CHECK_QUEUE}
+11-10 11:25:14.457 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.safetynet.service.START pkg=com.google.android.gms }
+11-10 11:25:15.505 32011 32011 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.common.telemetry.service.START dat=chimera-action: cmp=com.goog
+le.android.gms/.chimera.PersistentApiService }
+11-10 11:25:16.836  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1164747
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 11:25:16.837  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-10 11:25:17.060  1717  2076 I ActivityManager: sendIntentSender target:Pendi
+ngIntentRecord{fccd02e com.google.android.gms broadcastIntent}, intent:flg=0x4 
+hwFlg=0x810
+11-10 11:25:17.078  1717 14545 V BroadcastQueue: Finished with ordered broadcas
+t BroadcastRecord{f2cccc7 u0 com.google.android.gms.gcm.ACTION_CHECK_QUEUE}
+11-10 11:25:17.080  1717  1717 I JobScheduler: About to run job on context 0, j
+ob: JobStatus{6e6664c #u0a172/9242 com.android.vending/com.google.android.finsk
+y.scheduler.process.mainimpl.PhoneskyJobServiceMain u=0 s=10172 TIME=-3s913ms:+
+22h30m19s922ms NET READY}
+11-10 11:25:17.131 18357  7185 W GetGamesServiceReqFacto: Parsing request with 
+ignored arguments. signInOptionsBundle [Bundle[{com.google.android.gms.signin.i
+nternal.serverClientId=null, com.google.android.gms.signin.internal.usePromptMo
+deForAuthCode=true, com.google.android.gms.signin.internal.logSessionId=null, c
+om.google.android.gms.signin.internal.hostedDomain=null, com.google.android.gms
+.signin.internal.offlineAccessRequested=false, com.google.android.gms.signin.in
+ternal.waitForAccessTokenRefresh=false, com.google.android.gms.signin.internal.
+clientRequestedAccount=Account {name=XXXXXXXXX, type=com.google}, com.google.an
+droid.gms.signin.internal.idTokenRequested=false, com.google.android.gms.signin
+.internal.forceCodeForRefreshToken=false}]], isRetryingSignIn [false], skipWelc
+omePopup [false], requireGooglePlus [false]
+11-10 11:25:17.148 18357  8723 W Binder  : 	at m26.den.d(:com.google.android.gm
+s.optional_games@254232017@25.42.32 (100000-0):3)
+11-10 11:25:17.148 18357  8723 W Binder  : 	at m26.den.dX(:com.google.android.g
+ms.optional_games@254232017@25.42.32 (100000-0):34)
+11-10 11:25:17.148 18357  8723 W Binder  : 	at m26.cqk.onTransact(:com.google.a
+ndroid.gms.optional_games@254232017@25.42.32 (100000-0):75)
+11-10 11:25:17.174  5683  5708 W chbox:googleap: Reducing the number of conside
+red missed Gc histogram windows from 314 to 100
+11-10 11:25:17.182 28422 29307 W Finsky  : [88940] SLM: no metadata property co
+m.android.vending.derived.apk.id found for shared library com.google.android.tr
+ichromelibrary_398709933:
+11-10 11:25:17.183 28422 29307 W Finsky  : [88940] SLM: no metadata property co
+m.android.vending.sdk.version.patch found for shared library com.google.android
+.trichromelibrary_398709933:
+11-10 11:25:17.183 28422 29307 W Finsky  : [88940] SLM: no metadata property co
+m.android.vending.derived.apk.id found for shared library com.google.android.tr
+ichromelibrary_739012233:
+11-10 11:25:17.183 28422 29307 W Finsky  : [88940] SLM: no metadata property co
+m.android.vending.sdk.version.patch found for shared library com.google.android
+.trichromelibrary_739012233:
+11-10 11:25:18.906  1717 14545 I JobScheduler.Time: Add job to TimeTracking: be
+00781 #u0a172/9257 com.android.vending/com.google.android.finsky.scheduler.proc
+ess.mainimpl.PhoneskyJobServiceMain, delayTime:3818842454, deadlineTime:3862042
+454
+11-10 11:25:18.916  1717 14545 I JobScheduler: APP response end time, Completed
+ JobStatus{6e6664c #u0a172/9242 com.android.vending/com.google.android.finsky.s
+cheduler.process.mainimpl.PhoneskyJobServiceMain u=0 s=10172 TIME=-5s748ms:+22h
+30m18s87ms NET READY}, reschedule=false
+11-10 11:25:22.124 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.feedback.internal.IFeedbackService dat=chimera-action: cmp=com.
+google.android.gms/.chimera.GmsBoundBrokerService }
+11-10 11:25:22.343 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.measurement.START pkg=com.google.android.gms }
+11-10 11:25:22.457  3103  3103 I HiAdKit.ExSplashManager:  do not request exspl
+ash config
+11-10 11:25:22.616 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.potokens.service.START dat=chimera-action: cmp=com.google.andro
+id.gms/.chimera.GmsApiService }
+11-10 11:25:22.876  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1164748
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 11:25:22.878  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-10 11:25:23.453 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.inappreach.service.START dat=chimera-action: cmp=com.google.and
+roid.gms/.chimera.GmsApiService }
+
+
