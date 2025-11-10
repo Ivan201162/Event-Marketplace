@@ -38,7 +38,7 @@ void main() async {
   debugLog('GOOGLE_JSON_CHECK:${googleServicesExists ? "found" : "missing"}');
   
   debugLog('APP: BUILD OK $BUILD_VERSION');
-  debugLog('APP_VERSION:6.2.0+38');
+  debugLog('APP_VERSION:6.2.1+39');
   
   // Проверка Firebase options
   try {
@@ -65,19 +65,53 @@ void main() async {
   try {
     debugPrint('🚀 Запуск приложения...');
 
-    // Проверка google-services.json (Gradle task verifyGoogleServicesJson должна проверить это)
-    // Здесь логируем результат
+    // Безопасная инициализация Firebase с таймаутом
     try {
-      // Инициализация Firebase
+      debugLog('SPLASH_INIT_START');
+      
+      // Проверяем, инициализирован ли Firebase
+      bool firebaseInitialized = false;
       try {
         Firebase.app();
-        debugLog('GOOGLE_INIT:[DEFAULT]');
-        debugLog('GOOGLE_JSON_CHECK:found');
+        firebaseInitialized = true;
+        debugLog('SPLASH_FIREBASE_ALREADY_INIT');
       } catch (_) {
-        // Не инициализирован, инициализируем
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
+        // Не инициализирован, инициализируем с таймаутом
+        try {
+          // Инициализация Firebase с таймаутом
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          ).timeout(
+            const Duration(seconds: 6),
+            onTimeout: () {
+              debugLog('SPLASH_TIMEOUT_RETRY');
+              throw TimeoutException('Firebase init timeout', const Duration(seconds: 6));
+            },
+          );
+          firebaseInitialized = true;
+          debugLog('SPLASH_FIREBASE_INIT_OK');
+        } on TimeoutException {
+          debugLog('SPLASH_TIMEOUT_RETRY');
+          // Повторная попытка
+          try {
+            await Firebase.initializeApp(
+              options: DefaultFirebaseOptions.currentPlatform,
+            ).timeout(const Duration(seconds: 4));
+            firebaseInitialized = true;
+            debugLog('SPLASH_FIREBASE_INIT_OK');
+          } catch (e) {
+            debugLog('SPLASH_INIT_FAILED:$e');
+            firebaseInitialized = false;
+          }
+        } catch (e) {
+          debugLog('SPLASH_INIT_FAILED:$e');
+          // Fallback: оффлайн режим
+          debugLog('SPLASH_OFFLINE_MODE_ENABLED');
+          firebaseInitialized = false;
+        }
+      }
+      
+      if (firebaseInitialized) {
         // Включаем offline persistence для Firestore
         try {
           FirebaseFirestore.instance.settings = const Settings(
@@ -88,13 +122,24 @@ void main() async {
         } catch (e) {
           debugLog('FIRESTORE_PERSISTENCE:error:$e');
         }
-        debugLog('GOOGLE_INIT:[DEFAULT]');
-        debugLog('GOOGLE_JSON_CHECK:found');
+        
+        // Ждём первое событие authStateChanges с таймаутом
+        try {
+          await FirebaseAuth.instance.authStateChanges().timeout(
+            const Duration(seconds: 6),
+            onTimeout: (sink) {
+              debugLog('SPLASH_AUTH_STATE_TIMEOUT');
+              sink.add(null);
+            },
+          ).first;
+          debugLog('SPLASH_AUTH_STATE_OK');
+        } catch (e) {
+          debugLog('SPLASH_AUTH_STATE_ERROR:$e');
+        }
       }
     } catch (e) {
-      debugLog('FIREBASE_INIT_ERROR:$e');
-      debugLog('GOOGLE_JSON_CHECK:not_found');
-      // В release режиме это критическая ошибка, но не abort'им здесь (Gradle должен был проверить)
+      debugLog('SPLASH_INIT_FAILED:$e');
+      debugLog('SPLASH_OFFLINE_MODE_ENABLED');
     }
 
     // Инициализация Bootstrap с таймаутом
@@ -196,7 +241,7 @@ void main() async {
     });
     
     // Лог после runApp
-    debugLog('APP: BUILD OK v6.2-core-improvements-black-screen-fix');
+    debugLog('APP: BUILD OK v6.2.1-splash-init-fix');
   } catch (e, stackTrace) {
     debugPrint('❌ Критическая ошибка инициализации: $e');
     debugPrint('Stack trace: $stackTrace');

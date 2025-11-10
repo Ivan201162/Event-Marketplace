@@ -14,13 +14,22 @@ class SplashEventScreen extends StatefulWidget {
   State<SplashEventScreen> createState() => _SplashEventScreenState();
 }
 
+enum SplashState {
+  init,
+  loading,
+  ready,
+  error,
+}
+
 class _SplashEventScreenState extends State<SplashEventScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  bool _firebaseReady = false;
-  bool _authStateReady = false;
+  SplashState _state = SplashState.init;
+  String? _error;
+  DateTime? _initStartTime;
+  bool _showLongLoadingMessage = false;
 
   @override
   void initState() {
@@ -50,105 +59,124 @@ class _SplashEventScreenState extends State<SplashEventScreen>
     // Запускаем анимацию сразу, чтобы не было чёрного экрана
     _controller.forward();
     
+    _initStartTime = DateTime.now();
     _initializeFirebase();
-  }
-
-  Future<void> _initializeFirebase() async {
-    debugLog("SPLASH_START");
-    try {
-      // Таймер fallback 6 сек
-      final timeout = Future.delayed(const Duration(seconds: 6));
-      final init = _doInit();
-      
-      await Future.any([init, timeout]);
-      
-      if (!_firebaseReady || !_authStateReady) {
-        debugLog("SPLASH_TIMEOUT:firebaseInit=$_firebaseReady:authResolved=$_authStateReady");
-        // Повторяем init
-        debugLog("SPLASH_INIT_TIMEOUT_RETRY");
-        await _doInit();
-      }
-      
-      // Если всё ещё не готово после повтора, продолжаем с ошибкой
-      if (!_firebaseReady || !_authStateReady) {
-        debugLog("SPLASH_HANG_FIX_APPLIED");
+    
+    // Проверка на зависание > 8 секунд
+    Future.delayed(const Duration(seconds: 8), () {
+      if (mounted && _state != SplashState.ready && _state != SplashState.error) {
         setState(() {
-          _firebaseReady = true;
-          _authStateReady = true;
+          _showLongLoadingMessage = true;
         });
-        _navigateToAuthGate();
       }
-    } catch (e) {
-      debugLog("SPLASH: Firebase init error: $e");
-      setState(() {
-        _firebaseReady = true;
-        _authStateReady = true;
-      });
-      _navigateToAuthGate();
-    }
-  }
-  
-  Future<void> _doInit() async {
-    try {
-      try {
-        Firebase.app();
-        debugLog("SPLASH: Firebase init ok");
-        setState(() {
-          _firebaseReady = true;
-        });
-        _checkAuthState();
-      } catch (_) {
-        await Firebase.initializeApp();
-        debugLog("SPLASH: Firebase init ok");
-        setState(() {
-          _firebaseReady = true;
-        });
-        _checkAuthState();
-      }
-    } catch (e) {
-      debugLog("SPLASH: Firebase init error: $e");
-      setState(() {
-        _firebaseReady = true;
-        _authStateReady = true;
-      });
-      _navigateToAuthGate();
-    }
-  }
-
-  void _checkAuthState() {
-    StreamSubscription<User?>? subscription;
-    subscription = FirebaseAuth.instance.authStateChanges().listen((user) {
-      subscription?.cancel();
-      debugLog("SPLASH: Auth state resolved");
-      setState(() {
-        _authStateReady = true;
-      });
-      debugLog("SPLASH_READY");
-      _navigateToAuthGate();
     });
   }
 
-  void _navigateToAuthGate() {
-    if (_firebaseReady && _authStateReady && mounted) {
-      // Запускаем анимацию, если ещё не запущена
-      if (!_controller.isAnimating && !_controller.isCompleted) {
-        _controller.forward().then((_) {
-          debugLog("SPLASH_COMPLETE");
-          Future.delayed(const Duration(milliseconds: 200), () {
-            if (mounted) {
-              context.go('/auth-gate');
-            }
-          });
-        });
-      } else if (_controller.isCompleted) {
-        debugLog("SPLASH_COMPLETE");
-        Future.delayed(const Duration(milliseconds: 200), () {
-          if (mounted) {
-            context.go('/auth-gate');
+  Future<void> _initializeFirebase() async {
+    debugLog("SPLASH_INIT_START");
+    setState(() {
+      _state = SplashState.loading;
+    });
+    
+    try {
+      // Безопасная инициализация Firebase с таймаутом
+      bool firebaseInitialized = false;
+      try {
+        Firebase.app();
+        debugLog("SPLASH_FIREBASE_ALREADY_INIT");
+        firebaseInitialized = true;
+      } catch (_) {
+        try {
+          // Инициализация Firebase с таймаутом
+          await Firebase.initializeApp().timeout(
+            const Duration(seconds: 6),
+            onTimeout: () {
+              debugLog("SPLASH_TIMEOUT_RETRY");
+              throw TimeoutException('Firebase init timeout', const Duration(seconds: 6));
+            },
+          );
+          firebaseInitialized = true;
+          debugLog("SPLASH_FIREBASE_INIT_OK");
+        } on TimeoutException {
+          debugLog("SPLASH_TIMEOUT_RETRY");
+          // Повторная попытка
+          try {
+            await Firebase.initializeApp().timeout(const Duration(seconds: 4));
+            firebaseInitialized = true;
+            debugLog("SPLASH_FIREBASE_INIT_OK");
+          } catch (e) {
+            debugLog("SPLASH_INIT_FAILED:$e");
+            setState(() {
+              _state = SplashState.error;
+              _error = e.toString();
+            });
+            return;
           }
-        });
+        } catch (e) {
+          debugLog("SPLASH_INIT_FAILED:$e");
+          setState(() {
+            _state = SplashState.error;
+            _error = e.toString();
+          });
+          return;
+        }
       }
+      
+      if (firebaseInitialized) {
+        // Ждём первое событие authStateChanges с таймаутом
+        try {
+          await FirebaseAuth.instance.authStateChanges().timeout(
+            const Duration(seconds: 6),
+            onTimeout: (sink) {
+              debugLog("SPLASH_AUTH_STATE_TIMEOUT");
+              sink.add(null);
+            },
+          ).first;
+          debugLog("SPLASH_AUTH_STATE_OK");
+          debugLog("SPLASH_READY");
+          
+          setState(() {
+            _state = SplashState.ready;
+          });
+          
+          _navigateToAuthGate();
+        } catch (e) {
+          debugLog("SPLASH_AUTH_STATE_ERROR:$e");
+          // Продолжаем даже при ошибке auth state
+          setState(() {
+            _state = SplashState.ready;
+          });
+          _navigateToAuthGate();
+        }
+      }
+    } catch (e) {
+      debugLog("SPLASH_INIT_FAILED:$e");
+      setState(() {
+        _state = SplashState.error;
+        _error = e.toString();
+      });
     }
+  }
+
+  void _navigateToAuthGate() {
+    if (_state == SplashState.ready && mounted) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) {
+          context.go('/auth-gate');
+        }
+      });
+    }
+  }
+  
+  void _handleRetry() {
+    debugLog("SPLASH:RETRY");
+    setState(() {
+      _state = SplashState.init;
+      _error = null;
+      _showLongLoadingMessage = false;
+      _initStartTime = DateTime.now();
+    });
+    _initializeFirebase();
   }
 
   @override
@@ -164,57 +192,113 @@ class _SplashEventScreenState extends State<SplashEventScreen>
     final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final mutedColor = isDark ? AppColors.darkTextMuted : AppColors.lightTextMuted;
 
-    // Всегда показываем splash screen, даже если init не готов
-    // Если init завис → показываем индикатор загрузки
-    final showLoading = !_firebaseReady || !_authStateReady;
-      // Показываем splash с индикатором загрузки
+    // Если ошибка → показываем InitErrorScreen
+    if (_state == SplashState.error) {
       return Scaffold(
-        backgroundColor: bgColor,
         body: Center(
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // EVENT крупно
-                  Text(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text(
+                'Ошибка инициализации',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _error ?? 'Не удалось инициализировать приложение',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: mutedColor),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: _handleRetry,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Повторить запуск'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Показываем splash screen
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: Center(
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // EVENT крупно (анимированный логотип)
+                AnimatedOpacity(
+                  opacity: _state == SplashState.loading ? 0.7 : 1.0,
+                  duration: const Duration(milliseconds: 500),
+                  child: Text(
                     'EVENT',
                     style: AppTypography.displayLg.copyWith(
                       color: textColor,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  // Тонкая черта
-                  Container(
-                    width: 140,
-                    height: 1,
-                    color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 16),
+                // Тонкая черта
+                Container(
+                  width: 140,
+                  height: 1,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 16),
+                // Слоган
+                Text(
+                  'Найдите своего идеального специалиста для мероприятий',
+                  style: AppTypography.bodyMd.copyWith(
+                    color: mutedColor,
                   ),
-                  const SizedBox(height: 16),
-                  // Слоган
-                  Text(
-                    'Найдите своего идеального специалиста для мероприятий',
-                    style: AppTypography.bodyMd.copyWith(
-                      color: mutedColor,
+                  textAlign: TextAlign.center,
+                ),
+                if (_state == SplashState.loading) ...[
+                  const SizedBox(height: 32),
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.primary,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  if (showLoading) ...[
-                    const SizedBox(height: 32),
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ],
                 ],
-              ),
+                if (_showLongLoadingMessage) ...[
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Приложение загружается дольше обычного...\nПроверьте интернет.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: mutedColor,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextButton.icon(
+                          onPressed: _handleRetry,
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Перезапустить'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }

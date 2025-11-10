@@ -2,6 +2,7 @@ import 'package:event_marketplace_app/core/auth_gate.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
 import 'package:event_marketplace_app/screens/splash/splash_event_screen.dart';
+import 'package:event_marketplace_app/screens/splash/init_error_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
 import 'package:event_marketplace_app/screens/auth/login_screen_improved.dart';
 import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
@@ -53,6 +54,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/splash-event',
         name: 'splash-event',
         builder: (context, state) => const SplashEventScreen(),
+      ),
+      // Экран ошибки инициализации
+      GoRoute(
+        path: '/init-error',
+        name: 'init-error',
+        builder: (context, state) {
+          final error = state.extra as String?;
+          return InitErrorScreen(error: error);
+        },
       ),
       // Старый splash (для совместимости)
       GoRoute(

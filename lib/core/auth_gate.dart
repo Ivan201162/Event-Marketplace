@@ -35,16 +35,32 @@ class _AuthGateState extends State<AuthGate> {
         debugLog("AUTH_GATE:FIREBASE_ALREADY_INIT");
         _firebaseReady = true;
       } catch (_) {
-        // Инициализируем Firebase
-        await Firebase.initializeApp();
-        debugLog("AUTH_GATE:FIREBASE_INIT_OK");
-        _firebaseReady = true;
+        // Инициализируем Firebase с таймаутом
+        try {
+          await Firebase.initializeApp().timeout(const Duration(seconds: 6));
+          debugLog("AUTH_GATE:FIREBASE_INIT_OK");
+          _firebaseReady = true;
+        } catch (e) {
+          debugLog("AUTH_GATE:FIREBASE_INIT_ERROR:$e");
+          _firebaseReady = true; // Продолжаем даже при ошибке
+        }
       }
       
-      // Ждём первое событие authStateChanges
-      await FirebaseAuth.instance.authStateChanges().first;
-      debugLog("AUTH_GATE_READY");
-      _authStateReady = true;
+      // Ждём первое событие authStateChanges с таймаутом
+      try {
+        await FirebaseAuth.instance.authStateChanges().timeout(
+          const Duration(seconds: 6),
+          onTimeout: (sink) {
+            debugLog("AUTH_GATE:AUTH_STATE_TIMEOUT");
+            sink.add(null);
+          },
+        ).first;
+        debugLog("AUTH_GATE_READY");
+        _authStateReady = true;
+      } catch (e) {
+        debugLog("AUTH_GATE:AUTH_STATE_ERROR:$e");
+        _authStateReady = true; // Продолжаем даже при ошибке
+      }
       
       if (mounted) {
         setState(() {});
@@ -69,7 +85,13 @@ class _AuthGateState extends State<AuthGate> {
     }
 
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
+      stream: FirebaseAuth.instance.authStateChanges().timeout(
+        const Duration(seconds: 6),
+        onTimeout: (sink) {
+          debugLog("AUTH_GATE:STREAM_TIMEOUT");
+          sink.add(null);
+        },
+      ),
       builder: (context, snapshot) {
         // Пока загружается состояние авторизации
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -80,11 +102,12 @@ class _AuthGateState extends State<AuthGate> {
 
         final user = snapshot.data;
 
-        // IF user == null → show LoginScreen
+        // IF user == null → show LoginScreen (без двойного срабатывания)
         if (user == null) {
           debugLog("AUTH_GATE:USER:null");
           debugLog("AUTH_SCREEN_SHOWN");
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Используем Future.microtask для исключения двойного срабатывания
+          Future.microtask(() {
             if (mounted) {
               context.go('/login');
             }
@@ -123,6 +146,9 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
       // Полный fresh install wipe после успешной авторизации
       if (!kDebugMode) {
         final isFirstRun = await FirstRunHelper.isFirstRun();
+        if (!isFirstRun) {
+          debugLog("WIPE_BEFORE_INIT_DONE:not_first_run");
+        }
         if (isFirstRun) {
           debugLog("FRESH_INSTALL_DETECTED:uid=${widget.user.uid}");
           debugLog("FRESH_WIPE_START:uid=${widget.user.uid}");
@@ -242,19 +268,23 @@ class _ProfileCheckWidgetState extends State<_ProfileCheckWidget> {
         debugLog("AUTH_GATE:PROFILE_CHECK:missing_fields=[${missingFields.join(',')}]");
         debugLog("ONBOARDING_REQUIRED:uid=${widget.user.uid}");
         debugLog("ONBOARDING_OPENED");
-        // Жёсткий редирект на онбординг - вход блокируется
-        if (mounted) {
-          context.go('/onboarding/role-name-city');
-        }
+        // Жёсткий редирект на онбординг - вход блокируется (без двойного срабатывания)
+        Future.microtask(() {
+          if (mounted) {
+            context.go('/onboarding/role-name-city');
+          }
+        });
         return;
       }
       
-      // Всё готово → /main
+      // Всё готово → /main (без двойного срабатывания)
       debugLog("AUTH_GATE:PROFILE_CHECK:ok");
       debugLog("HOME_LOADED");
-      if (mounted) {
-        context.go('/main');
-      }
+      Future.microtask(() {
+        if (mounted) {
+          context.go('/main');
+        }
+      });
     } catch (e) {
       debugLog("ERROR:AUTH_GATE_CHECK:$e");
       debugLog("AUTH_GATE: user=null → show login");

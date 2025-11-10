@@ -1,0 +1,380 @@
+﻿
+11-10 10:32:36.344 23986 24736 I Finsky  : [88771] VerifyApps: Installer app: c
+om.android.shell
+11-10 10:32:46.742 25115 25115 D FirebaseSessions: Dependency to CRASHLYTICS ad
+ded.
+11-10 10:32:46.746 25115 25115 I FirebaseApp: Device unlocked: initializing all
+ Firebase APIs for app [DEFAULT]
+11-10 10:32:46.764 25115 25115 I FirebaseCrashlytics: Initializing Firebase Cra
+shlytics 20.0.3 for com.eventmarketplace.app
+11-10 10:32:46.771 25115 25115 D FirebaseSessions: Subscriber CRASHLYTICS regis
+tered.
+11-10 10:32:46.802 25115 25166 I FirebaseCrashlytics: Saved version control inf
+o
+11-10 10:32:46.805 25115 25115 D FirebaseSessions: Initializing Firebase Sessio
+ns 3.0.3.
+11-10 10:32:46.807 25115 25115 I FirebaseInitProvider: FirebaseApp initializati
+on successful
+11-10 10:32:46.827 25115 25182 I iGraphics: [0030080c] no spt app: com.eventmar
+ketplace.app
+11-10 10:32:46.828 25115 25166 D FirebaseSessions: Notified CRASHLYTICS of new 
+session 0ef6f13e4f514de18481d9a1ee4e3c2d
+11-10 10:32:46.844 25115 25115 W marketplace.app: type=1400 audit(0.0:1163259):
+ avc: denied { read } for pid=25115 name="max_map_count" dev="proc" ino=2468271
+0 scontext=u:r:untrusted_app:s0:c227,c257,c512,c768 tcontext=u:object_r:proc_ma
+x_map_count:s0 tclass=file permissive=0
+11-10 10:32:46.913 25115 25205 I FA      :   adb shell setprop debug.firebase.a
+nalytics.app com.eventmarketplace.app
+11-10 10:32:47.283 25115 25115 D FirebaseSessions: App foregrounded on com.even
+tmarketplace.app
+11-10 10:32:47.283 25115 25115 D FirebaseSessions: Session 0ef6f13e4f514de18481
+d9a1ee4e3c2d has not backgrounded yet
+11-10 10:32:47.283 25115 25115 D FirebaseSessions: No process data for com.even
+tmarketplace.app
+11-10 10:32:47.285 25115 25166 D FirebaseSessions: Session 3b5789fa9d0c402f8270
+a3126638116f has not backgrounded yet
+11-10 10:32:47.285 25115 25166 D FirebaseSessions: No process data map
+11-10 10:32:47.285 25115 25166 D FirebaseSessions: No process data for com.even
+tmarketplace.app
+11-10 10:32:47.293 25115 25166 D FirebaseSessions: Notified CRASHLYTICS of new 
+session 8c9d673fd57540f3a163db29af7f1dd9
+11-10 10:32:47.787 25115 25166 D FirebaseSessions: Fetching settings from serve
+r.
+11-10 10:32:48.097 25115 25115 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 10:32:48.097 25115 25115 I flutter : APP: APP: RELEASE FLOW START
+11-10 10:32:48.097 25115 25115 I flutter : APP: GOOGLE_JSON_CHECK:missing
+11-10 10:32:48.097 25115 25115 I flutter : APP: APP: BUILD OK v6.2.1-splash-ini
+t-fix
+11-10 10:32:48.097 25115 25115 I flutter : APP: APP_VERSION:6.2.1+39
+11-10 10:32:48.097 25115 25115 I flutter : APP: FIREBASE_OPTIONS_OK:event-marke
+tplace-mvp
+11-10 10:32:48.097 25115 25115 I flutter : APP: SESSION_START
+11-10 10:32:48.097 25115 25115 I flutter : APP: INDEXES_READY
+11-10 10:32:48.097 25115 25115 I flutter : APP: FIREBASE_DEPLOY_START
+11-10 10:32:48.097 25115 25115 I flutter : APP: SPLASH_INIT_START
+11-10 10:32:48.122 25115 25115 I flutter : APP: SPLASH_FIREBASE_INIT_OK
+11-10 10:32:48.122 25115 25115 I flutter : APP: FIRESTORE_PERSISTENCE:enabled
+11-10 10:32:48.123 25115 25115 I flutter : APP: SPLASH_AUTH_STATE_OK
+11-10 10:32:48.123 25115 25115 I flutter : ЁЯФД Bootstrap: ╨Ш╨╜╨╕╤Ж╨╕╨░╨╗╨╕╨╖╨░
+╤Ж╨╕╤П Firebase...
+11-10 10:32:48.123 25115 25115 I flutter : тЬЕ Firebase already initialized
+11-10 10:32:48.162 25115 25155 D FirebaseSessions: Fetched settings: {"settings
+_version":3,"cache_duration":163833,"features":{"collect_logged_exceptions":tru
+e,"collect_reports":true,"collect_analytics":false,"prompt_enabled":false,"push
+_enabled":false,"firebase_crashlytics_enabled":false,"collect_anrs":true,"colle
+ct_metric_kit":false,"collect_build_ids":true},"app":{"status":"activated","upd
+ate_required":false,"report_upload_variant":2,"native_report_upload_variant":2}
+,"fabric":{"org_id":"68f7a883b19d6de9f6f19c63","bundle_id":"com.eventmarketplac
+e.app"},"on_demand_upload_rate_per_minute":10,"on_demand_backoff_base":1.2,"on_
+demand_backoff_step_duration_seconds":60,"app_quality":{"sessions_enabled":true
+,"sampling_rate":1,"session_timeout_seconds":1800},"on_demand_thread_recording_
+suspension_enabled":true}
+11-10 10:32:48.167 25115 25157 D FirebaseSessions: Remote settings cache not ex
+pired. Using cached values.
+11-10 10:32:48.172 25115 25154 D FirebaseSessions: Session Event Type: SESSION_
+START
+11-10 10:32:48.172 25115 25154 D FirebaseSessions: Successfully logged Session 
+Start event.
+11-10 10:32:48.346 25115 25115 I FLTFireMsgService: FlutterFirebaseMessagingBac
+kgroundService started!
+11-10 10:32:49.342 25115 25115 I flutter : APP: APP: GOOGLE FIX CONFIRMED: No c
+urrent user
+11-10 10:32:49.370 25115 25115 I flutter : APP: FCM_INIT_OK
+11-10 10:32:49.386 25115 25115 I flutter : APP: WEB_CLIENT_ID:1:272201705683:an
+droid:0196de78aaeb970ef80c26
+11-10 10:32:49.386 25115 25115 I flutter : APP: FIREBASE_API_KEY:AIzaSyCdDRPCyC
+HEJy7WBr5eQrcyuRhh_hSfih4
+11-10 10:32:49.386 25115 25115 I flutter : APP: APP: BUILD OK v6.2.1-splash-ini
+t-fix
+11-10 10:32:49.398 25115 25115 I flutter : APP: SPLASH_INIT_START
+11-10 10:32:49.398 25115 25115 I flutter : APP: SPLASH_FIREBASE_ALREADY_INIT
+11-10 10:32:49.401 25115 25115 I flutter : APP: SPLASH_AUTH_STATE_OK
+11-10 10:32:49.401 25115 25115 I flutter : APP: SPLASH_READY
+11-10 10:32:49.532  1082  1302 W ScreemCommon: CLICK_START_APP: JL_APP_LAUNCHIN
+G_END and JL_EVENT_CLICK_UP too long| span:138074 > A(10000), A
+11-10 10:32:49.550  1717  2441 I HwPackageManagerService: app:system_server, ge
+tApplicationInfo or source return null
+11-10 10:32:49.552  1717  2441 I HwPackageManagerService: app:surfaceflinger, g
+etApplicationInfo or source return null
+11-10 10:32:49.620  1717  1898 I WindowManager: Exit animation finished in Wind
+ow{b1316a3 u0 Splash Screen com.eventmarketplace.app EXITING}: remove=true
+11-10 10:32:49.620  1717  1898 E WindowManager: win=Window{b1316a3 u0 Splash Sc
+reen com.eventmarketplace.app EXITING} destroySurfaces: appStopped=false win.mW
+indowRemovalAllowed=true win.mRemoveOnExit=true
+11-10 10:32:49.621  1717  1898 I WindowManager: postWindowRemoveCleanupLocked: 
+Window{b1316a3 u0 Splash Screen com.eventmarketplace.app}
+11-10 10:32:49.621  1717  1898 I WindowManager: Removing Window{b1316a3 u0 Spla
+sh Screen com.eventmarketplace.app} from AppWindowToken{7561870 token=Token{2ce
+1ab3 ActivityRecord{9f469ed u0 com.eventmarketplace.app/.MainActivity t981}}}
+11-10 10:32:49.707 25115 25115 I flutter : APP: AUTH_GATE:FIREBASE_ALREADY_INIT
+11-10 10:32:49.711 25115 25115 I flutter : APP: AUTH_GATE_READY
+11-10 10:32:49.736 25115 25115 I flutter : APP: AUTH_GATE:USER:null
+11-10 10:32:49.736 25115 25115 I flutter : APP: AUTH_SCREEN_SHOWN
+11-10 10:32:52.618 25115 25115 I flutter : APP: GOOGLE_BTN_TAP
+11-10 10:32:52.639  1717  3405 I ActivityTaskManager: START u0 {act=com.google.
+firebase.auth.internal.NONGMSCORE_SIGN_IN hwFlg=0x10 pkg=com.eventmarketplace.a
+pp cmp=com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpAct
+ivity (has extras)} from uid 10483
+11-10 10:32:52.640  1717  3405 I ActivityTaskManager: ActivityRecord info: Acti
+vityInfo{4ea91bd com.google.firebase.auth.internal.GenericIdpActivity}
+11-10 10:32:52.640  1717  3405 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=null activity=ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.googl
+e.firebase.auth.internal.GenericIdpActivity t-1} display-from-source=0 display-
+id=0 display-windowing-mode=1
+11-10 10:32:52.641  1717  3405 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=null activity=ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.googl
+e.firebase.auth.internal.GenericIdpActivity t-1} display-from-source=0 display-
+id=0 display-windowing-mode=1 activity-options-fullscreen=Rect(0, 0 - 0, 0) non
+-freeform-display maximized-bounds
+11-10 10:32:52.652  1717  3405 D ActivityTaskManager: TaskLaunchParamsModifier:
+task=TaskRecord{7578f03 #982 A=10483:com.eventmarketplace.app U=0 StackId=962 s
+z=0} activity=ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.google.fir
+ebase.auth.internal.GenericIdpActivity t-1} display-from-task=0 display-id=0 di
+splay-windowing-mode=1 activity-options-fullscreen=Rect(0, 0 - 0, 0) non-freefo
+rm-display maximized-bounds
+11-10 10:32:52.652  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 350, userId=10483, pid=25115, com.eventmarketplace.app/com.google.fireba
+se.auth.internal.GenericIdpActivity
+11-10 10:32:52.653  1053  1089 D AwareLog: iawared: WorkingsetSendPrereadMsg co
+m.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity
+11-10 10:32:52.655  1053  1089 D AwareLog: iawared: WorkingsetStart com.eventma
+rketplace.app/com.google.firebase.auth.internal.GenericIdpActivity in monitor1
+11-10 10:32:52.657  1717  3405 I WindowManager: addWindowToken: displayid:0 bin
+der:Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.google
+.firebase.auth.internal.GenericIdpActivity t982}} token:AppWindowToken{8b38cb9 
+token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.goog
+le.firebase.auth.internal.GenericIdpActivity t982}}}
+11-10 10:32:52.657  1717  3405 V ActivityTaskManager: addAppToken: AppWindowTok
+en{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.a
+pp/com.google.firebase.auth.internal.GenericIdpActivity t982}}} task={taskId=98
+2 appTokens=[] mdr=false} at 2147483647
+11-10 10:32:52.658  1717  3405 I ActivityTaskManager: setAppStartingWindow: tok
+en=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.google.
+firebase.auth.internal.GenericIdpActivity t982}} pkg=com.eventmarketplace.app t
+ransferFrom=null newTask=true taskSwitch=true processRunning=true allowTaskSnap
+shot=true activityCreated=false LowRamTaskSnapshots=false
+11-10 10:32:52.667 25115 25115 D FirebaseSessions: App backgrounded on com.even
+tmarketplace.app
+11-10 10:32:52.669  1717  8994 I ActivityTaskManager: Making visible and schedu
+ling visibility: ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.google.
+firebase.auth.internal.GenericIdpActivity t982}
+11-10 10:32:52.672  1717  8994 I WindowManager: Changing focus from Window{c609
+29e u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity} to null 
+displayId=0 Callers=com.android.server.wm.RootWindowContainer.updateFocusedWind
+owLocked:209 com.android.server.wm.WindowManagerService.updateFocusedWindowLock
+ed:6517 com.android.server.wm.ActivityDisplay.setFocusedApp:1606 com.android.se
+rver.wm.ActivityTaskManagerService.setResumedActivityUncheckLocked:6590 
+11-10 10:32:52.675  1717  8994 I WindowManager: Check opening app=AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}}: allDrawn=false 
+startingDisplayed=false startingMoved=false isRelaunching()=false startingWindo
+w=null
+11-10 10:32:52.693 25115 25115 D ActivityThread: add activity client record, r=
+ ActivityRecord{23f0834 token=android.os.BinderProxy@d1608c3 {com.eventmarketpl
+ace.app/com.google.firebase.auth.internal.GenericIdpActivity}} token= android.o
+s.BinderProxy@d1608c3
+11-10 10:32:52.695 25115 25115 D FirebaseSessions: App foregrounded on com.even
+tmarketplace.app
+11-10 10:32:52.847 25115 25155 W System  : Ignoring header X-Firebase-Locale be
+cause its value was null.
+11-10 10:32:52.851  1717  2441 I WindowManager: addWindow: Window{61c1d98 u0 co
+m.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity} cl
+ient:android.os.BinderProxy@791db7b currentDisplayId:0 requestDisplayId:0 token
+:Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.google.fi
+rebase.auth.internal.GenericIdpActivity t982}}
+11-10 10:32:52.854  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.google.firebase.auth.internal.GenericIdpActivity, flag = onResume, isHomeAc
+tivity = , isTop = true
+11-10 10:32:52.859  1717  2441 I WindowManager: Check opening app=AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}}: allDrawn=false 
+startingDisplayed=false startingMoved=false isRelaunching()=false startingWindo
+w=null
+11-10 10:32:52.860  1717  2441 I WindowManager: Changing focus from null to Win
+dow{61c1d98 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.Gener
+icIdpActivity} displayId=0 Callers=com.android.server.wm.RootWindowContainer.up
+dateFocusedWindowLocked:209 com.android.server.wm.WindowManagerService.updateFo
+cusedWindowLocked:6517 com.android.server.wm.WindowManagerService.relayoutWindo
+w:2813 com.android.server.wm.Session.relayout:197 
+11-10 10:32:52.861  1717  2441 V HwPhoneWindowManager: updateSystemUiColorLw wi
+ndow=Window{61c1d98 u0 com.eventmarketplace.app/com.google.firebase.auth.intern
+al.GenericIdpActivity},EmuiStyle=0,StatusBarColor=0xff000000,NavigationBarColor
+=0xfffcfcfc, mForceNotchStatusBar=false
+11-10 10:32:52.862  1717  1895 D StatusBarManagerService: win:Window{61c1d98 u0
+ com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity}
+mIsColorEnable:truelight:false
+11-10 10:32:52.863  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{61c1d98 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.Ge
+nericIdpActivity}
+11-10 10:32:52.863 25115 25155 W LocalRequestInterceptor: Error getting App Che
+ck token; using placeholder token instead. Error: com.google.firebase.FirebaseE
+xception: No AppCheckProvider installed.
+11-10 10:32:52.865  4659 31772 I CAWARENESS_AppUsageManager: onEvent, packageNa
+me=com.eventmarketplace.app, activityName=com.google.firebase.auth.internal.Gen
+ericIdpActivity
+11-10 10:32:52.875  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}}: allDrawn=true s
+tartingDisplayed=false startingMoved=false isRelaunching()=false startingWindow
+=null
+11-10 10:32:52.875  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 24, app = AppWindowToken{8b38cb9 token=Token{d2cfe80 Activi
+tyRecord{575d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.
+GenericIdpActivity t982}}}, window = Window{61c1d98 u0 com.eventmarketplace.app
+/com.google.firebase.auth.internal.GenericIdpActivity}, mClosingApps = {}, topO
+peningApp = AppWindowToken{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u
+0 com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity
+ t982}}}, mExitIconBitmap = null, mExitIconHeight = -1, mExitIconWidth = -1
+11-10 10:32:52.875  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}}: hidden=false hi
+ddenRequested=false
+11-10 10:32:52.875  1717  1898 I WindowManager: Animation done in AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}} isHidden:false h
+iddenRequested:false
+11-10 10:32:52.877  1717  1898 I WindowManager: dispatchResized : win = Window{
+61c1d98 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.GenericId
+pActivity} drawState = HAS_DRAWN
+11-10 10:32:52.879  1717  1895 D StatusBarManagerService: win:Window{61c1d98 u0
+ com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity}
+mIsColorEnable:truelight:false
+11-10 10:32:52.879  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{61c1d98 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.Ge
+nericIdpActivity}
+11-10 10:32:52.887  1717  3088 V ActivityTaskManager: Activity idle: Token{d2cf
+e80 ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth
+.internal.GenericIdpActivity t982}}
+11-10 10:32:53.376  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 351, userId=10483, pid=25115, com.eventmarketplace.app/com.google.fireba
+se.auth.internal.GenericIdpActivity
+11-10 10:32:53.377  1053  1089 D AwareLog: iawared: WorkingsetPause com.eventma
+rketplace.app/com.google.firebase.auth.internal.GenericIdpActivity
+11-10 10:32:53.724 25115 25115 W GenericIdpActivity: Error getting App Check to
+ken; using placeholder token instead. Error: com.google.firebase.FirebaseExcept
+ion: No AppCheckProvider installed.
+11-10 10:32:53.749  1717  8994 V ActivityTaskManager: addAppToken: AppWindowTok
+en{fe2eedc token=Token{73fd74f ActivityRecord{d641dae u0 com.android.chrome/com
+.google.android.apps.chrome.IntentDispatcher t982}}} task={taskId=982 appTokens
+=[AppWindowToken{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.even
+tmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity t982}}}] 
+mdr=false} at 2147483647
+11-10 10:32:53.754  1053  1089 D AwareLog: iawared: WorkingsetProcessCommand su
+bCmd = 352, userId=10483, pid=25115, com.eventmarketplace.app/com.google.fireba
+se.auth.internal.GenericIdpActivity
+11-10 10:32:53.755  1053  1089 D AwareLog: iawared: WorkingsetStop com.eventmar
+ketplace.app/com.google.firebase.auth.internal.GenericIdpActivity
+11-10 10:32:53.756 25115 25115 D FirebaseSessions: App backgrounded on com.even
+tmarketplace.app
+11-10 10:32:53.760  1717  8994 I WindowManager: Changing focus from Window{61c1
+d98 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpAct
+ivity} to null displayId=0 Callers=com.android.server.wm.RootWindowContainer.up
+dateFocusedWindowLocked:209 com.android.server.wm.WindowManagerService.updateFo
+cusedWindowLocked:6517 com.android.server.wm.ActivityDisplay.setFocusedApp:1606
+ com.android.server.wm.ActivityTaskManagerService.setResumedActivityUncheckLock
+ed:6590 
+11-10 10:32:53.763  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.google.firebase.auth.internal.GenericIdpActivity, flag = onPause, isHomeAct
+ivity = , isTop = false
+11-10 10:32:53.786  1717  2042 I ActivityManager: Need to start process com.hua
+wei.browserhomepage for provider ContentProviderInfo{name=com.android.partnerbr
+owsercustomizations className=com.huawei.browserhomepage.PartnerHomepageProvide
+rTmobile}, callerApp: ProcessRecord{b97fa14 20362:com.android.chrome/u0a176}
+11-10 10:32:53.790  1717  8994 D ActivityManager: cleanUpApplicationRecord app:
+ 15297:com.huawei.hwid.container3/u0a78, bad: false, restarting: false, allowRe
+start: true
+11-10 10:32:53.796  1717  3405 V ActivityTaskManager: addAppToken: AppWindowTok
+en{9111312 token=Token{b7b29d ActivityRecord{f5c3d74 u0 com.android.chrome/org.
+chromium.chrome.browser.customtabs.CustomTabActivity t982}}} task={taskId=982 a
+ppTokens=[AppWindowToken{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 
+com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity t
+982}}}, AppWindowToken{fe2eedc token=Token{73fd74f ActivityRecord{d641dae u0 co
+m.android.chrome/com.google.android.apps.chrome.IntentDispatcher t982}}}] mdr=f
+alse} at 2147483647
+11-10 10:32:53.828  1717  1897 V ActivityTaskManager: Stopping ActivityRecord{5
+75d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdp
+Activity t982}: nowVisible=false animating=true finishing=false
+11-10 10:32:53.828  1717  1897 V ActivityTaskManager: Stopping ActivityRecord{5
+75d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdp
+Activity t982}: nowVisible=false animating=true finishing=false
+11-10 10:32:53.940  1717  2042 V ActivityTaskManager: Stopping ActivityRecord{5
+75d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdp
+Activity t982}: nowVisible=false animating=true finishing=false
+11-10 10:32:54.958  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 6, app = AppWindowToken{7561870 token=Token{2ce1ab3 Activit
+yRecord{9f469ed u0 com.eventmarketplace.app/.MainActivity t981}}}, window = Win
+dow{c60929e u0 com.eventmarketplace.app/com.eventmarketplace.app.MainActivity},
+ mClosingApps = {AppWindowToken{7561870 token=Token{2ce1ab3 ActivityRecord{9f46
+9ed u0 com.eventmarketplace.app/.MainActivity t981}}}, AppWindowToken{8b38cb9 t
+oken=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.app/com.googl
+e.firebase.auth.internal.GenericIdpActivity t982}}}, AppWindowToken{fe2eedc tok
+en=Token{73fd74f ActivityRecord{d641dae u0 com.android.chrome/com.google.androi
+d.apps.chrome.IntentDispatcher t982}}}}, topOpeningApp = AppWindowToken{9111312
+ token=Token{b7b29d ActivityRecord{f5c3d74 u0 com.android.chrome/org.chromium.c
+hrome.browser.customtabs.CustomTabActivity t982}}}, mExitIconBitmap = null, mEx
+itIconHeight = -1, mExitIconWidth = -1
+11-10 10:32:54.960  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 6, app = AppWindowToken{8b38cb9 token=Token{d2cfe80 Activit
+yRecord{575d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.G
+enericIdpActivity t982}}}, window = Window{61c1d98 u0 com.eventmarketplace.app/
+com.google.firebase.auth.internal.GenericIdpActivity}, mClosingApps = {AppWindo
+wToken{7561870 token=Token{2ce1ab3 ActivityRecord{9f469ed u0 com.eventmarketpla
+ce.app/.MainActivity t981}}}, AppWindowToken{8b38cb9 token=Token{d2cfe80 Activi
+tyRecord{575d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.
+GenericIdpActivity t982}}}, AppWindowToken{fe2eedc token=Token{73fd74f Activity
+Record{d641dae u0 com.android.chrome/com.google.android.apps.chrome.IntentDispa
+tcher t982}}}}, topOpeningApp = AppWindowToken{9111312 token=Token{b7b29d Activ
+ityRecord{f5c3d74 u0 com.android.chrome/org.chromium.chrome.browser.customtabs.
+CustomTabActivity t982}}}, mExitIconBitmap = null, mExitIconHeight = -1, mExitI
+conWidth = -1
+11-10 10:32:54.961  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}}: hidden=true hid
+denRequested=true
+11-10 10:32:54.962  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 6, app = AppWindowToken{9111312 token=Token{b7b29d Activity
+Record{f5c3d74 u0 com.android.chrome/org.chromium.chrome.browser.customtabs.Cus
+tomTabActivity t982}}}, window = Window{743eba4 u0 com.android.chrome/org.chrom
+ium.chrome.browser.customtabs.CustomTabActivity}, mClosingApps = {AppWindowToke
+n{7561870 token=Token{2ce1ab3 ActivityRecord{9f469ed u0 com.eventmarketplace.ap
+p/.MainActivity t981}}}, AppWindowToken{8b38cb9 token=Token{d2cfe80 ActivityRec
+ord{575d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.Gener
+icIdpActivity t982}}}, AppWindowToken{fe2eedc token=Token{73fd74f ActivityRecor
+d{d641dae u0 com.android.chrome/com.google.android.apps.chrome.IntentDispatcher
+ t982}}}}, topOpeningApp = AppWindowToken{9111312 token=Token{b7b29d ActivityRe
+cord{f5c3d74 u0 com.android.chrome/org.chromium.chrome.browser.customtabs.Custo
+mTabActivity t982}}}, mExitIconBitmap = null, mExitIconHeight = -1, mExitIconWi
+dth = -1
+11-10 10:32:54.981  1717  1897 V ActivityTaskManager: Stopping ActivityRecord{5
+75d3b2 u0 com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdp
+Activity t982}: nowVisible=false animating=true finishing=false
+11-10 10:32:55.285  1717  1898 I WindowManager: Animation done in AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}} isHidden:true hi
+ddenRequested:true
+11-10 10:32:55.296  2606  3045 E DollieAdapterService: notifyActivityState pkg:
+com.eventmarketplace.app/com.google.firebase.auth.internal.GenericIdpActivity s
+tate:16 fg:false mUid:10483
+11-10 10:32:55.329   773  1714 W BufferQueueProducer: [com.eventmarketplace.app
+/com.google.firebase.auth.internal.GenericIdpActivity#0]:1390: disconnect: not 
+connected (req=1)
+11-10 10:32:55.336  1717  2042 I WindowManager: notifyAppStopped: AppWindowToke
+n{8b38cb9 token=Token{d2cfe80 ActivityRecord{575d3b2 u0 com.eventmarketplace.ap
+p/com.google.firebase.auth.internal.GenericIdpActivity t982}}}
+11-10 10:32:55.336  1717  2042 E WindowManager: win=Window{61c1d98 u0 com.event
+marketplace.app/com.google.firebase.auth.internal.GenericIdpActivity} destroySu
+rfaces: appStopped=true win.mWindowRemovalAllowed=false win.mRemoveOnExit=false
+11-10 10:32:55.769  3103  3103 I HiAdKit.ExSplashManager:  do not request exspl
+ash config
+11-10 10:32:55.828  2606  3045 D ConnCureConfigUtil: isCaredApp: input = com.an
+droid.chrome
+11-10 10:32:55.828  2606  3045 I ConnCureStateMonitor: isCaredApp:true,isAllowe
+d:true,isDataEnabled:true
+11-10 10:32:57.356  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1163282
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=22626 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-10 10:32:57.358  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+
+
