@@ -63,6 +63,7 @@ void main() async {
   };
 
   try {
+    final startupStartTime = DateTime.now().millisecondsSinceEpoch;
     debugPrint('🚀 Запуск приложения...');
 
     // Безопасная инициализация Firebase с таймаутом
@@ -245,7 +246,9 @@ void main() async {
     });
     
     // Лог после runApp
+    final startupTime = DateTime.now().millisecondsSinceEpoch - startupStartTime;
     debugLog('APP: BUILD OK v6.3-quantum-evolution');
+    debugLog('PERF_STARTUP_TIME:$startupTime');
   } catch (e, stackTrace) {
     debugPrint('❌ Критическая ошибка инициализации: $e');
     debugPrint('Stack trace: $stackTrace');

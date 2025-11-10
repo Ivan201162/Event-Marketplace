@@ -96,6 +96,9 @@ class _AddCommentFieldState extends State<AddCommentField> {
       });
 
       debugLog('COMMENT_ADD:$widget.parentType:$widget.parentId:${commentRef.id}');
+      if (widget.parentType == 'posts') {
+        debugLog('POST_COMMENT:${widget.parentId}:${commentRef.id}');
+      }
       _controller.clear();
     } catch (e) {
       debugLog('COMMENT_ERR:${e.toString()}:$widget.parentType:$widget.parentId');

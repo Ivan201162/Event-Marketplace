@@ -65,6 +65,7 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
   Future<void> _loadInitialData() async {
     if (_currentUserId == null) return;
     
+    final startTime = DateTime.now().millisecondsSinceEpoch;
     setState(() => _isLoading = true);
     
     try {
@@ -78,10 +79,10 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
         _currentUserCity = (userData['city'] as String?)?.toLowerCase();
       }
       
-      // Загружаем Stories
+      // Preload Stories
       await _loadStories();
       
-      // Загружаем посты и рилсы
+      // Загружаем посты и рилсы (20 элементов)
       await _loadPosts();
       await _loadReels();
       
@@ -90,9 +91,10 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
         await _loadRecommendations();
       }
       
+      final loadTime = DateTime.now().millisecondsSinceEpoch - startTime;
       debugLog("FEED_PAGE_LOADED:${_posts.length + _reels.length}");
-      
       debugLog("FEED_LOADED:${_posts.length + _reels.length}");
+      debugLog("PERF_FEED_LOAD:$loadTime");
       
       if (_posts.isEmpty && _reels.isEmpty) {
         debugLog("FEED_EMPTY");
@@ -100,7 +102,9 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
       
       setState(() => _isLoading = false);
     } catch (e) {
+      final loadTime = DateTime.now().millisecondsSinceEpoch - startTime;
       debugLog("ERROR:feed_load:$e");
+      debugLog("PERF_FEED_LOAD:$loadTime");
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -338,7 +342,7 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
   }
 
   Future<void> _refresh() async {
-    debugLog("FEED_OPENED");
+    debugLog("FEED_REFRESH");
     try {
       _lastPostDoc = null;
       _lastReelDoc = null;
@@ -689,6 +693,7 @@ class _FeedScreenFullState extends State<FeedScreenFull> {
                                   contentId: post.id,
                                 );
                                 if (success) {
+                                  debugLog("POST_LIKE:${post.id}");
                                   _analyticsService.logPostLike(post.id, post.authorId);
                                 }
                   },
