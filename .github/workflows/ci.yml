@@ -313,7 +313,7 @@ jobs:
         projectId: event-marketplace-app
         
     - name: Deploy to TestFlight
-      uses: apple-actions/upload-testflight-build@v1
+      uses: apple-actions/upload-testflight-build@v3
       with:
         app-path: ./artifacts/ios-build
         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
