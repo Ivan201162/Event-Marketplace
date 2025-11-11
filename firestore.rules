@@ -218,11 +218,13 @@ service cloud.firestore {
       allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
     }
     
-    // Comments
-    match /comments/{contentType}/{contentId}/{commentId} {
+    // Comments (v7.2: comments/{contentId}/comments/{commentId})
+    match /comments/{contentId}/comments/{commentId} {
       allow read: if true;
       allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid
-        && request.resource.data.text is string && request.resource.data.text.size() > 0;
+        && request.resource.data.text is string && request.resource.data.text.size() > 0
+        && request.resource.data.contentType is string
+        && request.resource.data.contentId == contentId;
       allow update, delete: if isSignedIn() && request.auth.uid == resource.data.authorId;
     }
     

@@ -1,0 +1,200 @@
+﻿2463a8e6 (HEAD -> prod/v6.1-next) v6.3-auth-hard-reset: Complete implementation - AuthGate rewrite, Firebase Rules, build fixes
+4636af1a v6.3-auth-hard-reset: Fix logging_service and login_screen cleanup
+c0bc3557 v6.3-auth-hard-reset: Update dependencies, rewrite main.dart, AuthGate, AuthRepository, LoginScreen
+d426bb7b v6.3: Final report update
+219a981e v6.3: Add performance logging (PERF_STARTUP_TIME, PERF_FEED_LOAD, PERF_PROFILE_LOAD)
+ce501066 v6.3: Add Feed improvements (pull-to-refresh, lazy load, performance logs, POST_LIKE, POST_COMMENT)
+1d7029a5 v6.3: Update report with completed tasks
+b2d52730 v6.3: Add Onboarding logs, FCM improvements, UI transitions
+749fd709 v6.3: Quantum Evolution (Splash fix, Google Sign-In, Email/Password UX, Fresh-Install Wipe)
+0e85cd5a v6.2.1: Splash init fix (timeouts, state machine, error screen, visual fallback)
+2fb44e78 v6.2.0+38: Fix black screen on startup (splash screen initialization, router initialLocation)
+ca3afd6d v6.2.0: Core improvements (Google Sign-In fix, onboarding, auth errors, wipe, debug overlay, password change, account delete, race condition fix, splash fix)
+f173ebb9 docs: add v6.1.3 Google Fix ABSOLUTE FORCE report
+2fc1e5b1 v6.1.3: ABSOLUTE Google Sign-In fix (webClientId, silent fix, auth refactor)
+1a047365 docs: add v6.1.2 Google Auth ABSOLUTE report
+ed0dbeff v6.1.2: ABSOLUTE Google Sign-In fix (release) + strict AuthGate + diagnostics + build&install
+84c69ed6 v6.1.2: ABSOLUTE Google Sign-In fix (release) + strict AuthGate + diagnostics + build&install
+5dc9ca68 v6.1.1-google-fix: update report with installation and logcat results
+517c5a04 v6.1.1-google-fix: add installation and logcat collection
+5d358ff4 v6.1.1-google-fix: fix theme_provider imports, APK built successfully
+7f773cab v6.1.1-google-fix: improve Google Sign-In with detailed logging, auto-retry, and proper redirects
+950a7ffe v6.1-next: fix type casting error in specialist_providers.dart line 85
+fc9f3a8a v6.1-next: add missing logs (BOOKING_UI_OPENED, BOOKING_VALIDATION_ERR, FEED_PAGE_LOADED, SEARCH_DATE_FILTER_APPLIED)
+b8a3eac6 v6.1-next: add themeProvider import to main.dart
+aedbd301 v6.1-next: integrate themeProvider in settings and main, ensure immediate theme application
+7a616ccb v6.1-next: update final report with all completed tasks
+f9128a62 v6.1-next: improve feed pagination logs, move calendar auto-confirm to settings, improve settings theme/notifications
+250dfd59 v6.1-next: finalize report and complete main tasks
+a947428d v6.1-next: update saved filters to users/{uid}/saved_filters, improve chat typing indicator and read receipts, FCM token update check
+213a3f1e v6.1-next: add sendPushOnBooking and sendPushOnMessage Cloud Functions, update cleanupExpiredStories schedule
+334629ca v6.1-next: implement comments system with subcollections, threaded view, and likes
+5a2a6401 v6.1-next: add INDEXES_READY log marker
+8ab4e908 v6.1-next: fix firestore indexes - remove single-field controls, add composite indexes
+ac256159 v6.1-next: version update to 6.1.0+35
+bd8f6688 (prod/v6.0-ultimate) ultimate: finalize v6.0-ultimate report with all completed tasks
+df332168 ultimate: add basic unit test structure for PricingService
+83dd08b6 ultimate: update report with saved filters completion
+e474f3ae ultimate: add saved search filters functionality with Firestore storage
+fb75e27e ultimate: finalize v6.0-ultimate report with all completed tasks and remaining items
+d630d17f ultimate: fix duplicate initState in notifications screen
+f6ba5d17 ultimate: update v6.0-ultimate report with content, FCM, and notifications sections
+3aecfe7e ultimate: add FCM message handlers (onMessage, onBackgroundMessage, onMessageOpenedApp) and notifications screen logging
+df52f855 ultimate: add v6.0-ultimate report with APK details and logcat
+98ca205a ultimate: fix Future.timeout syntax error in calendar tab
+e76c16fc ultimate: v6.0-ultimate - UI/UX improvements, calendar with timeout, chats reply/forward, analytics events
+53d98281 ultimate: add v6.0-ultimate report
+fdc839ae ultimate: v6.0-ultimate initial - version update, auth improvements, logging
+89f64f36 (prod/ultimate-clean-max) ultimate: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜ ╤Б╤В╨░╤В╤Г╤Б ╨┤╨╡╨┐╨╗╨╛╤П
+cac599c8 ultimate: F - ╤Д╨╕╨╜╨░╨╗╤М╨╜╤Л╨╣ ╨╛╤В╤З╨╡╤В ╨╕ ╤Б╨▒╨╛╤А╨║╨░ APK v4.4.0+6
+5c09cdbf ultimate: A1-A5 - ╨│╨╗╨░╨▓╨╜╨░╤П ╨┐╨╗╨░╤И╨║╨░, ╨┐╤А╨╛╤Д╨╕╨╗╤М, ╤А╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┐╤А╨╛╤Д╨╕╨╗╤П
+6ae386a6 v5.12: ╨Ш╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╤Л ╨╛╤И╨╕╨▒╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤Ж╨╕╨╕, APK ╤Б╨╛╨▒╤А╨░╨╜ ╨╕ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜
+eb818b58 mega: ╨а╤Л╨╜╨╛╤З╨╜╨░╤П ╨╛╤Ж╨╡╨╜╨║╨░ ╨┐╤А╨░╨╣╤Б╨╛╨▓ (╨┐╨╡╤А╤Ж╨╡╨╜╤В╨╕╨╗╨╕), ╤Б╨▒╨╛╤А╨║╨░ ╨╕ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨║╨░ v5.7.0+17
+0b3d25ab mega: ╨Ю╨╜╨▒╨╛╤А╨┤╨╕╨╜╨│ ╤А╨╛╨╗╤М+╨д╨Ш╨Ю+╨│╨╛╤А╨╛╨┤, ╨┐╨╗╨░╤И╨║╨░ ╨│╨╗╨░╨▓╨╜╨╛╨╣, ╨┐╤А╨╛╤Д╨╕╨╗╤М VK-╤И╨░╨┐╨║╨░ ╤Б ╤А╨╛╨╗╤П╨╝╨╕
+9e509c41 v5.1-profile-suite: ╨┐╤А╨╛╤Д╨╕╨╗╤М 2.0 ╤Б ╤В╨░╨▒╨░╨╝╨╕, ╤Б╨╕╤Б╤В╨╡╨╝╨░ ╨╛╤В╨╖╤Л╨▓╨╛╨▓, ╤А╨╡╨┤╨░╨║╤В╨╛╤А ╨┐╤А╨╛╤Д╨╕╨╗╤П, PopScope, ╨╗╨╛╨│╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡
+29db7604 v5.0-full-suite: ╨▓╨╡╤А╤Б╨╕╤П 5.0.0+10, ╤Г╨┤╨░╨╗╨╡╨╜╤Л ╤В╨╡╤Б╤В╨╛╨▓╤Л╨╡ ╨┐╨░╤В╤З╨╕, ╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╤Л Firebase Rules, ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜ PopScope ╨╜╨░ ╨│╨╗╨░╨▓╨╜╤Л╨╣ ╤Н╨║╤А╨░╨╜
+d809330f ultimate: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜ ╤З╨╡╨║-╨╗╨╕╤Б╤В ╨┤╨╡╨┐╨╗╨╛╤П
+fced7b48 max: real apply refresh + search + settings + stories
+7216c9fe ultimate: F - ╤Д╨╕╨╜╨░╨╗╤М╨╜╤Л╨╣ ╨╛╤В╤З╨╡╤В ╨╕ ╤Б╨▓╨╛╨┤╨║╨░
+6cac9fb0 ultimate: C - ╤З╨╕╤Б╤В╨║╨░ ╨║╨╛╨┤╨░ ╨╕ ╨░╨╜╨░╨╗╨╕╨╖ ╨╛╨┐╤Ж╨╕╨╣
+d43fbde9 ultimate: A4-A6 - ╨╖╨░╤П╨▓╨║╨╕, ╨┐╤А╨╛╤Д╨╕╨╗╤М, back-╨╜╨░╨▓╨╕╨│╨░╤Ж╨╕╤П
+1abce1fa ultimate: A3 - ╨┐╨╛╨╕╤Б╨║ ╤Б ╤А╨░╤Б╤И╨╕╤А╨╡╨╜╨╜╤Л╨╝╨╕ ╤Д╨╕╨╗╤М╤В╤А╨░╨╝╨╕ ╨╕ ╨╕╨╜╨┤╨╡╨║╤Б╨░╨╝╨╕
+fcc2e1bd ultimate: A1-A2 - ╨│╨╗╨░╨▓╨╜╨░╤П ╨┐╨╗╨░╤И╨║╨░ ╨╕ ╨▒╨╗╨╛╨║╨╕ ╨╗╤Г╤З╤И╨╕╤Е ╤Б╨┐╨╡╤Ж╨╕╨░╨╗╨╕╤Б╤В╨╛╨▓
+2f2fcb21 (prod/stage4.4-profileA-full) stage4.4.0+6: navigation fixes, search retry, google sync, mini-profile, indexes, PATCH-TEST-555
+1fad1979 REALITY CHECK 444: proof that changes apply - debugFlag added, log confirmed
+9a068ec1 stage4.4: profileA-full - auth enrich, onboarding, home banner, firestore rules, indexes deployed
+8def535a (prod/stage4.3-max-pack) stage4.3: max-pack fixes applied - home, registration, search, requests, firestore rules, indexes, storage
+63511ba5 (prod/stage4.2-home-request-search) stage4.2: real apply - patch + build + install + auto-run
+d26dadb4 stage4.2: home + create request + search implemented
+ff82b3af (prod/stage4.1-real-fix) stage4.1: real fixes applied
+3bf802a1 (prod/stage4-full-fix, prod/stage1-hardening) feat: ╨▓╨╡╤А╤В╨╕╨║╨░╨╗╤М╨╜╤Л╨╣ PageView ╨┤╨╗╤П ╨╕╨┤╨╡╨╣ (Shorts), ╨╕╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╨░ ╨╝╨╛╨┤╨╡╨╗╤М Idea
+59978d85 fix: ╤Г╨┤╨░╨╗╨╡╨╜╤Л ╤В╨╡╤Б╤В╨╛╨▓╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡ ╨╕╨╖ chats ╨╕ requests, ╨╛╨▒╨╜╨╛╨▓╨╗╤С╨╜ ╤Н╨║╤А╨░╨╜ ╨╖╨░╤П╨▓╨╛╨║
+d73d4a99 feat: ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨╕ ╤Б ╨╝╨╛╨╜╨╡╤В╨╕╨╖╨░╤Ж╨╕╨╡╨╣, ╨╕╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╨░ ╨│╨╗╨░╨▓╨╜╨░╤П, ╤Г╨┤╨░╨╗╨╡╨╜╨░ ╤Б╤В╨░╤В╨╕╤Б╤В╨╕╨║╨░
+f731b45f fix: ╤Г╨┤╨░╨╗╨╡╨╜╤Л ╤В╨╡╤Б╤В╨╛╨▓╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡ ╨╕╨╖ ideas_provider, ╨╗╨╛╨│╨╕╨╜ - ╨┐╨╡╤А╨▓╤Л╨╣ ╤Н╨║╤А╨░╨╜
+2b4b9499 chore: ╤Б╨╛╨╖╨┤╨░╨╜ ╤Б╨║╤А╨╕╨┐╤В ╨╛╤З╨╕╤Б╤В╨║╨╕ production ╨┤╨░╨╜╨╜╤Л╤Е
+6ec981b6 (prod/cutover-final) docs: ╤Д╨╕╨╜╨░╨╗╤М╨╜╤Л╨╣ ╨╛╤В╤З╤С╤В ╤Б╨╕╤Б╤В╨╡╨╝╤Л ╤А╨╡╨╣╤В╨╕╨╜╨│╨░
+1c5e5d9b feat: ╤Б╨╕╤Б╤В╨╡╨╝╨░ ╤А╨╡╨╣╤В╨╕╨╜╨│╨░ ╤Б╨┐╨╡╤Ж╨╕╨░╨╗╨╕╤Б╤В╨╛╨▓ (Cloud Functions, ╨░╨╜╨░╨╗╨╕╤В╨╕╨║╨░, ╨┐╤А╨╛╨▓╨░╨╣╨┤╨╡╤А╤Л)
+2ba2bef1 docs: ╨╛╨▒╨╜╨╛╨▓╨╗╤С╨╜ ╨╛╤В╤З╤С╤В - APK ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜ ╨╜╨░ ╤Г╤Б╤В╤А╨╛╨╣╤Б╤В╨▓╨╛
+dbc0f63b docs: ╤Д╨╕╨╜╨░╨╗╤М╨╜╤Л╨╣ ╨╛╤В╤З╤С╤В ╨┐╤А╨╛╨┤╨░╨║╤И╨╜ ╨║╤Г╤В╨╛╨▓╨╡╤А╨░
+bc94ce04 fix: ╨╕╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╤Л ╨╛╤И╨╕╨▒╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤Ж╨╕╨╕ ╨┤╨╗╤П ╨┐╤А╨╛╨┤╨░╨║╤И╨╜ ╤Б╨▒╨╛╤А╨║╨╕
+0d5fe3e5 feat: production cutover - auth, home, feed, rules, indexes
+25e532b0 (prod_final_release) docs: add installation complete report
+ddc02d31 docs: add deployment checklist and test data wipe instructions
+8ea16080 docs: final completion report
+81ca43cf fix: add missing _buildTopSpecialistsSection method, fix TaxType null safety
+1205f8c1 docs: comprehensive final report with all completed tasks
+aab4a42b feat: add top specialists carousels to Home Screen, add @username to header
+c3b2c0da fix: remove mock data from ChatListScreenImproved, add Create menu to Profile
+7e52ae72 docs: final status report with current state
+e2b93f72 fix: RadioGroup import conflict + remove unnecessary username index
+8a728925 docs: production final report + username index
+9330d5e2 feat: add username autogen, role selection screen, register button fix
+f9455dfd (stable_build) docs: add final autonomous production fix report
+2a49d692 feat: production fixes - feed following, app config, cleanup
+8e900d4b feat: complete authentication stabilization and app optimization
+1f2dace9 ui/ux: ╨б╤У╨а┬╗╨б╤У╨бтАб╨бтВм╨а┬╡╨а╨Е ╨а╨Ж╨а╨Е╨а┬╡╨бтВм╨а╨Е╨а╤С╨атДЦ ╨а╨Ж╨а╤С╨а╥С, ╨а┬░╨а╨Е╨а╤С╨а╤Ш╨а┬░╨бтАа╨а╤С╨а╤С ╨а╤С ╨а┬░╨а╥С╨а┬░╨а╤Ч╨бтАЪ╨а╤С╨а╨Ж╨а╨Е╨а╤Х╨б╨Г╨бтАЪ╨б╨К ╨а╤Ч╨б╨В╨а╤С╨а┬╗╨а╤Х╨а┬╢╨а┬╡╨а╨Е╨а╤С╨б╨П
+2f55ea71 build: ╨б╨Г╨бтАЪ╨а┬░╨а┬▒╨а╤С╨а┬╗╨б╨К╨а╨Е╨а┬░╨б╨П ╨бтАб╨а╤С╨б╨Г╨бтАЪ╨а╤Х╨а╨Ж╨а┬░╨б╨П ╨а╨Ж╨а┬╡╨б╨В╨б╨Г╨а╤С╨б╨П ╨а╤Ч╨а╤Х╨б╨Г╨а┬╗╨а┬╡ ╨а╤Ч╨а╤Х╨а┬╗╨а╨Е╨а╤Х╨атДЦ ╨а╥С╨а╤С╨а┬░╨а╤Ц╨а╨Е╨а╤Х╨б╨Г╨бтАЪ╨а╤С╨а╤Ф╨а╤С ╨а╤С ╨бтАб╨а╤С╨б╨Г╨бтАЪ╨а╤Ф╨а╤С
+0aa06cf3 feat: project stabilization and critical fixes
+fbd99a8b init: ╨╖╨░╤Д╨╕╨║╤Б╨╕╤А╨╛╨▓╨░╨╜╨░ ╤Б╤В╨░╨▒╨╕╨╗╤М╨╜╨░╤П ╨▓╨╡╤А╤Б╨╕╤П ╨┐╤А╨╛╨╡╨║╤В╨░ ╨┤╨╗╤П Cursor
+9080a906 feat: ╨Я╨╛╨╗╨╜╨╛╨╡ ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╨╡ ╤Д╤Г╨╜╨║╤Ж╨╕╨╛╨╜╨░╨╗╤М╨╜╨╛╤Б╤В╨╕ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╤П
+d13ed971 (fix/stabilize-audit, feat/full-impl-verified) docs: add installation report for current version 1.0.2+4
+648272f7 docs: add completion summary and final app status screenshot
+f09e6080 feat: complete app restoration with full authentication and Firebase integration
+16898d28 feat: successful Android build and installation with minimal app
+5fa95a67 feat: fix providers and create missing models for compilation
+88ff2bd8 feat: fix major errors and create missing models
+023fe939 feat: cleanup, dependencies, version increment and about screen
+444ec456 feat: verify firestore security rules and indexes
+ec5c3be5 feat: implement profile module with editing and settings
+a94f84b1 feat: implement ideas module with creation, interactions and filters
+1cb8d9d5 feat: implement chats module with messaging and media support
+06bfe245 feat: implement requests module with CRUD operations and filters
+bbd52bb9 feat: implement feed screen with stories and posts
+514465d4 feat: setup routing, session persistence and firestore models
+a60ac65f chore: snapshot before full rebuild
+7e48a674 feat: full verified implementation (feed, stories, requests, chats, ideas, profile/settings) + rules + fixes
+4b26ec96 (feat/feed-fix-and-full-feature-pack) chore: snapshot before full rollout
+733d07dd fix: applied and verified all latest features + UI improvements (feed, stories, chats, ideas, profile, etc.)
+ab5918fd feat: ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ ╨┐╨╛╨╗╨╜╨░╤П ╨┤╨╛╤А╨░╨▒╨╛╤В╨║╨░ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╤П ╤Б ╨░╨▓╤В╨╛╤В╨╡╤Б╤В╨░╨╝╨╕ - ╨▓╤Б╨╡ ╤Д╤Г╨╜╨║╤Ж╨╕╨╕ ╤А╨╡╨░╨╗╨╕╨╖╨╛╨▓╨░╨╜╤Л ╨╕ APK ╤Б╨╛╨▒╤А╨░╨╜
+64c681ae feat: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨░ ╤А╨╡╨║╨╗╨░╨╝╨░ ╨▓ ╤Б╤В╨╛╤А╨╕╤Б ╤Б ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨║╨╛╨╣ storyAd ╤В╨╕╨┐╨░
+67144144 feat: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨░ ╤Б╨╛╤А╤В╨╕╤А╨╛╨▓╨║╨░ ╤З╨░╤В╨╛╨▓ ╨┐╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ ╨╕ ╨╜╨╡╨┐╤А╨╛╤З╨╕╤В╨░╨╜╨╜╤Л╨╝ ╤Б╨╛╨╛╨▒╤Й╨╡╨╜╨╕╤П╨╝
+bafb1259 feat: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨░ ╨░╨┤╨░╨┐╤В╨╕╨▓╨╜╨░╤П ╨╜╨░╨▓╨╕╨│╨░╤Ж╨╕╤П ╨┤╨╗╤П ╨┐╨╗╨░╨╜╤И╨╡╤В╨╛╨▓ ╤Б drawer
+d2f7a097 feat: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨░ ╤Б╨╡╨║╤Ж╨╕╤П ╤Б╤В╨╛╤А╨╕╤Б ╨▓ ╤Б╤В╨╕╨╗╨╡ Instagram ╨╜╨░ ╨│╨╗╨░╨▓╨╜╤Г╤О ╤Б╤В╤А╨░╨╜╨╕╤Ж╤Г
+ed49e167 feat: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╤Л shimmer ╨░╨╜╨╕╨╝╨░╤Ж╨╕╨╕ ╨╕ pull-to-refresh ╨▓ ╨╗╨╡╨╜╤В╤Г
+8d53cd25 feat: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╤Л ╨▓╨║╨╗╨░╨┤╨║╨╕ ╨┐╤А╨╛╤Д╨╕╨╗╤П ╨▓ ╤Б╤В╨╕╨╗╨╡ Instagram (╨Я╨╛╤Б╤В╤Л, ╨а╨╕╨╗╤Б╤Л, ╨Ь╨╡╨┤╨╕╨░, ╨Ф╨╛╤Б╤В╨╕╨╢╨╡╨╜╨╕╤П)
+5717a32f feat: ╤А╨╡╨░╨╗╨╕╨╖╨╛╨▓╨░╨╜ ╨▒╨╗╨╛╨║ ╨в╨Ю╨Я ╤Б╨┐╨╡╤Ж╨╕╨░╨╗╨╕╤Б╤В╨╛╨▓ ╨╜╨╡╨┤╨╡╨╗╨╕ ╤Б ╤А╨╡╨░╨╗╤М╨╜╤Л╨╝╨╕ ╨┤╨░╨╜╨╜╤Л╨╝╨╕
+5a2fb3a5 feat: ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜ ╨░╨║╤В╨╕╨▓╨╜╤Л╨╣ ╨╕╨╜╨┤╨╕╨║╨░╤В╨╛╤А ╨┤╨╗╤П ╨║╨╜╨╛╨┐╨║╨╕ ╤Д╨╕╨╗╤М╤В╤А╨╛╨▓ ╨╜╨░ ╨│╨╗╨░╨▓╨╜╨╛╨╣ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨╡
+861c22e3 fix: ╨╕╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╤Л ╨╛╤И╨╕╨▒╨║╨╕ ╨╗╨╡╨╜╤В╤Л - ╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╤Л Firestore rules ╨╕ ╨┤╨╛╨▒╨░╨▓╨╗╨╡╨╜╨░ ╨┐╤А╨╛╨▓╨╡╤А╨║╨░ ╨░╨▓╤В╨╛╤А╨╕╨╖╨░╤Ж╨╕╨╕
+d24e9bda feat: initial commit for feed fix and full feature pack
+966d494c (chore/safe-migrate-no-mocks) feat: implement core Event Marketplace functionality with real data integration
+10a2a276 fix(profile): resolve DropdownButton assertion error and improve null safety in profile editing screens
+b5766e73 (tag: release_no_mocks_real_data_v1) feat(ui kit): implement comprehensive UI Kit with buttons, cards, avatars, images, and loading states
+1196fc90 feat(real flows): implement notification service, follow service, and complete real data flows
+b69ffa65 feat(real data): complete mock replacement with real providers, UI Kit, and enhanced states
+c56e7813 refactor(real data): create real providers, fix Story model, add feature flags, remove duplicate StoryType
+985b88dc (tag: v7.0_profile_social_upgrade, tag: pre_no_mocks_checkpoint, stable/google-auth-working) Profile overhaul v7.0: UI upgrade, monetization moved, stories, mentions, customization, analytics, full editor
+d2a7dde4 (tag: polish_v6.1_profile_menu_enabled) Profile polish v6.1: back fix, active menu, google name sync, enhanced UI
+54e1bb4e (tag: profile_v3.0_pro_stories_hero) Profile Upgrade v3.0: Pro accounts, Stories, Hero navigation, Enhanced UI
+a53f8ecc (tag: stable_v2.1_chat_system_complete) Complete chat system with Firestore and push notifications - v2.1
+d8f6c000 (tag: stable_v2.0_full_build_with_ui_auth_firestore) Full stable build: UI, Auth, Splash animation, Firestore, Profile, Feed, Requests - v2.0
+d97cacdb (tag: stable_v1.1_animated_splash) Stable build with animated splash screen, full functionality and error fixes
+ea49a837 fix: specialist_services_screen - remove unused field
+e7700341 fix: specialist_reviews_screen - imports, types, null safety, and unused methods
+ee9d84f6 fix: specialist_profile_edit_screen - null safety, unused methods, and imports
+3f5b5f24 (tag: v1.0-stable-google-auth, origin/stable/google-auth-working)  Stable checkpoint  Google Auth successfully working
+a5332dc6 (fix/critical-fixes) fix: profile_screen - AppUser type conflicts resolved with dynamic casting
+49d8622d fix: home_screen - type annotations, SearchFilters, and AppUser properties
+fc7f18a4 fix: booking_screen - constructor parameters, null safety, and category display
+bef28a0d Fix dependencies and Riverpod state management
+42fb8e8f fix: advanced_search_screen and ai_assistant_screen - method signatures, imports, and color issues
+e3488290 fix: ╨╕╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╛╤Б╤В╨░╨▓╤И╨╕╤Е╤Б╤П ╨║╤А╨╕╤В╨╕╤З╨╡╤Б╨║╨╕╤Е ╨╛╤И╨╕╨▒╨╛╨║
+88daa456 fix: story_providers and admin_dashboard_screen - remove non-existent methods and fix StreamBuilder types
+4084f8c2 Fix critical errors: Add missing models, providers, and screens
+e790ae52 fix: formatting improvements and user changes
+5bdc0c55 fix: ╨╝╨░╤Б╤Б╨╛╨▓╨░╤П ╨╛╤З╨╕╤Б╤В╨║╨░ ╨┐╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣ ╨╕ ╨┐╤А╨╛╨▒╨╗╨╡╨╝ ╤Б ╨║╨╛╨╜╤В╨╡╨║╤Б╤В╨╛╨╝
+fc641ee6 fix: ╤Г╤Б╤В╤А╨░╨╜╨╕╤В╤М ╨╛╤И╨╕╨▒╨║╨╕ ╤В╨╕╨┐╨╕╨╖╨░╤Ж╨╕╨╕ ╨╕ null safety
+6f6d9e4d fix: specialists_providers major refactoring - FamilyNotifier, Specialist constructor, PriceRange parameters
+f9e626e6 (fix/nonstop-autofix) SAFEPOINT before critical fixes
+3378ed0c fix: provider method signatures and argument counts
+c02eeeda fix: await missing futures and showDialog type inference
+21b2c1ea fix: test_data_service type annotations and parameter names
+d90067cd fix: recommendation service method names and properties
+dabf8f57 fix: add common_types imports, fix Specialist constructor calls
+d67fd5ac fix: recommendation_service - fromDocument to fromFirestore, correct getters
+fbd8560a fix: category 2 - undefined identifiers, null safety, MessageType/MessageStatus fixes
+889df7b7 autofix: dart fix + format
+24c9c0bd (tag: SAFEPOINT_NONSTOP) SAFEPOINT: before nonstop-fix
+5d59caa2 fix: unused imports, AppUser fields (iduid, displayNamename, photoURLavatarUrl), create missing SpecialistProfile classes, syntax errors (withValues, Radio activeColor) - 86748662 issues
+b3865949 fix: ambiguous debugPrint imports, AppUser photoUrlphotoURL, SharePlus API - 87718753 issues
+c87c31d2 fix: review model, providers, services, deprecated API (withOpacity, Radio), specialist category nullability - 87678771 issues
+915887c6 autofix: dart fix + format
+0afa53f5 SAFEPOINT: before nonstop-fix
+67b3592d autofix: dart fix + format
+2e121488 (fix/B-typing-generics) SAFEPOINT: before nonstop-fix
+021c0c58 Fix critical symbol errors: add debugPrint imports, create missing models and repositories
+550f877a (fix/D-deps-and-clean, fix/C-deprecated-and-nav, fix/A-critical-symbols) A: snapshot before critical symbol fixes
+d59b2fef (backup-20251016-0916) A: snapshot before critical symbol fixes
+ea85611b (tag: snapshot-20251017-2112)  FULL APP RESTORATION: Created working Event Marketplace app with full navigation and all tabs
+16046d5e  UI NAVIGATION FIX: Added automatic transition from diagnostic to main UI with step-by-step logging
+74ed54f8  BLACK SCREEN FIX: Simplified main.dart - removed complex initialization causing startup failure
+c4e7fa7e  UI BLACK SCREEN FIX: Fixed main navigation and router issues
+317bc6a5  MAJOR WARNINGS FIX: Fixed 19+ critical issues - deprecated API, lint warnings, type issues
+74a28c76  CRITICAL FIXES: App now compiles and runs successfully on Android device
+cbd4e2dc (tag: snapshot-20251017-1403)  Project compiles and runs on Android device - QA improvements completed
+743219f7  Step 1-2: Dependencies updated, format applied, 189 auto-fixes, APK builds successfully
+0950fb5a (tag: snapshot-20251017-1015, backup-20251017-1015)  Snapshot before full QA fix
+1064c9a0 (tag: snapshot-20251016-2239)  Snapshot before deployment - 2025-10-16 22:39
+ba39c610 (tag: snapshot-20251016-1944, backup-20251016-1944)  Snapshot before audit
+26676946 (tag: v3.1-admin-panel)  ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜╨░ ╨░╨┤╨╝╨╕╨╜-╨┐╨░╨╜╨╡╨╗╤М ╨╝╨░╤А╨║╨╡╤В╨╕╨╜╨│╨░: ╤В╨░╤А╨╕╤Д╤Л, ╤А╨╡╨║╨╗╨░╨╝╨░, ╨░╨║╤Ж╨╕╨╕, ╤А╨╡╤Д╨╡╤А╨░╨╗╤Л, ╨░╨╜╨░╨╗╨╕╤В╨╕╨║╨░, ╤А╨░╤Б╤Б╤Л╨╗╨║╨╕, ╨┐╤А╨░╨▓╨░ ╨┤╨╛╤Б╤В╤Г╨┐╨░
+1e54ebb2 (tag: v3.0-growth)  Growth Pack: ╨а╨╡╤Д╨╡╤А╨░╨╗╤Л, ╨┤╨╕╨╜╨░╨╝╨╕╤З╨╡╤Б╨║╨╛╨╡ ╤Ж╨╡╨╜╨╛╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡, ╤Г╨╝╨╜╨░╤П ╤А╨╡╨║╨╗╨░╨╝╨░, ╨░╨╜╨░╨╗╨╕╤В╨╕╨║╨░, ╤З╨╡╨║╨╕, ╨┐╨░╤А╤В╨╜╤С╤А╨║╨░
+608c16d7 (tag: v2.5-monetization)  ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜ ╨┐╨╛╨╗╨╜╤Л╨╣ ╨╝╨╛╨┤╤Г╨╗╤М ╨╝╨╛╨╜╨╡╤В╨╕╨╖╨░╤Ж╨╕╨╕: ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕, ╨┐╤А╨╛╨┤╨▓╨╕╨╢╨╡╨╜╨╕╤П, ╤А╨╡╨║╨╗╨░╨╝╨░, ╨┐╤А╨╡╨╝╨╕╤Г╨╝-╤Д╤Г╨╜╨║╤Ж╨╕╨╕
+1010301c (tag: snapshot-20251016-0916, chore/total-cleanup-ci-ready)  Snapshot: ╤Д╨╕╨║╤Б╨░╤Ж╨╕╤П ╤В╨╡╨║╤Г╤Й╨╡╨│╨╛ ╤Б╨╛╤Б╤В╨╛╤П╨╜╨╕╤П ╨┐╤А╨╛╨╡╨║╤В╨░ ╨┐╨╡╤А╨╡╨┤ ╨╕╨╖╨╝╨╡╨╜╨╡╨╜╨╕╤П╨╝╨╕
+8ad2d383 (tag: v1.2-stable)  ╨Я╨╛╨┤╨│╨╛╤В╨╛╨▓╨║╨░ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╤П ╨║ ╨╝╨╜╨╛╨│╨╛╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤М╤Б╨║╨╛╨╝╤Г ╤В╨╡╤Б╤В╤Г
+f1531bc0 (tag: v1.1-stable)  ╨Ю╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╨╡: ╤Д╨╕╨╗╤М╤В╤А╤Л, ╨╖╨░╤П╨▓╨║╨╕, ╨╕╨┤╨╡╨╕, ╤А╨╡╨┤╨░╨║╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┐╤А╨╛╤Д╨╕╨╗╤П, ╤Г╨╗╤Г╤З╤И╨╡╨╜╨╕╨╡ ╨░╤Г╤В╨╡╨╜╤В╨╕╤Д╨╕╨║╨░╤Ж╨╕╨╕
+1fd56faa (tag: backup-before-appbar-fix)  ╨б╨╛╤Е╤А╨░╨╜╨╡╨╜╨╛ ╤Б╤В╨░╨▒╨╕╨╗╤М╨╜╨╛╨╡ ╤Б╨╛╤Б╤В╨╛╤П╨╜╨╕╨╡ ╨┐╨╡╤А╨╡╨┤ ╤Г╨┤╨░╨╗╨╡╨╜╨╕╨╡╨╝ ╨┤╤Г╨▒╨╗╨╕╤А╤Г╤О╤Й╨╡╨│╨╛ AppBar
+1b7109bd (fix/audit-hardening) docs: add comprehensive final improvements report
+0e80b491 feat: enhance ErrorLoggingService with batch operations and caching
+f3a185c5 docs: add comprehensive improvements documentation
+6bbe9b3f fix: resolve type errors in pro_subscription_service and advertising_service
+a05cc5e9 feat: improve TestDataService with better error handling, batch operations, and management UI
+f34b7917 docs: final fix report and project status - all 12 phases completed successfully

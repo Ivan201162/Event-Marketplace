@@ -8,7 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SplashEventScreen extends StatefulWidget {
-  const SplashEventScreen({super.key});
+  final bool showRetry;
+  const SplashEventScreen({this.showRetry = false, super.key});
 
   @override
   State<SplashEventScreen> createState() => _SplashEventScreenState();

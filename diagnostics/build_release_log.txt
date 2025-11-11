@@ -1,0 +1,21 @@
+СБОРКА НЕ ВЫПОЛНЕНА — ОШИБКА YAML
+==================================
+
+Причина: Дубликат google_sign_in в pubspec.yaml блокирует flutter pub get
+
+Ошибка:
+  Error on line 53, column 3: Duplicate mapping key.
+     ╷
+  53 │   google_sign_in: ^6.2.1
+     │   ^^^^^^^^^^^^^^
+
+Команда для сборки (после исправления):
+  flutter clean
+  flutter pub get
+  flutter build apk --release --no-tree-shake-icons | tee diagnostics/build_release_log.txt
+
+Ожидаемый результат:
+  - flutter pub get выполняется без ошибок
+  - flutter build apk успешно собирает APK
+  - APK находится в build/app/outputs/flutter-apk/app-release.apk
+

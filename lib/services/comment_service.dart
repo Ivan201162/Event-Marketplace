@@ -8,9 +8,10 @@ class CommentService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// Получить коллекцию комментариев для контента
-  CollectionReference _getCommentsCollection(String contentType, String contentId) {
+  /// Использует структуру: comments/{contentId}/{commentId}
+  CollectionReference _getCommentsCollection(String contentId) {
     return _firestore
-        .collection(contentType) // posts, reels, stories, ideas
+        .collection('comments')
         .doc(contentId)
         .collection('comments');
   }
@@ -34,15 +35,18 @@ class CommentService {
       final authorName = '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'.trim();
       final authorPhotoUrl = userData['photoURL'] as String? ?? user.photoURL;
 
-      final commentRef = _getCommentsCollection(contentType, contentId).doc();
+      final commentRef = _getCommentsCollection(contentId).doc();
       
       await commentRef.set({
+        'contentType': contentType, // Сохраняем тип контента в документе
+        'contentId': contentId,
         'authorId': user.uid,
         'authorName': authorName.isNotEmpty ? authorName : (user.displayName ?? 'Пользователь'),
         'authorPhotoUrl': authorPhotoUrl,
         'text': text.trim(),
         'parentId': parentId,
         'likesCount': 0,
+        'likes': [],
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -68,7 +72,7 @@ class CommentService {
         throw Exception('User not authenticated');
       }
 
-      final commentRef = _getCommentsCollection(contentType, contentId).doc(commentId);
+      final commentRef = _getCommentsCollection(contentId).doc(commentId);
       final commentDoc = await commentRef.get();
       
       if (!commentDoc.exists) {
@@ -77,9 +81,10 @@ class CommentService {
 
       final commentData = commentDoc.data() as Map<String, dynamic>;
       final authorId = commentData['authorId'] as String;
+      final contentTypeFromComment = commentData['contentType'] as String? ?? contentType;
 
       // Проверяем права: автор комментария или автор контента
-      final contentDoc = await _firestore.collection(contentType).doc(contentId).get();
+      final contentDoc = await _firestore.collection(contentTypeFromComment).doc(contentId).get();
       final contentData = contentDoc.data() ?? {};
       final contentAuthorId = contentData['authorId'] as String?;
 
@@ -111,7 +116,7 @@ class CommentService {
         throw Exception('User not authenticated');
       }
 
-      final commentRef = _getCommentsCollection(contentType, contentId).doc(commentId);
+      final commentRef = _getCommentsCollection(contentId).doc(commentId);
       final commentDoc = await commentRef.get();
       
       if (!commentDoc.exists) {
@@ -120,9 +125,10 @@ class CommentService {
 
       final commentData = commentDoc.data() as Map<String, dynamic>;
       final authorId = commentData['authorId'] as String;
+      final contentTypeFromComment = commentData['contentType'] as String? ?? contentType;
 
       // Проверяем права: автор комментария или автор контента
-      final contentDoc = await _firestore.collection(contentType).doc(contentId).get();
+      final contentDoc = await _firestore.collection(contentTypeFromComment).doc(contentId).get();
       final contentData = contentDoc.data() ?? {};
       final contentAuthorId = contentData['authorId'] as String?;
 
@@ -151,7 +157,7 @@ class CommentService {
         throw Exception('User not authenticated');
       }
 
-      final commentRef = _getCommentsCollection(contentType, contentId).doc(commentId);
+      final commentRef = _getCommentsCollection(contentId).doc(commentId);
       final commentDoc = await commentRef.get();
       
       if (!commentDoc.exists) {
@@ -187,7 +193,8 @@ class CommentService {
     required String contentId,
     String? parentId, // null для корневых комментариев
   }) {
-    Query query = _getCommentsCollection(contentType, contentId)
+    Query query = _getCommentsCollection(contentId)
+        .where('contentType', isEqualTo: contentType)
         .orderBy('createdAt', descending: false);
 
     if (parentId != null) {

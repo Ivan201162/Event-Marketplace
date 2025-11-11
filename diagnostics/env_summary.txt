@@ -1,0 +1,38 @@
+Сводка окружения
+================
+
+Flutter SDK: >=3.22.0
+Dart SDK: >=3.3.0 <4.0.0
+
+Ключевые зависимости:
+- firebase_core: ^3.6.0
+- firebase_auth: ^5.3.1
+- google_sign_in: ^6.2.1 (ДУБЛИКАТ в pubspec.yaml!)
+- cloud_firestore: ^5.4.4
+- firebase_storage: ^12.3.4
+- firebase_messaging: ^15.1.3
+- firebase_analytics: ^11.2.1
+- firebase_crashlytics: ^4.0.0
+
+Gradle:
+- Google Services: 4.4.2
+- Firebase BOM: 33.3.0
+- Play Services Auth: 21.2.0
+- MultiDex: 2.0.1
+
+Android:
+- applicationId: com.eventmarketplace.app
+- package_name: com.eventmarketplace.app (совпадает)
+- minSdk: flutter.minSdkVersion
+- targetSdk: flutter.targetSdkVersion
+- multiDexEnabled: true
+
+Firebase:
+- project_id: event-marketplace-mvp
+- mobilesdk_app_id: 1:272201705683:android:0196de78aaeb970ef80c26
+- apiKey: AIzaSyCdDRPCyCHEJy7WBr5eQrcyuRhh_hSfih4
+
+SHA-1 Certificate:
+- Hash: a2179ae3c52226d72edbf194e5f9e280b8e3b9fd
+- Проверка: требуется валидация на Firebase Console
+

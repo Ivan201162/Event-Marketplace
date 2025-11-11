@@ -22,3 +22,6 @@ export { cleanupExpiredStories } from './cleanupStories';
 
 // Экспорт push notifications
 export { sendPushOnBooking, sendPushOnMessage } from './pushNotifications';
+
+// Экспорт comment notifications
+export { onCommentCreate } from './onCommentCreate';

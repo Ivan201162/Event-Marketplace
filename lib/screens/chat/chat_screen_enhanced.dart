@@ -610,8 +610,11 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
                         // Группируем реакции по эмодзи
                         final reactionsByEmoji = <String, int>{};
                         for (final doc in reactionSnapshot.data!.docs) {
-                          final emoji = doc.data()['emoji'] as String? ?? '';
-                          reactionsByEmoji[emoji] = (reactionsByEmoji[emoji] ?? 0) + 1;
+                          final data = doc.data() as Map<String, dynamic>;
+                          final emoji = data['emoji'] as String? ?? '';
+                          if (emoji.isNotEmpty) {
+                            reactionsByEmoji[emoji] = (reactionsByEmoji[emoji] ?? 0) + 1;
+                          }
                         }
                         
                         if (reactionsByEmoji.isEmpty) {
@@ -699,7 +702,8 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
         
-        final typing = snapshot.data!.data()?['typing'] as Map<String, dynamic>?;
+        final chatData = snapshot.data!.data() as Map<String, dynamic>?;
+        final typing = chatData?['typing'] as Map<String, dynamic>?;
         if (typing == null || typing.isEmpty) return const SizedBox.shrink();
         
         final user = FirebaseAuth.instance.currentUser;
@@ -1028,64 +1032,63 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
             children: [
               // Кнопка прикрепления
               IconButton(
-            onPressed: _showAttachmentOptions,
-            icon: const Icon(
-              Icons.attach_file,
-              color: Color(0xFF1E3A8A),
-            ),
-          ),
-
-          // Поле ввода
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: TextField(
-                controller: _messageController,
-                decoration: const InputDecoration(
-                  hintText: 'Введите сообщение...',
-                  border: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                onPressed: _showAttachmentOptions,
+                icon: const Icon(
+                  Icons.attach_file,
+                  color: Color(0xFF1E3A8A),
                 ),
-                maxLines: null,
-                textCapitalization: TextCapitalization.sentences,
-                onSubmitted: (_) => _sendMessage(),
               ),
-            ),
-          ),
-
-          const SizedBox(width: 8),
-
-          // Кнопка отправки
-          GestureDetector(
-            onTap: _isSending ? null : _sendMessage,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: _isSending ? Colors.grey[300] : const Color(0xFF1E3A8A),
-                shape: BoxShape.circle,
-              ),
-              child: _isSending
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : const Icon(
-                      Icons.send,
-                      color: Colors.white,
-                      size: 20,
+              // Поле ввода
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: const InputDecoration(
+                      hintText: 'Введите сообщение...',
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
-            ),
+                    maxLines: null,
+                    textCapitalization: TextCapitalization.sentences,
+                    onSubmitted: (_) => _sendMessage(),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Кнопка отправки
+              GestureDetector(
+                onTap: _isSending ? null : _sendMessage,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: _isSending ? Colors.grey[300] : const Color(0xFF1E3A8A),
+                    shape: BoxShape.circle,
+                  ),
+                  child: _isSending
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -1103,17 +1106,34 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
                 : MainAxisAlignment.start,
             children: [
               if (index % 2 != 0) ...[
-                ShimmerBox(width: 32, height: 32, borderRadius: 16),
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
                 const SizedBox(width: 8),
               ],
-              ShimmerBox(
+              Container(
                 width: MediaQuery.of(context).size.width * 0.6,
                 height: 60,
-                borderRadius: 20,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
               if (index % 2 == 0) ...[
                 const SizedBox(width: 8),
-                ShimmerBox(width: 32, height: 32, borderRadius: 16),
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
               ],
             ],
           ),

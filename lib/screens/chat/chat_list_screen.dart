@@ -1,180 +1,138 @@
-import 'package:event_marketplace_app/providers/chat_providers.dart';
-import 'package:event_marketplace_app/screens/chat/chat_screen.dart';
-import 'package:event_marketplace_app/widgets/chat_list_item.dart';
-import 'package:event_marketplace_app/widgets/chat_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../utils/debug_log.dart';
+import 'chat_screen_enhanced.dart';
 
-/// Экран списка чатов
-class ChatListScreen extends ConsumerStatefulWidget {
+class ChatListScreen extends StatelessWidget {
   const ChatListScreen({super.key});
 
   @override
-  ConsumerState<ChatListScreen> createState() => _ChatListScreenState();
-}
-
-class _ChatListScreenState extends ConsumerState<ChatListScreen> {
-  String _searchQuery = '';
-  String _selectedFilter = 'all';
-
-  @override
   Widget build(BuildContext context) {
-    final chatsState = ref.watch(chatsProvider);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      return const Scaffold(body: Center(child: Text('Необходима авторизация')));
+    }
+
+    final chats = FirebaseFirestore.instance
+        .collection('chats')
+        .where('participants', arrayContains: uid)
+        .orderBy('updatedAt', descending: true)
+        .snapshots();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Чаты'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-        ],
+        title: const Text("Чаты"),
       ),
-      body: Column(
-        children: [
-          // Поиск
-          ChatSearchBar(
-            onSearchChanged: (query) => setState(() => _searchQuery = query),
-          ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: chats,
+        builder: (ctx, snap) {
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          final chatsList = snap.data!.docs;
+          if (chatsList.isEmpty) {
+            return const Center(child: Text("Нет сообщений"));
+          }
 
-          // Список чатов
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                ref.read(chatsProvider.notifier).refreshChats();
-              },
-              child: chatsState.when(
-                data: (chats) => ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: chats.length,
-                  itemBuilder: (context, index) {
-                    final chat = chats[index];
-                    return ChatListItem(
-                      chat: chat,
-                      onTap: () => _openChat(chat.id),
-                    );
-                  },
-                ),
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                error: (error, stack) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline,
-                          size: 64, color: Colors.red,),
-                      const SizedBox(height: 16),
-                      Text('Ошибка загрузки чатов: $error'),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () =>
-                            ref.read(chatsProvider.notifier).refreshChats(),
-                        child: const Text('Повторить'),
+          return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: chatsList.length,
+            itemBuilder: (ctx, i) {
+              final doc = chatsList[i];
+              final d = doc.data() as Map<String, dynamic>;
+              final chatId = doc.id;
+              final participants = (d['participants'] as List?)?.cast<String>() ?? [];
+              final otherUserId = participants.firstWhere((p) => p != uid, orElse: () => '');
+              final lastMessage = d['lastMessage'] as String? ?? '';
+              final updatedAt = d['updatedAt'] as Timestamp?;
+              final unreadCount = (d['unreadCount'] as Map<String, dynamic>?)?[uid] as int? ?? 0;
+
+              return FutureBuilder<DocumentSnapshot>(
+                future: otherUserId.isNotEmpty
+                    ? FirebaseFirestore.instance.collection('users').doc(otherUserId).get()
+                    : Future.value(null),
+                builder: (ctx, userSnap) {
+                  final userData = userSnap.data?.data() as Map<String, dynamic>?;
+                  final firstName = userData?['firstName'] ?? '';
+                  final lastName = userData?['lastName'] ?? '';
+                  final photoUrl = userData?['photoUrl'] as String?;
+                  final name = '$firstName $lastName'.trim();
+                  
+                  return Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                        child: photoUrl == null ? const Icon(Icons.person) : null,
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Поиск в чатах'),
-        content: TextField(
-          decoration: const InputDecoration(
-            hintText: 'Введите запрос...',
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) => setState(() => _searchQuery = value),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ref.read(chatsProvider.notifier).searchChats(_searchQuery);
+                      title: Text(name.isNotEmpty ? name : 'Пользователь'),
+                      subtitle: Text(
+                        lastMessage.isNotEmpty ? lastMessage : 'Нет сообщений',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (updatedAt != null)
+                            Text(
+                              _formatTime(updatedAt.toDate()),
+                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            ),
+                          if (unreadCount > 0) ...[
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: const BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                unreadCount > 9 ? '9+' : unreadCount.toString(),
+                                style: const TextStyle(color: Colors.white, fontSize: 10),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      onTap: () {
+                        debugLog('CHAT_OPENED:$chatId');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ChatScreenEnhanced(
+                              chatId: chatId,
+                              recipientName: name,
+                              recipientAvatar: photoUrl,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
             },
-            child: const Text('Найти'),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  void _showFilterDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Фильтры чатов'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Все'),
-              leading: Radio<String>(
-                value: 'all',
-                groupValue: _selectedFilter,
-                onChanged: (value) => setState(() => _selectedFilter = value!),
-              ),
-            ),
-            ListTile(
-              title: const Text('Непрочитанные'),
-              leading: Radio<String>(
-                value: 'unread',
-                groupValue: _selectedFilter,
-                onChanged: (value) => setState(() => _selectedFilter = value!),
-              ),
-            ),
-            ListTile(
-              title: const Text('С медиа'),
-              leading: Radio<String>(
-                value: 'media',
-                groupValue: _selectedFilter,
-                onChanged: (value) => setState(() => _selectedFilter = value!),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ref.read(chatsProvider.notifier).filterChats(_selectedFilter);
-            },
-            child: const Text('Применить'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _openChat(String chatId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatScreen(chatId: chatId),
-      ),
-    );
+  String _formatTime(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date);
+    if (diff.inDays == 0) {
+      return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+    } else if (diff.inDays == 1) {
+      return 'Вчера';
+    } else if (diff.inDays < 7) {
+      return '${diff.inDays} дн. назад';
+    } else {
+      return '${date.day}.${date.month}';
+    }
   }
 }

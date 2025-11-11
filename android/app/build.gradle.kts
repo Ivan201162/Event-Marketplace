@@ -40,6 +40,7 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
+        vectorDrawables.useSupportLibrary = true
         
         // Web Client ID для Google Sign-In (из google-services.json)
         manifestPlaceholders["appAuthRedirectScheme"] = applicationId.toString()
@@ -79,15 +80,21 @@ tasks.register("verifyGoogleServicesJson") {
     doLast {
         val f = file("$projectDir/google-services.json")
         if (!f.exists()) {
-            throw GradleException("google-services.json NOT FOUND at android/app/. Aborting.")
+            throw GradleException("❌ google-services.json NOT FOUND at android/app/. Aborting build.")
         }
         val text = f.readText()
         if (!text.contains("\"package_name\"")) {
-            throw GradleException("google-services.json missing package_name")
+            throw GradleException("❌ google-services.json missing package_name")
         }
         if (!text.contains("client_info")) {
-            throw GradleException("google-services.json missing client_info")
+            throw GradleException("❌ google-services.json missing client_info")
         }
+        // Проверка package_name == com.eventmarketplace.app
+        val packageNamePattern = "\"package_name\"\\s*:\\s*\"com\\.eventmarketplace\\.app\""
+        if (!Regex(packageNamePattern).containsMatchIn(text)) {
+            throw GradleException("❌ google-services.json package_name != com.eventmarketplace.app")
+        }
+        println("✅ GOOGLE_JSON_CHECK: found")
     }
 }
 
@@ -104,5 +111,5 @@ dependencies {
     // Firebase BOM for version management
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
 }

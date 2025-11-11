@@ -20,7 +20,7 @@ class WipeService {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         await _wipeUser(user.uid);
-        await AuthRepository().logout();
+        await FirebaseAuth.instance.signOut();
       }
     }
   }

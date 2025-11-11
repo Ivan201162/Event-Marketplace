@@ -1,392 +1,284 @@
-import 'package:event_marketplace_app/providers/auth_providers.dart';
-import 'package:event_marketplace_app/providers/specialist_providers.dart';
-import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../utils/debug_log.dart';
+import '../../ui/components/app_card.dart';
+import '../../ui/components/chip_badge.dart';
+import '../../ui/components/outlined_button_x.dart';
+import '../profile/profile_screen_v2.dart';
 
-/// Home screen with user profile and main content
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+  Widget _buildSpecialistCard(Map<String, dynamic> data, BuildContext context) {
+    final roles = (data['roles'] as List?) ?? [];
+    final rating = (data['rating'] as num?)?.toDouble() ?? 0.0;
+    final photoUrl = data['photoUrl'] as String?;
+    final firstName = data['firstName'] ?? '';
+    final lastName = data['lastName'] ?? '';
+    final city = data['city'] ?? '';
+    final specialistId = data['uid'] as String? ?? '';
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Event Marketplace'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {
-              context.push('/notifications');
-            },
+    return AppCard(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.all(12),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ProfileScreenV2(userId: specialistId),
+          ),
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                child: photoUrl == null ? const Icon(Icons.person) : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$firstName $lastName',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(city, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                        Text('${rating.toStringAsFixed(1)}', style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (roles.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: roles.take(2).map((role) {
+                return ChipBadge(label: role.toString());
+              }).toList(),
+            ),
+          ],
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: OutlinedButtonX(
+                  text: 'Профиль',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProfileScreenV2(userId: specialistId),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: OutlinedButtonX(
+                  text: 'Связаться',
+                  onTap: () {
+                    // TODO: Открыть чат
+                  },
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: OutlinedButtonX(
+                  text: 'Заказать',
+                  onTap: () {
+                    // TODO: Открыть календарь для бронирования
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
-      body: authState.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(child: Text('Пользователь не найден'));
-          }
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // User profile card
-                _buildUserProfileCard(context, user),
-                const SizedBox(height: 24),
-
-                // Search section
-                _buildSearchSection(context),
-                const SizedBox(height: 24),
-
-                // Categories section
-                _buildCategoriesSection(context, ref),
-                const SizedBox(height: 24),
-
-                // Top specialists section
-                _buildTopSpecialistsSection(
-                    context, ref, 'Топ-10 недели по России', true,),
-                const SizedBox(height: 24),
-                _buildTopSpecialistsSection(
-                  context,
-                  ref,
-                  'Топ-10 недели по городу ${user.city ?? ''}',
-                  false,
-                ),
-                const SizedBox(height: 24),
-
-                // Quick actions
-                _buildQuickActions(context),
-              ],
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Ошибка: $error')),
-      ),
     );
   }
 
-  Widget _buildUserProfileCard(BuildContext context, user) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 30,
-              backgroundImage:
-                  user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
-              child: user.avatarUrl == null
-                  ? const Icon(Icons.person, size: 30)
-                  : null,
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    user.name,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold,),
-                  ),
-                  if (user.city != null) ...[
-                    const SizedBox(height: 4),
-                    Text(user.city!,
-                        style:
-                            TextStyle(color: Colors.grey[600], fontSize: 14),),
-                  ],
-                  if (user.status != null) ...[
-                    const SizedBox(height: 4),
-                    Text(user.status!,
-                        style:
-                            TextStyle(color: Colors.blue[600], fontSize: 14),),
-                  ],
-                ],
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                context.push('/profile/edit');
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSearchSection(BuildContext context) {
-    final searchController = TextEditingController();
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Поиск специалистов',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: 'Поиск по имени, категории, городу...',
-                prefixIcon: const Icon(Icons.search),
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.filter_list),
-                  onPressed: () {
-                    context.push('/search');
-                  },
-                ),
-              ),
-              onSubmitted: (query) {
-                if (query.isNotEmpty) {
-                  context.push('/search?query=${Uri.encodeComponent(query)}');
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoriesSection(BuildContext context, WidgetRef ref) {
-    final specializationsAsync = ref.watch(popularSpecializationsProvider);
-
+  Widget _buildCarousel(String title, Query query, String region) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Популярные категории',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            title,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
-        const SizedBox(height: 12),
-        specializationsAsync.when(
-          data: (specializations) {
-            if (specializations.isEmpty) {
-              return const Center(child: Text('Нет категорий'));
+        StreamBuilder<QuerySnapshot>(
+          stream: query.snapshots(),
+          builder: (ctx, snap) {
+            if (!snap.hasData) {
+              return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
             }
-            return GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: specializations.length,
-              itemBuilder: (context, index) {
-                final specialization = specializations[index];
-                final iconData = _getSpecializationIcon(specialization);
-                final color = _getSpecializationColor(specialization);
-
-                return GestureDetector(
-                  onTap: () {
-                    context.push(
-                        '/search?specialization=${Uri.encodeComponent(specialization)}',);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: color.withOpacity(0.3)),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(iconData, size: 36, color: color),
-                        const SizedBox(height: 8),
-                        Text(
-                          specialization,
-                          style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500,),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Ошибка: $error')),
-        ),
-      ],
-    );
-  }
-
-  IconData _getSpecializationIcon(String specialization) {
-    switch (specialization.toLowerCase()) {
-      case 'ведущий':
-      case 'ведущие':
-        return Icons.mic;
-      case 'фотограф':
-      case 'фотографы':
-        return Icons.camera_alt;
-      case 'dj':
-        return Icons.headset;
-      case 'видеограф':
-      case 'видеографы':
-        return Icons.videocam;
-      case 'декоратор':
-      case 'декораторы':
-        return Icons.palette;
-      case 'аниматор':
-      case 'аниматоры':
-        return Icons.sentiment_very_satisfied;
-      case 'музыкант':
-      case 'музыканты':
-        return Icons.music_note;
-      case 'танцор':
-      case 'танцоры':
-        return Icons.music_note;
-      case 'кейтеринг':
-        return Icons.restaurant;
-      default:
-        return Icons.work;
-    }
-  }
-
-  Color _getSpecializationColor(String specialization) {
-    switch (specialization.toLowerCase()) {
-      case 'ведущий':
-      case 'ведущие':
-        return Colors.blue;
-      case 'фотограф':
-      case 'фотографы':
-        return Colors.green;
-      case 'dj':
-        return Colors.purple;
-      case 'видеограф':
-      case 'видеографы':
-        return Colors.red;
-      case 'декоратор':
-      case 'декораторы':
-        return Colors.orange;
-      case 'аниматор':
-      case 'аниматоры':
-        return Colors.pink;
-      case 'музыкант':
-      case 'музыканты':
-        return Colors.indigo;
-      case 'танцор':
-      case 'танцоры':
-        return Colors.teal;
-      case 'кейтеринг':
-        return Colors.brown;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  Widget _buildTopSpecialistsSection(
-    BuildContext context,
-    WidgetRef ref,
-    String title,
-    bool isCountryWide,
-  ) {
-    final currentUser = ref.watch(currentUserProvider).value;
-    final specialistsAsync = isCountryWide
-        ? ref.watch(topSpecialistsRuProvider)
-        : ref.watch(topSpecialistsCityProvider(currentUser?.city ?? 'Москва'));
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(title,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                context.push('/search');
-              },
-              child: const Text('Все'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        specialistsAsync.when(
-          data: (specialists) {
-            if (specialists.isEmpty) {
-              return const Center(child: Text('Нет специалистов'));
+            final count = snap.data!.docs.length;
+            if (region == 'RU') {
+              debugLog('HOME_TOP_RU_COUNT:$count');
+            } else {
+              debugLog('HOME_TOP_CITY_COUNT:$count');
             }
+            
+            if (count == 0) {
+              return const SizedBox(
+                height: 200,
+                child: Center(child: Text('Специалисты не найдены')),
+              );
+            }
+
             return SizedBox(
               height: 200,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: specialists.length,
-                itemBuilder: (context, index) {
-                  final specialist = specialists[index];
-                  return Container(
-                    width: 150,
-                    margin: const EdgeInsets.only(right: 12),
-                    child: SpecialistCard(
-                      specialist: specialist,
-                      onTap: () {
-                        context.push('/specialist/${specialist.id}');
-                      },
-                    ),
+                itemCount: count,
+                itemBuilder: (ctx, i) {
+                  final doc = snap.data!.docs[i];
+                  final data = doc.data() as Map<String, dynamic>;
+                  // Добавляем uid из document ID
+                  data['uid'] = doc.id;
+                  return SizedBox(
+                    width: 300,
+                    child: _buildSpecialistCard(data, ctx),
                   );
                 },
               ),
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Ошибка: $error')),
         ),
       ],
     );
   }
 
-  Widget _buildQuickActions(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Быстрые действия',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  context.push('/requests/create');
-                },
-                icon: const Icon(Icons.add),
-                label: const Text('Создать заявку'),
-              ),
+  Widget _buildUserProfileCard(Map<String, dynamic>? userData) {
+    if (userData == null) {
+      return const SizedBox.shrink();
+    }
+
+    final firstName = userData['firstName'] ?? '';
+    final lastName = userData['lastName'] ?? '';
+    final city = userData['city'] ?? '';
+    final roles = (userData['roles'] as List?) ?? [];
+    final photoUrl = userData['photoUrl'] as String?;
+
+    return AppCard(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 32,
+            backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+            child: photoUrl == null ? const Icon(Icons.person, size: 32) : null,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$firstName $lastName',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(city, style: TextStyle(color: Colors.grey[600])),
+                const SizedBox(height: 8),
+                if (roles.isNotEmpty)
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: roles.take(3).map((role) {
+                      return ChipBadge(label: role.toString());
+                    }).toList(),
+                  ),
+              ],
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  context.push('/posts/create');
-                },
-                icon: const Icon(Icons.post_add),
-                label: const Text('Создать пост'),
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return const Scaffold(body: Center(child: Text('Необходима авторизация')));
+    }
+
+    debugLog('HOME_LOADED');
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots();
+    final userCity = userDoc.map((snap) {
+      final data = snap.data() as Map<String, dynamic>?;
+      return data?['city'] as String?;
+    });
+
+    // Запрос для лучших по России
+    final topRussiaQuery = FirebaseFirestore.instance
+        .collection('users')
+        .where('roles', isNotEqualTo: null)
+        .orderBy('rating', descending: true)
+        .limit(10);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Главная")),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: userDoc,
+        builder: (ctx, userSnap) {
+          final userData = userSnap.data?.data() as Map<String, dynamic>?;
+          
+          return StreamBuilder<String?>(
+            stream: userCity,
+            builder: (ctx, citySnap) {
+              final city = citySnap.data;
+              
+              // Запрос для лучших в городе
+              Query topCityQuery = FirebaseFirestore.instance
+                  .collection('users')
+                  .where('roles', isNotEqualTo: null);
+              
+              if (city != null && city.isNotEmpty) {
+                topCityQuery = topCityQuery.where('cityLower', isEqualTo: city.toLowerCase());
+              }
+              topCityQuery = topCityQuery.orderBy('rating', descending: true).limit(10);
+
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildUserProfileCard(userData),
+                    _buildCarousel('Лучшие специалисты недели — Россия', topRussiaQuery, 'RU'),
+                    const SizedBox(height: 16),
+                    _buildCarousel(
+                      city != null ? 'Лучшие специалисты недели — $city' : 'Лучшие специалисты',
+                      topCityQuery,
+                      city ?? 'ALL',
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

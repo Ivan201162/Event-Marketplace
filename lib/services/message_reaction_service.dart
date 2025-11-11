@@ -24,9 +24,10 @@ class MessageReactionService {
       final messageDoc = await messageRef.get();
       if (!messageDoc.exists) return false;
 
-      final messageData = messageDoc.data();
+      final messageData = messageDoc.data() as Map<String, dynamic>?;
+      if (messageData == null) return false;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-              ?.map((e) => MessageReaction.fromMap(e))
+              ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [];
 
@@ -51,7 +52,7 @@ class MessageReactionService {
 
       return true;
     } catch (e) {
-      debugPrint('Ошибка добавления реакции: $e');
+      print('Ошибка добавления реакции: $e');
       return false;
     }
   }
@@ -68,9 +69,10 @@ class MessageReactionService {
       final messageDoc = await messageRef.get();
       if (!messageDoc.exists) return false;
 
-      final messageData = messageDoc.data();
+      final messageData = messageDoc.data() as Map<String, dynamic>?;
+      if (messageData == null) return false;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-              ?.map((e) => MessageReaction.fromMap(e))
+              ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [];
 
@@ -84,7 +86,7 @@ class MessageReactionService {
 
       return true;
     } catch (e) {
-      debugPrint('Ошибка удаления реакции: $e');
+      print('Ошибка удаления реакции: $e');
       return false;
     }
   }
@@ -102,9 +104,10 @@ class MessageReactionService {
       final messageDoc = await messageRef.get();
       if (!messageDoc.exists) return false;
 
-      final messageData = messageDoc.data();
+      final messageData = messageDoc.data() as Map<String, dynamic>?;
+      if (messageData == null) return false;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-              ?.map((e) => MessageReaction.fromMap(e))
+              ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [];
 
@@ -134,7 +137,7 @@ class MessageReactionService {
 
       return true;
     } catch (e) {
-      debugPrint('Ошибка переключения реакции: $e');
+      print('Ошибка переключения реакции: $e');
       return false;
     }
   }
@@ -146,15 +149,16 @@ class MessageReactionService {
           await _firestore.collection('chat_messages').doc(messageId).get();
       if (!messageDoc.exists) return [];
 
-      final messageData = messageDoc.data();
+      final messageData = messageDoc.data() as Map<String, dynamic>?;
+      if (messageData == null) return [];
       final reactions = (messageData['reactions'] as List<dynamic>?)
-              ?.map((e) => MessageReaction.fromMap(e))
+              ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [];
 
       return reactions;
     } catch (e) {
-      debugPrint('Ошибка получения реакций: $e');
+      print('Ошибка получения реакций: $e');
       return [];
     }
   }
@@ -184,7 +188,7 @@ class MessageReactionService {
 
       return reactionStats;
     } catch (e) {
-      debugPrint('Ошибка получения статистики реакций: $e');
+      print('Ошибка получения статистики реакций: $e');
       return {};
     }
   }
@@ -213,7 +217,7 @@ class MessageReactionService {
 
       return userReactionStats;
     } catch (e) {
-      debugPrint('Ошибка получения статистики пользователя: $e');
+      print('Ошибка получения статистики пользователя: $e');
       return {};
     }
   }

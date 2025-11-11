@@ -1,0 +1,19 @@
+УСТРОЙСТВО OFFLINE — ЛОГИ НЕДОСТУПНЫ
+=====================================
+
+Устройство: 34HDU20228002261
+Статус: offline
+Дата попытки: 2025-11-11
+
+Команда для сбора логов (когда устройство будет online):
+  adb -s 34HDU20228002261 logcat -d > diagnostics/logcat_launch.txt
+
+Ожидаемые маркеры в логах:
+  - APP: BUILD OK v6.3-ultimate-restore
+  - APP_VERSION:6.3.0+45
+  - SPLASH:init-start
+  - SPLASH:init-done (или SPLASH_INIT_ERR)
+  - GOOGLE_JSON_CHECK:found
+  - AUTH_GATE: waiting for auth state
+  - AUTH_GATE:user-null (или AUTH_GATE:user=<uid>)
+

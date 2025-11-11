@@ -1,0 +1,17 @@
+﻿
+11-11 16:03:19.180  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1205408
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26583 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-11 16:03:19.183  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-11 16:03:24.447  1717  2042 E RMS.HwSysResManagerService: Process Permission
+ error! pid:2663 uid:1001 Process.myPid:1717
+11-11 16:03:25.220  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1205413
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=26583 scontext=u:r:sys
+tem_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-11 16:03:25.223  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+
+

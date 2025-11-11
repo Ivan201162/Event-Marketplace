@@ -1,0 +1,705 @@
+﻿
+11-11 01:47:26.771  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:48:26.772  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:49:26.773  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:49:42.958  1717  2076 I ActivityManager: sendIntentSender target:Pendi
+ngIntentRecord{dcf2059 com.google.android.gms broadcastIntent}, intent:flg=0x4 
+hwFlg=0x810
+11-11 01:49:42.999  1717  3309 I ActivityManager: sendIntentSender target:Pendi
+ngIntentRecord{5ae3fc4 com.google.android.gms startService}, intent:hwFlg=0x10
+11-11 01:50:26.775  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:51:26.776  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:52:26.777  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:53:26.778  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:54:26.780  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:55:26.781  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:56:26.782  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:57:26.783  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:58:26.784  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 01:59:26.785  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 02:00:26.787  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 02:01:26.788  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 02:02:26.789  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 02:03:26.790  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 02:04:26.791  1032  1115 I storaged: storaged_t::event: storage_info refr
+eshed.
+11-11 02:04:40.515  2680  2680 I ActivityThread: Handle window ActivityRecord{3
+8cafba token=android.os.BinderProxy@2412bae {com.huawei.android.launcher/com.hu
+awei.android.launcher.unihome.UniHomeLauncher}} visibility: true
+11-11 02:04:41.309  1717  2043 I ActivityManager: App 10166/com.google.android.
+permissioncontroller targets O+, restricted
+11-11 02:04:41.322  1717  2337 I ActivityManager: App 10166/com.google.android.
+permissioncontroller targets O+, restricted
+11-11 02:04:41.330 18357 18357 I LoadedApk: We unbound before receiving the con
+nection,name:ComponentInfo{com.android.vending/com.google.android.finsky.develo
+pergroupidinfo.DeveloperGroupIdInfoService}
+11-11 02:04:41.335  1717  2337 I ActivityManager: App 10190/com.google.android.
+videos targets O+, restricted
+11-11 02:04:41.354  1717  1949 I ActivityManager: App 10190/com.google.android.
+videos targets O+, restricted
+11-11 02:04:41.354  1717  1949 W BroadcastQueue: Background execution not allow
+ed: receiving Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:co
+m.eventmarketplace.app flg=0x4000010 (has extras) } to com.google.android.video
+s/com.google.android.libraries.social.peoplekit.thirdparty.viewcontrollers.Thir
+dPartyReceiver
+11-11 02:04:43.149  1717  2076 I ActivityManager: sendIntentSender target:Pendi
+ngIntentRecord{fccd02e com.google.android.gms broadcastIntent}, intent:flg=0x4 
+hwFlg=0x810
+11-11 02:04:43.166  1717  2043 V BroadcastQueue: Finished with ordered broadcas
+t BroadcastRecord{b49347 u0 com.google.android.gms.gcm.ACTION_CHECK_QUEUE}
+11-11 02:04:45.776  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_DOCUMENTS from package com.google.android.youtube (protectio
+nLevel=262146 flags=0x20dbbec5)
+11-11 02:04:45.781  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_SOUND_TRIGGER from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-11 02:04:45.781  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_AUDIO_OUTPUT from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-11 02:04:45.781  1717  1968 I PackageManager: Un-granting permission android
+.permission.CONTROL_INCALL_EXPERIENCE from package com.google.android.googlequi
+cksearchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-11 02:04:45.781  1717  1968 I PackageManager: Un-granting permission android
+.permission.WRITE_APN_SETTINGS from package com.google.android.googlequicksearc
+hbox (protectionLevel=18 flags=0xa0d8bec5)
+11-11 02:04:45.781  1717  1968 I PackageManager: Un-granting permission android
+.permission.SUBSTITUTE_SHARE_TARGET_APP_NAME_AND_ICON from package com.google.a
+ndroid.googlequicksearchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-11 02:04:45.781  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_MEDIA_OUTPUT from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-11 02:04:45.781  1717  1968 I PackageManager: Un-granting permission android
+.permission.MODIFY_AUDIO_ROUTING from package com.google.android.googlequicksea
+rchbox (protectionLevel=18 flags=0xa0d8bec5)
+11-11 02:04:45.790  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.google.android.apps.docs.
+editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.790  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.791  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.791  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.791  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.791  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.docs (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.google.android.apps.docs.
+editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.sheets (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.google.android.apps.docs.
+editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.a
+pps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.OTHER_SERVICES from package com.g
+oogle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.ALL_SERVICES from package com.goo
+gle.android.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.writely from package com.google.a
+ndroid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.801  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.wise from package com.google.andr
+oid.apps.docs.editors.slides (protectionLevel=2 flags=0x38dbbe44)
+11-11 02:04:45.802  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.setupwizard.READ_DEVICE_ORIGIN from package com.google.android.apps
+.messaging (protectionLevel=18 flags=0x38cbbe45)
+11-11 02:04:45.802  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.READ_SETTINGS from package com.google.android.a
+pps.messaging (protectionLevel=18 flags=0x38cbbe45)
+11-11 02:04:45.802  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.WRITE_SETTINGS from package com.google.android.
+apps.messaging (protectionLevel=18 flags=0x38cbbe45)
+11-11 02:04:45.815  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.android.contacts (protect
+ionLevel=2 flags=0x90c83e45)
+11-11 02:04:45.815  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.WRITE_GMAIL from package com.android.contacts (protec
+tionLevel=2 flags=0x90c83e45)
+11-11 02:04:45.815  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.con
+tacts (protectionLevel=2 flags=0x90c83e45)
+11-11 02:04:45.820  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.google.android.gm (protec
+tionLevel=66 flags=0x38cbbe45)
+11-11 02:04:45.820  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.READ_SETTINGS from package com.google.android.a
+pps.tachyon (protectionLevel=18 flags=0x30c83e45)
+11-11 02:04:45.820  1717  1968 I PackageManager: Un-granting permission com.hua
+wei.android.launcher.permission.WRITE_SETTINGS from package com.google.android.
+apps.tachyon (protectionLevel=18 flags=0x30c83e45)
+11-11 02:04:45.822  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH.mail from package com.android.cal
+endar (protectionLevel=2 flags=0x28c83e45)
+11-11 02:04:45.822  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.READ_GMAIL from package com.android.calendar (protect
+ionLevel=2 flags=0x28c83e45)
+11-11 02:04:45.822  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.gm.permission.WRITE_GMAIL from package com.android.calendar (protec
+tionLevel=2 flags=0x28c83e45)
+11-11 02:04:45.828  1717  1968 I PackageManager: Un-granting permission android
+.permission.REQUEST_INSTALL_PACKAGES from package com.google.android.apps.docs 
+(protectionLevel=66 flags=0x28cbbec5)
+11-11 02:04:45.831  1717  1968 I PackageManager: Un-granting permission android
+.permission.INTERACT_ACROSS_USERS from package com.google.android.syncadapters.
+contacts (protectionLevel=50 flags=0x20883e45)
+11-11 02:04:45.833  1717  1968 I PackageManager: Un-granting permission android
+.permission.WRITE_EMBEDDED_SUBSCRIPTIONS from package com.google.android.gms (p
+rotectionLevel=50 flags=0xa0cabec5)
+11-11 02:04:45.833  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_VIDEO_OUTPUT from package com.google.android.gms (protectio
+nLevel=2 flags=0xa0cabec5)
+11-11 02:04:45.833  1717  1968 I PackageManager: Un-granting permission android
+.permission.FORCE_STOP_PACKAGES from package com.google.android.gms (protection
+Level=18 flags=0xa0cabec5)
+11-11 02:04:45.833  1717  1968 I PackageManager: Un-granting permission android
+.permission.OBSERVE_ROLE_HOLDERS from package com.google.android.gms (protectio
+nLevel=258 flags=0xa0cabec5)
+11-11 02:04:45.834  1717  1968 I PackageManager: Un-granting permission android
+.permission.MODIFY_DEFAULT_AUDIO_EFFECTS from package com.google.android.gms (p
+rotectionLevel=18 flags=0xa0cabec5)
+11-11 02:04:45.834  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_DEVICE_ADMINS from package com.google.android.gms (protectio
+nLevel=2 flags=0xa0cabec5)
+11-11 02:04:45.835  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_ACTIVITY_STACKS from package com.google.android.gms (protect
+ionLevel=2 flags=0xa0cabec5)
+11-11 02:04:45.835  1717  1968 I PackageManager: Un-granting permission android
+.permission.CAPTURE_SECURE_VIDEO_OUTPUT from package com.google.android.gms (pr
+otectionLevel=2 flags=0xa0cabec5)
+11-11 02:04:45.835  1717  1968 I PackageManager: Un-granting permission android
+.permission.MANAGE_ROLLBACKS from package com.google.android.gms (protectionLev
+el=514 flags=0xa0cabec5)
+11-11 02:04:45.835  1717  1968 I PackageManager: Un-granting permission android
+.permission.MEDIA_CONTENT_CONTROL from package com.google.android.gms (protecti
+onLevel=18 flags=0xa0cabec5)
+11-11 02:04:45.838  1717  1968 I PackageManager: Un-granting permission android
+.permission.UPDATE_APP_OPS_STATS from package com.google.android.tts (protectio
+nLevel=274 flags=0x34cbbec5)
+11-11 02:04:45.838  1717  1968 I PackageManager: Un-granting permission android
+.permission.START_ACTIVITIES_FROM_BACKGROUND from package com.google.android.tt
+s (protectionLevel=49682 flags=0x34cbbec5)
+11-11 02:04:45.841  1717  1968 I PackageManager: Un-granting permission com.goo
+gle.android.googleapps.permission.GOOGLE_AUTH from package com.google.android.v
+ideos (protectionLevel=2 flags=0x30dbbec5)
+11-11 02:04:45.841  1717  1968 I PackageManager: Un-granting permission android
+.permission.WRITE_MEDIA_STORAGE from package com.google.android.apps.photos (pr
+otectionLevel=18 flags=0x38d9be45)
+11-11 02:04:46.988  1053  1089 D         : HibSTrategy::HibStrategySwapCandidat
+eProcessAdd packageName com.google.android.videos
+11-11 02:04:47.041  1053  5681 D         : HibStrategy::HibStrategySwapCandidat
+eProcessRemove packageName is com.google.android.videos
+11-11 02:04:51.648  1717  1968 I PackageManager: Returning preferred activity: 
+com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher
+11-11 02:04:51.736  1717  1946 I AccessibilityShortcutController: checkPackageI
+nstalled packageName:com.google.android.marvin.talkback,isInstalled:true
+11-11 02:04:51.747  1717  1949 I ActivityManager: App 10164/com.google.android.
+packageinstaller targets O+, restricted
+11-11 02:04:51.747  1717  1949 W BroadcastQueue: Background execution not allow
+ed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.
+eventmarketplace.app flg=0x4000010 (has extras) } to com.google.android.package
+installer/com.android.packageinstaller.PackageInstalledReceiver
+11-11 02:04:51.795 32011 11970 W GCM     : Unexpected forwarded intent: Intent 
+{ act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketplace.app 
+flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.Pe
+rsistentIntentOperationService (has extras) }
+11-11 02:04:51.797 32011 11970 W NetworkScheduler: Unexpected forwarded intent:
+ Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketpl
+ace.app flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.ch
+imera.PersistentIntentOperationService (has extras) }
+11-11 02:04:51.846 18357 18591 I Icing   : IndexChimeraService.getServiceInterf
+ace callingPackage=com.google.android.gms componentName=AppsCorpus serviceId=36
+11-11 02:04:51.871  1717  2744 I PackageManager: packageName: com.huawei.androi
+d.launcher is already default home
+11-11 02:04:51.873 18357 18394 I Icing   : IndexChimeraService.getServiceInterf
+ace callingPackage=com.google.android.gms componentName=null serviceId=30
+11-11 02:04:51.880 32011 11980 W GCM     : Unexpected forwarded intent: Intent 
+{ act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketplace.app 
+flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.chimera.Pe
+rsistentIntentOperationService (has extras) }
+11-11 02:04:51.880 32011 11977 W NetworkScheduler: Unexpected forwarded intent:
+ Intent { act=android.intent.action.PACKAGE_ADDED dat=package:com.eventmarketpl
+ace.app flg=0x4000010 pkg=com.google.android.gms cmp=com.google.android.gms/.ch
+imera.PersistentIntentOperationService (has extras) }
+11-11 02:04:51.978 18357 11368 I Icing   : Indexing com.google.android.gms-apps
+ from com.google.android.gms
+11-11 02:04:52.001  1717  2744 I ActivityManager: App 10164/com.google.android.
+packageinstaller targets O+, restricted
+11-11 02:04:52.025 18357 11368 I Icing   : Indexing done com.google.android.gms
+-apps
+11-11 02:04:56.133 32011 32011 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.presencemanager.service.START dat=chimera-action: cmp=com.googl
+e.android.gms/.chimera.PersistentApiService }
+11-11 02:04:56.148 32011 32011 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.presencemanager.service.INTERNAL_IDENTITY dat=chimera-action: c
+mp=com.google.android.gms/.chimera.PersistentApiService }
+11-11 02:05:01.818  7906  8376 I PlayCommon: [90998] Connecting to server for t
+imestamp: https://play.googleapis.com/play/log/timestamp
+11-11 02:05:01.830  1717  2076 I ActivityManager: sendIntentSender target:Pendi
+ngIntentRecord{fccd02e com.google.android.gms broadcastIntent}, intent:flg=0x4 
+hwFlg=0x810
+11-11 02:05:01.850  1717  2744 V BroadcastQueue: Finished with ordered broadcas
+t BroadcastRecord{875aa13 u0 com.google.android.gms.gcm.ACTION_CHECK_QUEUE}
+11-11 02:05:01.858  1717  1717 I JobScheduler: About to run job on context 0, j
+ob: JobStatus{4ec8d13 #u0a172/9422 com.android.vending/com.google.android.finsk
+y.scheduler.process.mainimpl.PhoneskyJobServiceMain u=0 s=10172 TIME=-5s947ms:+
+7h50m35s153ms NET READY}
+11-11 02:05:01.901  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.eventmarketplace.app.MainActivity, flag = showStartingWindow, isHomeActivit
+y = , isTop = false
+11-11 02:05:01.909  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.huawei.android.launcher.unihome.UniHomeLauncher, flag = onPause, isHomeActi
+vity = , isTop = false
+11-11 02:05:01.915  1717  1898 I WindowManager: addWindow: Window{c67140d u0 Sp
+lash Screen com.eventmarketplace.app} client:android.view.ViewRootImpl$W@3ef7ea
+4 currentDisplayId:0 requestDisplayId:0 token:Token{24e6a7b ActivityRecord{4877
+275 u0 com.eventmarketplace.app/.MainActivity t1005}}
+11-11 02:05:01.925  1717  1897 V ActivityTaskManager: Stopping ActivityRecord{5
+7f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}: nowVisible=
+false animating=true finishing=false
+11-11 02:05:01.931  1717  1898 I WindowManager: Changing focus from Window{f310
+e81 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeL
+auncher} to null displayId=0 Callers=com.android.server.wm.RootWindowContainer.
+updateFocusedWindowLocked:209 com.android.server.wm.WindowManagerService.update
+FocusedWindowLocked:6517 com.android.server.wm.WindowManagerService.relayoutWin
+dow:2813 com.android.server.wm.Session.relayout:197 
+11-11 02:05:01.943  1717  1898 I WindowManager: performshow Window{c67140d u0 S
+plash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=t
+rue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true des
+troying=false animating=true
+11-11 02:05:01.944  1717  1898 I WindowManager: dispatchResized : win = Window{
+c67140d u0 Splash Screen com.eventmarketplace.app} drawState = READY_TO_SHOW
+11-11 02:05:01.968  7906  8376 I PlayCommon: [90998] Connecting to server: http
+s://play.googleapis.com/play/log?format=raw&proto_v2=true
+11-11 02:05:01.970 18357  7185 W GetGamesServiceReqFacto: Parsing request with 
+ignored arguments. signInOptionsBundle [Bundle[{com.google.android.gms.signin.i
+nternal.serverClientId=null, com.google.android.gms.signin.internal.usePromptMo
+deForAuthCode=true, com.google.android.gms.signin.internal.logSessionId=null, c
+om.google.android.gms.signin.internal.hostedDomain=null, com.google.android.gms
+.signin.internal.offlineAccessRequested=false, com.google.android.gms.signin.in
+ternal.waitForAccessTokenRefresh=false, com.google.android.gms.signin.internal.
+clientRequestedAccount=Account {name=XXXXXXXXX, type=com.google}, com.google.an
+droid.gms.signin.internal.idTokenRequested=false, com.google.android.gms.signin
+.internal.forceCodeForRefreshToken=false}]], isRetryingSignIn [false], skipWelc
+omePopup [false], requireGooglePlus [false]
+11-11 02:05:01.970  1717 11045 I WindowManager: performshow Window{c67140d u0 S
+plash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=t
+rue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true des
+troying=false animating=true
+11-11 02:05:01.975  1717  1898 I WindowManager: performshow Window{c67140d u0 S
+plash Screen com.eventmarketplace.app} tok.waitingToShow=true isTransitionSet=t
+rue parentHidden=false vis=0 tok.hidden=true hasSurface=true policyVis=true des
+troying=false animating=true
+11-11 02:05:01.976  1717  1898 I WindowManager: Check opening app=AppWindowToke
+n{5f70098 token=Token{24e6a7b ActivityRecord{4877275 u0 com.eventmarketplace.ap
+p/.MainActivity t1005}}}: allDrawn=false startingDisplayed=true startingMoved=f
+alse isRelaunching()=false startingWindow=Window{c67140d u0 Splash Screen com.e
+ventmarketplace.app}
+11-11 02:05:01.976  1717  1898 D WindowManager: setActivityVisibleInFingerBoost
+Inner fit:true record:ActivityRecord{57f1789 u0 com.huawei.android.launcher/.un
+ihome.UniHomeLauncher t1} isInWallpaperEffect:false, callingPid: 1717
+11-11 02:05:01.977  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 12, app = AppWindowToken{bb8a345 token=Token{d0d67bc Activi
+tyRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}}},
+ window = Window{f310e81 u0 com.huawei.android.launcher/com.huawei.android.laun
+cher.unihome.UniHomeLauncher}, mClosingApps = {AppWindowToken{bb8a345 token=Tok
+en{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHo
+meLauncher t1}}}}, topOpeningApp = AppWindowToken{5f70098 token=Token{24e6a7b A
+ctivityRecord{4877275 u0 com.eventmarketplace.app/.MainActivity t1005}}}, mExit
+IconBitmap = null, mExitIconHeight = -1, mExitIconWidth = -1
+11-11 02:05:01.977  1717  1898 V WindowManager: commitVisibility: AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}: hidden=true hiddenRequested=true
+11-11 02:05:01.977  1717  1898 I WindowManager: Animation done in AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}} isHidden:true hiddenRequested:true
+11-11 02:05:01.977  1717  1898 V ActivityTaskManager: Stopping ActivityRecord{5
+7f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}: nowVisible=
+false animating=true finishing=false
+11-11 02:05:01.978  1717  1898 D HwWindowManagerServiceEx: is app exit to launc
+her info: transit = 12, app = AppWindowToken{5f70098 token=Token{24e6a7b Activi
+tyRecord{4877275 u0 com.eventmarketplace.app/.MainActivity t1005}}}, window = n
+ull, mClosingApps = {AppWindowToken{bb8a345 token=Token{d0d67bc ActivityRecord{
+57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}}}}, topOpen
+ingApp = AppWindowToken{5f70098 token=Token{24e6a7b ActivityRecord{4877275 u0 c
+om.eventmarketplace.app/.MainActivity t1005}}}, mExitIconBitmap = null, mExitIc
+onHeight = -1, mExitIconWidth = -1
+11-11 02:05:01.978  1717  1898 V ActivityTaskManager: Stopping ActivityRecord{5
+7f1789 u0 com.huawei.android.launcher/.unihome.UniHomeLauncher t1}: nowVisible=
+false animating=true finishing=false
+11-11 02:05:01.980  1717  1898 I WindowManager: New wallpaper target: null prev
+Target: Window{f310e81 u0 com.huawei.android.launcher/com.huawei.android.launch
+er.unihome.UniHomeLauncher}
+11-11 02:05:01.981  1717  1895 D StatusBarManagerService: win:Window{c67140d u0
+ Splash Screen com.eventmarketplace.app}mIsColorEnable:truelight:false
+11-11 02:05:01.981  1717  1895 I StatusBarDisable: setFlags what=0 which=1 pkg=
+Window{c67140d u0 Splash Screen com.eventmarketplace.app}
+11-11 02:05:01.984  2641  3419 I ScenarioService: add focus on app:com.eventmar
+ketplace.app to visiblePkgs
+11-11 02:05:01.997   773  3693 W BufferQueueProducer: [com.huawei.android.launc
+her/com.huawei.android.launcher.unihome.UniHomeLauncher#1]:1390: disconnect: no
+t connected (req=1)
+11-11 02:05:02.000   773  3693 W BufferQueueProducer: [com.huawei.android.launc
+her/com.huawei.android.launcher.unihome.UniHomeLauncher#0]:1390: disconnect: no
+t connected (req=1)
+11-11 02:05:02.002  1717  1897 D WindowManager: setLauncherVisibleInFingerBoost
+ record=ActivityRecord{57f1789 u0 com.huawei.android.launcher/.unihome.UniHomeL
+auncher t1}
+11-11 02:05:02.024 18357 18387 W Binder  : 	at m26.den.d(:com.google.android.gm
+s.optional_games@254232017@25.42.32 (100000-0):3)
+11-11 02:05:02.024 18357 18387 W Binder  : 	at m26.den.dX(:com.google.android.g
+ms.optional_games@254232017@25.42.32 (100000-0):34)
+11-11 02:05:02.024 18357 18387 W Binder  : 	at m26.cqk.onTransact(:com.google.a
+ndroid.gms.optional_games@254232017@25.42.32 (100000-0):75)
+11-11 02:05:02.057  1717  2043 V ActivityManager: Successfully start provider C
+ontentProviderRecord{6c218b1 u0 com.google.android.gms/.chimera.container.GmsMo
+duleProvider} launchingApp=null caller pid= 12077
+11-11 02:05:02.084  2641  3419 I ScenarioService: refresh visibleApp:[com.event
+marketplace.app]
+11-11 02:05:02.192  1717  1930 I HwAudioServiceEx: ComponentInfo : className = 
+com.eventmarketplace.app.MainActivity, flag = onResume, isHomeActivity = , isTo
+p = true
+11-11 02:05:02.205 18357 18357 D BoundBrokerSvc: onBind: Intent { act=com.googl
+e.android.gms.measurement.START pkg=com.google.android.gms }
+11-11 02:05:02.205 18357 18357 D BoundBrokerSvc: Loading bound service for inte
+nt: Intent { act=com.google.android.gms.measurement.START pkg=com.google.androi
+d.gms }
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:02.358 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:02.359 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:02.488 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:02.726  1717  2042 I JobScheduler.Time: Add job to TimeTracking: a9
+ba34f #u0a172/9427 com.android.vending/com.google.android.finsky.scheduler.proc
+ess.mainimpl.PhoneskyJobServiceMain, delayTime:3843279503, deadlineTime:3862042
+442
+11-11 02:05:02.734  1717  2042 I JobScheduler: APP response end time, Completed
+ JobStatus{4ec8d13 #u0a172/9422 com.android.vending/com.google.android.finsky.s
+cheduler.process.mainimpl.PhoneskyJobServiceMain u=0 s=10172 TIME=-6s823ms:+7h5
+0m34s277ms NET READY}, reschedule=false
+11-11 02:05:03.032  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1185909
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=3423 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-11 02:05:03.034  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-11 02:05:03.059  1717  2744 V ActivityManager: Successfully start provider C
+ontentProviderRecord{697d7e6 u0 com.google.android.gms/.fonts.provider.FontsPro
+vider} launchingApp=null caller pid= 12077
+11-11 02:05:03.078 12077 12077 I flutter : APP: SPLASH:init-done
+11-11 02:05:03.104 12077 12122 W InstallationId: com.google.firebase.installati
+ons.FirebaseInstallationsException: Firebase Installations Service is unavailab
+le. Please try again later.
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.instal
+lations.remote.FirebaseInstallationServiceClient.createFirebaseInstallation(Fir
+ebaseInstallationServiceClient.java:209)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations.registerFidWithServer(FirebaseInstallations.java:
+533)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations.doNetworkCallIfNecessary(FirebaseInstallations.ja
+va:387)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fireb
+ase-installations-FirebaseInstallations(FirebaseInstallations.java:372)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:
+0)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.concur
+rent.SequentialExecutor$QueueWorker.workOnQueue(SequentialExecutor.java:229)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.concur
+rent.SequentialExecutor$QueueWorker.run(SequentialExecutor.java:174)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.concur
+rent.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-Cust
+omThreadFactory(CustomThreadFactory.java:47)
+11-11 02:05:03.104 12077 12122 W InstallationId: 	at com.google.firebase.concur
+rent.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:03.105 32011 32011 D BoundBrokerSvc: onRebind: Intent { act=com.goo
+gle.android.gms.common.telemetry.service.START dat=chimera-action: cmp=com.goog
+le.android.gms/.chimera.PersistentApiService }
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:03.109 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:03.110 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:03.127 12077 12077 I flutter : APP: AUTH_GATE:STATE:null -> LOGIN
+11-11 02:05:03.131  1717  1898 I WindowManager: removeIfPossible: Window{c67140
+d u0 Splash Screen com.eventmarketplace.app} callers=com.android.server.wm.Wind
+owState.removeIfPossible:2611 com.android.server.wm.WindowManagerService.remove
+Window:2282 com.android.server.wm.Session.remove:179 android.view.ViewRootImpl.
+dispatchDetachedFromWindow:4929 android.view.ViewRootImpl.doDie:8273 
+11-11 02:05:03.131  2680  2958 E AbilityFormViewRefreshUtils: stopListening [0m
+s]
+11-11 02:05:03.132  1717  1898 I WindowManager: Not removing Window{c67140d u0 
+Splash Screen com.eventmarketplace.app EXITING} due to exit animation 
+11-11 02:05:03.138  7752 11742 I Finsky  : [91037] Package com.google.android.g
+ms is verified.
+11-11 02:05:03.146  1717  2043 I WindowManager: notifyAppStopped: AppWindowToke
+n{bb8a345 token=Token{d0d67bc ActivityRecord{57f1789 u0 com.huawei.android.laun
+cher/.unihome.UniHomeLauncher t1}}}
+11-11 02:05:03.146  1717  2043 E WindowManager: win=Window{330c58f u0 com.huawe
+i.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher} destroy
+Surfaces: appStopped=true win.mWindowRemovalAllowed=false win.mRemoveOnExit=fal
+se
+11-11 02:05:03.147  1717  2043 E WindowManager: win=Window{f310e81 u0 com.huawe
+i.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher} destroy
+Surfaces: appStopped=true win.mWindowRemovalAllowed=false win.mRemoveOnExit=fal
+se
+11-11 02:05:03.169  1082  1302 W ScreemCommon: CLICK_START_APP: JL_APP_LAUNCHIN
+G_END and JL_EVENT_CLICK_UP too long| span:1254720 > A(10000), A
+11-11 02:05:03.192  1717 11413 I HwPackageManagerService: app:system_server, ge
+tApplicationInfo or source return null
+11-11 02:05:03.194  1717 11413 I HwPackageManagerService: app:surfaceflinger, g
+etApplicationInfo or source return null
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invokeSuspend(RemoteSettingsFetch
+er.kt:60)
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:8)
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher$doConfigFetch$2.invoke(Unknown Source:4)
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettingsFetcher.doConfigFetch(RemoteSettingsFetcher.kt:53)
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings.updateSettings(RemoteSettings.kt:101)
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.sessions.s
+ettings.RemoteSettings$updateSettings$1.invokeSuspend(Unknown Source:14)
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-CustomTh
+readFactory(CustomThreadFactory.java:47)
+11-11 02:05:03.229 12077 12124 D StrictMode: 	at com.google.firebase.concurrent
+.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:03.245  1717  1898 I WindowManager: Exit animation finished in Wind
+ow{c67140d u0 Splash Screen com.eventmarketplace.app EXITING}: remove=true
+11-11 02:05:03.245  1717  1898 E WindowManager: win=Window{c67140d u0 Splash Sc
+reen com.eventmarketplace.app EXITING} destroySurfaces: appStopped=false win.mW
+indowRemovalAllowed=true win.mRemoveOnExit=true
+11-11 02:05:03.246  1717  1898 I WindowManager: postWindowRemoveCleanupLocked: 
+Window{c67140d u0 Splash Screen com.eventmarketplace.app}
+11-11 02:05:03.246  1717  1898 I WindowManager: Removing Window{c67140d u0 Spla
+sh Screen com.eventmarketplace.app} from AppWindowToken{5f70098 token=Token{24e
+6a7b ActivityRecord{4877275 u0 com.eventmarketplace.app/.MainActivity t1005}}}
+11-11 02:05:03.378 12077 12119 W InstallationId: com.google.firebase.installati
+ons.FirebaseInstallationsException: Firebase Installations Service is unavailab
+le. Please try again later.
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.instal
+lations.remote.FirebaseInstallationServiceClient.createFirebaseInstallation(Fir
+ebaseInstallationServiceClient.java:209)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations.registerFidWithServer(FirebaseInstallations.java:
+533)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations.doNetworkCallIfNecessary(FirebaseInstallations.ja
+va:387)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations.lambda$doRegistrationOrRefresh$3$com-google-fireb
+ase-installations-FirebaseInstallations(FirebaseInstallations.java:372)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.instal
+lations.FirebaseInstallations$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:
+0)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.concur
+rent.SequentialExecutor$QueueWorker.workOnQueue(SequentialExecutor.java:229)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.concur
+rent.SequentialExecutor$QueueWorker.run(SequentialExecutor.java:174)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.concur
+rent.CustomThreadFactory.lambda$newThread$0$com-google-firebase-concurrent-Cust
+omThreadFactory(CustomThreadFactory.java:47)
+11-11 02:05:03.378 12077 12119 W InstallationId: 	at com.google.firebase.concur
+rent.CustomThreadFactory$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-11 02:05:03.405  1717  2042 I JobScheduler.Time: Add job to TimeTracking: 28
+9ce15 #u0a492/436220505 com.eventmarketplace.app/com.google.android.datatranspo
+rt.runtime.scheduling.jobscheduling.JobInfoSchedulerService, delayTime:38338388
+60, deadlineTime:9223372036854775807
+11-11 02:05:04.502  2641  2724 I LocationDetection: leaveHomeFence: RequestResu
+lt{6, 2, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,2,3, 1, null, 4, 20000
+7, error_unknown}
+11-11 02:05:04.503  2641  2724 I LocationDetection: arriveHomeFence: RequestRes
+ult{6, 1, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,1,3, 1, null, 4, 2000
+07, error_unknown}
+11-11 02:05:05.145  1717  2076 I ActivityManager: sendIntentSender target:Pendi
+ngIntentRecord{fccd02e com.google.android.gms broadcastIntent}, intent:flg=0x4 
+hwFlg=0x810
+11-11 02:05:05.159  1717 11413 V BroadcastQueue: Finished with ordered broadcas
+t BroadcastRecord{e86aacd u0 com.google.android.gms.gcm.ACTION_CHECK_QUEUE}
+11-11 02:05:05.161  2641  2724 I LocationDetection: leaveHomeFence: RequestResu
+lt{6, 2, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,2,3, 1, null, 4, 20000
+7, error_unknown}
+11-11 02:05:05.165  2641  2724 I LocationDetection: arriveHomeFence: RequestRes
+ult{6, 1, 3, null, 0, 0, 100, com.huawei.powergenie_1:1;6,1,3, 1, null, 4, 2000
+07, error_unknown}
+11-11 02:05:07.678 18357 11934 W FA-SVC  : Gms url request failed, app: com.eve
+ntmarketplace.app, GOOGLE_ANALYTICS, m1.mu: Exception in CronetUrlRequest: net:
+:ERR_QUIC_PROTOCOL_ERROR, ErrorCode=10, InternalErrorCode=-356, Retryable=false
+, QuicDetailedErrorCode=25, Source=2
+11-11 02:05:08.133 32011 32011 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.common.telemetry.service.START dat=chimera-action: cmp=com.goog
+le.android.gms/.chimera.PersistentApiService }
+11-11 02:05:09.072  2641  2641 W com.huawei.iaware: type=1400 audit(0.0:1185921
+): avc: granted { getattr } for pid=2641 comm=616374696F6E732068616E646C6572 pa
+th="/data/system/users/0/appwidgets.xml" dev="sdd71" ino=3423 scontext=u:r:syst
+em_app:s0 tcontext=u:object_r:system_data_file:s0 tclass=file
+11-11 02:05:09.075  2641  3596 I PG_ash  : has widget app: com.huawei.android.t
+otemweather
+11-11 02:05:13.149 18357 18357 D BoundBrokerSvc: onUnbind: Intent { act=com.goo
+gle.android.gms.measurement.START pkg=com.google.android.gms }
+11-11 02:05:13.987  3103  3103 I HiAdKit.ExSplashManager:  do not request exspl
+ash config
+
+

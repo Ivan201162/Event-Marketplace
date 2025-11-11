@@ -1,0 +1,28 @@
+УСТРОЙСТВО OFFLINE — ЛОГИ НЕДОСТУПНЫ
+=====================================
+
+Устройство: 34HDU20228002261
+Статус: offline
+Дата попытки: 2025-11-11
+
+Команда для сбора логов (когда устройство будет online):
+  1. Очистить буфер: adb -s 34HDU20228002261 logcat -c
+  2. Открыть приложение и нажать "Войти через Google"
+  3. Подождать 30 секунд
+  4. Собрать лог: adb -s 34HDU20228002261 logcat -d > diagnostics/logcat_auth_flow.txt
+
+Ожидаемые маркеры в логах:
+  - GOOGLE_SIGNIN_START
+  - GOOGLE_SIGNIN_STEP:signIn
+  - GOOGLE_SIGNIN_STEP:getTokens
+  - GOOGLE_SIGNIN_SUCCESS:account=<email> (или GOOGLE_SIGNIN_ERROR)
+  - GOOGLE_FIREBASE_AUTH_START
+  - GOOGLE_FIREBASE_AUTH_SUCCESS:uid=<uid> (или GOOGLE_FIREBASE_AUTH_ERROR)
+  - AUTH_GATE:PROFILE_CHECK:uid=<uid>
+  - AUTH_GATE:PROFILE_CHECK:ok=true (или false)
+
+Потенциальные ошибки:
+  - GOOGLE_SIGNIN_ERROR:unknown:...
+  - GOOGLE_FIREBASE_AUTH_ERROR:DEVELOPER_ERROR:...
+  - GOOGLE_FIREBASE_AUTH_ERROR:network-request-failed:...
+

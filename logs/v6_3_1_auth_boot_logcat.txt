@@ -1,0 +1,6 @@
+﻿--------- beginning of main
+--------- beginning of system
+11-11 01:39:33.774  9087  9151 I flutter : [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+11-11 01:39:33.842  9087  9087 I flutter : APP: APP: BUILD OK v6.3.1-auth-boot
+11-11 01:39:33.921  9087  9087 I flutter : APP: SPLASH:init-done
+11-11 01:39:33.964  9087  9087 I flutter : APP: AUTH_GATE:USER_NULL -> LOGIN

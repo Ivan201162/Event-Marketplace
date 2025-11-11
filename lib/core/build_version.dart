@@ -1,3 +1,3 @@
 /// Версия сборки для отображения
-const String BUILD_VERSION = 'v6.3-auth-hard-reset';
+const String BUILD_VERSION = 'v7.2-premium';
 

@@ -4,7 +4,7 @@ import 'package:event_marketplace_app/screens/animated_splash_screen.dart';
 import 'package:event_marketplace_app/screens/splash/splash_event_screen.dart';
 import 'package:event_marketplace_app/screens/splash/init_error_screen.dart';
 import 'package:event_marketplace_app/screens/auth/auth_check_screen.dart';
-import 'package:event_marketplace_app/screens/auth/login_screen_improved.dart';
+import 'package:event_marketplace_app/screens/auth/login_screen.dart';
 import 'package:event_marketplace_app/screens/auth/phone_auth_improved.dart';
 import 'package:event_marketplace_app/screens/auth/role_selection_screen.dart';
 import 'package:event_marketplace_app/screens/auth/register_screen_enhanced.dart';
@@ -43,7 +43,7 @@ import 'package:go_router/go_router.dart';
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/splash-event', // Start with splash screen
+    initialLocation: '/auth-gate', // Start with AuthGate
     debugLogDiagnostics: true,
     observers: [
       _AnalyticsRouteObserver(),
@@ -90,7 +90,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         name: 'login',
-        builder: (context, state) => const LoginScreenImproved(),
+        builder: (context, state) => const LoginScreen(),
       ),
 
       GoRoute(
@@ -198,7 +198,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           if (userId == 'me') {
             final currentUser = FirebaseAuth.instance.currentUser;
             if (currentUser == null) {
-              return const LoginScreenImproved();
+              return const LoginScreen();
             }
             return ProfileFullScreen(userId: currentUser.uid);
           }

@@ -1,85 +1,99 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer' as developer;
 
-/// Репозиторий для работы с аутентификацией
 class AuthRepository {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-    // serverClientId НЕ указывать на Android (используется из google-services.json)
-  );
+  final _auth = FirebaseAuth.instance;
+  final _google = GoogleSignIn(scopes: ['email', 'profile']);
 
-  /// Вход через Google с жёстким reset
   Future<UserCredential> signInWithGoogle() async {
-    // Полный сброс состояния — лечит stuck-сессию Google
+    developer.log('GOOGLE_SIGNIN_START', name: 'AuthRepository');
+    
     try {
-      await _googleSignIn.disconnect();
-    } catch (_) {}
-    try {
-      await _googleSignIn.signOut();
-    } catch (_) {}
+      // Полный сброс состояния
+      try {
+        await _google.disconnect();
+      } catch (_) {}
+      try {
+        await _google.signOut();
+      } catch (_) {}
 
-    final connectivity = Connectivity();
-    final hasNet = await connectivity.checkConnectivity();
-    if (hasNet == ConnectivityResult.none) {
-      throw FirebaseAuthException(
-        code: 'network_request_failed',
-        message: 'No internet',
+      // Этап 1: Google Sign-In
+      final account = await _google.signIn();
+      if (account == null) {
+        developer.log('GOOGLE_SIGNIN_ERROR:canceled:User canceled', name: 'AuthRepository');
+        throw FirebaseAuthException(code: 'popup_closed_by_user', message: 'Вход отменён пользователем');
+      }
+
+      developer.log('GOOGLE_SIGNIN_SUCCESS:account=${account.email}', name: 'AuthRepository');
+
+      final auth = await account.authentication;
+      final cred = GoogleAuthProvider.credential(
+        accessToken: auth.accessToken,
+        idToken: auth.idToken,
       );
+
+      // Этап 2: Firebase Auth
+      developer.log('GOOGLE_FIREBASE_AUTH_START', name: 'AuthRepository');
+      
+      try {
+        final userCred = await _auth.signInWithCredential(cred);
+        developer.log('GOOGLE_FIREBASE_AUTH_SUCCESS:uid=${userCred.user?.uid}', name: 'AuthRepository');
+        return userCred;
+      } on FirebaseAuthException catch (e) {
+        developer.log('GOOGLE_FIREBASE_AUTH_ERROR:${e.code}:${e.message}', name: 'AuthRepository');
+        developer.log('GOOGLE_LOGIN_STACK:${StackTrace.current}', name: 'AuthRepository');
+        rethrow;
+      } catch (e, stack) {
+        developer.log('GOOGLE_FIREBASE_AUTH_ERROR:unknown:$e', name: 'AuthRepository');
+        developer.log('GOOGLE_LOGIN_STACK:$stack', name: 'AuthRepository');
+        throw FirebaseAuthException(code: 'unknown', message: e.toString());
+      }
+    } on FirebaseAuthException catch (e) {
+      developer.log('GOOGLE_SIGNIN_ERROR:${e.code}:${e.message}', name: 'AuthRepository');
+      developer.log('GOOGLE_LOGIN_STACK:${StackTrace.current}', name: 'AuthRepository');
+      rethrow;
+    } catch (e, stack) {
+      developer.log('GOOGLE_SIGNIN_ERROR:unknown:$e', name: 'AuthRepository');
+      developer.log('GOOGLE_LOGIN_STACK:$stack', name: 'AuthRepository');
+      throw FirebaseAuthException(code: 'unknown', message: e.toString());
     }
+  }
 
-    debugPrint('GOOGLE_SIGNIN_START');
-    final account = await _googleSignIn.signIn();
-
-    if (account == null) {
-      throw FirebaseAuthException(
-        code: 'canceled',
-        message: 'User canceled',
-      );
+  Future<UserCredential> signInWithEmail(String email, String password) async {
+    try {
+      return await _auth.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      developer.log('EMAIL_SIGNIN_ERROR:${e.code}:${e.message}', name: 'AuthRepository');
+      rethrow;
     }
-
-    final auth = await account.authentication;
-    final cred = GoogleAuthProvider.credential(
-      accessToken: auth.accessToken,
-      idToken: auth.idToken,
-    );
-
-    debugPrint('GOOGLE_FIREBASE_AUTH_START');
-    final userCred = await _auth.signInWithCredential(cred);
-    debugPrint('GOOGLE_SIGNIN_SUCCESS:${userCred.user?.uid}');
-    debugPrint('GOOGLE_FIREBASE_AUTH_SUCCESS');
-    return userCred;
   }
 
-  /// Вход через email/пароль
-  Future<UserCredential> signInWithEmail(String email, String password) {
-    return _auth.signInWithEmailAndPassword(email: email, password: password);
-  }
-
-  /// Регистрация через email/пароль
-  Future<UserCredential> signUpWithEmail(String email, String password) async {
-    final c = await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    return c;
-  }
-
-  /// Отправка письма для сброса пароля
-  Future<void> sendReset(String email) =>
-      _auth.sendPasswordResetEmail(email: email);
-
-  /// Выход из аккаунта
-  Future<void> logout() async {
+  Future<UserCredential> createUserWithEmailAndPassword(String email, String password) async {
     try {
-      await _googleSignIn.disconnect();
-    } catch (_) {}
+      final userCred = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      
+      // Создаём базовый документ пользователя
+      if (userCred.user != null) {
+        await _createUserDocument(userCred.user!.uid);
+      }
+      
+      return userCred;
+    } on FirebaseAuthException catch (e) {
+      developer.log('EMAIL_SIGNUP_ERROR:${e.code}:${e.message}', name: 'AuthRepository');
+      rethrow;
+    }
+  }
+
+  Future<void> _createUserDocument(String uid) async {
     try {
-      await _googleSignIn.signOut();
-    } catch (_) {}
-    await _auth.signOut();
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      developer.log('CREATE_USER_DOC_ERROR:$e', name: 'AuthRepository');
+    }
   }
 }
-

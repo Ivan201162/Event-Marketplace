@@ -1,0 +1,44 @@
+﻿flutter : Unhandled exception:
+строка:1 знак:1
++ flutter analyze 2>&1 | Out-File -FilePath diagnostics/flutter_analyze ...
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Unhandled exception::String) [],  
+   RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Error on line 53, column 3: Duplicate mapping key.
+   тХ╖
+53 тФВ   google_sign_in: ^6.2.1
+   тФВ   ^^^^^^^^^^^^^^
+   тХ╡
+#0      Loader._loadMapping (package:yaml/src/loader.dart:165:9)
+#1      Loader._loadNode (package:yaml/src/loader.dart:88:35)
+#2      Loader._loadMapping (package:yaml/src/loader.dart:163:19)
+#3      Loader._loadNode (package:yaml/src/loader.dart:88:35)
+#4      Loader._loadDocument (package:yaml/src/loader.dart:68:20)
+#5      Loader.load (package:yaml/src/loader.dart:60:20)
+#6      loadYamlDocument (package:yaml/yaml.dart:69:25)
+#7      loadYamlNode (package:yaml/yaml.dart:54:5)
+#8      loadYaml (package:yaml/yaml.dart:41:5)
+#9      FlutterManifest.createFromString (package:flutter_tools/src/flutter_man
+ifest.dart:45:28)
+#10     FlutterManifest.createFromPath (package:flutter_tools/src/flutter_manif
+est.dart:39:28)
+#11     runInContext.<anonymous closure> (package:flutter_tools/src/context_run
+ner.dart:225:44)
+#12     AppContext._generateIfNecessary.<anonymous closure> (package:flutter_to
+ols/src/base/context.dart:108:42)
+#13     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:674:23)
+#14     AppContext._generateIfNecessary (package:flutter_tools/src/base/context
+.dart:95:20)
+#15     AppContext.get (package:flutter_tools/src/base/context.dart:125:32)
+#16     featureFlags (package:flutter_tools/src/features.dart:13:42)
+#17     run.<anonymous closure> (package:flutter_tools/runner.dart:49:40)
+#18     runInContext.runnerWrapper (package:flutter_tools/src/context_runner.da
+rt:77:18)
+<asynchronous suspension>
+#19     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/cont
+ext.dart:154:19)
+<asynchronous suspension>
+#20     main (package:flutter_tools/executable.dart:101:3)
+<asynchronous suspension>

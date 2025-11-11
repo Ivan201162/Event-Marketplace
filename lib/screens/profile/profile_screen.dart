@@ -1,162 +1,68 @@
-import 'package:event_marketplace_app/providers/profile_providers.dart';
-import 'package:event_marketplace_app/screens/profile/edit_profile_screen.dart';
-import 'package:event_marketplace_app/widgets/profile_content.dart';
-import 'package:event_marketplace_app/widgets/profile_header.dart';
-import 'package:event_marketplace_app/widgets/profile_stats.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Экран профиля пользователя
-class ProfileScreen extends ConsumerStatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends ConsumerState<ProfileScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final bool _isOwnProfile = true; // TODO: Определить из контекста
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final profileState = ref.watch(profileProvider);
+    final user = FirebaseAuth.instance.currentUser!;
+    final doc = FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Профиль'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          if (_isOwnProfile) ...[
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: _editProfile,
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: _openSettings,
-            ),
-          ] else ...[
-            IconButton(
-              icon: const Icon(Icons.more_vert),
-              onPressed: _showProfileMenu,
-            ),
-          ],
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Посты'),
-            Tab(text: 'Идеи'),
-            Tab(text: 'Заявки'),
-          ],
-        ),
-      ),
-      body: profileState.when(
-        data: (profile) => Column(
-          children: [
-            // Заголовок профиля
-            ProfileHeader(
-              profile: profile,
-              isOwnProfile: _isOwnProfile,
-              onEditProfile: _editProfile,
-              onFollow: _toggleFollow,
-              onMessage: _sendMessage,
-            ),
+      appBar: AppBar(title: const Text("Профиль")),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: doc,
+        builder: (ctx, snap) {
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final data = snap.data!.data() as Map<String, dynamic>? ?? {};
 
-            // Статистика
-            ProfileStats(profile: profile),
-
-            // Контент
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  ProfileContent(type: 'posts', userId: profile.id),
-                  ProfileContent(type: 'ideas', userId: profile.id),
-                  ProfileContent(type: 'requests', userId: profile.id),
-                ],
-              ),
-            ),
-          ],
-        ),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          return ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки профиля: $error'),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () =>
-                    ref.read(profileProvider.notifier).refreshProfile(),
-                child: const Text('Повторить'),
+              Center(
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: data['photoUrl'] != null
+                      ? NetworkImage(data['photoUrl'] as String)
+                      : null,
+                  child: data['photoUrl'] == null
+                      ? const Icon(Icons.person, size: 50)
+                      : null,
+                ),
               ),
+              const SizedBox(height: 16),
+              Text(
+                "${data['firstName'] ?? ''} ${data['lastName'] ?? ''}",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "${data['city'] ?? ''}",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Роли: ${(data['roles'] as List?)?.join(', ') ?? 'Не указаны'}",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14),
+              ),
+              if (data['rating'] != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  "Рейтинг: ${data['rating']}",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _editProfile() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const EditProfileScreen(),
-      ),
-    );
-  }
-
-  void _openSettings() {
-    Navigator.pushNamed(context, '/settings');
-  }
-
-  void _toggleFollow() {
-    ref.read(profileProvider.notifier).toggleFollow();
-  }
-
-  void _sendMessage() {
-    // TODO: Открыть чат с пользователем
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Открытие чата...')),
-    );
-  }
-
-  void _showProfileMenu() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.report),
-            title: const Text('Пожаловаться'),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.block),
-            title: const Text('Заблокировать'),
-            onTap: () => Navigator.pop(context),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

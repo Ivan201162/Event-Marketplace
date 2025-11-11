@@ -1,0 +1,86 @@
+V7.0 REBUILD - Деплой Firebase
+================================
+
+Дата: 2025-11-11 11:49:05
+Версия: 7.0.0+47
+Build: v7.0-rebuild
+
+СТАТУС ДЕПЛОЯ:
+==============
+
+1. Firestore Rules
+   ✅ Файл: firestore.rules
+   ✅ Статус: Готов к деплою
+   ✅ Включает:
+      - Правила для users, specialists, posts, reels, stories, ideas
+      - Правила для bookings, specialist_calendar, specialist_pricing
+      - Правила для chats, messages, reactions
+      - Правила для notifications, saved_filters
+      - Функция isNotSelfReview() для предотвращения самоподписи
+
+2. Firestore Indexes
+   ✅ Файл: firestore.indexes.json
+   ✅ Статус: Готов к деплою
+   ✅ Включает:
+      - Индексы для users (rolesLower, cityLower, rating)
+      - Индексы для specialists (role, cityLower, categories)
+      - Индексы для posts, reels, stories, ideas (authorId)
+      - Индексы для reviews (specialistId)
+      - Индексы для bookings (specialistId, clientId, status)
+      - Индексы для notifications (userId)
+      - Индексы для chats (participants)
+      - Индексы для messages (chatId)
+
+3. Storage Rules
+   ✅ Файл: storage.rules
+   ✅ Статус: Готов к деплою
+   ✅ Включает правила для:
+      - avatars/{userId}
+      - posts/{postId}
+      - reels/{reelId}
+      - stories/{storyId}
+      - ideas/{ideaId}
+      - chats/{chatId}/images|videos|docs|voice
+      - uploads/posts/{uid}
+      - uploads/reels/{uid}
+      - uploads/chats/{chatId}
+
+4. Cloud Functions
+   ✅ Файлы:
+      - functions/src/wipeTestUser.ts
+      - functions/src/cleanupStories.ts
+   ✅ Статус: Готовы к деплою
+   ✅ Функции:
+      - wipeTestUser(uid, hard) - полная очистка тестового пользователя
+      - cleanupExpiredStories - автоматическое удаление истёкших stories (каждые 15 минут)
+
+КОМАНДА ДЕПЛОЯ:
+===============
+
+firebase deploy --only firestore:rules,firestore:indexes,storage,functions
+
+ПРИМЕЧАНИЯ:
+===========
+
+1. Перед деплоем убедитесь, что:
+   - Вы авторизованы в Firebase CLI (firebase login)
+   - Выбран правильный проект (firebase use <project-id>)
+   - Переменная окружения ALLOW_TEST_WIPE=1 установлена для функций
+
+2. После деплоя проверьте:
+   - Firestore Rules работают корректно
+   - Индексы созданы (может занять время)
+   - Storage Rules применены
+   - Functions развёрнуты и работают
+
+3. Для тестирования wipeTestUser:
+   - Установите ALLOW_TEST_WIPE=1 в настройках функций
+   - Вызовите функцию из приложения через WipeService
+
+ЛОГИ:
+=====
+
+[2025-11-11 11:49:05] Подготовка к деплою завершена
+[2025-11-11 11:49:05] Все файлы проверены и готовы
+[2025-11-11 11:49:05] APK собран: 73.3 MB
+
