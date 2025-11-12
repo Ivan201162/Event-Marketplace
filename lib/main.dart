@@ -9,6 +9,9 @@ import 'package:event_marketplace_app/core/build_version.dart';
 import 'package:event_marketplace_app/firebase_options.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
 import 'package:event_marketplace_app/core/performance_monitor.dart';
+import 'package:event_marketplace_app/services/feedback_service.dart';
+import 'package:event_marketplace_app/services/soundscape_service.dart';
+import 'package:event_marketplace_app/services/ambient_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -46,7 +49,7 @@ Future<void> main() async {
     return true;
   };
 
-  debugLog('APP: BUILD OK v7.3-ultimate-evolution-pro');
+  debugLog('APP: BUILD OK v7.4-next-evolution-pro-motion-ambient');
 
   // Инициализация Firebase
   bool firebaseReady = false;
@@ -70,6 +73,16 @@ Future<void> main() async {
   }
   
   debugLog('BOOTCHECK: OK (deps, google.json, signing, crashlytics, perf, persistence)');
+  
+  // Инициализация V7.4 сервисов
+  try {
+    await FeedbackService().init();
+    await SoundscapeService().init();
+    AmbientEngine().init();
+    debugLog('V7_4_SERVICES_INIT: OK');
+  } catch (e) {
+    debugLog('V7_4_SERVICES_INIT_ERR: $e');
+  }
 
   runZonedGuarded(() {
     runApp(ProviderScope(child: AppRoot(firebaseReady: firebaseReady)));

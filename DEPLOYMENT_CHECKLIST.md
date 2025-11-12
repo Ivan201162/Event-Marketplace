@@ -210,3 +210,4 @@ adb logcat -s flutter:I | Select-String "APP:|HOME_|SEARCH_|PROFILE_|REVIEWS_|RE
 
 
 
+
