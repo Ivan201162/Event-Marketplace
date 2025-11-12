@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 import '../../utils/debug_log.dart';
 import '../../ui/components/app_card.dart';
 import '../../ui/components/chip_badge.dart';
 import '../../ui/components/outlined_button_x.dart';
+import '../../ui/components/gradient_appbar.dart';
+import '../../ui/components/empty_state.dart';
+import '../../ui/components/loading_skeleton.dart';
+import '../../ui/components/motion/animated_card_entry.dart';
+import '../../theme/backgrounds.dart';
+import '../../theme/colors.dart';
+import '../../services/feedback_service.dart';
 import '../profile/profile_screen_v2.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -23,9 +31,11 @@ class HomeScreen extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       padding: const EdgeInsets.all(12),
       onTap: () {
-        Navigator.push(
+        FeedbackService().hapticLight();
+        debugLog('NAV:PROFILE_OPEN:$specialistId');
+        Navigator.push<ProfileScreenV2>(
           context,
-          MaterialPageRoute(
+          MaterialPageRoute<ProfileScreenV2>(
             builder: (_) => ProfileScreenV2(userId: specialistId),
           ),
         );
@@ -67,7 +77,7 @@ class HomeScreen extends StatelessWidget {
               spacing: 4,
               runSpacing: 4,
               children: roles.take(2).map((role) {
-                return ChipBadge(label: role.toString());
+                return ChipBadge(label: (role as String?)?.toString() ?? '');
               }).toList(),
             ),
           ],
@@ -167,7 +177,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUserProfileCard(Map<String, dynamic>? userData) {
+  Widget _buildUserProfileCard(Map<String, dynamic>? userData, BuildContext context) {
     if (userData == null) {
       return const SizedBox.shrink();
     }
@@ -177,41 +187,55 @@ class HomeScreen extends StatelessWidget {
     final city = userData['city'] ?? '';
     final roles = (userData['roles'] as List?) ?? [];
     final photoUrl = userData['photoUrl'] as String?;
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final userId = currentUser?.uid ?? '';
 
-    return AppCard(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 32,
-            backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
-            child: photoUrl == null ? const Icon(Icons.person, size: 32) : null,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$firstName $lastName',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Text(city, style: TextStyle(color: Colors.grey[600])),
-                const SizedBox(height: 8),
-                if (roles.isNotEmpty)
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: roles.take(3).map((role) {
-                      return ChipBadge(label: role.toString());
-                    }).toList(),
-                  ),
-              ],
+    return AnimatedCardEntry(
+      child: AppCard(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        onTap: () {
+          FeedbackService().hapticLight();
+          debugLog('NAV:PROFILE_OPEN:$userId');
+          Navigator.push<ProfileScreenV2>(
+            context,
+            MaterialPageRoute<ProfileScreenV2>(
+              builder: (_) => ProfileScreenV2(userId: userId),
             ),
-          ),
-        ],
+          );
+        },
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 32,
+              backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+              child: photoUrl == null ? const Icon(Icons.person, size: 32) : null,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '$firstName $lastName',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(city, style: TextStyle(color: Colors.grey[600])),
+                  const SizedBox(height: 8),
+                  if (roles.isNotEmpty)
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: roles.take(3).map((role) {
+                        return ChipBadge(label: (role as String?)?.toString() ?? '');
+                      }).toList(),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -239,8 +263,16 @@ class HomeScreen extends StatelessWidget {
         .limit(10);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Главная")),
-      body: StreamBuilder<DocumentSnapshot>(
+      appBar: const GradientAppBar(title: "Главная"),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: AppColors.gradientColors(context),
+          ),
+        ),
+        child: StreamBuilder<DocumentSnapshot>(
         stream: userDoc,
         builder: (ctx, userSnap) {
           final userData = userSnap.data?.data() as Map<String, dynamic>?;
@@ -264,7 +296,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildUserProfileCard(userData),
+                    _buildUserProfileCard(userData, context),
                     _buildCarousel('Лучшие специалисты недели — Россия', topRussiaQuery, 'RU'),
                     const SizedBox(height: 16),
                     _buildCarousel(
@@ -278,6 +310,7 @@ class HomeScreen extends StatelessWidget {
             },
           );
         },
+      ),
       ),
     );
   }

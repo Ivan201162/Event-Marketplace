@@ -52,7 +52,7 @@ Future<void> main() async {
     return true;
   };
 
-  debugLog('APP: BUILD OK v7.6-dynamic-canvas-motion-sync');
+  debugLog('APP: BUILD OK v7.6-premium-ui-nav-fix');
 
   // Инициализация Firebase
   bool firebaseReady = false;

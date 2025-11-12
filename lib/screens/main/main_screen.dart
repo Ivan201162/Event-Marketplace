@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 import '../home/home_screen.dart';
 import '../feed/feed_screen.dart';
 import '../requests/requests_screen.dart';
 import '../chat/chat_list_screen.dart';
 import '../ideas/ideas_screen_simple.dart';
 import '../../utils/debug_log.dart';
+import '../../services/feedback_service.dart';
 import 'dart:developer' as developer;
 
 class MainScreen extends StatefulWidget {
@@ -45,9 +47,11 @@ class _MainScreenState extends State<MainScreen> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
+          FeedbackService().hapticLight();
           setState(() {
             _currentIndex = index;
           });
+          debugLog('NAV:TAB:${_screenNames[index].toLowerCase()}');
           developer.log('MAIN_SHELL:tab=${_screenNames[index]}', name: 'MainScreen');
         },
         child: Container(

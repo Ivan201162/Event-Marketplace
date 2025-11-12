@@ -34,7 +34,7 @@ class SplashScreen extends StatelessWidget {
             )
                 .animate()
                 .fadeIn(delay: 300.ms, duration: 400.ms)
-                .scale(begin: const Offset(0, 1), end: const Offset(1, 1)),
+                .scaleX(begin: 0, end: 1, duration: 400.ms),
             
             // Подзаголовок
             Text(

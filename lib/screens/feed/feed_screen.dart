@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../utils/debug_log.dart';
+import '../../ui/components/gradient_appbar.dart';
+import '../../theme/colors.dart';
+import '../../services/feedback_service.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -310,7 +313,7 @@ class _FeedScreenState extends State<FeedScreen> {
   }
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Лента")),
+      appBar: const GradientAppBar(title: "Лента"),
       body: SafeArea(
         child: Column(
           children: [

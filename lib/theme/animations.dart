@@ -18,10 +18,10 @@ class AppMotion {
 }
 
 /// Fade transition
-class FadeTransition extends PageRouteBuilder {
+class FadePageTransition extends PageRouteBuilder {
   final Widget page;
   
-  FadeTransition({required this.page})
+  FadePageTransition({required this.page})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => page,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -35,12 +35,12 @@ class FadeTransition extends PageRouteBuilder {
 }
 
 /// Slide transition
-class SlideTransition extends PageRouteBuilder {
+class SlidePageTransition extends PageRouteBuilder {
   final Widget page;
   final Offset begin;
   final Offset end;
   
-  SlideTransition({
+  SlidePageTransition({
     required this.page,
     this.begin = const Offset(1.0, 0.0),
     this.end = Offset.zero,
@@ -65,12 +65,12 @@ class SlideTransition extends PageRouteBuilder {
 }
 
 /// Scale transition
-class ScaleTransition extends PageRouteBuilder {
+class ScalePageTransition extends PageRouteBuilder {
   final Widget page;
   final double begin;
   final double end;
   
-  ScaleTransition({
+  ScalePageTransition({
     required this.page,
     this.begin = 0.8,
     this.end = 1.0,

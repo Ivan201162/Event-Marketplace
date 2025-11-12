@@ -1,3 +1,3 @@
 /// Версия сборки для отображения
-const String BUILD_VERSION = 'v7.6-dynamic-canvas-motion-sync';
+const String BUILD_VERSION = 'v7.6-premium-ui-nav-fix';
 
