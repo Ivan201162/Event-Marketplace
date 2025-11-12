@@ -392,8 +392,8 @@ adb -s 34HDU20228002261 shell monkey -p com.eventmarketplace.app -c android.inte
 
 ## 📦 APK информация
 
-- **Размер:** 73.3 MB
-- **SHA1:** (будет добавлен после проверки)
+- **Размер:** 73.31 MB
+- **SHA1:** `1672FE34E76647D8D1ECF3A288BBF885961CDFED`
 - **Путь:** `build/app/outputs/flutter-apk/app-release.apk`
 - **Версия:** 7.3.0+55
 - **Build:** v7.3-ultimate-evolution-pro
