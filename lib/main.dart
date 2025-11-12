@@ -12,6 +12,7 @@ import 'package:event_marketplace_app/core/performance_monitor.dart';
 import 'package:event_marketplace_app/services/feedback_service.dart';
 import 'package:event_marketplace_app/services/soundscape_service.dart';
 import 'package:event_marketplace_app/services/ambient_engine.dart';
+import 'package:event_marketplace_app/services/motion_depth/motion_depth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -49,7 +50,7 @@ Future<void> main() async {
     return true;
   };
 
-  debugLog('APP: BUILD OK v7.4-next-evolution-pro-motion-ambient');
+  debugLog('APP: BUILD OK v7.5-design-harmony-motion-depth');
 
   // Инициализация Firebase
   bool firebaseReady = false;
@@ -74,14 +75,15 @@ Future<void> main() async {
   
   debugLog('BOOTCHECK: OK (deps, google.json, signing, crashlytics, perf, persistence)');
   
-  // Инициализация V7.4 сервисов
+  // Инициализация V7.4 и V7.5 сервисов
   try {
     await FeedbackService().init();
     await SoundscapeService().init();
     AmbientEngine().init();
-    debugLog('V7_4_SERVICES_INIT: OK');
+    await MotionDepthService().init();
+    debugLog('V7_5_SERVICES_INIT: OK');
   } catch (e) {
-    debugLog('V7_4_SERVICES_INIT_ERR: $e');
+    debugLog('V7_5_SERVICES_INIT_ERR: $e');
   }
 
   runZonedGuarded(() {

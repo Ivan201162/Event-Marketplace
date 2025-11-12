@@ -1,3 +1,3 @@
 /// Версия сборки для отображения
-const String BUILD_VERSION = 'v7.4-next-evolution-pro-motion-ambient';
+const String BUILD_VERSION = 'v7.5-design-harmony-motion-depth';
 

@@ -1,7 +1,7 @@
 name: event_marketplace_app
 description: Professional event app for booking specialists and managing events
 publish_to: 'none'
-version: 7.4.0+56
+version: 7.5.0+59
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -90,6 +90,8 @@ dependencies:
   dynamic_color: ^1.7.0
   flutter_sound: ^9.2.13
   # speech_to_text: ^6.6.0  # Временно отключено из-за проблем компиляции
+  # V7.5: Design Harmony + Motion Depth
+  sensors_plus: ^4.0.2
 dev_dependencies:
   build_runner: ^2.4.7
   dependency_validator: ^5.0.3
