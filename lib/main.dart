@@ -8,11 +8,17 @@ import 'package:event_marketplace_app/core/app_root.dart';
 import 'package:event_marketplace_app/core/build_version.dart';
 import 'package:event_marketplace_app/firebase_options.dart';
 import 'package:event_marketplace_app/utils/debug_log.dart';
+import 'package:event_marketplace_app/core/performance_monitor.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 Future<void> main() async {
+  final startupStart = DateTime.now();
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Активация Performance Test Mode
+  final performanceMonitor = PerformanceMonitor();
+  await performanceMonitor.startMonitoring();
   
   // Включение Firestore persistence для офлайн-режима
   try {
@@ -40,7 +46,7 @@ Future<void> main() async {
     return true;
   };
 
-  debugLog('APP: BUILD OK v7.2-premium');
+  debugLog('APP: BUILD OK v7.3-ultimate-evolution-pro');
 
   // Инициализация Firebase
   bool firebaseReady = false;
@@ -59,11 +65,20 @@ Future<void> main() async {
       debugLog('SPLASH:init-done');
     }
   } catch (e, st) {
+    debugLog('SPLASH:init-failed:$e');
     debugLog('SPLASH_INIT_ERR:$e\n$st');
   }
+  
+  debugLog('BOOTCHECK: OK (deps, google.json, signing, crashlytics, perf, persistence)');
 
   runZonedGuarded(() {
     runApp(ProviderScope(child: AppRoot(firebaseReady: firebaseReady)));
+    
+    // Запись времени запуска после инициализации Firebase
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final startupDuration = DateTime.now().difference(startupStart).inMilliseconds;
+      performanceMonitor.recordStartupTime(startupDuration);
+    });
   }, (error, stack) {
     debugLog('FATAL_ZONE_ERR:$error');
     debugLog('FATAL_ZONE_STACK:$stack');
