@@ -13,6 +13,8 @@ import 'package:event_marketplace_app/services/feedback_service.dart';
 import 'package:event_marketplace_app/services/soundscape_service.dart';
 import 'package:event_marketplace_app/services/ambient_engine.dart';
 import 'package:event_marketplace_app/services/motion_depth/motion_depth_service.dart';
+import 'package:event_marketplace_app/services/dynamic_canvas/dynamic_canvas_service.dart';
+import 'package:event_marketplace_app/services/sync/smart_sync_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -50,7 +52,7 @@ Future<void> main() async {
     return true;
   };
 
-  debugLog('APP: BUILD OK v7.5-design-harmony-motion-depth');
+  debugLog('APP: BUILD OK v7.6-dynamic-canvas-motion-sync');
 
   // Инициализация Firebase
   bool firebaseReady = false;
@@ -75,15 +77,17 @@ Future<void> main() async {
   
   debugLog('BOOTCHECK: OK (deps, google.json, signing, crashlytics, perf, persistence)');
   
-  // Инициализация V7.4 и V7.5 сервисов
+  // Инициализация V7.4, V7.5 и V7.6 сервисов
   try {
     await FeedbackService().init();
     await SoundscapeService().init();
     AmbientEngine().init();
     await MotionDepthService().init();
-    debugLog('V7_5_SERVICES_INIT: OK');
+    await DynamicCanvasService().init();
+    await SmartSyncService().init();
+    debugLog('V7_6_SERVICES_INIT: OK');
   } catch (e) {
-    debugLog('V7_5_SERVICES_INIT_ERR: $e');
+    debugLog('V7_6_SERVICES_INIT_ERR: $e');
   }
 
   runZonedGuarded(() {

@@ -87,6 +87,32 @@ class MotionDepthService {
     _isInitialized = false;
   }
   
+  /// Синхронизация с Dynamic Canvas
+  static Offset get syncedOffset {
+    try {
+      final tilt = tiltOffset.value;
+      // Импортируем DynamicCanvasService только при использовании
+      // final dynamicFactor = DynamicCanvasService.intensity.value;
+      // Временно используем статический множитель
+      final dynamicFactor = 0.0; // Будет обновлено через SmartSyncService
+      return Offset(
+        tilt.dx * (1 + dynamicFactor),
+        tilt.dy * (1 + dynamicFactor),
+      );
+    } catch (e) {
+      return tiltOffset.value;
+    }
+  }
+  
+  /// Синхронизация с Canvas (вызывается из SmartSyncService)
+  static Offset syncWithCanvas(double canvasIntensity) {
+    final tilt = tiltOffset.value;
+    return Offset(
+      tilt.dx * (1 + canvasIntensity * 0.3),
+      tilt.dy * (1 + canvasIntensity * 0.3),
+    );
+  }
+  
   bool get enabled => _enabled;
   bool get isInitialized => _isInitialized;
 }

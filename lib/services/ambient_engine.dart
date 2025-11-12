@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:event_marketplace_app/services/soundscape_service.dart';
 import 'package:event_marketplace_app/services/feedback_service.dart';
+import 'package:event_marketplace_app/services/dynamic_canvas/dynamic_canvas_service.dart';
 
 enum AmbientContext {
   calendar,
@@ -30,10 +31,64 @@ class AmbientEngine {
   AmbientContext? _currentContext;
   Timer? _pulseTimer;
   bool _enabled = true;
+  bool _audioReactive = true;
   
   /// Инициализация
   Future<void> init() async {
-    log('AMBIENT_ENGINE_INIT');
+    // Слушаем изменения интенсивности звука для audio-reactive режима
+    if (_audioReactive) {
+      DynamicCanvasService.intensity.addListener(_onAudioIntensityChange);
+    }
+    log('AMBIENT_ENGINE_INIT: audioReactive=$_audioReactive');
+  }
+  
+  /// Обработчик изменения интенсивности звука
+  void _onAudioIntensityChange() {
+    if (!_audioReactive || !_enabled) return;
+    
+    final intensity = DynamicCanvasService.intensity.value;
+    
+    // Если громкость высокая (>0.6) → тёплый оттенок
+    if (intensity > 0.6) {
+      _ambientColorShift(Colors.orangeAccent, null);
+    } else {
+      // Низкая громкость → холодный оттенок
+      _ambientColorShift(Colors.blueAccent, null);
+    }
+    
+    // Лёгкий пульс света в фоне под музыку
+    if (intensity > 0.3) {
+      _triggerPulse(
+        Colors.white.withOpacity(intensity * 0.1),
+        duration: (100 + intensity * 200).round(),
+      );
+    }
+  }
+  
+  /// Сдвиг цвета ambient (внутренний метод)
+  void _ambientColorShift(Color color, BuildContext? uiContext) {
+    _colorTemperature.value = color == Colors.orangeAccent ? 0.5 : -0.5;
+    
+    if (uiContext != null) {
+      final theme = Theme.of(uiContext);
+      final baseColor = theme.scaffoldBackgroundColor;
+      
+      _backgroundColor.value = Color.lerp(
+        baseColor,
+        color.withOpacity(0.1),
+        0.5,
+      ) ?? baseColor;
+      
+      log('AMBIENT_COLOR_SHIFT_AUDIO:$color');
+    } else {
+      _backgroundColor.value = color.withOpacity(0.1);
+    }
+  }
+  
+  /// Установка audioReactive режима
+  void setAudioReactive(bool enabled) {
+    _audioReactive = enabled;
+    log('AMBIENT_AUDIO_REACTIVE:$enabled');
   }
   
   /// Триггер контекста
